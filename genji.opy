@@ -1,20 +1,19 @@
 #Global variables
 globalvar A # Checkpoint Positions
 globalvar B # Current checkpoint in Editing context, maybe just a TempIterator count
-
+globalvar C # Holds checkpoint effects in editing context (shows all ?)
 globalvar DVA 3
 globalvar dva 4
-# test
 
 
 globalvar H # KillBall position
 globalvar I # KillBall radius
 globalvar J #  Current checkpoint in editing context? whats difference between B and J
 globalvar K # Array holding killball effects
+globalvar L # Kill sphere temp chase lpcation?
 globalvar Dao 12  # Dash Enabled for Checkpoint
 globalvar SHIFT 13 # If Dash is enabled for the checkpoint
-globalvar SUPERJUMP 14
-# O doesn't exist?
+globalvar SUPERJUMP 14 # Unused ..?
 globalvar P # 2d array checkpoints for index with a list of players at each checkpoint
 globalvar Q # I think this is just arr of active players. Non-saved, non-spectating active players
 # All these TQ is cursed killball/pinball shit
@@ -50,8 +49,8 @@ playervar E # EditMode 2 Killing sphere | 3 Bouncing ball | 1 checkpoint
 playervar F # Portal switch ??? appends event player Portal 1 "entrance"
 playervar G # Portal Switch ??? appends event player Portal 2 "exit"
 playervar H # Portal String inworld text
-playervar I 
-playervar J
+playervar I # Unused ? Comment says tutorial HUD set to 2
+playervar J # "Climbing the wall prompt" HUD set to 2
 playervar K # Guide Enabled (1) /Disabled (2)
 playervar L # Time trial-like checkpoint?
 playervar ztjs 12  # Timer (countdown?) for time limit
@@ -544,7 +543,7 @@ rule "Jump to previous checkpoint":
 
 
 rule "------------------------------------------------------Turn off the rules above after finishing editing--------------------------":
-
+    @Delimiter
 
 rule "Setup and Variables":
     disableInspector()
@@ -1305,7 +1304,7 @@ def pinball():
 
 
 rule "Checkpoint | Position <---------------------------------------------------------------------------- paste here!":
-
+    @Delimiter
 
 rule "Checkpoint | HUD":
     @Event eachPlayer
