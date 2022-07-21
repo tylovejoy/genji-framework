@@ -1,6 +1,5 @@
-#!include "map settings.opy"
-#!include "defines and variables.opy"
-
+#!include "settings.opy"
+#!include "definitions.opy"
 #!include "editor.opy"
 
 
@@ -1346,4 +1345,4 @@ rule "rule 95":
 
 
 
-#!include "checks and bans.opy"
+#!include "mechanics.opy"
