@@ -73,9 +73,9 @@ rule "Portal Effect - Text":
     @Event eachPlayer
 
     #Change Vector (0, 0, 0) to starting position of Portal 1-2
-    createInWorldText(eventPlayer, "{{0}}".format(eventPlayer.PortalText), vect(276.288, -17.222, -74.522), 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.YELLOW, SpecVisibility.DEFAULT)
+    createInWorldText(eventPlayer, "{0}{1}".format(eventPlayer.PortalText, "Send to next target to next map"), vect(276.288, -17.222, -74.522), 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.YELLOW, SpecVisibility.DEFAULT)
     #Change Vector (1, 1, 1) to starting position of Portal 2-3
-    createInWorldText(eventPlayer, "{{0}}".format(eventPlayer.PortalText), vect(1, 1, 1), 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.YELLOW, SpecVisibility.DEFAULT)
+    createInWorldText(eventPlayer, "{0}{1}".format(eventPlayer.PortalText, "Send to next target to next map"), vect(1, 1, 1), 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.YELLOW, SpecVisibility.DEFAULT)
 
 rule "Portal Effects":
     @Disabled
