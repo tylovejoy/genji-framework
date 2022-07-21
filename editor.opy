@@ -223,7 +223,6 @@ rule "Edit mode":
     @Event eachPlayer
     @Condition eventPlayer.hasSpawned() == true
     
-    #玩家E：编辑模式
     eventPlayer.EditModeSelection = 1
     eventPlayer.GuideToggle = 1
 
@@ -428,7 +427,7 @@ rule "Guide HUD effects":
     createInWorldText(getAllPlayers(), "Selected Checkpoint", CheckpointPositions[B__] + vect(0, 0.5, 0), 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
     #createEffect(getAllPlayers(), Effect.SPHERE, Color.RED, H[J], I[J], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createEffect(getAllPlayers(), Effect.GOOD_AURA, Color.PURPLE, TQ__[TQ1__], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    #轻易别打开，动作太长会
+    #Don't open it easily, the action will be too long
     hudText(getAllPlayers(), [].concat(0).concat("Selected Checkpoint's number: {0}".format(B__)).concat("Current Killing Sphere's radius: {0}".format(KillBallRadii[J__])).concat("Current Bouncing Ball's strenght: {0}".format(EditMode__[TQ1__]))[hostPlayer.EditModeSelection], null, [].concat("").concat("").concat("").concat("Current Bouncing Ball's Ultimate: {0}\r\nCurrent Bouncing Ball's Dash: {1}".format(TQ5__[TQ1__], TQ6__[TQ1__]))[hostPlayer.EditModeSelection], HudPosition.TOP, -14, Color.RED, Color.WHITE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     createInWorldText(getAllPlayers(), "Selected Killing Sphere", KillBallPositions[J__], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
     createEffect(getAllPlayers(), Effect.ORB, Color.RED, KillBallChase, 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)

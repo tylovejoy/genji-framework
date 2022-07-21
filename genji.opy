@@ -22,7 +22,7 @@ rule "Friend Title - Displaying your message (on you)":
     if "your nickname <-------" == "{0}".format(eventPlayer):
         bigMessage(getAllPlayers(), "Message to the whole room")
         createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    #空白处填写您好友的名字
+    #Fill in the blank with your friend's name
     if "your nickname <-------" == "{0}".format(eventPlayer):
         bigMessage(getAllPlayers(), "Message to the whole room")
         createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
@@ -804,17 +804,15 @@ rule "Checkpoint | HUD":
         hudSubtext(eventPlayer, "{0} {1}".format("level ", "{0} / {1}".format(eventPlayer.A__, len(CheckpointPositions) - 1)), HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
         hudSubtext(eventPlayer, "{0} {1} {2}".format("Time", l"{0} sec".format(eventPlayer.D__), "| time limit: {0}".format(eventPlayer.L__) if TimeLimitSettingToggle_ else ""), HudPosition.LEFT, -2, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     ActivePlayers.append(eventPlayer)
-    #子程序1为游戏的初始化设置
+    #StartGame_Sub is the initialization of the game
     StartGame_Sub()
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
-    #玩家F：自杀防止复活
     eventPlayer.SpectateToggle = 0
-    #玩家I：教程HUD
     eventPlayer.I_unused = 2
-    #玩家J：爬墙提示HUD
+    #Climbing the wall prompts the HUD
     eventPlayer.J__ = 2
-    #子程序0为检查点效果显示
+    #CheckpointEffect_Sub is the checkpoint effect display
     CheckpointEffect_Sub()
 
 
@@ -860,7 +858,6 @@ rule "Checkpoint | Arrived":
         destroyInWorldText(eventPlayer.PlayerEffects[4])
         Portal1PlayerList.append(eventPlayer)
         Portal2PlayerList.append(eventPlayer)
-        #H传送门字符串
         eventPlayer.PortalText = 2
     if TimeLimitSettingToggle_ == true:
         eventPlayer.L__ = 0
@@ -983,7 +980,7 @@ rule "Landing on Checkpoint (In some circumstances turn off?)":
     @Condition eventPlayer.InvincibleToggle != 1
     @Condition eventPlayer.SpectateToggle != 1
     
-    #做特定关卡开启落地死亡再打开
+    #Do a specific level to open the landing and die and then open it again
     #@Condition (eventPlayer.A == -1 or eventPlayer.A == -1 or eventPlayer.A == -1 or false) == true
     if eventPlayer.EditModeSelection < 1:
         eventPlayer.setAbility1Enabled(false)
@@ -1031,7 +1028,7 @@ rule "Combo | Reset the run | RESTART":
     ListPlayersAtCheckpoints[eventPlayer.A__].remove(eventPlayer)
     if eventPlayer.A__ >= len(CheckpointPositions) - 1:
         CheckpointEffect_Sub()
-        #这条动作为“消除玩家通关成绩显示”
+        #This action is "eliminate the display of player clearance results"
         destroyHudText(eventPlayer.PlayerEffects[7])
     StartGame_Sub()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
@@ -1089,9 +1086,12 @@ rule "Initialization | Double jump | Bhop":
     @Hero genji
     @Condition eventPlayer.isOnGround() == true
     
-    #变量A后的数字“-1”为关卡数，具体操作参考“给刀”。此条规则开启效果为“特定关卡开启三段”，关闭则为“所有关卡封禁三段”
+    #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
+    # When this rule is turned on, the effect is "open three stages in a specific level", 
+    # and when it is turned off, it will be "banned three stages in all levels"
     #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
-    #注释一定要看！此条条件开启的效果为“通关后自动开启三段”，关闭则通关后仍封禁三段
+    # Notes must be read! When this condition is turned on, the effect is "Automatically open three stages after customs clearance", 
+    # and if it is turned off, three stages will still be banned after customs clearance.
     #@Condition eventPlayer.A < len(A) - 1
     eventPlayer.TY__ = 0
     eventPlayer.J__ = 2
@@ -1227,7 +1227,7 @@ rule "Combo | Quick Reset":
 rule "Limit Ultimate":
     @Event eachPlayer
     @Hero genji
-    #此条规则作用为：在跑图时令SHIFT只能使用一次
+    #The function of this rule is: SHIFT can only be used once when running the map
     @Condition eventPlayer.isUsingUltimate() == true
     @Condition eventPlayer.A__ < len(CheckpointPositions) - 1
     @Condition eventPlayer.EditModeSelection < 1
@@ -1238,7 +1238,7 @@ rule "Limit Ultimate":
 
 rule "Lmit Dash":
     @Event eachPlayer
-    #此条规则作用为：在跑图时令SHIFT只能使用一次
+    #The function of this rule is: SHIFT can only be used once when running the map
     @Condition eventPlayer.isUsingAbility1() == true
     @Condition eventPlayer.A__ < len(CheckpointPositions) - 1
     @Condition eventPlayer.EditModeSelection < 1
