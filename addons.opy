@@ -23,7 +23,7 @@ rule "Portal 1-2":
     #Modify vector (0, 0, 0) to start teleport position
     @Condition distance(eventPlayer, vect(0, 0, 0)) <= 1.4
     #Modify "-1" to the number of levels of the portal level
-    @Condition (eventPlayer.A__ == -1 or eventPlayer.A__ >= len(A__) - 1) == true
+    @Condition (eventPlayer.A__ == -1 or eventPlayer.A__ >= len(CheckpointPositions) - 1) == true
 
     #Modify the vector (0, 0, 0) to the position where the teleport ends
     eventPlayer.teleport(vect(0, 0, 0))
@@ -36,7 +36,7 @@ rule "Portal 2-3":
     #Modify vector (0, 0, 0) to start teleport position
     @Condition distance(eventPlayer, vect(0, 0, 0)) <= 1.4
     #Modify "-1" to the number of levels of the portal level
-    @Condition (eventPlayer.A__ == -1 or eventPlayer.A__ >= len(A__) - 1) == true
+    @Condition (eventPlayer.A__ == -1 or eventPlayer.A__ >= len(CheckpointPositions) - 1) == true
 
     #Modify the vector (0, 0, 0) to the position where the teleport ends
     eventPlayer.teleport(vect(0, 0, 0))
@@ -49,7 +49,7 @@ rule "Portal 3-1":
     #Modify vector (0, 0, 0) to start teleport position
     @Condition distance(eventPlayer, vect(0, 0, 0)) <= 1.4
     #Modify "-1" to the number of levels of the portal level
-    @Condition (eventPlayer.A__ == -1 or eventPlayer.A__ >= len(A__) - 1) == true
+    @Condition (eventPlayer.A__ == -1 or eventPlayer.A__ >= len(CheckpointPositions) - 1) == true
 
     #Modify the vector (0, 0, 0) to the position where the teleport ends
     eventPlayer.teleport(vect(0, 0, 0))
@@ -73,56 +73,56 @@ rule "Portal Effect - Text":
     @Event eachPlayer
 
     #Change Vector (0, 0, 0) to starting position of Portal 1-2
-    createInWorldText(eventPlayer, "{{0}}".format(eventPlayer.H), vect(276.288, -17.222, -74.522), 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.YELLOW, SpecVisibility.DEFAULT)
+    createInWorldText(eventPlayer, "{{0}}".format(eventPlayer.PortalText), vect(276.288, -17.222, -74.522), 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.YELLOW, SpecVisibility.DEFAULT)
     #Change Vector (1, 1, 1) to starting position of Portal 2-3
-    createInWorldText(eventPlayer, "{{0}}".format(eventPlayer.H), vect(1, 1, 1), 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.YELLOW, SpecVisibility.DEFAULT)
+    createInWorldText(eventPlayer, "{{0}}".format(eventPlayer.PortalText), vect(1, 1, 1), 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.YELLOW, SpecVisibility.DEFAULT)
 
 rule "Portal Effects":
     @Disabled
     #Effects of Portal 1-2
-    createEffect(F, Effect.RING, Color.LIME_GREEN, vect(0, 0, 0), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(Portal1PlayerList, Effect.RING, Color.LIME_GREEN, vect(0, 0, 0), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     #Effects of Portal 1-2
-    createEffect(F, Effect.LIGHT_SHAFT, Color.RED, vect(276.288, -17.222, -74.522), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(Portal1PlayerList, Effect.LIGHT_SHAFT, Color.RED, vect(276.288, -17.222, -74.522), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     #Effects of Portal 2-3
-    createEffect(G, Effect.RING, Color.LIME_GREEN, vect(1, 1, 1), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(Portal2PlayerList, Effect.RING, Color.LIME_GREEN, vect(1, 1, 1), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     #Effects of Portal 2-3
-    createEffect(G, Effect.LIGHT_SHAFT, Color.RED, vect(1, 1, 1), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(Portal2PlayerList, Effect.LIGHT_SHAFT, Color.RED, vect(1, 1, 1), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     #Effects of Portal 3-1
-    createEffect(F, Effect.RING, Color.LIME_GREEN, vect(2, 2, 2), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(Portal1PlayerList, Effect.RING, Color.LIME_GREEN, vect(2, 2, 2), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     #Effects of Portal 3-1
-    createEffect(F, Effect.LIGHT_SHAFT, Color.RED, vect(2, 2, 2), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(Portal1PlayerList, Effect.LIGHT_SHAFT, Color.RED, vect(2, 2, 2), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     #Change Vector  (0, 0, 0) to starting position of Portal 3-1
-    createInWorldText(F, "to next map", vect(0, 0, 0), 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.YELLOW, SpecVisibility.DEFAULT)
+    createInWorldText(Portal1PlayerList, "to next map", vect(0, 0, 0), 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.YELLOW, SpecVisibility.DEFAULT)
 
-rule "开启传送门视野—————————— 特定关卡时开启 ————————————":
+rule "Open the portal view ——————————— Open in a specific checkpoint ————————————":
     @Disabled
     @Event eachPlayer
-    #将“-1”分别改为两个传送门所在关卡的关卡数
-    @Condition (eventPlayer.A == -1 or eventPlayer.A == -1 or eventPlayer.A >= len(A) - 1) == true
+    #Change "-1" to the number of checkpoints of the checkpoint where the two portals are located
+    @Condition (eventPlayer.A__ == -1 or eventPlayer.A__ == -1 or eventPlayer.A__ >= len(CheckpointPositions) - 1) == true
 
-    eventPlayer.H = 1
-    #将“-1”修改为第一个传送门所在的关卡数
-    if eventPlayer.A == -1:
-        F.append(eventPlayer)
-        #将“-2”修改为第二个传送门所在的关卡数
-    elif eventPlayer.A == -2:
-        G.append(eventPlayer)
-        #无需更改
-    elif eventPlayer.A >= len(A) - 1:
-        G.append(eventPlayer)
-        F.append(eventPlayer)
-        eventPlayer.H = 2
+    eventPlayer.PortalText = 1
+    #Change "-1" to the number of checkpoints where the first portal is located
+    if eventPlayer.A__ == -1:
+        Portal1PlayerList.append(eventPlayer)
+        #Change "-2" to the number of checkpoints where the second portal is located
+    elif eventPlayer.A__ == -2:
+        Portal2PlayerList.append(eventPlayer)
+        #No changes required
+    elif eventPlayer.A__ >= len(CheckpointPositions) - 1:
+        Portal2PlayerList.append(eventPlayer)
+        Portal1PlayerList.append(eventPlayer)
+        eventPlayer.PortalText = 2
 
-rule "关闭传送门视野—————————— 特定关卡时关闭 ————————————":
+rule "Close the portal view ——————————— Close in certain checkpoints ————————————":
     @Disabled
     @Event eachPlayer
-    #将“-2”分别修改为两个传送门传送过去后的关卡数
-    @Condition (eventPlayer.A == -2 or eventPlayer.A == -2 or false) == true
+    #Modify "-2" to the number of checkpoints after the two portals have been teleported
+    @Condition (eventPlayer.A__ == -2 or eventPlayer.A__ == -2 or false) == true
 
-    eventPlayer.H = 0
-    #将此处的“-2”修改为第一个传送门传送过去之后的关卡数
-    if eventPlayer.A == -2:
-        F.remove(eventPlayer)
-        #将此处的“-2”修改为第二个传送门传送过去之后的关卡数
-    elif eventPlayer.A == -2:
-        G.remove(eventPlayer)
+    eventPlayer.PortalText = 0
+    #Modify the "-2" here to the number of checkpoints after the first portal has passed
+    if eventPlayer.A__ == -2:
+        Portal1PlayerList.remove(eventPlayer)
+        #Modify the "-2" here to the number of checkpoints after the second portal has passed
+    elif eventPlayer.A__ == -2:
+        Portal2PlayerList.remove(eventPlayer)

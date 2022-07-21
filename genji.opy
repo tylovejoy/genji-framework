@@ -1,6 +1,7 @@
 #!include "settings.opy"
 #!include "definitions.opy"
 #!include "editor.opy"
+#!include "addons.opy"
 
 
 rule "------------------------------------------------------Turn off the rules above after finishing editing--------------------------":
