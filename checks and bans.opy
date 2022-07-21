@@ -1,0 +1,271 @@
+#!mainFile "genji.opy"
+
+rule "------------------------------------------------------ checks --------------------------":   
+    @Delimiter
+    @Disabled
+
+
+rule "Bhop Green":
+    @Event eachPlayer
+    @Condition eventPlayer.isOnGround() == true
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
+    
+    eventPlayer.BhopHUDColor = Color.GREEN
+
+
+rule "Bhop Red":
+    @Event eachPlayer
+    @Condition eventPlayer.isJumping() == true
+    
+    eventPlayer.BhopHUDColor = Color.RED
+
+rule "Checking | Jump":
+    @Event eachPlayer
+    @Hero genji
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
+    @Condition eventPlayer.TY__ != 2
+    
+    #变量A后的数字“-1”为关卡数，具体操作参考“给刀”。此条规则开启效果为“特定关卡开启三段”，关闭则为“所有关卡封禁三段
+    #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
+    #注释一定要看！此条条件开启的效果为“通关后自动开启三段”，关闭则通关后仍封禁三
+    #@Condition eventPlayer.A < len(A) - 1
+    eventPlayer.TY__ += 1
+
+
+rule "Checking | Bhop in the air":
+    @Event eachPlayer
+    @Condition eventPlayer.TY__ == 0
+    @Condition eventPlayer.isInAir() == true
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
+    
+    eventPlayer.BhopUsed = 0
+
+
+rule "Checking | In the air":
+    @Event eachPlayer
+    @Hero genji
+    @Condition eventPlayer.TY__ == 0
+    @Condition eventPlayer.isInAir() == true
+    
+    #变量A后的数字“-1”为关卡数，具体操作参考“给刀”。此条规则开启效果为“特定关卡开启三段”，关闭则为“所有关卡封禁三段
+    #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
+    #注释一定要看！此条条件开启的效果为“通关后自动开启三段”，关闭则通关后仍封禁三
+    #@Condition eventPlayer.A < len(A) - 1
+    eventPlayer.TY__ = 1
+
+
+rule "Checking | Triple jump":
+    @Event eachPlayer
+    @Condition eventPlayer.TY__ == 1
+    
+    wait(0.1, Wait.ABORT_WHEN_FALSE)
+    eventPlayer.TY__ = 2
+
+
+rule "Checking | Player on the wall":
+    @Event eachPlayer
+    #此条规则同时与爬墙判定挂钩，请勿关闭/删除
+    @Condition eventPlayer.isOnWall() == true
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
+    
+    eventPlayer.TY__ = 2
+    eventPlayer.J__ = 1
+
+
+
+rule "Checking | Using Emote":
+    @Event eachPlayer
+    @Condition eventPlayer.isCommunicatingEmote() == true
+    
+    eventPlayer.BhopUsed = 0
+
+
+rule "Checking | Bhop":
+    @Event eachPlayer
+    @Condition eventPlayer.BhopUsed == 0
+    @Condition eventPlayer.isJumping() == true
+    
+    eventPlayer.BhopUsed = 1
+    smallMessage(eventPlayer, "Bhop")
+
+
+rule "Checking | Double bhop | thank for Githuboy#5249":
+    @Event eachPlayer
+    @Condition eventPlayer.isOnWall() == false
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
+    @Condition eventPlayer.isOnGround() == false
+    @Condition eventPlayer.isInAir() == true
+    @Condition eventPlayer.isJumping() == false
+    @Condition eventPlayer.isCrouching() == true
+    
+    smallMessage(eventPlayer, "Success")
+    eventPlayer.BhopUsed = 0
+    if BhopBanToggle == true:
+        kill(eventPlayer, null)
+        smallMessage(eventPlayer, "{0} {1}".format(heroIcon(Hero.GENJI), ": Double Bhop is disabled"))
+
+
+rule "爬墙未用HUD___Counter multiclimb hud":
+    @Event eachPlayer
+    @Condition eventPlayer.J__ == 2
+    @Condition eventPlayer.hasSpawned() == true
+    
+    destroyHudText(eventPlayer.MultiClimbCountHUD)
+    hudHeader(eventPlayer, "Climb{0}".format("({0})".format(eventPlayer.MultiClimbCount) if eventPlayer.MultiClimbCount > 0 else ""), HudPosition.LEFT, 2, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    eventPlayer.MultiClimbCountHUD = getLastCreatedText()
+
+
+rule "爬墙已用HUD___Counter multicimb hud":
+    @Event eachPlayer
+    @Condition eventPlayer.J__ == 1
+    @Condition eventPlayer.hasSpawned() == true
+    
+    destroyHudText(eventPlayer.MultiClimbCountHUD)
+    hudHeader(eventPlayer, "Climb", HudPosition.LEFT, 2, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    eventPlayer.MultiClimbCountHUD = getLastCreatedText()
+    if eventPlayer.HUB_DOTS_INDEX == 2:
+        smallMessage(eventPlayer, "Wallclimb ")
+
+
+rule "爬墙计数 multiclimb counting":
+    @Event eachPlayer
+    @Condition eventPlayer.isOnWall() == true
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
+    @Condition eventPlayer.J__ == 2
+    @Condition eventPlayer.InvincibleToggle == 0
+    
+    eventPlayer.MultiClimbCount += 1
+
+
+rule "二段跳，小跳初始化":
+    @Event eachPlayer
+    @Hero genji
+    @Condition eventPlayer.isOnGround() == true
+    
+    #变量A后的数字“-1”为关卡数，具体操作参考“给刀”。此条规则开启效果为“特定关卡开启三段”，关闭则为“所有关卡封禁三段”
+    #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
+    #注释一定要看！此条条件开启的效果为“通关后自动开启三段”，关闭则通关后仍封禁三段
+    #@Condition eventPlayer.A < len(A) - 1
+    eventPlayer.TY__ = 0
+    eventPlayer.J__ = 2
+    eventPlayer.MultiClimbCount = 0
+    wait(0)
+    if (eventPlayer.TY__ != 0 or eventPlayer.J__ != 2) and eventPlayer.isOnGround():
+        goto RULE_START
+    eventPlayer.BhopUsed = 1
+
+
+rule "Extended function | Strengthen stall (家里有妖怪#5202 | Easier to stall | Jump farther)":
+    @Event eachPlayer
+    @Condition eventPlayer.hasSpawned() == true
+    @Condition eventPlayer.getVerticalSpeed() >= -0.2
+    @Condition eventPlayer.getVerticalSpeed() <= 0.05
+    @Condition eventPlayer.getHorizontalSpeed() <= 1.3
+    @Condition eventPlayer.isInAir() == true
+    @Condition eventPlayer.isOnWall() == false
+    @Condition eventPlayer.isOnGround() == false
+    @Condition createWorkshopSetting(bool, "Extended function", "Strengthen stall", false, 0) == true
+    
+    wait(0.25, Wait.ABORT_WHEN_FALSE)
+    eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
+    waitUntil(not eventPlayer.isMoving(), 10)
+    eventPlayer.stopForcingPosition()
+    eventPlayer.setMoveSpeed(0)
+    eventPlayer.setGravity(0)
+    wait(3)
+    eventPlayer.setGravity(100)
+    eventPlayer.setMoveSpeed(100)
+    eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+    if RULE_CONDITION:
+        goto RULE_START
+
+
+rule "Extended function | Climb the wall to refresh double jump(喵喵酱#51379 | Touch and Multi will not trigger)":
+    @Event eachPlayer
+    @Condition eventPlayer.isOnWall() == true
+    @Condition createWorkshopSetting(bool, "Extended function", "Climb the wall to refresh double jump", false, 1) == true
+    
+    wait(0.25, Wait.ABORT_WHEN_FALSE)
+    waitUntil(not eventPlayer.isOnWall(), 1)
+    eventPlayer.setStatusEffect(null, Status.HACKED, 0.1)
+    wait(0.1)
+    eventPlayer.clearStatusEffect(Status.HACKED)
+
+
+rule "Extended function | Save climb into the checkpoint(TITANXPASCAL#5554 *Remember to create text to prompt players)":
+    @Event eachPlayer
+    @Condition distance(eventPlayer, CheckpointPositions[eventPlayer.A__ + 1]) <= 2
+    @Condition createWorkshopSetting(bool, "Extended function", "Save climb into the checkpoint", false, 2) == true
+    #Change "-1" to certain Checkpoints' number
+    @Condition eventPlayer.A__ in [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1] == true
+    
+    #If all checkpoints need this function, enable this rule and disable Rule: "Array Contains" 
+    #@Condition eventPlayer.A < len(A) - 1
+    if eventPlayer.J__ == 1:
+        kill(eventPlayer, null)
+        smallMessage(eventPlayer, "Fail to meet clear condition: Save climb")
+
+
+rule "Extended function | Save Bhop into the checkpoint(TITANXPASCAL#5554 *Remember to create text to prompt players)":
+    @Event eachPlayer
+    @Condition distance(eventPlayer, CheckpointPositions[eventPlayer.A__ + 1]) <= 2
+    @Condition createWorkshopSetting(bool, "Extended function", "Save Bhop into the checkpoint", false, 3) == true
+    #Change "-1" to certain Checkpoints' number
+    @Condition eventPlayer.A__ in [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1] == true
+    
+    #If all checkpoints need this function, enable this rule and disable Rule: "Array Contains" 
+    #@Condition eventPlayer.A < len(A) - 1
+    if eventPlayer.BhopUsed == 1:
+        kill(eventPlayer, null)
+        smallMessage(eventPlayer, "Fail to meet clear condition: Save bhop")
+
+rule "------------------------------------------------------ bans  --------------------------":   
+    @Delimiter
+    @Disabled
+
+
+rule "Ban | Triple Jump":
+    @Event eachPlayer
+    @Condition eventPlayer.getVerticalSpeed() >= 5.8
+    @Condition eventPlayer.TY__ == 1
+    @Condition eventPlayer.isUsingAbility1() == false
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Triple Jump", false, 0) == true
+    
+    if eventPlayer.isOnWall():
+        return
+    eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+
+
+rule "Ban | Multiclimb":
+    @Event eachPlayer
+    @Condition eventPlayer.isOnWall() == true
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
+    @Condition eventPlayer.J__ == 2
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Multiclimb", false, 1) == true
+    
+    eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+    smallMessage(eventPlayer, "{0} {1}".format(heroIcon(Hero.GENJI), ": Multiclimb is Disabled"))
+
+
+rule "Ban | Double Bhop":
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Double Bhop", false, 2) == true
+    
+    BhopBanToggle = true
+
+
+rule "Ban | Emote":
+    @Event eachPlayer
+    @Condition eventPlayer.isCommunicatingEmote() == true
+    @Condition eventPlayer.A__ < len(CheckpointPositions) - 1
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Emote", false, 3) == true
+    
+    kill(eventPlayer, null)
+    smallMessage(eventPlayer, "{0} {1}".format(heroIcon(Hero.GENJI), ": Emote jumping is disabled"))
+
+
+rule "Ban | Bhop from Reset":
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban bhop from reset", false, 4) == true
+    
+    BhopBanFromReset = true
+
