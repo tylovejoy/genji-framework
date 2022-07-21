@@ -25,9 +25,12 @@ rule "Checking | Jump":
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
     @Condition eventPlayer.TY__ != 2
     
-    #变量A后的数字“-1”为关卡数，具体操作参考“给刀”。此条规则开启效果为“特定关卡开启三段”，关闭则为“所有关卡封禁三段
+    #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
+    #When this rule is turned on, the effect is "open three stages for a specific level", 
+    #and when it is turned off, it means "ban all levels for three stages"
     #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
-    #注释一定要看！此条条件开启的效果为“通关后自动开启三段”，关闭则通关后仍封禁三
+    #Notes must be read! The effect of this condition being turned on is "Automatically open three stages after customs clearance", 
+    #and if it is turned off, it will still be banned for three stages after customs clearance.
     #@Condition eventPlayer.A < len(A) - 1
     eventPlayer.TY__ += 1
 
@@ -47,9 +50,12 @@ rule "Checking | In the air":
     @Condition eventPlayer.TY__ == 0
     @Condition eventPlayer.isInAir() == true
     
-    #变量A后的数字“-1”为关卡数，具体操作参考“给刀”。此条规则开启效果为“特定关卡开启三段”，关闭则为“所有关卡封禁三段
+    #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
+    #When this rule is turned on, the effect is "open three stages for a specific level", 
+    #and when it is turned off, it means "ban all levels for three stages"
     #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
-    #注释一定要看！此条条件开启的效果为“通关后自动开启三段”，关闭则通关后仍封禁三
+    #Notes must be read! The effect of this condition being turned on is "Automatically open three stages after customs clearance", 
+    #and if it is turned off, it will still be banned for three stages after customs clearance.
     #@Condition eventPlayer.A < len(A) - 1
     eventPlayer.TY__ = 1
 
@@ -64,7 +70,7 @@ rule "Checking | Triple jump":
 
 rule "Checking | Player on the wall":
     @Event eachPlayer
-    #此条规则同时与爬墙判定挂钩，请勿关闭/删除
+    #This rule is also linked to the determination of wall climbing, please do not close/delete
     @Condition eventPlayer.isOnWall() == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
     
@@ -106,7 +112,7 @@ rule "Checking | Double bhop | thank for Githuboy#5249":
         smallMessage(eventPlayer, "{0} {1}".format(heroIcon(Hero.GENJI), ": Double Bhop is disabled"))
 
 
-rule "爬墙未用HUD___Counter multiclimb hud":
+rule "wall climbing unused HUD___Counter multiclimb hud":
     @Event eachPlayer
     @Condition eventPlayer.J__ == 2
     @Condition eventPlayer.hasSpawned() == true
@@ -116,7 +122,7 @@ rule "爬墙未用HUD___Counter multiclimb hud":
     eventPlayer.MultiClimbCountHUD = getLastCreatedText()
 
 
-rule "爬墙已用HUD___Counter multicimb hud":
+rule "wall climbing used HUD___Counter multicimb hud":
     @Event eachPlayer
     @Condition eventPlayer.J__ == 1
     @Condition eventPlayer.hasSpawned() == true
@@ -128,7 +134,7 @@ rule "爬墙已用HUD___Counter multicimb hud":
         smallMessage(eventPlayer, "Wallclimb ")
 
 
-rule "爬墙计数 multiclimb counting":
+rule "Wall climb count multiclimb counting":
     @Event eachPlayer
     @Condition eventPlayer.isOnWall() == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
@@ -138,14 +144,17 @@ rule "爬墙计数 multiclimb counting":
     eventPlayer.MultiClimbCount += 1
 
 
-rule "二段跳，小跳初始化":
+rule "Double jump, initialized with small jump":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.isOnGround() == true
     
-    #变量A后的数字“-1”为关卡数，具体操作参考“给刀”。此条规则开启效果为“特定关卡开启三段”，关闭则为“所有关卡封禁三段”
+    #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
+    #When this rule is turned on, the effect is "open three stages for a specific level", 
+    #and when it is turned off, it means "ban all levels for three stages"
     #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
-    #注释一定要看！此条条件开启的效果为“通关后自动开启三段”，关闭则通关后仍封禁三段
+    #Notes must be read! The effect of this condition being turned on is "Automatically open three stages after customs clearance", 
+    #and if it is turned off, it will still be banned for three stages after customs clearance.
     #@Condition eventPlayer.A < len(A) - 1
     eventPlayer.TY__ = 0
     eventPlayer.J__ = 2
