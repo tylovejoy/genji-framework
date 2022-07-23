@@ -42,8 +42,8 @@ rule "Setup and Variables":
     disableScoring()
     disableMusic()
     pauseMatchTime()
-    Dao__ = []
-    SHIFT__ = []
+    BladeEnabledCheckpoints = []
+    DashEnabledCheckpoints = []
     BouncePadCheckpoints = []
     KillballCheckpoints = []
     CheckpointPositions = []
@@ -52,16 +52,16 @@ rule "Setup and Variables":
     KillBallPositions = []
     KillBallRadii = []
     KillBallEffects = []
-    J__ = 0
+    SelectedKillball_Editing = 0
     ActivePlayers = []
-    TQ__ = []
-    TQ2__ = []
-    EditMode__ = []
-    TQ1__ = 0
-    TQ5__ = []
-    TQ6__ = []
+    BouncePositions = []
+    BounceEffects = []
+    BounceStrength = []
+    CurrentBounce_Editing = 0
+    BounceToggleUlt = []
+    BounceToggleDash = []
     wait(1)
-    B__ = len(CheckpointPositions) - 1
+    SelectedCheckpoint_Editing = len(CheckpointPositions) - 1 # This probably isn't necessary.
     KILLBALL()
     wait(2)
     pinball()
@@ -90,21 +90,21 @@ rule "Setup and Variables":
     hudSubtext(getAllPlayers(), "Hold {0} | Spectate".format(buttonString(Button.INTERACT)), HudPosition.RIGHT, -11, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "Hold {0} |  Enable Quick reset".format(buttonString(Button.RELOAD)), HudPosition.RIGHT, -10, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "press {0} | Quick reset".format(buttonString(Button.RELOAD)), HudPosition.RIGHT, -9, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    TimeLimitSettingToggle_ = createWorkshopSetting(bool, "Extended function", "Level time limit", false, 0)
+    TimeLimitSettingToggle = createWorkshopSetting(bool, "Extended function", "Level time limit", false, 0)
 
 
 def CheckpointEffect_Sub():
     @Name "Checkpoint | Effect |-------------------------------------------------SUB0"
     
-    createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.A__][1] if len(CheckpointPositions[eventPlayer.A__]) != 0 else CheckpointPositions[eventPlayer.A__], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.PlayerEffects[0] = getLastCreatedEntity()
-    createEffect(eventPlayer, Effect.RING, Color.LIME_GREEN, CheckpointPositions[eventPlayer.A__ + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer, Effect.RING, Color.LIME_GREEN, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.PlayerEffects[1] = getLastCreatedEntity()
-    createEffect(eventPlayer, Effect.LIGHT_SHAFT, Color.WHITE, CheckpointPositions[eventPlayer.A__ + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer, Effect.LIGHT_SHAFT, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.PlayerEffects[2] = getLastCreatedEntity()
-    createIcon(eventPlayer, CheckpointPositions[eventPlayer.A__ + 1] + vect(0, 1, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
+    createIcon(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + vect(0, 1, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
     eventPlayer.PlayerEffects[3] = getLastCreatedEntity()
-    createInWorldText(eventPlayer, "Come here", CheckpointPositions[eventPlayer.A__ + 1], 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT)
+    createInWorldText(eventPlayer, "Come here", CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT)
     eventPlayer.PlayerEffects[4] = getLastCreatedText()
 
 
@@ -112,10 +112,10 @@ def StartGame_Sub():
     @Name "Checkpoint | Start the game |-------------------------------------SUB1"
     
     if len(CheckpointPositions) != 0:
-        if "{0}".format(eventPlayer) in SavedProgress and TimeLimitSettingToggle_ == false:
+        if "{0}".format(eventPlayer) in SavedProgress and TimeLimitSettingToggle == false:
             #if "{0}".format(eventPlayer) in save == true:
-            eventPlayer.A__ = SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-            eventPlayer.D__ = SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 2]
+            eventPlayer.CurrentCheckpoint = SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
+            eventPlayer.Timer = SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 2]
             SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 3] = eventPlayer
             SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 4] = getTotalTimeElapsed()
             SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 5] = 0
@@ -123,13 +123,12 @@ def StartGame_Sub():
             eventPlayer.teleport(CheckpointPositions[SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]] + vect(0, 1, 0))
         else:
             eventPlayer.teleport(CheckpointPositions[0] + vect(0, 1, 0))
-            eventPlayer.A__ = 0
-            eventPlayer.D__ = 0
-            stopChasingVariable(eventPlayer.TimelimitTimer__)
-            eventPlayer.TimelimitTimer__ = 0
-            SavedProgress.append(["{0}".format(eventPlayer), eventPlayer.A__, eventPlayer.D__, eventPlayer, getTotalTimeElapsed(), 0, 0])
-    chase(eventPlayer.D__, 9999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
-    eventPlayer.G_unused = 0
+            eventPlayer.CurrentCheckpoint = 0
+            eventPlayer.Timer = 0
+            stopChasingVariable(eventPlayer.PauseTimer)
+            eventPlayer.PauseTimer = 0
+            SavedProgress.append(["{0}".format(eventPlayer), eventPlayer.CurrentCheckpoint, eventPlayer.Timer, eventPlayer, getTotalTimeElapsed(), 0, 0])
+    chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
     eventPlayer.PortalText = []
     if eventPlayer.EditModeSelection < 1:
         eventPlayer.setAbility1Enabled(false)
@@ -140,7 +139,7 @@ def StartGame_Sub():
         eventPlayer.setUltCharge(100)
     eventPlayer.setStatusEffect(null, Status.PHASED_OUT, 9999)
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
-    ListPlayersAtCheckpoints[eventPlayer.A__].append(eventPlayer)
+    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
     eventPlayer.InvincibleToggle = 0
 
 
@@ -409,387 +408,387 @@ def KILLBALL():
 def pinball():
     @Name "Checkpoint | Bouncing Ball effect |-------------------------------------SUB"
     
-    if TQ__ == []:
+    if BouncePositions == []:
         return
     TempIterator1 = 0
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[0]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[0]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 1
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[1]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[1]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 2
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[2]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[2]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 3
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[3]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[3]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 4
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[4]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[4]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 5
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[5]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[5]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 6
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[6]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[6]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 7
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[7]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[7]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 8
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[8]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[8]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 9
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[9]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[9]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 10
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[10]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[10]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 11
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[11]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[11]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 12
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[12]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[12]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 13
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[13]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[13]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 14
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[14]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[14]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 15
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[15]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[15]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 16
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[16]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[16]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 17
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[17]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[17]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 18
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[18]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[18]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 19
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[19]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[19]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 20
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[20]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[20]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 21
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[21]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[21]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 22
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[22]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[22]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 23
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[23]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[23]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 24
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[24]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[24]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 25
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[25]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[25]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 26
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[26]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[26]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 27
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[27]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[27]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 28
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[28]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[28]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 29
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[29]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[29]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 30
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[30]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[30]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 31
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[31]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[31]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 32
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[32]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[32]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 33
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[33]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[33]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 34
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[34]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[34]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 35
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[35]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[35]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 36
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[36]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[36]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 37
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[37]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[37]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 38
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[38]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[38]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 39
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[39]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[39]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 40
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[40]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[40]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 41
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[41]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[41]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 42
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[42]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[42]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 43
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[43]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[43]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 44
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[44]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[44]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 45
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[45]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[45]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 46
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[46]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[46]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 47
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[47]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[47]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 48
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[48]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[48]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 49
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[49]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[49]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 50
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[50]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[50]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 51
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[51]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[51]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 52
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[52]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[52]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 53
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[53]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[53]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 54
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[54]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[54]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 55
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[55]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[55]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 56
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[56]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[56]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 57
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[57]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[57]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 58
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[58]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[58]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 59
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[59]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[59]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 60
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[60]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[60]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 61
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[61]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[61]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 62
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[62]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[62]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 63
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[63]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[63]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 64
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[64]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[64]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 65
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[65]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[65]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 66
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[66]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[66]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 67
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[67]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[67]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 68
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[68]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[68]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 69
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[69]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[69]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 70
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[70]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[70]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 71
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[71]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[71]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 72
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[72]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[72]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 73
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[73]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[73]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 74
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[74]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[74]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
     TempIterator1 = 75
-    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[75]]), Effect.ORB, Color.GREEN, TQ__[TempIterator1], 1, EffectReeval.VISIBILITY)
-    TQ2__.append(getLastCreatedEntity())
-    if TempIterator1 == len(TQ__) - 1:
+    createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[75]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    BounceEffects.append(getLastCreatedEntity())
+    if TempIterator1 == len(BouncePositions) - 1:
         return
 
 
@@ -801,31 +800,30 @@ rule "Checkpoint | HUD":
     
     eventPlayer.setDamageDealt(0)
     if eventPlayer in ActivePlayers:
-        hudSubtext(eventPlayer, "{0} {1}".format("level ", "{0} / {1}".format(eventPlayer.A__, len(CheckpointPositions) - 1)), HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-        hudSubtext(eventPlayer, "{0} {1} {2}".format("Time", l"{0} sec".format(eventPlayer.D__), "| time limit: {0}".format(eventPlayer.L__) if TimeLimitSettingToggle_ else ""), HudPosition.LEFT, -2, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+        hudSubtext(eventPlayer, "{0} {1}".format("level ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+        hudSubtext(eventPlayer, "{0} {1} {2}".format("Time", l"{0} sec".format(eventPlayer.Timer), "| time limit: {0}".format(eventPlayer.TimeLimitTimer) if TimeLimitSettingToggle else ""), HudPosition.LEFT, -2, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     ActivePlayers.append(eventPlayer)
     #StartGame_Sub is the initialization of the game
     StartGame_Sub()
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
     eventPlayer.SpectateToggle = 0
-    eventPlayer.I_unused = 2
     #Climbing the wall prompts the HUD
-    eventPlayer.J__ = 2
+    eventPlayer.WallclimbUsed = 2
     #CheckpointEffect_Sub is the checkpoint effect display
     CheckpointEffect_Sub()
 
 
 rule "Checkpoint | Arrived":
     @Event eachPlayer
-    @Condition distance(eventPlayer, CheckpointPositions[eventPlayer.A__ + 1]) <= 1.4
-    @Condition eventPlayer.A__ < len(CheckpointPositions) - 1
+    @Condition distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= 1.4
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.isOnGround() == true
     @Condition (eventPlayer.EditModeSelection >= 1 or eventPlayer.InvincibleToggle == 0) == true
     
-    eventPlayer.A__ += 1
-    if TimeLimitSettingToggle_:
-        smallMessage(eventPlayer, "Arrived at {0}/{1}".format(eventPlayer.A__, len(CheckpointPositions) - 1))
+    eventPlayer.CurrentCheckpoint += 1
+    if TimeLimitSettingToggle:
+        smallMessage(eventPlayer, "Arrived at {0}/{1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1))
     else:
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
@@ -834,23 +832,23 @@ rule "Checkpoint | Arrived":
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
         SavedProgress.remove("{0}".format(eventPlayer))
-        SavedProgress.append(["{0}".format(eventPlayer), eventPlayer.A__, eventPlayer.D__, eventPlayer, getTotalTimeElapsed(), 0, 0])
+        SavedProgress.append(["{0}".format(eventPlayer), eventPlayer.CurrentCheckpoint, eventPlayer.Timer, eventPlayer, getTotalTimeElapsed(), 0, 0])
         playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
-        playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.A__] + vect(0, 1.5, 0), 4)
-        bigMessage(eventPlayer, "{0} {1}".format("Arrived at", "{0} / {1}".format(eventPlayer.A__, len(CheckpointPositions) - 1)))
-    ListPlayersAtCheckpoints[eventPlayer.A__].append(eventPlayer)
-    ListPlayersAtCheckpoints[eventPlayer.A__ - 1].remove(eventPlayer)
+        playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
+        bigMessage(eventPlayer, "{0} {1}".format("Arrived at", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)))
+    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
+    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
     if eventPlayer.EditModeSelection < 1:
         eventPlayer.setUltEnabled(false)
         eventPlayer.setAbility1Enabled(false)
     if eventPlayer.EditModeSelection >= 1:
         return
-    if eventPlayer.A__ >= len(CheckpointPositions) - 1:
+    if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
         eventPlayer.setAbility1Enabled(true)
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
-        stopChasingVariable(eventPlayer.D__)
-        bigMessage(getAllPlayers(), "{0} {1} {2}".format(eventPlayer, "Mission complete! Time", l"{0} sec".format(eventPlayer.D__)))
+        stopChasingVariable(eventPlayer.Timer)
+        bigMessage(getAllPlayers(), "{0} {1} {2}".format(eventPlayer, "Mission complete! Time", l"{0} sec".format(eventPlayer.Timer)))
         destroyEffect(eventPlayer.PlayerEffects[0])
         destroyEffect(eventPlayer.PlayerEffects[1])
         destroyEffect(eventPlayer.PlayerEffects[2])
@@ -859,9 +857,9 @@ rule "Checkpoint | Arrived":
         Portal1PlayerList.append(eventPlayer)
         Portal2PlayerList.append(eventPlayer)
         eventPlayer.PortalText = 2
-    if TimeLimitSettingToggle_ == true:
-        eventPlayer.L__ = 0
-        chase(eventPlayer.L__, 10, rate=1, ChaseReeval.DESTINATION_AND_RATE)
+    if TimeLimitSettingToggle == true:
+        eventPlayer.TimeLimitTimer = 0
+        chase(eventPlayer.TimeLimitTimer, 10, rate=1, ChaseReeval.DESTINATION_AND_RATE)
 
 
 rule "nope":
@@ -873,9 +871,9 @@ rule "nope":
 rule "Killing Sphere | Damage":
     @Event eachPlayer
     @Hero genji
-    @Condition (KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[0])] == eventPlayer.A__ or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[1])] == eventPlayer.A__ or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[2])] == eventPlayer.A__ or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[3])] == eventPlayer.A__) == true
-    @Condition eventPlayer.A__ != 0
-    @Condition eventPlayer.A__ < len(CheckpointPositions) - 1
+    @Condition (KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[0])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[1])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[2])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[3])] == eventPlayer.CurrentCheckpoint) == true
+    @Condition eventPlayer.CurrentCheckpoint != 0
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.InvincibleToggle == 0
     
     kill(eventPlayer, null)
@@ -884,16 +882,15 @@ rule "Killing Sphere | Damage":
 rule "Bouncing Ball | Properties":
     @Event eachPlayer
     @Hero genji
-    @Condition BouncePadCheckpoints[TQ__.index([player for player in TQ__ if distance(eventPlayer, player) <= 1.2])] == eventPlayer.A__
-    @Condition eventPlayer.A__ != 0
+    @Condition BouncePadCheckpoints[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer, player) <= 1.2])] == eventPlayer.CurrentCheckpoint
+    @Condition eventPlayer.CurrentCheckpoint != 0
     
-    eventPlayer.applyImpulse(Vector.UP, EditMode__[TQ__.index([player for player in TQ__ if distance(eventPlayer.getPosition(), player) <= 2])], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-    #eventPlayer.setAbility1Enabled(TQ6[TQ.index([player for player in TQ if distance(eventPlayer.getPosition(), player) <= 2])])
-    #eventPlayer.setUltEnabled(TQ5[TQ.index([player for player in TQ if distance(eventPlayer.getPosition(), player) <= 2])])
-    if TQ6__[TQ__.index([player for player in TQ__ if distance(eventPlayer.getPosition(), player) <= 2])] == true:
+    eventPlayer.applyImpulse(Vector.UP, BounceStrength[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+
+    if BounceToggleDash[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])] == true:
         eventPlayer.setAbility1Enabled(true)
         smallMessage(eventPlayer, "Dash is ready")
-    if TQ5__[TQ__.index([player for player in TQ__ if distance(eventPlayer.getPosition(), player) <= 2])] == true:
+    if BounceToggleUlt[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])] == true:
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
         smallMessage(eventPlayer, "Ultimate is ready")
@@ -902,7 +899,7 @@ rule "Bouncing Ball | Properties":
 rule "Data for Top 5":
     @Event eachPlayer
     @Hero genji
-    @Condition eventPlayer.A__ == len(CheckpointPositions) - 1
+    @Condition eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
     @Condition eventPlayer.EditModeSelection < 1
     
     del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
@@ -913,32 +910,32 @@ rule "Data for Top 5":
     del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
     SavedProgress.remove("{0}".format(eventPlayer))
     if eventPlayer.PlayerEffects[7] == null:
-        eventPlayer.LeaderboardTimerCapture = eventPlayer.D__
+        eventPlayer.LeaderboardTimerCapture = eventPlayer.Timer
         hudText(null if toplistTimes[toplistPlayers.index("{0}".format(eventPlayer))] in toplistSortedTimes else getAllPlayers(), heroIcon(Hero.GENJI), eventPlayer, "{0} sec".format(eventPlayer.LeaderboardTimerCapture), HudPosition.RIGHT, eventPlayer.LeaderboardTimerCapture, rgb(158, 255, 187), rgb(158, 255, 187), rgb(158, 255, 187), HudReeval.VISIBILITY_SORT_ORDER_AND_STRING, SpecVisibility.DEFAULT)
         eventPlayer.PlayerEffects[7] = getLastCreatedText()
     else:
-        if eventPlayer.D__ > eventPlayer.LeaderboardTimerCapture:
+        if eventPlayer.Timer > eventPlayer.LeaderboardTimerCapture:
             goto lbl_0
-        eventPlayer.LeaderboardTimerCapture = eventPlayer.D__
+        eventPlayer.LeaderboardTimerCapture = eventPlayer.Timer
         lbl_0:
     #Save data for the Top 5 list
     if "{0}".format(eventPlayer) in toplistPlayers:
-        if eventPlayer.D__ >= toplistTimes[toplistPlayers.index("{0}".format(eventPlayer))]:
+        if eventPlayer.Timer >= toplistTimes[toplistPlayers.index("{0}".format(eventPlayer))]:
             goto lbl_1
-        toplistTimes[toplistPlayers.index("{0}".format(eventPlayer))] = eventPlayer.D__
+        toplistTimes[toplistPlayers.index("{0}".format(eventPlayer))] = eventPlayer.Timer
         lbl_1:
     else:
         toplistPlayers.append("{0}".format(eventPlayer))
-        toplistTimes[toplistPlayers.index("{0}".format(eventPlayer))] = eventPlayer.D__
+        toplistTimes[toplistPlayers.index("{0}".format(eventPlayer))] = eventPlayer.Timer
     #Reload the Sorted Array Times
     toplistSortedTimes = sorted(toplistTimes).slice(0, 6)
-    stopChasingVariable(eventPlayer.TimelimitTimer__)
-    eventPlayer.TimelimitTimer__ = 0
+    stopChasingVariable(eventPlayer.PauseTimer)
+    eventPlayer.PauseTimer = 0
 
 
 rule "Checkpoint | Finish effects":
     @Event eachPlayer
-    @Condition eventPlayer.A__ == len(CheckpointPositions) - 1
+    @Condition eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
     @Condition eventPlayer.EditModeSelection < 1
     @Condition eventPlayer.isMoving() == true
     
@@ -963,19 +960,19 @@ rule "Death Teleport":
     
     eventPlayer.clearStatusEffect(Status.PHASED_OUT)
     eventPlayer.resurrect()
-    if TimeLimitSettingToggle_ == true:
-        eventPlayer.L__ = 0
-        stopChasingVariable(eventPlayer.L__)
-        eventPlayer.A__ = eventPlayer.A__ if eventPlayer.EditModeSelection > 0 else 0
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.A__][1] if len(CheckpointPositions[eventPlayer.A__]) != 0 else CheckpointPositions[eventPlayer.A__])
+    if TimeLimitSettingToggle == true:
+        eventPlayer.TimeLimitTimer = 0
+        stopChasingVariable(eventPlayer.TimeLimitTimer)
+        eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint if eventPlayer.EditModeSelection > 0 else 0
+    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
 
 
 rule "Landing on Checkpoint (In some circumstances turn off?)":
     @Event eachPlayer
     @Hero genji
-    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.A__][1] if len(CheckpointPositions[eventPlayer.A__]) != 0 else CheckpointPositions[eventPlayer.A__])) > 1.4
+    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])) > 1.4
     @Condition eventPlayer.isOnGround() == true
-    @Condition eventPlayer.A__ < len(CheckpointPositions) - 1
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition len(CheckpointPositions) >= 2
     @Condition eventPlayer.InvincibleToggle != 1
     @Condition eventPlayer.SpectateToggle != 1
@@ -987,17 +984,17 @@ rule "Landing on Checkpoint (In some circumstances turn off?)":
         eventPlayer.setUltEnabled(false)
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
-    if TimeLimitSettingToggle_ == true:
-        eventPlayer.L__ = 0
-        stopChasingVariable(eventPlayer.L__)
-        eventPlayer.A__ = eventPlayer.A__ if eventPlayer.EditModeSelection > 0 else 0
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.A__][1] if len(CheckpointPositions[eventPlayer.A__]) != 0 else CheckpointPositions[eventPlayer.A__])
+    if TimeLimitSettingToggle == true:
+        eventPlayer.TimeLimitTimer = 0
+        stopChasingVariable(eventPlayer.TimeLimitTimer)
+        eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint if eventPlayer.EditModeSelection > 0 else 0
+    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
     if BhopBanFromReset == true:
         eventPlayer.disallowButton(Button.JUMP)
         wait(0.1)
         eventPlayer.allowButton(Button.JUMP)
-    if eventPlayer.A__ == 0:
-        eventPlayer.D__ = 0
+    if eventPlayer.CurrentCheckpoint == 0:
+        eventPlayer.Timer = 0
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
 
@@ -1025,8 +1022,8 @@ rule "Combo | Reset the run | RESTART":
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
         SavedProgress.remove("{0}".format(eventPlayer))
-    ListPlayersAtCheckpoints[eventPlayer.A__].remove(eventPlayer)
-    if eventPlayer.A__ >= len(CheckpointPositions) - 1:
+    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].remove(eventPlayer)
+    if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
         CheckpointEffect_Sub()
         #This action is "eliminate the display of player clearance results"
         destroyHudText(eventPlayer.PlayerEffects[7])
@@ -1044,40 +1041,40 @@ rule "Combo | Spectate | Interact":
     wait(1, Wait.ABORT_WHEN_FALSE)
     smallMessage(eventPlayer, "Hold Interact again to turn off spectate mode")
     if eventPlayer.isAlive():
-        if eventPlayer.A__ < len(CheckpointPositions) - 1:
-            chase(eventPlayer.TimelimitTimer__, 999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
-            SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 2] = eventPlayer.D__
+        if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
+            chase(eventPlayer.PauseTimer, 999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
+            SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 2] = eventPlayer.Timer
             SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 4] = getTotalTimeElapsed()
             SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 1
         eventPlayer.setRespawnTime(9999)
         eventPlayer.SpectateToggle = 1
-        stopChasingVariable(eventPlayer.D__)
+        stopChasingVariable(eventPlayer.Timer)
         wait(0.2)
         kill(eventPlayer, null)
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.A__][1] if len(CheckpointPositions[eventPlayer.A__]) != 0 else CheckpointPositions[eventPlayer.A__])
+        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
     else:
         if eventPlayer.EditModeSelection >= 1:
             goto lbl_0
         eventPlayer.respawn()
         eventPlayer.SpectateToggle = 0
         lbl_0:
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.A__][1] if len(CheckpointPositions[eventPlayer.A__]) != 0 else CheckpointPositions[eventPlayer.A__])
-        if eventPlayer.A__ >= len(CheckpointPositions) - 1:
+        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
+        if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
             goto lbl_1
         eventPlayer.setUltEnabled(false)
         eventPlayer.setAbility1Enabled(false)
-        chase(eventPlayer.D__, 10000, rate=1, ChaseReeval.DESTINATION_AND_RATE)
+        chase(eventPlayer.Timer, 10000, rate=1, ChaseReeval.DESTINATION_AND_RATE)
         lbl_1:
         eventPlayer.setRespawnTime(0)
         eventPlayer.InvincibleToggle = 0
-        if eventPlayer.A__ < len(CheckpointPositions) - 1:
-            stopChasingVariable(eventPlayer.TimelimitTimer__)
-            SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 5] = eventPlayer.TimelimitTimer__
-            eventPlayer.TimelimitTimer__ = 0
+        if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
+            stopChasingVariable(eventPlayer.PauseTimer)
+            SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 5] = eventPlayer.PauseTimer
+            eventPlayer.PauseTimer = 0
             SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 0
-    if TimeLimitSettingToggle_ == false:
+    if TimeLimitSettingToggle == false:
         goto lbl_2
-    eventPlayer.A__ = 0
+    eventPlayer.CurrentCheckpoint = 0
     lbl_2:
 
 
@@ -1093,10 +1090,10 @@ rule "Initialization | Double jump | Bhop":
     # Notes must be read! When this condition is turned on, the effect is "Automatically open three stages after customs clearance", 
     # and if it is turned off, three stages will still be banned after customs clearance.
     #@Condition eventPlayer.A < len(A) - 1
-    eventPlayer.TY__ = 0
-    eventPlayer.J__ = 2
+    eventPlayer.JumpCount = 0
+    eventPlayer.WallclimbUsed = 2
     wait(0)
-    if (eventPlayer.TY__ != 0 or eventPlayer.J__ != 2) and eventPlayer.isOnGround():
+    if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed != 2) and eventPlayer.isOnGround():
         goto RULE_START
     eventPlayer.BhopUsed = 1
 
@@ -1110,22 +1107,22 @@ rule "Combo | Invincible/Normal mode":
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
     @Condition eventPlayer.isUsingAbility1() == false
-    @Condition eventPlayer.A__ < len(CheckpointPositions) - 1
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isUsingUltimate() == false
     
-    eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.A__][1] if len(CheckpointPositions[eventPlayer.A__]) != 0 else CheckpointPositions[eventPlayer.A__], true)
+    eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], true)
     if eventPlayer.InvincibleToggle == 0:
-        chase(eventPlayer.TimelimitTimer__, 999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
-        SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 2] = eventPlayer.D__
+        chase(eventPlayer.PauseTimer, 999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
+        SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 2] = eventPlayer.Timer
         SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 4] = getTotalTimeElapsed()
         SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 1
-        if TimeLimitSettingToggle_ == false:
+        if TimeLimitSettingToggle == false:
             goto lbl_0
         smallMessage(eventPlayer, "Press ctrl+LMB/RMB to jump next/prev")
-        stopChasingVariable(eventPlayer.L__)
+        stopChasingVariable(eventPlayer.TimeLimitTimer)
         lbl_0:
-        stopChasingVariable(eventPlayer.D__)
+        stopChasingVariable(eventPlayer.Timer)
         bigMessage(eventPlayer, "Invincible mode")
         eventPlayer.stopForcingPosition()
         eventPlayer.setUltEnabled(true)
@@ -1139,19 +1136,19 @@ rule "Combo | Invincible/Normal mode":
         eventPlayer.setUltEnabled(false)
         eventPlayer.setAbility1Enabled(false)
         lbl_1:
-        if TimeLimitSettingToggle_ == false:
+        if TimeLimitSettingToggle == false:
             goto lbl_2
-        eventPlayer.A__ = 0
+        eventPlayer.CurrentCheckpoint = 0
         lbl_2:
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.A__][1] if len(CheckpointPositions[eventPlayer.A__]) != 0 else CheckpointPositions[eventPlayer.A__])
+        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
         wait(0.1)
         eventPlayer.InvincibleToggle = 0
         bigMessage(eventPlayer, "Normal mode")
-        chase(eventPlayer.D__, 9999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
+        chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
         eventPlayer.stopForcingPosition()
-        stopChasingVariable(eventPlayer.TimelimitTimer__)
-        SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 5] = eventPlayer.TimelimitTimer__
-        eventPlayer.TimelimitTimer__ = 0
+        stopChasingVariable(eventPlayer.PauseTimer)
+        SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 5] = eventPlayer.PauseTimer
+        eventPlayer.PauseTimer = 0
         SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 0
 
 
@@ -1166,8 +1163,8 @@ rule "Ultimate charge":
 
 rule "Player left the game":
     @Event playerLeft
-    
     ActivePlayers.remove(eventPlayer)
+    #if player's cur_checkpoint is 0, delete save info
     if SavedProgress[SavedProgress.index(eventPlayer) - 2] == 0:
         del SavedProgress[SavedProgress.index(eventPlayer) + 1]
         del SavedProgress[SavedProgress.index(eventPlayer) + 1]
@@ -1204,13 +1201,13 @@ rule "Combo | Quick Reset":
     if eventPlayer.isHoldingButton(Button.MELEE):
         return
     if eventPlayer.QuickRestartToggle == true:
-        eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.A__][1] if len(CheckpointPositions[eventPlayer.A__]) != 0 else CheckpointPositions[eventPlayer.A__], true)
+        eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], true)
         if eventPlayer.EditModeSelection >= 1 or eventPlayer.InvincibleToggle == 1:
             goto lbl_0
         eventPlayer.setUltEnabled(false)
         eventPlayer.setAbility1Enabled(false)
         lbl_0:
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.A__][1] if len(CheckpointPositions[eventPlayer.A__]) != 0 else CheckpointPositions[eventPlayer.A__])
+        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
         wait(0.1)
         eventPlayer.stopForcingPosition()
     wait(1, Wait.ABORT_WHEN_FALSE)
@@ -1229,7 +1226,7 @@ rule "Limit Ultimate":
     @Hero genji
     #The function of this rule is: SHIFT can only be used once when running the map
     @Condition eventPlayer.isUsingUltimate() == true
-    @Condition eventPlayer.A__ < len(CheckpointPositions) - 1
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.EditModeSelection < 1
     @Condition eventPlayer.InvincibleToggle == 0
     
@@ -1240,7 +1237,7 @@ rule "Lmit Dash":
     @Event eachPlayer
     #The function of this rule is: SHIFT can only be used once when running the map
     @Condition eventPlayer.isUsingAbility1() == true
-    @Condition eventPlayer.A__ < len(CheckpointPositions) - 1
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.EditModeSelection < 1
     @Condition eventPlayer.InvincibleToggle == 0
     
@@ -1250,9 +1247,9 @@ rule "Lmit Dash":
 rule "Give Blade":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround() == true
-    @Condition eventPlayer.A__ < len(CheckpointPositions) - 1
-    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.A__].last() if len(CheckpointPositions[eventPlayer.A__]) > 1 else CheckpointPositions[eventPlayer.A__])) <= 1.4
-    @Condition eventPlayer.A__ in Dao__ == true
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
+    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) > 1 else CheckpointPositions[eventPlayer.CurrentCheckpoint])) <= 1.4
+    @Condition eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints == true
     @Condition eventPlayer.isUsingUltimate() == false
     
     wait(0.1)
@@ -1266,10 +1263,10 @@ rule "Give Blade":
 rule "Give Dash":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround() == true
-    @Condition eventPlayer.A__ < len(CheckpointPositions) - 1
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     #@Condition distance(eventPlayer, A[eventPlayer.A]) <= 1.4
-    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.A__].last() if len(CheckpointPositions[eventPlayer.A__]) > 1 else CheckpointPositions[eventPlayer.A__])) <= 1.4
-    @Condition eventPlayer.A__ in SHIFT__ == true
+    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) > 1 else CheckpointPositions[eventPlayer.CurrentCheckpoint])) <= 1.4
+    @Condition eventPlayer.CurrentCheckpoint in DashEnabledCheckpoints == true
     @Condition eventPlayer.isUsingAbility1() == false
     
     eventPlayer.setAbility1Enabled(true)
@@ -1281,68 +1278,68 @@ rule "Give Dash":
 
 rule "rule 91":
     @Event eachPlayer
-    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.A__ if eventPlayer.EditModeSelection > 0 else 0])) > 1.4
-    @Condition TimeLimitSettingToggle_ == true
+    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint if eventPlayer.EditModeSelection > 0 else 0])) > 1.4
+    @Condition TimeLimitSettingToggle == true
     @Condition (0 if eventPlayer.EditModeSelection > 0 else eventPlayer.InvincibleToggle) != 1
-    @Condition (0 if eventPlayer.EditModeSelection > 0 else eventPlayer.A__) == 0
+    @Condition (0 if eventPlayer.EditModeSelection > 0 else eventPlayer.CurrentCheckpoint) == 0
     
     #@Condition eventPlayer.A == 0
     #@Condition eventPlayer.C != 1
-    # I think this is testing a checkpoint in edit mode. having a timer run
-    eventPlayer.L__ = 0
-    chase(eventPlayer.L__, 10, rate=1, ChaseReeval.DESTINATION_AND_RATE)
-    eventPlayer.D__ = 0
+
+    eventPlayer.TimeLimitTimer = 0
+    chase(eventPlayer.TimeLimitTimer, 10, rate=1, ChaseReeval.DESTINATION_AND_RATE)
+    eventPlayer.Timer = 0
 
 
-rule "rule 92":
+rule "Checkpoint Time Limit":
     @Event eachPlayer
-    @Condition TimeLimitSettingToggle_ == true
-    @Condition eventPlayer.L__ >= 5
-    @Condition eventPlayer.A__ < len(CheckpointPositions) - 1
+    @Condition TimeLimitSettingToggle == true
+    @Condition eventPlayer.TimeLimitTimer >= 5
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     
-    eventPlayer.A__ = eventPlayer.A__ if eventPlayer.EditModeSelection > 0 else 0
+    eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint if eventPlayer.EditModeSelection > 0 else 0
     if eventPlayer.InvincibleToggle == 1:
         goto lbl_0
     if eventPlayer.EditModeSelection > 0 and eventPlayer.isOnGround():
         goto lbl_1
-    eventPlayer.teleport(CheckpointPositions[0 if eventPlayer.EditModeSelection < 1 else eventPlayer.A__])
+    eventPlayer.teleport(CheckpointPositions[0 if eventPlayer.EditModeSelection < 1 else eventPlayer.CurrentCheckpoint])
     lbl_0:
     smallMessage(eventPlayer, "Time out!")
     lbl_1:
-    stopChasingVariable(eventPlayer.L__)
+    stopChasingVariable(eventPlayer.TimeLimitTimer)
 
 
-rule "rule 93":
+rule "Reset Timelimit Timer When at Checkpoint 0":
     @Event eachPlayer
     @Condition distance(eventPlayer, CheckpointPositions[0]) < 1
-    @Condition eventPlayer.A__ == 0
-    @Condition TimeLimitSettingToggle_ == true
+    @Condition eventPlayer.CurrentCheckpoint == 0
+    @Condition TimeLimitSettingToggle == true
     
-    stopChasingVariable(eventPlayer.L__)
-    eventPlayer.L__ = 0
-    eventPlayer.D__ = 0
+    stopChasingVariable(eventPlayer.TimeLimitTimer)
+    eventPlayer.TimeLimitTimer = 0
+    eventPlayer.Timer = 0
 
 
-rule "rule 94":
+rule "Go Forward Checkpoint (Invincible Mode | TimeLimitSetting Enabled)":
     @Event eachPlayer
     @Condition eventPlayer.InvincibleToggle == 1
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition TimeLimitSettingToggle_ == true
+    @Condition TimeLimitSettingToggle == true
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
     
-    eventPlayer.A__ += 1 if eventPlayer.A__ < len(CheckpointPositions) - 2 else 0
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.A__])
+    eventPlayer.CurrentCheckpoint += 1 if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 2 else 0
+    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
 
 
-rule "rule 95":
+rule "Go Backward Checkpoint (Invincible Mode | TimeLimitSetting Enabled)":
     @Event eachPlayer
     @Condition eventPlayer.InvincibleToggle == 1
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition TimeLimitSettingToggle_ == true
+    @Condition TimeLimitSettingToggle == true
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
     
-    eventPlayer.A__ -= 1 if eventPlayer.A__ > 0 else 0
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.A__])
+    eventPlayer.CurrentCheckpoint -= 1 if eventPlayer.CurrentCheckpoint > 0 else 0
+    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
 
 
 
