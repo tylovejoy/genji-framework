@@ -23,7 +23,7 @@ rule "Checking | Jump":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
-    @Condition eventPlayer.TY__ != 2
+    @Condition eventPlayer.JumpCount != 2
     
     #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
     #When this rule is turned on, the effect is "open three stages for a specific level", 
@@ -32,12 +32,12 @@ rule "Checking | Jump":
     #Notes must be read! The effect of this condition being turned on is "Automatically open three stages after customs clearance", 
     #and if it is turned off, it will still be banned for three stages after customs clearance.
     #@Condition eventPlayer.A < len(A) - 1
-    eventPlayer.TY__ += 1
+    eventPlayer.JumpCount += 1
 
 
 rule "Checking | Bhop in the air":
     @Event eachPlayer
-    @Condition eventPlayer.TY__ == 0
+    @Condition eventPlayer.JumpCount == 0
     @Condition eventPlayer.isInAir() == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     
@@ -47,7 +47,7 @@ rule "Checking | Bhop in the air":
 rule "Checking | In the air":
     @Event eachPlayer
     @Hero genji
-    @Condition eventPlayer.TY__ == 0
+    @Condition eventPlayer.JumpCount == 0
     @Condition eventPlayer.isInAir() == true
     
     #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
@@ -57,15 +57,15 @@ rule "Checking | In the air":
     #Notes must be read! The effect of this condition being turned on is "Automatically open three stages after customs clearance", 
     #and if it is turned off, it will still be banned for three stages after customs clearance.
     #@Condition eventPlayer.A < len(A) - 1
-    eventPlayer.TY__ = 1
+    eventPlayer.JumpCount = 1
 
 
 rule "Checking | Triple jump":
     @Event eachPlayer
-    @Condition eventPlayer.TY__ == 1
+    @Condition eventPlayer.JumpCount == 1
     
     wait(0.1, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.TY__ = 2
+    eventPlayer.JumpCount = 2
 
 
 rule "Checking | Player on the wall":
@@ -74,8 +74,8 @@ rule "Checking | Player on the wall":
     @Condition eventPlayer.isOnWall() == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
     
-    eventPlayer.TY__ = 2
-    eventPlayer.J__ = 1
+    eventPlayer.JumpCount = 2
+    eventPlayer.WallclimbUsed = 1
 
 
 
@@ -112,9 +112,9 @@ rule "Checking | Double bhop | thank for Githuboy#5249":
         smallMessage(eventPlayer, "{0} {1}".format(heroIcon(Hero.GENJI), ": Double Bhop is disabled"))
 
 
-rule "wall climbing unused HUD___Counter multiclimb hud":
+rule "wall climbing unused HUD Counter multiclimb hud":
     @Event eachPlayer
-    @Condition eventPlayer.J__ == 2
+    @Condition eventPlayer.WallclimbUsed == 2
     @Condition eventPlayer.hasSpawned() == true
     
     destroyHudText(eventPlayer.MultiClimbCountHUD)
@@ -122,23 +122,21 @@ rule "wall climbing unused HUD___Counter multiclimb hud":
     eventPlayer.MultiClimbCountHUD = getLastCreatedText()
 
 
-rule "wall climbing used HUD___Counter multicimb hud":
+rule "wall climbing used HUD Counter multicimb hud":
     @Event eachPlayer
-    @Condition eventPlayer.J__ == 1
+    @Condition eventPlayer.WallclimbUsed == 1
     @Condition eventPlayer.hasSpawned() == true
     
     destroyHudText(eventPlayer.MultiClimbCountHUD)
     hudHeader(eventPlayer, "Climb", HudPosition.LEFT, 2, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     eventPlayer.MultiClimbCountHUD = getLastCreatedText()
-    if eventPlayer.HUB_DOTS_INDEX == 2:
-        smallMessage(eventPlayer, "Wallclimb ")
 
 
 rule "Wall climb count multiclimb counting":
     @Event eachPlayer
     @Condition eventPlayer.isOnWall() == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
-    @Condition eventPlayer.J__ == 2
+    @Condition eventPlayer.WallclimbUsed == 2
     @Condition eventPlayer.InvincibleToggle == 0
     
     eventPlayer.MultiClimbCount += 1
@@ -156,11 +154,11 @@ rule "Double jump, initialized with small jump":
     #Notes must be read! The effect of this condition being turned on is "Automatically open three stages after customs clearance", 
     #and if it is turned off, it will still be banned for three stages after customs clearance.
     #@Condition eventPlayer.A < len(A) - 1
-    eventPlayer.TY__ = 0
-    eventPlayer.J__ = 2
+    eventPlayer.JumpCount = 0
+    eventPlayer.WallclimbUsed = 2
     eventPlayer.MultiClimbCount = 0
     wait(0)
-    if (eventPlayer.TY__ != 0 or eventPlayer.J__ != 2) and eventPlayer.isOnGround():
+    if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed != 2) and eventPlayer.isOnGround():
         goto RULE_START
     eventPlayer.BhopUsed = 1
 
@@ -202,26 +200,27 @@ rule "Extended function | Climb the wall to refresh double jump(喵喵酱#51379 
     eventPlayer.clearStatusEffect(Status.HACKED)
 
 
-rule "Extended function | Save climb into the checkpoint(TITANXPASCAL#5554 *Remember to create text to prompt players)":
+rule "Force Saveclimb":
     @Event eachPlayer
-    @Condition distance(eventPlayer, CheckpointPositions[eventPlayer.A__ + 1]) <= 2
+    # Extended function | Save climb into the checkpoint(TITANXPASCAL#5554 *Remember to create text to prompt players)
+    @Condition distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= 2
     @Condition createWorkshopSetting(bool, "Extended function", "Save climb into the checkpoint", false, 2) == true
     #Change "-1" to certain Checkpoints' number
-    @Condition eventPlayer.A__ in [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1] == true
+    @Condition eventPlayer.CurrentCheckpoint in [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1] == true
     
     #If all checkpoints need this function, enable this rule and disable Rule: "Array Contains" 
     #@Condition eventPlayer.A < len(A) - 1
-    if eventPlayer.J__ == 1:
+    if eventPlayer.WallclimbUsed == 1:
         kill(eventPlayer, null)
         smallMessage(eventPlayer, "Fail to meet clear condition: Save climb")
 
 
 rule "Extended function | Save Bhop into the checkpoint(TITANXPASCAL#5554 *Remember to create text to prompt players)":
     @Event eachPlayer
-    @Condition distance(eventPlayer, CheckpointPositions[eventPlayer.A__ + 1]) <= 2
+    @Condition distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= 2
     @Condition createWorkshopSetting(bool, "Extended function", "Save Bhop into the checkpoint", false, 3) == true
     #Change "-1" to certain Checkpoints' number
-    @Condition eventPlayer.A__ in [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1] == true
+    @Condition eventPlayer.CurrentCheckpoint in [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1] == true
     
     #If all checkpoints need this function, enable this rule and disable Rule: "Array Contains" 
     #@Condition eventPlayer.A < len(A) - 1
@@ -237,7 +236,7 @@ rule "------------------------------------------------------ bans  -------------
 rule "Ban | Triple Jump":
     @Event eachPlayer
     @Condition eventPlayer.getVerticalSpeed() >= 5.8
-    @Condition eventPlayer.TY__ == 1
+    @Condition eventPlayer.JumpCount == 1
     @Condition eventPlayer.isUsingAbility1() == false
     @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Triple Jump", false, 0) == true
     
@@ -250,7 +249,7 @@ rule "Ban | Multiclimb":
     @Event eachPlayer
     @Condition eventPlayer.isOnWall() == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
-    @Condition eventPlayer.J__ == 2
+    @Condition eventPlayer.WallclimbUsed == 2
     @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Multiclimb", false, 1) == true
     
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
@@ -266,7 +265,7 @@ rule "Ban | Double Bhop":
 rule "Ban | Emote":
     @Event eachPlayer
     @Condition eventPlayer.isCommunicatingEmote() == true
-    @Condition eventPlayer.A__ < len(CheckpointPositions) - 1
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Emote", false, 3) == true
     
     kill(eventPlayer, null)

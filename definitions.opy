@@ -2,40 +2,45 @@
 
 #Global variables
 
-globalvar CheckpointPositions 0 # Checkpoint Positions
-globalvar B__ 1 # Current checkpoint in Editing context, maybe just a TempIterator count
-globalvar CheckpointRings_Editing 2 # Holds checkpoint effects in editing context (shows all ?)
-globalvar DVA 3
-globalvar dva 4
-globalvar Portal1PlayerList 5 # portal1 player list (visiblility)
-globalvar Portal2PlayerList 6 # portal2 player list (visiblility)
-globalvar KillBallPositions 7 # KillBall position
-globalvar KillBallRadii 8 # KillBall radius
-globalvar J__ 9 #  Current checkpoint in editing context? whats difference between B and J
-globalvar KillBallEffects 10 # Array holding killball effects
-globalvar KillBallChase 11 # Kill sphere temp chase lpcation?
-globalvar Dao__ 12 # Dash Enabled for Checkpoint what difference?
-globalvar SHIFT__ 13 # If Dash is enabled for the checkpoint whats difference?
-globalvar SUPERJUMP_unused 14 # UNUSED
-globalvar ListPlayersAtCheckpoints 15  # 2d array checkpoints for index with a list of players at each checkpoint
-globalvar ActivePlayers 16 # I think this is just arr of active players. Non-saved, non-spectating active players
-globalvar R_unused 17 # UNUSED
+globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
+globalvar SelectedCheckpoint_Editing 1      # int                       --- selected checkpoint
+globalvar CheckpointRings_Editing 2         # list[effect]              --- Holds checkpoint effects in editing context
+globalvar Portal1PlayerList 5               # list[player]              --- players who can see portal 1
+globalvar Portal2PlayerList 6               # list[player]              --- players who can see portal 2
+globalvar KillBallPositions 7               # list[vect]                --- KillBall position
+globalvar KillBallRadii 8                   # list[float]               --- KillBall radius, default 5
+globalvar SelectedKillball_Editing 9        # int                       --- Current killball in editing context
+globalvar KillBallEffects 10                # list[effect]              --- Array holding killball effects
+globalvar KillBallChase 11                  # vect                      --- Location of killball while editing, chased.
+globalvar BladeEnabledCheckpoints 12        # int                       --- blade enabled, should be bool.
+globalvar DashEnabledCheckpoints 13         # int                       --- dash enabled, should be bool.
+globalvar ListPlayersAtCheckpoints 15       # list[list[player]]        --- players at a specific checkpoint
+globalvar ActivePlayers 16                  # list[player]              --- Active players, Non-saved, non-spectating active players
 
-# Killball/Bounce Pad editing stuff
-globalvar TQ__ 18
-globalvar TQ1__ 19
-globalvar TQ2__ 20
-globalvar TQ3__ 21
-globalvar EditMode__ 22
-globalvar TQ5__ 23
-globalvar TQ6__ 24
+#Bounce Pad editing stuff
+globalvar BouncePositions 18                # list[vect]                --- list of bouncepad positions
+globalvar CurrentBounce_Editing 19          # int                       --- count of 0-indexed bouncepad pos currently
+globalvar BounceEffects 20                  # list[effects]             --- list of bounce pad effect entities
+globalvar CurrentBouncePosition_Editing 21  # vect                      --- the position we just added to bouncepad positions
+globalvar BounceStrength 22                 # list[float]               --- bouncepad strength
+globalvar BounceToggleUlt 23                # list[bool]                --- toggle ult on bounce
+globalvar BounceToggleDash 24               # list[bool]                --- toggle dash on bounce
 
  
-globalvar TimeLimitSettingToggle_ 25 # level time limit ? ws setting
-globalvar KillballCheckpoints 26 # 2d list of checkpoints that havea kill ball [[0], [3]]
-globalvar BouncePadCheckpoints 27 # 2d list like killballnumber
-globalvar BhopBanFromReset 28 # Ban bhop from reset
-globalvar SavedProgress 30 # saves player data in array for rejoining, sequential data.... should probably be 2d list
+globalvar TimeLimitSettingToggle 25         # bool                      --- checkpoint time limit, ws setting
+globalvar KillballCheckpoints 26            # list[list[int]]           --- 2d list of checkpoints that havea kill ball [[0], [3]]
+globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d list like killballnumber
+globalvar BhopBanFromReset 28               # bool                      --- Ban bhop from reset
+
+# sequential data
+#0 eventPlayer, 
+#1 current checkpoint, 
+#2 timer gets stored here, 
+#3 eventPlayer stored, 
+#4 totalElapsedTime , 
+#5 PausedTimer amount, 
+#6 bool timer paused
+globalvar SavedProgress 30                  # list[Any]                 --- saves player data in array for rejoining, sequential data
 
 # Leaderboard stuff
 globalvar toplistPlayers 32
@@ -43,33 +48,37 @@ globalvar toplistTimes 33
 globalvar toplistSortedTimes 34
 
 
-globalvar BhopBanToggle 35 # Enabled if Bhop is banned
-globalvar TempIterator1 38 # This seems like a tru TempIterator rather than B
+globalvar BhopBanToggle 35                  # bool                      --- Enabled if Bhop is banned
+globalvar TempIterator1 38                  # int                       --- temp iterator
 
 
 #Player variables
 
-playervar A__ 0  # Current Checkpoint ??
-playervar PlayerEffects 1  # Player effect data array 0 - Cur Checkpoint Ring, 1 - Next CP ring, 2 - Lightshaft at next CP, 3 - Arrow icon, 4 - "Come here" text 
-playervar InvincibleToggle 2  # i thikn this is invincible/normal mode toggle
-playervar D__ 3  # Timer
-playervar EditModeSelection 4  # EditMode 2 Killing sphere | 3 Bouncing ball | 1 checkpoint
-playervar SpectateToggle 5  # SpectateToggle
-playervar G_unused 6  # unused?
-playervar PortalText 7  # Portal String inworld text
-playervar I_unused 8  # Unused ? Comment says tutorial HUD set to 2
-playervar J__ 9  # "Climbing the wall prompt" HUD set to 2, multiclimb hud start ?
-playervar GuideToggle 10  # Guide Enabled (1) /Disabled (2)
-playervar L__ 11  # Time trial-like checkpoint?
-playervar TimelimitTimer__ 12 # Timer (countdown?) for time limit
-playervar BhopUsed 14 # Bhop has been used 1, 0 if not
-playervar LeaderboardTimerCapture 19 # Leaderboard Timer capture
-playervar TY__ 26 # some kind of tracking for bhop/multi jumps
-playervar MultiClimbCountHUD 28 # climb counter . HUD entity
-playervar QuickRestartToggle 31 # If quick restart is enabled or not
-playervar MultiClimbCount 32  # climb counter # for HUD
-playervar BhopHUDColor 85 # Color for Bhop HUD
-playervar HUB_DOTS_INDEX 117 # never true? never init. shows "wall climb" text. debug text most likely
+playervar CurrentCheckpoint 0               # int                       --- Current Checkpoint
+
+#PlayerEffects data
+#0 - Current ring, 
+#1 - Next ring, 
+#2 - Next lightshaft, 
+#3 - Next arrow icon, 
+#4 - Next "Come here" text
+playervar PlayerEffects 1                   # list[effect]              --- Player effect data array  
+playervar InvincibleToggle 2                # int                       --- invincible/normal mode toggle, should be bool
+playervar Timer 3                           # float                     --- Timer, chased.
+playervar EditModeSelection 4               # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
+playervar SpectateToggle 5                  # int                       --- Spectate Toggle, should be bool
+playervar PortalText 7                      # In-World Text             --- Portal String inworld text
+playervar WallclimbUsed 9                   # int                       --- 1 if wall climb has been used 2 if not, should be bool
+playervar GuideToggle 10                    # int                       --- Guide Enabled (1) /Disabled (2), should be bool
+playervar TimeLimitTimer 11                 # float                     --- Time limit for each checkpoint, chased
+playervar PauseTimer 12                     # float                     --- time in spectate/invincible, chased
+playervar BhopUsed 14                       # int                       --- Bhop has been used 1, 0 if not, should be bool
+playervar LeaderboardTimerCapture 19        # float                     --- Saves players time for leaderboard
+playervar JumpCount 26                      # int                       --- jump tracking count, 0, 1, 2
+playervar MultiClimbCountHUD 28             # HUD                       --- climb counter
+playervar QuickRestartToggle 31             # int                       --- If quick restart is enabled or not, should be bool
+playervar MultiClimbCount 32                # int                       --- climb count # for HUD
+playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
 
 
 #Subroutine names
