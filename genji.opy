@@ -33,7 +33,6 @@ rule "Setup and Variables":
     KillBallRadii = []
     KillBallEffects = []
     SelectedKillball_Editing = 0
-    ActivePlayers = []
     BouncePositions = []
     BounceEffects = []
     BounceStrength = []
@@ -853,14 +852,9 @@ rule "Checkpoint | HUD":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.hasSpawned() == true
-    smallMessage(getAllPlayers(), "debug1")
-    ActivePlayers.append(eventPlayer)
-    eventPlayer.setDamageDealt(0)
-    if eventPlayer in ActivePlayers:
-        smallMessage(getAllPlayers(), "debug2")
-        hudSubtext(eventPlayer, "{0} {1}".format("level ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-        hudSubtext(eventPlayer, "{0} {1} {2}".format("Time", "{0} sec".format(eventPlayer.Timer), "| time limit: {0}".format(eventPlayer.TimeLimitTimer) if TimeLimitSettingToggle else ""), HudPosition.LEFT, -2, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    
+
+    hudSubtext(eventPlayer, "{0} {1}".format("level ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(eventPlayer, "{0} {1} {2}".format("Time", "{0} sec".format(eventPlayer.Timer), "| time limit: {0}".format(eventPlayer.TimeLimitTimer) if TimeLimitSettingToggle else ""), HudPosition.LEFT, -2, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     #StartGame_Sub is the initialization of the game
     StartGame_Sub()
     eventPlayer.enableDeathSpectateAllPlayers()
@@ -1227,7 +1221,7 @@ rule "Ultimate charge":
 
 rule "Player left the game":
     @Event playerLeft
-    ActivePlayers.remove(eventPlayer)
+
     #if player's cur_checkpoint is 0, delete save info
     if SavedProgress[SavedProgress.index(eventPlayer) - 2] == 0:
         del SavedProgress[SavedProgress.index(eventPlayer) + 1]
