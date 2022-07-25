@@ -3,7 +3,7 @@
 # cheats
 editortoggle(1) # 0 is editor, rest is numbers
 #!define touchground false
-#!define cpcheat false
+#!define cpcheat true
 
 #!include "settings.opy"
 #!include "definitions.opy"
@@ -16,7 +16,7 @@ rule "------------------------------------------------------Turn off the rules a
 
 
 rule "Setup and Variables":
-    disableInspector()
+    # disableInspector()
     getAllPlayers().disableRespawn()
     disableGamemodeCompletion()
     disableScoring()
@@ -118,7 +118,25 @@ rule "debug cheat last cp":
     ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
 
 
-
+def checkpointFailReset():
+    if eventPlayer.EditModeSelection < 1:
+        eventPlayer.setAbility1Enabled(false)
+        eventPlayer.setUltEnabled(false)
+    eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+    eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
+    if TimeLimitSettingToggle == true:
+        eventPlayer.TimeLimitTimer = 0
+        stopChasingVariable(eventPlayer.TimeLimitTimer)
+        eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint if eventPlayer.EditModeSelection > 0 else 0
+    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
+    if BhopBanFromReset == true:
+        eventPlayer.disallowButton(Button.JUMP)
+        wait(0.1)
+        eventPlayer.allowButton(Button.JUMP)
+    if eventPlayer.CurrentCheckpoint == 0:
+        eventPlayer.Timer = 0
+    if eventPlayer.isUsingUltimate():
+        kill(eventPlayer, null)
 
 
 rule "Checkpoint | Position <---------------------------------------------------------------------------- paste here!":
@@ -835,12 +853,14 @@ rule "Checkpoint | HUD":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.hasSpawned() == true
-    
+    smallMessage(getAllPlayers(), "debug1")
+    ActivePlayers.append(eventPlayer)
     eventPlayer.setDamageDealt(0)
     if eventPlayer in ActivePlayers:
+        smallMessage(getAllPlayers(), "debug2")
         hudSubtext(eventPlayer, "{0} {1}".format("level ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-        hudSubtext(eventPlayer, "{0} {1} {2}".format("Time", l"{0} sec".format(eventPlayer.Timer), "| time limit: {0}".format(eventPlayer.TimeLimitTimer) if TimeLimitSettingToggle else ""), HudPosition.LEFT, -2, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    ActivePlayers.append(eventPlayer)
+        hudSubtext(eventPlayer, "{0} {1} {2}".format("Time", "{0} sec".format(eventPlayer.Timer), "| time limit: {0}".format(eventPlayer.TimeLimitTimer) if TimeLimitSettingToggle else ""), HudPosition.LEFT, -2, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    
     #StartGame_Sub is the initialization of the game
     StartGame_Sub()
     eventPlayer.enableDeathSpectateAllPlayers()
@@ -909,12 +929,14 @@ rule "nope":
 rule "Killing Sphere | Damage":
     @Event eachPlayer
     @Hero genji
-    @Condition (KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[0])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[1])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[2])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[3])] == eventPlayer.CurrentCheckpoint) == true
     @Condition eventPlayer.CurrentCheckpoint != 0
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.InvincibleToggle == 0
+    @Condition (KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[0])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[1])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[2])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[3])] == eventPlayer.CurrentCheckpoint) == true
     
-    kill(eventPlayer, null)
+    
+    # kill(eventPlayer, null)
+    checkpointFailReset()
 
 
 rule "Bouncing Ball | Properties":
@@ -1010,34 +1032,35 @@ rule "Death Teleport":
 rule "Landing on Checkpoint (In some circumstances turn off?)":
     @Event eachPlayer
     @Hero genji
-    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])) > 1.4
-    @Condition eventPlayer.isOnGround() == true
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition len(CheckpointPositions) >= 2
     @Condition eventPlayer.InvincibleToggle != 1
     @Condition eventPlayer.SpectateToggle != 1
+    @Condition eventPlayer.isOnGround() == true    
+    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])) > 1.4
     @Condition not touchground
 
     #Do a specific level to open the landing and die and then open it again
     #@Condition (eventPlayer.A == -1 or eventPlayer.A == -1 or eventPlayer.A == -1 or false) == true
-    if eventPlayer.EditModeSelection < 1:
-        eventPlayer.setAbility1Enabled(false)
-        eventPlayer.setUltEnabled(false)
-    eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
-    eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
-    if TimeLimitSettingToggle == true:
-        eventPlayer.TimeLimitTimer = 0
-        stopChasingVariable(eventPlayer.TimeLimitTimer)
-        eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint if eventPlayer.EditModeSelection > 0 else 0
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
-    if BhopBanFromReset == true:
-        eventPlayer.disallowButton(Button.JUMP)
-        wait(0.1)
-        eventPlayer.allowButton(Button.JUMP)
-    if eventPlayer.CurrentCheckpoint == 0:
-        eventPlayer.Timer = 0
-    if eventPlayer.isUsingUltimate():
-        kill(eventPlayer, null)
+    # if eventPlayer.EditModeSelection < 1:
+    #     eventPlayer.setAbility1Enabled(false)
+    #     eventPlayer.setUltEnabled(false)
+    # eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+    # eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
+    # if TimeLimitSettingToggle == true:
+    #     eventPlayer.TimeLimitTimer = 0
+    #     stopChasingVariable(eventPlayer.TimeLimitTimer)
+    #     eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint if eventPlayer.EditModeSelection > 0 else 0
+    # eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
+    # if BhopBanFromReset == true:
+    #     eventPlayer.disallowButton(Button.JUMP)
+    #     wait(0.1)
+    #     eventPlayer.allowButton(Button.JUMP)
+    # if eventPlayer.CurrentCheckpoint == 0:
+    #     eventPlayer.Timer = 0
+    # if eventPlayer.isUsingUltimate():
+    #     kill(eventPlayer, null)
+    checkpointFailReset()
 
 
 rule "Player Effect":

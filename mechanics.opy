@@ -211,7 +211,8 @@ rule "Force Saveclimb":
     #If all checkpoints need this function, enable this rule and disable Rule: "Array Contains" 
     #@Condition eventPlayer.A < len(A) - 1
     if eventPlayer.WallclimbUsed == 1:
-        kill(eventPlayer, null)
+        # kill(eventPlayer, null)
+        checkpointFailReset()
         smallMessage(eventPlayer, "Fail to meet clear condition: Save climb")
 
 
@@ -225,7 +226,8 @@ rule "Extended function | Save Bhop into the checkpoint(TITANXPASCAL#5554 *Remem
     #If all checkpoints need this function, enable this rule and disable Rule: "Array Contains" 
     #@Condition eventPlayer.A < len(A) - 1
     if eventPlayer.BhopUsed == 1:
-        kill(eventPlayer, null)
+        # kill(eventPlayer, null)
+        checkpointFailReset()
         smallMessage(eventPlayer, "Fail to meet clear condition: Save bhop")
 
 rule "------------------------------------------------------ bans  --------------------------":   
@@ -242,7 +244,8 @@ rule "Ban | Triple Jump":
     
     if eventPlayer.isOnWall():
         return
-    eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+    # eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+    checkpointFailReset()
 
 
 rule "Ban | Multiclimb":
@@ -252,7 +255,8 @@ rule "Ban | Multiclimb":
     @Condition eventPlayer.WallclimbUsed == 2
     @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Multiclimb", false, 1) == true
     
-    eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+    # eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+    checkpointFailReset()
     smallMessage(eventPlayer, "{0} {1}".format(heroIcon(Hero.GENJI), ": Multiclimb is Disabled"))
 
 
@@ -268,7 +272,8 @@ rule "Ban | Emote":
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Emote", false, 3) == true
     
-    kill(eventPlayer, null)
+    # kill(eventPlayer, null)
+    checkpointFailReset()
     smallMessage(eventPlayer, "{0} {1}".format(heroIcon(Hero.GENJI), ": Emote jumping is disabled"))
 
 
