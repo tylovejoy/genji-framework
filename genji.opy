@@ -1,36 +1,16 @@
+
+#!define editortoggle(x) __script__("test-maps/togglescript.js")
+# cheats
+editortoggle(1) # 0 is editor, rest is numbers
+#!define touchground false
+#!define cpcheat false
+
 #!include "settings.opy"
 #!include "definitions.opy"
-#!include "editor.opy"
-#!include "addons.opy"
+
 
 
 rule "------------------------------------------------------Turn off the rules above after finishing editing--------------------------":
-    @Delimiter
-    @Disabled
-
-rule "Text <------------------------------------------------- put code and author here!":
-    hudSubtext(getAllPlayers(), "For more maps and records join:", HudPosition.LEFT, -14, Color.PURPLE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers(), "dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.PURPLE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    hudText(getAllPlayers(), "", null, "{0}\r\n{1}".format("MADE BY: Write your nickname here", "CODE: write maps code here"), HudPosition.LEFT, -15, Color.WHITE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-
-
-rule "Friend Title - Displaying your message (on you)":
-    @Event eachPlayer
-    @Condition eventPlayer.hasSpawned() == true
-    
-    #In the field custom string your nickname
-    if "your nickname <-------" == "{0}".format(eventPlayer):
-        bigMessage(getAllPlayers(), "Message to the whole room")
-        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    #Fill in the blank with your friend's name
-    if "your nickname <-------" == "{0}".format(eventPlayer):
-        bigMessage(getAllPlayers(), "Message to the whole room")
-        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-
-rule "Checkpoint | Position <---------------------------------------------------------------------------- paste here!":
-    @Delimiter
-
-rule "------------------------------------------------------ enter data in rule above --------------------------":
     @Delimiter
     @Disabled
 
@@ -92,6 +72,64 @@ rule "Setup and Variables":
     hudSubtext(getAllPlayers(), "press {0} | Quick reset".format(buttonString(Button.RELOAD)), HudPosition.RIGHT, -9, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     TimeLimitSettingToggle = createWorkshopSetting(bool, "Extended function", "Level time limit", false, 0)
 
+
+rule "Text <------------------------------------------------- put code and author here!":
+    hudSubtext(getAllPlayers(), "For more maps and records join:", HudPosition.LEFT, -14, Color.PURPLE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.PURPLE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudText(getAllPlayers(), "", null, "{0}\r\n{1}".format("MADE BY: Write your nickname here", "CODE: write maps code here"), HudPosition.LEFT, -15, Color.WHITE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+
+
+rule "Friend Title - Displaying your message (on you)":
+    @Event eachPlayer
+    @Condition eventPlayer.hasSpawned() == true
+    
+    #In the field custom string your nickname
+    if "your nickname <-------" == "{0}".format(eventPlayer):
+        bigMessage(getAllPlayers(), "Message to the whole room")
+        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+    #Fill in the blank with your friend's name
+    if "your nickname <-------" == "{0}".format(eventPlayer):
+        bigMessage(getAllPlayers(), "Message to the whole room")
+        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+
+
+rule "debugg cheat next cp":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
+    @Condition cpcheat
+    eventPlayer.CurrentCheckpoint += 1
+    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
+    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
+    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
+
+
+rule "debug cheat last cp":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
+    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
+    @Condition eventPlayer.CurrentCheckpoint != 0
+    @Condition cpcheat
+    
+    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
+    eventPlayer.CurrentCheckpoint -= 1
+    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
+    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
+
+
+
+
+
+rule "Checkpoint | Position <---------------------------------------------------------------------------- paste here!":
+    @Delimiter
+
+
+editorordata
+
+rule "------------------------------------------------------ enter data in rule above --------------------------":
+    @Delimiter
+    @Disabled
 
 def CheckpointEffect_Sub():
     @Name "Checkpoint | Effect |-------------------------------------------------SUB0"
@@ -967,6 +1005,8 @@ rule "Death Teleport":
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
 
 
+
+
 rule "Landing on Checkpoint (In some circumstances turn off?)":
     @Event eachPlayer
     @Hero genji
@@ -976,7 +1016,8 @@ rule "Landing on Checkpoint (In some circumstances turn off?)":
     @Condition len(CheckpointPositions) >= 2
     @Condition eventPlayer.InvincibleToggle != 1
     @Condition eventPlayer.SpectateToggle != 1
-    
+    @Condition not touchground
+
     #Do a specific level to open the landing and die and then open it again
     #@Condition (eventPlayer.A == -1 or eventPlayer.A == -1 or eventPlayer.A == -1 or false) == true
     if eventPlayer.EditModeSelection < 1:
@@ -1342,5 +1383,5 @@ rule "Go Backward Checkpoint (Invincible Mode | TimeLimitSetting Enabled)":
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
 
 
-
+#!include "addons.opy"
 #!include "mechanics.opy"
