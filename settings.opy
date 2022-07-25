@@ -16,7 +16,8 @@ settings {
     "gamemodes": {
         "skirmish": {
             "enabledMaps": [
-                "workshopChamber"
+                #"workshopChamber"
+                selectedmap
             ]
         },
         "tdm": {

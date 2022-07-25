@@ -1,0 +1,71 @@
+<html>
+<header>
+<title>CP Data Converter</title>
+</header>
+<body>
+
+<p id="p1">Convertold fw <b>CHECKPOINT</b> data into that of version version x</p>
+
+<textarea id="txtfield" name="txtfield" rows="4" cols="50" style="display:inline-block;width:100%">
+data here
+</textarea>
+
+<button onclick="myFunction()" style="display:inline-block;width:100%;height:50px">Convert</button>
+<button onclick="myFunction2()" style="display:inline-block;width:100%">Copy Results to clipboard</button>
+<input type="checkbox" id="vardefenitions"> test data
+<textarea id="results" readonly style="display:inline-block;width:100%;height:80%;" >results here</textarea>
+
+
+
+<script>
+
+function myFunction(){
+    var data = document.getElementById("txtfield").value
+    var replacingvalues = [
+        ["A","CheckpointPositions", 0],
+        ["H","KillBallPositions", 7],
+        ["I","KillBallRadii", 8],
+        ["killballnumber","KillballCheckpoints", 26],
+        ["pinballnumber","BouncePadCheckpoints", 27],
+        ["save","SavedProgress", 30],
+        ["TQ","BouncePositions", 18],
+        ["TQ1","CurrentBounce_Editing", 19],
+        ["TQ2","BounceEffects", 20],
+        ["TQ3","CurrentBouncePosition_Editing", 21],
+        ["EditMode","BounceStrength", 22],
+        ["TQ5","BounceToggleUlt", 23],
+        ["TQ6","BounceToggleDash", 24]
+    ]
+
+    for(i = 0;i<replacingvalues.length;i++){
+        data = data.replaceAll(": " + replacingvalues[i][0],": " + replacingvalues[i][1])
+    }
+
+    if (document.getElementById("vardefenitions").checked){ 
+        for(i = 0;i<replacingvalues.length;i++){
+            data = data.replaceAll("Global." + replacingvalues[i][0] + " =","Global." + replacingvalues[i][1] + " =")
+        }
+
+    } else {
+        data = data.substring(data.indexOf("actions")) // cut out var defenations
+    }
+
+
+
+    document.getElementById("results").innerHTML = data
+    
+}
+
+function myFunction2(){
+    var a = document.getElementById("results")
+    a.select()
+    a.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(a.value);
+
+}
+
+</script>
+
+
+</body>
+</html>
