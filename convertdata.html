@@ -38,14 +38,15 @@ function myFunction(){
     ]
 
     for(i = 0;i<replacingvalues.length;i++){
-        data = data.replaceAll(": " + replacingvalues[i][0],": " + replacingvalues[i][1])
+        data = data.replaceAll(": " + replacingvalues[i][0],": " + replacingvalues[i][1]) + "\n"
+    }
+
+    for(i = 0;i<replacingvalues.length;i++){
+        data = data.replaceAll("Global." + replacingvalues[i][0] + " =","Global." + replacingvalues[i][1] + " =")
     }
 
     if (document.getElementById("vardefenitions").checked){ 
-        for(i = 0;i<replacingvalues.length;i++){
-            data = data.replaceAll("Global." + replacingvalues[i][0] + " =","Global." + replacingvalues[i][1] + " =")
-        }
-
+  
     } else {
         data = data.substring(data.indexOf("actions")) // cut out var defenations
     }
