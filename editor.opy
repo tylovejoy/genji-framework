@@ -46,7 +46,6 @@ rule "Clear excess data":
     BladeEnabledCheckpoints = 0
     DashEnabledCheckpoints = 0
     ListPlayersAtCheckpoints = 0
-    ActivePlayers = 0
     CurrentBounce_Editing = 0
     TempIterator1 = 0
     BounceEffects = 0
