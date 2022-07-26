@@ -6,13 +6,13 @@ if (x == 0){
 } else {
     datafiles = {
     1: "test-maps/krdata.opy",
-    2: "test-maps/seconddata.opy"
+    2: "test-maps/hollydata.opy"
 
     }[x]
 
     selectedmap = {
     1: "kingsRow",
-    2: "kingsRow"
+    2: "hollywood"
 
 
     }[x]
