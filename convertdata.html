@@ -12,7 +12,7 @@ data here
 
 <button onclick="myFunction()" style="display:inline-block;width:100%;height:50px">Convert</button>
 <button onclick="myFunction2()" style="display:inline-block;width:100%">Copy Results to clipboard</button>
-<input type="checkbox" id="vardefenitions"> test data
+<input type="checkbox" id="overpy"> overpy data (paste full rule in opy format)
 <textarea id="results" readonly style="display:inline-block;width:100%;height:80%;" >results here</textarea>
 
 
@@ -22,6 +22,7 @@ data here
 function myFunction(){
     var data = document.getElementById("txtfield").value
     var replacingvalues = [
+        ["r", "testvalue", 999], //debug
         ["A","CheckpointPositions", 0],
         ["H","KillBallPositions", 7],
         ["I","KillBallRadii", 8],
@@ -34,21 +35,28 @@ function myFunction(){
         ["TQ3","CurrentBouncePosition_Editing", 21],
         ["EditMode","BounceStrength", 22],
         ["TQ5","BounceToggleUlt", 23],
-        ["TQ6","BounceToggleDash", 24]
+        ["TQ6","BounceToggleDash", 24],
+        
     ]
 
-    for(i = 0;i<replacingvalues.length;i++){
-        data = data.replaceAll(": " + replacingvalues[i][0],": " + replacingvalues[i][1]) + "\n"
-    }
+    if (document.getElementById("overpy").checked){ 
+        data = "\n" + data
+        for(i = 0;i<replacingvalues.length;i++){
+            data = data.replaceAll("\n    " + replacingvalues[i][0] + " =","\n    " + replacingvalues[i][1] + " =")
+        }
 
-    for(i = 0;i<replacingvalues.length;i++){
-        data = data.replaceAll("Global." + replacingvalues[i][0] + " =","Global." + replacingvalues[i][1] + " =")
-    }
-
-    if (document.getElementById("vardefenitions").checked){ 
-  
     } else {
-        data = data.substring(data.indexOf("actions")) // cut out var defenations
+        data = data.substring(data.indexOf("actions")) // cut out var defines
+
+        for(i = 0;i<replacingvalues.length;i++){
+            data = data.replaceAll("Global." + replacingvalues[i][0] + " =","Global." + replacingvalues[i][1] + " =")
+        }
+
+        if( data.split("}").length == 3){
+            console.log("3")
+            data = data.substring(0,data.lastIndexOf("}")) + data.substring(data.lastIndexOf("}")+1)
+            console.log(data)
+        }
     }
 
 
@@ -57,6 +65,8 @@ function myFunction(){
     
 }
 
+
+// copy button
 function myFunction2(){
     var a = document.getElementById("results")
     a.select()
