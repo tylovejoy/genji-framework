@@ -78,6 +78,7 @@ playervar JumpCount 26                      # int                       --- jump
 playervar MultiClimbCountHUD 28             # HUD                       --- climb counter
 playervar QuickRestartToggle 31             # int                       --- If quick restart is enabled or not, should be bool
 playervar MultiClimbCount 32                # int                       --- climb count # for HUD
+playervar invis 40                          # bool                      --- invis toggle added by fisho
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
 
 
