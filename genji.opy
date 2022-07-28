@@ -69,6 +69,7 @@ rule "Setup and Variables":
     hudSubtext(getAllPlayers(), "Hold {0} | Spectate".format(buttonString(Button.INTERACT)), HudPosition.RIGHT, -11, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "Hold {0} |  Enable Quick reset".format(buttonString(Button.RELOAD)), HudPosition.RIGHT, -10, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "press {0} | Quick reset".format(buttonString(Button.RELOAD)), HudPosition.RIGHT, -9, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "Hold {0} | Toggle invis".format(buttonString(Button.ABILITY_2)), HudPosition.RIGHT, -8, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     TimeLimitSettingToggle = createWorkshopSetting(bool, "Extended function", "Level time limit", false, 0)
 
 
@@ -94,8 +95,8 @@ rule "Friend Title - Displaying your message (on you)":
 
 rule "debugg cheat next cp":
     @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition cpcheat
     eventPlayer.CurrentCheckpoint += 1
@@ -106,8 +107,8 @@ rule "debugg cheat next cp":
 
 rule "debug cheat last cp":
     @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.CurrentCheckpoint != 0
     @Condition cpcheat
     
@@ -1398,6 +1399,23 @@ rule "Go Backward Checkpoint (Invincible Mode | TimeLimitSetting Enabled)":
     
     eventPlayer.CurrentCheckpoint -= 1 if eventPlayer.CurrentCheckpoint > 0 else 0
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
+
+
+rule "invis toggle":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
+    @Condition eventPlayer.EditModeSelection < 1
+
+    wait(2, Wait.ABORT_WHEN_FALSE)
+    eventPlayer.invis = not eventPlayer.invis
+    eventPlayer.setInvisibility(Invis.NONE)
+    if eventPlayer.invis:
+        eventPlayer.setInvisibility(Invis.ALL)
+
+    smallMessage(eventPlayer, "invis {0}".format("on" if eventPlayer.invis else "off"))    
+    playEffect(eventPlayer, DynamicEffect.DEBUFF_IMPACT_SOUND, null, eventPlayer, 100)
+
+
 
 
 #!include "addons.opy"

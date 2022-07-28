@@ -454,8 +454,8 @@ rule "Show checkpoints":
 
 rule "Jump to next checkpoint":
     @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     
     eventPlayer.CurrentCheckpoint += 1
@@ -466,8 +466,8 @@ rule "Jump to next checkpoint":
 
 rule "Jump to previous checkpoint":
     @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.CurrentCheckpoint != 0
     
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
