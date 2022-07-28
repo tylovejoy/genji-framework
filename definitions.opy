@@ -80,7 +80,7 @@ playervar QuickRestartToggle 31             # int                       --- If q
 playervar MultiClimbCount 32                # int                       --- climb count # for HUD
 playervar invis 40                          # bool                      --- invis toggle added by fisho
 playervar flytoggle 41                      # vector/null               --- null if not flying, else vector position, added by fisho
-playervar savemaphud 42                     # hud od                    --- store save map hud
+playervar savemaphud 42                     # array                     --- array of save map hud ids
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
 
 
