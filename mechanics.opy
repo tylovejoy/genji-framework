@@ -178,6 +178,7 @@ rule "Extended function | Strengthen stall (家里有妖怪#5202 | Easier to sta
     eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
     waitUntil(not eventPlayer.isMoving(), 10)
     eventPlayer.stopForcingPosition()
+    eventPlayer.flytoggle = null
     eventPlayer.setMoveSpeed(0)
     eventPlayer.setGravity(0)
     wait(3)

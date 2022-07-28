@@ -1,9 +1,9 @@
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 # cheats
-editortoggle(2) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #!define touchground false
-#!define cpcheat true
+#!define cpcheat false
 
 #!include "settings.opy"
 #!include "definitions.opy"
@@ -69,6 +69,7 @@ rule "Setup and Variables":
     hudSubtext(getAllPlayers(), "Hold {0} | Spectate".format(buttonString(Button.INTERACT)), HudPosition.RIGHT, -11, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "Hold {0} |  Enable Quick reset".format(buttonString(Button.RELOAD)), HudPosition.RIGHT, -10, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "press {0} | Quick reset".format(buttonString(Button.RELOAD)), HudPosition.RIGHT, -9, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "Hold {0} | Toggle invis".format(buttonString(Button.ABILITY_2)), HudPosition.RIGHT, -8, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     TimeLimitSettingToggle = createWorkshopSetting(bool, "Extended function", "Level time limit", false, 0)
 
 
@@ -92,29 +93,28 @@ rule "Friend Title - Displaying your message (on you)":
         createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
 
-rule "debugg cheat next cp":
+rule "fisho cp cheat for overpy toggle":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
+    @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
     @Condition cpcheat
-    eventPlayer.CurrentCheckpoint += 1
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
+
+    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
+        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
+        eventPlayer.CurrentCheckpoint -= 1
+        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
+        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
+    else:
+        eventPlayer.CurrentCheckpoint += 1
+        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
+        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
+        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
+        eventPlayer.Timer += 9999 
 
 
-rule "debug cheat last cp":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
-    @Condition eventPlayer.CurrentCheckpoint != 0
-    @Condition cpcheat
+
+
     
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
-    eventPlayer.CurrentCheckpoint -= 1
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
 
 
 def checkpointFailReset():
@@ -853,8 +853,10 @@ rule "Checkpoint | HUD":
     @Hero genji
     @Condition eventPlayer.hasSpawned() == true
 
+    hudSubheader(eventPlayer,"{0}{1}".format("Invis on\n" if eventPlayer.invis else "","You are invincible" if eventPlayer.InvincibleToggle else "") , HudPosition.TOP, -12, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(eventPlayer, "{0} {1}".format("level ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(eventPlayer, "{0} {1} {2}".format("Time", "{0} sec".format(eventPlayer.Timer), "| time limit: {0}".format(eventPlayer.TimeLimitTimer) if TimeLimitSettingToggle else ""), HudPosition.LEFT, -2, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+   
     #StartGame_Sub is the initialization of the game
     StartGame_Sub()
     eventPlayer.enableDeathSpectateAllPlayers()
@@ -1182,6 +1184,7 @@ rule "Combo | Invincible/Normal mode":
         lbl_0:
         stopChasingVariable(eventPlayer.Timer)
         bigMessage(eventPlayer, "Invincible mode")
+        eventPlayer.flytoggle = null
         eventPlayer.stopForcingPosition()
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
@@ -1204,6 +1207,7 @@ rule "Combo | Invincible/Normal mode":
         bigMessage(eventPlayer, "Normal mode")
         chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
         eventPlayer.stopForcingPosition()
+        eventPlayer.flytoggle = null
         stopChasingVariable(eventPlayer.PauseTimer)
         SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 5] = eventPlayer.PauseTimer
         eventPlayer.PauseTimer = 0
@@ -1268,6 +1272,7 @@ rule "Combo | Quick Reset":
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
         wait(0.1)
         eventPlayer.stopForcingPosition()
+        eventPlayer.flytoggle = null
     wait(1, Wait.ABORT_WHEN_FALSE)
     if eventPlayer.QuickRestartToggle == false:
         eventPlayer.QuickRestartToggle = true
@@ -1400,5 +1405,28 @@ rule "Go Backward Checkpoint (Invincible Mode | TimeLimitSetting Enabled)":
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
 
 
+rule "invis toggle":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
+    @Condition eventPlayer.EditModeSelection < 1
+
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    eventPlayer.invis = not eventPlayer.invis
+    eventPlayer.setInvisibility(Invis.NONE)
+    if eventPlayer.invis:
+        eventPlayer.setInvisibility(Invis.ALL)
+
+    smallMessage(eventPlayer, "invis {0}".format("on" if eventPlayer.invis else "off"))    
+    playEffect(eventPlayer, DynamicEffect.DEBUFF_IMPACT_SOUND, null, eventPlayer, 100)
+
+/*
+# hud test
+globalvar itemp
+rule "test hud":
+    hudHeader(getAllPlayers(), getNumberOfTextIds(), HudPosition.TOP, 0, Color.RED, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+
+    for itemp in range(12):
+        createDummy(Hero.GENJI, Team.1, -1, null, null)
+*/
 #!include "addons.opy"
 #!include "mechanics.opy"
