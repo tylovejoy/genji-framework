@@ -141,6 +141,7 @@ globalvar toplistSortedTimes 34
 globalvar BhopBanToggle 35                  # bool                      --- Enabled if Bhop is banned
 globalvar TempIterator1 38                  # int                       --- temp iterator
 
+globalvar DashExploitToggle 39
 
 #Player variables
 

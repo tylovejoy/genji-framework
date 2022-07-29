@@ -1088,7 +1088,7 @@ rule "Combo | Reset the run | RESTART":
         CheckpointEffect_Sub()
         #This action is "eliminate the display of player clearance results"
         destroyHudText(eventPlayer.PlayerEffects[7])
-    waitUntil(!eventPlayer.isUsingAbility2() and toggle)
+    waitUntil(not eventPlayer.isUsingAbility2() and DashExploitToggle, 0.5)
     eventPlayer.CurrentCheckpoint = 0
     StartGame_Sub()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
