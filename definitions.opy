@@ -1,7 +1,97 @@
 #!mainFile "genji.opy"
 
-#Global variables
+# ----------------GLOBAL------------------
+#!define CheckpointPositions A
+#!define SelectedCheckpoint_Editing B
+#!define CheckpointRings_Editing C 
+#3 DVA
+#4 dva
+#!define Portal1PlayerList F
+#!define Portal2PlayerList G
+#!define KillBallPositions H
+#!define KillBallRadii I
+#!define SelectedKillball_Editing J
+#!define KillBallEffects K
+#!define KillBallChase L
+#!define BladeEnabledCheckpoints Dao
+#!define DashEnabledCheckpoints SHIFT
+#14 O
+#!define ListPlayersAtCheckpoints P
+#!define ActivePlayers Q
+#17 R
+#Bounce Pad editing stuff
+#!define BouncePositions TQ
+#!define CurrentBounce_Editing TQ1
+#!define BounceEffects TQ2
+#!define CurrentBouncePosition_Editing TQ3
+#!define BounceStrength EditMode
+#!define BounceToggleUlt TQ5
+#!define BounceToggleDash TQ6
 
+#!define TimeLimitSettingToggle kz_xs
+#!define KillballCheckpoints killballnumber
+#!define BouncePadCheckpoints pinballnumber
+#!define BhopBanFromReset deathjump
+#29
+#!define SavedProgress save
+##!define toplistPlayers toplistPlayers
+##!define toplistTimes toplistTimes
+##!define toplistSortedTimes toplistSortedTimes
+#!define BhopBanToggle kaxiaotiao
+#36
+#37
+#!define TempIterator1 NANBA
+
+
+# ----------------PLAYER------------------
+#!define CurrentCheckpoint A
+#!define PlayerEffects B
+#!define InvincibleToggle C
+#!define Timer D
+#!define EditModeSelection E
+#!define SpectateToggle F
+#6 G
+#!define PortalText H
+#8 I
+#!define WallclimbUsed J
+#!define GuideToggle K
+#!define TimeLimitTimer L
+#!define PauseTimer ztjs
+#13
+#!define BhopUsed O
+#15
+#16
+#17
+#18
+#!define LeaderboardTimerCapture T
+#20
+#21
+#22
+#23
+#24
+#25
+#!define JumpCount TY
+#27
+#!define MultiClimbCountHUD paqiang   
+#29
+#30
+#!define QuickRestartToggle quick_restart     
+#!define MultiClimbCount climbNum        
+           
+#!define BhopHUDColor CH           
+
+
+# ----------------SUBS------------------
+#!define CheckpointEffect_Sub Sub0
+#!define StartGame_Sub Sub1
+##!define KILLBALL KILLBALL
+##!define pinball pinball
+
+
+
+
+
+#Global variables
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 globalvar SelectedCheckpoint_Editing 1      # int                       --- selected checkpoint
 globalvar CheckpointRings_Editing 2         # list[effect]              --- Holds checkpoint effects in editing context
