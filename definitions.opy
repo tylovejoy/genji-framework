@@ -1,4 +1,4 @@
-#!mainFile "genji.opy"
+#!mainFile "genji.opy"    
 
 #Global variables
 

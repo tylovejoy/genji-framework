@@ -3,7 +3,7 @@
 # cheats
 editortoggle(0) # 0 is editor, rest is numbers
 #!define touchground false
-#!define cpcheat false
+#!define cpcheat true
 
 #!include "settings.opy"
 #!include "definitions.opy"
@@ -1172,6 +1172,7 @@ rule "Combo | Invincible/Normal mode":
     @Condition eventPlayer.isUsingUltimate() == false
     
     eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], true)
+    eventPlayer.flytoggle = null
     if eventPlayer.InvincibleToggle == 0:
         chase(eventPlayer.PauseTimer, 999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
         SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 2] = eventPlayer.Timer
@@ -1264,6 +1265,7 @@ rule "Combo | Quick Reset":
         return
     if eventPlayer.QuickRestartToggle == true:
         eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], true)
+        eventPlayer.flytoggle = null
         if eventPlayer.EditModeSelection >= 1 or eventPlayer.InvincibleToggle == 1:
             goto lbl_0
         eventPlayer.setUltEnabled(false)
@@ -1419,14 +1421,39 @@ rule "invis toggle":
     smallMessage(eventPlayer, "invis {0}".format("on" if eventPlayer.invis else "off"))    
     playEffect(eventPlayer, DynamicEffect.DEBUFF_IMPACT_SOUND, null, eventPlayer, 100)
 
-/*
-# hud test
-globalvar itemp
-rule "test hud":
-    hudHeader(getAllPlayers(), getNumberOfTextIds(), HudPosition.TOP, 0, Color.RED, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
+
+
+
+globalvar itemp
+rule "leaderboard test bots":
+    wait(8) # wait for other entities to be created
     for itemp in range(12):
+     
         createDummy(Hero.GENJI, Team.1, -1, null, null)
-*/
+        wait(0.1)
+        getLastCreatedEntity().startForcingName("bot number: {0}".format(len([i for i in getAllPlayers() if i.isDummy() and i.getCurrentHero() == Hero.GENJI]) ))
+        
+
+    itemp = 9999
+
+rule "leaderboard test ai":
+    @Event eachPlayer
+    @Hero genji
+    @Condition eventPlayer.isDummy()
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
+    @Condition itemp == 9999
+    # jump each ######################
+    #wait(0.5 + eventPlayer.getSlot()/30)
+    #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]+Vector.UP)
+    #if RULE_CONDITION:
+    #    goto RULE_START
+    
+    # jump to last ###############################
+    wait(1 + eventPlayer.getSlot())
+    eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 1
+    ##eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint]) # teleport not needed
+
+
 #!include "addons.opy"
 #!include "mechanics.opy"
