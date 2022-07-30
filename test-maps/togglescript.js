@@ -1,7 +1,6 @@
+
 if (x == 0){
-    x = `#!define editorordata #!include "editor.opy" \n #!define selectedmap "workshopChamber" `
-
-
+    x = `#!define editorordata #\n #!define selectedmap "workshopChamber"\n#!define editoron true`
 
 } else {
     datafiles = {
@@ -16,11 +15,9 @@ if (x == 0){
     2: "hollywood",
     3: "route66",
     4: "workshopChamber"
-
-
     }[x]
 
-    x = '#!define editorordata #!include "'+ datafiles + '"\n #!define selectedmap "' + selectedmap + '"'
+    x = '#!define editorordata #!include "'+ datafiles + '"\n #!define selectedmap "' + selectedmap + '"' + '\n #!define editoron false'
 
 }
 
