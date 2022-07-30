@@ -1,0 +1,12 @@
+rule "testdata":
+    A = [vect(10.025, 0, -7.273), vect(3.51, 0, -6.919), vect(-3.654, 0, -7.654)]
+    H = []
+    I = []
+    P = [0, [0], [0, null, null, null, null]]
+    TQ = []
+    EditMode = []
+    TQ5 = []
+    TQ6 = []
+    killballnumber = []
+    pinballnumber = []
+    save = [75.551, 0, 0, "bot number: 11", 2, 21.552, null, 77.551, 0, 0]

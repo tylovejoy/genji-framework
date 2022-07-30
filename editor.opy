@@ -52,6 +52,7 @@ rule "Clear excess data":
     CurrentBouncePosition_Editing = 0
     SavedProgress = 0
     TimeLimitSettingToggle = 0
+    LeaderBoardFull = []
     #bigMessage(getAllPlayers(), "Excess data has been cleared")
     #bigMessage(getAllPlayers(), "Excess data has been cleared")
     enableInspector()
@@ -102,9 +103,9 @@ rule "Fly toggle editor":
     
 
     eventPlayer.enableEnvironmentCollision()
-    if eventPlayer.flytoggle != null:
-        eventPlayer.flytoggle = null
-        eventPlayer.stopForcingPosition()
+    #if eventPlayer.flytoggle != null:
+    eventPlayer.flytoggle = null
+    eventPlayer.stopForcingPosition()
 
     wait(1)
 
@@ -123,6 +124,7 @@ rule "Change editing mode":
     @Condition eventPlayer == hostPlayer
     
     wait(1, Wait.ABORT_WHEN_FALSE)
+    eventPlayer.flytoggle = null
     if eventPlayer.EditModeSelection == 1:
         eventPlayer.EditModeSelection = 2
         smallMessage(hostPlayer, "Current mode: Killing sphere")
@@ -379,7 +381,12 @@ rule "Add a teleport":
     
     if hostPlayer.isHoldingButton(Button.MELEE):
         return
-    CheckpointPositions[SelectedCheckpoint_Editing] = [CheckpointPositions[SelectedCheckpoint_Editing][0] if len(CheckpointPositions[SelectedCheckpoint_Editing]) != 0 else CheckpointPositions[SelectedCheckpoint_Editing], hostPlayer.getPosition()]
+    CheckpointPositions[SelectedCheckpoint_Editing] = [
+        CheckpointPositions[SelectedCheckpoint_Editing][0] 
+            if len(CheckpointPositions[SelectedCheckpoint_Editing]) != 0 else 
+            CheckpointPositions[SelectedCheckpoint_Editing], hostPlayer.getPosition()
+            ]
+
     smallMessage(getAllPlayers(), "Teleport has been added for checkpoint {0}".format(SelectedCheckpoint_Editing))
 
 
@@ -536,9 +543,11 @@ rule "Guide HUD":
         HudPosition.LEFT, -12, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
-    hudText(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
+    hudText(getAllPlayers(), #if hostPlayer.GuideToggle == 1 else null, 
         "Hold Dash to change editing mode\n"
-        "Current mode: {0}".format(["Checkpoints","Killing Sphere","Bouncing Ball"][hostPlayer.EditModeSelection -1]),
+        "Current mode: {0}".format(["Checkpoints","Killing Sphere","Bouncing Ball"][hostPlayer.EditModeSelection -1])
+        if localPlayer == hostPlayer else "Current editor/host: {0}".format(hostPlayer)
+        ,
         null,        
         "Hold Q+LMB=Turn Ultimate On/Off\n"
         "Hold Q+RMB=Turn Dash On/Off" if hostPlayer.EditModeSelection == 3 else "",
@@ -553,7 +562,7 @@ rule "Guide HUD effects":
     #createEffect(getAllPlayers(), Effect.SPHERE, Color.RED, H[J], I[J], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createEffect(getAllPlayers(), Effect.GOOD_AURA, Color.PURPLE, BouncePositions[CurrentBounce_Editing], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     #Don't open it easily, the action will be too long
-    hudText(getAllPlayers(), [].concat(0).concat("Selected Checkpoint's number: {0}".format(SelectedCheckpoint_Editing)).concat("Current Killing Sphere's radius: {0}".format(KillBallRadii[SelectedKillball_Editing])).concat("Current Bouncing Ball's strenght: {0}".format(BounceStrength[CurrentBounce_Editing]))[hostPlayer.EditModeSelection], null, [].concat("").concat("").concat("").concat("Current Bouncing Ball's Ultimate: {0}\r\nCurrent Bouncing Ball's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]))[hostPlayer.EditModeSelection], HudPosition.TOP, -14, Color.RED, Color.WHITE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudText(hostPlayer, [].concat(0).concat("Selected Checkpoint's number: {0}".format(SelectedCheckpoint_Editing)).concat("Current Killing Sphere's radius: {0}".format(KillBallRadii[SelectedKillball_Editing])).concat("Current Bouncing Ball's strenght: {0}".format(BounceStrength[CurrentBounce_Editing]))[hostPlayer.EditModeSelection], null, [].concat("").concat("").concat("").concat("Current Bouncing Ball's Ultimate: {0}\r\nCurrent Bouncing Ball's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]))[hostPlayer.EditModeSelection], HudPosition.TOP, -14, Color.RED, Color.WHITE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     createInWorldText(getAllPlayers(), "Selected Killing Sphere", KillBallPositions[SelectedKillball_Editing], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
     createEffect(getAllPlayers(), Effect.ORB, Color.RED, KillBallChase, 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createInWorldText(hostPlayer, l"{0} m".format(distance(hostPlayer, KillBallChase)), KillBallChase - vect(0, 1.5, 0), 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
