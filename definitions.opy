@@ -133,10 +133,10 @@ globalvar DeathBhopBan 28               # bool                      --- Ban bhop
 globalvar SavedProgress 30                  # list[Any]                 --- saves player data in array for rejoining, sequential data
 
 # Leaderboard stuff
-globalvar toplistPlayers 32
-globalvar toplistTimes 33
-globalvar toplistSortedTimes 34
-
+#globalvar toplistPlayers 32
+#globalvar toplistTimes 33
+#globalvar toplistSortedTimes 34
+globalvar LeaderBoardFull 32                # [ [name,time] ]           -- sorted list of 0-20 leaderboard entries
 
 globalvar BhopBanToggle 35                  # bool                      --- Enabled if Bhop is banned
 globalvar TempIterator1 38                  # int                       --- temp iterator
@@ -164,7 +164,8 @@ playervar GuideToggle 10                    # int                       --- Guid
 playervar TimeLimitTimer 11                 # float                     --- Time limit for each checkpoint, chased
 playervar PauseTimer 12                     # float                     --- time in spectate/invincible, chased
 playervar BhopUsed 14                       # int                       --- Bhop has been used 1, 0 if not, should be bool
-playervar LeaderboardTimerCapture 19        # float                     --- Saves players time for leaderboard
+#playervar LeaderboardTimerCapture 19        # float                     --- Saves players time for leaderboard
+playervar LeaderboardToggle 19              # bool                      --- show/hide leaderboard
 playervar JumpCount 26                      # int                       --- jump tracking count, 0, 1, 2
 playervar MultiClimbCountHUD 28             # HUD                       --- climb counter
 playervar QuickRestartToggle 31             # int                       --- If quick restart is enabled or not, should be bool
@@ -181,4 +182,4 @@ subroutine CheckpointEffect_Sub 0
 subroutine StartGame_Sub 1
 subroutine KILLBALL 3
 subroutine pinball 4
-
+subroutine Leaderboardupdate # fishos

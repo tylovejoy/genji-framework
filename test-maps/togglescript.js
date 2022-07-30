@@ -7,13 +7,15 @@ if (x == 0){
     datafiles = {
     1: "test-maps/krdata.opy",
     2: "test-maps/hollydata.opy",
-    3: "test-maps/route.opy"
+    3: "test-maps/route.opy",
+    4: "test-maps/minimap.opy"
     }[x]
 
     selectedmap = {
     1: "kingsRow",
     2: "hollywood",
-    3: "route66"
+    3: "route66",
+    4: "workshopChamber"
 
 
     }[x]
