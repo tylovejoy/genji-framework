@@ -278,8 +278,13 @@ rule "Ban | Emote":
     smallMessage(eventPlayer, "{0} {1}".format(heroIcon(Hero.GENJI), ": Emote jumping is disabled"))
 
 
-rule "Ban | Bhop from Reset":
-    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban bhop from reset", false, 4) == true
+rule "Ban | Deathbhop":
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Deathbhop", false, 4) == true
     
-    BhopBanFromReset = true
+    DeathBhopBan = true
 
+
+rule "Ban | Dash Exploit":
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Dash Exploit", false, 4) == true
+    
+    DashExploitToggle = true
