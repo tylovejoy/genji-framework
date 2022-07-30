@@ -31,7 +31,7 @@
 #!define TimeLimitSettingToggle kz_xs
 #!define KillballCheckpoints killballnumber
 #!define BouncePadCheckpoints pinballnumber
-#!define BhopBanFromReset deathjump
+#!define DeathBhopBan deathjump
 #29
 #!define SavedProgress save
 ##!define toplistPlayers toplistPlayers
@@ -120,7 +120,7 @@ globalvar BounceToggleDash 24               # list[bool]                --- togg
 globalvar TimeLimitSettingToggle 25         # bool                      --- checkpoint time limit, ws setting
 globalvar KillballCheckpoints 26            # list[list[int]]           --- 2d list of checkpoints that havea kill ball [[0], [3]]
 globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d list like killballnumber
-globalvar BhopBanFromReset 28               # bool                      --- Ban bhop from reset
+globalvar DeathBhopBan 28               # bool                      --- Ban bhop from reset
 
 # sequential data
 #0 eventPlayer, 
@@ -141,6 +141,7 @@ globalvar toplistSortedTimes 34
 globalvar BhopBanToggle 35                  # bool                      --- Enabled if Bhop is banned
 globalvar TempIterator1 38                  # int                       --- temp iterator
 
+globalvar DashExploitToggle 39
 
 #Player variables
 

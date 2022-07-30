@@ -128,7 +128,8 @@ def checkpointFailReset():
         stopChasingVariable(eventPlayer.TimeLimitTimer)
         eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint if eventPlayer.EditModeSelection > 0 else 0
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
-    if BhopBanFromReset == true:
+    if DeathBhopBan == true:
+
         eventPlayer.disallowButton(Button.JUMP)
         wait(0.1)
         eventPlayer.allowButton(Button.JUMP)
@@ -1048,7 +1049,7 @@ rule "Landing on Checkpoint (In some circumstances turn off?)":
     #     stopChasingVariable(eventPlayer.TimeLimitTimer)
     #     eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint if eventPlayer.EditModeSelection > 0 else 0
     # eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
-    # if BhopBanFromReset == true:
+    # if DeathBhopBan == true:
     #     eventPlayer.disallowButton(Button.JUMP)
     #     wait(0.1)
     #     eventPlayer.allowButton(Button.JUMP)
@@ -1087,6 +1088,8 @@ rule "Combo | Reset the run | RESTART":
         CheckpointEffect_Sub()
         #This action is "eliminate the display of player clearance results"
         destroyHudText(eventPlayer.PlayerEffects[7])
+    waitUntil(not eventPlayer.isUsingAbility2() and DashExploitToggle, 0.5)
+    eventPlayer.CurrentCheckpoint = 0
     StartGame_Sub()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     Portal1PlayerList.remove(eventPlayer)
