@@ -1,7 +1,7 @@
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 # cheats
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(3) # 0 is editor, rest is numbers
 #!define touchground false
 #!define cpcheat true
 
@@ -1423,8 +1423,7 @@ rule "invis toggle":
 
 
 
-
-
+/*
 globalvar itemp
 rule "leaderboard test bots":
     wait(8) # wait for other entities to be created
@@ -1453,7 +1452,7 @@ rule "leaderboard test ai":
     wait(1 + eventPlayer.getSlot())
     eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 1
     ##eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint]) # teleport not needed
-
+*/
 
 #!include "addons.opy"
 #!include "mechanics.opy"
