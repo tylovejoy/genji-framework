@@ -2,8 +2,8 @@
 
 settings {
     "main": {
-        "description": "Genji parkour Editor\r\nCode:Q11RM\r\nCreated by:易忘#51876\r\nUdpated by: 五里雾中#51574\r\nTranslated by: Xerteks#2929,FATHER\r\n2022.05.22",
-        "modeName": "Genji parkour"
+        "description": "  ~ The Official Genji Parkour Editor ~\nCode: XXXXX\nAdapted by: nebula#11571/FishoFire#2431",
+        "modeName": "Genji Parkour V.0.9 pre-beta"
     },
     "lobby": {
         "allowPlayersInQueue": true,

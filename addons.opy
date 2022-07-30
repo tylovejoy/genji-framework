@@ -1,6 +1,6 @@
 #!mainFile "genji.opy"
 
-rule "-------------------------------------------Addons-------------------------------------------------------":
+rule "------------------------------------------------------------------------ Addons  ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
 
@@ -94,7 +94,7 @@ rule "Portal Effects":
     #Change Vector  (0, 0, 0) to starting position of Portal 3-1
     createInWorldText(Portal1PlayerList, "to next map", vect(0, 0, 0), 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.YELLOW, SpecVisibility.DEFAULT)
 
-rule "Open the portal view ——————————— Open in a specific checkpoint ————————————":
+rule "Open the portal view < Open in a specific checkpoint ":
     @Disabled
     @Event eachPlayer
     #Change "-1" to the number of checkpoints of the checkpoint where the two portals are located
@@ -113,7 +113,7 @@ rule "Open the portal view ——————————— Open in a specific 
         Portal1PlayerList.append(eventPlayer)
         eventPlayer.PortalText = 2
 
-rule "Close the portal view ——————————— Close in certain checkpoints ————————————":
+rule "Close the portal view < Close in certain checkpoints":
     @Disabled
     @Event eachPlayer
     #Modify "-2" to the number of checkpoints after the two portals have been teleported

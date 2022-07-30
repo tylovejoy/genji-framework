@@ -2,11 +2,12 @@
 
 
 
-rule "------------------------------------------------------Turn off the rules below after finishing editing--------------------------":   
+rule "------------------------------------------------------------------------  Editor ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
-
-rule "inspector":
+    
+rule "inspector update every 10 sec":
+    @Condition EditorOn
     disableInspector()
     wait(10)
     enableInspector()
@@ -15,6 +16,7 @@ rule "inspector":
 
 rule "Hide/Show Guide HUD":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.EditModeSelection >= 1
@@ -29,8 +31,9 @@ rule "Hide/Show Guide HUD":
         smallMessage(getAllPlayers(), "Guide is open")
 
 
-rule "Clear excess data":
+rule "Clear excess data and save map":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
@@ -58,31 +61,57 @@ rule "Clear excess data":
     enableInspector()
 
     hudHeader(eventPlayer, 
-        " \n"
-        " 0. open this window to clear data excess (done)\n\n"
-        " 1. Open Workshop Inspector\n Set variable target as global\n click the [x]\n\n"
-        " 2. Open Workshop Editor\n open [Checkpoint | Position]\n CLICK THE YELLOW [+] SIGN \n\n"
-        " 3. TURN OFF EDIT RULES\n\n"
-        " 4. ESC→SHOW LOBBY→SETTINGS→SHARE CODE→\n CREATE NEW CODE→COPY CODE\n\n"
-        " 5. OPEN WORKSHOP EDITOR\n PASTE MAP CODE AND THE AUTHOR NAME IN the \"TEXT\" rule \n\n"
-        " 6. ESC→SHOW LOBBY→SETTINGS→SHARE CODE→\n UPLOAD TO EXISTING CODE→\n"
-        " PASTE THE CODE YOU CREATED IN STEP 5 \n\n"
+        "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
+        "   0. clear excess data:\n"
+        " Automatically done when opening this window\n\n"
+
+        "   1. Copy data:\n" 
+        " Open Workshop Inspector → Set variable target as global\n"
+        " click the [x]\n\n"
+
+        "   2. Insert data:\n"
+        " Paste the data in the rule named 'map data pasta' (last rule)\n\n" 
+
+        "   3. Turn editor off:\n"
+        " ESC→SHOW LOBBY→SETTINGS→ workshop settings →\n"
+        " toggle 'Editor mode' off\n"
         , HudPosition.TOP, -99, Color.LIME_GREEN, HudReeval.NONE
     )
     eventPlayer.savemaphud[0] = getLastCreatedText()
+
     hudHeader(eventPlayer, 
-        "    > Press Interact to hide this window <    "
+        "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
+        "   4. Create intial sharecode:\n" 
+        " ESC→SHOW LOBBY→SETTINGS→SHARE CODE→\n"
+        " CREATE NEW CODE→COPY CODE\n\n"
+
+        "   5. Add credits:\n" 
+        " Enter your name & map code in the 'Credits here' rule\n"
+        " (second to last rule) \n\n"
+        
+        "   6. Update for credits:\n"
+        " ESC→SHOW LOBBY→SETTINGS→SHARE CODE→\n"
+        " UPLOAD TO EXISTING CODE→ PASTE THE CODE YOU CREATED IN STEP 4\n"
         , HudPosition.TOP, -98, Color.LIME_GREEN, HudReeval.NONE
     )
     eventPlayer.savemaphud[1] = getLastCreatedText()
+
+    hudHeader(eventPlayer, 
+        "    > Press Interact to close this window <    "
+        , HudPosition.TOP, -97, Color.LIME_GREEN, HudReeval.NONE
+    )
+    eventPlayer.savemaphud[2] = getLastCreatedText()
+
     waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), 9999)
     waitUntil(eventPlayer.isHoldingButton(Button.INTERACT), 9999)
     destroyHudText(eventPlayer.savemaphud[0])
     destroyHudText(eventPlayer.savemaphud[1])
+    destroyHudText(eventPlayer.savemaphud[2])
 
 
-rule "Fly toggle editor":
+rule "Fly toggle":
     @Event eachPlayer
+    @Condition EditorOn
     #@Condition eventPlayer.EditModeSelection > 0
     @Condition eventPlayer.EditModeSelection == 1
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
@@ -120,6 +149,7 @@ rule "Deflect TP":
 
 rule "Change editing mode":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1) == true
     @Condition eventPlayer == hostPlayer
     
@@ -138,6 +168,7 @@ rule "Change editing mode":
 
 rule "Change Killing Sphere size (increase)":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
     @Condition eventPlayer == hostPlayer
@@ -163,6 +194,7 @@ rule "Change Killing Sphere size (increase)":
 
 rule "Change Killing Sphere size (decrease)":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer == hostPlayer
@@ -183,6 +215,7 @@ rule "Change Killing Sphere size (decrease)":
 
 rule "Bouncing Ball strenght":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer == hostPlayer
@@ -198,6 +231,7 @@ rule "Bouncing Ball strenght":
 
 rule "Move the Killing sphere (toward)":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
     @Condition eventPlayer == hostPlayer
@@ -235,6 +269,7 @@ rule "Move the Killing sphere (toward)":
 
 rule "Move the Killing sphere (backward)":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
     @Condition eventPlayer == hostPlayer
@@ -270,8 +305,9 @@ rule "Move the Killing sphere (backward)":
         pinball()
 
 
-rule "Edit mode":
+rule "Guide hud on spawn":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.hasSpawned() == true
     
     eventPlayer.EditModeSelection = 1
@@ -280,6 +316,7 @@ rule "Edit mode":
 
 rule "Create Checkpoint":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
     @Condition eventPlayer == hostPlayer
@@ -322,6 +359,7 @@ rule "Create Checkpoint":
 
 rule "Delete Checkpoint":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
     @Condition eventPlayer == hostPlayer
@@ -362,6 +400,7 @@ rule "Delete Checkpoint":
 
 rule "Move checkpoint":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer == hostPlayer
@@ -372,6 +411,7 @@ rule "Move checkpoint":
 
 
 rule "Add a teleport":
+    @Condition EditorOn
     @Condition hostPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition hostPlayer.isHoldingButton(Button.RELOAD) == true
     @Condition len(CheckpointPositions) > 1
@@ -392,6 +432,7 @@ rule "Add a teleport":
 
 rule "Swap selected point (back)":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer == hostPlayer
@@ -417,6 +458,7 @@ rule "Swap selected point (back)":
 
 rule "Swap selected point (forward)":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
     @Condition eventPlayer == hostPlayer
@@ -442,6 +484,7 @@ rule "Swap selected point (forward)":
 
 rule "Bouncing Ball turn on/off ultimate":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
     @Condition eventPlayer == hostPlayer
@@ -457,6 +500,7 @@ rule "Bouncing Ball turn on/off ultimate":
 
 rule "Bouncing Ball turn on/off dash":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
     @Condition eventPlayer == hostPlayer
@@ -471,14 +515,13 @@ rule "Bouncing Ball turn on/off dash":
 
 
 rule "Guide HUD":
+    @Condition EditorOn
     #done#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, [].concat(0).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create New Checkpoint\r\nInteract+RMB=Delete selected Checkpoint\r\nInteract+R=Add teleport to Checkpoint", "Interact+Ultimate=Set Checkpoint to your current position\r\nInteract+Crouch=Select previous Checkpoint", "Interact+Jump=Select next Checkpoint\r\nInteract+1 ability=Show all checkpoints")).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create new killing sphere\r\nInteract+RMB=Delete selected sphere\r\nInteract+Crouch=Select previous sphere", "Interact+Jump=Select nex sphere\r\nDeflect+Jump=Make sphere bigger\r\nDeflect+Crouch=Shrink the sphere", "Deflect+LMB=Move forward\r\nDeflect+RMB=Move Backward")).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create new Bouncing Ball\r\nInteract+RMB=Delete selected Ball\r\nInteract+Crouch=Select previous Ball", "Interact+Jump=Select next Ball\r\nDeflect+Jump=Increase Ball's strenght\r\nDeflect+Crouch=Decrease Ball's strenght", "Deflect+LMB=Move Ball forward\r\nDeflect+RMB=Move Ball back"))[hostPlayer.E], "Hold melee to open the guidance text"), HudPosition.RIGHT, -2, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     #to test#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, "Crouch+LMB=Next lvl\r\nCrouch+RMB=Prev lvl\r\nIn invincbile mode:\r\nE=Trough Wall", ""), HudPosition.RIGHT, -1, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     #to test#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, "Hold melee to hide guidence text\r\nCreated by: 易忘#51876\r\nUdpated by: 五里雾中#51574\r\nTranslated by: Xerteks#2929,FATHER", ""), HudPosition.RIGHT, 0, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     
     #hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, "{0}\r\n{1}{2}\r\n{3}".format("To save the map:\r\n1.Interact+Melee+Reload to clear excess data", "2.Open Workshop Inspector - Set variable target as global - click the [x]\r\n3.Open Workshop Editor - open [Checkpoint | Position]", "- CLICK THE YELLOW [+] SIGN\r\n4.TURN OFF EDIT RULES\r\n{0}{1}\r\n{2}".format("ESC→SHOW LOBBY→SETTINGS→SHARE CODE→CREATE NEW CODE→COPY CODE\r\n6.OPEN WORKSHOP EDITOR - PASTE MAP CODE AND ADD YOUR", "NICKNAME AS AUTHOR IN \"TEXT\" \r\n7.ESC→SHOW LOBBY→SETTINGS→SHARE CODE→UPLOAD TO EXISTING CODE→\r\n{0}".format(" PASTE THE CODE YOU CREATED IN STEP 5"), "\n")), ""), HudPosition.LEFT, -12, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     #hudText(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, [].concat(0).concat("Hold Dash to change editing mode\r\nCurrent mode: Checkpoints").concat("Hold Dash to change editing mode\r\nCurrent mode: Killing Sphere").concat("Hold Dash to change editing mode\r\nCurrent mode: Bouncing Ball")[hostPlayer.E], "Guide HUD has been closed"), null, [].concat("").concat("").concat("").concat("Hold Q+LMB=Turn Ultimate On/Off\r\nHold Q+RMB=Turn Dash On/Off")[hostPlayer.E], HudPosition.LEFT, -6, Color.RED, Color.WHITE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-
-
 
     hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
         "{0}".format(
@@ -557,6 +600,7 @@ rule "Guide HUD":
 
 
 rule "Guide HUD effects":
+    @Condition EditorOn
     createIcon(getAllPlayers(), CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.RED, true)
     createInWorldText(getAllPlayers(), "Selected Checkpoint", CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.5, 0), 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
     #createEffect(getAllPlayers(), Effect.SPHERE, Color.RED, H[J], I[J], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
@@ -571,6 +615,7 @@ rule "Guide HUD effects":
 
 rule "Hide excess checkpoints":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1) == true
     @Condition eventPlayer == hostPlayer
@@ -582,6 +627,7 @@ rule "Hide excess checkpoints":
 
 
 rule "Show checkpoints":
+    @Condition EditorOn
     @Condition SelectedCheckpoint_Editing == -2
     
     for SelectedCheckpoint_Editing in range(len(CheckpointPositions)):
@@ -589,8 +635,9 @@ rule "Show checkpoints":
         CheckpointRings_Editing.append(getLastCreatedEntity())
 
 
-rule "editor jump cp":
+rule "Skip checkpoints":
     @Event eachPlayer
+    @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
 
@@ -602,9 +649,11 @@ rule "editor jump cp":
     else:
         eventPlayer.CurrentCheckpoint += 1
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
+        eventPlayer.Timer += 9999
         ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
         ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
-        eventPlayer.Timer = 9999
+        
+
 /*
 rule "Jump to next checkpoint":
     @Event eachPlayer
