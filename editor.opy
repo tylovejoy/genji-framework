@@ -52,6 +52,7 @@ rule "Clear excess data":
     CurrentBouncePosition_Editing = 0
     SavedProgress = 0
     TimeLimitSettingToggle = 0
+    LeaderBoardFull = []
     #bigMessage(getAllPlayers(), "Excess data has been cleared")
     #bigMessage(getAllPlayers(), "Excess data has been cleared")
     enableInspector()
