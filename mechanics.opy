@@ -5,7 +5,7 @@ rule "------------------------------------------------------------------------ C
     @Disabled
 
 
-rule "Bhop Green":
+rule "Bhop Indicator | Unused | Green":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround() == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
@@ -13,7 +13,7 @@ rule "Bhop Green":
     eventPlayer.BhopHUDColor = Color.GREEN
 
 
-rule "Bhop Red":
+rule "Bhop Indicator | Used | Red":
     @Event eachPlayer
     @Condition eventPlayer.isJumping() == true
     
@@ -95,7 +95,7 @@ rule "Checking | Bhop":
     smallMessage(eventPlayer, "Bhop")
 
 
-rule "Checking | Double bhop | thank for Githuboy#5249":
+rule "Checking | Create Bhop | thank for Githuboy#5249":
     @Event eachPlayer
     @Condition eventPlayer.isOnWall() == false
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
@@ -104,15 +104,15 @@ rule "Checking | Double bhop | thank for Githuboy#5249":
     @Condition eventPlayer.isInAir() == true
     @Condition eventPlayer.isJumping() == false
     @Condition eventPlayer.isCrouching() == true
-    
-    smallMessage(eventPlayer, "Success")
+
+    smallMessage(eventPlayer, "Bhop has been created!")
     eventPlayer.BhopUsed = 0
     if BhopBanToggle == true:
-        kill(eventPlayer, null)
-        smallMessage(eventPlayer, "{0} {1}".format(heroIcon(Hero.GENJI), ": Double Bhop is disabled"))
+        smallMessage(eventPlayer, "Create Bhop is banned!")
+        checkpointFailReset()
 
 
-rule "wall climbing unused HUD Counter multiclimb hud":
+rule "HUD | Multi-Wallclimbs Used":
     @Event eachPlayer
     @Condition eventPlayer.WallclimbUsed == 2
     @Condition eventPlayer.hasSpawned() == true
@@ -122,7 +122,7 @@ rule "wall climbing unused HUD Counter multiclimb hud":
     eventPlayer.MultiClimbCountHUD = getLastCreatedText()
 
 
-rule "wall climbing used HUD Counter multicimb hud":
+rule "HUD | Wallclimb Used":
     @Event eachPlayer
     @Condition eventPlayer.WallclimbUsed == 1
     @Condition eventPlayer.hasSpawned() == true
@@ -132,7 +132,7 @@ rule "wall climbing used HUD Counter multicimb hud":
     eventPlayer.MultiClimbCountHUD = getLastCreatedText()
 
 
-rule "Wall climb count multiclimb counting":
+rule "Multi-Wallclimb Counter":
     @Event eachPlayer
     @Condition eventPlayer.isOnWall() == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
@@ -163,90 +163,86 @@ rule "Double jump, initialized with small jump":
     eventPlayer.BhopUsed = 1
 
 
-rule "Force Saveclimb":
-    @Event eachPlayer
-    # Extended function | Save climb into the checkpoint(TITANXPASCAL#5554 *Remember to create text to prompt players)
-    @Condition distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= 2
-    @Condition createWorkshopSetting(bool, "Extended function", "Save climb into the checkpoint", false, 2) == true
-    #Change "-1" to certain Checkpoints' number
-    @Condition eventPlayer.CurrentCheckpoint in [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1] == true
-    
-    #If all checkpoints need this function, enable this rule and disable Rule: "Array Contains" 
-    #@Condition eventPlayer.A < len(A) - 1
-    if eventPlayer.WallclimbUsed == 1:
-        # kill(eventPlayer, null)
-        checkpointFailReset()
-        smallMessage(eventPlayer, "Fail to meet clear condition: Save climb")
-
-
-rule "Extended function | Save Bhop into the checkpoint(TITANXPASCAL#5554 *Remember to create text to prompt players)":
-    @Event eachPlayer
-    @Condition distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= 2
-    @Condition createWorkshopSetting(bool, "Extended function", "Save Bhop into the checkpoint", false, 3) == true
-    #Change "-1" to certain Checkpoints' number
-    @Condition eventPlayer.CurrentCheckpoint in [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1] == true
-    
-    #If all checkpoints need this function, enable this rule and disable Rule: "Array Contains" 
-    #@Condition eventPlayer.A < len(A) - 1
-    if eventPlayer.BhopUsed == 1:
-        # kill(eventPlayer, null)
-        checkpointFailReset()
-        smallMessage(eventPlayer, "Fail to meet clear condition: Save bhop")
-
 rule "-------------------------------------------------------------------------- Bans --------------------------------------------------------------------------":
     @Delimiter
     @Disabled
 
 
+rule "Ban Wallclimb for specific CPs --- EDIT ME":
+    # Credit: TITANXPASCAL#5554
+    @Event eachPlayer
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Wallclimb for specific CPs", false, 2) == true
+    # Change "-1" to certain Checkpoints' number
+    @Condition eventPlayer.CurrentCheckpoint in [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1] == true
+    # If all checkpoints need this function, enable this rule and disable Rule: "Array Contains" 
+    #@Condition eventPlayer.A < len(A) - 1
+    @Condition distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= 2
+
+    if eventPlayer.WallclimbUsed == 1:
+        checkpointFailReset()
+        smallMessage(eventPlayer, "Climb is banned!")
+
+
+rule "Ban Bhop for specific CPs --- EDIT ME":
+    # Credit: TITANXPASCAL#5554
+    @Event eachPlayer
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Bhop for specific CPs", false, 3) == true
+    # Change "-1" to certain Checkpoints' number
+    @Condition eventPlayer.CurrentCheckpoint in [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1] == true
+    # If all checkpoints need this function, enable this rule and disable Rule: "Array Contains" 
+    #@Condition eventPlayer.A < len(A) - 1
+    @Condition distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= 2 
+
+    if eventPlayer.BhopUsed == 1:
+        checkpointFailReset()
+        smallMessage(eventPlayer, "Bhop is banned!")
+
+
 rule "Ban | Triple Jump":
     @Event eachPlayer
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Triple Jump", false, 0) == true
     @Condition eventPlayer.getVerticalSpeed() >= 5.8
     @Condition eventPlayer.JumpCount == 1
     @Condition eventPlayer.isUsingAbility1() == false
-    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Triple Jump", false, 0) == true
     
     if eventPlayer.isOnWall():
         return
-    # eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+    smallMessage(eventPlayer, "Triple Jump is banned!")
     checkpointFailReset()
 
 
 rule "Ban | Multiclimb":
     @Event eachPlayer
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Multiclimb", false, 1) == true
     @Condition eventPlayer.isOnWall() == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     @Condition eventPlayer.WallclimbUsed == 2
-    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Multiclimb", false, 1) == true
     
     # eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+    smallMessage(eventPlayer, "Multicimb is banned!")
     checkpointFailReset()
-    smallMessage(eventPlayer, "{0} {1}".format(heroIcon(Hero.GENJI), ": Multiclimb is Disabled"))
-
-
-rule "Ban | Double Bhop":
-    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Double Bhop", false, 2) == true
     
+
+rule "Ban | Create Bhop":
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Create Bhop", false, 2) == true
     BhopBanToggle = true
 
 
-rule "Ban | Emote":
+rule "Ban | Emote Savehop":
     @Event eachPlayer
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Emote Savehop", false, 3) == true
     @Condition eventPlayer.isCommunicatingEmote() == true
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Emote", false, 3) == true
     
-    # kill(eventPlayer, null)
+    smallMessage(eventPlayer, "Emote Savehop is banned!")
     checkpointFailReset()
-    smallMessage(eventPlayer, "{0} {1}".format(heroIcon(Hero.GENJI), ": Emote jumping is disabled"))
 
 
 rule "Ban | Deathbhop":
     @Condition createWorkshopSetting(bool, "Ban Switch", "Deathbhop", false, 4) == true
-    
     DeathBhopBan = true
 
 
 rule "Ban | Dash Exploit":
     @Condition createWorkshopSetting(bool, "Ban Switch", "Dash Exploit", false, 4) == true
-    
     DashExploitToggle = true
