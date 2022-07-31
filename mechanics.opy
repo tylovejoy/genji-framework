@@ -5,20 +5,6 @@ rule "------------------------------------------------------------------------ C
     @Disabled
 
 
-rule "Bhop Indicator | Unused | Green":
-    @Event eachPlayer
-    @Condition eventPlayer.isOnGround() == true
-    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
-    
-    eventPlayer.BhopHUDColor = Color.GREEN
-
-
-rule "Bhop Indicator | Used | Red":
-    @Event eachPlayer
-    @Condition eventPlayer.isJumping() == true
-    
-    eventPlayer.BhopHUDColor = Color.RED
-
 rule "Checking | Jump":
     @Event eachPlayer
     @Hero genji
@@ -95,7 +81,8 @@ rule "Checking | Bhop":
     smallMessage(eventPlayer, "Bhop")
 
 
-rule "Checking | Create Bhop | thank for Githuboy#5249":
+rule "Checking | Create Bhop":
+    # Credit: Githuboy#5249
     @Event eachPlayer
     @Condition eventPlayer.isOnWall() == false
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
@@ -112,37 +99,27 @@ rule "Checking | Create Bhop | thank for Githuboy#5249":
         checkpointFailReset()
 
 
-rule "HUD | Multi-Wallclimbs Used":
+rule "Checking | Bhop/Double Jump Initialization":
     @Event eachPlayer
-    @Condition eventPlayer.WallclimbUsed == 2
-    @Condition eventPlayer.hasSpawned() == true
+    @Hero genji
+    @Condition eventPlayer.isOnGround() == true
     
-    destroyHudText(eventPlayer.MultiClimbCountHUD)
-    hudHeader(eventPlayer, "Climb{0}".format("({0})".format(eventPlayer.MultiClimbCount) if eventPlayer.MultiClimbCount > 0 else ""), HudPosition.LEFT, 2, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    eventPlayer.MultiClimbCountHUD = getLastCreatedText()
+    #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
+    # When this rule is turned on, the effect is "open three stages in a specific level", 
+    # and when it is turned off, it will be "banned three stages in all levels"
+    #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
+    # Notes must be read! When this condition is turned on, the effect is "Automatically open three stages after customs clearance", 
+    # and if it is turned off, three stages will still be banned after customs clearance.
+    #@Condition eventPlayer.A < len(A) - 1
+    eventPlayer.JumpCount = 0
+    eventPlayer.WallclimbUsed = 2
+    wait(0)
+    if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed != 2) and eventPlayer.isOnGround():
+        goto RULE_START
+    eventPlayer.BhopUsed = 1
 
 
-rule "HUD | Wallclimb Used":
-    @Event eachPlayer
-    @Condition eventPlayer.WallclimbUsed == 1
-    @Condition eventPlayer.hasSpawned() == true
-    
-    destroyHudText(eventPlayer.MultiClimbCountHUD)
-    hudHeader(eventPlayer, "Climb", HudPosition.LEFT, 2, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    eventPlayer.MultiClimbCountHUD = getLastCreatedText()
-
-
-rule "Multi-Wallclimb Counter":
-    @Event eachPlayer
-    @Condition eventPlayer.isOnWall() == true
-    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
-    @Condition eventPlayer.WallclimbUsed == 2
-    @Condition eventPlayer.InvincibleToggle == 0
-    
-    eventPlayer.MultiClimbCount += 1
-
-
-rule "Double jump, initialized with small jump":
+rule "Checking | Double jump, initialized with small jump":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.isOnGround() == true
@@ -163,12 +140,65 @@ rule "Double jump, initialized with small jump":
     eventPlayer.BhopUsed = 1
 
 
+rule "HUD | Multiclimbs Used":
+    @Event eachPlayer
+    @Condition eventPlayer.WallclimbUsed == 2
+    @Condition eventPlayer.hasSpawned() == true
+    
+    destroyHudText(eventPlayer.MultiClimbCountHUD)
+    hudHeader(eventPlayer, "Climb{0}".format("({0})".format(eventPlayer.MultiClimbCount) if eventPlayer.MultiClimbCount > 0 else ""), HudPosition.LEFT, 2, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    eventPlayer.MultiClimbCountHUD = getLastCreatedText()
+
+
+rule "HUD | Wallclimb Used":
+    @Event eachPlayer
+    @Condition eventPlayer.WallclimbUsed == 1
+    @Condition eventPlayer.hasSpawned() == true
+    
+    destroyHudText(eventPlayer.MultiClimbCountHUD)
+    hudHeader(eventPlayer, "Climb", HudPosition.LEFT, 2, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    eventPlayer.MultiClimbCountHUD = getLastCreatedText()
+
+
+rule "HUD | Multiclimb Counter":
+    @Event eachPlayer
+    @Condition eventPlayer.isOnWall() == true
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
+    @Condition eventPlayer.WallclimbUsed == 2
+    @Condition eventPlayer.InvincibleToggle == 0
+    
+    eventPlayer.MultiClimbCount += 1
+
+
+rule "HUD | Bhop":
+        @Event eachPlayer
+        @Condition eventPlayer.hasSpawned() == true
+        
+        wait(1)
+        hudHeader(eventPlayer, "Bhop", HudPosition.LEFT, 1, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.COLOR, SpecVisibility.DEFAULT)
+
+
+rule "HUD | Bhop Indicator | Unused | Green":
+    @Event eachPlayer
+    @Condition eventPlayer.isOnGround() == true
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
+    
+    eventPlayer.BhopHUDColor = Color.GREEN
+
+
+rule "HUD | Bhop Indicator | Used | Red":
+    @Event eachPlayer
+    @Condition eventPlayer.isJumping() == true
+    
+    eventPlayer.BhopHUDColor = Color.RED
+
+
 rule "-------------------------------------------------------------------------- Bans --------------------------------------------------------------------------":
     @Delimiter
     @Disabled
 
 
-rule "Ban Wallclimb for specific CPs --- EDIT ME":
+rule "Ban | Wallclimb for specific CPs <---- EDIT ME":
     # Credit: TITANXPASCAL#5554
     @Event eachPlayer
     @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Wallclimb for specific CPs", false, 2) == true
@@ -183,7 +213,7 @@ rule "Ban Wallclimb for specific CPs --- EDIT ME":
         smallMessage(eventPlayer, "Climb is banned!")
 
 
-rule "Ban Bhop for specific CPs --- EDIT ME":
+rule "Ban | Bhop for specific CPs      <---- EDIT ME":
     # Credit: TITANXPASCAL#5554
     @Event eachPlayer
     @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Bhop for specific CPs", false, 3) == true

@@ -196,11 +196,32 @@ rule "Setup and Variables":
     EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron 
         , 0) # breaks if the defined thing is on the same line
 
-   
+
+rule "Initialize and CP HUD":
+    @Event eachPlayer
+    @Hero genji
+    @Condition eventPlayer.hasSpawned() == true
+
+    hudSubheader(eventPlayer,"{0}{1}".format("Invis on\n" if eventPlayer.invis else "","You are invincible" if eventPlayer.InvincibleToggle else "") , HudPosition.TOP, -12, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(eventPlayer, "{0} {1}".format("level ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(eventPlayer, "Time {0} sec".format(eventPlayer.Timer), HudPosition.LEFT, -2, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    
+    #StartGame_Sub is the initialization of the game
+    StartGame_Sub()
+    eventPlayer.enableDeathSpectateAllPlayers()
+    eventPlayer.enableDeathSpectateTargetHud()
+    eventPlayer.SpectateToggle = 0
+    #Climbing the wall prompts the HUD
+    eventPlayer.WallclimbUsed = 2
+    #CheckpointEffect_Sub is the checkpoint effect display
+    CheckpointEffect_Sub()
+
+    eventPlayer.disableGamemodeHud()
     
 
 
 def checkpointFailReset():
+    @Name "SUB | Checkpoint Fail"
     if eventPlayer.EditModeSelection < 1:
         eventPlayer.setAbility1Enabled(false)
         eventPlayer.setUltEnabled(false)
@@ -221,7 +242,7 @@ def checkpointFailReset():
 
 
 def CheckpointEffect_Sub():
-    @Name "Checkpoint | Effect"
+    @Name "SUB | Checkpoint Effects"
     
     createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.PlayerEffects[0] = getLastCreatedEntity()
@@ -236,7 +257,7 @@ def CheckpointEffect_Sub():
 
 
 def StartGame_Sub():
-    @Name "Checkpoint | Start the game"
+    @Name "SUB | Start Game"
     
     if len(CheckpointPositions) != 0:
         if "{0}".format(eventPlayer) in SavedProgress:
@@ -269,9 +290,46 @@ def StartGame_Sub():
     ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
     eventPlayer.InvincibleToggle = 0
 
+def Leaderboardupdate():
+    @Name "SUB | Leaderboard Update"
+    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
+    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
+    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
+    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
+    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
+    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
+    SavedProgress.remove("{0}".format(eventPlayer))
+    # [i[0] for i in var1]   list of first element of each in var 1
+
+    if "{0}".format(eventPlayer) in [i[0] for i in LeaderBoardFull]: # you already have a time
+        if eventPlayer.Timer > [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)][0][1]: # new time worse
+            #printLog("{0} - {1} - worse time then old".format(eventPlayer,eventPlayer.Timer))
+            goto lb0
+        else: # new time better
+            #printLog("{0} - {1} - replace own old time".format(eventPlayer,eventPlayer.Timer))
+            LeaderBoardFull.remove( [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)])
+            LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer]] )
+
+    else: # you are not in list yet
+        if len(LeaderBoardFull) < 20: # board has room for more
+            printLog("{0} - {1} - room on board".format(eventPlayer,eventPlayer.Timer))
+            LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer] ])
+
+        else: # 20 entries already
+            if LeaderBoardFull[19][1] < eventPlayer.Timer:  # your time lower then last entry
+                printLog("{0} - {1} - existing times are better".format(eventPlayer,eventPlayer.Timer))
+                goto lb0
+            else: # you beat the last entry, thus replacing it
+                printLog("{0} - {1} - replace lowest time".format(eventPlayer,eventPlayer.Timer))
+                del LeaderBoardFull[19]
+                LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer]] )
+
+    LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
+    lb0:
+
 
 def KILLBALL():
-    @Name "Checkpoint | Killing Sphere effect"
+    @Name "SUB | Kill Orb Effects"
     
     if KillBallPositions == []:
         return
@@ -282,7 +340,7 @@ def KILLBALL():
 
 
 def pinball():
-    @Name "Checkpoint | Bouncing Ball effect"
+    @Name "SUB | Bounce Ball Effects"
     
     if BouncePositions == []:
         return
@@ -290,29 +348,6 @@ def pinball():
     for TempIterator1 in range(0, len(BouncePositions) - 1):
         createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[TempIterator1]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
         BounceEffects.append(getLastCreatedEntity())
-
-
-rule "Initialize and CP HUD":
-    @Event eachPlayer
-    @Hero genji
-    @Condition eventPlayer.hasSpawned() == true
-
-    hudSubheader(eventPlayer,"{0}{1}".format("Invis on\n" if eventPlayer.invis else "","You are invincible" if eventPlayer.InvincibleToggle else "") , HudPosition.TOP, -12, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudSubtext(eventPlayer, "{0} {1}".format("level ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudSubtext(eventPlayer, "Time {0} sec".format(eventPlayer.Timer), HudPosition.LEFT, -2, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-   
-    #StartGame_Sub is the initialization of the game
-    StartGame_Sub()
-    eventPlayer.enableDeathSpectateAllPlayers()
-    eventPlayer.enableDeathSpectateTargetHud()
-    eventPlayer.SpectateToggle = 0
-    #Climbing the wall prompts the HUD
-    eventPlayer.WallclimbUsed = 2
-    #CheckpointEffect_Sub is the checkpoint effect display
-    CheckpointEffect_Sub()
-
-    eventPlayer.disableGamemodeHud()
-
 
 rule "Checkpoint | Arrived":
     @Event eachPlayer
@@ -361,54 +396,29 @@ rule "Checkpoint | Arrived":
 
 
 
-rule "toggle leaderboard":
+rule "Checkpoint | Finish effects":
     @Event eachPlayer
-    @Condition eventPlayer.isCommunicatingSpray()
-
-    eventPlayer.LeaderboardToggle = not eventPlayer.LeaderboardToggle
-
-
-def Leaderboardupdate():
-    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-    SavedProgress.remove("{0}".format(eventPlayer))
-    # [i[0] for i in var1]   list of first element of each in var 1
-
-    if "{0}".format(eventPlayer) in [i[0] for i in LeaderBoardFull]: # you already have a time
-        if eventPlayer.Timer > [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)][0][1]: # new time worse
-            #printLog("{0} - {1} - worse time then old".format(eventPlayer,eventPlayer.Timer))
-            goto lb0
-        else: # new time better
-            #printLog("{0} - {1} - replace own old time".format(eventPlayer,eventPlayer.Timer))
-            LeaderBoardFull.remove( [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)])
-            LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer]] )
-
-    else: # you are not in list yet
-        if len(LeaderBoardFull) < 20: # board has room for more
-            printLog("{0} - {1} - room on board".format(eventPlayer,eventPlayer.Timer))
-            LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer] ])
-
-        else: # 20 entries already
-            if LeaderBoardFull[19][1] < eventPlayer.Timer:  # your time lower then last entry
-                printLog("{0} - {1} - existing times are better".format(eventPlayer,eventPlayer.Timer))
-                goto lb0
-            else: # you beat the last entry, thus replacing it
-                printLog("{0} - {1} - replace lowest time".format(eventPlayer,eventPlayer.Timer))
-                del LeaderBoardFull[19]
-                LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer]] )
-
-    LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
-    lb0:
+    @Condition eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
+    @Condition eventPlayer.EditModeSelection < 1
+    @Condition eventPlayer.isMoving() == true
+    
+    #@Condition (eventPlayer.isMoving() == true or eventPlayer.isHoldingButton(Button.JUMP) == true) == true
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.YELLOW, eventPlayer.getPosition(), 1.6)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.GREEN, eventPlayer.getPosition(), 1.4)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.PURPLE, eventPlayer.getPosition(), 1.2)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.RED, eventPlayer.getPosition(), 1)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.BLUE, eventPlayer.getPosition(), 0.8)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.AQUA, eventPlayer.getPosition(), 0.6)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.ORANGE, eventPlayer.getPosition(), 0.4)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, eventPlayer.getPosition(), 0.2)
+    wait(0.35)
+    if RULE_CONDITION:
+        goto RULE_START
 
 
 
 
-
-rule "Killing Sphere | Damage":
+rule "Kill Orb | Activate":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.CurrentCheckpoint != 0
@@ -421,7 +431,7 @@ rule "Killing Sphere | Damage":
     checkpointFailReset()
 
 
-rule "Bouncing Ball | Properties":
+rule "Bounce Ball | Activate":
     @Event eachPlayer
     @Hero genji
     @Condition BouncePadCheckpoints[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer, player) <= 1.2])] == eventPlayer.CurrentCheckpoint
@@ -476,27 +486,8 @@ rule "Data for Top 5":
 
 */
 
-rule "Checkpoint | Finish effects":
-    @Event eachPlayer
-    @Condition eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
-    @Condition eventPlayer.EditModeSelection < 1
-    @Condition eventPlayer.isMoving() == true
-    
-    #@Condition (eventPlayer.isMoving() == true or eventPlayer.isHoldingButton(Button.JUMP) == true) == true
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.YELLOW, eventPlayer.getPosition(), 1.6)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.GREEN, eventPlayer.getPosition(), 1.4)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.PURPLE, eventPlayer.getPosition(), 1.2)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.RED, eventPlayer.getPosition(), 1)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.BLUE, eventPlayer.getPosition(), 0.8)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.AQUA, eventPlayer.getPosition(), 0.6)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.ORANGE, eventPlayer.getPosition(), 0.4)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, eventPlayer.getPosition(), 0.2)
-    wait(0.35)
-    if RULE_CONDITION:
-        goto RULE_START
 
-
-rule "Death Teleport":
+rule "Death Reset":
     @Event playerDied
     @Condition eventPlayer.SpectateToggle != 1
     @Condition len(CheckpointPositions) >= 2
@@ -508,7 +499,7 @@ rule "Death Teleport":
 
 
 
-rule "Ground dead":
+rule "Ground Reset":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
@@ -547,7 +538,46 @@ rule "Player Effect":
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
 
 
-rule "Restart run":
+
+rule "Ultimate Charge":
+    @Event eachPlayer
+    @Condition eventPlayer.getUltCharge() < 100
+    
+    eventPlayer.setUltCharge(100)
+
+
+rule "Player Leaves":
+    @Event playerLeft
+
+    #if player's cur_checkpoint is 0, delete save info
+    if SavedProgress[SavedProgress.index(eventPlayer) - 2] == 0:
+        del SavedProgress[SavedProgress.index(eventPlayer) + 1]
+        del SavedProgress[SavedProgress.index(eventPlayer) + 1]
+        del SavedProgress[SavedProgress.index(eventPlayer) + 1]
+        del SavedProgress[SavedProgress.index(eventPlayer) - 1]
+        del SavedProgress[SavedProgress.index(eventPlayer) - 1]
+        del SavedProgress[SavedProgress.index(eventPlayer) - 1]
+        SavedProgress.remove(eventPlayer)
+    else:
+        if SavedProgress[SavedProgress.index(eventPlayer) - 2] >= len(CheckpointPositions) - 1:
+            goto lbl_0
+        if SavedProgress[SavedProgress.index(eventPlayer) + 3] == 1:
+            goto lbl_1
+        SavedProgress[SavedProgress.index(eventPlayer) - 1] = getTotalTimeElapsed() - (SavedProgress[SavedProgress.index(eventPlayer) + 1]) - (SavedProgress[SavedProgress.index(eventPlayer) + 2]) + (SavedProgress[SavedProgress.index(eventPlayer) - 1])
+        lbl_0:
+        lbl_1:
+        SavedProgress[SavedProgress.index(eventPlayer) + 2] = 0
+        SavedProgress[SavedProgress.index(eventPlayer) + 3] = 0
+
+
+rule "Combo | Leaderboard Toggle | Spray":
+    @Event eachPlayer
+    @Condition eventPlayer.isCommunicatingSpray()
+
+    eventPlayer.LeaderboardToggle = not eventPlayer.LeaderboardToggle
+
+
+rule "Combo | Restart Run | Crouch + Interact + Deflect":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
@@ -574,7 +604,7 @@ rule "Restart run":
     Portal2PlayerList.remove(eventPlayer)
 
 
-rule "Enter Spectate":
+rule "Combo | Enter Spectate | Hold Interact":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.EditModeSelection < 1
@@ -615,31 +645,7 @@ rule "Enter Spectate":
             SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 0
 
 
-rule "Initialization | Double jump | Bhop":
-    @Event eachPlayer
-    @Hero genji
-    @Condition eventPlayer.isOnGround() == true
-    
-    #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
-    # When this rule is turned on, the effect is "open three stages in a specific level", 
-    # and when it is turned off, it will be "banned three stages in all levels"
-    #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
-    # Notes must be read! When this condition is turned on, the effect is "Automatically open three stages after customs clearance", 
-    # and if it is turned off, three stages will still be banned after customs clearance.
-    #@Condition eventPlayer.A < len(A) - 1
-    eventPlayer.JumpCount = 0
-    eventPlayer.WallclimbUsed = 2
-    wait(0)
-    if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed != 2) and eventPlayer.isOnGround():
-        goto RULE_START
-    eventPlayer.BhopUsed = 1
-
-
-
-
-
-
-rule "Toggle Invincible/Normal mode":
+rule "Combo | Toggle Invincible Mode | Melee + Reload":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
@@ -683,48 +689,8 @@ rule "Toggle Invincible/Normal mode":
         SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 0
 
 
-rule "Ultimate charge":
-    @Event eachPlayer
-    @Condition eventPlayer.getUltCharge() < 100
-    
-    eventPlayer.setUltCharge(100)
 
-
-
-
-rule "Player left the game":
-    @Event playerLeft
-
-    #if player's cur_checkpoint is 0, delete save info
-    if SavedProgress[SavedProgress.index(eventPlayer) - 2] == 0:
-        del SavedProgress[SavedProgress.index(eventPlayer) + 1]
-        del SavedProgress[SavedProgress.index(eventPlayer) + 1]
-        del SavedProgress[SavedProgress.index(eventPlayer) + 1]
-        del SavedProgress[SavedProgress.index(eventPlayer) - 1]
-        del SavedProgress[SavedProgress.index(eventPlayer) - 1]
-        del SavedProgress[SavedProgress.index(eventPlayer) - 1]
-        SavedProgress.remove(eventPlayer)
-    else:
-        if SavedProgress[SavedProgress.index(eventPlayer) - 2] >= len(CheckpointPositions) - 1:
-            goto lbl_0
-        if SavedProgress[SavedProgress.index(eventPlayer) + 3] == 1:
-            goto lbl_1
-        SavedProgress[SavedProgress.index(eventPlayer) - 1] = getTotalTimeElapsed() - (SavedProgress[SavedProgress.index(eventPlayer) + 1]) - (SavedProgress[SavedProgress.index(eventPlayer) + 2]) + (SavedProgress[SavedProgress.index(eventPlayer) - 1])
-        lbl_0:
-        lbl_1:
-        SavedProgress[SavedProgress.index(eventPlayer) + 2] = 0
-        SavedProgress[SavedProgress.index(eventPlayer) + 3] = 0
-
-
-rule "Create Bhop Climb HUD Text":
-    @Event eachPlayer
-    @Condition eventPlayer.hasSpawned() == true
-    
-    wait(1)
-    hudHeader(eventPlayer, "Bhop", HudPosition.LEFT, 1, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.COLOR, SpecVisibility.DEFAULT)
-
-
-rule "Combo | Quick Reset":
+rule "Combo | Quick Reset | Reload, Hold Reload to Enable":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
     @Condition eventPlayer.EditModeSelection < 1
@@ -754,10 +720,25 @@ rule "Combo | Quick Reset":
         bigMessage(eventPlayer, "Quick reset is disabled")
 
 
+rule "Combo | Invisible Toggle | Hold Deflect":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
+    @Condition eventPlayer.EditModeSelection < 1
+
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    eventPlayer.invis = not eventPlayer.invis
+    eventPlayer.setInvisibility(Invis.NONE)
+    if eventPlayer.invis:
+        eventPlayer.setInvisibility(Invis.ALL)
+
+    smallMessage(eventPlayer, "Invisible {0}".format("on" if eventPlayer.invis else "off"))    
+    playEffect(eventPlayer, DynamicEffect.DEBUFF_IMPACT_SOUND, null, eventPlayer, 100)
+
+
 rule "Limit Ultimate":
     @Event eachPlayer
     @Hero genji
-    #The function of this rule is: SHIFT can only be used once when running the map
+    #The function of this rule is: ULT can only be used once when running the map
     @Condition eventPlayer.isUsingUltimate() == true
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.EditModeSelection < 1
@@ -766,9 +747,9 @@ rule "Limit Ultimate":
     eventPlayer.setUltEnabled(false)
 
 
-rule "Lmit Dash":
+rule "Limit Dash":
     @Event eachPlayer
-    #The function of this rule is: SHIFT can only be used once when running the map
+    #The function of this rule is: DASH can only be used once when running the map
     @Condition eventPlayer.isUsingAbility1() == true
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.EditModeSelection < 1
@@ -781,8 +762,8 @@ rule "Give Blade":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround() == true
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) > 1 else CheckpointPositions[eventPlayer.CurrentCheckpoint])) <= 1.4
     @Condition eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints == true
+    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) > 1 else CheckpointPositions[eventPlayer.CurrentCheckpoint])) <= 1.4
     @Condition eventPlayer.isUsingUltimate() == false
     
     wait(0.1)
@@ -798,27 +779,12 @@ rule "Give Dash":
     @Condition eventPlayer.isOnGround() == true
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     #@Condition distance(eventPlayer, A[eventPlayer.A]) <= 1.4
-    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) > 1 else CheckpointPositions[eventPlayer.CurrentCheckpoint])) <= 1.4
     @Condition eventPlayer.CurrentCheckpoint in DashEnabledCheckpoints == true
+    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) > 1 else CheckpointPositions[eventPlayer.CurrentCheckpoint])) <= 1.4
     @Condition eventPlayer.isUsingAbility1() == false
     
     eventPlayer.setAbility1Enabled(true)
     smallMessage(eventPlayer, "Dash is ready")
-
-
-rule "invis toggle":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
-    @Condition eventPlayer.EditModeSelection < 1
-
-    wait(1, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.invis = not eventPlayer.invis
-    eventPlayer.setInvisibility(Invis.NONE)
-    if eventPlayer.invis:
-        eventPlayer.setInvisibility(Invis.ALL)
-
-    smallMessage(eventPlayer, "invis {0}".format("on" if eventPlayer.invis else "off"))    
-    playEffect(eventPlayer, DynamicEffect.DEBUFF_IMPACT_SOUND, null, eventPlayer, 100)
 
 
 
@@ -869,7 +835,7 @@ rule "------------------------------------------------------------------------ M
     @Disabled
 
 
-rule "Friend Title <----  Displaying your message (on you)":
+rule "Friend Title <----  DISPLAY MESSAGE HERE (ON PLAYER)":
     @Event eachPlayer
     @Condition eventPlayer.hasSpawned() == true
     
@@ -883,13 +849,13 @@ rule "Friend Title <----  Displaying your message (on you)":
         createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
 
-rule "Credits here <---- insert your name": #"Text <---- put code and author here!":
+rule "Credits here <---- INSERT YOUR NAME HERE": #"Text <---- put code and author here!":
     hudSubtext(getAllPlayers(), "For more maps and records join:", HudPosition.LEFT, -14, Color.PURPLE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.PURPLE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     hudText(getAllPlayers(), "", null, "{0}\r\n{1}".format("MADE BY: Write your nickname here", "CODE: write maps code here"), HudPosition.LEFT, -15, Color.WHITE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
 
-rule "map data <---- insert your map data":
+rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
     @Delimiter
 
 editorordata

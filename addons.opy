@@ -5,19 +5,19 @@ rule "------------------------------------------------------------------------ A
     @Disabled
 
 
-rule "Add Blade to Checkpoint":
+rule "Add Blade to Checkpoint --- EDIT ME":
     @Disabled
     #Change "-1" to certain Checkpoints' number. For example if you want to add Blade to Checkpoint 2 and 6 change one of "-1" to 2 and other "-1" to 6
     BladeEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
 
 
-rule "Add Dash to Checkpoint":
+rule "Add Dash to Checkpoint --- EDIT ME":
     @Disabled
     #Change "-1" to certain Checkpoints' number. For example if you want to add Dash to Checkpoint 7 and 1 change one of "-1" to 7 and other "-1" to 1
     DashEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
-rule "Portal 1-2":
+rule "Portal 1->2":
     @Disabled
     @Event eachPlayer
     #Modify vector (0, 0, 0) to start teleport position
@@ -30,7 +30,7 @@ rule "Portal 1-2":
     #If you don't want to find the coordinates, send it directly to level 0
     eventPlayer.teleport(CheckpointPositions[0])
 
-rule "Portal 2-3":
+rule "Portal 2->3":
     @Disabled
     @Event eachPlayer
     #Modify vector (0, 0, 0) to start teleport position
@@ -43,7 +43,7 @@ rule "Portal 2-3":
     #If you don't want to find the coordinates, send it directly to level 0
     eventPlayer.teleport(CheckpointPositions[0])
 
-rule "Portal 3-1":
+rule "Portal 3->1":
     @Disabled
     @Event eachPlayer
     #Modify vector (0, 0, 0) to start teleport position
