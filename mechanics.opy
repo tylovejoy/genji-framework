@@ -269,10 +269,10 @@ rule "Ban | Emote Savehop":
 
 
 rule "Ban | Deathbhop":
-    @Condition createWorkshopSetting(bool, "Ban Switch", "Deathbhop", false, 4) == true
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Deathbhop", false, 4) == true
     DeathBhopBan = true
 
 
 rule "Ban | Dash Exploit":
-    @Condition createWorkshopSetting(bool, "Ban Switch", "Dash Exploit", false, 4) == true
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Dash Exploit", false, 4) == true
     DashExploitToggle = true
