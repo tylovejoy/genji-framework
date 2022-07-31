@@ -826,10 +826,35 @@ rule "leaderboard test ai":
 */
 
 
+
 #!include "mechanics.opy"
 
 #!include "addons.opy"
 
+rule "Ms. Destructo | Created by nebula":
+    @Condition isGameInProgress() == true
+    
+    wait(2)
+    #Init dummy at arbitrary location
+    createDummy(Hero.DVA, hostPlayer.getTeam(), -1, vect(0, 200, 0), vect(0, 0, 0))
+    MsDestructo = getLastCreatedEntity()
+    MsDestructo.startForcingName("Ms. Destructo")
+    wait(1)
+    MsDestructo.setInvisibility(Invis.ALL)
+    MsDestructo.MapVectorArray = [[0, Map.HANAMURA, Map.HANAMURA_WINTER, Map.HORIZON_LUNAR_COLONY, Map.PARIS, Map.TEMPLE_OF_ANUBIS, Map.DORADO, Map.HAVANA, Map.JUNKERTOWN, Map.RIALTO, Map.ROUTE66, Map.WATCHPOINT_GIBRALTAR, Map.BLIZZ_WORLD, Map.BLIZZ_WORLD_WINTER, Map.EICHENWALDE, Map.EICHENWALDE_HALLOWEEN, Map.HOLLYWOOD, Map.HOLLYWOOD_HALLOWEEN, Map.KINGS_ROW, Map.KINGS_ROW_WINTER, Map.NUMBANI, Map.AYUTTHAYA, Map.BUSAN_DOWNTOWN_LNY, Map.BUSAN_SANCTUARY_LNY, Map.ILIOS_LIGHTHOUSE, Map.ILIOS_RUINS, Map.ILIOS_WELL, Map.LIJIANG_CONTROL_CENTER, Map.LIJIANG_CONTROL_CENTER_LNY, Map.LIJIANG_GARDEN, Map.LIJIANG_GARDEN_LNY, Map.LIJIANG_NIGHT_MARKET, Map.LIJIANG_NIGHT_MARKET_LNY, Map.NEPAL_SANCTUM, Map.NEPAL_SHRINE, Map.NEPAL_VILLAGE, Map.NEPAL_VILLAGE_WINTER, Map.OASIS_CITY_CENTER, Map.OASIS_GARDENS, Map.OASIS_UNIVERSITY, Map.BLACK_FOREST, Map.BLACK_FOREST_WINTER, Map.CASTILLO, Map.ECOPOINT_ANTARCTICA, Map.ECOPOINT_ANTARCTICA_WINTER, Map.CHATEAU_GUILLARD, Map.CHATEAU_GUILLARD_HALLOWEEN, Map.KANEZAKA, Map.NECROPOLIS, Map.PETRA, Map.VOLSKAYA, Map.PRACTICE_RANGE, Map.ILIOS, Map.BUSAN, Map.LIJIANG_TOWER, Map.LIJIANG_TOWER_LNY, Map.NEPAL, Map.OASIS, Map.MALEVENTO], [vect(15.759, 30.576, -27.201)], [vect(15.759, 30.576, -27.201)], [vect(31.759, 40.003, -59.476)], [vect(-54.508, 40.179, -10.866)], [vect(-26.78, 23.366, 40.284)], [vect(69.418, 42.103, -17.712)], [vect(9.382, 38.635, -81.276)], [vect(9.382, 38.635, -81.276)], [vect(9.756, 30.753, -41.395)], [vect(30.313, 28.237, -16.925)], [vect(73.985, 26.198, -109.338)], [vect(-21.03, 35.127, 88.381)], [vect(-21.03, 35.127, 88.381)], [vect(54.798, 40.964, -82.78)], [vect(54.798, 40.964, -82.78)], [vect(-0.355, 28.167, -22.396)], [vect(-0.355, 28.167, -22.396)], [vect(-56.869, 24.061, -32.132)], [vect(-56.869, 24.061, -32.132)], [vect(105.299, 22.764, 14.89)], [vect(16.965, 26.541, -7.13)], [vect(51.885, 37.172, -113.654)], [vect(-329.934, 56.136, 149.839)], [vect(322.988, 15.716, -37.732)], [vect(27.711, 87.241, -161.298)], [vect(-223.895, 34.756, 0.89)], [vect(-5.808, 324.398, 282.523)], [vect(-5.808, 324.398, 282.523)], [vect(-0.414, 156.197, 148.681)], [vect(-0.414, 156.197, 148.681)], [vect(-0.381, 53.736, -33.335)], [vect(-0.381, 53.736, -33.335)], [vect(83.1, 178.926, 0.593)], [vect(-49.803, 63.29, -0.413)], [vect(-184.659, -38.73, -0.783)], [vect(-184.659, -38.73, -0.783)], [vect(150.125, 30.619, 251.966)], [vect(134.888, 36.76, -240.736)], [vect(-195.549, 60.35, -0.098)], [vect(-9.622, 44.751, 5.635)], [vect(-9.622, 44.751, 5.635)], [vect(-100.828, 76.566, 60.021)], [vect(-6.186, 35.564, 1.378)], [vect(-6.186, 35.564, 1.378)], [vect(200.414, 82.412, 78.813)], [vect(200.414, 82.412, 78.813)], [vect(-36.319, 32.305, 0.472)], [vect(-1.144, 47.168, -2.946)], [vect(9.678, 28.313, 13.4)], [vect(-49.147, 22.344, 76.844)], [vect(54.948, 50.769, 3.93)], [vect(322.988, 40, -37.732), vect(27.711, 100, -161.298), vect(-223.895, 50, 0.89)], [vect(51.885, 37.172, -113.654), vect(-329.934, 56.136, 149.839), vect(227.21, 43.353, 252.64)], [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)], [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)], [vect(83.1, 178.926, 0.593), vect(-49.803, 63.29, -0.413), vect(-184.659, -38.73, -0.783)], [vect(150.125, 30.619, 251.966), vect(134.888, 36.76, -240.736), vect(-195.549, 60.35, -0.098)], [vect(17.808, 35.955, 17.505)]]
+    for MsDestructo.ArrayIterator in range(len(MsDestructo.MapVectorArray[MsDestructo.MapVectorArray[0].index(getCurrentMap())])):
+        MsDestructo.startForcingPosition(MsDestructo.MapVectorArray[MsDestructo.MapVectorArray.index(getCurrentMap())][MsDestructo.ArrayIterator], true)
+        MsDestructo.startScalingSize(20, true)
+        MsDestructo.disableEnvironmentCollision(true)
+        MsDestructo.setUltEnabled(true)
+        MsDestructo.setUltCharge(100)
+        wait(3)
+        MsDestructo.startForcingButton(Button.ULTIMATE)
+        wait(5)
+        MsDestructo.respawn()
+        wait(3)
+    destroyDummy(MsDestructo.getTeam(), MsDestructo.getSlot())
+    
 rule "------------------------------------------------------------------------ Map pasta ------------------------------------------------------------------------ ":
     @Delimiter
     @Disabled

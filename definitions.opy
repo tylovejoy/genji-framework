@@ -1,10 +1,10 @@
-#!mainFile "genji.opy"    
+#!mainFile "genji.opy"
 
 # ----------------GLOBAL------------------
 #!define CheckpointPositions A
 #!define SelectedCheckpoint_Editing B
 #!define CheckpointRings_Editing C 
-#3 DVA
+#3 MsDestructo
 #4 dva
 #!define Portal1PlayerList F
 #!define Portal2PlayerList G
@@ -49,9 +49,9 @@
 #!define Timer D
 #!define EditModeSelection E
 #!define SpectateToggle F
-#6 G
+#6 ArrayIterator
 #!define PortalText H
-#8 I
+#8 MapVectorArray
 #!define WallclimbUsed J
 #!define GuideToggle K
 #11 L
@@ -94,6 +94,7 @@
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 globalvar SelectedCheckpoint_Editing 1      # int                       --- selected checkpoint
 globalvar CheckpointRings_Editing 2         # list[effect]              --- Holds checkpoint effects in editing context
+globalvar MsDestructo 3                     # MsDestructo Player
 globalvar Portal1PlayerList 5               # list[player]              --- players who can see portal 1
 globalvar Portal2PlayerList 6               # list[player]              --- players who can see portal 2
 globalvar KillBallPositions 7               # list[vect]                --- KillBall position
@@ -156,7 +157,9 @@ playervar InvincibleToggle 2                # int                       --- invi
 playervar Timer 3                           # float                     --- Timer, chased.
 playervar EditModeSelection 4               # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
 playervar SpectateToggle 5                  # int                       --- Spectate Toggle, should be bool
+playervar ArrayIterator 6                   # MsDestructo Iterator
 playervar PortalText 7                      # In-World Text             --- Portal String inworld text
+playervar MapVectorArray 8                  # MsDestructo Vectors
 playervar WallclimbUsed 9                   # int                       --- 1 if wall climb has been used 2 if not, should be bool
 playervar GuideToggle 10                    # int                       --- Guide Enabled (1) /Disabled (2), should be bool
 
