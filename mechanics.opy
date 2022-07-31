@@ -163,44 +163,6 @@ rule "Double jump, initialized with small jump":
     eventPlayer.BhopUsed = 1
 
 
-rule "Extended function | Strengthen stall (家里有妖怪#5202 | Easier to stall | Jump farther)":
-    @Event eachPlayer
-    @Condition eventPlayer.hasSpawned() == true
-    @Condition eventPlayer.getVerticalSpeed() >= -0.2
-    @Condition eventPlayer.getVerticalSpeed() <= 0.05
-    @Condition eventPlayer.getHorizontalSpeed() <= 1.3
-    @Condition eventPlayer.isInAir() == true
-    @Condition eventPlayer.isOnWall() == false
-    @Condition eventPlayer.isOnGround() == false
-    @Condition createWorkshopSetting(bool, "Extended function", "Strengthen stall", false, 0) == true
-    
-    wait(0.25, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
-    waitUntil(not eventPlayer.isMoving(), 10)
-    eventPlayer.stopForcingPosition()
-    eventPlayer.flytoggle = null
-    eventPlayer.setMoveSpeed(0)
-    eventPlayer.setGravity(0)
-    wait(3)
-    eventPlayer.setGravity(100)
-    eventPlayer.setMoveSpeed(100)
-    eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-    if RULE_CONDITION:
-        goto RULE_START
-
-
-rule "Extended function | Climb the wall to refresh double jump(喵喵酱#51379 | Touch and Multi will not trigger)":
-    @Event eachPlayer
-    @Condition eventPlayer.isOnWall() == true
-    @Condition createWorkshopSetting(bool, "Extended function", "Climb the wall to refresh double jump", false, 1) == true
-    
-    wait(0.25, Wait.ABORT_WHEN_FALSE)
-    waitUntil(not eventPlayer.isOnWall(), 1)
-    eventPlayer.setStatusEffect(null, Status.HACKED, 0.1)
-    wait(0.1)
-    eventPlayer.clearStatusEffect(Status.HACKED)
-
-
 rule "Force Saveclimb":
     @Event eachPlayer
     # Extended function | Save climb into the checkpoint(TITANXPASCAL#5554 *Remember to create text to prompt players)

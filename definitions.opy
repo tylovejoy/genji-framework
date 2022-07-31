@@ -28,7 +28,6 @@
 #!define BounceToggleUlt TQ5
 #!define BounceToggleDash TQ6
 
-#!define TimeLimitSettingToggle kz_xs
 #!define KillballCheckpoints killballnumber
 #!define BouncePadCheckpoints pinballnumber
 #!define DeathBhopBan deathjump
@@ -55,7 +54,7 @@
 #8 I
 #!define WallclimbUsed J
 #!define GuideToggle K
-#!define TimeLimitTimer L
+#11 L
 #!define PauseTimer ztjs
 #13
 #!define BhopUsed O
@@ -117,8 +116,6 @@ globalvar BounceStrength 22                 # list[float]               --- boun
 globalvar BounceToggleUlt 23                # list[bool]                --- toggle ult on bounce
 globalvar BounceToggleDash 24               # list[bool]                --- toggle dash on bounce
 
- 
-globalvar TimeLimitSettingToggle 25         # bool                      --- checkpoint time limit, ws setting
 globalvar KillballCheckpoints 26            # list[list[int]]           --- 2d list of checkpoints that havea kill ball [[0], [3]]
 globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d list like killballnumber
 globalvar DeathBhopBan 28               # bool                      --- Ban bhop from reset
@@ -162,7 +159,7 @@ playervar SpectateToggle 5                  # int                       --- Spec
 playervar PortalText 7                      # In-World Text             --- Portal String inworld text
 playervar WallclimbUsed 9                   # int                       --- 1 if wall climb has been used 2 if not, should be bool
 playervar GuideToggle 10                    # int                       --- Guide Enabled (1) /Disabled (2), should be bool
-playervar TimeLimitTimer 11                 # float                     --- Time limit for each checkpoint, chased
+
 playervar PauseTimer 12                     # float                     --- time in spectate/invincible, chased
 playervar BhopUsed 14                       # int                       --- Bhop has been used 1, 0 if not, should be bool
 #playervar LeaderboardTimerCapture 19        # float                     --- Saves players time for leaderboard

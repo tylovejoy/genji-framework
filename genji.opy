@@ -195,7 +195,7 @@ rule "Setup and Variables":
     hudSubtext(getAllPlayers(), " Spray | Toggle leaderboard", HudPosition.RIGHT, -8, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron 
         , 0) # breaks if the defined thing is on the same line
-    TimeLimitSettingToggle = createWorkshopSetting(bool, "Extended function", "Level time limit", false, 0)
+
    
     
 
@@ -206,10 +206,6 @@ def checkpointFailReset():
         eventPlayer.setUltEnabled(false)
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
-    if TimeLimitSettingToggle == true:
-        eventPlayer.TimeLimitTimer = 0
-        stopChasingVariable(eventPlayer.TimeLimitTimer)
-        eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint if eventPlayer.EditModeSelection > 0 else 0
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
     if DeathBhopBan == true:
 
@@ -243,7 +239,7 @@ def StartGame_Sub():
     @Name "Checkpoint | Start the game"
     
     if len(CheckpointPositions) != 0:
-        if "{0}".format(eventPlayer) in SavedProgress and TimeLimitSettingToggle == false:
+        if "{0}".format(eventPlayer) in SavedProgress:
             #if "{0}".format(eventPlayer) in save == true:
             eventPlayer.CurrentCheckpoint = SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
             eventPlayer.Timer = SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 2]
@@ -303,7 +299,7 @@ rule "Initialize and CP HUD":
 
     hudSubheader(eventPlayer,"{0}{1}".format("Invis on\n" if eventPlayer.invis else "","You are invincible" if eventPlayer.InvincibleToggle else "") , HudPosition.TOP, -12, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(eventPlayer, "{0} {1}".format("level ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudSubtext(eventPlayer, "{0} {1} {2}".format("Time", "{0} sec".format(eventPlayer.Timer), "| time limit: {0}".format(eventPlayer.TimeLimitTimer) if TimeLimitSettingToggle else ""), HudPosition.LEFT, -2, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(eventPlayer, "Time {0} sec".format(eventPlayer.Timer), HudPosition.LEFT, -2, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
    
     #StartGame_Sub is the initialization of the game
     StartGame_Sub()
@@ -326,21 +322,19 @@ rule "Checkpoint | Arrived":
     @Condition (eventPlayer.EditModeSelection >= 1 or eventPlayer.InvincibleToggle == 0) == true
     
     eventPlayer.CurrentCheckpoint += 1
-    if TimeLimitSettingToggle:
-        smallMessage(eventPlayer, "Arrived at {0}/{1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1))
-    else: # normal cp, but also runs when completed
- 
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        SavedProgress.remove("{0}".format(eventPlayer))
-        SavedProgress.append(["{0}".format(eventPlayer), eventPlayer.CurrentCheckpoint, eventPlayer.Timer, eventPlayer, getTotalTimeElapsed(), 0, 0])
-        playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
-        playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
-        bigMessage(eventPlayer, "{0} {1}".format("Arrived at", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)))
+
+    # normal cp, but also runs when completed
+    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
+    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
+    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
+    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
+    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
+    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
+    SavedProgress.remove("{0}".format(eventPlayer))
+    SavedProgress.append(["{0}".format(eventPlayer), eventPlayer.CurrentCheckpoint, eventPlayer.Timer, eventPlayer, getTotalTimeElapsed(), 0, 0])
+    playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
+    bigMessage(eventPlayer, "{0} {1}".format("Arrived at", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)))
     ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
     ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
     if eventPlayer.EditModeSelection < 1:
@@ -364,9 +358,7 @@ rule "Checkpoint | Arrived":
         Portal2PlayerList.append(eventPlayer)
         eventPlayer.PortalText = 2
         Leaderboardupdate()
-    if TimeLimitSettingToggle == true:
-        eventPlayer.TimeLimitTimer = 0
-        chase(eventPlayer.TimeLimitTimer, 10, rate=1, ChaseReeval.DESTINATION_AND_RATE)
+
 
 
 rule "toggle leaderboard":
@@ -511,10 +503,6 @@ rule "Death Teleport":
     
     eventPlayer.clearStatusEffect(Status.PHASED_OUT)
     eventPlayer.resurrect()
-    if TimeLimitSettingToggle == true:
-        eventPlayer.TimeLimitTimer = 0
-        stopChasingVariable(eventPlayer.TimeLimitTimer)
-        eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint if eventPlayer.EditModeSelection > 0 else 0
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
 
 
@@ -538,10 +526,6 @@ rule "Ground dead":
     #     eventPlayer.setUltEnabled(false)
     # eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
     # eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
-    # if TimeLimitSettingToggle == true:
-    #     eventPlayer.TimeLimitTimer = 0
-    #     stopChasingVariable(eventPlayer.TimeLimitTimer)
-    #     eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint if eventPlayer.EditModeSelection > 0 else 0
     # eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
     # if DeathBhopBan == true:
     #     eventPlayer.disallowButton(Button.JUMP)
@@ -629,10 +613,6 @@ rule "Enter Spectate":
             SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 5] = eventPlayer.PauseTimer
             eventPlayer.PauseTimer = 0
             SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 0
-    if TimeLimitSettingToggle == false:
-        goto lbl_2
-    eventPlayer.CurrentCheckpoint = 0
-    lbl_2:
 
 
 rule "Initialization | Double jump | Bhop":
@@ -675,11 +655,6 @@ rule "Toggle Invincible/Normal mode":
         SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 2] = eventPlayer.Timer
         SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 4] = getTotalTimeElapsed()
         SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 1
-        if TimeLimitSettingToggle == false:
-            goto lbl_0
-        smallMessage(eventPlayer, "Press ctrl+LMB/RMB to jump next/prev")
-        stopChasingVariable(eventPlayer.TimeLimitTimer)
-        lbl_0:
         stopChasingVariable(eventPlayer.Timer)
         bigMessage(eventPlayer, "Invincible mode")
         eventPlayer.flytoggle = null
@@ -695,10 +670,6 @@ rule "Toggle Invincible/Normal mode":
         eventPlayer.setUltEnabled(false)
         eventPlayer.setAbility1Enabled(false)
         lbl_1:
-        if TimeLimitSettingToggle == false:
-            goto lbl_2
-        eventPlayer.CurrentCheckpoint = 0
-        lbl_2:
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
         wait(0.1)
         eventPlayer.InvincibleToggle = 0
@@ -833,75 +804,6 @@ rule "Give Dash":
     
     eventPlayer.setAbility1Enabled(true)
     smallMessage(eventPlayer, "Dash is ready")
-
-
-
-
-
-rule "rule 91":
-    @Event eachPlayer
-    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint if eventPlayer.EditModeSelection > 0 else 0])) > 1.4
-    @Condition TimeLimitSettingToggle == true
-    @Condition (0 if eventPlayer.EditModeSelection > 0 else eventPlayer.InvincibleToggle) != 1
-    @Condition (0 if eventPlayer.EditModeSelection > 0 else eventPlayer.CurrentCheckpoint) == 0
-    
-    #@Condition eventPlayer.A == 0
-    #@Condition eventPlayer.C != 1
-
-    eventPlayer.TimeLimitTimer = 0
-    chase(eventPlayer.TimeLimitTimer, 10, rate=1, ChaseReeval.DESTINATION_AND_RATE)
-    eventPlayer.Timer = 0
-
-
-rule "Checkpoint Time Limit":
-    @Event eachPlayer
-    @Condition TimeLimitSettingToggle == true
-    @Condition eventPlayer.TimeLimitTimer >= 5
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    
-    eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint if eventPlayer.EditModeSelection > 0 else 0
-    if eventPlayer.InvincibleToggle == 1:
-        goto lbl_0
-    if eventPlayer.EditModeSelection > 0 and eventPlayer.isOnGround():
-        goto lbl_1
-    eventPlayer.teleport(CheckpointPositions[0 if eventPlayer.EditModeSelection < 1 else eventPlayer.CurrentCheckpoint])
-    lbl_0:
-    smallMessage(eventPlayer, "Time out!")
-    lbl_1:
-    stopChasingVariable(eventPlayer.TimeLimitTimer)
-
-
-rule "Reset Timelimit Timer When at Checkpoint 0":
-    @Event eachPlayer
-    @Condition distance(eventPlayer, CheckpointPositions[0]) < 1
-    @Condition eventPlayer.CurrentCheckpoint == 0
-    @Condition TimeLimitSettingToggle == true
-    
-    stopChasingVariable(eventPlayer.TimeLimitTimer)
-    eventPlayer.TimeLimitTimer = 0
-    eventPlayer.Timer = 0
-
-
-rule "Go Forward Checkpoint (Invincible Mode | TimeLimitSetting Enabled)":
-    @Event eachPlayer
-    @Condition eventPlayer.InvincibleToggle == 1
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition TimeLimitSettingToggle == true
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
-    
-    eventPlayer.CurrentCheckpoint += 1 if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 2 else 0
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
-
-
-rule "Go Backward Checkpoint (Invincible Mode | TimeLimitSetting Enabled)":
-    @Event eachPlayer
-    @Condition eventPlayer.InvincibleToggle == 1
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition TimeLimitSettingToggle == true
-    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
-    
-    eventPlayer.CurrentCheckpoint -= 1 if eventPlayer.CurrentCheckpoint > 0 else 0
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
 
 
 rule "invis toggle":

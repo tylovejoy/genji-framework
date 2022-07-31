@@ -54,7 +54,6 @@ rule "Clear excess data and save map":
     BounceEffects = 0
     CurrentBouncePosition_Editing = 0
     SavedProgress = 0
-    TimeLimitSettingToggle = 0
     LeaderBoardFull = []
     #bigMessage(getAllPlayers(), "Excess data has been cleared")
     #bigMessage(getAllPlayers(), "Excess data has been cleared")
