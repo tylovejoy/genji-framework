@@ -231,7 +231,7 @@ def checkpointFailReset():
     if DeathBhopBan == true:
         eventPlayer.disallowButton(Button.JUMP)
         if eventPlayer.isHoldingButton(Button.JUMP):
-            smallMessage("Deathbhop is banned!")
+            smallMessage(eventPlayer, "Deathbhop is banned!")
         wait(0.1)
         eventPlayer.allowButton(Button.JUMP)
     if eventPlayer.CurrentCheckpoint == 0:
