@@ -253,7 +253,7 @@ rule "Deflect TP":
     eventPlayer.teleport(eventPlayer.getPosition() + eventPlayer.getFacingDirection() * 3)
 */
 
-rule "Change Edit Mode                | Hold Dash":
+rule "Change Edit Mode | Hold Dash":
     @Event eachPlayer
     @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1) == true
@@ -272,7 +272,7 @@ rule "Change Edit Mode                | Hold Dash":
         smallMessage(hostPlayer, "Current mode: Checkpoint")
 
 
-rule "Bounce Ball | Toggle Ultimate   | Ultimate + Primary Fire":
+rule "Bounce Ball | Toggle Ultimate | Ultimate + Primary Fire":
     @Event eachPlayer
     @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
@@ -288,7 +288,7 @@ rule "Bounce Ball | Toggle Ultimate   | Ultimate + Primary Fire":
         BounceToggleUlt[CurrentBounce_Editing] = false
 
 
-rule "Bounce Ball | Toggle Dash       | Ultimate + Secondary Fire":
+rule "Bounce Ball | Toggle Dash | Ultimate + Secondary Fire":
     @Event eachPlayer
     @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
@@ -334,7 +334,7 @@ rule "Bounce Ball | Decrease Strength | Deflect + Crouch":
             goto RULE_START
 
 
-rule "Kill Orb | Increase Size        | Deflect + Jump":
+rule "Kill Orb | Increase Size | Deflect + Jump":
     @Event eachPlayer
     @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
@@ -360,7 +360,7 @@ rule "Kill Orb | Increase Size        | Deflect + Jump":
                 goto RULE_START
 
 
-rule "Kill Orb | Decrease Size        | Deflect + Crouch":
+rule "Kill Orb | Decrease Size | Deflect + Crouch":
     @Event eachPlayer
     @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
@@ -381,7 +381,7 @@ rule "Kill Orb | Decrease Size        | Deflect + Crouch":
             KILLBALL()
 
 
-rule "Kill Orb | Move Toward          | Deflect + Primary Fire":
+rule "Kill Orb | Move Toward | Deflect + Primary Fire":
     @Event eachPlayer
     @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
@@ -419,7 +419,7 @@ rule "Kill Orb | Move Toward          | Deflect + Primary Fire":
         pinball()
 
 
-rule "Kill Orb | Move Backward        | Deflect + Secondary Fire":
+rule "Kill Orb | Move Backward | Deflect + Secondary Fire":
     @Event eachPlayer
     @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
@@ -457,7 +457,7 @@ rule "Kill Orb | Move Backward        | Deflect + Secondary Fire":
         pinball()
 
 
-rule "Checkpoint | Create             | Interact + Primary Fire":
+rule "Checkpoint | Create | Interact + Primary Fire":
     @Event eachPlayer
     @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
@@ -500,7 +500,7 @@ rule "Checkpoint | Create             | Interact + Primary Fire":
             bigMessage(getAllPlayers(), "New bouncing ball has been created! \r\nIt's only valid for level {0}".format(eventPlayer.CurrentCheckpoint))
 
 
-rule "Checkpoint | Delete             | Interact + Secondary Fire":
+rule "Checkpoint | Delete | Interact + Secondary Fire":
     @Event eachPlayer
     @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
@@ -541,7 +541,7 @@ rule "Checkpoint | Delete             | Interact + Secondary Fire":
         CurrentBouncePosition_Editing = BouncePositions[CurrentBounce_Editing]
 
 
-rule "Checkpoint | Move               | Ultimate + Interact":
+rule "Checkpoint | Move | Ultimate + Interact":
     @Event eachPlayer
     @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
@@ -553,7 +553,7 @@ rule "Checkpoint | Move               | Ultimate + Interact":
     smallMessage(getAllPlayers(), "Checkpoint has been moved to your position")
 
 
-rule "Checkpoint | Select Previous    | Interact + Crouch":
+rule "Checkpoint | Select Previous | Interact + Crouch":
     @Event eachPlayer
     @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
@@ -579,7 +579,7 @@ rule "Checkpoint | Select Previous    | Interact + Crouch":
         lbl_2:
 
 
-rule "Checkpoint | Select Next        | Interact + Jump":
+rule "Checkpoint | Select Next | Interact + Jump":
     @Event eachPlayer
     @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
@@ -605,7 +605,7 @@ rule "Checkpoint | Select Next        | Interact + Jump":
         lbl_2:
 
 
-rule "Checkpoint | Hide All           | Interact + Dash":
+rule "Checkpoint | Hide All | Interact + Dash":
     @Event eachPlayer
     @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
@@ -618,7 +618,7 @@ rule "Checkpoint | Hide All           | Interact + Dash":
     SelectedCheckpoint_Editing = -2
 
 
-rule "Checkpoint | Show All           |":
+rule "Checkpoint | Show All |":
     @Condition EditorOn
     @Condition SelectedCheckpoint_Editing == -2
     
@@ -627,7 +627,7 @@ rule "Checkpoint | Show All           |":
         CheckpointRings_Editing.append(getLastCreatedEntity())
 
 
-rule "Checkpoint | Skip               | Crouch + Primary/Secondary Fire":
+rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
     @Event eachPlayer
     @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
@@ -646,7 +646,7 @@ rule "Checkpoint | Skip               | Crouch + Primary/Secondary Fire":
         ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
 
 
-rule "Teleport | Add                  | Interact + Reload":
+rule "Teleport | Add | Interact + Reload":
     @Condition EditorOn
     @Condition hostPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition hostPlayer.isHoldingButton(Button.RELOAD) == true
