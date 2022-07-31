@@ -229,8 +229,9 @@ def checkpointFailReset():
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
     if DeathBhopBan == true:
-
         eventPlayer.disallowButton(Button.JUMP)
+        if eventPlayer.isHoldingButton(Button.JUMP):
+            smallMessage("Deathbhop is banned!")
         wait(0.1)
         eventPlayer.allowButton(Button.JUMP)
     if eventPlayer.CurrentCheckpoint == 0:
@@ -510,22 +511,6 @@ rule "Ground Reset":
     @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])) > 1.4
     @Condition not touchground
 
-    #Do a specific level to open the landing and die and then open it again
-    #@Condition (eventPlayer.A == -1 or eventPlayer.A == -1 or eventPlayer.A == -1 or false) == true
-    # if eventPlayer.EditModeSelection < 1:
-    #     eventPlayer.setAbility1Enabled(false)
-    #     eventPlayer.setUltEnabled(false)
-    # eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
-    # eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
-    # eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
-    # if DeathBhopBan == true:
-    #     eventPlayer.disallowButton(Button.JUMP)
-    #     wait(0.1)
-    #     eventPlayer.allowButton(Button.JUMP)
-    # if eventPlayer.CurrentCheckpoint == 0:
-    #     eventPlayer.Timer = 0
-    # if eventPlayer.isUsingUltimate():
-    #     kill(eventPlayer, null)
     checkpointFailReset()
 
 
@@ -596,7 +581,9 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
         CheckpointEffect_Sub()
         #This action is "eliminate the display of player clearance results"
         destroyHudText(eventPlayer.PlayerEffects[7])
-    waitUntil(not eventPlayer.isUsingAbility2() and DashExploitToggle, 0.5)
+    if DashExploitToggle:
+        waitUntil(not eventPlayer.isUsingAbility2(), 0.5)
+        smallMessage(eventPlayer, "Dash Start is banned!")
     eventPlayer.CurrentCheckpoint = 0
     StartGame_Sub()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
