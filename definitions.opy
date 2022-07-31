@@ -106,6 +106,7 @@ globalvar BladeEnabledCheckpoints 12        # int                       --- blad
 globalvar DashEnabledCheckpoints 13         # int                       --- dash enabled, should be bool.
 globalvar ListPlayersAtCheckpoints 15       # list[list[player]]        --- players at a specific checkpoint
 #globalvar ActivePlayers 16                  # list[player]              --- Active players, Non-saved, non-spectating active players
+globalvar EditorOn 17                       # bool                      --- editor rules enabled?
 
 #Bounce Pad editing stuff
 globalvar BouncePositions 18                # list[vect]                --- list of bouncepad positions

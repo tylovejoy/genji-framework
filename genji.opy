@@ -1,7 +1,8 @@
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 # cheats
-editortoggle(4) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
+
 #!define touchground false
 #!define cpcheat true
 
@@ -10,13 +11,38 @@ editortoggle(4) # 0 is editor, rest is numbers
 
 
 
-rule "------------------------------------------------------Turn off the rules above after finishing editing--------------------------":
+rule "fisho cp cheat for overpy toggle":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
+    @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
+    @Condition cpcheat
+
+    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
+        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
+        eventPlayer.CurrentCheckpoint -= 1
+        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
+        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
+    else:
+        eventPlayer.CurrentCheckpoint += 1
+        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
+        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
+        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
+        #eventPlayer.Timer += 9999 
+
+
+
+
+#!include "editor.opy"
+
+rule "------------------------------------------------------------------------  General rules ------------------------------------------------------------------------ ":
     @Delimiter
     @Disabled
 
 
 rule "Setup and Variables":
     # disableInspector()
+
+    
     getAllPlayers().disableRespawn()
     disableGamemodeCompletion()
     disableScoring()
@@ -167,50 +193,10 @@ rule "Setup and Variables":
     hudSubtext(getAllPlayers(), "press {0} | Quick reset".format(buttonString(Button.RELOAD)), HudPosition.RIGHT, -9, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "Hold {0} | Toggle invis".format(buttonString(Button.ABILITY_2)), HudPosition.RIGHT, -8, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), " Spray | Toggle leaderboard", HudPosition.RIGHT, -8, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron 
+        , 0) # breaks if the defined thing is on the same line
     TimeLimitSettingToggle = createWorkshopSetting(bool, "Extended function", "Level time limit", false, 0)
-
-
-rule "Text <------------------------------------------------- put code and author here!":
-    hudSubtext(getAllPlayers(), "For more maps and records join:", HudPosition.LEFT, -14, Color.PURPLE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers(), "dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.PURPLE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    hudText(getAllPlayers(), "", null, "{0}\r\n{1}".format("MADE BY: Write your nickname here", "CODE: write maps code here"), HudPosition.LEFT, -15, Color.WHITE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-
-
-rule "Friend Title - Displaying your message (on you)":
-    @Event eachPlayer
-    @Condition eventPlayer.hasSpawned() == true
-    
-    #In the field custom string your nickname
-    if "your nickname <-------" == "{0}".format(eventPlayer):
-        bigMessage(getAllPlayers(), "Message to the whole room")
-        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    #Fill in the blank with your friend's name
-    if "your nickname <-------" == "{0}".format(eventPlayer):
-        bigMessage(getAllPlayers(), "Message to the whole room")
-        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-
-
-rule "fisho cp cheat for overpy toggle":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
-    @Condition cpcheat
-
-    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
-        eventPlayer.CurrentCheckpoint -= 1
-        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
-    else:
-        eventPlayer.CurrentCheckpoint += 1
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
-        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
-        #eventPlayer.Timer += 9999 
-
-
-
-
+   
     
 
 
@@ -236,18 +222,10 @@ def checkpointFailReset():
         kill(eventPlayer, null)
 
 
-rule "Checkpoint | Position <---------------------------------------------------------------------------- paste here!":
-    @Delimiter
 
-
-editorordata
-
-rule "------------------------------------------------------ enter data in rule above --------------------------":
-    @Delimiter
-    @Disabled
 
 def CheckpointEffect_Sub():
-    @Name "Checkpoint | Effect |-------------------------------------------------SUB0"
+    @Name "Checkpoint | Effect"
     
     createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.PlayerEffects[0] = getLastCreatedEntity()
@@ -262,7 +240,7 @@ def CheckpointEffect_Sub():
 
 
 def StartGame_Sub():
-    @Name "Checkpoint | Start the game |-------------------------------------SUB1"
+    @Name "Checkpoint | Start the game"
     
     if len(CheckpointPositions) != 0:
         if "{0}".format(eventPlayer) in SavedProgress and TimeLimitSettingToggle == false:
@@ -297,7 +275,7 @@ def StartGame_Sub():
 
 
 def KILLBALL():
-    @Name "Checkpoint | Killing Sphere effect |-------------------------------------SUB"
+    @Name "Checkpoint | Killing Sphere effect"
     
     if KillBallPositions == []:
         return
@@ -559,7 +537,7 @@ def KILLBALL():
 
 
 def pinball():
-    @Name "Checkpoint | Bouncing Ball effect |-------------------------------------SUB"
+    @Name "Checkpoint | Bouncing Ball effect"
     
     if BouncePositions == []:
         return
@@ -946,7 +924,7 @@ def pinball():
 
 
 
-rule "Checkpoint | HUD":
+rule "Initialize and CP HUD":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.hasSpawned() == true
@@ -965,6 +943,7 @@ rule "Checkpoint | HUD":
     #CheckpointEffect_Sub is the checkpoint effect display
     CheckpointEffect_Sub()
 
+    eventPlayer.disableGamemodeHud()
 
 
 rule "Checkpoint | Arrived":
@@ -1020,7 +999,6 @@ rule "Checkpoint | Arrived":
 
 rule "toggle leaderboard":
     @Event eachPlayer
-
     @Condition eventPlayer.isCommunicatingSpray()
 
     eventPlayer.LeaderboardToggle = not eventPlayer.LeaderboardToggle
@@ -1035,60 +1013,35 @@ def Leaderboardupdate():
     del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
     SavedProgress.remove("{0}".format(eventPlayer))
     # [i[0] for i in var1]   list of first element of each in var 1
+
     if "{0}".format(eventPlayer) in [i[0] for i in LeaderBoardFull]: # you already have a time
-        if eventPlayer.Timer > [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)][0][1]:
-            printLog("{0} - {1} - worse time then old".format(eventPlayer,eventPlayer.Timer))
+        if eventPlayer.Timer > [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)][0][1]: # new time worse
+            #printLog("{0} - {1} - worse time then old".format(eventPlayer,eventPlayer.Timer))
             goto lb0
-        else:
-            printLog("{0} - {1} - replace own old time".format(eventPlayer,eventPlayer.Timer))
+        else: # new time better
+            #printLog("{0} - {1} - replace own old time".format(eventPlayer,eventPlayer.Timer))
             LeaderBoardFull.remove( [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)])
-
-
             LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer]] )
 
-    else:
-        if len(LeaderBoardFull) < 20: # no time, but room for entries
+    else: # you are not in list yet
+        if len(LeaderBoardFull) < 20: # board has room for more
             printLog("{0} - {1} - room on board".format(eventPlayer,eventPlayer.Timer))
             LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer] ])
-        else:
-            if LeaderBoardFull[19][1] < eventPlayer.Timer: 
+
+        else: # 20 entries already
+            if LeaderBoardFull[19][1] < eventPlayer.Timer:  # your time lower then last entry
                 printLog("{0} - {1} - existing times are better".format(eventPlayer,eventPlayer.Timer))
                 goto lb0
-            else:
+            else: # you beat the last entry, thus replacing it
                 printLog("{0} - {1} - replace lowest time".format(eventPlayer,eventPlayer.Timer))
                 del LeaderBoardFull[19]
                 LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer]] )
 
-
-    /*
-    already in list?
-        new time worse?
-            break
-        new time better?
-            replace        
-
-    not in list
-        below 20 entries
-            add
-        above 20 entries
-            last entry better?
-                break
-            last entry worse
-                remove last entry
-                add
-
-
-    */
-  
     LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
     lb0:
 
 
 
-rule "nope":
-    @Event eachPlayer
-    
-    getAllPlayers().disableGamemodeHud()
 
 
 rule "Killing Sphere | Damage":
@@ -1158,6 +1111,7 @@ rule "Data for Top 5":
     eventPlayer.PauseTimer = 0
 
 */
+
 rule "Checkpoint | Finish effects":
     @Event eachPlayer
     @Condition eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
@@ -1194,7 +1148,7 @@ rule "Death Teleport":
 
 
 
-rule "Landing on Checkpoint (In some circumstances turn off?)":
+rule "Ground dead":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
@@ -1237,7 +1191,7 @@ rule "Player Effect":
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
 
 
-rule "Combo | Reset the run | RESTART":
+rule "Restart run":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
@@ -1264,7 +1218,7 @@ rule "Combo | Reset the run | RESTART":
     Portal2PlayerList.remove(eventPlayer)
 
 
-rule "Combo | Spectate | Interact":
+rule "Enter Spectate":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.EditModeSelection < 1
@@ -1333,7 +1287,7 @@ rule "Initialization | Double jump | Bhop":
 
 
 
-rule "Combo | Invincible/Normal mode":
+rule "Toggle Invincible/Normal mode":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
@@ -1630,5 +1584,38 @@ rule "leaderboard test ai":
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint+1]+ Vector.UP) # teleport not needed
     
 */
-#!include "addons.opy"
+
+
 #!include "mechanics.opy"
+
+#!include "addons.opy"
+
+rule "------------------------------------------------------------------------ Map pasta ------------------------------------------------------------------------ ":
+    @Delimiter
+    @Disabled
+
+
+rule "Friend Title <----  Displaying your message (on you)":
+    @Event eachPlayer
+    @Condition eventPlayer.hasSpawned() == true
+    
+    #In the field custom string your nickname
+    if "your nickname <-------" == "{0}".format(eventPlayer):
+        bigMessage(getAllPlayers(), "Message to the whole room")
+        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+    #Fill in the blank with your friend's name
+    if "your nickname <-------" == "{0}".format(eventPlayer):
+        bigMessage(getAllPlayers(), "Message to the whole room")
+        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+
+
+rule "Credits here <---- insert your name": #"Text <---- put code and author here!":
+    hudSubtext(getAllPlayers(), "For more maps and records join:", HudPosition.LEFT, -14, Color.PURPLE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.PURPLE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudText(getAllPlayers(), "", null, "{0}\r\n{1}".format("MADE BY: Write your nickname here", "CODE: write maps code here"), HudPosition.LEFT, -15, Color.WHITE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+
+
+rule "map data <---- insert your map data":
+    @Delimiter
+
+editorordata
