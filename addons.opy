@@ -5,19 +5,19 @@ rule "------------------------------------------------------------------------ A
     @Disabled
 
 
-rule "Add Blade to Checkpoint --- EDIT ME":
+rule "Add Blade to Checkpoint <---- EDIT ME":
     @Disabled
     #Change "-1" to certain Checkpoints' number. For example if you want to add Blade to Checkpoint 2 and 6 change one of "-1" to 2 and other "-1" to 6
     BladeEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
 
 
-rule "Add Dash to Checkpoint --- EDIT ME":
+rule "Add Dash to Checkpoint <---- EDIT ME":
     @Disabled
     #Change "-1" to certain Checkpoints' number. For example if you want to add Dash to Checkpoint 7 and 1 change one of "-1" to 7 and other "-1" to 1
     DashEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
-rule "Portal 1->2":
+rule "Portal 1 -> 2 <---- EDIT ME":
     @Disabled
     @Event eachPlayer
     #Modify vector (0, 0, 0) to start teleport position
@@ -30,7 +30,7 @@ rule "Portal 1->2":
     #If you don't want to find the coordinates, send it directly to level 0
     eventPlayer.teleport(CheckpointPositions[0])
 
-rule "Portal 2->3":
+rule "Portal 2 -> 3 <---- EDIT ME":
     @Disabled
     @Event eachPlayer
     #Modify vector (0, 0, 0) to start teleport position
@@ -43,7 +43,7 @@ rule "Portal 2->3":
     #If you don't want to find the coordinates, send it directly to level 0
     eventPlayer.teleport(CheckpointPositions[0])
 
-rule "Portal 3->1":
+rule "Portal 3 -> 1 <---- EDIT ME":
     @Disabled
     @Event eachPlayer
     #Modify vector (0, 0, 0) to start teleport position
@@ -56,13 +56,13 @@ rule "Portal 3->1":
     #If you don't want to find the coordinates, send it directly to level 0
     eventPlayer.teleport(CheckpointPositions[0])
 
-rule "In world text for certain Checkpoints":
+rule "In world text for certain Checkpoints <---- EDIT ME":
     @Disabled
     createInWorldText(sorted(ListPlayersAtCheckpoints[0]), "Text for checkpoint 0", vect(0, 0, 0), 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
     createInWorldText(sorted(ListPlayersAtCheckpoints[1]), "Text for checkpoint 1", vect(0, 0, 0), 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
     createInWorldText(sorted(ListPlayersAtCheckpoints[2]), "Text for checkpoint 2", vect(0, 0, 0), 3, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
-rule "HUD text for certain Checkpoints":
+rule "HUD text for certain Checkpoints <---- EDIT ME":
     @Disabled
     hudHeader(sorted(ListPlayersAtCheckpoints[0]), "Text for checkpoint 0", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudHeader(sorted(ListPlayersAtCheckpoints[1]), "Text for checkpoint 1", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
@@ -94,7 +94,7 @@ rule "Portal Effects":
     #Change Vector  (0, 0, 0) to starting position of Portal 3-1
     createInWorldText(Portal1PlayerList, "to next map", vect(0, 0, 0), 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.YELLOW, SpecVisibility.DEFAULT)
 
-rule "Open the portal view < Open in a specific checkpoint ":
+rule "Enable Portal For Specific CPs <---- EDIT ME":
     @Disabled
     @Event eachPlayer
     #Change "-1" to the number of checkpoints of the checkpoint where the two portals are located
@@ -113,7 +113,7 @@ rule "Open the portal view < Open in a specific checkpoint ":
         Portal1PlayerList.append(eventPlayer)
         eventPlayer.PortalText = 2
 
-rule "Close the portal view < Close in certain checkpoints":
+rule "Disable Portal For Specific CPs <---- EDIT ME":
     @Disabled
     @Event eachPlayer
     #Modify "-2" to the number of checkpoints after the two portals have been teleported
