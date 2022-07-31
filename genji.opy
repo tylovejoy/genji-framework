@@ -831,7 +831,8 @@ rule "leaderboard test ai":
 
 #!include "addons.opy"
 
-rule "Ms. Destructo | Created by nebula":
+rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
+    # Credit: nebula#11571
     @Condition isGameInProgress() == true
     
     wait(2)
@@ -854,7 +855,7 @@ rule "Ms. Destructo | Created by nebula":
         MsDestructo.respawn()
         wait(3)
     destroyDummy(MsDestructo.getTeam(), MsDestructo.getSlot())
-    
+
 rule "------------------------------------------------------------------------ Map pasta ------------------------------------------------------------------------ ":
     @Delimiter
     @Disabled
