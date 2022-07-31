@@ -273,6 +273,6 @@ rule "Ban | Deathbhop":
     DeathBhopBan = true
 
 
-rule "Ban | Dash Exploit":
-    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Dash Exploit", false, 4) == true
+rule "Ban | Dash Start":
+    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Dash Start", false, 4) == true
     DashExploitToggle = true
