@@ -48,6 +48,9 @@ rule "Setup and Variables":
     disableScoring()
     disableMusic()
     pauseMatchTime()
+    startForcingSpawn(Team.ALL,  0)
+    startForcingSpawn(Team.ALL,  1)
+    startForcingSpawn(Team.ALL,  2)
     BladeEnabledCheckpoints = []
     DashEnabledCheckpoints = []
     BouncePadCheckpoints = []
@@ -195,6 +198,7 @@ rule "Setup and Variables":
     hudSubtext(getAllPlayers(), " Spray | Toggle leaderboard", HudPosition.RIGHT, -8, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron 
         , 0) # breaks if the defined thing is on the same line
+
 
 
 rule "Initialize and CP HUD":
