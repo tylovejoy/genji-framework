@@ -615,9 +615,10 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
         CheckpointEffect_Sub()
         #This action is "eliminate the display of player clearance results"
         destroyHudText(eventPlayer.PlayerEffects[7])
-    if DashExploitToggle:
-        waitUntil(not eventPlayer.isUsingAbility2(), 0.5)
+    if DashExploitToggle and eventPlayer.isUsingAbility2():
         smallMessage(eventPlayer, "Dash Start is banned!")
+        waitUntil(not eventPlayer.isUsingAbility2(), 0.5)
+        
     eventPlayer.CurrentCheckpoint = 0
     StartGame_Sub()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
