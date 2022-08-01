@@ -221,12 +221,11 @@ rule "Fly/Noclip Toggle | Hold Deflect":
     #@Condition eventPlayer.EditModeSelection > 0
     @Condition eventPlayer.EditModeSelection == 1
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
+    #@Condition not eventPlayer.isHoldingButton(Button.JUMP)
+    #@Condition not eventPlayer.isHoldingButton(Button.CROUCH)
+    #@Condition not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
+    #@Condition not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
 
-    @Condition not eventPlayer.isHoldingButton(Button.JUMP)
-    @Condition not eventPlayer.isHoldingButton(Button.CROUCH)
-    @Condition not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
-    @Condition not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
-    
 
     @Condition eventPlayer.flytoggle == null
 
