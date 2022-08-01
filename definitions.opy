@@ -1,5 +1,7 @@
 #!mainFile "genji.opy"
 
+#!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format("" if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
+
 # ----------------GLOBAL------------------
 #!define CheckpointPositions A
 #!define SelectedCheckpoint_Editing B
@@ -135,7 +137,7 @@ globalvar SavedProgress 30                  # list[Any]                 --- save
 #globalvar toplistPlayers 32
 #globalvar toplistTimes 33
 #globalvar toplistSortedTimes 34
-globalvar LeaderBoardFull 32                # [ [name,time] ]           -- sorted list of 0-20 leaderboard entries
+globalvar LeaderBoardFull 32                # [[name,second,prettytime]]--- sorted list of 0-19 leaderboard entries
 
 globalvar BhopBanToggle 35                  # bool                      --- Enabled if Bhop is banned
 globalvar TempIterator1 38                  # int                       --- temp iterator
@@ -174,6 +176,7 @@ playervar MultiClimbCount 32                # int                       --- clim
 playervar invis 40                          # bool                      --- invis toggle added by fisho
 playervar flytoggle 41                      # vector/null               --- null if not flying, else vector position, added by fisho
 playervar savemaphud 42                     # array                     --- array of save map hud ids
+playervar TracesOff 43                      # bool                      --- turn traces (ring explosion fx) off
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
 
 
