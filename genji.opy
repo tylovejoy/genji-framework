@@ -16,6 +16,7 @@ rule "fisho cp cheat for overpy toggle":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
     @Condition cpcheat
+    @Condition not EditorOn
 
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
@@ -414,6 +415,7 @@ rule "Checkpoint | Finish effects":
     @Condition eventPlayer.TracesOff == false
     #@Condition (eventPlayer.isMoving() == true or eventPlayer.isHoldingButton(Button.JUMP) == true) == true
     /*
+    # old color
     playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.YELLOW, eventPlayer.getPosition(), 1.6)
     playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.GREEN, eventPlayer.getPosition(), 1.4)
     playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.PURPLE, eventPlayer.getPosition(), 1.2)
@@ -422,6 +424,7 @@ rule "Checkpoint | Finish effects":
     playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.AQUA, eventPlayer.getPosition(), 0.6)
     playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.ORANGE, eventPlayer.getPosition(), 0.4)
     playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, eventPlayer.getPosition(), 0.2)
+    
     */
     # rgb((cosDeg(modeList * 360 - 0) + 0.5) * 255, (cosDeg(modeList * 360 - 120) + 0.5) * 255, (cosDeg(modeList * 360 - 240) + 0.5) * 255)
     playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255), eventPlayer.getPosition(), 1.6)
@@ -446,7 +449,7 @@ rule "Toggle Traces":
     eventPlayer.TracesOff = not eventPlayer.TracesOff
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
 
-    smallMessage(eventPlayer, "Invisible {0}".format("off" if eventPlayer.TracesOff else "on"))    
+    smallMessage(eventPlayer, "Traces {0}".format("off" if eventPlayer.TracesOff else "on"))    
     playEffect(eventPlayer, DynamicEffect.DEBUFF_IMPACT_SOUND, null, eventPlayer, 100)
 
 rule "Kill Orb | Activate":
@@ -585,12 +588,10 @@ rule "Player Leaves":
         SavedProgress[SavedProgress.index(eventPlayer) + 3] = 0
 
 
-rule "Combo | Leaderboard Toggle | Spray":
+rule "Combo | Leaderboard Toggle | Melee toggle":
     @Event eachPlayer
-    #@Condition eventPlayer.isCommunicatingSpray()
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.EditModeSelection < 1
-
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.LeaderboardToggle = not eventPlayer.LeaderboardToggle
 
@@ -806,9 +807,9 @@ rule "Give Dash":
     eventPlayer.setAbility1Enabled(true)
     smallMessage(eventPlayer, "Dash is ready")
 
+
+
 /*
-
-
 globalvar itemp
 rule "leaderboard test bots":
     wait(8) # wait for other entities to be created
@@ -844,8 +845,8 @@ rule "leaderboard test ai ":
     #wait(60)
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint+1]+ Vector.UP) # teleport not needed
     
-*/
 
+*/
 
 
 #!include "mechanics.opy"
