@@ -118,52 +118,52 @@ rule "HUD | Show Guide On Spawn":
 
 rule "HUD | Guide":
     @Condition EditorOn
-    #done#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, [].concat(0).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create New Checkpoint\r\nInteract+RMB=Delete selected Checkpoint\r\nInteract+R=Add teleport to Checkpoint", "Interact+Ultimate=Set Checkpoint to your current position\r\nInteract+Crouch=Select previous Checkpoint", "Interact+Jump=Select next Checkpoint\r\nInteract+1 ability=Show all checkpoints")).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create new killing sphere\r\nInteract+RMB=Delete selected sphere\r\nInteract+Crouch=Select previous sphere", "Interact+Jump=Select nex sphere\r\nDeflect+Jump=Make sphere bigger\r\nDeflect+Crouch=Shrink the sphere", "Deflect+LMB=Move forward\r\nDeflect+RMB=Move Backward")).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create new Bouncing Ball\r\nInteract+RMB=Delete selected Ball\r\nInteract+Crouch=Select previous Ball", "Interact+Jump=Select next Ball\r\nDeflect+Jump=Increase Ball's strenght\r\nDeflect+Crouch=Decrease Ball's strenght", "Deflect+LMB=Move Ball forward\r\nDeflect+RMB=Move Ball back"))[hostPlayer.E], "Hold melee to open the guidance text"), HudPosition.RIGHT, -2, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    #done#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, [].concat(0).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create New Checkpoint\r\nInteract+RMB=Delete selected Checkpoint\r\nInteract+R=Add teleport to Checkpoint", "Interact+Ultimate=Set Checkpoint to your current position\r\nInteract+Crouch=Select previous Checkpoint", "Interact+Jump=Select next Checkpoint\r\nInteract+1 ability=Show all checkpoints")).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create new Kill Orb\r\nInteract+RMB=Delete selected sphere\r\nInteract+Crouch=Select previous sphere", "Interact+Jump=Select nex sphere\r\nDeflect+Jump=Make sphere bigger\r\nDeflect+Crouch=Shrink the sphere", "Deflect+LMB=Move forward\r\nDeflect+RMB=Move Backward")).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create new Bounce Orb\r\nInteract+RMB=Delete selected Ball\r\nInteract+Crouch=Select previous Ball", "Interact+Jump=Select next Ball\r\nDeflect+Jump=Increase Ball's strength\r\nDeflect+Crouch=Decrease Ball's strength", "Deflect+LMB=Move Ball forward\r\nDeflect+RMB=Move Ball back"))[hostPlayer.E], "Hold melee to open the guidance text"), HudPosition.RIGHT, -2, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     #to test#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, "Crouch+LMB=Next lvl\r\nCrouch+RMB=Prev lvl\r\nIn invincbile mode:\r\nE=Trough Wall", ""), HudPosition.RIGHT, -1, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     #to test#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, "Hold melee to hide guidence text\r\nCreated by: 易忘#51876\r\nUdpated by: 五里雾中#51574\r\nTranslated by: Xerteks#2929,FATHER", ""), HudPosition.RIGHT, 0, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     
     #hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, "{0}\r\n{1}{2}\r\n{3}".format("To save the map:\r\n1.Interact+Melee+Reload to clear excess data", "2.Open Workshop Inspector - Set variable target as global - click the [x]\r\n3.Open Workshop Editor - open [Checkpoint | Position]", "- CLICK THE YELLOW [+] SIGN\r\n4.TURN OFF EDIT RULES\r\n{0}{1}\r\n{2}".format("ESC→SHOW LOBBY→SETTINGS→SHARE CODE→CREATE NEW CODE→COPY CODE\r\n6.OPEN WORKSHOP EDITOR - PASTE MAP CODE AND ADD YOUR", "NICKNAME AS AUTHOR IN \"TEXT\" \r\n7.ESC→SHOW LOBBY→SETTINGS→SHARE CODE→UPLOAD TO EXISTING CODE→\r\n{0}".format(" PASTE THE CODE YOU CREATED IN STEP 5"), "\n")), ""), HudPosition.LEFT, -12, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    #hudText(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, [].concat(0).concat("Hold Dash to change editing mode\r\nCurrent mode: Checkpoints").concat("Hold Dash to change editing mode\r\nCurrent mode: Killing Sphere").concat("Hold Dash to change editing mode\r\nCurrent mode: Bouncing Ball")[hostPlayer.E], "Guide HUD has been closed"), null, [].concat("").concat("").concat("").concat("Hold Q+LMB=Turn Ultimate On/Off\r\nHold Q+RMB=Turn Dash On/Off")[hostPlayer.E], HudPosition.LEFT, -6, Color.RED, Color.WHITE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    #hudText(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, [].concat(0).concat("Hold Dash to change editing mode\r\nCurrent mode: Checkpoints").concat("Hold Dash to change editing mode\r\nCurrent mode: Kill Orb").concat("Hold Dash to change editing mode\r\nCurrent mode: Bounce Orb")[hostPlayer.E], "Guide HUD has been closed"), null, [].concat("").concat("").concat("").concat("Hold Q+LMB=Turn Ultimate On/Off\r\nHold Q+RMB=Turn Dash On/Off")[hostPlayer.E], HudPosition.LEFT, -6, Color.RED, Color.WHITE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
     hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
-        "{0}".format(
-        [
-        "Interact+LMB=Create New Checkpoint\n"
-        "Interact+RMB=Delete selected Checkpoint\n"
-        "Interact+R=Add teleport to Checkpoint\n"
-        "Interact+Ultimate=Set Checkpoint to your current position\n"
-        "Interact+Crouch=Select previous Checkpoint\n"
-        "Interact+Jump=Select next Checkpoint\n"
-        "Interact+1 ability=Show all checkpoints",
+        "{0}".format(    
+    [
+        "{0} + {1} | Create New Checkpoint\n"
+        "{0} + {2} | Delete selected Checkpoint\n"
+        "{0} + {3} | Add teleport to Checkpoint\n"
+        "{0} + {4} | Set Checkpoint to current position\n"
+        "{0} + {5} | Select previous Checkpoint\n"
+        "{0} + {6} | Select next Checkpoint\n"
+        "{0} + {7} | Show all checkpoints".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_1)),
 
-        "Interact+LMB=Create new killing sphere\n"
-        "Interact+RMB=Delete selected sphere\n"
-        "Interact+Crouch=Select previous sphere\n"
-        "Interact+Jump=Select nex sphere\n"
-        "Deflect+Jump=Make sphere bigger\r\nDeflect+Crouch=Shrink the sphere\n"
-        "Deflect+LMB=Move forward\n"
-        "Deflect+RMB=Move Backward",
-
-        "Interact+LMB=Create new Bouncing Ball\n"
-        "Interact+RMB=Delete selected Ball\n"
-        "Interact+Crouch=Select previous Ball\n"
-        "Interact+Jump=Select next Ball\n"
-        "Deflect+Jump=Increase Ball's strenght\n"
-        "Deflect+Crouch=Decrease Ball's strenght\n"
-        "Deflect+LMB=Move Ball forward\n"
-        "Deflect+RMB=Move Ball back"
+        "{0} + {1} | Create new kill orb\n"
+        "{0} + {2} | Delete selected orb\n"
+        "{0} + {3} | Select previous orb\n"
+        "{0} + {4} | Select nex orb\n"
+        "{5} + {4} | Increase orb size\r\n{5}+{3}=Decrease orb size\n"
+        "{5} + {1} | Move orb forward\n"
+        "{5} + {2} | Move orb Backward".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2)),
+ 
+        "{0} + {1} | Create new Bounce orb\n"
+        "{0} + {2} | Delete selected orb\n"
+        "{0} + {3} | Select previous orb\n"
+        "{0} + {4} | Select next orb\n"
+        "{5} + {4} | Increase orb strength\n"
+        "{5} + {3} | Decrease Borball strength\n"
+        "{5} + {1} | Move orb forward\n"
+        "{5} + {2} | Move orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
         ][hostPlayer.EditModeSelection-1]), 
         HudPosition.RIGHT, 10, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     hudSubtext(hostPlayer, #if hostPlayer.GuideToggle else null, 
-        "Crouch+LMB=Next lvl\n"
-        "Crouch+RMB=Prev lvl\n"
-        "hold melee to toggle guidence text\n"
+        "{0} + {1} | Next checkpoint\n"
+        "{0} + {2} | Prev checkpoint\n"
+        "Hold {3} to toggle guide\n"
         #"In invincbile mode:\n"
-        "E=Fly (checkpoint mode only)\n"
+        "{4} | Fly (checkpoint mode only)\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.MELEE), buttonString(Button.ABILITY_2))
         if hostPlayer.GuideToggle == 1  else
-        "Hold melee to toggle guidence text"
+        "Hold {0} to toggle guide".format(buttonString(Button.ABILITY_2))
         ,
         HudPosition.RIGHT, 11, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
@@ -176,7 +176,7 @@ rule "HUD | Guide":
     )
     */
     hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
-        "save map: hold interact+melee+reload and follow instructions",
+    "save map: hold {0} + {1} + {2} and follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
         #"Interact+Melee+Reload to clear excess data\n"
         #"2. Open Workshop Inspector - Set variable target as global - click the [x]\n"
         #"3. Open Workshop Editor - open [Checkpoint | Position] - CLICK THE YELLOW [+] SIGN\n"
@@ -189,13 +189,14 @@ rule "HUD | Guide":
     )
 
     hudText(getAllPlayers(), #if hostPlayer.GuideToggle == 1 else null, 
-        "Hold Dash to change editing mode\n"
-        "Current mode: {0}".format(["Checkpoints","Killing Sphere","Bouncing Ball"][hostPlayer.EditModeSelection -1])
+        "Hold {0} to change editing mode\n"
+        "Current mode: {1}".format(buttonString(Button.ABILITY_2), ["Checkpoints","Kill Orb","Bounce Orb"][hostPlayer.EditModeSelection -1])
         if localPlayer == hostPlayer else "Current editor/host: {0}".format(hostPlayer)
         ,
         null,        
-        "Hold Q+LMB=Turn Ultimate On/Off\n"
-        "Hold Q+RMB=Turn Dash On/Off" if hostPlayer.EditModeSelection == 3 else "",
+        "Hold {0} + {1} | Turn Ultimate On/Off\n"
+        "Hold {0} + {2} | Turn Dash On/Off".format(buttonString(Button.ULTIMATE), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE))
+        if hostPlayer.EditModeSelection == 3 else "",
             
         HudPosition.LEFT, -6, Color.RED, Color.WHITE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
@@ -208,8 +209,8 @@ rule "HUD | Guide Effects":
     #createEffect(getAllPlayers(), Effect.SPHERE, Color.RED, H[J], I[J], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createEffect(getAllPlayers(), Effect.GOOD_AURA, Color.PURPLE, BouncePositions[CurrentBounce_Editing], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     #Don't open it easily, the action will be too long
-    hudText(hostPlayer, [].concat(0).concat("Selected Checkpoint's number: {0}".format(SelectedCheckpoint_Editing)).concat("Current Killing Sphere's radius: {0}".format(KillBallRadii[SelectedKillball_Editing])).concat("Current Bouncing Ball's strenght: {0}".format(BounceStrength[CurrentBounce_Editing]))[hostPlayer.EditModeSelection], null, [].concat("").concat("").concat("").concat("Current Bouncing Ball's Ultimate: {0}\r\nCurrent Bouncing Ball's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]))[hostPlayer.EditModeSelection], HudPosition.TOP, -14, Color.RED, Color.WHITE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    createInWorldText(getAllPlayers(), "Selected Killing Sphere", KillBallPositions[SelectedKillball_Editing], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+    hudText(hostPlayer, [].concat(0).concat("Selected Checkpoint's number: {0}".format(SelectedCheckpoint_Editing)).concat("Current Kill Orb's radius: {0}".format(KillBallRadii[SelectedKillball_Editing])).concat("Current Bounce Orb's strength: {0}".format(BounceStrength[CurrentBounce_Editing]))[hostPlayer.EditModeSelection], null, [].concat("").concat("").concat("").concat("Current Bounce Orb's Ultimate: {0}\r\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]))[hostPlayer.EditModeSelection], HudPosition.TOP, -14, Color.RED, Color.WHITE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    createInWorldText(getAllPlayers(), "Selected Kill Orb", KillBallPositions[SelectedKillball_Editing], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
     createEffect(getAllPlayers(), Effect.ORB, Color.RED, KillBallChase, 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createInWorldText(hostPlayer, l"{0} m".format(distance(hostPlayer, KillBallChase)), KillBallChase - vect(0, 1.5, 0), 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
     createIcon(getAllPlayers(), KillBallPositions[SelectedKillball_Editing] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.RED, true)
@@ -263,10 +264,10 @@ rule "Change Edit Mode | Hold Dash":
     eventPlayer.flytoggle = null
     if eventPlayer.EditModeSelection == 1:
         eventPlayer.EditModeSelection = 2
-        smallMessage(hostPlayer, "Current mode: Killing sphere")
+        smallMessage(hostPlayer, "Current mode: Kill Orb")
     elif eventPlayer.EditModeSelection == 2:
         eventPlayer.EditModeSelection = 3
-        smallMessage(hostPlayer, "Current mode: Bouncing Ball")
+        smallMessage(hostPlayer, "Current mode: Bounce Orb")
     elif eventPlayer.EditModeSelection == 3:
         eventPlayer.EditModeSelection = 1
         smallMessage(hostPlayer, "Current mode: Checkpoint")
@@ -470,7 +471,7 @@ rule "Checkpoint | Create | Interact + Primary Fire":
         smallMessage(getAllPlayers(), "New Checkpoint has been created")
     elif eventPlayer.EditModeSelection == 2:
         if eventPlayer.CurrentCheckpoint == 0:
-            bigMessage(getAllPlayers(), "Cannot place killing sphere on level 0")
+            bigMessage(getAllPlayers(), "Cannot place Kill Orb on first checkpoint")
         else:
             KillBallPositions.append(eventPlayer.getPosition())
             KillballCheckpoints.append(eventPlayer.CurrentCheckpoint)
@@ -481,10 +482,10 @@ rule "Checkpoint | Create | Interact + Primary Fire":
             KillBallEffects = []
             KILLBALL()
             KillBallChase = KillBallPositions[SelectedKillball_Editing]
-            bigMessage(getAllPlayers(), "New killing sphere has been created! \r\nIt's only valid for level {0}".format(eventPlayer.CurrentCheckpoint))
+            bigMessage(getAllPlayers(), "New Kill Orb has been created! \r\nIt's only valid for checkpoint {0}".format(eventPlayer.CurrentCheckpoint))
     elif eventPlayer.EditModeSelection == 3:
         if eventPlayer.CurrentCheckpoint == 0:
-            bigMessage(getAllPlayers(), "Cannot place bouncing balls on level 0")
+            bigMessage(getAllPlayers(), "Cannot place bounce orb on first checkpoint")
         else:
             BouncePositions.append(eventPlayer.getPosition())
             CurrentBounce_Editing = len(BouncePositions) - 1
@@ -497,7 +498,7 @@ rule "Checkpoint | Create | Interact + Primary Fire":
             pinball()
             CurrentBouncePosition_Editing = BouncePositions[CurrentBounce_Editing]
             BouncePadCheckpoints.append(eventPlayer.CurrentCheckpoint)
-            bigMessage(getAllPlayers(), "New bouncing ball has been created! \r\nIt's only valid for level {0}".format(eventPlayer.CurrentCheckpoint))
+            bigMessage(getAllPlayers(), "New Bounce Orb has been created! \r\nIt's only valid for checkpoint {0}".format(eventPlayer.CurrentCheckpoint))
 
 
 rule "Checkpoint | Delete | Interact + Secondary Fire":

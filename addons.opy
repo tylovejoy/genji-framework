@@ -22,12 +22,12 @@ rule "Portal 1 -> 2 <---- EDIT ME":
     @Event eachPlayer
     #Modify vector (0, 0, 0) to start teleport position
     @Condition distance(eventPlayer, vect(0, 0, 0)) <= 1.4
-    #Modify "-1" to the number of levels of the portal level
+    #Modify "-1" to the number of levels of the portal checkpoint
     @Condition (eventPlayer.CurrentCheckpoint == -1 or eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1) == true
 
     #Modify the vector (0, 0, 0) to the position where the teleport ends
     eventPlayer.teleport(vect(0, 0, 0))
-    #If you don't want to find the coordinates, send it directly to level 0
+    #If you don't want to find the coordinates, send it directly to checkpoint 0
     eventPlayer.teleport(CheckpointPositions[0])
 
 rule "Portal 2 -> 3 <---- EDIT ME":
@@ -35,12 +35,12 @@ rule "Portal 2 -> 3 <---- EDIT ME":
     @Event eachPlayer
     #Modify vector (0, 0, 0) to start teleport position
     @Condition distance(eventPlayer, vect(0, 0, 0)) <= 1.4
-    #Modify "-1" to the number of levels of the portal level
+    #Modify "-1" to the number of levels of the portal checkpoint
     @Condition (eventPlayer.CurrentCheckpoint == -1 or eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1) == true
 
     #Modify the vector (0, 0, 0) to the position where the teleport ends
     eventPlayer.teleport(vect(0, 0, 0))
-    #If you don't want to find the coordinates, send it directly to level 0
+    #If you don't want to find the coordinates, send it directly to checkpoint 0
     eventPlayer.teleport(CheckpointPositions[0])
 
 rule "Portal 3 -> 1 <---- EDIT ME":
@@ -48,12 +48,12 @@ rule "Portal 3 -> 1 <---- EDIT ME":
     @Event eachPlayer
     #Modify vector (0, 0, 0) to start teleport position
     @Condition distance(eventPlayer, vect(0, 0, 0)) <= 1.4
-    #Modify "-1" to the number of levels of the portal level
+    #Modify "-1" to the number of levels of the portal checkpoint
     @Condition (eventPlayer.CurrentCheckpoint == -1 or eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1) == true
 
     #Modify the vector (0, 0, 0) to the position where the teleport ends
     eventPlayer.teleport(vect(0, 0, 0))
-    #If you don't want to find the coordinates, send it directly to level 0
+    #If you don't want to find the coordinates, send it directly to checkpoint 0
     eventPlayer.teleport(CheckpointPositions[0])
 
 rule "In world text for certain Checkpoints <---- EDIT ME":

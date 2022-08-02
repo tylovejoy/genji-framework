@@ -12,7 +12,7 @@ rule "Checking | Jump":
     @Condition eventPlayer.JumpCount != 2
     
     #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
-    #When this rule is turned on, the effect is "open three stages for a specific level", 
+    #When this rule is turned on, the effect is "open three stages for a specific checkpoint", 
     #and when it is turned off, it means "ban all levels for three stages"
     #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
     #Notes must be read! The effect of this condition being turned on is "Automatically open three stages after customs clearance", 
@@ -37,7 +37,7 @@ rule "Checking | In the air":
     @Condition eventPlayer.isInAir() == true
     
     #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
-    #When this rule is turned on, the effect is "open three stages for a specific level", 
+    #When this rule is turned on, the effect is "open three stages for a specific checkpoint", 
     #and when it is turned off, it means "ban all levels for three stages"
     #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
     #Notes must be read! The effect of this condition being turned on is "Automatically open three stages after customs clearance", 
@@ -105,7 +105,7 @@ rule "Checking | Bhop/Double Jump Initialization":
     @Condition eventPlayer.isOnGround() == true
     
     #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
-    # When this rule is turned on, the effect is "open three stages in a specific level", 
+    # When this rule is turned on, the effect is "open three stages in a specific checkpoint", 
     # and when it is turned off, it will be "banned three stages in all levels"
     #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
     # Notes must be read! When this condition is turned on, the effect is "Automatically open three stages after customs clearance", 
@@ -125,7 +125,7 @@ rule "Checking | Double jump, initialized with small jump":
     @Condition eventPlayer.isOnGround() == true
     
     #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
-    #When this rule is turned on, the effect is "open three stages for a specific level", 
+    #When this rule is turned on, the effect is "open three stages for a specific checkpoint", 
     #and when it is turned off, it means "ban all levels for three stages"
     #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
     #Notes must be read! The effect of this condition being turned on is "Automatically open three stages after customs clearance", 
