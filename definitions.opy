@@ -1,11 +1,14 @@
 #!mainFile "genji.opy"
 
+##!define RestartTimer(timeInMinutes) "{0} Hours and {1} Minutes".format(floor(timeInMinutes / 60 / 60), "{0}{1}".format(floor(timeInMinutes % 60 / 10), floor(timeInMinutes % 60 - floor(timeInMinutes % 60 / 10) * 10)))
+
+
 # ----------------GLOBAL------------------
 #!define CheckpointPositions A
 #!define SelectedCheckpoint_Editing B
 #!define CheckpointRings_Editing C 
 #3 MsDestructo
-#4 dva
+#4 TimeRemaining
 #!define Portal1PlayerList F
 #!define Portal2PlayerList G
 #!define KillBallPositions H
@@ -95,6 +98,7 @@ globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- some
 globalvar SelectedCheckpoint_Editing 1      # int                       --- selected checkpoint
 globalvar CheckpointRings_Editing 2         # list[effect]              --- Holds checkpoint effects in editing context
 globalvar MsDestructo 3                     # MsDestructo Player
+globalvar TimeRemaining 4
 globalvar Portal1PlayerList 5               # list[player]              --- players who can see portal 1
 globalvar Portal2PlayerList 6               # list[player]              --- players who can see portal 2
 globalvar KillBallPositions 7               # list[vect]                --- KillBall position

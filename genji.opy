@@ -41,8 +41,6 @@ rule "------------------------------------------------------------------------  
 
 rule "Setup and Variables":
     # disableInspector()
-
-    
     getAllPlayers().disableRespawn()
     disableGamemodeCompletion()
     disableScoring()
@@ -71,10 +69,11 @@ rule "Setup and Variables":
     KILLBALL()
     wait(2)
     pinball()
-    if getCurrentGamemode() == Gamemode.SKIRMISH:
-        hudText(getAllPlayers(), "", null, "{0} {1} {2}".format("Time left until server resets:", 270 - floor(getTotalTimeElapsed() / 60), "Minutes"), HudPosition.RIGHT, -15, Color.WHITE, Color.WHITE, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    else:
-        hudText(getAllPlayers(), "", null, "{0} {1} {2}".format("Time left until server resets:", 90 - floor(getTotalTimeElapsed() / 60), "Minutes"), HudPosition.RIGHT, -15, Color.WHITE, Color.WHITE, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+
+    # if getCurrentGamemode() == Gamemode.SKIRMISH:
+    #     hudText(getAllPlayers(), "", null, "{0} {1} {2}".format("Time left until server resets:", 270 - floor(getTotalTimeElapsed() / 60), "Minutes"), HudPosition.RIGHT, -15, Color.WHITE, Color.WHITE, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    # else:
+    #     hudText(getAllPlayers(), "", null, "{0} {1} {2}".format("Time left until server resets:", 90 - floor(getTotalTimeElapsed() / 60), "Minutes"), HudPosition.RIGHT, -15, Color.WHITE, Color.WHITE, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     SavedProgress = []
     # old board
     /*
@@ -196,6 +195,33 @@ rule "Setup and Variables":
     EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron 
         , 0) # breaks if the defined thing is on the same line
 
+    
+
+rule "Match time":
+    # Created by Hax, edited by FishoFire
+    if getCurrentGamemode() != Gamemode.SKIRMISH:
+        wait(0.25)
+        setMatchTime(1)
+        wait(1.1)
+        setMatchTime(1)
+        wait(1.1)
+
+    while TimeRemaining < 5:
+        setMatchTime(3600)
+        wait(2875)
+        TimeRemaining += 1
+   
+    TimeRemaining = 1800
+    hudHeader(getAllPlayers(), "  Server Restarts In {0} Min  ".format(ceil(TimeRemaining / 60)), HudPosition.RIGHT, -200, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+    chase(TimeRemaining, 0, rate=1, ChaseReeval.NONE)
+    wait(1795)
+    bigMessage(getAllPlayers(), "maximum lobby time expired, restarting")
+    wait(5)
+
+    if getCurrentGamemode() == Gamemode.FFA:
+        declarePlayerVictory(hostPlayer)
+    else:
+        declareTeamVictory(hostPlayer.getTeam())
 
 rule "Initialize and CP HUD":
     @Event eachPlayer
@@ -203,7 +229,7 @@ rule "Initialize and CP HUD":
     @Condition eventPlayer.hasSpawned() == true
 
     hudSubheader(eventPlayer,"{0}{1}".format("Invis on\n" if eventPlayer.invis else "","You are invincible" if eventPlayer.InvincibleToggle else "") , HudPosition.TOP, -12, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudSubtext(eventPlayer, "{0} {1}".format("level ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(eventPlayer, "{0} {1}".format("Checkpoint ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(eventPlayer, "Time {0} sec".format(eventPlayer.Timer), HudPosition.LEFT, -2, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     
     #StartGame_Sub is the initialization of the game
