@@ -29,12 +29,13 @@ settings {
         "general": {
             "enableHeroSwitching": false,
             "enableEnemyHealthBars": false,
-            "gamemodeStartTrigger": "manual",
+            "gamemodeStartTrigger": "immediately",
             "heroLimit": "off",
             "enableKillCam": false,
             "enableKillFeed": false,
             "respawnTime%": 0,
-            "spawnHealthPacks": "disabled"
+            "spawnHealthPacks": "disabled",
+            "enableRandomHeroes": true,
         }
     },
     "heroes": {
