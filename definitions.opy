@@ -101,8 +101,8 @@ globalvar SelectedCheckpoint_Editing 1      # int                       --- sele
 globalvar CheckpointRings_Editing 2         # list[effect]              --- Holds checkpoint effects in editing context
 globalvar MsDestructo 3                     # MsDestructo Player
 globalvar TimeRemaining 4
-globalvar Portal1PlayerList 5               # list[player]              --- players who can see portal 1
-globalvar Portal2PlayerList 6               # list[player]              --- players who can see portal 2
+#globalvar Portal1PlayerList 5               # list[player]              --- players who can see portal 1
+#globalvar Portal2PlayerList 6               # list[player]              --- players who can see portal 2
 globalvar KillBallPositions 7               # list[vect]                --- KillBall position
 globalvar KillBallRadii 8                   # list[float]               --- KillBall radius, default 5
 globalvar SelectedKillball_Editing 9        # int                       --- Current killball in editing context
@@ -112,7 +112,7 @@ globalvar BladeEnabledCheckpoints 12        # int                       --- blad
 globalvar DashEnabledCheckpoints 13         # int                       --- dash enabled, should be bool.
 globalvar ListPlayersAtCheckpoints 15       # list[list[player]]        --- players at a specific checkpoint
 #globalvar ActivePlayers 16                  # list[player]              --- Active players, Non-saved, non-spectating active players
-globalvar EditorOn 17                       # bool                      --- editor rules enabled?
+#globalvar EditorOn 17                       # bool                      --- editor rules enabled?
 
 #Bounce Pad editing stuff
 globalvar BouncePositions 18                # list[vect]                --- list of bouncepad positions
@@ -181,6 +181,7 @@ playervar invis 40                          # bool                      --- invi
 playervar flytoggle 41                      # vector/null               --- null if not flying, else vector position, added by fisho
 playervar savemaphud 42                     # array                     --- array of save map hud ids
 playervar TracesOff 43                      # bool                      --- turn traces (ring explosion fx) off
+playervar EditorOn 45                       # bool                      --- on all players, but only gets checked from host player
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
 
 

@@ -1,7 +1,7 @@
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 # cheats
-editortoggle(5) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 
 #!define touchground false
 #!define cpcheat true
@@ -16,7 +16,7 @@ rule "fisho cp cheat for overpy toggle":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
     @Condition cpcheat
-    @Condition not EditorOn
+    @Condition not eventPlayer.EditorOn
 
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
@@ -55,8 +55,8 @@ rule "Setup and Variables":
     BouncePadCheckpoints = []
     KillballCheckpoints = []
     CheckpointPositions = []
-    Portal1PlayerList = []
-    Portal2PlayerList = []
+    #Portal1PlayerList = []
+    #Portal2PlayerList = []
     KillBallPositions = []
     KillBallRadii = []
     KillBallEffects = []
@@ -200,11 +200,7 @@ rule "Setup and Variables":
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | Toggle leaderboard".format(buttonString(Button.MELEE)), HudPosition.RIGHT, -14, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     
     hudSubtext([i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1], " \nHold {0} | Toggle Traces".format(buttonString(Button.ULTIMATE)), HudPosition.LEFT, 100, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)  
-
-    EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron 
-        , 0) # breaks if the defined thing is on the same line
-
-    
+   
 
 rule "Match time":
     # Created by Hax, edited by FishoFire
@@ -235,13 +231,16 @@ rule "Match time":
 
 rule "Initialize and CP HUD":
     @Event eachPlayer
-    @Hero genji
+    #@Hero genji
     @Condition eventPlayer.hasSpawned() == true
-
+    @Condition eventPlayer.getCurrentHero() == Hero.GENJI
     hudSubheader(eventPlayer,"{0}{1}".format("Invis on\n" if eventPlayer.invis else "","You are invincible" if eventPlayer.InvincibleToggle else "") , HudPosition.TOP, -12, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(eventPlayer, "{0} {1}".format("Checkpoint ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(eventPlayer, "Time {0} sec".format(eventPlayer.Timer), HudPosition.LEFT, -2, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    
+        
+    eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron 
+        , 0) # breaks if the defined thing is on the same line
+
     #StartGame_Sub is the initialization of the game
     StartGame_Sub()
     eventPlayer.enableDeathSpectateAllPlayers()
@@ -253,7 +252,6 @@ rule "Initialize and CP HUD":
     CheckpointEffect_Sub()
 
     eventPlayer.disableGamemodeHud()
-    
 
 
 def checkpointFailReset():
@@ -427,8 +425,8 @@ rule "Checkpoint | Arrived":
         destroyEffect(eventPlayer.PlayerEffects[2])
         destroyIcon(eventPlayer.PlayerEffects[3])
         destroyInWorldText(eventPlayer.PlayerEffects[4])
-        Portal1PlayerList.append(eventPlayer)
-        Portal2PlayerList.append(eventPlayer)
+        #Portal1PlayerList.append(eventPlayer)
+        #Portal2PlayerList.append(eventPlayer)
         eventPlayer.PortalText = 2
         Leaderboardupdate()
 
@@ -628,7 +626,8 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
-    
+    eventPlayer.flytoggle = null
+
     if "{0}".format(eventPlayer) in SavedProgress:
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
@@ -649,9 +648,9 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
     eventPlayer.CurrentCheckpoint = 0
     StartGame_Sub()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
-    Portal1PlayerList.remove(eventPlayer)
-    Portal2PlayerList.remove(eventPlayer)
-
+    #Portal1PlayerList.remove(eventPlayer)
+    #Portal2PlayerList.remove(eventPlayer)
+    
 
 rule "Combo | Enter Spectate | Hold Interact":
     @Event eachPlayer

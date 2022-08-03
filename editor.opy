@@ -7,7 +7,7 @@ rule "------------------------------------------------------------------------  
     @Disabled
     
 rule "Inspector | Update Every 10 Minutes":
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     disableInspector()
     wait(10)
     enableInspector()
@@ -16,7 +16,7 @@ rule "Inspector | Update Every 10 Minutes":
 
 rule "HUD | Clear Excess Data & Save Map":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
@@ -24,8 +24,8 @@ rule "HUD | Clear Excess Data & Save Map":
     
     SelectedCheckpoint_Editing = 0
     CheckpointRings_Editing = 0
-    Portal1PlayerList = 0
-    Portal2PlayerList = 0
+    #Portal1PlayerList = 0
+    #Portal2PlayerList = 0
     SelectedKillball_Editing = 0
     KillBallEffects = 0
     KillBallChase = 0
@@ -93,7 +93,7 @@ rule "HUD | Clear Excess Data & Save Map":
 
 rule "HUD | Show/Hide Guide | Hold Melee":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.EditModeSelection >= 1
@@ -110,14 +110,14 @@ rule "HUD | Show/Hide Guide | Hold Melee":
 
 rule "HUD | Show Guide On Spawn":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.hasSpawned() == true
     
     eventPlayer.EditModeSelection = 1
     eventPlayer.GuideToggle = 1
 
 rule "HUD | Guide":
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     #done#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, [].concat(0).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create New Checkpoint\r\nInteract+RMB=Delete selected Checkpoint\r\nInteract+R=Add teleport to Checkpoint", "Interact+Ultimate=Set Checkpoint to your current position\r\nInteract+Crouch=Select previous Checkpoint", "Interact+Jump=Select next Checkpoint\r\nInteract+1 ability=Show all checkpoints")).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create new Kill Orb\r\nInteract+RMB=Delete selected sphere\r\nInteract+Crouch=Select previous sphere", "Interact+Jump=Select nex sphere\r\nDeflect+Jump=Make sphere bigger\r\nDeflect+Crouch=Shrink the sphere", "Deflect+LMB=Move forward\r\nDeflect+RMB=Move Backward")).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create new Bounce Orb\r\nInteract+RMB=Delete selected Ball\r\nInteract+Crouch=Select previous Ball", "Interact+Jump=Select next Ball\r\nDeflect+Jump=Increase Ball's strength\r\nDeflect+Crouch=Decrease Ball's strength", "Deflect+LMB=Move Ball forward\r\nDeflect+RMB=Move Ball back"))[hostPlayer.E], "Hold melee to open the guidance text"), HudPosition.RIGHT, -2, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     #to test#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, "Crouch+LMB=Next lvl\r\nCrouch+RMB=Prev lvl\r\nIn invincbile mode:\r\nE=Trough Wall", ""), HudPosition.RIGHT, -1, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     #to test#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, "Hold melee to hide guidence text\r\nCreated by: 易忘#51876\r\nUdpated by: 五里雾中#51574\r\nTranslated by: Xerteks#2929,FATHER", ""), HudPosition.RIGHT, 0, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
@@ -203,7 +203,7 @@ rule "HUD | Guide":
 
 
 rule "HUD | Guide Effects":
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     createIcon(getAllPlayers(), CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.RED, true)
     createInWorldText(getAllPlayers(), "Selected Checkpoint", CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.5, 0), 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
     #createEffect(getAllPlayers(), Effect.SPHERE, Color.RED, H[J], I[J], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
@@ -218,19 +218,21 @@ rule "HUD | Guide Effects":
 
 rule "Fly/Noclip Toggle | Hold Deflect":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     #@Condition eventPlayer.EditModeSelection > 0
     @Condition eventPlayer.EditModeSelection == 1
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     #@Condition not eventPlayer.isHoldingButton(Button.JUMP)
-    #@Condition not eventPlayer.isHoldingButton(Button.CROUCH)
+    @Condition not eventPlayer.isHoldingButton(Button.CROUCH)
     #@Condition not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     #@Condition not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
-
-
     @Condition eventPlayer.flytoggle == null
 
-    waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_2), 1)
+    waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_2) or (eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.INTERACT)), 1)
+    if eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.INTERACT):
+        wait()
+        return
+
     eventPlayer.flytoggle = eventPlayer.getPosition() + Vector.UP
     eventPlayer.startForcingPosition(eventPlayer.flytoggle, true)
     eventPlayer.disableEnvironmentCollision(true)
@@ -262,7 +264,7 @@ rule "Deflect TP":
 
 rule "Change Edit Mode | Hold Dash":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1) == true
     @Condition eventPlayer == hostPlayer
     
@@ -281,7 +283,7 @@ rule "Change Edit Mode | Hold Dash":
 
 rule "Bounce Ball | Toggle Ultimate | Ultimate + Primary Fire":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
     @Condition eventPlayer == hostPlayer
@@ -297,7 +299,7 @@ rule "Bounce Ball | Toggle Ultimate | Ultimate + Primary Fire":
 
 rule "Bounce Ball | Toggle Dash | Ultimate + Secondary Fire":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
     @Condition eventPlayer == hostPlayer
@@ -313,7 +315,7 @@ rule "Bounce Ball | Toggle Dash | Ultimate + Secondary Fire":
 
 rule "Bounce Ball | Increase Strength | Deflect + Jump":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer == hostPlayer
@@ -327,7 +329,7 @@ rule "Bounce Ball | Increase Strength | Deflect + Jump":
 
 rule "Bounce Ball | Decrease Strength | Deflect + Crouch":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer == hostPlayer
@@ -343,7 +345,7 @@ rule "Bounce Ball | Decrease Strength | Deflect + Crouch":
 
 rule "Kill Orb | Increase Size | Deflect + Jump":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
     @Condition eventPlayer == hostPlayer
@@ -369,7 +371,7 @@ rule "Kill Orb | Increase Size | Deflect + Jump":
 
 rule "Kill Orb | Decrease Size | Deflect + Crouch":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer == hostPlayer
@@ -390,7 +392,7 @@ rule "Kill Orb | Decrease Size | Deflect + Crouch":
 
 rule "Kill Orb | Move Toward | Deflect + Primary Fire":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
     @Condition eventPlayer == hostPlayer
@@ -428,7 +430,7 @@ rule "Kill Orb | Move Toward | Deflect + Primary Fire":
 
 rule "Kill Orb | Move Backward | Deflect + Secondary Fire":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
     @Condition eventPlayer == hostPlayer
@@ -466,7 +468,7 @@ rule "Kill Orb | Move Backward | Deflect + Secondary Fire":
 
 rule "Checkpoint | Create | Interact + Primary Fire":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
     @Condition eventPlayer == hostPlayer
@@ -509,7 +511,7 @@ rule "Checkpoint | Create | Interact + Primary Fire":
 
 rule "Checkpoint | Delete | Interact + Secondary Fire":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
     @Condition eventPlayer == hostPlayer
@@ -550,7 +552,7 @@ rule "Checkpoint | Delete | Interact + Secondary Fire":
 
 rule "Checkpoint | Move | Ultimate + Interact":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer == hostPlayer
@@ -562,7 +564,7 @@ rule "Checkpoint | Move | Ultimate + Interact":
 
 rule "Checkpoint | Select Previous | Interact + Crouch":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer == hostPlayer
@@ -588,7 +590,7 @@ rule "Checkpoint | Select Previous | Interact + Crouch":
 
 rule "Checkpoint | Select Next | Interact + Jump":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
     @Condition eventPlayer == hostPlayer
@@ -614,7 +616,7 @@ rule "Checkpoint | Select Next | Interact + Jump":
 
 rule "Checkpoint | Hide All | Interact + Dash":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1) == true
     @Condition eventPlayer == hostPlayer
@@ -626,7 +628,7 @@ rule "Checkpoint | Hide All | Interact + Dash":
 
 
 rule "Checkpoint | Show All |":
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition SelectedCheckpoint_Editing == -2
     
     for SelectedCheckpoint_Editing in range(len(CheckpointPositions)):
@@ -636,7 +638,7 @@ rule "Checkpoint | Show All |":
 
 rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
     @Event eachPlayer
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
 
@@ -654,7 +656,7 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
 
 
 rule "Teleport | Add | Interact + Reload":
-    @Condition EditorOn
+    @Condition hostPlayer.EditorOn
     @Condition hostPlayer.isHoldingButton(Button.MELEE) == false
     @Condition hostPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition hostPlayer.isHoldingButton(Button.RELOAD) == true
