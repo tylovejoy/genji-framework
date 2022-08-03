@@ -126,8 +126,8 @@ rule "HUD | Guide":
     #hudText(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, [].concat(0).concat("Hold Dash to change editing mode\r\nCurrent mode: Checkpoints").concat("Hold Dash to change editing mode\r\nCurrent mode: Kill Orb").concat("Hold Dash to change editing mode\r\nCurrent mode: Bounce Orb")[hostPlayer.E], "Guide HUD has been closed"), null, [].concat("").concat("").concat("").concat("Hold Q+LMB=Turn Ultimate On/Off\r\nHold Q+RMB=Turn Dash On/Off")[hostPlayer.E], HudPosition.LEFT, -6, Color.RED, Color.WHITE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
     hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
-        "{0}".format(    
-    [
+        " \n{0}".format(    
+    [   
         "{0} + {1} | Create New Checkpoint\n"
         "{0} + {2} | Delete selected Checkpoint\n"
         "{0} + {3} | Add teleport to Checkpoint\n"
@@ -157,7 +157,7 @@ rule "HUD | Guide":
     )
 
     hudSubtext(hostPlayer, #if hostPlayer.GuideToggle else null, 
-        "{0} + {1} | Next checkpoint\n"
+        " \n{0} + {1} | Next checkpoint\n"
         "{0} + {2} | Prev checkpoint\n"
         "Hold {3} to toggle guide\n"
         #"In invincbile mode:\n"
@@ -194,7 +194,7 @@ rule "HUD | Guide":
         if localPlayer == hostPlayer else "Current editor/host: {0}".format(hostPlayer)
         ,
         null,        
-        "Hold {0} + {1} | Turn Ultimate On/Off\n"
+        " \nHold {0} + {1} | Turn Ultimate On/Off\n"
         "Hold {0} + {2} | Turn Dash On/Off".format(buttonString(Button.ULTIMATE), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE))
         if hostPlayer.EditModeSelection == 3 else "",
             

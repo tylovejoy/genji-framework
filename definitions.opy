@@ -148,6 +148,11 @@ globalvar TempIterator1 38                  # int                       --- temp
 
 globalvar DashExploitToggle 39
 
+
+globalvar PortalNames 40                    # [str]                     --- display name of portals
+globalvar PortalLoc 41                      # [vect]                    --- portal position
+globalvar PortalDest 42                     # [vect]                    --- portal destination
+globalvar PortalOn 43                       # bool                      --- portals enabled
 #Player variables
 
 playervar CurrentCheckpoint 0               # int                       --- Current Checkpoint
