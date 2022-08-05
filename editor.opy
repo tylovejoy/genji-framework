@@ -139,8 +139,9 @@ rule "HUD | Guide":
         "{0} + {1} | Create new kill orb\n"
         "{0} + {2} | Delete selected orb\n"
         "{0} + {3} | Select previous orb\n"
-        "{0} + {4} | Select nex orb\n"
-        "{5} + {4} | Increase orb size\r\n{5}+{3}=Decrease orb size\n"
+        "{0} + {4} | Select next orb\n"
+        "{5} + {4} | Increase orb size\n"
+        "{5} + {3} | Decrease orb size\n"
         "{5} + {1} | Move orb forward\n"
         "{5} + {2} | Move orb Backward".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2)),
  
@@ -149,7 +150,7 @@ rule "HUD | Guide":
         "{0} + {3} | Select previous orb\n"
         "{0} + {4} | Select next orb\n"
         "{5} + {4} | Increase orb strength\n"
-        "{5} + {3} | Decrease Borball strength\n"
+        "{5} + {3} | Decrease orb strength\n"
         "{5} + {1} | Move orb forward\n"
         "{5} + {2} | Move orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
         ][hostPlayer.EditModeSelection-1]), 
@@ -159,62 +160,60 @@ rule "HUD | Guide":
     hudSubtext(hostPlayer, #if hostPlayer.GuideToggle else null, 
         " \n{0} + {1} | Next checkpoint\n"
         "{0} + {2} | Prev checkpoint\n"
-        "Hold {3} to toggle guide\n"
+        "Hold {3} | toggle guide\n"
         #"In invincbile mode:\n"
         "{4} | Fly (checkpoint mode only)\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.MELEE), buttonString(Button.ABILITY_2))
         if hostPlayer.GuideToggle == 1  else
-        "Hold {0} to toggle guide".format(buttonString(Button.ABILITY_2))
-        ,
+        "Hold {0} | toggle guide".format(buttonString(Button.MELEE)),
         HudPosition.RIGHT, 11, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
-    /*
-    # just replace by guide togle info
-        hudSubtext(getAllPlayers() if hostPlayer.GuideToggle else null, 
-        "Hold melee to hide guidence text\r\nCreated by: 易忘#51876\r\nUdpated by: 五里雾中#51574\r\nTranslated by: Xerteks#2929,FATHER" 
-        HudPosition.RIGHT, 0, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
-    )
-    */
+
     hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
     "save map: hold {0} + {1} + {2} and follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
-        #"Interact+Melee+Reload to clear excess data\n"
-        #"2. Open Workshop Inspector - Set variable target as global - click the [x]\n"
-        #"3. Open Workshop Editor - open [Checkpoint | Position] - CLICK THE YELLOW [+] SIGN\n"
-        #"4. TURN OFF EDIT RULES\n"
-        #"5. ESC→SHOW LOBBY→SETTINGS→SHARE CODE→CREATE NEW CODE→COPY CODE\n"
-        #"6. OPEN WORKSHOP EDITOR - PASTE MAP CODE AND ADD YOUR NICKNAME AS AUTHOR IN \"TEXT\" \n"
-        #"7. ESC→SHOW LOBBY→SETTINGS→SHARE CODE→UPLOAD TO EXISTING CODE→\n"
-        #"  PASTE THE CODE YOU CREATED IN STEP 5",
         HudPosition.LEFT, -12, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-
     hudText(getAllPlayers(), #if hostPlayer.GuideToggle == 1 else null, 
-        "Hold {0} to change editing mode\n"
-        "Current mode: {1}".format(buttonString(Button.ABILITY_2), ["Checkpoints","Kill Orb","Bounce Orb"][hostPlayer.EditModeSelection -1])
+        "Current mode: {1}\n"
+        "Hold {0} to change ".format(buttonString(Button.ABILITY_1), ["Checkpoints","Kill Orb","Bounce Orb"][hostPlayer.EditModeSelection -1])
         if localPlayer == hostPlayer else "Current editor/host: {0}".format(hostPlayer)
         ,
-        null,        
-        " \nHold {0} + {1} | Turn Ultimate On/Off\n"
-        "Hold {0} + {2} | Turn Dash On/Off".format(buttonString(Button.ULTIMATE), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE))
-        if hostPlayer.EditModeSelection == 3 else "",
-            
+        null,      
+        null,  
+        #" \nHold {0} + {1} | Turn Ultimate On/Off\n"
+        #"Hold {0} + {2} | Turn Dash On/Off".format(buttonString(Button.ULTIMATE), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE))
+        #if hostPlayer.EditModeSelection == 3 else "",   
         HudPosition.LEFT, -6, Color.RED, Color.WHITE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
+    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
+        "Orb gives ultimate: {0} | toggle with {1} + {2}\n"
+        "Orb gives dash: {3} | toggle with {1} + {4}".format(BounceToggleUlt[CurrentBounce_Editing] if BounceToggleUlt[CurrentBounce_Editing] != 0 else "false", buttonString(Button.ULTIMATE), buttonString(Button.PRIMARY_FIRE), BounceToggleDash[CurrentBounce_Editing] if BounceToggleDash[CurrentBounce_Editing] != 0 else "false", buttonString(Button.SECONDARY_FIRE))
+        , HudPosition.TOP, -18, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
+    hudText(hostPlayer,
+        [
+        "Selected Checkpoint's number: {0}".format(SelectedCheckpoint_Editing),
+        "Current Kill Orb's radius: {0}".format(KillBallRadii[SelectedKillball_Editing]),
+        "Current Bounce Orb's strength: {0}".format(BounceStrength[CurrentBounce_Editing])
+        ][hostPlayer.EditModeSelection -1],
+        null,
+        null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
+        HudPosition.TOP, -20, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
 rule "HUD | Guide Effects":
     @Condition hostPlayer.EditorOn
     createIcon(getAllPlayers(), CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.RED, true)
     createInWorldText(getAllPlayers(), "Selected Checkpoint", CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.5, 0), 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
-    #createEffect(getAllPlayers(), Effect.SPHERE, Color.RED, H[J], I[J], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    ###createEffect(getAllPlayers(), Effect.SPHERE, Color.RED, H[J], I[J], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createEffect(getAllPlayers(), Effect.GOOD_AURA, Color.PURPLE, BouncePositions[CurrentBounce_Editing], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     #Don't open it easily, the action will be too long
-    hudText(hostPlayer, [].concat(0).concat("Selected Checkpoint's number: {0}".format(SelectedCheckpoint_Editing)).concat("Current Kill Orb's radius: {0}".format(KillBallRadii[SelectedKillball_Editing])).concat("Current Bounce Orb's strength: {0}".format(BounceStrength[CurrentBounce_Editing]))[hostPlayer.EditModeSelection], null, [].concat("").concat("").concat("").concat("Current Bounce Orb's Ultimate: {0}\r\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]))[hostPlayer.EditModeSelection], HudPosition.TOP, -14, Color.RED, Color.WHITE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    
     createInWorldText(getAllPlayers(), "Selected Kill Orb", KillBallPositions[SelectedKillball_Editing], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
     createEffect(getAllPlayers(), Effect.ORB, Color.RED, KillBallChase, 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createInWorldText(hostPlayer, l"{0} m".format(distance(hostPlayer, KillBallChase)), KillBallChase - vect(0, 1.5, 0), 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
     createIcon(getAllPlayers(), KillBallPositions[SelectedKillball_Editing] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.RED, true)
-    
+    createEffect(localPlayer if len(CheckpointPositions[SelectedCheckpoint_Editing] ) > 1 else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[SelectedCheckpoint_Editing][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+
 
 rule "Fly/Noclip Toggle | Hold Deflect":
     @Event eachPlayer
