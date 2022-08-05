@@ -696,8 +696,7 @@ rule "Combo | Enter Spectate | Hold Interact":
 
 rule "Combo | Toggle Practice Mode | Interact + Crouch + Ultimate":
     @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
+    @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
     @Condition eventPlayer.isUsingAbility1() == false
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
@@ -719,7 +718,7 @@ rule "Combo | Toggle Practice Mode | Interact + Crouch + Ultimate":
         # eventPlayer.setUltEnabled(true)
         # eventPlayer.setUltCharge(100)
         # eventPlayer.setAbility1Enabled(true)
-        checkpointFailReset()
+        
         eventPlayer.InvincibleToggle = 2
 
     else:
@@ -729,7 +728,8 @@ rule "Combo | Toggle Practice Mode | Interact + Crouch + Ultimate":
         eventPlayer.setAbility1Enabled(false)
         lbl_1:
         eventPlayer.CurrentCheckpoint = eventPlayer.PracticeCheckpoint
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
+        checkpointFailReset()
+        # eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
         eventPlayer.InvincibleToggle = 0
         bigMessage(eventPlayer, "Normal mode")
         chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
