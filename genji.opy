@@ -1,7 +1,7 @@
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 # cheats
-editortoggle(6) # 0 is editor, rest is numbers
+editortoggle(3) # 0 is editor, rest is numbers
 
 #!define touchground false
 #!define cpcheat true
@@ -199,10 +199,11 @@ rule "Setup and Variables":
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | leaderboard".format(buttonString(Button.MELEE)), HudPosition.RIGHT, -17, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "Hold {0} | Spectate".format(buttonString(Button.INTERACT)), HudPosition.RIGHT, -16, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | invisible".format(buttonString(Button.ABILITY_2)), HudPosition.RIGHT, -15, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudSubtext([i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1], "Hold {0} | Toggle Traces".format(abilityIconString(Hero.GENJI,Button.ULTIMATE)), HudPosition.RIGHT, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)  
+    hudSubtext([i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1], "Hold {0} | Toggle Traces".format(abilityIconString(Hero.GENJI,Button.ULTIMATE)), HudPosition.RIGHT, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)  
    
 
 rule "Match time":
+    
     # Created by Hax, edited by FishoFire
     if getCurrentGamemode() != Gamemode.SKIRMISH:
         wait(0.25)
@@ -433,6 +434,7 @@ rule "Checkpoint | Arrived":
 
 
 rule "Checkpoint | Finish effects":
+    # rainbow drops
     @Event eachPlayer
     @Condition eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
     @Condition eventPlayer.EditModeSelection < 1
@@ -470,6 +472,7 @@ rule "Toggle Traces":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
+    @Condition eventPlayer.EditModeSelection < 1
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.TracesOff = not eventPlayer.TracesOff
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
@@ -736,12 +739,12 @@ rule "Combo | Toggle Invincible Mode | Melee + Reload":
         eventPlayer.PauseTimer = 0
         SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 0
 
-
+  
 
 rule "Combo | Quick Reset | Reload, Hold Reload to Enable":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
-    @Condition eventPlayer.EditModeSelection < 1
+    #@Condition eventPlayer.EditModeSelection < 1
     
     if eventPlayer.isHoldingButton(Button.MELEE):
         return
