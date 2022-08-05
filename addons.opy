@@ -189,6 +189,7 @@ rule "control map portal - placement - toggled via workshop":
 rule "control map portal - function - toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
+    @Condition len(PortalLoc) > 0
     @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc]) == true
     @Condition eventPlayer.InvincibleToggle or eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
     
