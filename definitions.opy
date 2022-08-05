@@ -173,7 +173,7 @@ playervar PortalText 7                      # In-World Text             --- Port
 playervar MapVectorArray 8                  # MsDestructo Vectors
 playervar WallclimbUsed 9                   # int                       --- 1 if wall climb has been used 2 if not, should be bool
 playervar GuideToggle 10                    # int                       --- Guide Enabled (1) /Disabled (2), should be bool
-
+playervar PracticeCheckpoint 11             # int                       --- Which checkpoint player started practice
 playervar PauseTimer 12                     # float                     --- time in spectate/invincible, chased
 playervar BhopUsed 14                       # int                       --- Bhop has been used 1, 0 if not, should be bool
 #playervar LeaderboardTimerCapture 19        # float                     --- Saves players time for leaderboard
