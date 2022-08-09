@@ -985,6 +985,10 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         MsDestructo.respawn()
         wait(3)
     destroyDummy(MsDestructo.getTeam(), MsDestructo.getSlot())
+    # Remove MsDestructo data when done
+    MsDestructo.MapVectorArray = 0
+    MsDestructo.ArrayIterator = 0
+    MsDestructo = 0
 
 
 
