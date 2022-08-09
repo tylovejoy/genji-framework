@@ -165,7 +165,7 @@ rule "HUD | Multiclimb Counter":
     @Condition eventPlayer.isOnWall() == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     @Condition eventPlayer.WallclimbUsed == 2
-    @Condition eventPlayer.InvincibleToggle != 1
+    @Condition eventPlayer.InvincibleToggle == 0
     
     eventPlayer.MultiClimbCount += 1
 

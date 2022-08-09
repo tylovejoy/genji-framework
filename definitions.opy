@@ -65,7 +65,7 @@
 #!define BhopUsed O
 #15
 #16 PracticeCheckpoint
-#17
+#17 PracticeToggle
 #18
 #!define LeaderboardTimerCapture T
 #20
@@ -177,6 +177,7 @@ playervar GuideToggle 10                    # int                       --- Guid
 playervar PauseTimer 12                     # float                     --- time in spectate/invincible, chased
 playervar BhopUsed 14                       # int                       --- Bhop has been used 1, 0 if not, should be bool
 playervar PracticeCheckpoint 16             # int                       --- Saved practice checkpoint
+playervar PracticeToggle 17                 # int                       --- if player is in practice mode 1 else 0
 #playervar LeaderboardTimerCapture 19        # float                     --- Saves players time for leaderboard
 playervar LeaderboardToggle 19              # bool                      --- show/hide leaderboard
 playervar JumpCount 26                      # int                       --- jump tracking count, 0, 1, 2
