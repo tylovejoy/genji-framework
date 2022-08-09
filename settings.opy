@@ -40,10 +40,10 @@ settings {
     },
     "heroes": {
         "allTeams": {
-            "dva": {
-                "enableSpawningWithUlt": true,
-                "spawnWithoutMech": true
-            },
+            #"dva": {
+                #"enableSpawningWithUlt": true
+                #"spawnWithoutMech": true
+            #},
             "genji": {
                 "enableAbility2": false,
                 "enableInfiniteAmmo": true,

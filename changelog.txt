@@ -1,0 +1,23 @@
+0.9:
+- reworked A LOT of huds both visually and functionaly in both play mode and editor
+- removed unused extensions
+- fixed bugs with bans
+- fixed invincible dash exploit
+- added practice mode
+- added leaderboard that displays up to 20 entries (starts at 5 but expands when more entries)
+- added invisible toggle
+- added toggle and adjusted color for finish fx / drops
+- added hud to indicate invis and invincible mode
+- added dva to break fences
+- added dash start into a workshop toggle
+- adjusted default lobbyname and message
+- portals reworked to now isnetead of on set positions, enabled via toggle
+- re-ordered and renamed many rules, and translated remaining 
+- bans are now disabled in invincible mode/map completed
+
+editor:
+- added fly/noclicp
+- quick reset added
+- guide hud improvements and cleaned up a lot
+- editor rules via toggle instead
+- placing a teleport now puts a purple sphere down during editing that cp
