@@ -661,15 +661,15 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
         SavedProgress.remove("{0}".format(eventPlayer))
     # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].remove(eventPlayer)
-    if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
-        CheckpointEffect_Sub()
-        #This action is "eliminate the display of player clearance results"
-        destroyHudText(eventPlayer.PlayerEffects[7])
+    
+    eventPlayer.CurrentCheckpoint = 0
+    CheckpointEffect_Sub()
+
     if DashExploitToggle and eventPlayer.isUsingAbility2():
         smallMessage(eventPlayer, "Dash Start is banned!")
         waitUntil(not eventPlayer.isUsingAbility2(), 0.5)
         
-    eventPlayer.CurrentCheckpoint = 0
+    
     StartGame_Sub()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     #Portal1PlayerList.remove(eventPlayer)
