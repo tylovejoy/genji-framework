@@ -168,7 +168,7 @@ rule "control map portal - placement - toggled via workshop":
     
     for TempIterator1 in range(len(PortalLoc)):
         createEffect(
-            [i for i in getAllPlayers() if i.InvincibleToggle or i.CurrentCheckpoint == len(CheckpointPositions) - 1],
+            [i for i in getAllPlayers() if i.InvincibleToggle == 1 or i.CurrentCheckpoint == len(CheckpointPositions) - 1],
             Effect.BAD_AURA, 
             #Color.AQUA if localPlayer.portalselect != evalOnce(i) else Color.ORANGE, 
             Color.AQUA if evalOnce(TempIterator1) % 2 == 1 else Color.ORANGE,
@@ -179,7 +179,7 @@ rule "control map portal - placement - toggled via workshop":
         )
 
         createInWorldText(
-            [i for i in getAllPlayers() if i.InvincibleToggle or i.CurrentCheckpoint == len(CheckpointPositions) - 1], 
+            [i for i in getAllPlayers() if i.InvincibleToggle == 1 or i.CurrentCheckpoint == len(CheckpointPositions) - 1], 
             "{0}".format(PortalNames[evalOnce(TempIterator1)]), 
             PortalLoc[evalOnce(TempIterator1)] + vect(0,1,0), 
             1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
@@ -191,7 +191,7 @@ rule "control map portal - function - toggled via workshop":
     @Condition PortalOn
     @Condition len(PortalLoc) > 0
     @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc]) == true
-    @Condition eventPlayer.InvincibleToggle or eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
+    @Condition eventPlayer.InvincibleToggle == 1 or eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
     
     if PortalDest[
             PortalLoc.index(

@@ -637,19 +637,23 @@ rule "Checkpoint | Show All |":
 
 rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
     @Event eachPlayer
-    @Condition hostPlayer.EditorOn
+    @Condition hostPlayer.EditorOn or eventPlayer.InvincibleToggle == 2
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
 
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
         eventPlayer.CurrentCheckpoint -= 1
+        if eventPlayer.InvincibleToggle == 2:
+            eventPlayer.PracticeCheckpoint -= 1
         ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
         ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
     else:
         eventPlayer.CurrentCheckpoint += 1
+        if eventPlayer.InvincibleToggle == 2:
+            eventPlayer.PracticeCheckpoint += 1
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
-        eventPlayer.Timer += 9999
+        # eventPlayer.Timer += 9999
         ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
         ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
 
