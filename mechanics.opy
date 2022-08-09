@@ -91,12 +91,12 @@ rule "Checking | Create Bhop":
     @Condition eventPlayer.isInAir() == true
     @Condition eventPlayer.isJumping() == false
     @Condition eventPlayer.isCrouching() == true
-
-    smallMessage(eventPlayer, "Bhop has been created!")
     eventPlayer.BhopUsed = 0
     if BhopBanToggle == true:
         smallMessage(eventPlayer, "Create Bhop is banned!")
         checkpointFailReset()
+        return
+    smallMessage(eventPlayer, "Bhop has been created!")    
 
 
 rule "Checking | Bhop/Double Jump Initialization":

@@ -60,15 +60,15 @@ rule "Portal 3 -> 1 <---- EDIT ME":
 */
 rule "In world text for certain Checkpoints <---- EDIT ME":
     @Disabled
-    createInWorldText(sorted(ListPlayersAtCheckpoints[0]), "Text for checkpoint 0", vect(0, 0, 0), 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    createInWorldText(sorted(ListPlayersAtCheckpoints[1]), "Text for checkpoint 1", vect(0, 0, 0), 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    createInWorldText(sorted(ListPlayersAtCheckpoints[2]), "Text for checkpoint 2", vect(0, 0, 0), 3, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+    createInWorldText([x for x in getAllPlayers() if x.CurrentCheckpoint == 0], "Text for checkpoint 0", vect(0, 0, 0), 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+    createInWorldText([x for x in getAllPlayers() if x.CurrentCheckpoint == 1], "Text for checkpoint 1", vect(0, 0, 0), 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+    createInWorldText([x for x in getAllPlayers() if x.CurrentCheckpoint == 2], "Text for checkpoint 2", vect(0, 0, 0), 3, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
 rule "HUD text for certain Checkpoints <---- EDIT ME":
     @Disabled
-    hudHeader(sorted(ListPlayersAtCheckpoints[0]), "Text for checkpoint 0", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudHeader(sorted(ListPlayersAtCheckpoints[1]), "Text for checkpoint 1", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudHeader(sorted(ListPlayersAtCheckpoints[2]), "Text for checkpoint 2", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 0], "Text for checkpoint 0", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 1], "Text for checkpoint 1", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 2], "Text for checkpoint 2", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 /*
 rule "Portal Effect - Text":
     @Disabled
