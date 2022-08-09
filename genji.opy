@@ -227,16 +227,24 @@ rule "Match time":
     else:
         declareTeamVictory(hostPlayer.getTeam())
 
+rule "Genji Swapper 9000":
+    @Event eachPlayer
+
+    if not eventPlayer.isDummy():
+        eventPlayer.startForcingHero(Hero.GENJI)
+
 
 rule "Initialize and CP HUD":
     @Event eachPlayer
     #@Hero genji
     @Condition eventPlayer.hasSpawned() == true
     @Condition eventPlayer.getCurrentHero() == Hero.GENJI
+    
+
     hudSubtext(eventPlayer, "{0} {1}".format("Checkpoint ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(eventPlayer, "Time {0} sec".format(eventPlayer.Timer), HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT) #LEFT, -2
     hudSubheader(eventPlayer,"{0}{1}".format("Invis on\n" if eventPlayer.invis else "","You are invincible" if eventPlayer.InvincibleToggle else "") , HudPosition.TOP, -12, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-        
+    
     eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron 
         , 0) # breaks if the defined thing is on the same line
 
@@ -249,7 +257,7 @@ rule "Initialize and CP HUD":
     eventPlayer.WallclimbUsed = 2
     #CheckpointEffect_Sub is the checkpoint effect display
     CheckpointEffect_Sub()
-
+    
     eventPlayer.disableGamemodeHud()
 
 
