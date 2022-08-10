@@ -21,13 +21,13 @@ rule "fisho cp cheat for overpy toggle":
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
         eventPlayer.CurrentCheckpoint -= 1
-        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
+        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
+        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
     else:
         eventPlayer.CurrentCheckpoint += 1
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
-        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
+        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
+        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
         #eventPlayer.Timer += 9999 
 
 
@@ -337,13 +337,14 @@ rule "Initialize and CP HUD":
 
 def checkpointFailReset():
     @Name "SUB | Checkpoint Fail"
+    eventPlayer.cancelPrimaryAction()
     if eventPlayer.EditModeSelection < 1:
         eventPlayer.setAbility1Enabled(false)
         eventPlayer.setUltEnabled(false)
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
-    if DeathBhopBan == true:
+    if DeathBhopBan == true and eventPlayer.InvincibleToggle == 0 and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
         eventPlayer.disallowButton(Button.JUMP)
         if eventPlayer.isHoldingButton(Button.JUMP):
             smallMessage(eventPlayer, "Deathbhop is banned!")
@@ -403,7 +404,7 @@ def StartGame_Sub():
         eventPlayer.setUltCharge(100)
     eventPlayer.setStatusEffect(null, Status.PHASED_OUT, 9999)
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
+    # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
     eventPlayer.InvincibleToggle = 0
 
 
@@ -451,8 +452,8 @@ def KILLBALL():
     if KillBallPositions == []:
         return
 
-    for TempIterator1 in range(0, len(KillBallPositions) - 1):
-        createEffect(sorted(ListPlayersAtCheckpoints[KillballCheckpoints[TempIterator1]]), Effect.SPHERE, Color.BLUE, KillBallPositions[TempIterator1], KillBallRadii[TempIterator1], EffectReeval.VISIBILITY)
+    for TempIterator1 in range(0, len(KillBallPositions)):
+        createEffect([x for x in getAllPlayers() if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
         KillBallEffects.append(getLastCreatedEntity())
 
 
@@ -462,8 +463,8 @@ def pinball():
     if BouncePositions == []:
         return
 
-    for TempIterator1 in range(0, len(BouncePositions) - 1):
-        createEffect(sorted(ListPlayersAtCheckpoints[BouncePadCheckpoints[TempIterator1]]), Effect.ORB, Color.GREEN, BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
+    for TempIterator1 in range(0, len(BouncePositions)):
+        createEffect([x for x in getAllPlayers() if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], Effect.ORB, Color.GREEN, BouncePositions[evalOnce(TempIterator1)], 1, EffectReeval.VISIBILITY)
         BounceEffects.append(getLastCreatedEntity())
 
 rule "Checkpoint | Arrived":
@@ -495,8 +496,8 @@ rule "Checkpoint | Arrived":
         SavedProgress.remove("{0}".format(eventPlayer))
         SavedProgress.append(["{0}".format(eventPlayer), eventPlayer.CurrentCheckpoint, eventPlayer.Timer, eventPlayer, getTotalTimeElapsed(), 0, 0])
     
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
+    # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
+    # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
     
     lbl_1:
     if eventPlayer.EditModeSelection < 1:
@@ -735,16 +736,16 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
         SavedProgress.remove("{0}".format(eventPlayer))
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].remove(eventPlayer)
-    if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
-        CheckpointEffect_Sub()
-        #This action is "eliminate the display of player clearance results"
-        destroyHudText(eventPlayer.PlayerEffects[7])
-    if DashExploitToggle and eventPlayer.isUsingAbility2():
+    # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].remove(eventPlayer)
+    
+    eventPlayer.CurrentCheckpoint = 0
+    CheckpointEffect_Sub()
+
+    if eventPlayer.InvincibleToggle == 0 and DashExploitToggle and eventPlayer.isUsingAbility2():
         smallMessage(eventPlayer, "Dash Start is banned!")
         waitUntil(not eventPlayer.isUsingAbility2(), 0.5)
         
-    eventPlayer.CurrentCheckpoint = 0
+    
     StartGame_Sub()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     #Portal1PlayerList.remove(eventPlayer)

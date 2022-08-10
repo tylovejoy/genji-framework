@@ -659,16 +659,16 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
         eventPlayer.CurrentCheckpoint -= 1
         if eventPlayer.PracticeToggle == 1:
             eventPlayer.PracticeCheckpoint -= 1
-        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
+        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
+        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
     else:
         eventPlayer.CurrentCheckpoint += 1
         if eventPlayer.PracticeToggle == 1:
             eventPlayer.PracticeCheckpoint += 1
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
         # eventPlayer.Timer += 9999
-        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-        ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
+        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
+        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
 
 
 rule "Teleport | Add | Interact + Reload":
