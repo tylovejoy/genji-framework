@@ -4,7 +4,7 @@
 editortoggle(3) # 0 is editor, rest is numbers
 
 #!define touchground false
-#!define cpcheat true
+#!define cpcheat false
 
 #!include "settings.opy"
 #!include "definitions.opy"
@@ -46,7 +46,7 @@ rule "Setup and Variables":
     disableGamemodeCompletion()
     disableScoring()
     disableMusic()
-    pauseMatchTime()
+    #pauseMatchTime()
     startForcingSpawn(Team.ALL,  0)
     startForcingSpawn(Team.ALL,  1)
     startForcingSpawn(Team.ALL,  2)
@@ -74,7 +74,7 @@ rule "Setup and Variables":
     wait(2)
     pinball()
 
-    PortalOn = createWorkshopSetting(bool, "addons","enable portals (contorl maps)",true,0)
+    PortalOn = createWorkshopSetting(bool, "map settings","enable portals (contorl maps)",true,0)
     # if getCurrentGamemode() == Gamemode.SKIRMISH:
     #     hudText(getAllPlayers(), "", null, "{0} {1} {2}".format("Time left until server resets:", 270 - floor(getTotalTimeElapsed() / 60), "Minutes"), HudPosition.RIGHT, -15, Color.WHITE, Color.WHITE, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     # else:
@@ -192,13 +192,87 @@ rule "Setup and Variables":
     
     # normal
     hudSubtext(getAllPlayers(), "{0}+{1}+{2} | Restart".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT)), HudPosition.RIGHT, -20, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers(), "{0}+{1} | Invincible".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)), HudPosition.RIGHT, -19, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    
+    hudSubtext(getAllPlayers(), "{0}+{1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.InvincibleToggle == 1 else ""), HudPosition.RIGHT, -19, Color.GREEN if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    
     hudSubtext(getAllPlayers(), "{0} {1} |  {2}".format( "" if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset"), HudPosition.RIGHT, -18, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | leaderboard".format(buttonString(Button.MELEE)), HudPosition.RIGHT, -17, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers(), "Hold {0} | Spectate".format(buttonString(Button.INTERACT)), HudPosition.RIGHT, -16, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | invisible".format(buttonString(Button.ABILITY_2)), HudPosition.RIGHT, -15, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else ""), HudPosition.RIGHT, -16, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else ""), HudPosition.RIGHT, -15,Color.GREEN if localPlayer.invis else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     hudSubtext([i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1], "Hold {0} | Toggle Traces".format(abilityIconString(Hero.GENJI,Button.ULTIMATE)), HudPosition.RIGHT, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)  
    
+    hudSubtext(getAllPlayers() if localPlayer.EditModeSelection < 1 else null,"{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.CurrentCheckpoint - localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else ""),HudPosition.RIGHT, -13, Color.GREEN if localPlayer.PracticeToggle else Color.GRAY if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    
+    hudSubheader([i for i in getAllPlayers() if i.PracticeToggle and hostPlayer.EditModeSelection < 1],
+        "{0} + {1} | Next level\n"
+        "{0} + {2} | Previous level\n"
+        "{3} | Start from practice cp ".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT)),
+        HudPosition.RIGHT, -12, Color.LIME_GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+
+  
+    Difficultyhud = createWorkshopSetting(enum[
+        "beginner",
+        "easy-",
+        "easy",
+        "easy+",
+        "medium-",
+        "medium",
+        "medium+",
+        "hard-",
+        "hard",
+        "hard+",
+        "very hard-",
+        "very hard",
+        "very hard+",
+        "extreme-",
+        "extreme",
+        "extreme+",
+        "hell",
+        "don't display"
+        ],"map settings","difficulty (display hud)",0, 0)
+
+    if Difficultyhud < 17: # 17th entry is dont display
+        hudSubheader(getAllPlayers(), 
+            [
+            "beginner",
+            "easy -",
+            "easy",
+            "easy +,",
+            "medium -",
+            "medium",
+            "medium +",
+            "hard -",
+            "hard",
+            "hard +",
+            "very hard -",
+            "very hard",
+            "very hard +",
+            "extreme -",
+            "extreme",
+            "extreme +",
+            "hell"][Difficultyhud], 
+            HudPosition.TOP, -24,
+            [
+            Color.GREEN,
+            Color.LIME_GREEN,
+            Color.LIME_GREEN,
+            Color.LIME_GREEN,
+            Color.YELLOW,
+            Color.YELLOW,
+            Color.YELLOW,
+            Color.ORANGE,
+            Color.ORANGE,
+            Color.ORANGE,
+            rgb(255, 69, 0),
+            rgb(255, 69, 0),
+            rgb(255, 69, 0),
+            Color.RED,
+            Color.RED,
+            Color.RED,
+            rgb(150, 0, 0)
+            ][Difficultyhud]
+            , HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+
 
 rule "Match time":
     
@@ -241,9 +315,9 @@ rule "Initialize and CP HUD":
     @Condition eventPlayer.getCurrentHero() == Hero.GENJI
     
 
-    hudSubtext(eventPlayer, "{0} {1}".format("Checkpoint ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudSubtext(eventPlayer, "Time {0} sec".format(eventPlayer.Timer), HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT) #LEFT, -2
-    hudSubheader(eventPlayer,"{0}{1}".format("Invis on\n" if eventPlayer.invis else "","You are invincible" if eventPlayer.InvincibleToggle else "") , HudPosition.TOP, -12, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(eventPlayer, "{0} {1}".format("Level ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(eventPlayer, "Time {0}".format(prettyTime(eventPlayer.Timer)), HudPosition.LEFT, -5, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT) #LEFT, -2
+    #hudSubheader(eventPlayer,"{0}{1}".format("Invis on\n" if eventPlayer.invis else "","You are invincible" if eventPlayer.InvincibleToggle else "") , HudPosition.TOP, -12, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     
     eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron 
         , 0) # breaks if the defined thing is on the same line
@@ -439,7 +513,8 @@ rule "Checkpoint | Arrived":
 
         if eventPlayer.PracticeToggle != 1:
             stopChasingVariable(eventPlayer.Timer)
-            bigMessage(getAllPlayers(), "{0} {1} {2}".format(eventPlayer, "Mission complete! Time", l"{0} sec".format(eventPlayer.Timer)))
+            #bigMessage(getAllPlayers(), "{0} {1} {2}".format(eventPlayer, "Mission complete! Time", l"{0}".format(prettyTime(eventPlayer.Timer))))
+            bigMessage(getAllPlayers(), "{0} {1}".format(eventPlayer, "Mission complete! Time {0}".format(prettyTime(eventPlayer.Timer))))
             destroyEffect(eventPlayer.PlayerEffects[0])
             destroyEffect(eventPlayer.PlayerEffects[1])
             destroyEffect(eventPlayer.PlayerEffects[2])
@@ -809,6 +884,7 @@ rule "Combo | Practice Restart | Interact":
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == false
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
+    @Condition eventPlayer.EditModeSelection < 1
     #@Condition eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint <= 0 == true
     
     if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
@@ -950,15 +1026,13 @@ rule "leaderboard test ai ":
     
     
     # jump to last ###############################
-    wait(1 + eventPlayer.getSlot()*2)
+    wait(3 + eventPlayer.getSlot()*2)
     eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 2
     checkpointFailReset()
     wait(1)
     #wait(60)
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint+1]+ Vector.UP) # teleport not needed
-    
-
-*/
+    */
 
 
 #!include "mechanics.opy"
@@ -1018,24 +1092,17 @@ rule "Friend Title <----  DISPLAY MESSAGE HERE (ON PLAYER)":
 rule "Credits here <---- INSERT YOUR NAME HERE": #"Text <---- put code and author here!":
     #hudText(getAllPlayers(), "", null, "{0}\r\n{1}".format("MADE BY: Write your nickname here", "CODE: write maps code here"), HudPosition.LEFT, -15, Color.WHITE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     
-    hudSubtext(getAllPlayers(), "made by: (name)| map code: (XXXXX)", HudPosition.LEFT, -15, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    
-    #hudSubheader(
-    #    getAllPlayers(), 
-    #    [
-    #    "Difficulty: EZ {0}".format(iconString(Icon.HAPPY)),
-    #    "Difficulty: EZ+ {0}".format(iconString(Icon.HAPPY)),
-    #    "Difficulty: Hell+ {0}".format(iconString(Icon.SKULL))
-    #    ][createWorkshopSetting(enum["ez","ez+","hell+"],"map dif","things",0, 0)]
-    #    , 
-    #    HudPosition.LEFT, -14, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
-    #)
-    hudSubheader(getAllPlayers(), "Difficulty: Hell+ {0}".format(iconString(Icon.SKULL)), HudPosition.LEFT, -14, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubheader(getAllPlayers(), "made by: (name)", HudPosition.LEFT, -15, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubheader(getAllPlayers(), "map code: (XXXXX)", HudPosition.LEFT, -14, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+
     ##hudText(getAllPlayers(), iconString(Icon.SKULL), "Difficulty: Hell+", null, HudPosition.LEFT, -14, Color.RED, Color.WHITE, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     
     #hudSubtext(getAllPlayers(), "For more maps and records join:", HudPosition.LEFT, -14, Color.PURPLE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubheader(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    
 
+
+    
 
 rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
     @Delimiter

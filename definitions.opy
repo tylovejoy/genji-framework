@@ -3,7 +3,7 @@
 ##!define RestartTimer(timeInMinutes) "{0} Hours and {1} Minutes".format(floor(timeInMinutes / 60 / 60), "{0}{1}".format(floor(timeInMinutes % 60 / 10), floor(timeInMinutes % 60 - floor(timeInMinutes % 60 / 10) * 10)))
 
 ##!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format("" if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
-#!define prettyTime(timeInSeconds) "{0}".format(eventPlayer.Timer)
+#!define prettyTime(timeInSeconds) "{0} sec".format(eventPlayer.Timer)
 
 # ----------------GLOBAL------------------
 #!define CheckpointPositions A
@@ -153,6 +153,8 @@ globalvar PortalNames 40                    # [str]                     --- disp
 globalvar PortalLoc 41                      # [vect]                    --- portal position
 globalvar PortalDest 42                     # [vect]                    --- portal destination
 globalvar PortalOn 43                       # bool                      --- portals enabled
+
+globalvar Difficultyhud 44                  # number                    --- workshop toggle to display difficulty hud
 #Player variables
 
 playervar CurrentCheckpoint 0               # int                       --- Current Checkpoint

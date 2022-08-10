@@ -54,9 +54,10 @@ rule "HUD | Clear Excess Data & Save Map":
         "   2. Insert data:\n"
         " Paste the data in the rule named 'map data pasta' (last rule)\n\n" 
 
-        "   3. Turn editor off:\n"
+        "   3. Workshop settings:\n"
         " ESC→SHOW LOBBY→SETTINGS→ workshop settings →\n"
         " toggle 'Editor mode' off\n"
+        " Select display difficulty\n"
         , HudPosition.TOP, -99, Color.LIME_GREEN, HudReeval.NONE
     )
     eventPlayer.savemaphud[0] = getLastCreatedText()
@@ -70,6 +71,7 @@ rule "HUD | Clear Excess Data & Save Map":
         "   5. Add credits:\n" 
         " Enter your name & map code in the 'Credits here' rule\n"
         " (second to last rule) \n\n"
+
         
         "   6. Update for credits:\n"
         " ESC→SHOW LOBBY→SETTINGS→SHARE CODE→\n"
@@ -117,7 +119,13 @@ rule "HUD | Show Guide On Spawn":
     eventPlayer.GuideToggle = 1
 
 rule "HUD | Guide":
-    @Condition hostPlayer.EditorOn
+    #@Condition hostPlayer.EditorOn
+    # condition messes up if host player leaves
+
+    waitUntil(hostPlayer.hasSpawned(), 90)
+    wait(0.5)
+    if not hostPlayer.EditorOn:
+        return
     #done#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, [].concat(0).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create New Checkpoint\r\nInteract+RMB=Delete selected Checkpoint\r\nInteract+R=Add teleport to Checkpoint", "Interact+Ultimate=Set Checkpoint to your current position\r\nInteract+Crouch=Select previous Checkpoint", "Interact+Jump=Select next Checkpoint\r\nInteract+1 ability=Show all checkpoints")).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create new Kill Orb\r\nInteract+RMB=Delete selected sphere\r\nInteract+Crouch=Select previous sphere", "Interact+Jump=Select nex sphere\r\nDeflect+Jump=Make sphere bigger\r\nDeflect+Crouch=Shrink the sphere", "Deflect+LMB=Move forward\r\nDeflect+RMB=Move Backward")).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create new Bounce Orb\r\nInteract+RMB=Delete selected Ball\r\nInteract+Crouch=Select previous Ball", "Interact+Jump=Select next Ball\r\nDeflect+Jump=Increase Ball's strength\r\nDeflect+Crouch=Decrease Ball's strength", "Deflect+LMB=Move Ball forward\r\nDeflect+RMB=Move Ball back"))[hostPlayer.E], "Hold melee to open the guidance text"), HudPosition.RIGHT, -2, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     #to test#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, "Crouch+LMB=Next lvl\r\nCrouch+RMB=Prev lvl\r\nIn invincbile mode:\r\nE=Trough Wall", ""), HudPosition.RIGHT, -1, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     #to test#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, "Hold melee to hide guidence text\r\nCreated by: 易忘#51876\r\nUdpated by: 五里雾中#51574\r\nTranslated by: Xerteks#2929,FATHER", ""), HudPosition.RIGHT, 0, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
@@ -201,7 +209,12 @@ rule "HUD | Guide":
         HudPosition.TOP, -20, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
 rule "HUD | Guide Effects":
-    @Condition hostPlayer.EditorOn
+    #@Condition hostPlayer.EditorOn
+    waitUntil(hostPlayer.hasSpawned(), 90)
+    wait(0.5)
+    if not hostPlayer.EditorOn:
+        return
+
     createIcon(getAllPlayers(), CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.RED, true)
     createInWorldText(getAllPlayers(), "Selected Checkpoint", CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.5, 0), 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
     ###createEffect(getAllPlayers(), Effect.SPHERE, Color.RED, H[J], I[J], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
