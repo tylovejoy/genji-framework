@@ -92,7 +92,7 @@ rule "Checking | Create Bhop":
     @Condition eventPlayer.isJumping() == false
     @Condition eventPlayer.isCrouching() == true
     eventPlayer.BhopUsed = 0
-    if BhopBanToggle == true and eventPlayer.InvincibleToggle == 0:
+    if BhopBanToggle == true and eventPlayer.InvincibleToggle == 0 eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
         smallMessage(eventPlayer, "Create Bhop is banned!")
         checkpointFailReset()
         return
@@ -203,6 +203,7 @@ rule "Ban | Wallclimb for specific CPs <---- EDIT ME":
     @Event eachPlayer
     @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Wallclimb for specific CPs", false, 2) == true
     @Condition eventPlayer.InvincibleToggle == 0
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     # Change "-1" to certain Checkpoints' number
     @Condition eventPlayer.CurrentCheckpoint in [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1] == true
     # If all checkpoints need this function, enable this rule and disable Rule: "Array Contains" 
@@ -219,6 +220,7 @@ rule "Ban | Bhop for specific CPs      <---- EDIT ME":
     @Event eachPlayer
     @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Bhop for specific CPs", false, 3) == true
     @Condition eventPlayer.InvincibleToggle == 0
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     # Change "-1" to certain Checkpoints' number
     @Condition eventPlayer.CurrentCheckpoint in [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1] == true
     # If all checkpoints need this function, enable this rule and disable Rule: "Array Contains" 
@@ -234,6 +236,7 @@ rule "Ban | Triple Jump":
     @Event eachPlayer
     @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Triple Jump", false, 0) == true
     @Condition eventPlayer.InvincibleToggle == 0
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.getVerticalSpeed() >= 5.8
     @Condition eventPlayer.JumpCount == 1
     @Condition eventPlayer.isUsingAbility1() == false
@@ -248,6 +251,7 @@ rule "Ban | Multiclimb":
     @Event eachPlayer
     @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Multiclimb", false, 1) == true
     @Condition eventPlayer.InvincibleToggle == 0
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.isOnWall() == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     @Condition eventPlayer.WallclimbUsed == 2
@@ -260,8 +264,8 @@ rule "Ban | Emote Savehop":
     @Event eachPlayer
     @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Emote Savehop", false, 3) == true
     @Condition eventPlayer.InvincibleToggle == 0
-    @Condition eventPlayer.isCommunicatingEmote() == true
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
+    @Condition eventPlayer.isCommunicatingEmote() == true
     
     smallMessage(eventPlayer, "Emote Savehop is banned!")
     checkpointFailReset()

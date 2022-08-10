@@ -270,7 +270,7 @@ def checkpointFailReset():
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
-    if DeathBhopBan == true and eventPlayer.InvincibleToggle == 0:
+    if DeathBhopBan == true and eventPlayer.InvincibleToggle == 0 and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
         eventPlayer.disallowButton(Button.JUMP)
         if eventPlayer.isHoldingButton(Button.JUMP):
             smallMessage(eventPlayer, "Deathbhop is banned!")
