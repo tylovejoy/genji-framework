@@ -263,13 +263,14 @@ rule "Initialize and CP HUD":
 
 def checkpointFailReset():
     @Name "SUB | Checkpoint Fail"
+    eventPlayer.cancelPrimaryAction()
     if eventPlayer.EditModeSelection < 1:
         eventPlayer.setAbility1Enabled(false)
         eventPlayer.setUltEnabled(false)
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
-    if DeathBhopBan == true:
+    if DeathBhopBan == true and eventPlayer.InvincibleToggle == 0:
         eventPlayer.disallowButton(Button.JUMP)
         if eventPlayer.isHoldingButton(Button.JUMP):
             smallMessage(eventPlayer, "Deathbhop is banned!")
@@ -665,7 +666,7 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
     eventPlayer.CurrentCheckpoint = 0
     CheckpointEffect_Sub()
 
-    if DashExploitToggle and eventPlayer.isUsingAbility2():
+    if eventPlayer.InvincibleToggle == 0 and DashExploitToggle and eventPlayer.isUsingAbility2():
         smallMessage(eventPlayer, "Dash Start is banned!")
         waitUntil(not eventPlayer.isUsingAbility2(), 0.5)
         
