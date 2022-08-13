@@ -92,7 +92,7 @@ rule "Checking | Create Bhop":
     @Condition eventPlayer.isJumping() == false
     @Condition eventPlayer.isCrouching() == true
     eventPlayer.BhopUsed = 0
-    if BhopBanToggle == true and eventPlayer.InvincibleToggle == 0 eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
+    if BhopBanToggle == true and eventPlayer.InvincibleToggle == 0 and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
         smallMessage(eventPlayer, "Create Bhop is banned!")
         checkpointFailReset()
         return
