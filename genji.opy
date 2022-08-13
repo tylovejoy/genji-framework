@@ -1,10 +1,10 @@
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 # cheats
-editortoggle(3) # 0 is editor, rest is numbers
+editortoggle(8) # 0 is editor, rest is numbers
 
 #!define touchground false
-#!define cpcheat false
+#!define cpcheat true
 
 #!include "settings.opy"
 #!include "definitions.opy"
@@ -17,6 +17,8 @@ rule "fisho cp cheat for overpy toggle":
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
     @Condition cpcheat
     @Condition not eventPlayer.EditorOn
+    @Condition not eventPlayer.PracticeToggle
+    
 
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
