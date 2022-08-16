@@ -170,33 +170,18 @@ rule "HUD | Guide":
         HudPosition.RIGHT, 11, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
-
     hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
     "save map: hold {0} + {1} + {2} and follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
         HudPosition.LEFT, -12, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-    /*
-    hudText(getAllPlayers(), #if hostPlayer.GuideToggle == 1 else null, 
-        "Current mode: {1}\n"
-        "Hold {0} to change ".format(buttonString(Button.ABILITY_1), ["Checkpoints","Kill Orb","Bounce Orb"][hostPlayer.EditModeSelection -1])
-        if localPlayer == hostPlayer else "Current editor/host: {0}".format(hostPlayer)
-        ,
-        null,      
-        null,   
-        HudPosition.RIGHT, -60, Color.RED, Color.WHITE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    */
-    hudText(getAllPlayers(), #if hostPlayer.GuideToggle == 1 else null, 
+    
+    hudText(getAllPlayers(),  #  LEFT at -6 original position
         "Current mode: {0}".format(["Checkpoints","Kill Orb","Bounce Orb"][hostPlayer.EditModeSelection -1])
         if localPlayer == hostPlayer else "Current editor/host: {0}".format(hostPlayer)
-        ,
-        null   ,   
-        null,   
+        , null, null,   
         HudPosition.RIGHT, -60, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-    hudText(getAllPlayers(), #if hostPlayer.GuideToggle == 1 else null, 
-        null
-        ,
-        null,
+    hudText(getAllPlayers(), null, null, # original part of the one ontop of it
         "Hold {0} to change mode\n".format(buttonString(Button.ABILITY_1)),      
         HudPosition.RIGHT, -59, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
