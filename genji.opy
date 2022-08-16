@@ -400,7 +400,7 @@ def StartGame_Sub():
             eventPlayer.PauseTimer = 0
             SavedProgress.append(["{0}".format(eventPlayer), eventPlayer.CurrentCheckpoint, eventPlayer.Timer, eventPlayer, getTotalTimeElapsed(), 0, 0])
     chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
-    eventPlayer.PortalText = []
+    # eventPlayer.PortalText = []
     if eventPlayer.EditModeSelection < 1:
         eventPlayer.setAbility1Enabled(false)
         eventPlayer.setUltEnabled(false)
@@ -412,6 +412,7 @@ def StartGame_Sub():
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
     # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
     eventPlayer.InvincibleToggle = 0
+    eventPlayer.LockState = false
 
 
 def Leaderboardupdate():
@@ -488,7 +489,7 @@ rule "Checkpoint | Arrived":
 
     # if eventPlayer.PracticeLock:
     #     return
-
+    eventPlayer.LockState = true
     eventPlayer.CurrentCheckpoint += 1
     
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
@@ -515,6 +516,7 @@ rule "Checkpoint | Arrived":
     # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
     
     lbl_1:
+    eventPlayer.LockState = false
     if eventPlayer.EditModeSelection < 1:
         eventPlayer.setUltEnabled(false)
         eventPlayer.setAbility1Enabled(false)
@@ -537,9 +539,11 @@ rule "Checkpoint | Arrived":
             # destroyInWorldText(eventPlayer.PlayerEffects[4])
             #Portal1PlayerList.append(eventPlayer)
             #Portal2PlayerList.append(eventPlayer)
-            eventPlayer.PortalText = 2
+            # eventPlayer.PortalText = 2
             Leaderboardupdate()
     lbl_0:
+    eventPlayer.LockState = false
+
 
 
 rule "Checkpoint | Finish effects":
@@ -872,8 +876,10 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
     @Condition eventPlayer.CurrentCheckpoint <= len(CheckpointPositions) - 1
     @Condition eventPlayer.InvincibleToggle != 1
     @Condition eventPlayer.isAlive() == true
+    # @Condition eventPlayer.LockState = false
     
     waitUntil(eventPlayer.isUsingUltimate() == false, 3)
+    waitUntil(not eventPlayer.LockState, 5)
     eventPlayer.startForcingPosition(
         CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint] 
         if eventPlayer.PracticeToggle == 1 else 
@@ -886,10 +892,7 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
         wait(0.2)
         eventPlayer.PracticeToggle = 1
     else:
-        eventPlayer.InvincibleToggle = 1
         checkpointFailReset()
-        # if eventPlayer.getAltitude() < 0.5:
-        #     wait(1)
         eventPlayer.setAbility1Enabled(false)
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint])
         eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint
@@ -899,8 +902,7 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
         bigMessage(eventPlayer, "Normal mode")
         chase(eventPlayer.Timer, abs(9999999), rate=1, ChaseReeval.DESTINATION_AND_RATE)
         eventPlayer.stopForcingPosition()
-        wait(0.15)
-        eventPlayer.InvincibleToggle = 0
+        
 
 rule "Combo | Practice Restart | Interact":
     @Event eachPlayer
@@ -1143,3 +1145,47 @@ rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
 
 
 
+globalvar timething    
+
+rule "debug practice toggle on map 4":
+    hudHeader(getAllPlayers(), timething, HudPosition.TOP, -9999, Color.WHITE, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    timething = 1.08
+
+rule "debug practice toggle on map 4":
+    @Event eachPlayer
+    @Condition eventPlayer.isCommunicatingSpray()
+
+    eventPlayer.startForcingButton(Button.ULTIMATE)
+    eventPlayer.startForcingButton(Button.MELEE)
+    wait()
+    eventPlayer.stopForcingButton(Button.ULTIMATE)
+    eventPlayer.stopForcingButton(Button.MELEE)
+    
+    eventPlayer.startFacing(vect(-1,-0.4,0 ),900, Relativity.TO_WORLD,FacingReeval.DIRECTION_AND_TURN_RATE)
+    wait(0.5)
+    eventPlayer.forceButtonPress(Button.JUMP)   
+    wait(0.3)
+    eventPlayer.forceButtonPress(Button.JUMP)   
+    #wait()
+    eventPlayer.startThrottleInDirection(Vector.FORWARD, 1, Relativity.TO_PLAYER, Throttle.REPLACE_EXISTING, ThrottleReeval.DIRECTION_AND_MAGNITUDE)
+    wait(timething)
+    eventPlayer.startForcingButton(Button.ULTIMATE)
+    eventPlayer.startForcingButton(Button.MELEE)
+    wait()
+    eventPlayer.stopForcingButton(Button.ULTIMATE)
+    eventPlayer.stopForcingButton(Button.MELEE)
+
+    eventPlayer.stopThrottleInDirection()
+    eventPlayer.stopFacing()
+    
+    wait(1)
+
+rule "debug practice toggle on map 4":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
+    timething += 0.016
+
+rule "debug practice toggle on map 4":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
+    timething -= 0.016
