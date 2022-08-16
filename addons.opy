@@ -164,6 +164,7 @@ rule "control map portal - placement - toggled via workshop":
         PortalDest = [vect(134.366, 7.829, -240.53), vect(158.27, 11.814, 262.272), vect(-206.269, 19.292, 0.103), vect(158.283, 11.814, 262.283), vect(134.318, 7.829, -240.667), vect(-206.269, 19.292, 0.103)]
 
     else:
+        PortalDest = null
         return
     
     for TempIterator1 in range(len(PortalLoc)):
@@ -189,9 +190,9 @@ rule "control map portal - placement - toggled via workshop":
 rule "control map portal - function - toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
-    @Condition len(PortalLoc) > 0
-    @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc]) == true
+    @Condition len(PortalLoc) != null
     @Condition eventPlayer.InvincibleToggle or eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
+    @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc]) == true
     
     if PortalDest[
             PortalLoc.index(
