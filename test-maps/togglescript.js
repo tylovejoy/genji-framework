@@ -4,14 +4,14 @@ if (x == 0){
 
 } else {
     datafiles = {
-    1: "test-maps/krdata.opy", // kigns row
-    2: "test-maps/hollydata.opy", // hollywood kami
-    3: "test-maps/route.opy", // fries route, ez
-    4: "test-maps/minimap.opy", // really small workshop map to test leaderboard
-    5: "test-maps/hanamura.opy", // 100 cp hana kami
-    6: "test-maps/busan.opy",// super short busan to test portals
-    7: "test-maps/testinghana.opy", // from BDRQ4 the test map they build us
-    8: "test-maps/cp1skipbug.opy" // the map data that sometimes skips cp 1 on reseting when people spec you
+    1: "test-maps/krdata.opy", // 7JXAM - Vertigo - kings row
+    2: "test-maps/hollydata.opy", // 1W8FF -  Kami - hollywood 
+    3: "test-maps/route.opy", // 4QETZV - FRENCHFRIES - route 
+    4: "test-maps/minimap.opy", // tiny 3 cp workshop map by me
+    5: "test-maps/hanamura.opy", // RF0B8 - Kami - 100 cp hana
+    6: "test-maps/busan.opy",// portal test map by me
+    7: "test-maps/testinghana.opy", // BDRQ4 - genji community - framework test map
+    8: "test-maps/cp1skipbug.opy" // 0zh5n - the map data that sometimes skips cp 1 on reseting when people spec you
     }[x]
 
     selectedmap = {
