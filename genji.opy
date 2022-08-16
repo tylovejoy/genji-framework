@@ -244,69 +244,69 @@ rule "Setup and Variables":
         "{3} | Start from practice cp ".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT)),
         HudPosition.RIGHT, -12, Color.LIME_GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
-  
-    Difficultyhud = createWorkshopSetting(enum[
-        "beginner",
-        "easy-",
-        "easy",
-        "easy+",
-        "medium-",
-        "medium",
-        "medium+",
-        "hard-",
-        "hard",
-        "hard+",
-        "very hard-",
-        "very hard",
-        "very hard+",
-        "extreme-",
-        "extreme",
-        "extreme+",
-        "hell",
-        "don't display"
-        ],"map settings","difficulty (display hud)",0, 0)
-
-    if Difficultyhud < 17: # 17th entry is dont display
-        hudSubheader(getAllPlayers(), 
-            [
+    if not hostPlayer.EditorOn:
+        Difficultyhud = createWorkshopSetting(enum[
             "beginner",
-            "easy -",
+            "easy-",
             "easy",
-            "easy +,",
-            "medium -",
+            "easy+",
+            "medium-",
             "medium",
-            "medium +",
-            "hard -",
+            "medium+",
+            "hard-",
             "hard",
-            "hard +",
-            "very hard -",
+            "hard+",
+            "very hard-",
             "very hard",
-            "very hard +",
-            "extreme -",
+            "very hard+",
+            "extreme-",
             "extreme",
-            "extreme +",
-            "hell"][Difficultyhud], 
-            HudPosition.TOP, -24,
-            [
-            Color.GREEN,
-            Color.LIME_GREEN,
-            Color.LIME_GREEN,
-            Color.LIME_GREEN,
-            Color.YELLOW,
-            Color.YELLOW,
-            Color.YELLOW,
-            Color.ORANGE,
-            Color.ORANGE,
-            Color.ORANGE,
-            rgb(255, 69, 0),
-            rgb(255, 69, 0),
-            rgb(255, 69, 0),
-            Color.RED,
-            Color.RED,
-            Color.RED,
-            rgb(150, 0, 0)
-            ][Difficultyhud]
-            , HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            "extreme+",
+            "hell",
+            "don't display"
+            ],"map settings","difficulty (display hud)",0, 0)
+
+        if Difficultyhud < 17: # 17th entry is dont display
+            hudSubheader(getAllPlayers(), 
+                [
+                "beginner",
+                "easy -",
+                "easy",
+                "easy +,",
+                "medium -",
+                "medium",
+                "medium +",
+                "hard -",
+                "hard",
+                "hard +",
+                "very hard -",
+                "very hard",
+                "very hard +",
+                "extreme -",
+                "extreme",
+                "extreme +",
+                "hell"][Difficultyhud], 
+                HudPosition.TOP, -24,
+                [
+                Color.GREEN,
+                Color.LIME_GREEN,
+                Color.LIME_GREEN,
+                Color.LIME_GREEN,
+                Color.YELLOW,
+                Color.YELLOW,
+                Color.YELLOW,
+                Color.ORANGE,
+                Color.ORANGE,
+                Color.ORANGE,
+                rgb(255, 69, 0),
+                rgb(255, 69, 0),
+                rgb(255, 69, 0),
+                Color.RED,
+                Color.RED,
+                Color.RED,
+                rgb(150, 0, 0)
+                ][Difficultyhud]
+                , HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     wait(5)
     KILLBALL()
     wait(2)
