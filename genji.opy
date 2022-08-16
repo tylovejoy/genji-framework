@@ -86,17 +86,13 @@ rule "Setup and Variables":
     startForcingSpawn(Team.ALL,  0)
     startForcingSpawn(Team.ALL,  1)
     startForcingSpawn(Team.ALL,  2)
-
     BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints != null else []
     DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints != null  else  []
-
     BouncePadCheckpoints = BouncePadCheckpoints if len(BouncePadCheckpoints) else []
+    CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
+    CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
     KillballCheckpoints = KillballCheckpoints if len(KillballCheckpoints) else []
     KillBallPositions = KillBallPositions if len(KillBallPositions) else []
-    CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
-    #Portal1PlayerList = []
-    #Portal2PlayerList = []
-    CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
     KillBallRadii = KillBallRadii if len(KillBallRadii) else []
     KillBallEffects = KillBallEffects if len(KillBallEffects) else []
     SelectedKillball_Editing = 0
@@ -238,7 +234,7 @@ rule "Setup and Variables":
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | leaderboard".format(buttonString(Button.MELEE)), HudPosition.RIGHT, -17, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else ""), HudPosition.RIGHT, -16, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else ""), HudPosition.RIGHT, -15,Color.GREEN if localPlayer.invis else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-    hudSubtext([i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1], "Hold {0} | Toggle Traces".format(abilityIconString(Hero.GENJI,Button.ULTIMATE)), HudPosition.RIGHT, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)  
+    hudSubtext([i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1 and i.PracticeToggle != 1], "Hold {0} | Toggle Traces".format(abilityIconString(Hero.GENJI,Button.ULTIMATE)), HudPosition.RIGHT, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)  
    
     hudSubtext(getAllPlayers() if localPlayer.EditModeSelection < 1 else null,"{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.CurrentCheckpoint - localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else ""),HudPosition.RIGHT, -13, Color.GREEN if localPlayer.PracticeToggle else Color.GRAY if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     
@@ -581,6 +577,7 @@ rule "Checkpoint | Finish effects":
     @Condition eventPlayer.EditModeSelection < 1
     @Condition eventPlayer.isMoving() == true
     @Condition eventPlayer.TracesOff == false
+    @Condition eventPlayer.PracticeToggle != 1
     #@Condition (eventPlayer.isMoving() == true or eventPlayer.isHoldingButton(Button.JUMP) == true) == true
     /*
     # old color
@@ -614,6 +611,8 @@ rule "Toggle Traces":
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
     @Condition eventPlayer.EditModeSelection < 1
+    @Condition eventPlayer.PracticeToggle != 1
+    
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.TracesOff = not eventPlayer.TracesOff
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
@@ -902,24 +901,41 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
     @Condition eventPlayer.isAlive() == true
     
 
-    waitUntil(eventPlayer.isUsingUltimate() == false, 3)
+    #waitUntil(eventPlayer.isUsingUltimate() == false or eventPlayer.PracticeToggle == 0, 3)
+    if eventPlayer.isUsingUltimate():
+        kill(eventPlayer, null)
+      
     wait(0.16)
     waitUntil(not eventPlayer.LockState, 5)
+    /*
     eventPlayer.startForcingPosition(
         CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint] 
         if eventPlayer.PracticeToggle == 1 else 
         CheckpointPositions[eventPlayer.CurrentCheckpoint], true
     )
+    */
     if eventPlayer.PracticeToggle == 0:
+        eventPlayer.startForcingPosition(
+            CheckpointPositions[eventPlayer.CurrentCheckpoint] 
+            if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) == 0 else
+            CheckpointPositions[eventPlayer.CurrentCheckpoint][1]  
+                 , true
+        )
         stopChasingVariable(eventPlayer.Timer)
         bigMessage(eventPlayer, "Practice mode")
         eventPlayer.stopForcingPosition()
         wait(0.2)
         eventPlayer.PracticeToggle = 1
     else:
+         eventPlayer.startForcingPosition(
+            CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint] 
+            if len(CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint]) == 0 else
+            CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint][1]
+            , true
+        )
         checkpointFailReset()
         eventPlayer.setAbility1Enabled(false)
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint])
+        #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint])
         eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint
         eventPlayer.PracticeCheckpoint = 0
         wait(0.1)
