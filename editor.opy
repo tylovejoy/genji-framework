@@ -329,7 +329,7 @@ rule "Bounce Ball | Increase Strength | Deflect + Jump":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.EditModeSelection == 3    
     if len(BouncePositions) > 0:
