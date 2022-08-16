@@ -165,7 +165,7 @@ rule "HUD | Multiclimb Counter":
     @Condition eventPlayer.isOnWall() == true
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     @Condition eventPlayer.WallclimbUsed == 2
-    @Condition eventPlayer.InvincibleToggle == 0
+    # @Condition eventPlayer.InvincibleToggle == 0
     
     eventPlayer.MultiClimbCount += 1
 
@@ -252,9 +252,10 @@ rule "Ban | Multiclimb":
     @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Multiclimb", false, 1) == true
     @Condition eventPlayer.InvincibleToggle == 0
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    @Condition eventPlayer.isOnWall() == true
-    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
-    @Condition eventPlayer.WallclimbUsed == 2
+    @Condition eventPlayer.MultiClimbCount > 0
+    # @Condition eventPlayer.isOnWall() == true
+    # @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
+    # @Condition eventPlayer.WallclimbUsed == 2
     
     # eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
     smallMessage(eventPlayer, "Multicimb is banned!")

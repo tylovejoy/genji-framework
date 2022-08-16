@@ -307,6 +307,10 @@ rule "Setup and Variables":
             rgb(150, 0, 0)
             ][Difficultyhud]
             , HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    wait(5)
+    KILLBALL()
+    wait(2)
+    pinball()
 
 
 rule "Match time":
@@ -487,9 +491,9 @@ def KILLBALL():
     
     if KillBallPositions == []:
         return
-
+    
     for TempIterator1 in range(0, len(KillBallPositions)):
-        createEffect([x for x in getAllPlayers() if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
+        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
         KillBallEffects.append(getLastCreatedEntity())
 
 
@@ -500,7 +504,7 @@ def pinball():
         return
 
     for TempIterator1 in range(0, len(BouncePositions)):
-        createEffect([x for x in getAllPlayers() if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], Effect.ORB, Color.GREEN, BouncePositions[evalOnce(TempIterator1)], 1, EffectReeval.VISIBILITY)
+        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], Effect.ORB, Color.GREEN, BouncePositions[evalOnce(TempIterator1)], 1, EffectReeval.VISIBILITY)
         BounceEffects.append(getLastCreatedEntity())
 
 rule "Checkpoint | Arrived":
@@ -627,7 +631,7 @@ rule "Kill Orb | Activate":
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.InvincibleToggle == 0
     @Condition (KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[0])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[1])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[2])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[3])] == eventPlayer.CurrentCheckpoint) == true
-    
+
     
     # kill(eventPlayer, null)
     checkpointFailReset()
