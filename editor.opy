@@ -126,12 +126,6 @@ rule "HUD | Guide":
     wait(0.5)
     if not hostPlayer.EditorOn:
         return
-    #done#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, [].concat(0).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create New Checkpoint\r\nInteract+RMB=Delete selected Checkpoint\r\nInteract+R=Add teleport to Checkpoint", "Interact+Ultimate=Set Checkpoint to your current position\r\nInteract+Crouch=Select previous Checkpoint", "Interact+Jump=Select next Checkpoint\r\nInteract+1 ability=Show all checkpoints")).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create new Kill Orb\r\nInteract+RMB=Delete selected sphere\r\nInteract+Crouch=Select previous sphere", "Interact+Jump=Select nex sphere\r\nDeflect+Jump=Make sphere bigger\r\nDeflect+Crouch=Shrink the sphere", "Deflect+LMB=Move forward\r\nDeflect+RMB=Move Backward")).concat("{0}\r\n{1}\r\n{2}".format("Interact+LMB=Create new Bounce Orb\r\nInteract+RMB=Delete selected Ball\r\nInteract+Crouch=Select previous Ball", "Interact+Jump=Select next Ball\r\nDeflect+Jump=Increase Ball's strength\r\nDeflect+Crouch=Decrease Ball's strength", "Deflect+LMB=Move Ball forward\r\nDeflect+RMB=Move Ball back"))[hostPlayer.E], "Hold melee to open the guidance text"), HudPosition.RIGHT, -2, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    #to test#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, "Crouch+LMB=Next lvl\r\nCrouch+RMB=Prev lvl\r\nIn invincbile mode:\r\nE=Trough Wall", ""), HudPosition.RIGHT, -1, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    #to test#hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, "Hold melee to hide guidence text\r\nCreated by: 易忘#51876\r\nUdpated by: 五里雾中#51574\r\nTranslated by: Xerteks#2929,FATHER", ""), HudPosition.RIGHT, 0, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    
-    #hudSubtext(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, "{0}\r\n{1}{2}\r\n{3}".format("To save the map:\r\n1.Interact+Melee+Reload to clear excess data", "2.Open Workshop Inspector - Set variable target as global - click the [x]\r\n3.Open Workshop Editor - open [Checkpoint | Position]", "- CLICK THE YELLOW [+] SIGN\r\n4.TURN OFF EDIT RULES\r\n{0}{1}\r\n{2}".format("ESC→SHOW LOBBY→SETTINGS→SHARE CODE→CREATE NEW CODE→COPY CODE\r\n6.OPEN WORKSHOP EDITOR - PASTE MAP CODE AND ADD YOUR", "NICKNAME AS AUTHOR IN \"TEXT\" \r\n7.ESC→SHOW LOBBY→SETTINGS→SHARE CODE→UPLOAD TO EXISTING CODE→\r\n{0}".format(" PASTE THE CODE YOU CREATED IN STEP 5"), "\n")), ""), HudPosition.LEFT, -12, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    #hudText(getAllPlayers(), "{0}{1}{2}".format(hostPlayer.K, [].concat(0).concat("Hold Dash to change editing mode\r\nCurrent mode: Checkpoints").concat("Hold Dash to change editing mode\r\nCurrent mode: Kill Orb").concat("Hold Dash to change editing mode\r\nCurrent mode: Bounce Orb")[hostPlayer.E], "Guide HUD has been closed"), null, [].concat("").concat("").concat("").concat("Hold Q+LMB=Turn Ultimate On/Off\r\nHold Q+RMB=Turn Dash On/Off")[hostPlayer.E], HudPosition.LEFT, -6, Color.RED, Color.WHITE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
     hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
         " \n{0}".format(    
@@ -176,22 +170,21 @@ rule "HUD | Guide":
         HudPosition.RIGHT, 11, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
-
     hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
     "save map: hold {0} + {1} + {2} and follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
         HudPosition.LEFT, -12, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-    hudText(getAllPlayers(), #if hostPlayer.GuideToggle == 1 else null, 
-        "Current mode: {1}\n"
-        "Hold {0} to change ".format(buttonString(Button.ABILITY_1), ["Checkpoints","Kill Orb","Bounce Orb"][hostPlayer.EditModeSelection -1])
+    
+    hudText(getAllPlayers(),  #  LEFT at -6 original position
+        "Current mode: {0}".format(["Checkpoints","Kill Orb","Bounce Orb"][hostPlayer.EditModeSelection -1])
         if localPlayer == hostPlayer else "Current editor/host: {0}".format(hostPlayer)
-        ,
-        null,      
-        null,  
-        #" \nHold {0} + {1} | Turn Ultimate On/Off\n"
-        #"Hold {0} + {2} | Turn Dash On/Off".format(buttonString(Button.ULTIMATE), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE))
-        #if hostPlayer.EditModeSelection == 3 else "",   
-        HudPosition.LEFT, -6, Color.RED, Color.WHITE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+        , null, null,   
+        HudPosition.RIGHT, -60, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+    )
+    hudText(getAllPlayers(), null, null, # original part of the one ontop of it
+        "Hold {0} to change mode\n".format(buttonString(Button.ABILITY_1)),      
+        HudPosition.RIGHT, -59, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+    )
 
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
         "Orb gives ultimate: {0} | toggle with {1} + {2}\n"
@@ -199,11 +192,16 @@ rule "HUD | Guide":
         , HudPosition.TOP, -18, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
     hudText(hostPlayer,
+        /*
         [
         "Selected Checkpoint's number: {0}".format(SelectedCheckpoint_Editing),
         "Current Kill Orb's radius: {0}".format(KillBallRadii[SelectedKillball_Editing]),
         "Current Bounce Orb's strength: {0}".format(BounceStrength[CurrentBounce_Editing])
         ][hostPlayer.EditModeSelection -1],
+        */
+        #"Selected Checkpoint's number: {0}\n{1}".format(SelectedCheckpoint_Editing, "Current Kill Orb's radius: {0}".format(KillBallRadii[SelectedKillball_Editing]) if hostPlayer.EditModeSelection == 2 else "Current Bounce Orb's strength: {0}".format(BounceStrength[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else ""),
+        "Selected Checkpoint: {0}{1}".format(SelectedCheckpoint_Editing, "\nCurrent Kill Orb's radius: {0}".format(KillBallRadii[SelectedKillball_Editing]) if hostPlayer.EditModeSelection == 2 else "\nCurrent Bounce Orb's strength: {0}".format(BounceStrength[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else ""),
+        
         null,
         null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
         HudPosition.TOP, -20, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
