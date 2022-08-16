@@ -1,10 +1,10 @@
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 # cheats
-editortoggle(9) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 
 #!define touchground false
-#!define cpcheat true
+#!define cpcheat false
 
 #!include "settings.opy"
 #!include "definitions.opy"
