@@ -517,11 +517,11 @@ rule "Checkpoint | Arrived":
             stopChasingVariable(eventPlayer.Timer)
             #bigMessage(getAllPlayers(), "{0} {1} {2}".format(eventPlayer, "Mission complete! Time", l"{0}".format(prettyTime(eventPlayer.Timer))))
             bigMessage(getAllPlayers(), "{0} {1}".format(eventPlayer, "Mission complete! Time {0}".format(prettyTime(eventPlayer.Timer))))
-            destroyEffect(eventPlayer.PlayerEffects[0])
-            destroyEffect(eventPlayer.PlayerEffects[1])
-            destroyEffect(eventPlayer.PlayerEffects[2])
-            destroyIcon(eventPlayer.PlayerEffects[3])
-            destroyInWorldText(eventPlayer.PlayerEffects[4])
+            # destroyEffect(eventPlayer.PlayerEffects[0])
+            # destroyEffect(eventPlayer.PlayerEffects[1])
+            # destroyEffect(eventPlayer.PlayerEffects[2])
+            # destroyIcon(eventPlayer.PlayerEffects[3])
+            # destroyInWorldText(eventPlayer.PlayerEffects[4])
             #Portal1PlayerList.append(eventPlayer)
             #Portal2PlayerList.append(eventPlayer)
             eventPlayer.PortalText = 2
@@ -726,6 +726,7 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     eventPlayer.flytoggle = null
+    eventPlayer.CurrentCheckpoint = 0
     eventPlayer.InvincibleToggle = 0
     eventPlayer.PracticeToggle = 0
     eventPlayer.PracticeCheckpoint = 0
@@ -740,8 +741,8 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
         SavedProgress.remove("{0}".format(eventPlayer))
     # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].remove(eventPlayer)
     
-    eventPlayer.CurrentCheckpoint = 0
-    CheckpointEffect_Sub()
+    
+    # CheckpointEffect_Sub()
 
     if eventPlayer.InvincibleToggle == 0 and DashExploitToggle and eventPlayer.isUsingAbility2():
         smallMessage(eventPlayer, "Dash Start is banned!")
