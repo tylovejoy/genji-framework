@@ -52,7 +52,7 @@ rule "HUD | Clear Excess Data & Save Map":
         " click the [x]\n\n"
 
         "   2. Insert data:\n"
-        " Paste the data in the rule named 'map data pasta' (last rule)\n\n" 
+        " Paste the data in the rule named 'map data pasta' (first rule)\n\n" 
 
         "   3. Workshop settings:\n"
         " ESC→SHOW LOBBY→SETTINGS→ workshop settings →\n"
@@ -70,7 +70,7 @@ rule "HUD | Clear Excess Data & Save Map":
 
         "   5. Add credits:\n" 
         " Enter your name & map code in the 'Credits here' rule\n"
-        " (second to last rule) \n\n"
+        " (second rule) \n\n"
 
         
         "   6. Update for credits:\n"

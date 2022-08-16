@@ -1,7 +1,7 @@
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 # cheats
-editortoggle(8) # 0 is editor, rest is numbers
+editortoggle(7) # 0 is editor, rest is numbers
 
 #!define touchground false
 #!define cpcheat true
@@ -17,8 +17,7 @@ rule "fisho cp cheat for overpy toggle":
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
     @Condition cpcheat
     @Condition not eventPlayer.EditorOn
-    @Condition not eventPlayer.PracticeToggle
-    
+    @Condition not eventPlayer.PracticeToggle   
 
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
@@ -34,7 +33,42 @@ rule "fisho cp cheat for overpy toggle":
 
 
 
+rule "------------------------------------------------------------------------ Map pasta ------------------------------------------------------------------------ ":
+    @Delimiter
+    @Disabled
 
+
+rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
+    @Delimiter
+
+editorordata
+
+rule "Credits here <---- INSERT YOUR NAME HERE": #"Text <---- put code and author here!":
+    #hudText(getAllPlayers(), "", null, "{0}\r\n{1}".format("MADE BY: Write your nickname here", "CODE: write maps code here"), HudPosition.LEFT, -15, Color.WHITE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    
+    hudSubheader(getAllPlayers(), "made by: (name)", HudPosition.LEFT, -15, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubheader(getAllPlayers(), "map code: (XXXXX)", HudPosition.LEFT, -14, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+
+    ##hudText(getAllPlayers(), iconString(Icon.SKULL), "Difficulty: Hell+", null, HudPosition.LEFT, -14, Color.RED, Color.WHITE, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    
+    #hudSubtext(getAllPlayers(), "For more maps and records join:", HudPosition.LEFT, -14, Color.PURPLE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubheader(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    
+
+rule "Friend Title <----  DISPLAY MESSAGE HERE (ON PLAYER)":
+    @Event eachPlayer
+    @Condition eventPlayer.hasSpawned() == true
+    
+    #In the field custom string your nickname
+    if "your nickname <-------" == "{0}".format(eventPlayer):
+        bigMessage(getAllPlayers(), "Message to the whole room")
+        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+    #Fill in the blank with your friend's name
+    if "your nickname <-------" == "{0}".format(eventPlayer):
+        bigMessage(getAllPlayers(), "Message to the whole room")
+        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+
+    
 #!include "editor.opy"
 
 rule "------------------------------------------------------------------------  General rules ------------------------------------------------------------------------ ":
@@ -52,26 +86,29 @@ rule "Setup and Variables":
     startForcingSpawn(Team.ALL,  0)
     startForcingSpawn(Team.ALL,  1)
     startForcingSpawn(Team.ALL,  2)
-    BladeEnabledCheckpoints = []
-    DashEnabledCheckpoints = []
-    BouncePadCheckpoints = []
-    KillballCheckpoints = []
-    CheckpointPositions = []
+
+    BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints != null else []
+    DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints != null  else  []
+
+    BouncePadCheckpoints = BouncePadCheckpoints if len(BouncePadCheckpoints) else []
+    KillballCheckpoints = KillballCheckpoints if len(KillballCheckpoints) else []
+    KillBallPositions = KillBallPositions if len(KillBallPositions) else []
+    CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
     #Portal1PlayerList = []
     #Portal2PlayerList = []
-    KillBallPositions = []
-    KillBallRadii = []
-    KillBallEffects = []
+    CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
+    KillBallRadii = KillBallRadii if len(KillBallRadii) else []
+    KillBallEffects = KillBallEffects if len(KillBallEffects) else []
     SelectedKillball_Editing = 0
-    BouncePositions = []
-    BounceEffects = []
-    BounceStrength = []
+    BouncePositions = BouncePositions if len(BouncePositions) else []
+    BounceEffects = BounceEffects if len(BounceEffects) else []
+    BounceStrength = BounceStrength if len(BounceStrength) else []
     CurrentBounce_Editing = 0
-    BounceToggleUlt = []
-    BounceToggleDash = []
+    BounceToggleUlt = BounceToggleUlt if len(BounceToggleUlt) else []
+    BounceToggleDash = BounceToggleDash if len(BounceToggleDash) else []
     LeaderBoardFull = []
     wait(1)
-    SelectedCheckpoint_Editing = len(CheckpointPositions) - 1 # This probably isn't necessary.
+    SelectedCheckpoint_Editing = len(CheckpointPositions) - 1 # This probably isn't necessary
     KILLBALL()
     wait(2)
     pinball()
@@ -514,10 +551,13 @@ rule "Checkpoint | Arrived":
     if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1: # complete lvl
    
         eventPlayer.setAbility1Enabled(true)
-        eventPlayer.setUltEnabled(true)
-        eventPlayer.setUltCharge(100)
+        #eventPlayer.setUltEnabled(true)
+        #eventPlayer.setUltCharge(100)
 
         if eventPlayer.PracticeToggle != 1:
+            eventPlayer.setUltEnabled(true)
+            eventPlayer.setUltCharge(100)
+
             stopChasingVariable(eventPlayer.Timer)
             #bigMessage(getAllPlayers(), "{0} {1} {2}".format(eventPlayer, "Mission complete! Time", l"{0}".format(prettyTime(eventPlayer.Timer))))
             bigMessage(getAllPlayers(), "{0} {1}".format(eventPlayer, "Mission complete! Time {0}".format(prettyTime(eventPlayer.Timer))))
@@ -863,6 +903,7 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
     
 
     waitUntil(eventPlayer.isUsingUltimate() == false, 3)
+    wait(0.16)
     waitUntil(not eventPlayer.LockState, 5)
     eventPlayer.startForcingPosition(
         CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint] 
@@ -887,6 +928,7 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
         chase(eventPlayer.Timer, abs(9999999), rate=1, ChaseReeval.DESTINATION_AND_RATE)
         eventPlayer.stopForcingPosition()
 
+    wait(0.3)
 
 rule "Combo | Practice Restart | Interact":
     @Event eachPlayer
@@ -897,6 +939,7 @@ rule "Combo | Practice Restart | Interact":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == false
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
     @Condition eventPlayer.EditModeSelection < 1
+    @Condition eventPlayer.PracticeToggle
     #@Condition eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint <= 0 == true
     
     if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
@@ -1081,43 +1124,4 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     MsDestructo = 0
 
 
-
-rule "------------------------------------------------------------------------ Map pasta ------------------------------------------------------------------------ ":
-    @Delimiter
-    @Disabled
-
-
-rule "Friend Title <----  DISPLAY MESSAGE HERE (ON PLAYER)":
-    @Event eachPlayer
-    @Condition eventPlayer.hasSpawned() == true
-    
-    #In the field custom string your nickname
-    if "your nickname <-------" == "{0}".format(eventPlayer):
-        bigMessage(getAllPlayers(), "Message to the whole room")
-        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    #Fill in the blank with your friend's name
-    if "your nickname <-------" == "{0}".format(eventPlayer):
-        bigMessage(getAllPlayers(), "Message to the whole room")
-        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-
-
-rule "Credits here <---- INSERT YOUR NAME HERE": #"Text <---- put code and author here!":
-    #hudText(getAllPlayers(), "", null, "{0}\r\n{1}".format("MADE BY: Write your nickname here", "CODE: write maps code here"), HudPosition.LEFT, -15, Color.WHITE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    
-    hudSubheader(getAllPlayers(), "made by: (name)", HudPosition.LEFT, -15, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    hudSubheader(getAllPlayers(), "map code: (XXXXX)", HudPosition.LEFT, -14, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-
-    ##hudText(getAllPlayers(), iconString(Icon.SKULL), "Difficulty: Hell+", null, HudPosition.LEFT, -14, Color.RED, Color.WHITE, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    
-    #hudSubtext(getAllPlayers(), "For more maps and records join:", HudPosition.LEFT, -14, Color.PURPLE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    hudSubheader(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    
-
-
-    
-
-rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
-    @Delimiter
-
-editorordata
 

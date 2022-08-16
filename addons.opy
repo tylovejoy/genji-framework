@@ -164,11 +164,12 @@ rule "control map portal - placement - toggled via workshop":
         PortalDest = [vect(134.366, 7.829, -240.53), vect(158.27, 11.814, 262.272), vect(-206.269, 19.292, 0.103), vect(158.283, 11.814, 262.283), vect(134.318, 7.829, -240.667), vect(-206.269, 19.292, 0.103)]
 
     else:
+        PortalDest = null
         return
     
     for TempIterator1 in range(len(PortalLoc)):
         createEffect(
-            [i for i in getAllPlayers() if i.InvincibleToggle or i.CurrentCheckpoint == len(CheckpointPositions) - 1],
+            [i for i in getAllPlayers() if i.InvincibleToggle or i.CurrentCheckpoint == len(CheckpointPositions) - 1 or len(CheckpointPositions) < 2],
             Effect.BAD_AURA, 
             #Color.AQUA if localPlayer.portalselect != evalOnce(i) else Color.ORANGE, 
             Color.AQUA if evalOnce(TempIterator1) % 2 == 1 else Color.ORANGE,
@@ -179,7 +180,7 @@ rule "control map portal - placement - toggled via workshop":
         )
 
         createInWorldText(
-            [i for i in getAllPlayers() if i.InvincibleToggle or i.CurrentCheckpoint == len(CheckpointPositions) - 1], 
+            [i for i in getAllPlayers() if i.InvincibleToggle or i.CurrentCheckpoint == len(CheckpointPositions) - 1 or len(CheckpointPositions) < 2], 
             "{0}".format(PortalNames[evalOnce(TempIterator1)]), 
             PortalLoc[evalOnce(TempIterator1)] + vect(0,1,0), 
             1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
@@ -189,9 +190,9 @@ rule "control map portal - placement - toggled via workshop":
 rule "control map portal - function - toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
-    @Condition len(PortalLoc) > 0
+    @Condition len(PortalLoc) != null
+    @Condition eventPlayer.InvincibleToggle or eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1 or len(CheckpointPositions) < 2
     @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc]) == true
-    @Condition eventPlayer.InvincibleToggle or eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
     
     if PortalDest[
             PortalLoc.index(
