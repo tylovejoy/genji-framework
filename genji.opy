@@ -396,7 +396,7 @@ def StartGame_Sub():
             eventPlayer.PauseTimer = 0
             SavedProgress.append(["{0}".format(eventPlayer), eventPlayer.CurrentCheckpoint, eventPlayer.Timer, eventPlayer, getTotalTimeElapsed(), 0, 0])
     chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
-    eventPlayer.PortalText = []
+    # eventPlayer.PortalText = []
     if eventPlayer.EditModeSelection < 1:
         eventPlayer.setAbility1Enabled(false)
         eventPlayer.setUltEnabled(false)
@@ -408,6 +408,7 @@ def StartGame_Sub():
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
     # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
     eventPlayer.InvincibleToggle = 0
+    eventPlayer.LockState = false
 
 
 def Leaderboardupdate():
@@ -476,11 +477,13 @@ rule "Checkpoint | Arrived":
     @Condition eventPlayer.isOnGround() == true
     @Condition (eventPlayer.EditModeSelection >= 1 or eventPlayer.InvincibleToggle == 0) == true
     
+    eventPlayer.LockState = true
     eventPlayer.CurrentCheckpoint += 1
 
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
     bigMessage(eventPlayer, "{0} {1}".format("Arrived at", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)))
+
 
     if eventPlayer.PracticeToggle == 1:
         eventPlayer.PracticeCheckpoint += 1
@@ -502,6 +505,7 @@ rule "Checkpoint | Arrived":
     # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
     
     lbl_1:
+    eventPlayer.LockState = false
     if eventPlayer.EditModeSelection < 1:
         eventPlayer.setUltEnabled(false)
         eventPlayer.setAbility1Enabled(false)
@@ -527,6 +531,7 @@ rule "Checkpoint | Arrived":
             eventPlayer.PortalText = 2
             Leaderboardupdate()
     lbl_0:
+    eventPlayer.LockState = false
 
 
 rule "Checkpoint | Finish effects":
@@ -856,6 +861,9 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
     @Condition eventPlayer.InvincibleToggle != 1
     @Condition eventPlayer.isAlive() == true
     
+
+    waitUntil(eventPlayer.isUsingUltimate() == false, 3)
+    waitUntil(not eventPlayer.LockState, 5)
     eventPlayer.startForcingPosition(
         CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint] 
         if eventPlayer.PracticeToggle == 1 else 
@@ -868,6 +876,7 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
         wait(0.2)
         eventPlayer.PracticeToggle = 1
     else:
+        checkpointFailReset()
         eventPlayer.setAbility1Enabled(false)
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint])
         eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint
