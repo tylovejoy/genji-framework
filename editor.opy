@@ -648,6 +648,7 @@ rule "Checkpoint | Show All |":
 
 rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
     @Event eachPlayer
+    @Condition eventPlayer.LockState == false
     @Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle == 1
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
