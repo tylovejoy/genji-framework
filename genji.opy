@@ -710,7 +710,7 @@ rule "Ground Reset":
     @Condition eventPlayer.InvincibleToggle == 0
     @Condition eventPlayer.SpectateToggle != 1
     @Condition eventPlayer.isOnGround() == true   
-    @Condition eventPlayer.LockState = false 
+    @Condition eventPlayer.LockState == false 
     @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])) > 1.4
     @Condition not touchground
 
