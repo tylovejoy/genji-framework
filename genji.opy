@@ -513,9 +513,7 @@ rule "Checkpoint | Arrived":
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.isOnGround() == true
     @Condition (eventPlayer.EditModeSelection >= 1 or eventPlayer.InvincibleToggle == 0) == true
-    
-    if eventPlayer.LockState:
-        return
+    @Condition eventPlayer.LockState == false
     eventPlayer.CurrentCheckpoint += 1
 
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
@@ -711,7 +709,8 @@ rule "Ground Reset":
     @Condition len(CheckpointPositions) >= 2
     @Condition eventPlayer.InvincibleToggle == 0
     @Condition eventPlayer.SpectateToggle != 1
-    @Condition eventPlayer.isOnGround() == true    
+    @Condition eventPlayer.isOnGround() == true   
+    @Condition eventPlayer.LockState = false 
     @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])) > 1.4
     @Condition not touchground
 
