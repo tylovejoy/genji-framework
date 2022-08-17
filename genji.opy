@@ -414,7 +414,8 @@ def CheckpointEffect_Sub():
 
 def StartGame_Sub():
     @Name "SUB | Start Game"
-    
+    if eventPlayer.isUsingUltimate():
+        kill(eventPlayer, null)
     if len(CheckpointPositions) != 0:
         if "{0}".format(eventPlayer) in SavedProgress:
             #if "{0}".format(eventPlayer) in save == true:
