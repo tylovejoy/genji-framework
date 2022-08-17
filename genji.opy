@@ -514,7 +514,8 @@ rule "Checkpoint | Arrived":
     @Condition eventPlayer.isOnGround() == true
     @Condition (eventPlayer.EditModeSelection >= 1 or eventPlayer.InvincibleToggle == 0) == true
     
-    eventPlayer.LockState = true
+    if eventPlayer.LockState:
+        return
     eventPlayer.CurrentCheckpoint += 1
 
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
@@ -542,7 +543,6 @@ rule "Checkpoint | Arrived":
     # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
     
     lbl_1:
-    eventPlayer.LockState = false
     if eventPlayer.EditModeSelection < 1:
         eventPlayer.setUltEnabled(false)
         eventPlayer.setAbility1Enabled(false)
@@ -571,7 +571,6 @@ rule "Checkpoint | Arrived":
             eventPlayer.PortalText = 2
             Leaderboardupdate()
     lbl_0:
-    eventPlayer.LockState = false
 
 
 rule "Checkpoint | Finish effects":
@@ -904,13 +903,12 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
     @Condition eventPlayer.InvincibleToggle != 1
     @Condition eventPlayer.isAlive() == true
     
-
+    eventPlayer.LockState = true
     #waitUntil(eventPlayer.isUsingUltimate() == false or eventPlayer.PracticeToggle == 0, 3)
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
       
     wait(0.16)
-    waitUntil(not eventPlayer.LockState, 5)
     /*
     eventPlayer.startForcingPosition(
         CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint] 
@@ -949,6 +947,7 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
         eventPlayer.stopForcingPosition()
 
     wait(0.3)
+    eventPlayer.LockState = false
 
 rule "Combo | Practice Restart | Interact":
     @Event eachPlayer
