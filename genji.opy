@@ -960,7 +960,8 @@ rule "Combo | Practice Restart | Interact":
     @Condition eventPlayer.EditModeSelection < 1
     @Condition eventPlayer.PracticeToggle
     #@Condition eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint <= 0 == true
-    
+    if eventPlayer.isUsingUltimate():
+        kill(eventPlayer, null)
     if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
         Sub0()
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint])
@@ -981,6 +982,8 @@ rule "Combo | Quick Reset | Reload, Hold Reload to Enable":
     if eventPlayer.isHoldingButton(Button.MELEE):
         return
     if eventPlayer.QuickRestartToggle == true:
+        if eventPlayer.isUsingUltimate():
+            kill(eventPlayer, null)
         eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], true)
         eventPlayer.flytoggle = null
         if eventPlayer.EditModeSelection >= 1 or eventPlayer.InvincibleToggle == 1:
