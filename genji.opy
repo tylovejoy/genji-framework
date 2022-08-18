@@ -82,6 +82,7 @@ rule "Setup and Variables":
     disableGamemodeCompletion()
     disableScoring()
     disableMusic()
+    disableAnnouncer()
     #pauseMatchTime()
     startForcingSpawn(Team.ALL,  0)
     startForcingSpawn(Team.ALL,  1)
