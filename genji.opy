@@ -5,11 +5,10 @@ editortoggle(0) # 0 is editor, rest is numbers
 
 #!define touchground false
 #!define cpcheat false
+#!define inspectoron false
 
 #!include "settings.opy"
 #!include "definitions.opy"
-
-
 
 rule "fisho cp cheat for overpy toggle":
     @Event eachPlayer
@@ -31,8 +30,6 @@ rule "fisho cp cheat for overpy toggle":
         # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
         #eventPlayer.Timer += 9999 
 
-
-
 rule "------------------------------------------------------------------------ Map pasta ------------------------------------------------------------------------ ":
     @Delimiter
     @Disabled
@@ -46,13 +43,13 @@ editorordata
 rule "Credits here <---- INSERT YOUR NAME HERE": #"Text <---- put code and author here!":
     #hudText(getAllPlayers(), "", null, "{0}\r\n{1}".format("MADE BY: Write your nickname here", "CODE: write maps code here"), HudPosition.LEFT, -15, Color.WHITE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     
-    hudSubheader(getAllPlayers(), "made by: (name)", HudPosition.LEFT, -15, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    hudSubheader(getAllPlayers(), "map code: (XXXXX)", HudPosition.LEFT, -14, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "made by: (name)", HudPosition.LEFT, -15, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "map code: (XXXXX)", HudPosition.LEFT, -14, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
     ##hudText(getAllPlayers(), iconString(Icon.SKULL), "Difficulty: Hell+", null, HudPosition.LEFT, -14, Color.RED, Color.WHITE, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     
     #hudSubtext(getAllPlayers(), "For more maps and records join:", HudPosition.LEFT, -14, Color.PURPLE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    hudSubheader(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     
 
 rule "Friend Title <----  DISPLAY MESSAGE HERE (ON PLAYER)":
@@ -77,7 +74,9 @@ rule "------------------------------------------------------------------------  
 
 
 rule "Setup and Variables":
-    # disableInspector()
+    if not inspectoron:
+        disableInspector()
+    
     getAllPlayers().disableRespawn()
     disableGamemodeCompletion()
     disableScoring()
@@ -235,7 +234,12 @@ rule "Setup and Variables":
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | leaderboard".format(buttonString(Button.MELEE)), HudPosition.RIGHT, -17, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else ""), HudPosition.RIGHT, -16, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else ""), HudPosition.RIGHT, -15,Color.GREEN if localPlayer.invis else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-    hudSubtext([i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1 and i.PracticeToggle != 1], "Hold {0} | Toggle Traces".format(abilityIconString(Hero.GENJI,Button.ULTIMATE)), HudPosition.RIGHT, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)  
+    #hudSubtext([i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1 and i.PracticeToggle != 1], "Hold {0} | Toggle Traces".format(abilityIconString(Hero.GENJI,Button.ULTIMATE)), HudPosition.RIGHT, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)  
+    hudSubtext(
+        [i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1 and i.PracticeToggle != 1], 
+        "Hold {0} | Toggle Traces{1}".format(abilityIconString(Hero.GENJI,Button.ULTIMATE), "" if localPlayer.TracesOff else " | ON "), 
+        HudPosition.RIGHT, -14, Color.WHITE if localPlayer.TracesOff else Color.GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )  
    
     hudSubtext(getAllPlayers() if localPlayer.EditModeSelection < 1 else null,"{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.CurrentCheckpoint - localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else ""),HudPosition.RIGHT, -13, Color.GREEN if localPlayer.PracticeToggle else Color.GRAY if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     
@@ -330,7 +334,7 @@ rule "Match time":
         TimeRemaining += 1
    
     TimeRemaining = 1800
-    hudHeader(getAllPlayers(), "  Server Restarts In {0} Min  ".format(ceil(TimeRemaining / 60)), HudPosition.RIGHT, -200, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+    hudSubtext(getAllPlayers(), "  Server Restarts In {0} Min  ".format(ceil(TimeRemaining / 60)), HudPosition.RIGHT, -200, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     chase(TimeRemaining, 0, rate=1, ChaseReeval.NONE)
     wait(1795)
     bigMessage(getAllPlayers(), "maximum lobby time expired, restarting")
@@ -396,11 +400,13 @@ def checkpointFailReset():
         kill(eventPlayer, null)
 
 
-
-
 def CheckpointEffect_Sub():
     @Name "SUB | Checkpoint Effects"
     
+
+    if eventPlayer.PlayerEffects[0] != null:
+        return
+        
     createEffect(eventPlayer if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else null, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.PlayerEffects[0] = getLastCreatedEntity()
     createEffect(eventPlayer if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else null, Effect.RING, Color.LIME_GREEN, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
