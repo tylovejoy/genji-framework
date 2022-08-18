@@ -81,6 +81,7 @@ rule "Setup and Variables":
     disableGamemodeCompletion()
     disableScoring()
     disableMusic()
+    disableAnnouncer()
     #pauseMatchTime()
     startForcingSpawn(Team.ALL,  0)
     startForcingSpawn(Team.ALL,  1)
@@ -389,9 +390,9 @@ def checkpointFailReset():
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
     if DeathBhopBan == true and eventPlayer.InvincibleToggle == 0 and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
         eventPlayer.disallowButton(Button.JUMP)
+        wait(0.2)
         if eventPlayer.isHoldingButton(Button.JUMP):
             smallMessage(eventPlayer, "Deathbhop is banned!")
-        wait(0.1)
         eventPlayer.allowButton(Button.JUMP)
     if eventPlayer.CurrentCheckpoint == 0:
         eventPlayer.Timer = 0
@@ -402,19 +403,19 @@ def checkpointFailReset():
 def CheckpointEffect_Sub():
     @Name "SUB | Checkpoint Effects"
     
+
     if eventPlayer.PlayerEffects[0] != null:
         return
-
-
-    createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        
+    createEffect(eventPlayer if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else null, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.PlayerEffects[0] = getLastCreatedEntity()
-    createEffect(eventPlayer, Effect.RING, Color.LIME_GREEN, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else null, Effect.RING, Color.LIME_GREEN, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.PlayerEffects[1] = getLastCreatedEntity()
-    createEffect(eventPlayer, Effect.LIGHT_SHAFT, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else null, Effect.LIGHT_SHAFT, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.PlayerEffects[2] = getLastCreatedEntity()
-    createIcon(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + vect(0, 1, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
+    createIcon(eventPlayer if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + vect(0, 1, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
     eventPlayer.PlayerEffects[3] = getLastCreatedEntity()
-    createInWorldText(eventPlayer, "Come here", CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT)
+    createInWorldText(eventPlayer if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else null, "Come here", CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT)
     eventPlayer.PlayerEffects[4] = getLastCreatedText()
 
 
@@ -778,6 +779,7 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
+    eventPlayer.LockState = true
     eventPlayer.flytoggle = null
     eventPlayer.CurrentCheckpoint = 0
     eventPlayer.InvincibleToggle = 0
@@ -806,6 +808,7 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     #Portal1PlayerList.remove(eventPlayer)
     #Portal2PlayerList.remove(eventPlayer)
+    eventPlayer.LockState = false
     
 
 rule "Combo | Enter Spectate | Hold Interact":
@@ -859,7 +862,6 @@ rule "Combo | Toggle Invincible Mode | Melee + Reload":
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isUsingUltimate() == false
-    eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], true)
     eventPlayer.flytoggle = null
     if eventPlayer.InvincibleToggle == 0:
         chase(eventPlayer.PauseTimer, 999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
@@ -869,7 +871,6 @@ rule "Combo | Toggle Invincible Mode | Melee + Reload":
         stopChasingVariable(eventPlayer.Timer)
         bigMessage(eventPlayer, "Invincible mode")
         eventPlayer.flytoggle = null
-        eventPlayer.stopForcingPosition()
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
         eventPlayer.setAbility1Enabled(true)
@@ -877,6 +878,7 @@ rule "Combo | Toggle Invincible Mode | Melee + Reload":
         eventPlayer.InvincibleToggle = 1
     
     else:
+        eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], true)
         if eventPlayer.EditModeSelection >= 1:
             goto lbl_1
         eventPlayer.setUltEnabled(false)
@@ -949,7 +951,12 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
         wait(0.1)
         eventPlayer.PracticeToggle = 0
         bigMessage(eventPlayer, "Normal mode")
-        chase(eventPlayer.Timer, abs(9999999), rate=1, ChaseReeval.DESTINATION_AND_RATE)
+        if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
+            chase(eventPlayer.Timer, abs(9999999), rate=1, ChaseReeval.DESTINATION_AND_RATE)
+        else:
+            eventPlayer.setUltEnabled(true)
+            eventPlayer.setUltCharge(100)
+            eventPlayer.setAbility1Enabled(true)
         eventPlayer.stopForcingPosition()
 
     wait(0.3)
