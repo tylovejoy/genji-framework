@@ -11,6 +11,7 @@ settings {
         "spectatorSlots": 3,
         "team1Slots": 12,
         "team2Slots": 0,
+        "returnToLobby": "never",
         "swapTeamsAfterMatch": false
     },
     "gamemodes": {
@@ -59,6 +60,3 @@ settings {
         }
     }
 }
-
-
-

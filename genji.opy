@@ -1,15 +1,19 @@
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 # cheats
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(4) # 0 is editor, rest is numbers
 
 #!define touchground false
 #!define cpcheat false
+#!define inspectoron false
 
 #!include "settings.opy"
 #!include "definitions.opy"
 
-
+/*
+rule "temp":
+    hudHeader(getAllPlayers(), getNumberOfEntityIds(), HudPosition.TOP, -9999999999, Color.AQUA, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+*/
 
 rule "fisho cp cheat for overpy toggle":
     @Event eachPlayer
@@ -77,7 +81,9 @@ rule "------------------------------------------------------------------------  
 
 
 rule "Setup and Variables":
-    # disableInspector()
+    if not inspectoron:
+        disableInspector()
+    
     getAllPlayers().disableRespawn()
     disableGamemodeCompletion()
     disableScoring()
@@ -234,7 +240,12 @@ rule "Setup and Variables":
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | leaderboard".format(buttonString(Button.MELEE)), HudPosition.RIGHT, -17, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else ""), HudPosition.RIGHT, -16, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else ""), HudPosition.RIGHT, -15,Color.GREEN if localPlayer.invis else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-    hudSubtext([i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1 and i.PracticeToggle != 1], "Hold {0} | Toggle Traces".format(abilityIconString(Hero.GENJI,Button.ULTIMATE)), HudPosition.RIGHT, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)  
+    #hudSubtext([i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1 and i.PracticeToggle != 1], "Hold {0} | Toggle Traces".format(abilityIconString(Hero.GENJI,Button.ULTIMATE)), HudPosition.RIGHT, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)  
+    hudSubtext(
+        [i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1 and i.PracticeToggle != 1], 
+        "Hold {0} | Toggle Traces{1}".format(abilityIconString(Hero.GENJI,Button.ULTIMATE), "" if localPlayer.TracesOff else " | ON "), 
+        HudPosition.RIGHT, -14, Color.WHITE if localPlayer.TracesOff else Color.GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )  
    
     hudSubtext(getAllPlayers() if localPlayer.EditModeSelection < 1 else null,"{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.CurrentCheckpoint - localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else ""),HudPosition.RIGHT, -13, Color.GREEN if localPlayer.PracticeToggle else Color.GRAY if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     
@@ -329,7 +340,7 @@ rule "Match time":
         TimeRemaining += 1
    
     TimeRemaining = 1800
-    hudHeader(getAllPlayers(), "  Server Restarts In {0} Min  ".format(ceil(TimeRemaining / 60)), HudPosition.RIGHT, -200, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+    hudSubtext(getAllPlayers(), "  Server Restarts In {0} Min  ".format(ceil(TimeRemaining / 60)), HudPosition.RIGHT, -200, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     chase(TimeRemaining, 0, rate=1, ChaseReeval.NONE)
     wait(1795)
     bigMessage(getAllPlayers(), "maximum lobby time expired, restarting")
