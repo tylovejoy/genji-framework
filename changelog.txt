@@ -1,4 +1,5 @@
-0.9:
+0.9 - date 17-8-2022
+
 - reworked A LOT of huds both visually and functionaly in both play mode and editor
 - removed unused extensions
 - fixed bugs with bans
@@ -21,3 +22,21 @@ editor:
 - guide hud improvements and cleaned up a lot
 - editor rules via toggle instead
 - placing a teleport now puts a purple sphere down during editing that cp
+
+
+0.9.1 - date 18-8-2022
+fixed bugs:
+- guide hud hud toggle displayed messages even to non host
+- shift to change mode was visible to non host in editor
+- prevented a bug that causes fx to be created to often, resulting in reahcing fx limit
+
+adjustments:
+- "multicimb" typo fixed
+- guide toggle hint is now bottom of the block
+- guide toggle hint is now orange if closed
+- traces now display on/off in hud and color green if on
+- server restart time is now a smaller hud
+- the lobby should now autometically restart if the match is over
+- left top hud is now bigger
+
+
