@@ -856,7 +856,6 @@ rule "Combo | Toggle Invincible Mode | Melee + Reload":
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isUsingUltimate() == false
-    eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], true)
     eventPlayer.flytoggle = null
     if eventPlayer.InvincibleToggle == 0:
         chase(eventPlayer.PauseTimer, 999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
@@ -866,7 +865,6 @@ rule "Combo | Toggle Invincible Mode | Melee + Reload":
         stopChasingVariable(eventPlayer.Timer)
         bigMessage(eventPlayer, "Invincible mode")
         eventPlayer.flytoggle = null
-        eventPlayer.stopForcingPosition()
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
         eventPlayer.setAbility1Enabled(true)
@@ -874,6 +872,7 @@ rule "Combo | Toggle Invincible Mode | Melee + Reload":
         eventPlayer.InvincibleToggle = 1
     
     else:
+        eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], true)
         if eventPlayer.EditModeSelection >= 1:
             goto lbl_1
         eventPlayer.setUltEnabled(false)
