@@ -1,7 +1,7 @@
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 # cheats
-editortoggle(4) # 0 is editor, rest is numbers
+editortoggle(3) # 0 is editor, rest is numbers
 
 #!define touchground false
 #!define cpcheat false
@@ -10,10 +10,10 @@ editortoggle(4) # 0 is editor, rest is numbers
 #!include "settings.opy"
 #!include "definitions.opy"
 
-/*
+
 rule "temp":
     hudHeader(getAllPlayers(), getNumberOfEntityIds(), HudPosition.TOP, -9999999999, Color.AQUA, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-*/
+
 
 rule "fisho cp cheat for overpy toggle":
     @Event eachPlayer
@@ -406,11 +406,13 @@ def checkpointFailReset():
         kill(eventPlayer, null)
 
 
-
-
 def CheckpointEffect_Sub():
     @Name "SUB | Checkpoint Effects"
     
+    if eventPlayer.PlayerEffects[0] != null:
+        return
+
+
     createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.PlayerEffects[0] = getLastCreatedEntity()
     createEffect(eventPlayer, Effect.RING, Color.LIME_GREEN, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
