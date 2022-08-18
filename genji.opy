@@ -947,6 +947,10 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
         bigMessage(eventPlayer, "Normal mode")
         if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
             chase(eventPlayer.Timer, abs(9999999), rate=1, ChaseReeval.DESTINATION_AND_RATE)
+        else:
+            eventPlayer.setUltEnabled(true)
+            eventPlayer.setUltCharge(100)
+            eventPlayer.setAbility1Enabled(true)
         eventPlayer.stopForcingPosition()
 
     wait(0.3)
