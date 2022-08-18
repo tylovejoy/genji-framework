@@ -772,6 +772,7 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
+    eventPlayer.LockState = true
     eventPlayer.flytoggle = null
     eventPlayer.CurrentCheckpoint = 0
     eventPlayer.InvincibleToggle = 0
@@ -800,6 +801,7 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     #Portal1PlayerList.remove(eventPlayer)
     #Portal2PlayerList.remove(eventPlayer)
+    eventPlayer.LockState = false
     
 
 rule "Combo | Enter Spectate | Hold Interact":
