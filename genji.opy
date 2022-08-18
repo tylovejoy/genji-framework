@@ -386,9 +386,9 @@ def checkpointFailReset():
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
     if DeathBhopBan == true and eventPlayer.InvincibleToggle == 0 and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
         eventPlayer.disallowButton(Button.JUMP)
+        wait(0.2)
         if eventPlayer.isHoldingButton(Button.JUMP):
             smallMessage(eventPlayer, "Deathbhop is banned!")
-        wait(0.1)
         eventPlayer.allowButton(Button.JUMP)
     if eventPlayer.CurrentCheckpoint == 0:
         eventPlayer.Timer = 0
