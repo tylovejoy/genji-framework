@@ -2,8 +2,8 @@
 
 settings {
     "main": {
-        "description": "  ~ The Official Genji Parkour Editor ~\nCode: XXXXX\nAdapted by: nebula#11571/FishoFire#2431",
-        "modeName": "Genji Parkour V.0.9 pre-beta"
+        "description": "  ~ The Official Genji Parkour Editor ~\nCode: YMXQ9\nAdapted by: nebula#11571/FishoFire#2431",
+        "modeName": "Genji Parkour V.0.9.1 beta"
     },
     "lobby": {
         "allowPlayersInQueue": true,
@@ -11,6 +11,7 @@ settings {
         "spectatorSlots": 3,
         "team1Slots": 12,
         "team2Slots": 0,
+        "returnToLobby": "never",
         "swapTeamsAfterMatch": false
     },
     "gamemodes": {
@@ -59,6 +60,3 @@ settings {
         }
     }
 }
-
-
-

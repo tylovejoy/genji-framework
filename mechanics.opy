@@ -258,8 +258,8 @@ rule "Ban | Multiclimb":
     # @Condition eventPlayer.WallclimbUsed == 2
     
     # eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
-    smallMessage(eventPlayer, "Multicimb is banned!")
-    checkpointFailReset()
+    smallMessage(eventPlayer, "Multiclimb is banned!")
+    checkpointFailReset() 
     
 rule "Ban | Emote Savehop":
     @Event eachPlayer

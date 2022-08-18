@@ -101,13 +101,13 @@ rule "HUD | Show/Hide Guide | Hold Melee":
     @Condition eventPlayer.EditModeSelection >= 1
     
     wait(0.8, Wait.ABORT_WHEN_FALSE)
-    playEffect(hostPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
+    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     if eventPlayer.GuideToggle == 1:
         eventPlayer.GuideToggle = 2
-        smallMessage(getAllPlayers(), "Guide is hidden")
+        smallMessage(eventPlayer, "Guide is hidden")
     else:
         eventPlayer.GuideToggle = 1
-        smallMessage(getAllPlayers(), "Guide is open")
+        smallMessage(eventPlayer, "Guide is open")
 
 
 rule "HUD | Show Guide On Spawn":
@@ -162,12 +162,13 @@ rule "HUD | Guide":
     hudSubtext(hostPlayer, #if hostPlayer.GuideToggle else null, 
         " \n{0} + {1} | Next checkpoint\n"
         "{0} + {2} | Prev checkpoint\n"
-        "Hold {3} | toggle guide\n"
+        #"Hold {3} | toggle guide\n"
         #"In invincbile mode:\n"
-        "{4} | Fly (checkpoint mode only)\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.MELEE), buttonString(Button.ABILITY_2))
+        "{4} | Fly (checkpoint mode only)\n"
+        "Hold {3} | toggle guide\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.MELEE), buttonString(Button.ABILITY_2))
         if hostPlayer.GuideToggle == 1  else
         "Hold {0} | toggle guide".format(buttonString(Button.MELEE)),
-        HudPosition.RIGHT, 11, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        HudPosition.RIGHT, 11, Color.GREEN if hostPlayer.GuideToggle == 1 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
     hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
@@ -181,7 +182,7 @@ rule "HUD | Guide":
         , null, null,   
         HudPosition.RIGHT, -60, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-    hudText(getAllPlayers(), null, null, # original part of the one ontop of it
+    hudText(hostPlayer, null, null, # original part of the one ontop of it
         "Hold {0} to change mode\n".format(buttonString(Button.ABILITY_1)),      
         HudPosition.RIGHT, -59, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
