@@ -186,23 +186,42 @@ rule "HUD | Guide":
         "Hold {0} to change mode\n".format(buttonString(Button.ABILITY_1)),      
         HudPosition.RIGHT, -59, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-
+    /*
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
-        "Orb gives ultimate: {0} | toggle with {1} + {2}\n"
-        "Orb gives dash: {3} | toggle with {1} + {4}".format(BounceToggleUlt[CurrentBounce_Editing] if BounceToggleUlt[CurrentBounce_Editing] != 0 else "false", buttonString(Button.ULTIMATE), buttonString(Button.PRIMARY_FIRE), BounceToggleDash[CurrentBounce_Editing] if BounceToggleDash[CurrentBounce_Editing] != 0 else "false", buttonString(Button.SECONDARY_FIRE))
-        , HudPosition.TOP, -18, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+        "{3} + {4} | orb give ultimate | {0} \n"
+        "{3} + {5} | orb gives dash | {1} \n"
+        "{3} + {6} | orb unlocks checkpoint | {2}".format(
+            "on" if BounceToggleUlt[CurrentBounce_Editing] != 0 else "off", 
+            buttonString(Button.ULTIMATE), 
+            buttonString(Button.PRIMARY_FIRE), 
+        ), HudPosition.TOP, -18, Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )
+    */
+    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
+        "{0} + {1} | orb give ultimate | {2}".format(
+            buttonString(Button.ULTIMATE), 
+            buttonString(Button.PRIMARY_FIRE), 
+            "on" if BounceToggleUlt[CurrentBounce_Editing] != 0 else "off"
+        ), HudPosition.TOP, -18, Color.GREEN  if BounceToggleUlt[CurrentBounce_Editing] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )
+    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
+        "{0} + {1} | orb gives dash | {2}".format(
+            buttonString(Button.ULTIMATE), 
+            buttonString(Button.SECONDARY_FIRE),
+            "on" if BounceToggleDash[CurrentBounce_Editing] != 0 else "off"
+        ), HudPosition.TOP, -17, Color.GREEN  if BounceToggleDash[CurrentBounce_Editing] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )
+    
+    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null,
+        "{0} + {1} | orb unlocks checkpoint | {2}\n".format(
+            buttonString(Button.ULTIMATE), 
+            buttonString(Button.ABILITY_2),
+            "on" if BounceToggleLock[CurrentBounce_Editing] != 0 else "off"
+        ), HudPosition.TOP, -16, Color.GREEN if BounceToggleLock[CurrentBounce_Editing] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )
 
     hudText(hostPlayer,
-        /*
-        [
-        "Selected Checkpoint's number: {0}".format(SelectedCheckpoint_Editing),
-        "Current Kill Orb's radius: {0}".format(KillBallRadii[SelectedKillball_Editing]),
-        "Current Bounce Orb's strength: {0}".format(BounceStrength[CurrentBounce_Editing])
-        ][hostPlayer.EditModeSelection -1],
-        */
-        #"Selected Checkpoint's number: {0}\n{1}".format(SelectedCheckpoint_Editing, "Current Kill Orb's radius: {0}".format(KillBallRadii[SelectedKillball_Editing]) if hostPlayer.EditModeSelection == 2 else "Current Bounce Orb's strength: {0}".format(BounceStrength[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else ""),
         "Selected Checkpoint: {0}{1}".format(SelectedCheckpoint_Editing, "\nCurrent Kill Orb's radius: {0}".format(KillBallRadii[SelectedKillball_Editing]) if hostPlayer.EditModeSelection == 2 else "\nCurrent Bounce Orb's strength: {0}".format(BounceStrength[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else ""),
-        
         null,
         null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
         HudPosition.TOP, -20, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
@@ -301,7 +320,7 @@ rule "Bounce Ball | Toggle Ultimate | Ultimate + Primary Fire":
     @Condition eventPlayer.EditModeSelection == 3
     @Condition len(BouncePositions) != 0
     
-    wait(1)
+    wait(0.24) # 1 original
     if BounceToggleUlt[CurrentBounce_Editing] == false:
         BounceToggleUlt[CurrentBounce_Editing] = true
     elif BounceToggleUlt[CurrentBounce_Editing] == true:
@@ -317,11 +336,28 @@ rule "Bounce Ball | Toggle Dash | Ultimate + Secondary Fire":
     @Condition eventPlayer.EditModeSelection == 3
     @Condition len(BouncePositions) != 0
     
-    wait(1)
+    wait(0.24) # 1 original
     if BounceToggleDash[CurrentBounce_Editing] == false:
         BounceToggleDash[CurrentBounce_Editing] = true
     elif BounceToggleDash[CurrentBounce_Editing] == true:
         BounceToggleDash[CurrentBounce_Editing] = false
+
+
+rule "Bounce Ball | Toggle Lock| Ultimate + deflect":
+    @Event eachPlayer
+    @Condition hostPlayer.EditorOn
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
+    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
+    @Condition eventPlayer == hostPlayer
+    @Condition eventPlayer.EditModeSelection == 3
+    @Condition len(BouncePositions) != 0
+    
+    wait(0.24) # 1 original
+    if BounceToggleLock[CurrentBounce_Editing] == false:
+        BounceToggleLock[CurrentBounce_Editing] = true
+    elif BounceToggleLock[CurrentBounce_Editing] == true:
+        BounceToggleLock[CurrentBounce_Editing] = false
+
 
 
 rule "Bounce Ball | Increase Strength | Deflect + Jump":
@@ -511,6 +547,7 @@ rule "Checkpoint | Create | Interact + Primary Fire":
             BounceStrength[CurrentBounce_Editing] = 10
             BounceToggleUlt[CurrentBounce_Editing] = false
             BounceToggleDash[CurrentBounce_Editing] = false
+            BounceToggleLock[CurrentBounce_Editing] = false
             for TempIterator1 in range(len(BouncePositions)):
                 destroyEffect(BounceEffects[TempIterator1])
             BounceEffects = []
@@ -551,6 +588,7 @@ rule "Checkpoint | Delete | Interact + Secondary Fire":
         del BounceStrength[CurrentBounce_Editing]
         del BounceToggleUlt[CurrentBounce_Editing]
         del BounceToggleDash[CurrentBounce_Editing]
+        del BounceToggleLock[CurrentBounce_Editing]
         destroyEffect(BounceEffects[CurrentBounce_Editing])
         del BounceEffects[CurrentBounce_Editing]
         del BouncePadCheckpoints[CurrentBounce_Editing]
