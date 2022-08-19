@@ -1,20 +1,6 @@
 #!mainFile "genji.opy"
 
-/*
-globalvar TempIterator2
-rule "a":
-    @Event eachPlayer
-    @Condition eventPlayer.isCommunicatingSpray()
 
-     
-    for TempIterator2 in range(len(BouncePositions)):
-        destroyEffect(BounceEffects[TempIterator2])
-        wait()
-    
-    smallMessage(getAllPlayers(), "remade")
-    wait(1)
-    pinball()
-*/
 rule "------------------------------------------------------------------------  Editor ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
@@ -307,15 +293,6 @@ rule "Fly/Noclip Toggle | Hold Deflect":
 
     wait(1)
 
-/*
-rule "Deflect TP":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
-    @Condition eventPlayer.EditModeSelection == 1
-    
-    eventPlayer.teleport(eventPlayer.getPosition() + eventPlayer.getFacingDirection() * 3)
-*/
-
 rule "Change Edit Mode | Hold Dash":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
@@ -564,7 +541,6 @@ rule "Kill Orb | Move Toward | Deflect + Primary Fire":
 
         for TempIterator1 in range(len(KillBallPositions)):
             destroyEffect(KillBallEffects[TempIterator1])
-            wait()
 
         KillBallEffects = []
         KILLBALL()
@@ -581,7 +557,6 @@ rule "Kill Orb | Move Toward | Deflect + Primary Fire":
         
         for TempIterator1 in range(len(BounceEffects)):
             destroyEffect(BounceEffects[TempIterator1])
-            wait()
 
         BounceEffects = []
         pinball()
