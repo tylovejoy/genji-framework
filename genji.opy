@@ -514,7 +514,6 @@ def KILLBALL():
         createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
         KillBallEffects.append(getLastCreatedEntity())
 
-
 def pinball():
     @Name "SUB | Bounce Ball Effects"
     
@@ -537,6 +536,7 @@ def pinball():
             EffectReeval.VISIBILITY_AND_COLOR
         )
         BounceEffects.append(getLastCreatedEntity())
+
 
 rule "Checkpoint | Arrived":
     @Event eachPlayer
@@ -702,7 +702,7 @@ rule "Bounce Ball | Activate":
     if BounceToggleLock[eventPlayer.bouncetouched]:
         #if not [i for i in BouncePositions if distance(i, eventPlayer) < 2 and BounceToggleLock[BouncePositions.index(i)] == true and BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint][0] in eventPlayer.LockCollected:  
             eventPlayer.LockCollected.append(BouncePositions[eventPlayer.bouncetouched])
-            smallMessage(eventPlayer, "collected orb")
+            smallMessage(eventPlayer, "orb has been collected")
             playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     # used to check 2 meters on togles

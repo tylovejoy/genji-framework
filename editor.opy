@@ -1,7 +1,20 @@
 #!mainFile "genji.opy"
 
+/*
+globalvar TempIterator2
+rule "a":
+    @Event eachPlayer
+    @Condition eventPlayer.isCommunicatingSpray()
 
-
+     
+    for TempIterator2 in range(len(BouncePositions)):
+        destroyEffect(BounceEffects[TempIterator2])
+        wait()
+    
+    smallMessage(getAllPlayers(), "remade")
+    wait(1)
+    pinball()
+*/
 rule "------------------------------------------------------------------------  Editor ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
@@ -447,7 +460,7 @@ rule "Kill Orb | Decrease Size | Deflect + Crouch":
             KillBallEffects = []
             KILLBALL()
 
-
+/*
 rule "Kill Orb | Move Toward | Deflect + Primary Fire":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
@@ -466,25 +479,33 @@ rule "Kill Orb | Move Toward | Deflect + Primary Fire":
             goto RULE_START
         stopChasingVariable(KillBallChase)
         KillBallPositions[SelectedKillball_Editing] = KillBallChase
+        wait()
         for TempIterator1 in range(len(KillBallPositions)):
             destroyEffect(KillBallEffects[TempIterator1])
+            wait()
+        wait()
         KillBallEffects = []
         KILLBALL()
     elif eventPlayer.EditModeSelection == 3:
         if CurrentBouncePosition_Editing != BouncePositions[CurrentBounce_Editing]:
             goto lbl_1
-        chase(CurrentBouncePosition_Editing, eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * (distance(eventPlayer.getPosition(), BouncePositions[CurrentBounce_Editing]) + 5)), rate=1, ChaseReeval.DESTINATION_AND_RATE)
+        #chase(CurrentBouncePosition_Editing, eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * (distance(eventPlayer.getPosition(), BouncePositions[CurrentBounce_Editing]) + 5)), rate=1, ChaseReeval.DESTINATION_AND_RATE)
+        CurrentBouncePosition_Editing = CurrentBouncePosition_Editing + (eventPlayer.getFacingDirection() *5)
+        
+        #eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * (distance(eventPlayer.getPosition(), BouncePositions[CurrentBounce_Editing]) + 5))
         lbl_1:
         wait(0.25)
         if RULE_CONDITION:
             goto RULE_START
-        stopChasingVariable(CurrentBouncePosition_Editing)
+        #stopChasingVariable(CurrentBouncePosition_Editing)
         BouncePositions[CurrentBounce_Editing] = CurrentBouncePosition_Editing
+        wait()
         for TempIterator1 in range(len(BouncePositions)):
             destroyEffect(BounceEffects[TempIterator1])
+            wait()
+        wait()
         BounceEffects = []
         pinball()
-
 
 rule "Kill Orb | Move Backward | Deflect + Secondary Fire":
     @Event eachPlayer
@@ -522,6 +543,56 @@ rule "Kill Orb | Move Backward | Deflect + Secondary Fire":
             destroyEffect(BounceEffects[TempIterator1])
         BounceEffects = []
         pinball()
+
+*/
+rule "Kill Orb | Move Toward | Deflect + Primary Fire":
+    @Event eachPlayer
+    @Condition hostPlayer.EditorOn
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
+    @Condition eventPlayer == hostPlayer
+    @Condition eventPlayer.EditModeSelection > 1
+    
+    if eventPlayer.EditModeSelection == 2:
+        if len(KillBallPositions) == 0:
+            wait()
+            return
+
+        KillBallPositions[SelectedKillball_Editing] += eventPlayer.getFacingDirection() * (1 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -1)
+
+        wait(0.25)
+        if RULE_CONDITION:
+            goto RULE_START
+
+        for TempIterator1 in range(len(KillBallPositions)):
+            destroyEffect(KillBallEffects[TempIterator1])
+            wait()
+
+        KillBallEffects = []
+        KILLBALL()
+
+    elif eventPlayer.EditModeSelection == 3:
+
+        if len(BouncePositions) ==  0:
+            wait()
+            return
+
+
+        BouncePositions[CurrentBounce_Editing] += eventPlayer.getFacingDirection() * (1 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -1)
+     
+        wait(0.25)
+        if RULE_CONDITION:
+            goto RULE_START
+        
+        for TempIterator1 in range(len(BouncePositions)):
+            destroyEffect(BounceEffects[TempIterator1])
+            wait()
+
+        BounceEffects = []
+        pinball()
+
+    wait()
+
 
 
 rule "Checkpoint | Create | Interact + Primary Fire":
