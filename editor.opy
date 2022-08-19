@@ -557,10 +557,8 @@ rule "Kill Orb | Move Toward | Deflect + Primary Fire":
         if len(KillBallPositions) == 0:
             wait()
             return
-
-        KillBallPositions[SelectedKillball_Editing] += eventPlayer.getFacingDirection() * (1 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -1)
-
-        wait(0.25)
+        KillBallPositions[SelectedKillball_Editing] += eventPlayer.getFacingDirection() * (0.5 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.5)
+        wait(0.24)
         if RULE_CONDITION:
             goto RULE_START
 
@@ -572,19 +570,16 @@ rule "Kill Orb | Move Toward | Deflect + Primary Fire":
         KILLBALL()
 
     elif eventPlayer.EditModeSelection == 3:
-
         if len(BouncePositions) ==  0:
             wait()
             return
-
-
-        BouncePositions[CurrentBounce_Editing] += eventPlayer.getFacingDirection() * (1 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -1)
+        BouncePositions[CurrentBounce_Editing] += eventPlayer.getFacingDirection() * (0.5 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.5)
      
-        wait(0.25)
+        wait(0.24)
         if RULE_CONDITION:
             goto RULE_START
         
-        for TempIterator1 in range(len(BouncePositions)):
+        for TempIterator1 in range(len(BounceEffects)):
             destroyEffect(BounceEffects[TempIterator1])
             wait()
 
@@ -592,7 +587,6 @@ rule "Kill Orb | Move Toward | Deflect + Primary Fire":
         pinball()
 
     wait()
-
 
 
 rule "Checkpoint | Create | Interact + Primary Fire":
