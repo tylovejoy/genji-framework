@@ -1,7 +1,6 @@
 #!mainFile "genji.opy"
 
 
-
 rule "------------------------------------------------------------------------  Editor ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
@@ -38,6 +37,7 @@ rule "HUD | Clear Excess Data & Save Map":
     CurrentBouncePosition_Editing = 0
     SavedProgress = 0
     LeaderBoardFull = []
+    PortalOn = false
     #bigMessage(getAllPlayers(), "Excess data has been cleared")
     #bigMessage(getAllPlayers(), "Excess data has been cleared")
     enableInspector()
@@ -186,23 +186,53 @@ rule "HUD | Guide":
         "Hold {0} to change mode\n".format(buttonString(Button.ABILITY_1)),      
         HudPosition.RIGHT, -59, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-
+    /*
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
-        "Orb gives ultimate: {0} | toggle with {1} + {2}\n"
-        "Orb gives dash: {3} | toggle with {1} + {4}".format(BounceToggleUlt[CurrentBounce_Editing] if BounceToggleUlt[CurrentBounce_Editing] != 0 else "false", buttonString(Button.ULTIMATE), buttonString(Button.PRIMARY_FIRE), BounceToggleDash[CurrentBounce_Editing] if BounceToggleDash[CurrentBounce_Editing] != 0 else "false", buttonString(Button.SECONDARY_FIRE))
-        , HudPosition.TOP, -18, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+        "{3} + {4} | orb give ultimate | {0} \n"
+        "{3} + {5} | orb gives dash | {1} \n"
+        "{3} + {6} | orb unlocks checkpoint | {2}".format(
+            "on" if BounceToggleUlt[CurrentBounce_Editing] != 0 else "off", 
+            buttonString(Button.ULTIMATE), 
+            buttonString(Button.PRIMARY_FIRE), 
+        ), HudPosition.TOP, -18, Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )
+    */
+    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
+        "{0} + {1} | orb give ultimate | {2}".format(
+            buttonString(Button.ULTIMATE), 
+            buttonString(Button.PRIMARY_FIRE), 
+            "on" if BounceToggleUlt[CurrentBounce_Editing] != 0 else "off"
+        ), HudPosition.TOP, -18, Color.GREEN  if BounceToggleUlt[CurrentBounce_Editing] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )
+    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
+        "{0} + {1} | orb gives dash | {2}".format(
+            buttonString(Button.ULTIMATE), 
+            buttonString(Button.SECONDARY_FIRE),
+            "on" if BounceToggleDash[CurrentBounce_Editing] != 0 else "off"
+        ), HudPosition.TOP, -17, Color.GREEN  if BounceToggleDash[CurrentBounce_Editing] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )
+    
+    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null,
+        "{0} + {1} | orb unlocks checkpoint | {2}\n".format(
+            buttonString(Button.ULTIMATE), 
+            buttonString(Button.ABILITY_2),
+            "on" if BounceToggleLock[CurrentBounce_Editing] != 0 else "off"
+        ), HudPosition.TOP, -16, Color.GREEN if BounceToggleLock[CurrentBounce_Editing] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )
 
     hudText(hostPlayer,
-        /*
-        [
-        "Selected Checkpoint's number: {0}".format(SelectedCheckpoint_Editing),
-        "Current Kill Orb's radius: {0}".format(KillBallRadii[SelectedKillball_Editing]),
-        "Current Bounce Orb's strength: {0}".format(BounceStrength[CurrentBounce_Editing])
-        ][hostPlayer.EditModeSelection -1],
-        */
-        #"Selected Checkpoint's number: {0}\n{1}".format(SelectedCheckpoint_Editing, "Current Kill Orb's radius: {0}".format(KillBallRadii[SelectedKillball_Editing]) if hostPlayer.EditModeSelection == 2 else "Current Bounce Orb's strength: {0}".format(BounceStrength[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else ""),
-        "Selected Checkpoint: {0}{1}".format(SelectedCheckpoint_Editing, "\nCurrent Kill Orb's radius: {0}".format(KillBallRadii[SelectedKillball_Editing]) if hostPlayer.EditModeSelection == 2 else "\nCurrent Bounce Orb's strength: {0}".format(BounceStrength[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else ""),
-        
+        "Selected Checkpoint: {0}{1}\norb limit: {2}/65".format(
+            SelectedCheckpoint_Editing, 
+            "\nCurrent Kill Orb's radius: {0}".format(
+                KillBallRadii[SelectedKillball_Editing]
+            ) if hostPlayer.EditModeSelection == 2 else 
+            "\nCurrent Bounce Orb's strength: {0}".format(
+                BounceStrength[CurrentBounce_Editing]
+                ) if hostPlayer.EditModeSelection == 3 
+                else "",
+            len(BouncePositions) + len(KillBallPositions)
+            ),
+            
         null,
         null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
         HudPosition.TOP, -20, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
@@ -264,15 +294,6 @@ rule "Fly/Noclip Toggle | Hold Deflect":
 
     wait(1)
 
-/*
-rule "Deflect TP":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
-    @Condition eventPlayer.EditModeSelection == 1
-    
-    eventPlayer.teleport(eventPlayer.getPosition() + eventPlayer.getFacingDirection() * 3)
-*/
-
 rule "Change Edit Mode | Hold Dash":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
@@ -301,7 +322,7 @@ rule "Bounce Ball | Toggle Ultimate | Ultimate + Primary Fire":
     @Condition eventPlayer.EditModeSelection == 3
     @Condition len(BouncePositions) != 0
     
-    wait(1)
+    wait(0.24) # 1 original
     if BounceToggleUlt[CurrentBounce_Editing] == false:
         BounceToggleUlt[CurrentBounce_Editing] = true
     elif BounceToggleUlt[CurrentBounce_Editing] == true:
@@ -317,11 +338,28 @@ rule "Bounce Ball | Toggle Dash | Ultimate + Secondary Fire":
     @Condition eventPlayer.EditModeSelection == 3
     @Condition len(BouncePositions) != 0
     
-    wait(1)
+    wait(0.24) # 1 original
     if BounceToggleDash[CurrentBounce_Editing] == false:
         BounceToggleDash[CurrentBounce_Editing] = true
     elif BounceToggleDash[CurrentBounce_Editing] == true:
         BounceToggleDash[CurrentBounce_Editing] = false
+
+
+rule "Bounce Ball | Toggle Lock| Ultimate + deflect":
+    @Event eachPlayer
+    @Condition hostPlayer.EditorOn
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
+    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
+    @Condition eventPlayer == hostPlayer
+    @Condition eventPlayer.EditModeSelection == 3
+    @Condition len(BouncePositions) != 0
+    
+    wait(0.24) # 1 original
+    if BounceToggleLock[CurrentBounce_Editing] == false:
+        BounceToggleLock[CurrentBounce_Editing] = true
+    elif BounceToggleLock[CurrentBounce_Editing] == true:
+        BounceToggleLock[CurrentBounce_Editing] = false
+
 
 
 rule "Bounce Ball | Increase Strength | Deflect + Jump":
@@ -400,7 +438,7 @@ rule "Kill Orb | Decrease Size | Deflect + Crouch":
             KillBallEffects = []
             KILLBALL()
 
-
+/*
 rule "Kill Orb | Move Toward | Deflect + Primary Fire":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
@@ -419,25 +457,33 @@ rule "Kill Orb | Move Toward | Deflect + Primary Fire":
             goto RULE_START
         stopChasingVariable(KillBallChase)
         KillBallPositions[SelectedKillball_Editing] = KillBallChase
+        wait()
         for TempIterator1 in range(len(KillBallPositions)):
             destroyEffect(KillBallEffects[TempIterator1])
+            wait()
+        wait()
         KillBallEffects = []
         KILLBALL()
     elif eventPlayer.EditModeSelection == 3:
         if CurrentBouncePosition_Editing != BouncePositions[CurrentBounce_Editing]:
             goto lbl_1
-        chase(CurrentBouncePosition_Editing, eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * (distance(eventPlayer.getPosition(), BouncePositions[CurrentBounce_Editing]) + 5)), rate=1, ChaseReeval.DESTINATION_AND_RATE)
+        #chase(CurrentBouncePosition_Editing, eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * (distance(eventPlayer.getPosition(), BouncePositions[CurrentBounce_Editing]) + 5)), rate=1, ChaseReeval.DESTINATION_AND_RATE)
+        CurrentBouncePosition_Editing = CurrentBouncePosition_Editing + (eventPlayer.getFacingDirection() *5)
+        
+        #eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * (distance(eventPlayer.getPosition(), BouncePositions[CurrentBounce_Editing]) + 5))
         lbl_1:
         wait(0.25)
         if RULE_CONDITION:
             goto RULE_START
-        stopChasingVariable(CurrentBouncePosition_Editing)
+        #stopChasingVariable(CurrentBouncePosition_Editing)
         BouncePositions[CurrentBounce_Editing] = CurrentBouncePosition_Editing
+        wait()
         for TempIterator1 in range(len(BouncePositions)):
             destroyEffect(BounceEffects[TempIterator1])
+            wait()
+        wait()
         BounceEffects = []
         pinball()
-
 
 rule "Kill Orb | Move Backward | Deflect + Secondary Fire":
     @Event eachPlayer
@@ -476,6 +522,48 @@ rule "Kill Orb | Move Backward | Deflect + Secondary Fire":
         BounceEffects = []
         pinball()
 
+*/
+rule "Kill Orb | Move Toward | Deflect + Primary Fire":
+    @Event eachPlayer
+    @Condition hostPlayer.EditorOn
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
+    @Condition eventPlayer == hostPlayer
+    @Condition eventPlayer.EditModeSelection > 1
+    
+    if eventPlayer.EditModeSelection == 2:
+        if len(KillBallPositions) == 0:
+            wait()
+            return
+        KillBallPositions[SelectedKillball_Editing] += eventPlayer.getFacingDirection() * (0.5 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.5)
+        wait(0.24)
+        if RULE_CONDITION:
+            goto RULE_START
+
+        for TempIterator1 in range(len(KillBallPositions)):
+            destroyEffect(KillBallEffects[TempIterator1])
+
+        KillBallEffects = []
+        KILLBALL()
+
+    elif eventPlayer.EditModeSelection == 3:
+        if len(BouncePositions) ==  0:
+            wait()
+            return
+        BouncePositions[CurrentBounce_Editing] += eventPlayer.getFacingDirection() * (0.5 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.5)
+     
+        wait(0.24)
+        if RULE_CONDITION:
+            goto RULE_START
+        
+        for TempIterator1 in range(len(BounceEffects)):
+            destroyEffect(BounceEffects[TempIterator1])
+
+        BounceEffects = []
+        pinball()
+
+    wait()
+
 
 rule "Checkpoint | Create | Interact + Primary Fire":
     @Event eachPlayer
@@ -492,6 +580,10 @@ rule "Checkpoint | Create | Interact + Primary Fire":
         if eventPlayer.CurrentCheckpoint == 0:
             bigMessage(getAllPlayers(), "Cannot place Kill Orb on first checkpoint")
         else:
+            if len(BouncePositions) + len(KillBallPositions) >= 65:
+                bigMessage(getAllPlayers(), "Orb limit reached for this map, delete old orbs first")
+                wait()
+                return
             KillBallPositions.append(eventPlayer.getPosition())
             KillballCheckpoints.append(eventPlayer.CurrentCheckpoint)
             SelectedKillball_Editing = len(KillBallPositions) - 1
@@ -506,11 +598,16 @@ rule "Checkpoint | Create | Interact + Primary Fire":
         if eventPlayer.CurrentCheckpoint == 0:
             bigMessage(getAllPlayers(), "Cannot place bounce orb on first checkpoint")
         else:
+            if len(BouncePositions) + len(KillBallPositions) >= 65:
+                bigMessage(getAllPlayers(), "Orb limit reached for this map, delete old orbs first")
+                wait()
+                return
             BouncePositions.append(eventPlayer.getPosition())
             CurrentBounce_Editing = len(BouncePositions) - 1
             BounceStrength[CurrentBounce_Editing] = 10
             BounceToggleUlt[CurrentBounce_Editing] = false
             BounceToggleDash[CurrentBounce_Editing] = false
+            BounceToggleLock[CurrentBounce_Editing] = false
             for TempIterator1 in range(len(BouncePositions)):
                 destroyEffect(BounceEffects[TempIterator1])
             BounceEffects = []
@@ -519,6 +616,7 @@ rule "Checkpoint | Create | Interact + Primary Fire":
             BouncePadCheckpoints.append(eventPlayer.CurrentCheckpoint)
             bigMessage(getAllPlayers(), "New Bounce Orb has been created! \r\nIt's only valid for checkpoint {0}".format(eventPlayer.CurrentCheckpoint))
 
+    wait(0.64)
 
 rule "Checkpoint | Delete | Interact + Secondary Fire":
     @Event eachPlayer
@@ -551,6 +649,7 @@ rule "Checkpoint | Delete | Interact + Secondary Fire":
         del BounceStrength[CurrentBounce_Editing]
         del BounceToggleUlt[CurrentBounce_Editing]
         del BounceToggleDash[CurrentBounce_Editing]
+        del BounceToggleLock[CurrentBounce_Editing]
         destroyEffect(BounceEffects[CurrentBounce_Editing])
         del BounceEffects[CurrentBounce_Editing]
         del BouncePadCheckpoints[CurrentBounce_Editing]
@@ -695,34 +794,3 @@ rule "Teleport | Add | Interact + Reload":
 
 
 
-
-
-
-        
-
-/*
-rule "Jump to next checkpoint":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    
-    eventPlayer.CurrentCheckpoint += 1
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
-
-
-rule "Jump to previous checkpoint":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition eventPlayer.CurrentCheckpoint != 0
-    
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
-    eventPlayer.CurrentCheckpoint -= 1
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
-
-*/
-# 8539

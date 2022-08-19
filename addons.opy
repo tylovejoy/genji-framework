@@ -132,7 +132,7 @@ rule "Disable Portal For Specific CPs <---- EDIT ME":
 
 rule "control map portal - placement - toggled via workshop":
     @Condition PortalOn
-
+    wait(5, Wait.ABORT_WHEN_FALSE)
     if getCurrentMap() == Map.BUSAN:
         #"down > sanc","down > meka","sanc > down","sanc > meka","meka > sanc","meka > down"
         PortalNames = ["Sanctuary","MEKA base","Downtown","MEKA base","Sanctuary","Downtown"]

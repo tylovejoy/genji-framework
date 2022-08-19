@@ -25,6 +25,9 @@ editor:
 
 
 0.9.1 - date 18-8-2022
+added:
+- bounce orbs can now be used to lock checkpoints till collected
+
 fixed bugs:
 - guide hud hud toggle displayed messages even to non host
 - shift to change mode was visible to non host in editor
