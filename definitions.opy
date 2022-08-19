@@ -122,6 +122,7 @@ globalvar CurrentBouncePosition_Editing 21  # vect                      --- the 
 globalvar BounceStrength 22                 # list[float]               --- bouncepad strength
 globalvar BounceToggleUlt 23                # list[bool]                --- toggle ult on bounce
 globalvar BounceToggleDash 24               # list[bool]                --- toggle dash on bounce
+globalvar BounceToggleLock 25               # list[bool]                --- lock cp if not collected bounce
 
 globalvar KillballCheckpoints 26            # list[list[int]]           --- 2d list of checkpoints that havea kill ball [[0], [3]]
 globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d list like killballnumber
@@ -193,6 +194,8 @@ playervar flytoggle 41                      # vector/null               --- null
 playervar savemaphud 42                     # array                     --- array of save map hud ids
 playervar TracesOff 43                      # bool                      --- turn traces (ring explosion fx) off
 playervar EditorOn 45                       # bool                      --- on all players, but only gets checked from host player
+playervar LockCollected 46                  # number                    --- amount collected lock this cp
+playervar bouncetouched 47                  # int                       --- cache of the bouncepad id you are currently touching
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
 
 
