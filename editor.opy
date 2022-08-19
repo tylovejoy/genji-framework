@@ -38,6 +38,7 @@ rule "HUD | Clear Excess Data & Save Map":
     CurrentBouncePosition_Editing = 0
     SavedProgress = 0
     LeaderBoardFull = []
+    PortalOn = false
     #bigMessage(getAllPlayers(), "Excess data has been cleared")
     #bigMessage(getAllPlayers(), "Excess data has been cleared")
     enableInspector()
