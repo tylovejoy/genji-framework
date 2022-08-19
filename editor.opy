@@ -221,7 +221,18 @@ rule "HUD | Guide":
     )
 
     hudText(hostPlayer,
-        "Selected Checkpoint: {0}{1}".format(SelectedCheckpoint_Editing, "\nCurrent Kill Orb's radius: {0}".format(KillBallRadii[SelectedKillball_Editing]) if hostPlayer.EditModeSelection == 2 else "\nCurrent Bounce Orb's strength: {0}".format(BounceStrength[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else ""),
+        "Selected Checkpoint: {0}{1}\norb limit: {2}/65".format(
+            SelectedCheckpoint_Editing, 
+            "\nCurrent Kill Orb's radius: {0}".format(
+                KillBallRadii[SelectedKillball_Editing]
+            ) if hostPlayer.EditModeSelection == 2 else 
+            "\nCurrent Bounce Orb's strength: {0}".format(
+                BounceStrength[CurrentBounce_Editing]
+                ) if hostPlayer.EditModeSelection == 3 
+                else "",
+            len(BouncePositions) + len(KillBallPositions)
+            ),
+            
         null,
         null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
         HudPosition.TOP, -20, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
@@ -528,6 +539,10 @@ rule "Checkpoint | Create | Interact + Primary Fire":
         if eventPlayer.CurrentCheckpoint == 0:
             bigMessage(getAllPlayers(), "Cannot place Kill Orb on first checkpoint")
         else:
+            if len(BouncePositions) + len(KillBallPositions) >= 65:
+                bigMessage(getAllPlayers(), "Orb limit reached for this map, delete old orbs first")
+                wait()
+                return
             KillBallPositions.append(eventPlayer.getPosition())
             KillballCheckpoints.append(eventPlayer.CurrentCheckpoint)
             SelectedKillball_Editing = len(KillBallPositions) - 1
@@ -542,6 +557,10 @@ rule "Checkpoint | Create | Interact + Primary Fire":
         if eventPlayer.CurrentCheckpoint == 0:
             bigMessage(getAllPlayers(), "Cannot place bounce orb on first checkpoint")
         else:
+            if len(BouncePositions) + len(KillBallPositions) >= 65:
+                bigMessage(getAllPlayers(), "Orb limit reached for this map, delete old orbs first")
+                wait()
+                return
             BouncePositions.append(eventPlayer.getPosition())
             CurrentBounce_Editing = len(BouncePositions) - 1
             BounceStrength[CurrentBounce_Editing] = 10
@@ -556,6 +575,7 @@ rule "Checkpoint | Create | Interact + Primary Fire":
             BouncePadCheckpoints.append(eventPlayer.CurrentCheckpoint)
             bigMessage(getAllPlayers(), "New Bounce Orb has been created! \r\nIt's only valid for checkpoint {0}".format(eventPlayer.CurrentCheckpoint))
 
+    wait(0.64)
 
 rule "Checkpoint | Delete | Interact + Secondary Fire":
     @Event eachPlayer
@@ -733,34 +753,3 @@ rule "Teleport | Add | Interact + Reload":
 
 
 
-
-
-
-        
-
-/*
-rule "Jump to next checkpoint":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    
-    eventPlayer.CurrentCheckpoint += 1
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
-
-
-rule "Jump to previous checkpoint":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition eventPlayer.CurrentCheckpoint != 0
-    
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
-    eventPlayer.CurrentCheckpoint -= 1
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-    ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
-
-*/
-# 8539

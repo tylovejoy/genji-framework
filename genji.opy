@@ -1101,10 +1101,13 @@ rule "Give Dash":
     smallMessage(eventPlayer, "Dash is ready")
 
 
-
 /*
+
 globalvar itemp
 rule "leaderboard test bots":
+
+    
+
     wait(8) # wait for other entities to be created
     for itemp in range(22):
      
