@@ -43,3 +43,11 @@ adjustments:
 - left top hud is now bigger
 
 
+0.9.2 - date 22-8-2022
+added:
+- custom difficulty hud
+- world record optional hud
+- increased max effects
+
+adjustments:
+- time remaining now always shows

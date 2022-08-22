@@ -1,11 +1,13 @@
-
+# cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-# cheats
-editortoggle(0) # 0 is editor, rest is numbers
-
+editortoggle(10) # 0 is editor, rest is numbers
 #!define touchground false
 #!define cpcheat false
-#!define inspectoron true
+#!define inspectoron false
+
+# settings ##############################
+# limit on how many orbs can be made
+#!define fxlimit 193
 
 #!include "settings.opy"
 #!include "definitions.opy"
@@ -40,17 +42,38 @@ rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
 
 editorordata
 
-rule "Credits here <---- INSERT YOUR NAME HERE": #"Text <---- put code and author here!":
-    #hudText(getAllPlayers(), "", null, "{0}\r\n{1}".format("MADE BY: Write your nickname here", "CODE: write maps code here"), HudPosition.LEFT, -15, Color.WHITE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    
+rule "Credits here <---- INSERT YOUR NAME HERE": 
     hudSubtext(getAllPlayers(), "made by: (name)", HudPosition.LEFT, -15, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "map code: (XXXXX)", HudPosition.LEFT, -14, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-
-    ##hudText(getAllPlayers(), iconString(Icon.SKULL), "Difficulty: Hell+", null, HudPosition.LEFT, -14, Color.RED, Color.WHITE, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    
-    #hudSubtext(getAllPlayers(), "For more maps and records join:", HudPosition.LEFT, -14, Color.PURPLE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+
+
+rule "Custom difficulty hud":
+    @Disabled
+    @Delimiter
+
+    #1) workshop settings > difficulty > set to "dont display"
+    #2) enable this rule
+    #3) type your difficulty in the hud below
+    hudSubheader(getAllPlayers(), 
+        "Difficulty: custom", 
+        HudPosition.TOP, -24,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+
+
+rule "Display World Record": 
+    @Disabled
+    @Delimiter
+
+    #1) enable this rule
+    #2) type your entry in the textfield that says "name and time here"
+    hudText(getAllPlayers() if not hostPlayer.EditorOn else null,
+        null,
+        " \n{0} world record {0}".format(iconString(Icon.FIRE)),
+        "name and time here",#"Tony hawk - 69 sec",
+        HudPosition.RIGHT, -1, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     
+    # enable rule and fill in your record here
+
 
 rule "Friend Title <----  DISPLAY MESSAGE HERE (ON PLAYER)":
     @Event eachPlayer
@@ -227,8 +250,14 @@ rule "Setup and Variables":
     hudSubtext(getAllPlayers(), "                                                   \r\n  \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n", HudPosition.TOP, -6, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     
     # normal
-    hudSubtext(getAllPlayers(), "{0}+{1}+{2} | Restart".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT)), HudPosition.RIGHT, -20, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), 
+        "{0}+{1}+{2} | Restart".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT)), 
+        HudPosition.RIGHT, -20, 
+        Color.WHITE,
+        HudReeval.VISIBILITY_AND_STRING, 
+        SpecVisibility.DEFAULT)
     
+
     hudSubtext(getAllPlayers(), "{0}+{1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.InvincibleToggle == 1 else ""), HudPosition.RIGHT, -19, Color.GREEN if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     
     hudSubtext(getAllPlayers(), "{0} {1} |  {2}".format( "" if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset"), HudPosition.RIGHT, -18, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
@@ -373,7 +402,7 @@ rule "Match time - always show":
         declareTeamVictory(hostPlayer.getTeam())
 */
 
-rule "Match time - always show - short while":
+rule "Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
         wait(0.25)
         setMatchTime(1)
@@ -385,7 +414,7 @@ rule "Match time - always show - short while":
     setMatchTime(69)
     pauseMatchTime()
     TimeRemaining = 265 #269
-    hudSubtext(getAllPlayers(), "  Server Restarts In {0} Min  ".format(TimeRemaining), HudPosition.RIGHT, -200, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+    hudSubheader(getAllPlayers(), "  Server Restarts In {0} Min  ".format(TimeRemaining), HudPosition.RIGHT, -200, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     while TimeRemaining > 0:
         wait(60)
         TimeRemaining --
@@ -564,6 +593,7 @@ def KILLBALL():
     for TempIterator1 in range(0, len(KillBallPositions)):
         createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
         KillBallEffects.append(getLastCreatedEntity())
+        wait()
 
 def pinball():
     @Name "SUB | Bounce Ball Effects"
@@ -587,7 +617,7 @@ def pinball():
             EffectReeval.VISIBILITY_AND_COLOR
         )
         BounceEffects.append(getLastCreatedEntity())
-
+        wait()
 
 rule "Checkpoint | Arrived":
     @Event eachPlayer
@@ -875,6 +905,7 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
 rule "Combo | Enter Spectate | Hold Interact":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
+    @Condition not eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.EditModeSelection < 1
     
     wait(1, Wait.ABORT_WHEN_FALSE)
@@ -1152,8 +1183,8 @@ rule "Give Dash":
     smallMessage(eventPlayer, "Dash is ready")
 
 
-/*
 
+/*
 globalvar itemp
 rule "leaderboard test bots":
 
@@ -1191,7 +1222,7 @@ rule "leaderboard test ai ":
     wait(1)
     #wait(60)
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint+1]+ Vector.UP) # teleport not needed
-    */
+*/
 
 
 #!include "mechanics.opy"

@@ -1,5 +1,9 @@
 #!mainFile "genji.opy"
 
+/*
+rule "server load hud":
+    hudHeader(getAllPlayers(), "{0} - {1} - {2}".format(getServerLoad(), getPeakServerLoad(), getAverageServerLoad()), HudPosition.RIGHT, -999, Color.WHITE, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+*/
 
 rule "------------------------------------------------------------------------  Editor ------------------------------------------------------------------------":
     @Delimiter
@@ -221,7 +225,7 @@ rule "HUD | Guide":
     )
 
     hudText(hostPlayer,
-        "Selected Checkpoint: {0}{1}\norb limit: {2}/65".format(
+        "Selected Checkpoint: {0}{1}\norb limit: {2}/{3}".format(
             SelectedCheckpoint_Editing, 
             "\nCurrent Kill Orb's radius: {0}".format(
                 KillBallRadii[SelectedKillball_Editing]
@@ -230,7 +234,8 @@ rule "HUD | Guide":
                 BounceStrength[CurrentBounce_Editing]
                 ) if hostPlayer.EditModeSelection == 3 
                 else "",
-            len(BouncePositions) + len(KillBallPositions)
+            len(BouncePositions) + len(KillBallPositions),
+            fxlimit
             ),
             
         null,
@@ -580,7 +585,7 @@ rule "Checkpoint | Create | Interact + Primary Fire":
         if eventPlayer.CurrentCheckpoint == 0:
             bigMessage(getAllPlayers(), "Cannot place Kill Orb on first checkpoint")
         else:
-            if len(BouncePositions) + len(KillBallPositions) >= 65:
+            if len(BouncePositions) + len(KillBallPositions) >= fxlimit:
                 bigMessage(getAllPlayers(), "Orb limit reached for this map, delete old orbs first")
                 wait()
                 return
@@ -600,7 +605,7 @@ rule "Checkpoint | Create | Interact + Primary Fire":
         if eventPlayer.CurrentCheckpoint == 0:
             bigMessage(getAllPlayers(), "Cannot place bounce orb on first checkpoint")
         else:
-            if len(BouncePositions) + len(KillBallPositions) >= 65:
+            if len(BouncePositions) + len(KillBallPositions) >= fxlimit:
                 bigMessage(getAllPlayers(), "Orb limit reached for this map, delete old orbs first")
                 wait()
                 return
