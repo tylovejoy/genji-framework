@@ -319,7 +319,7 @@ rule "Setup and Variables":
     pinball()
 
 /*
-rule "Match time":
+rule "Match time old":
     # Created by Hax, edited by FishoFire
     if getCurrentGamemode() != Gamemode.SKIRMISH:
         wait(0.25)
