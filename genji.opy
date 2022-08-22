@@ -402,7 +402,7 @@ rule "Match time - always show":
         declareTeamVictory(hostPlayer.getTeam())
 */
 
-rule "Match time - always show - short while":
+rule "Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
         wait(0.25)
         setMatchTime(1)
