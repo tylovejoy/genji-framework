@@ -24,7 +24,8 @@ rule "HUD | Clear Excess Data & Save Map":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
     @Condition eventPlayer == hostPlayer
-    
+
+    wait(0.5, Wait.ABORT_WHEN_FALSE)
     SelectedCheckpoint_Editing = 0
     CheckpointRings_Editing = 0
     #Portal1PlayerList = 0
@@ -797,9 +798,10 @@ rule "Teleport | Add | Interact + Reload":
     @Condition hostPlayer.EditModeSelection == 1
     @Condition SelectedCheckpoint_Editing > 0
     
-    
-    if hostPlayer.isHoldingButton(Button.MELEE):
-        return
+    waitUntil(hostPlayer.isHoldingButton(Button.MELEE) or not (hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.RELOAD)), 0.5)
+    if hostPlayer.isHoldingButton(Button.MELEE) or hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.RELOAD):
+      return
+
     CheckpointPositions[SelectedCheckpoint_Editing] = [
         CheckpointPositions[SelectedCheckpoint_Editing][0] 
             if len(CheckpointPositions[SelectedCheckpoint_Editing]) != 0 else 
