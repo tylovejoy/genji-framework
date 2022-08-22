@@ -406,10 +406,10 @@ rule "Kill Orb | Increase Size | Deflect + Jump":
             wait(0.1)
             if RULE_CONDITION:
                 goto RULE_START
-            for TempIterator1 in range(len(KillBallPositions)):
-                destroyEffect(KillBallEffects[TempIterator1])
-            KillBallEffects = []
-            KILLBALL()
+            # for TempIterator1 in range(len(KillBallPositions)):
+            #     destroyEffect(KillBallEffects[TempIterator1])
+            # KillBallEffects = []
+            # KILLBALL()
     elif eventPlayer.EditModeSelection == 3:
         if len(BouncePositions) > 0:
             BounceStrength[CurrentBounce_Editing] += 0.1
@@ -433,10 +433,10 @@ rule "Kill Orb | Decrease Size | Deflect + Crouch":
             wait(0.1)
             if RULE_CONDITION:
                 goto RULE_START
-            for TempIterator1 in range(len(KillBallPositions)):
-                destroyEffect(KillBallEffects[TempIterator1])
-            KillBallEffects = []
-            KILLBALL()
+            # for TempIterator1 in range(len(KillBallPositions)):
+            #     destroyEffect(KillBallEffects[TempIterator1])
+            # KillBallEffects = []
+            # KILLBALL()
 
 /*
 rule "Kill Orb | Move Toward | Deflect + Primary Fire":
@@ -523,7 +523,7 @@ rule "Kill Orb | Move Backward | Deflect + Secondary Fire":
         pinball()
 
 */
-rule "Kill Orb | Move Toward | Deflect + Primary Fire":
+rule "Kill Orb | Move Toward/Backward | Deflect + Primary Fire":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
@@ -540,11 +540,11 @@ rule "Kill Orb | Move Toward | Deflect + Primary Fire":
         if RULE_CONDITION:
             goto RULE_START
 
-        for TempIterator1 in range(len(KillBallPositions)):
-            destroyEffect(KillBallEffects[TempIterator1])
+        # for TempIterator1 in range(len(KillBallPositions)):
+        #     destroyEffect(KillBallEffects[TempIterator1])
 
-        KillBallEffects = []
-        KILLBALL()
+        # KillBallEffects = []
+        # KILLBALL()
 
     elif eventPlayer.EditModeSelection == 3:
         if len(BouncePositions) ==  0:
@@ -556,11 +556,11 @@ rule "Kill Orb | Move Toward | Deflect + Primary Fire":
         if RULE_CONDITION:
             goto RULE_START
         
-        for TempIterator1 in range(len(BounceEffects)):
-            destroyEffect(BounceEffects[TempIterator1])
+        # for TempIterator1 in range(len(BounceEffects)):
+        #     destroyEffect(BounceEffects[TempIterator1])
 
-        BounceEffects = []
-        pinball()
+        # BounceEffects = []
+        # pinball()
 
     wait()
 
@@ -592,7 +592,7 @@ rule "Checkpoint | Create | Interact + Primary Fire":
             #     destroyEffect(KillBallEffects[TempIterator1])
             # KillBallEffects = []
             # KILLBALL()
-            createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == evalOnce(KillballCheckpoints.last())], Effect.SPHERE, Color.BLUE, evalOnce(KillBallPositions.last()), evalOnce(KillBallRadii.last()), EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+            createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(SelectedKillball_Editing)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(SelectedKillball_Editing)], KillBallRadii[evalOnce(SelectedKillball_Editing)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
             KillBallEffects.append(getLastCreatedEntity())
             KillBallChase = KillBallPositions[SelectedKillball_Editing]
             bigMessage(getAllPlayers(), "New Kill Orb has been created! \r\nIt's only valid for checkpoint {0}".format(eventPlayer.CurrentCheckpoint))
@@ -616,10 +616,10 @@ rule "Checkpoint | Create | Interact + Primary Fire":
             # pinball()
             createEffect(
                 #[x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], 
-                [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == evalOnce(BouncePadCheckpoints.last()) and not evalOnce(BouncePositions.last()) in x.LockCollected], 
+                [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(CurrentBounce_Editing)] and not evalOnce(BouncePositions[evalOnce(CurrentBounce_Editing)]) in x.LockCollected], 
                 Effect.ORB, 
-                Color.ORANGE if evalOnce(BounceToggleLock.last()) else Color.GREEN, 
-                evalOnce(BouncePositions.last()), 
+                Color.ORANGE if BounceToggleLock[evalOnce(CurrentBounce_Editing)] else Color.GREEN, 
+                BouncePositions[evalOnce(CurrentBounce_Editing)], 
                 1, 
                 EffectReeval.VISIBILITY_POSITION_AND_RADIUS
             )
