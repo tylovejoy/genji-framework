@@ -1,7 +1,7 @@
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 # cheats
-editortoggle(10) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 
 #!define touchground false
 #!define cpcheat false

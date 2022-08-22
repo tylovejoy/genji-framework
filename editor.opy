@@ -588,10 +588,12 @@ rule "Checkpoint | Create | Interact + Primary Fire":
             KillballCheckpoints.append(eventPlayer.CurrentCheckpoint)
             SelectedKillball_Editing = len(KillBallPositions) - 1
             KillBallRadii[SelectedKillball_Editing] = 5
-            for TempIterator1 in range(len(KillBallPositions)):
-                destroyEffect(KillBallEffects[TempIterator1])
-            KillBallEffects = []
-            KILLBALL()
+            # for TempIterator1 in range(len(KillBallPositions)):
+            #     destroyEffect(KillBallEffects[TempIterator1])
+            # KillBallEffects = []
+            # KILLBALL()
+            createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == evalOnce(KillballCheckpoints.last())], Effect.SPHERE, Color.BLUE, evalOnce(KillBallPositions.last()), evalOnce(KillBallRadii.last()), EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+            KillBallEffects.append(getLastCreatedEntity())
             KillBallChase = KillBallPositions[SelectedKillball_Editing]
             bigMessage(getAllPlayers(), "New Kill Orb has been created! \r\nIt's only valid for checkpoint {0}".format(eventPlayer.CurrentCheckpoint))
     elif eventPlayer.EditModeSelection == 3:
@@ -608,10 +610,20 @@ rule "Checkpoint | Create | Interact + Primary Fire":
             BounceToggleUlt[CurrentBounce_Editing] = false
             BounceToggleDash[CurrentBounce_Editing] = false
             BounceToggleLock[CurrentBounce_Editing] = false
-            for TempIterator1 in range(len(BouncePositions)):
-                destroyEffect(BounceEffects[TempIterator1])
-            BounceEffects = []
-            pinball()
+            # for TempIterator1 in range(len(BouncePositions)):
+            #     destroyEffect(BounceEffects[TempIterator1])
+            # BounceEffects = []
+            # pinball()
+            createEffect(
+                #[x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], 
+                [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == evalOnce(BouncePadCheckpoints.last()) and not evalOnce(BouncePositions.last()) in x.LockCollected], 
+                Effect.ORB, 
+                Color.ORANGE if evalOnce(BounceToggleLock.last()) else Color.GREEN, 
+                evalOnce(BouncePositions.last()), 
+                1, 
+                EffectReeval.VISIBILITY_POSITION_AND_RADIUS
+            )
+                BounceEffects.append(getLastCreatedEntity())
             CurrentBouncePosition_Editing = BouncePositions[CurrentBounce_Editing]
             BouncePadCheckpoints.append(eventPlayer.CurrentCheckpoint)
             bigMessage(getAllPlayers(), "New Bounce Orb has been created! \r\nIt's only valid for checkpoint {0}".format(eventPlayer.CurrentCheckpoint))
