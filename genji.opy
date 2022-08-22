@@ -1,7 +1,7 @@
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 # cheats
-editortoggle(10) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 
 #!define touchground false
 #!define cpcheat false
@@ -345,6 +345,8 @@ rule "Match time":
     else:
         declareTeamVictory(hostPlayer.getTeam())
 */
+
+/*
 rule "Match time - always show":
     # Created by Hax, edited by FishoFire
     if getCurrentGamemode() != Gamemode.SKIRMISH:
@@ -355,12 +357,39 @@ rule "Match time - always show":
         wait(1.1)
 
     TimeRemaining = 16175
-    hudSubtext(getAllPlayers(), "  Server Restarts In {0} Min  ".format(ceil(TimeRemaining / 60)), HudPosition.RIGHT, -200, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)chase(TimeRemaining, 0, rate=1, ChaseReeval.NONE)
+    hudSubtext(getAllPlayers(), "  Server Restarts In {0} Min  ".format(ceil(TimeRemaining / 60)), HudPosition.RIGHT, -200, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+    chase(TimeRemaining, 0, rate=1, ChaseReeval.NONE)
     while TimeRemaining > 2000:
         setMatchTime(3600)
         wait(2875)
 
     wait(1795)
+    bigMessage(getAllPlayers(), "maximum lobby time expired, restarting")
+    wait(5)
+
+    if getCurrentGamemode() == Gamemode.FFA:
+        declarePlayerVictory(hostPlayer)
+    else:
+        declareTeamVictory(hostPlayer.getTeam())
+*/
+
+rule "Match time - always show - short while":
+    if getCurrentGamemode() != Gamemode.SKIRMISH:
+        wait(0.25)
+        setMatchTime(1)
+        wait(1.1)
+        setMatchTime(1)
+        wait(1.1)
+        wait(10)
+    
+    setMatchTime(69)
+    pauseMatchTime()
+    TimeRemaining = 265 #269
+    hudSubtext(getAllPlayers(), "  Server Restarts In {0} Min  ".format(TimeRemaining), HudPosition.RIGHT, -200, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+    while TimeRemaining > 0:
+        wait(60)
+        TimeRemaining --
+
     bigMessage(getAllPlayers(), "maximum lobby time expired, restarting")
     wait(5)
 
