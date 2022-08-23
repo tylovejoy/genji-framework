@@ -378,6 +378,35 @@ rule "Setup and Variables":
     KILLBALL()
     wait(2)
     pinball()
+    # Check for editor/host spawn to redo effect reeval
+    waitUntil(hostPlayer.hasSpawned(), 99999)
+    if not hostPlayer.EditorOn:
+        return
+    
+    for TempIterator1 in range(0, len(KillBallEffects)):
+        destroyEffect(KillBallEffects[TempIterator1])
+
+    KillBallEffects = []
+        
+    for TempIterator1 in range(0, len(KillballCheckpoints)):
+        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        KillBallEffects.append(getLastCreatedEntity())   
+
+    for TempIterator1 in range(0, len(BounceEffects)):
+        destroyEffect(BounceEffects[TempIterator1])
+    
+    BounceEffects = []
+        
+    for TempIterator1 in range(0, len(BouncePadCheckpoints)):
+        createEffect(
+            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not evalOnce(BouncePositions[evalOnce(TempIterator1)]) in x.LockCollected], 
+            Effect.ORB, 
+            Color.ORANGE if BounceToggleLock[evalOnce(TempIterator1)] else Color.GREEN, 
+            BouncePositions[evalOnce(TempIterator1)], 
+            1, 
+            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+        )
+            BounceEffects.append(getLastCreatedEntity())
 
 /*
 rule "Match time old":
@@ -627,6 +656,7 @@ def KILLBALL():
         createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
         KillBallEffects.append(getLastCreatedEntity())
         wait()
+
 
 def pinball():
     @Name "SUB | Bounce Ball Effects"
