@@ -43,8 +43,8 @@ rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
 editorordata
 
 rule "Credits here <---- INSERT YOUR NAME HERE": 
-    hudSubtext(getAllPlayers(), "made by: (name)", HudPosition.LEFT, -15, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers(), "map code: (XXXXX)", HudPosition.LEFT, -14, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "made by: name", HudPosition.LEFT, -15, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "map code: XXXXX", HudPosition.LEFT, -14, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
 
@@ -91,15 +91,27 @@ rule "Friend Title <----  DISPLAY MESSAGE HERE (ON PLAYER)":
 def UpdateCache():
     @Name "SUB | Update Effect Cache"
     
-    eventPlayer.BouncePosition_Cache = [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.BounceStrength_Cache = [i for i in BounceStrength if BouncePadCheckpoints[BounceStrength.index(i)] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.BounceUlt_Cache = [i for i in BounceToggleUlt if BouncePadCheckpoints[BounceToggleUlt.index(i)] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.BounceDash_Cache = [i for i in BounceToggleDash if BouncePadCheckpoints[BounceToggleDash.index(i)] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.BounceLock_Cache = [i for i in BounceToggleLock if BouncePadCheckpoints[BounceToggleLock.index(i)] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.BouncePosition_Cache = []
+    eventPlayer.BounceStrength_Cache = []
+    eventPlayer.BounceUlt_Cache = []
+    eventPlayer.BounceDash_Cache = []
+    eventPlayer.BounceLock_Cache = []
 
-    eventPlayer.KillPosition_Cache = [i for i in KillBallPositions if BouncePadCheckpoints[KillBallPositions.index(i)] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.KillRadii_Cache = [i for i in KillBallRadii if BouncePadCheckpoints[KillBallRadii.index(i)] == eventPlayer.CurrentCheckpoint]
+    for TempIterator1 in range(len(BouncePadCheckpoints)):
+        if BouncePadCheckpoints[TempIterator1] == eventPlayer.CurrentCheckpoint:
+            eventPlayer.BouncePosition_Cache.append(BouncePositions[TempIterator1])
+            eventPlayer.BounceStrength_Cache.append(BounceStrength[TempIterator1])
+            eventPlayer.BounceUlt_Cache.append(BounceToggleUlt[TempIterator1])
+            eventPlayer.BounceDash_Cache.append(BounceToggleDash[TempIterator1])
+            eventPlayer.BounceLock_Cache.append(BounceToggleLock[TempIterator1])
 
+    eventPlayer.KillPosition_Cache = []
+    eventPlayer.KillRadii_Cache = []
+
+    for TempIterator1 in range(len(KillballCheckpoints)):
+        if KillballCheckpoints[TempIterator1] == eventPlayer.CurrentCheckpoint:
+            eventPlayer.KillPosition_Cache.append(KillBallPositions[TempIterator1])
+            eventPlayer.KillRadii_Cache.append(KillBallRadii[TempIterator1])
     
 #!include "editor.opy"
 
@@ -751,6 +763,7 @@ rule "Kill Orb | Activate":
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.InvincibleToggle == 0
     # @Condition (KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[0])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[1])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[2])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[3])] == eventPlayer.CurrentCheckpoint) == true
+    @Condition eventPlayer.KillPosition_Cache != []
     @Condition (any([distance(i, eventPlayer) < eventPlayer.KillRadii_Cache[eventPlayer.KillPosition_Cache.index(i)] for i in eventPlayer.KillPosition_Cache])) == true
     # kill(eventPlayer, null)
     checkpointFailReset()
@@ -762,9 +775,10 @@ rule "Bounce Ball | Activate":
 
     # original
     #@Condition BouncePadCheckpoints[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer, player) <= 1.2])] == eventPlayer.CurrentCheckpoint
-    @Condition (any([distance(i, eventPlayer) < 1.2 for i in eventPlayer.BouncePosition_Cache])) == true
     # @Condition (any([distance(i, eventPlayer) < 1.2 and not (i in eventPlayer.LockCollected) and BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint for i in BouncePositions])) == true
     @Condition eventPlayer.CurrentCheckpoint != 0
+    @Condition eventPlayer.BouncePosition_Cache != []
+    @Condition (any([distance(i, eventPlayer) < 1.2 for i in eventPlayer.BouncePosition_Cache])) == true
     
     eventPlayer.bouncetouched = eventPlayer.BouncePosition_Cache.index( # cashe the touched bouncepad number
         sorted(
