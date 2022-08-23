@@ -333,6 +333,7 @@ rule "Bounce Ball | Toggle Ultimate | Ultimate + Primary Fire":
         BounceToggleUlt[CurrentBounce_Editing] = true
     elif BounceToggleUlt[CurrentBounce_Editing] == true:
         BounceToggleUlt[CurrentBounce_Editing] = false
+    UpdateCache()
 
 
 rule "Bounce Ball | Toggle Dash | Ultimate + Secondary Fire":
@@ -349,6 +350,7 @@ rule "Bounce Ball | Toggle Dash | Ultimate + Secondary Fire":
         BounceToggleDash[CurrentBounce_Editing] = true
     elif BounceToggleDash[CurrentBounce_Editing] == true:
         BounceToggleDash[CurrentBounce_Editing] = false
+    UpdateCache()
 
 
 rule "Bounce Ball | Toggle Lock| Ultimate + deflect":
@@ -365,6 +367,7 @@ rule "Bounce Ball | Toggle Lock| Ultimate + deflect":
         BounceToggleLock[CurrentBounce_Editing] = true
     elif BounceToggleLock[CurrentBounce_Editing] == true:
         BounceToggleLock[CurrentBounce_Editing] = false
+    UpdateCache()
 
 
 
@@ -380,6 +383,7 @@ rule "Bounce Ball | Increase Strength | Deflect + Jump":
         wait(0.1)
         if RULE_CONDITION:
             goto RULE_START
+    UpdateCache()
 
 
 rule "Bounce Ball | Decrease Strength | Deflect + Crouch":
@@ -396,6 +400,7 @@ rule "Bounce Ball | Decrease Strength | Deflect + Crouch":
         wait(0.1)
         if RULE_CONDITION:
             goto RULE_START
+    UpdateCache()
 
 
 rule "Kill Orb | Increase Size | Deflect + Jump":
@@ -422,6 +427,7 @@ rule "Kill Orb | Increase Size | Deflect + Jump":
             wait(0.1)
             if RULE_CONDITION:
                 goto RULE_START
+    UpdateCache()
 
 
 rule "Kill Orb | Decrease Size | Deflect + Crouch":
@@ -443,7 +449,7 @@ rule "Kill Orb | Decrease Size | Deflect + Crouch":
             #     destroyEffect(KillBallEffects[TempIterator1])
             # KillBallEffects = []
             # KILLBALL()
-
+    UpdateCache()
 /*
 rule "Kill Orb | Move Toward | Deflect + Primary Fire":
     @Event eachPlayer
@@ -567,7 +573,7 @@ rule "Kill Orb | Move Toward/Backward | Deflect + Primary Fire":
 
         # BounceEffects = []
         # pinball()
-
+    UpdateCache()
     wait()
 
 
@@ -633,7 +639,7 @@ rule "Checkpoint | Create | Interact + Primary Fire":
             CurrentBouncePosition_Editing = BouncePositions[CurrentBounce_Editing]
             BouncePadCheckpoints.append(eventPlayer.CurrentCheckpoint)
             bigMessage(getAllPlayers(), "New Bounce Orb has been created! \r\nIt's only valid for checkpoint {0}".format(eventPlayer.CurrentCheckpoint))
-
+    UpdateCache()
     wait(0.64)
 
 rule "Checkpoint | Delete | Interact + Secondary Fire":
@@ -676,7 +682,7 @@ rule "Checkpoint | Delete | Interact + Secondary Fire":
         CurrentBounce_Editing -= 1
         lbl_2:
         CurrentBouncePosition_Editing = BouncePositions[CurrentBounce_Editing]
-
+    UpdateCache()
 
 rule "Checkpoint | Move | Ultimate + Interact":
     @Event eachPlayer
@@ -786,6 +792,7 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
         # eventPlayer.Timer += 9999
         # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
         # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
+    UpdateCache()
 
 
 rule "Teleport | Add | Interact + Reload":

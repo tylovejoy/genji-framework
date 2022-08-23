@@ -88,6 +88,18 @@ rule "Friend Title <----  DISPLAY MESSAGE HERE (ON PLAYER)":
         bigMessage(getAllPlayers(), "Message to the whole room")
         createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
+def UpdateCache():
+    @Name "SUB | Update Effect Cache"
+    
+    eventPlayer.BouncePosition_Cache = [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.BounceStrength_Cache = [i for i in BounceStrength if BouncePadCheckpoints[BounceStrength.index(i)] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.BounceUlt_Cache = [i for i in BounceToggleUlt if BouncePadCheckpoints[BounceToggleUlt.index(i)] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.BounceDash_Cache = [i for i in BounceToggleDash if BouncePadCheckpoints[BounceToggleDash.index(i)] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.BounceLock_Cache = [i for i in BounceToggleLock if BouncePadCheckpoints[BounceToggleLock.index(i)] == eventPlayer.CurrentCheckpoint]
+
+    eventPlayer.KillPosition_Cache = [i for i in KillBallPositions if BouncePadCheckpoints[KillBallPositions.index(i)] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.KillRadii_Cache = [i for i in KillBallRadii if BouncePadCheckpoints[KillBallRadii.index(i)] == eventPlayer.CurrentCheckpoint]
+
     
 #!include "editor.opy"
 
@@ -129,9 +141,9 @@ rule "Setup and Variables":
     LeaderBoardFull = []
     wait(1)
     SelectedCheckpoint_Editing = len(CheckpointPositions) - 1 # This probably isn't necessary
-    KILLBALL()
-    wait(2)
-    pinball()
+    # KILLBALL()
+    # wait(2)
+    # pinball()
 
     PortalOn = createWorkshopSetting(bool, "map settings","enable portals (contorl maps)",true,0)
     # if getCurrentGamemode() == Gamemode.SKIRMISH:
@@ -413,6 +425,7 @@ rule "Match time":
     
     setMatchTime(69)
     pauseMatchTime()
+    wait(5)
     TimeRemaining = 265 #269
     hudSubheader(getAllPlayers(), "  Server Restarts In {0} Min  ".format(TimeRemaining), HudPosition.RIGHT, -200, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     while TimeRemaining > 0:
@@ -543,7 +556,6 @@ def StartGame_Sub():
     eventPlayer.LockCollected = null
     eventPlayer.InvincibleToggle = 0
     eventPlayer.LockState = false
-    
 
 
 def Leaderboardupdate():
@@ -636,7 +648,7 @@ rule "Checkpoint | Arrived":
 
     eventPlayer.LockCollected = null
     eventPlayer.CurrentCheckpoint += 1
-
+    UpdateCache()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
     bigMessage(eventPlayer, "{0} {1}".format("Arrived at", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)))
@@ -737,8 +749,8 @@ rule "Kill Orb | Activate":
     @Condition eventPlayer.CurrentCheckpoint != 0
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.InvincibleToggle == 0
-    @Condition (KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[0])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[1])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[2])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[3])] == eventPlayer.CurrentCheckpoint) == true
-
+    # @Condition (KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[0])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[1])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[2])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[3])] == eventPlayer.CurrentCheckpoint) == true
+    @Condition (any([distance(i, eventPlayer) < eventPlayer.KillRadii_Cache[eventPlayer.KillPosition_Cache.index(i)] for i in eventPlayer.KillPosition_Cache])) == true
     # kill(eventPlayer, null)
     checkpointFailReset()
 
@@ -749,15 +761,15 @@ rule "Bounce Ball | Activate":
 
     # original
     #@Condition BouncePadCheckpoints[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer, player) <= 1.2])] == eventPlayer.CurrentCheckpoint
-    
-    @Condition (any([distance(i, eventPlayer) < 1.2 and not (i in eventPlayer.LockCollected) and BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint for i in BouncePositions])) == true
+    @Condition (any([distance(i, eventPlayer) < 1.2 for i in eventPlayer.BouncePosition_Cache])) == true
+    # @Condition (any([distance(i, eventPlayer) < 1.2 and not (i in eventPlayer.LockCollected) and BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint for i in BouncePositions])) == true
     @Condition eventPlayer.CurrentCheckpoint != 0
     
-    eventPlayer.bouncetouched = BouncePositions.index( # cashe the touched bouncepad number
+    eventPlayer.bouncetouched = eventPlayer.BouncePosition_Cache.index( # cashe the touched bouncepad number
         sorted(
-            [i for i in BouncePositions if 
-                distance(eventPlayer, i ) < 1.2 and 
-                BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and
+            [i for i in eventPlayer.BouncePosition_Cache if 
+                distance(eventPlayer, i) < 1.2 and 
+                # BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and
                 not (i in eventPlayer.LockCollected) 
             ],lambda x: distance(eventPlayer, x)
             )[0]
@@ -765,24 +777,24 @@ rule "Bounce Ball | Activate":
     #A = sorted(A, lambda o: distance(vect(0, 0, 0), o))
 
     #eventPlayer.applyImpulse(Vector.UP, BounceStrength[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-    eventPlayer.applyImpulse(Vector.UP, BounceStrength[eventPlayer.bouncetouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+    eventPlayer.applyImpulse(Vector.UP, eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
     #eventPlayer.bounceindex = [i for i in BouncePadCheckpoints if i == eventPlayer.CurrentCheckpoint and distance(BouncePositions[], eventPlayer) < 2 ]
 
     #if BounceToggleDash[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])] == true:
-    if BounceToggleDash[eventPlayer.bouncetouched]:
+    if eventPlayer.BounceDash_Cache[eventPlayer.bouncetouched]:
         eventPlayer.setAbility1Enabled(true)
         smallMessage(eventPlayer, "Dash is ready")
 
     #if BounceToggleUlt[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])] == true:
-    if  BounceToggleUlt[eventPlayer.bouncetouched]:
+    if  eventPlayer.BounceUlt_Cache[eventPlayer.bouncetouched]:
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
         smallMessage(eventPlayer, "Ultimate is ready")
 
     #if BounceToggleLock[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])] == true:
-    if BounceToggleLock[eventPlayer.bouncetouched]:
+    if eventPlayer.BounceLock_Cache[eventPlayer.bouncetouched]:
         #if not [i for i in BouncePositions if distance(i, eventPlayer) < 2 and BounceToggleLock[BouncePositions.index(i)] == true and BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint][0] in eventPlayer.LockCollected:  
-            eventPlayer.LockCollected.append(BouncePositions[eventPlayer.bouncetouched])
+            eventPlayer.LockCollected.append(eventPlayer.BouncePosition_Cache[eventPlayer.bouncetouched])
             smallMessage(eventPlayer, "orb has been collected")
             playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 

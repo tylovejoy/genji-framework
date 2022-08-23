@@ -176,10 +176,9 @@ playervar PortalText 7                      # In-World Text             --- Port
 playervar MapVectorArray 8                  # MsDestructo Vectors
 playervar WallclimbUsed 9                   # int                       --- 1 if wall climb has been used 2 if not, should be bool
 playervar GuideToggle 10                    # int                       --- Guide Enabled (1) /Disabled (2), should be bool
-
-playervar LockState                         # bool                      --- locked means you are curently runing arrive checkpoint rule
-
+playervar LockState 11                      # bool                      --- locked means you are curently runing arrive checkpoint rule
 playervar PauseTimer 12                     # float                     --- time in spectate/invincible, chased
+
 playervar BhopUsed 14                       # int                       --- Bhop has been used 1, 0 if not, should be bool
 playervar PracticeCheckpoint 16             # int                       --- Saved practice checkpoint
 playervar PracticeToggle 17                 # int                       --- if player is in practice mode 1 else 0
@@ -196,6 +195,15 @@ playervar TracesOff 43                      # bool                      --- turn
 playervar EditorOn 45                       # bool                      --- on all players, but only gets checked from host player
 playervar LockCollected 46                  # number                    --- amount collected lock this cp
 playervar bouncetouched 47                  # int                       --- cache of the bouncepad id you are currently touching
+
+playervar KillPosition_Cache 50
+playervar KillRadii_Cache 51
+playervar BouncePosition_Cache 52
+playervar BounceStrength_Cache 53
+playervar BounceUlt_Cache 54
+playervar BounceDash_Cache 55
+playervar BounceLock_Cache 56
+
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
 
 
