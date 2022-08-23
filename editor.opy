@@ -18,11 +18,12 @@ rule "Inspector | Update Every 10 Minutes":
 
 rule "Effect Builder":
     waitUntil(hostPlayer.hasSpawned(), 9999)
+    wait(1)
     if not hostPlayer.EditorOn:
         return
     for TempIterator1 in range(0, len(KillBallEffects)):
         destroyEffect(KillBallEffects[TempIterator1])
-        del KillBallEffects[TempIterator1]
+    KillBallEffects = []
         
     for TempIterator1 in range(0, len(KillballCheckpoints)):
         createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
@@ -31,7 +32,7 @@ rule "Effect Builder":
 
     for TempIterator1 in range(0, len(BounceEffects)):
         destroyEffect(BounceEffects[TempIterator1])
-        del BounceEffects[TempIterator1]
+    BounceEffects = []
         
     for TempIterator1 in range(0, len(BouncePadCheckpoints)):
         createEffect(
