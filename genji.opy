@@ -556,6 +556,7 @@ def StartGame_Sub():
     eventPlayer.LockCollected = null
     eventPlayer.InvincibleToggle = 0
     eventPlayer.LockState = false
+    UpdateCache()
 
 
 def Leaderboardupdate():
