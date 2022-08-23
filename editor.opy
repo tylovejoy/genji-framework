@@ -16,6 +16,34 @@ rule "Inspector | Update Every 10 Minutes":
     enableInspector()
     goto RULE_START
 
+rule "Effect Builder":
+    waitUntil(hostPlayer.hasSpawned(), 9999)
+    if not hostPlayer.EditorOn:
+        return
+    for TempIterator1 in range(0, len(KillBallEffects)):
+        destroyEffect(KillBallEffects[TempIterator1])
+        del KillBallEffects[TempIterator1]
+        
+    for TempIterator1 in range(0, len(KillballCheckpoints)):
+        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        KillBallEffects.append(getLastCreatedEntity())
+        
+
+    for TempIterator1 in range(0, len(BounceEffects)):
+        destroyEffect(BounceEffects[TempIterator1])
+        del BounceEffects[TempIterator1]
+        
+    for TempIterator1 in range(0, len(BouncePadCheckpoints)):
+        createEffect(
+            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not evalOnce(BouncePositions[evalOnce(TempIterator1)]) in x.LockCollected], 
+            Effect.ORB, 
+            Color.ORANGE if BounceToggleLock[evalOnce(TempIterator1)] else Color.GREEN, 
+            BouncePositions[evalOnce(TempIterator1)], 
+            1, 
+            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+        )
+            BounceEffects.append(getLastCreatedEntity())
+        
 
 rule "HUD | Clear Excess Data & Save Map":
     @Event eachPlayer
@@ -633,7 +661,7 @@ rule "Checkpoint | Create | Interact + Primary Fire":
                 Color.ORANGE if BounceToggleLock[evalOnce(CurrentBounce_Editing)] else Color.GREEN, 
                 BouncePositions[evalOnce(CurrentBounce_Editing)], 
                 1, 
-                EffectReeval.VISIBILITY_POSITION_AND_RADIUS
+                EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
             )
                 BounceEffects.append(getLastCreatedEntity())
             CurrentBouncePosition_Editing = BouncePositions[CurrentBounce_Editing]

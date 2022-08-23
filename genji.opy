@@ -91,27 +91,35 @@ rule "Friend Title <----  DISPLAY MESSAGE HERE (ON PLAYER)":
 def UpdateCache():
     @Name "SUB | Update Effect Cache"
     
-    eventPlayer.BouncePosition_Cache = []
-    eventPlayer.BounceStrength_Cache = []
-    eventPlayer.BounceUlt_Cache = []
-    eventPlayer.BounceDash_Cache = []
-    eventPlayer.BounceLock_Cache = []
+    eventPlayer.BouncePosition_Cache = [_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.BounceStrength_Cache = [_ for _, i in BounceStrength if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.BounceUlt_Cache = [_ for _, i in BounceToggleUlt if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.BounceDash_Cache = [_ for _, i in BounceToggleDash if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.BounceLock_Cache = [_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.KillPosition_Cache = [_ for _, i in KillBallPositions if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
 
-    for TempIterator1 in range(len(BouncePadCheckpoints)):
-        if BouncePadCheckpoints[TempIterator1] == eventPlayer.CurrentCheckpoint:
-            eventPlayer.BouncePosition_Cache.append(BouncePositions[TempIterator1])
-            eventPlayer.BounceStrength_Cache.append(BounceStrength[TempIterator1])
-            eventPlayer.BounceUlt_Cache.append(BounceToggleUlt[TempIterator1])
-            eventPlayer.BounceDash_Cache.append(BounceToggleDash[TempIterator1])
-            eventPlayer.BounceLock_Cache.append(BounceToggleLock[TempIterator1])
+    # eventPlayer.BouncePosition_Cache = []
+    # eventPlayer.BounceStrength_Cache = []
+    # eventPlayer.BounceUlt_Cache = []
+    # eventPlayer.BounceDash_Cache = []
+    # eventPlayer.BounceLock_Cache = []
 
-    eventPlayer.KillPosition_Cache = []
-    eventPlayer.KillRadii_Cache = []
+    # for TempIterator1 in range(len(BouncePadCheckpoints)):
+    #     if BouncePadCheckpoints[TempIterator1] == eventPlayer.CurrentCheckpoint:
+    #         eventPlayer.BouncePosition_Cache.append(BouncePositions[TempIterator1])
+    #         eventPlayer.BounceStrength_Cache.append(BounceStrength[TempIterator1])
+    #         eventPlayer.BounceUlt_Cache.append(BounceToggleUlt[TempIterator1])
+    #         eventPlayer.BounceDash_Cache.append(BounceToggleDash[TempIterator1])
+    #         eventPlayer.BounceLock_Cache.append(BounceToggleLock[TempIterator1])
 
-    for TempIterator1 in range(len(KillballCheckpoints)):
-        if KillballCheckpoints[TempIterator1] == eventPlayer.CurrentCheckpoint:
-            eventPlayer.KillPosition_Cache.append(KillBallPositions[TempIterator1])
-            eventPlayer.KillRadii_Cache.append(KillBallRadii[TempIterator1])
+    # eventPlayer.KillPosition_Cache = []
+    # eventPlayer.KillRadii_Cache = []
+
+    # for TempIterator1 in range(len(KillballCheckpoints)):
+    #     if KillballCheckpoints[TempIterator1] == eventPlayer.CurrentCheckpoint:
+    #         eventPlayer.KillPosition_Cache.append(KillBallPositions[TempIterator1])
+    #         eventPlayer.KillRadii_Cache.append(KillBallRadii[TempIterator1])
     
 #!include "editor.opy"
 
@@ -612,7 +620,7 @@ def Leaderboardupdate():
 def KILLBALL():
     @Name "SUB | Kill Orb Effects"
     
-    if KillBallPositions == []:
+    if KillBallPositions == [] or hostPlayer.EditorOn == true:
         return
     
     for TempIterator1 in range(0, len(KillBallPositions)):
@@ -623,7 +631,7 @@ def KILLBALL():
 def pinball():
     @Name "SUB | Bounce Ball Effects"
     
-    if BouncePositions == []:
+    if BouncePositions == [] or hostPlayer.EditorOn == true:
         return
 
     /*
@@ -636,10 +644,10 @@ def pinball():
             #[x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], 
             [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected], 
             Effect.ORB, 
-            Color.ORANGE if BounceToggleLock[evalOnce(TempIterator1)] else Color.GREEN, 
+            Color.ORANGE if BounceToggleLock[TempIterator1] else Color.GREEN, 
             BouncePositions[evalOnce(TempIterator1)], 
             1, 
-            EffectReeval.VISIBILITY_AND_COLOR
+            EffectReeval.VISIBILITY
         )
         BounceEffects.append(getLastCreatedEntity())
         wait()
