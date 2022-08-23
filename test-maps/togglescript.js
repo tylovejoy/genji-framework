@@ -13,7 +13,8 @@ if (x == 0){
     7: "test-maps/testinghana.opy", // BDRQ4 - genji community - framework test map
     8: "test-maps/cp1skipbug.opy", // 0zh5n - the map data that sometimes skips cp 1 on reseting when people spec you
     9: "test-maps/lavamap.opy", // some lava and balls
-    10: "test-maps/bounce_demo.opy" // bounce demo - fisho - no original code but uploaded to X05Y0 on new fw
+    10: "test-maps/bounce_demo.opy", // bounce demo - fisho - no original code but uploaded to X05Y0 on new fw
+    11: "test-maps/bounce_heaven.opy"
     }[x]
 
     selectedmap = {
@@ -26,7 +27,8 @@ if (x == 0){
     7: "hanamura",
     8: "hanamura",
     9: "busan",
-    10: "hollywood"
+    10: "hollywood",
+    11: "workshopChamber"
     }[x]
 
     x = '#!define editorordata #!include "'+ datafiles + '"\n #!define selectedmap "' + selectedmap + '"' + '\n #!define editoron false'
