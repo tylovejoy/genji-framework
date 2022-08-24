@@ -181,7 +181,7 @@ playervar WallclimbUsed 9                   # int                       --- 1 if
 playervar GuideToggle 10                    # int                       --- Guide Enabled (1) /Disabled (2), should be bool
 playervar LockState 11                      # bool                      --- locked means you are curently runing arrive checkpoint rule
 playervar PauseTimer 12                     # float                     --- time in spectate/invincible, chased
-
+playervar Temp 13
 playervar BhopUsed 14                       # int                       --- Bhop has been used 1, 0 if not, should be bool
 playervar PracticeCheckpoint 16             # int                       --- Saved practice checkpoint
 playervar PracticeToggle 17                 # int                       --- if player is in practice mode 1 else 0

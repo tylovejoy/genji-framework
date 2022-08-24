@@ -590,9 +590,8 @@ rule "Checkpoint | Create | Interact + Primary Fire":
         else:
             insert(CheckpointPositions, SelectedCheckpoint_Editing + 1, eventPlayer.getPosition())
             SelectedCheckpoint_Editing = SelectedCheckpoint_Editing + 1
-            KillballCheckpoints = [x + 1 for x in KillballCheckpoints if x >= SelectedCheckpoint_Editing]
-            BouncePadCheckpoints = [x + 1 for x in BouncePadCheckpoints if x >= SelectedCheckpoint_Editing]
-        
+            KillballCheckpoints = [x + (1 if x >= SelectedCheckpoint_Editing else 0) for x in KillballCheckpoints]
+            BouncePadCheckpoints = [x + (1 if x >= SelectedCheckpoint_Editing else 0) for x in BouncePadCheckpoints]
         smallMessage(getAllPlayers(), "New Checkpoint has been created")
     elif eventPlayer.EditModeSelection == 2:
         if eventPlayer.CurrentCheckpoint == 0:
@@ -656,6 +655,34 @@ rule "Checkpoint | Delete | Interact + Secondary Fire":
     @Condition eventPlayer == hostPlayer
     
     if eventPlayer.EditModeSelection == 1:
+        # Resync Kill Orbs
+        eventPlayer.Temp = [i for _, i in KillballCheckpoints if _ == SelectedCheckpoint_Editing]
+        for TempIterator1 in range(len(eventPlayer.Temp)):
+            destroyEffect(KillBallEffects[eventPlayer.Temp[TempIterator1]])
+            del KillBallEffects[eventPlayer.Temp[TempIterator1]]
+        eventPlayer.Temp = [i for _, i in KillballCheckpoints if _ >= SelectedCheckpoint_Editing]
+        KillballCheckpoints = [x - (1 if x >= SelectedCheckpoint_Editing else 0) for x in KillballCheckpoints]
+        KillBallRadii = [x for x, i in KillBallRadii if i not in eventPlayer.Temp]
+        KillBallPositions = [x for x, i in KillBallPositions if i not in eventPlayer.Temp]
+        SelectedKillball_Editing = len(KillBallPositions) - 1
+        KillBallChase = KillBallPositions[SelectedKillball_Editing]
+
+        # Resync Bounce Orbs
+        eventPlayer.Temp = [i for _, i in BouncePadCheckpoints if _ == SelectedCheckpoint_Editing]
+        for TempIterator1 in range(len(eventPlayer.Temp)):
+            destroyEffect(BounceEffects[eventPlayer.Temp[TempIterator1]])
+            del BounceEffects[eventPlayer.Temp[TempIterator1]]
+        eventPlayer.Temp = [i for _, i in BouncePadCheckpoints if _ >= SelectedCheckpoint_Editing]
+        BouncePadCheckpoints = [x - (1 if x >= SelectedCheckpoint_Editing else 0) for x in BouncePadCheckpoints]
+        BouncePositions = [x for x, i in BouncePositions if i not in eventPlayer.Temp]
+        BounceStrength = [x for x, i in BounceStrength if i not in eventPlayer.Temp]
+        BounceToggleUlt = [x for x, i in BounceToggleUlt if i not in eventPlayer.Temp]
+        BounceToggleDash = [x for x, i in BounceToggleDash if i not in eventPlayer.Temp]
+        BounceToggleLock = [x for x, i in BounceToggleLock if i not in eventPlayer.Temp]
+        CurrentBounce_Editing = len(BouncePositions) - 1
+        CurrentBouncePosition_Editing = BouncePositions[CurrentBounce_Editing]
+
+
         del CheckpointPositions[SelectedCheckpoint_Editing]
         del CheckpointRings_Editing[SelectedCheckpoint_Editing]
         if SelectedCheckpoint_Editing <= 0:
