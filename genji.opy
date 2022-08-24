@@ -165,7 +165,7 @@ rule "Setup and Variables":
     # wait(2)
     # pinball()
 
-    PortalOn = createWorkshopSetting(bool, "map settings","enable portals (contorl maps)",true,0)
+    PortalOn = createWorkshopSetting(bool, "map settings","enable portals (control maps)",true,0)
     # if getCurrentGamemode() == Gamemode.SKIRMISH:
     #     hudText(getAllPlayers(), "", null, "{0} {1} {2}".format("Time left until server resets:", 270 - floor(getTotalTimeElapsed() / 60), "Minutes"), HudPosition.RIGHT, -15, Color.WHITE, Color.WHITE, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     # else:
