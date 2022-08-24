@@ -584,8 +584,15 @@ rule "Checkpoint | Create | Interact + Primary Fire":
     @Condition eventPlayer == hostPlayer
     
     if eventPlayer.EditModeSelection == 1:
-        CheckpointPositions.append(eventPlayer.getPosition() - vect(0, 0, 0))
-        SelectedCheckpoint_Editing = len(CheckpointPositions) - 1
+        if SelectedCheckpoint_Editing == len(CheckpointPositions) - 1:
+            CheckpointPositions.append(eventPlayer.getPosition() - vect(0, 0, 0))
+            SelectedCheckpoint_Editing = len(CheckpointPositions) - 1
+        else:
+            insert(CheckpointPositions, SelectedCheckpoint_Editing + 1, eventPlayer.getPosition())
+            SelectedCheckpoint_Editing = SelectedCheckpoint_Editing + 1
+            KillballCheckpoints = [x + 1 for x in KillballCheckpoints if x >= SelectedCheckpoint_Editing]
+            BouncePadCheckpoints = [x + 1 for x in BouncePadCheckpoints if x >= SelectedCheckpoint_Editing]
+        
         smallMessage(getAllPlayers(), "New Checkpoint has been created")
     elif eventPlayer.EditModeSelection == 2:
         if eventPlayer.CurrentCheckpoint == 0:
