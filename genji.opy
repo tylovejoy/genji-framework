@@ -96,8 +96,8 @@ def UpdateCache():
     eventPlayer.BounceUlt_Cache = [_ for _, i in BounceToggleUlt if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.BounceDash_Cache = [_ for _, i in BounceToggleDash if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.BounceLock_Cache = [_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.KillPosition_Cache = [_ for _, i in KillBallPositions if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.KillPosition_Cache = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
 
     # eventPlayer.BouncePosition_Cache = []
     # eventPlayer.BounceStrength_Cache = []
