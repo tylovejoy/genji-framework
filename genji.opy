@@ -3,11 +3,11 @@
 editortoggle(0) # 0 is editor, rest is numbers
 #!define touchground false
 #!define cpcheat false
-#!define inspectoron false
+#!define inspectoron true
 
 # settings ##############################
 # limit on how many orbs can be made
-#!define fxlimit 193
+#!define fxlimit 10
 
 #!include "settings.opy"
 #!include "definitions.opy"
@@ -39,6 +39,20 @@ rule "------------------------------------------------------------------------ M
 
 rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
     @Delimiter
+    A = [vect(19.495, 0, -0.018), vect(19.495, 0, -5.144), vect(19.495, 0, -10.307), vect(19.495, 0, -15.185), vect(19.495, 0, -19.495), vect(8.127, 0, -19.259), vect(-2.807, 0, -19.312), vect(-13.474, 0, -19.296), vect(-19.495, 0, -19.202), vect(-18.996, 0, -7.064), vect(-19.152, 0, 7.042), vect(-19.174, 0, 19.495), vect(-9.12, 0, 19.337), vect(-0.542, 0, 19.351), vect(9.22, 0, 19.415), vect(19.077, 0, 19.47), vect(15.521, 0, 15.514), vect(10.081, 0, 10.092), vect(4.953, 0, 4.896), vect(-0.789, 0.971, -0.846)]
+    TimeRemaining = 264
+    H = []
+    I = []
+    TQ = [vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15), vect(16.723, 0.971, -5.116), vect(12.293, 3.581, -5.068), vect(7.256, 5.586, -5.013), vect(2.422, 7.723, -4.959), vect(-2.852, 9.418, -4.9), vect(-7.773, 11.461, -4.846), vect(-12.871, 13.345, -4.789), vect(-18.408, 14.705, -4.728), vect(-19.369, 7.555, -1.027), vect(-19.063, 7.071, 6.15)]
+    EditMode = [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+    TQ5 = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+    TQ6 = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+    BounceToggleLock = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+    killballnumber = []
+    pinballnumber = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19]
+    LeaderBoardFull = []
+    PortalOn = false
+
 
 editorordata
 
@@ -98,6 +112,39 @@ def UpdateCache():
     eventPlayer.BounceLock_Cache = [_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.KillPosition_Cache = [_ for _, i in KillBallPositions if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
+    destroyEffect(eventPlayer.KillEffects_Cache)
+    eventPlayer.KillEffects_Cache = []
+    for eventPlayer.Temp in  range(len(eventPlayer.KillPosition_Cache)):
+        if hostPlayer.EditorOn:
+            createEffect(eventPlayer, Effect.SPHERE, Color.BLUE, eventPlayer.KillPosition_Cache[evalOnce(eventPlayer.Temp)], eventPlayer.KillRadii_Cache[evalOnce(eventPlayer.Temp)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        else:
+            createEffect(eventPlayer, Effect.SPHERE, Color.BLUE, eventPlayer.KillPosition_Cache[evalOnce(eventPlayer.Temp)], eventPlayer.KillRadii_Cache[evalOnce(eventPlayer.Temp)], EffectReeval.VISIBILITY)
+        eventPlayer.KillEffects_Cache.append(getLastCreatedEntity())
+        wait()
+    destroyEffect(eventPlayer.BounceEffects_Cache)
+    eventPlayer.BounceEffects_Cache = []
+    for eventPlayer.Temp in range(0, len(eventPlayer.BouncePosition_Cache)):
+        if hostPlayer.EditorOn:
+            createEffect(
+                eventPlayer if not eventPlayer.BouncePosition_Cache[evalOnce(eventPlayer.Temp)] in eventPlayer.LockCollected else null, 
+                Effect.ORB, 
+                Color.ORANGE if eventPlayer.BounceLock_Cache[evalOnce(eventPlayer.Temp)] else Color.GREEN, 
+                eventPlayer.BouncePosition_Cache[evalOnce(eventPlayer.Temp)], 
+                1, 
+                EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+            )
+        else:
+            createEffect(
+                eventPlayer if not eventPlayer.BouncePosition_Cache[evalOnce(eventPlayer.Temp)] in eventPlayer.LockCollected else null, 
+                Effect.ORB, 
+                Color.ORANGE if eventPlayer.BounceLock_Cache[eventPlayer.Temp] else Color.GREEN, 
+                eventPlayer.BouncePosition_Cache[evalOnce(eventPlayer.Temp)], 
+                1, 
+                EffectReeval.VISIBILITY
+            )
+        BounceEffects.append(getLastCreatedEntity())
+        wait()
+
 
     # eventPlayer.BouncePosition_Cache = []
     # eventPlayer.BounceStrength_Cache = []
@@ -374,39 +421,39 @@ rule "Setup and Variables":
                 rgb(150, 0, 0)
                 ][Difficultyhud]
                 , HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    wait(5)
-    KILLBALL()
-    wait(2)
-    pinball()
-    # Check for editor/host spawn to redo effect reeval
-    waitUntil(hostPlayer.hasSpawned(), 99999)
-    if not hostPlayer.EditorOn:
-        return
+    # wait(5)
+    # KILLBALL()
+    # wait(2)
+    # pinball()
+    # # Check for editor/host spawn to redo effect reeval
+    # waitUntil(hostPlayer.hasSpawned(), 99999)
+    # if not hostPlayer.EditorOn:
+    #     return
     
-    for TempIterator1 in range(0, len(KillBallEffects)):
-        destroyEffect(KillBallEffects[TempIterator1])
+    # for TempIterator1 in range(0, len(KillBallEffects)):
+    #     destroyEffect(KillBallEffects[TempIterator1])
 
-    KillBallEffects = []
+    # KillBallEffects = []
         
-    for TempIterator1 in range(0, len(KillballCheckpoints)):
-        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-        KillBallEffects.append(getLastCreatedEntity())   
+    # for TempIterator1 in range(0, len(KillballCheckpoints)):
+    #     createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    #     KillBallEffects.append(getLastCreatedEntity())   
 
-    for TempIterator1 in range(0, len(BounceEffects)):
-        destroyEffect(BounceEffects[TempIterator1])
+    # for TempIterator1 in range(0, len(BounceEffects)):
+    #     destroyEffect(BounceEffects[TempIterator1])
     
-    BounceEffects = []
+    # BounceEffects = []
         
-    for TempIterator1 in range(0, len(BouncePadCheckpoints)):
-        createEffect(
-            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not evalOnce(BouncePositions[evalOnce(TempIterator1)]) in x.LockCollected], 
-            Effect.ORB, 
-            Color.ORANGE if BounceToggleLock[evalOnce(TempIterator1)] else Color.GREEN, 
-            BouncePositions[evalOnce(TempIterator1)], 
-            1, 
-            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
-        )
-            BounceEffects.append(getLastCreatedEntity())
+    # for TempIterator1 in range(0, len(BouncePadCheckpoints)):
+    #     createEffect(
+    #         [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not evalOnce(BouncePositions[evalOnce(TempIterator1)]) in x.LockCollected], 
+    #         Effect.ORB, 
+    #         Color.ORANGE if BounceToggleLock[evalOnce(TempIterator1)] else Color.GREEN, 
+    #         BouncePositions[evalOnce(TempIterator1)], 
+    #         1, 
+    #         EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+    #     )
+    #         BounceEffects.append(getLastCreatedEntity())
 
 /*
 rule "Match time old":
@@ -605,7 +652,7 @@ def StartGame_Sub():
     eventPlayer.LockCollected = null
     eventPlayer.InvincibleToggle = 0
     eventPlayer.LockState = false
-    UpdateCache()
+    async(UpdateCache(), AsyncBehavior.RESTART)
 
 
 def Leaderboardupdate():
@@ -699,7 +746,7 @@ rule "Checkpoint | Arrived":
 
     eventPlayer.LockCollected = null
     eventPlayer.CurrentCheckpoint += 1
-    UpdateCache()
+    async(UpdateCache(), AsyncBehavior.RESTART)
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
     bigMessage(eventPlayer, "{0} {1}".format("Arrived at", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)))

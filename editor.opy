@@ -9,12 +9,12 @@ rule "------------------------------------------------------------------------  
     @Delimiter
     @Disabled
     
-rule "Inspector | Update Every 10 Minutes":
-    @Condition hostPlayer.EditorOn
-    disableInspector()
-    wait(10)
-    enableInspector()
-    goto RULE_START  
+# rule "Inspector | Update Every 10 Minutes":
+#     @Condition hostPlayer.EditorOn
+#     disableInspector()
+#     wait(10)
+#     enableInspector()
+#     goto RULE_START  
 
 rule "HUD | Clear Excess Data & Save Map":
     @Event eachPlayer
@@ -234,7 +234,7 @@ rule "HUD | Guide":
                 BounceStrength[CurrentBounce_Editing]
                 ) if hostPlayer.EditModeSelection == 3 
                 else "",
-            len(BouncePositions) + len(KillBallPositions),
+            len(hostPlayer.BouncePosition_Cache) + len(hostPlayer.KillPosition_Cache),
             fxlimit
             ),
             
@@ -332,7 +332,7 @@ rule "Bounce Ball | Toggle Ultimate | Ultimate + Primary Fire":
         BounceToggleUlt[CurrentBounce_Editing] = true
     elif BounceToggleUlt[CurrentBounce_Editing] == true:
         BounceToggleUlt[CurrentBounce_Editing] = false
-    UpdateCache()
+    async(UpdateCache(), AsyncBehavior.RESTART)
 
 
 rule "Bounce Ball | Toggle Dash | Ultimate + Secondary Fire":
@@ -349,7 +349,7 @@ rule "Bounce Ball | Toggle Dash | Ultimate + Secondary Fire":
         BounceToggleDash[CurrentBounce_Editing] = true
     elif BounceToggleDash[CurrentBounce_Editing] == true:
         BounceToggleDash[CurrentBounce_Editing] = false
-    UpdateCache()
+    async(UpdateCache(), AsyncBehavior.RESTART)
 
 
 rule "Bounce Ball | Toggle Lock| Ultimate + deflect":
@@ -366,7 +366,7 @@ rule "Bounce Ball | Toggle Lock| Ultimate + deflect":
         BounceToggleLock[CurrentBounce_Editing] = true
     elif BounceToggleLock[CurrentBounce_Editing] == true:
         BounceToggleLock[CurrentBounce_Editing] = false
-    UpdateCache()
+    async(UpdateCache(), AsyncBehavior.RESTART)
 
 
 
@@ -382,7 +382,7 @@ rule "Bounce Ball | Increase Strength | Deflect + Jump":
         wait(0.1)
         if RULE_CONDITION:
             goto RULE_START
-    UpdateCache()
+    async(UpdateCache(), AsyncBehavior.RESTART)
 
 
 rule "Bounce Ball | Decrease Strength | Deflect + Crouch":
@@ -399,7 +399,7 @@ rule "Bounce Ball | Decrease Strength | Deflect + Crouch":
         wait(0.1)
         if RULE_CONDITION:
             goto RULE_START
-    UpdateCache()
+    async(UpdateCache(), AsyncBehavior.RESTART)
 
 
 rule "Kill Orb | Increase Size | Deflect + Jump":
@@ -426,7 +426,7 @@ rule "Kill Orb | Increase Size | Deflect + Jump":
             wait(0.1)
             if RULE_CONDITION:
                 goto RULE_START
-    UpdateCache()
+    async(UpdateCache(), AsyncBehavior.RESTART)
 
 
 rule "Kill Orb | Decrease Size | Deflect + Crouch":
@@ -448,7 +448,7 @@ rule "Kill Orb | Decrease Size | Deflect + Crouch":
             #     destroyEffect(KillBallEffects[TempIterator1])
             # KillBallEffects = []
             # KILLBALL()
-    UpdateCache()
+    async(UpdateCache(), AsyncBehavior.RESTART)
 /*
 rule "Kill Orb | Move Toward | Deflect + Primary Fire":
     @Event eachPlayer
@@ -572,7 +572,7 @@ rule "Kill Orb | Move Toward/Backward | Deflect + Primary Fire":
 
         # BounceEffects = []
         # pinball()
-    UpdateCache()
+    async(UpdateCache(), AsyncBehavior.RESTART)
     wait()
 
 
@@ -597,8 +597,8 @@ rule "Checkpoint | Create | Interact + Primary Fire":
         if eventPlayer.CurrentCheckpoint == 0:
             bigMessage(getAllPlayers(), "Cannot place Kill Orb on first checkpoint")
         else:
-            if len(BouncePositions) + len(KillBallPositions) >= fxlimit:
-                bigMessage(getAllPlayers(), "Orb limit reached for this map, delete old orbs first")
+            if len(eventPlayer.BouncePosition_Cache) + len(eventPlayer.KillPosition_Cache) >= fxlimit:
+                bigMessage(getAllPlayers(), "Orb limit reached for this checkpoint, delete old orbs first")
                 wait()
                 return
             KillBallPositions.append(eventPlayer.getPosition())
@@ -617,8 +617,8 @@ rule "Checkpoint | Create | Interact + Primary Fire":
         if eventPlayer.CurrentCheckpoint == 0:
             bigMessage(getAllPlayers(), "Cannot place bounce orb on first checkpoint")
         else:
-            if len(BouncePositions) + len(KillBallPositions) >= fxlimit:
-                bigMessage(getAllPlayers(), "Orb limit reached for this map, delete old orbs first")
+            if len(eventPlayer.BouncePosition_Cache) + len(eventPlayer.KillPosition_Cache) >= fxlimit:
+                bigMessage(getAllPlayers(), "Orb limit reached for this checkpoint, delete old orbs first")
                 wait()
                 return
             BouncePositions.append(eventPlayer.getPosition())
@@ -640,11 +640,11 @@ rule "Checkpoint | Create | Interact + Primary Fire":
                 1, 
                 EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
             )
-                BounceEffects.append(getLastCreatedEntity())
+            BounceEffects.append(getLastCreatedEntity())
             CurrentBouncePosition_Editing = BouncePositions[CurrentBounce_Editing]
             BouncePadCheckpoints.append(eventPlayer.CurrentCheckpoint)
             bigMessage(getAllPlayers(), "New Bounce Orb has been created! \r\nIt's only valid for checkpoint {0}".format(eventPlayer.CurrentCheckpoint))
-    UpdateCache()
+    async(UpdateCache(), AsyncBehavior.RESTART)
     wait(0.64)
 
 rule "Checkpoint | Delete | Interact + Secondary Fire":
@@ -656,12 +656,14 @@ rule "Checkpoint | Delete | Interact + Secondary Fire":
     
     if eventPlayer.EditModeSelection == 1:
         # Resync Kill Orbs
-        eventPlayer.Temp = [i for _, i in KillballCheckpoints if _ == SelectedCheckpoint_Editing]
+        eventPlayer.Temp = [i for e, i in KillballCheckpoints if e == SelectedCheckpoint_Editing]
         for TempIterator1 in range(len(eventPlayer.Temp)):
             destroyEffect(KillBallEffects[eventPlayer.Temp[TempIterator1]])
             del KillBallEffects[eventPlayer.Temp[TempIterator1]]
-        eventPlayer.Temp = [i for _, i in KillballCheckpoints if _ >= SelectedCheckpoint_Editing]
-        KillballCheckpoints = [x - (1 if x >= SelectedCheckpoint_Editing else 0) for x in KillballCheckpoints]
+        eventPlayer.Temp = [i for e, i in KillballCheckpoints if e >= SelectedCheckpoint_Editing]
+
+        KillballCheckpoints = [x - (1 if x >= SelectedCheckpoint_Editing else 0) for x in KillballCheckpoints if x != SelectedCheckpoint_Editing]
+
         KillBallRadii = [x for x, i in KillBallRadii if i not in eventPlayer.Temp]
         KillBallPositions = [x for x, i in KillBallPositions if i not in eventPlayer.Temp]
         SelectedKillball_Editing = len(KillBallPositions) - 1
@@ -715,7 +717,7 @@ rule "Checkpoint | Delete | Interact + Secondary Fire":
         CurrentBounce_Editing -= 1
         lbl_2:
         CurrentBouncePosition_Editing = BouncePositions[CurrentBounce_Editing]
-    UpdateCache()
+    async(UpdateCache(), AsyncBehavior.RESTART)
 
 rule "Checkpoint | Move | Ultimate + Interact":
     @Event eachPlayer
@@ -825,7 +827,7 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
         # eventPlayer.Timer += 9999
         # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
         # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
-    UpdateCache()
+    async(UpdateCache(), AsyncBehavior.RESTART)
 
 
 rule "Teleport | Add | Interact + Reload":

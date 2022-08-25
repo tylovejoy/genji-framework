@@ -198,7 +198,8 @@ playervar TracesOff 43                      # bool                      --- turn
 playervar EditorOn 45                       # bool                      --- on all players, but only gets checked from host player
 playervar LockCollected 46                  # number                    --- amount collected lock this cp
 playervar bouncetouched 47                  # int                       --- cache of the bouncepad id you are currently touching
-
+playervar KillEffects_Cache 48
+playervar BounceEffects_Cache 49
 playervar KillPosition_Cache 50
 playervar KillRadii_Cache 51
 playervar BouncePosition_Cache 52
