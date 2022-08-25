@@ -68,7 +68,7 @@ rule "HUD | Clear Excess Data & Save Map":
 
     hudHeader(eventPlayer, 
         "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
-        "   4. Create intial sharecode:\n" 
+        "   4. Create initial sharecode:\n" 
         " ESC→SHOW LOBBY→SETTINGS→SHARE CODE→\n"
         " CREATE NEW CODE→COPY CODE\n\n"
 
