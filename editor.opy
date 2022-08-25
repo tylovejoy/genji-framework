@@ -9,12 +9,12 @@ rule "------------------------------------------------------------------------  
     @Delimiter
     @Disabled
     
-rule "Inspector | Update Every 10 Minutes":
-    @Condition hostPlayer.EditorOn
-    disableInspector()
-    wait(10)
-    enableInspector()
-    goto RULE_START  
+# rule "Inspector | Update Every 10 Minutes":
+#     @Condition hostPlayer.EditorOn
+#     disableInspector()
+#     wait(10)
+#     enableInspector()
+#     goto RULE_START  
 
 rule "HUD | Clear Excess Data & Save Map":
     @Event eachPlayer
@@ -592,6 +592,7 @@ rule "Checkpoint | Create | Interact + Primary Fire":
             SelectedCheckpoint_Editing = SelectedCheckpoint_Editing + 1
             KillballCheckpoints = [x + (1 if x >= SelectedCheckpoint_Editing else 0) for x in KillballCheckpoints]
             BouncePadCheckpoints = [x + (1 if x >= SelectedCheckpoint_Editing else 0) for x in BouncePadCheckpoints]
+            RebuildEffects()
         smallMessage(getAllPlayers(), "New Checkpoint has been created")
     elif eventPlayer.EditModeSelection == 2:
         if eventPlayer.CurrentCheckpoint == 0:
@@ -656,24 +657,35 @@ rule "Checkpoint | Delete | Interact + Secondary Fire":
     
     if eventPlayer.EditModeSelection == 1:
         # Resync Kill Orbs
-        eventPlayer.Temp = [i for _, i in KillballCheckpoints if _ == SelectedCheckpoint_Editing]
+        eventPlayer.Temp = []
+        eventPlayer.Temp = [e for e in [(i if e2 == SelectedCheckpoint_Editing else -1) for e2, i in KillballCheckpoints] if  e >=0]
+
+        # eventPlayer.Temp = [i for e, i in KillballCheckpoints if e == SelectedCheckpoint_Editing]
         for TempIterator1 in range(len(eventPlayer.Temp)):
             destroyEffect(KillBallEffects[eventPlayer.Temp[TempIterator1]])
             del KillBallEffects[eventPlayer.Temp[TempIterator1]]
-        eventPlayer.Temp = [i for _, i in KillballCheckpoints if _ >= SelectedCheckpoint_Editing]
-        KillballCheckpoints = [x - (1 if x >= SelectedCheckpoint_Editing else 0) for x in KillballCheckpoints]
+        # Remove specified checkpoint
+        KillballCheckpoints = [x for x in KillballCheckpoints if x != SelectedCheckpoint_Editing]
+        # Decrement checkpoints after removed one
+        KillballCheckpoints = [x - (1 if x > SelectedCheckpoint_Editing else 0) for x in KillballCheckpoints]
+        # Remove Radii at Checkpoint indexes (temp)
         KillBallRadii = [x for x, i in KillBallRadii if i not in eventPlayer.Temp]
         KillBallPositions = [x for x, i in KillBallPositions if i not in eventPlayer.Temp]
         SelectedKillball_Editing = len(KillBallPositions) - 1
         KillBallChase = KillBallPositions[SelectedKillball_Editing]
-
+        eventPlayer.Temp = []
         # Resync Bounce Orbs
-        eventPlayer.Temp = [i for _, i in BouncePadCheckpoints if _ == SelectedCheckpoint_Editing]
+        eventPlayer.Temp = [e for e in [(i if e2 == SelectedCheckpoint_Editing else -1) for e2, i in BouncePadCheckpoints] if  e >= 0]
+        # eventPlayer.Temp = [i for e, i in BouncePadCheckpoints if e == SelectedCheckpoint_Editing]
         for TempIterator1 in range(len(eventPlayer.Temp)):
             destroyEffect(BounceEffects[eventPlayer.Temp[TempIterator1]])
             del BounceEffects[eventPlayer.Temp[TempIterator1]]
-        eventPlayer.Temp = [i for _, i in BouncePadCheckpoints if _ >= SelectedCheckpoint_Editing]
-        BouncePadCheckpoints = [x - (1 if x >= SelectedCheckpoint_Editing else 0) for x in BouncePadCheckpoints]
+
+        # Remove specified checkpoint
+        BouncePadCheckpoints = [x for x in BouncePadCheckpoints if x != SelectedCheckpoint_Editing]
+        # Decrement checkpoints after removed one
+        BouncePadCheckpoints = [x - (1 if x > SelectedCheckpoint_Editing else 0) for x in BouncePadCheckpoints]
+        
         BouncePositions = [x for x, i in BouncePositions if i not in eventPlayer.Temp]
         BounceStrength = [x for x, i in BounceStrength if i not in eventPlayer.Temp]
         BounceToggleUlt = [x for x, i in BounceToggleUlt if i not in eventPlayer.Temp]
@@ -690,6 +702,7 @@ rule "Checkpoint | Delete | Interact + Secondary Fire":
         SelectedCheckpoint_Editing -= 1
         lbl_0:
         smallMessage(getAllPlayers(), "Checkpoint has been deleted")
+        RebuildEffects()
     elif eventPlayer.EditModeSelection == 2 and len(KillBallPositions) != 0:
         del KillBallPositions[SelectedKillball_Editing]
         del KillBallRadii[SelectedKillball_Editing]

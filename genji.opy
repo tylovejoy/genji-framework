@@ -3,7 +3,7 @@
 editortoggle(0) # 0 is editor, rest is numbers
 #!define touchground false
 #!define cpcheat false
-#!define inspectoron false
+#!define inspectoron true
 
 # settings ##############################
 # limit on how many orbs can be made
@@ -88,6 +88,34 @@ rule "Friend Title <----  DISPLAY MESSAGE HERE (ON PLAYER)":
         bigMessage(getAllPlayers(), "Message to the whole room")
         createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
+def RebuildEffects():
+    @Name "SUB | Rebuild Effects"
+    for TempIterator1 in range(0, len(KillBallEffects)):
+        destroyEffect(KillBallEffects[TempIterator1])
+
+    KillBallEffects = []
+        
+    for TempIterator1 in range(0, len(KillballCheckpoints)):
+        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        KillBallEffects.append(getLastCreatedEntity())   
+
+    for TempIterator1 in range(0, len(BounceEffects)):
+        destroyEffect(BounceEffects[TempIterator1])
+    
+    BounceEffects = []
+        
+    for TempIterator1 in range(0, len(BouncePadCheckpoints)):
+        createEffect(
+            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not evalOnce(BouncePositions[evalOnce(TempIterator1)]) in x.LockCollected], 
+            Effect.ORB, 
+            Color.ORANGE if BounceToggleLock[evalOnce(TempIterator1)] else Color.GREEN, 
+            BouncePositions[evalOnce(TempIterator1)], 
+            1, 
+            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+        )
+            BounceEffects.append(getLastCreatedEntity())
+
+
 def UpdateCache():
     @Name "SUB | Update Effect Cache"
     
@@ -96,8 +124,8 @@ def UpdateCache():
     eventPlayer.BounceUlt_Cache = [_ for _, i in BounceToggleUlt if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.BounceDash_Cache = [_ for _, i in BounceToggleDash if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.BounceLock_Cache = [_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.KillPosition_Cache = [_ for _, i in KillBallPositions if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.KillPosition_Cache = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
 
     # eventPlayer.BouncePosition_Cache = []
     # eventPlayer.BounceStrength_Cache = []
@@ -383,30 +411,7 @@ rule "Setup and Variables":
     if not hostPlayer.EditorOn:
         return
     
-    for TempIterator1 in range(0, len(KillBallEffects)):
-        destroyEffect(KillBallEffects[TempIterator1])
-
-    KillBallEffects = []
-        
-    for TempIterator1 in range(0, len(KillballCheckpoints)):
-        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-        KillBallEffects.append(getLastCreatedEntity())   
-
-    for TempIterator1 in range(0, len(BounceEffects)):
-        destroyEffect(BounceEffects[TempIterator1])
-    
-    BounceEffects = []
-        
-    for TempIterator1 in range(0, len(BouncePadCheckpoints)):
-        createEffect(
-            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not evalOnce(BouncePositions[evalOnce(TempIterator1)]) in x.LockCollected], 
-            Effect.ORB, 
-            Color.ORANGE if BounceToggleLock[evalOnce(TempIterator1)] else Color.GREEN, 
-            BouncePositions[evalOnce(TempIterator1)], 
-            1, 
-            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
-        )
-            BounceEffects.append(getLastCreatedEntity())
+    RebuildEffects()
 
 /*
 rule "Match time old":
@@ -802,7 +807,7 @@ rule "Kill Orb | Activate":
     @Condition eventPlayer.InvincibleToggle == 0
     # @Condition (KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[0])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[1])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[2])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[3])] == eventPlayer.CurrentCheckpoint) == true
     @Condition eventPlayer.KillPosition_Cache != []
-    @Condition (any([distance(i, eventPlayer) < eventPlayer.KillRadii_Cache[eventPlayer.KillPosition_Cache.index(i)] for i in eventPlayer.KillPosition_Cache])) == true
+    @Condition (any([distance(i, eventPlayer) <= eventPlayer.KillRadii_Cache[eventPlayer.KillPosition_Cache.index(i)] for i in eventPlayer.KillPosition_Cache])) == true
     # kill(eventPlayer, null)
     checkpointFailReset()
 
