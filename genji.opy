@@ -830,7 +830,8 @@ rule "Bounce Ball | Activate":
     #A = sorted(A, lambda o: distance(vect(0, 0, 0), o))
 
     #eventPlayer.applyImpulse(Vector.UP, BounceStrength[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-    eventPlayer.applyImpulse(Vector.UP, eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+    if eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched] != 0:
+        eventPlayer.applyImpulse(Vector.UP, eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
     #eventPlayer.bounceindex = [i for i in BouncePadCheckpoints if i == eventPlayer.CurrentCheckpoint and distance(BouncePositions[], eventPlayer) < 2 ]
 
     #if BounceToggleDash[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])] == true:
