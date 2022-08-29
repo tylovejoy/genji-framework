@@ -368,6 +368,7 @@ rule "Bounce Ball | Toggle Lock| Ultimate + deflect":
     wait(0.24) # 1 original
     if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] == false:
         BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = true
+        BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = 0
     elif BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] == true:
         BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = false
     UpdateCache()
@@ -553,7 +554,7 @@ rule "Kill Orb | Move Toward/Backward | Deflect + Primary Fire":
         while eventPlayer.isHoldingButton(Button.ABILITY_2) == true and (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
             KillBallChase += eventPlayer.getFacingDirection() * (0.125 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.125)
             wait()
-            
+
         KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] = KillBallChase
         # wait(0.24)
         # if RULE_CONDITION:
