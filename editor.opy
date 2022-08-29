@@ -101,10 +101,14 @@ rule "HUD | Show/Hide Guide | Hold Melee":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
+    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.EditModeSelection >= 1
     
     wait(0.8, Wait.ABORT_WHEN_FALSE)
+    if eventPlayer.isHoldingButton(Button.INTERACT) or eventPlayer.isHoldingButton(Button.RELOAD):
+        return
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     if eventPlayer.GuideToggle == 1:
         eventPlayer.GuideToggle = 2
