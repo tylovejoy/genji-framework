@@ -550,10 +550,16 @@ rule "Kill Orb | Move Toward/Backward | Deflect + Primary Fire":
         if len(KillBallPositions) == 0:
             wait()
             return
-        KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] += eventPlayer.getFacingDirection() * (0.5 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.5)
-        wait(0.24)
-        if RULE_CONDITION:
-            goto RULE_START
+        while true:
+            if eventPlayer.isHoldingButton(Button.ABILITY_2) == true and (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
+                KillBallChase += eventPlayer.getFacingDirection() * (0.125 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.125)
+            else:
+                break
+            wait()
+        KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] = KillBallChase
+        # wait(0.24)
+        # if RULE_CONDITION:
+        #     goto RULE_START
 
         # for TempIterator1 in range(len(KillBallPositions)):
         #     destroyEffect(KillBallEffects[TempIterator1])
@@ -566,7 +572,7 @@ rule "Kill Orb | Move Toward/Backward | Deflect + Primary Fire":
             wait()
             return
         BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] += eventPlayer.getFacingDirection() * (0.5 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.5)
-     
+        
         wait(0.24)
         if RULE_CONDITION:
             goto RULE_START
