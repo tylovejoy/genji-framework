@@ -101,10 +101,14 @@ rule "HUD | Show/Hide Guide | Hold Melee":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
+    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.EditModeSelection >= 1
     
     wait(0.8, Wait.ABORT_WHEN_FALSE)
+    if eventPlayer.isHoldingButton(Button.INTERACT) or eventPlayer.isHoldingButton(Button.RELOAD):
+        return
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     if eventPlayer.GuideToggle == 1:
         eventPlayer.GuideToggle = 2
@@ -137,10 +141,10 @@ rule "HUD | Guide":
         "{0} + {1} | Create New Checkpoint\n"
         "{0} + {2} | Delete selected Checkpoint\n"
         "{0} + {3} | Add teleport to Checkpoint\n"
-        "{0} + {4} | Set Checkpoint to current position\n"
-        "{0} + {5} | Select previous Checkpoint\n"
-        "{0} + {6} | Select next Checkpoint\n"
-        "{0} + {7} | Show all checkpoints".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_1)),
+        "{0} + {4} | Set Checkpoint to current position\n".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE)),
+        # "{0} + {5} | Select previous Checkpoint\n"
+        # "{0} + {6} | Select next Checkpoint\n"
+        # "{0} + {7} | Show all checkpoints".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_1)),
 
         "{0} + {1} | Create new kill orb\n"
         "{0} + {2} | Delete selected orb\n"
@@ -205,33 +209,33 @@ rule "HUD | Guide":
         "{0} + {1} | orb give ultimate | {2}".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.PRIMARY_FIRE), 
-            "on" if BounceToggleUlt[CurrentBounce_Editing] != 0 else "off"
-        ), HudPosition.TOP, -18, Color.GREEN  if BounceToggleUlt[CurrentBounce_Editing] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+            "on" if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off"
+        ), HudPosition.TOP, -18, Color.GREEN  if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
         "{0} + {1} | orb gives dash | {2}".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.SECONDARY_FIRE),
-            "on" if BounceToggleDash[CurrentBounce_Editing] != 0 else "off"
-        ), HudPosition.TOP, -17, Color.GREEN  if BounceToggleDash[CurrentBounce_Editing] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+            "on" if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off"
+        ), HudPosition.TOP, -17, Color.GREEN  if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null,
         "{0} + {1} | orb unlocks checkpoint | {2}\n".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.ABILITY_2),
-            "on" if BounceToggleLock[CurrentBounce_Editing] != 0 else "off"
-        ), HudPosition.TOP, -16, Color.GREEN if BounceToggleLock[CurrentBounce_Editing] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+            "on" if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off"
+        ), HudPosition.TOP, -16, Color.GREEN if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
     hudText(hostPlayer,
         "Selected Checkpoint: {0}{1}\norb limit: {2}/{3}".format(
             SelectedCheckpoint_Editing, 
             "\nCurrent Kill Orb's radius: {0}".format(
-                KillBallRadii[SelectedKillball_Editing]
+                KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
             ) if hostPlayer.EditModeSelection == 2 else 
             "\nCurrent Bounce Orb's strength: {0}".format(
-                BounceStrength[CurrentBounce_Editing]
+                BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
                 ) if hostPlayer.EditModeSelection == 3 
                 else "",
             len(BouncePositions) + len(KillBallPositions),
@@ -248,18 +252,18 @@ rule "HUD | Guide Effects":
     wait(0.5)
     if not hostPlayer.EditorOn:
         return
-
-    createIcon(getAllPlayers(), CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.RED, true)
-    createInWorldText(getAllPlayers(), "Selected Checkpoint", CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.5, 0), 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
+    
+    # createIcon(getAllPlayers(), CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.RED, true)
+    # createInWorldText(getAllPlayers(), "Selected Checkpoint", CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.5, 0), 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
     ###createEffect(getAllPlayers(), Effect.SPHERE, Color.RED, H[J], I[J], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createEffect(getAllPlayers(), Effect.GOOD_AURA, Color.PURPLE, BouncePositions[CurrentBounce_Editing], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(getAllPlayers() if SelectedCheckpoint_Editing != 0 and hostPlayer.BouncePosition_Cache else null, Effect.GOOD_AURA, Color.PURPLE, BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     #Don't open it easily, the action will be too long
     
-    createInWorldText(getAllPlayers(), "Selected Kill Orb", KillBallPositions[SelectedKillball_Editing], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
-    createEffect(getAllPlayers(), Effect.ORB, Color.RED, KillBallChase, 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createInWorldText(hostPlayer, l"{0} m".format(distance(hostPlayer, KillBallChase)), KillBallChase - vect(0, 1.5, 0), 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
-    createIcon(getAllPlayers(), KillBallPositions[SelectedKillball_Editing] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.RED, true)
-    createEffect(localPlayer if len(CheckpointPositions[SelectedCheckpoint_Editing] ) > 1 else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[SelectedCheckpoint_Editing][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createInWorldText(getAllPlayers() if SelectedCheckpoint_Editing != 0 and hostPlayer.KillPosition_Cache else null, "Selected Kill Orb", KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+    createEffect(getAllPlayers() if SelectedCheckpoint_Editing != 0 and hostPlayer.KillPosition_Cache else null, Effect.ORB, Color.RED, KillBallChase, 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createInWorldText(getAllPlayers() if SelectedCheckpoint_Editing != 0 and hostPlayer.KillPosition_Cache else null, l"{0} m".format(distance(hostPlayer, KillBallChase)), KillBallChase - vect(0, 1.5, 0), 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
+    createIcon(getAllPlayers() if SelectedCheckpoint_Editing != 0 and hostPlayer.KillPosition_Cache else null, KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.RED, true)
+    createEffect(getAllPlayers() if len(CheckpointPositions[SelectedCheckpoint_Editing] ) > 1 else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[SelectedCheckpoint_Editing][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
 
 
 rule "Fly/Noclip Toggle | Hold Deflect":
@@ -328,10 +332,10 @@ rule "Bounce Ball | Toggle Ultimate | Ultimate + Primary Fire":
     @Condition len(BouncePositions) != 0
     
     wait(0.24) # 1 original
-    if BounceToggleUlt[CurrentBounce_Editing] == false:
-        BounceToggleUlt[CurrentBounce_Editing] = true
-    elif BounceToggleUlt[CurrentBounce_Editing] == true:
-        BounceToggleUlt[CurrentBounce_Editing] = false
+    if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] == false:
+        BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = true
+    elif BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] == true:
+        BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = false
     UpdateCache()
 
 
@@ -345,10 +349,10 @@ rule "Bounce Ball | Toggle Dash | Ultimate + Secondary Fire":
     @Condition len(BouncePositions) != 0
     
     wait(0.24) # 1 original
-    if BounceToggleDash[CurrentBounce_Editing] == false:
-        BounceToggleDash[CurrentBounce_Editing] = true
-    elif BounceToggleDash[CurrentBounce_Editing] == true:
-        BounceToggleDash[CurrentBounce_Editing] = false
+    if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] == false:
+        BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = true
+    elif BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] == true:
+        BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = false
     UpdateCache()
 
 
@@ -362,10 +366,10 @@ rule "Bounce Ball | Toggle Lock| Ultimate + deflect":
     @Condition len(BouncePositions) != 0
     
     wait(0.24) # 1 original
-    if BounceToggleLock[CurrentBounce_Editing] == false:
-        BounceToggleLock[CurrentBounce_Editing] = true
-    elif BounceToggleLock[CurrentBounce_Editing] == true:
-        BounceToggleLock[CurrentBounce_Editing] = false
+    if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] == false:
+        BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = true
+    elif BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] == true:
+        BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = false
     UpdateCache()
 
 
@@ -378,7 +382,7 @@ rule "Bounce Ball | Increase Strength | Deflect + Jump":
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.EditModeSelection == 3    
     if len(BouncePositions) > 0:
-        BounceStrength[CurrentBounce_Editing] += 0.1
+        BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] += 0.1
         wait(0.1)
         if RULE_CONDITION:
             goto RULE_START
@@ -395,7 +399,7 @@ rule "Bounce Ball | Decrease Strength | Deflect + Crouch":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
     
     if len(BouncePositions) > 0:
-        BounceStrength[CurrentBounce_Editing] -= 0.1
+        BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] -= 0.1
         wait(0.1)
         if RULE_CONDITION:
             goto RULE_START
@@ -412,7 +416,7 @@ rule "Kill Orb | Increase Size | Deflect + Jump":
     
     if eventPlayer.EditModeSelection == 2:
         if len(KillBallPositions) > 0:
-            KillBallRadii[SelectedKillball_Editing] += 0.1
+            KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] += 0.1
             wait(0.1)
             if RULE_CONDITION:
                 goto RULE_START
@@ -422,7 +426,7 @@ rule "Kill Orb | Increase Size | Deflect + Jump":
             # KILLBALL()
     elif eventPlayer.EditModeSelection == 3:
         if len(BouncePositions) > 0:
-            BounceStrength[CurrentBounce_Editing] += 0.1
+            BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] += 0.1
             wait(0.1)
             if RULE_CONDITION:
                 goto RULE_START
@@ -440,7 +444,7 @@ rule "Kill Orb | Decrease Size | Deflect + Crouch":
     
     if len(KillBallPositions) > 0:
         if eventPlayer.EditModeSelection == 2:
-            KillBallRadii[SelectedKillball_Editing] -= 0.1
+            KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] -= 0.1
             wait(0.1)
             if RULE_CONDITION:
                 goto RULE_START
@@ -546,7 +550,7 @@ rule "Kill Orb | Move Toward/Backward | Deflect + Primary Fire":
         if len(KillBallPositions) == 0:
             wait()
             return
-        KillBallPositions[SelectedKillball_Editing] += eventPlayer.getFacingDirection() * (0.5 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.5)
+        KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] += eventPlayer.getFacingDirection() * (0.5 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.5)
         wait(0.24)
         if RULE_CONDITION:
             goto RULE_START
@@ -561,7 +565,7 @@ rule "Kill Orb | Move Toward/Backward | Deflect + Primary Fire":
         if len(BouncePositions) ==  0:
             wait()
             return
-        BouncePositions[CurrentBounce_Editing] += eventPlayer.getFacingDirection() * (0.5 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.5)
+        BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] += eventPlayer.getFacingDirection() * (0.5 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.5)
      
         wait(0.24)
         if RULE_CONDITION:
@@ -592,6 +596,7 @@ rule "Checkpoint | Create | Interact + Primary Fire":
             SelectedCheckpoint_Editing = SelectedCheckpoint_Editing + 1
             KillballCheckpoints = [x + (1 if x >= SelectedCheckpoint_Editing else 0) for x in KillballCheckpoints]
             BouncePadCheckpoints = [x + (1 if x >= SelectedCheckpoint_Editing else 0) for x in BouncePadCheckpoints]
+            UpdateCache()
             RebuildEffects()
         smallMessage(getAllPlayers(), "New Checkpoint has been created")
     elif eventPlayer.EditModeSelection == 2:
@@ -604,15 +609,19 @@ rule "Checkpoint | Create | Interact + Primary Fire":
                 return
             KillBallPositions.append(eventPlayer.getPosition())
             KillballCheckpoints.append(eventPlayer.CurrentCheckpoint)
-            SelectedKillball_Editing = len(KillBallPositions) - 1
-            KillBallRadii[SelectedKillball_Editing] = 5
+            UpdateCache()
+            SelectedKillball_Editing = len(hostPlayer.KillIndex_Cache) - 1
+            KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] = 5
             # for TempIterator1 in range(len(KillBallPositions)):
             #     destroyEffect(KillBallEffects[TempIterator1])
             # KillBallEffects = []
             # KILLBALL()
-            createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(SelectedKillball_Editing)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(SelectedKillball_Editing)], KillBallRadii[evalOnce(SelectedKillball_Editing)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+            createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(hostPlayer.KillIndex_Cache[SelectedKillball_Editing])]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(hostPlayer.KillIndex_Cache[SelectedKillball_Editing])], KillBallRadii[evalOnce(hostPlayer.KillIndex_Cache[SelectedKillball_Editing])], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
             KillBallEffects.append(getLastCreatedEntity())
-            KillBallChase = KillBallPositions[SelectedKillball_Editing]
+            UpdateCache()
+            SelectedKillball_Editing = len(hostPlayer.KillIndex_Cache) - 1
+            KillBallChase = KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
+            RebuildEffects()
             bigMessage(getAllPlayers(), "New Kill Orb has been created! \r\nIt's only valid for checkpoint {0}".format(eventPlayer.CurrentCheckpoint))
     elif eventPlayer.EditModeSelection == 3:
         if eventPlayer.CurrentCheckpoint == 0:
@@ -623,29 +632,34 @@ rule "Checkpoint | Create | Interact + Primary Fire":
                 wait()
                 return
             BouncePositions.append(eventPlayer.getPosition())
-            CurrentBounce_Editing = len(BouncePositions) - 1
-            BounceStrength[CurrentBounce_Editing] = 10
-            BounceToggleUlt[CurrentBounce_Editing] = false
-            BounceToggleDash[CurrentBounce_Editing] = false
-            BounceToggleLock[CurrentBounce_Editing] = false
+            BouncePadCheckpoints.append(eventPlayer.CurrentCheckpoint)
+            UpdateCache()
+            CurrentBounce_Editing = len(hostPlayer.BounceIndex_Cache) - 1
+            BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = 10
+            BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = false
+            BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = false
+            BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = false
             # for TempIterator1 in range(len(BouncePositions)):
             #     destroyEffect(BounceEffects[TempIterator1])
             # BounceEffects = []
             # pinball()
             createEffect(
                 #[x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], 
-                [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(CurrentBounce_Editing)] and not evalOnce(BouncePositions[evalOnce(CurrentBounce_Editing)]) in x.LockCollected], 
+                [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(hostPlayer.BounceIndex_Cache[CurrentBounce_Editing])] and not evalOnce(BouncePositions[evalOnce(hostPlayer.BounceIndex_Cache[CurrentBounce_Editing])]) in x.LockCollected], 
                 Effect.ORB, 
-                Color.ORANGE if BounceToggleLock[evalOnce(CurrentBounce_Editing)] else Color.GREEN, 
-                BouncePositions[evalOnce(CurrentBounce_Editing)], 
+                Color.ORANGE if BounceToggleLock[evalOnce(hostPlayer.BounceIndex_Cache[CurrentBounce_Editing])] else Color.GREEN, 
+                BouncePositions[evalOnce(hostPlayer.BounceIndex_Cache[CurrentBounce_Editing])], 
                 1, 
                 EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
             )
                 BounceEffects.append(getLastCreatedEntity())
-            CurrentBouncePosition_Editing = BouncePositions[CurrentBounce_Editing]
-            BouncePadCheckpoints.append(eventPlayer.CurrentCheckpoint)
+            UpdateCache()
+            CurrentBounce_Editing = len(hostPlayer.BounceIndex_Cache) - 1
+            CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+            RebuildEffects()
             bigMessage(getAllPlayers(), "New Bounce Orb has been created! \r\nIt's only valid for checkpoint {0}".format(eventPlayer.CurrentCheckpoint))
-    UpdateCache()
+    
+    
     wait(0.64)
 
 rule "Checkpoint | Delete | Interact + Secondary Fire":
@@ -671,8 +685,8 @@ rule "Checkpoint | Delete | Interact + Secondary Fire":
         # Remove Radii at Checkpoint indexes (temp)
         KillBallRadii = [x for x, i in KillBallRadii if i not in eventPlayer.Temp]
         KillBallPositions = [x for x, i in KillBallPositions if i not in eventPlayer.Temp]
-        SelectedKillball_Editing = len(KillBallPositions) - 1
-        KillBallChase = KillBallPositions[SelectedKillball_Editing]
+        SelectedKillball_Editing = len(hostPlayer.KillIndex_Cache) - 1
+        KillBallChase = KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
         eventPlayer.Temp = []
         # Resync Bounce Orbs
         eventPlayer.Temp = [e for e in [(i if e2 == SelectedCheckpoint_Editing else -1) for e2, i in BouncePadCheckpoints] if  e >= 0]
@@ -691,8 +705,8 @@ rule "Checkpoint | Delete | Interact + Secondary Fire":
         BounceToggleUlt = [x for x, i in BounceToggleUlt if i not in eventPlayer.Temp]
         BounceToggleDash = [x for x, i in BounceToggleDash if i not in eventPlayer.Temp]
         BounceToggleLock = [x for x, i in BounceToggleLock if i not in eventPlayer.Temp]
-        CurrentBounce_Editing = len(BouncePositions) - 1
-        CurrentBouncePosition_Editing = BouncePositions[CurrentBounce_Editing]
+        CurrentBounce_Editing = len(hostPlayer.BounceIndex_Cache) - 1
+        CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
 
 
         del CheckpointPositions[SelectedCheckpoint_Editing]
@@ -702,32 +716,34 @@ rule "Checkpoint | Delete | Interact + Secondary Fire":
         SelectedCheckpoint_Editing -= 1
         lbl_0:
         smallMessage(getAllPlayers(), "Checkpoint has been deleted")
-        RebuildEffects()
-    elif eventPlayer.EditModeSelection == 2 and len(KillBallPositions) != 0:
-        del KillBallPositions[SelectedKillball_Editing]
-        del KillBallRadii[SelectedKillball_Editing]
-        del KillballCheckpoints[SelectedKillball_Editing]
-        destroyEffect(KillBallEffects[SelectedKillball_Editing])
-        del KillBallEffects[SelectedKillball_Editing]
+    elif eventPlayer.EditModeSelection == 2 and len(KillBallPositions) != 0 and SelectedCheckpoint_Editing != 0 and hostPlayer.KillPosition_Cache:
+        del KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
+        del KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
+        del KillballCheckpoints[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
+        destroyEffect(KillBallEffects[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]])
+        del KillBallEffects[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
         if SelectedKillball_Editing <= 0:
             goto lbl_1
         SelectedKillball_Editing -= 1
         lbl_1:
-        KillBallChase = KillBallPositions[SelectedKillball_Editing]
-    elif eventPlayer.EditModeSelection == 3 and len(BouncePositions) != 0:
-        del BouncePositions[CurrentBounce_Editing]
-        del BounceStrength[CurrentBounce_Editing]
-        del BounceToggleUlt[CurrentBounce_Editing]
-        del BounceToggleDash[CurrentBounce_Editing]
-        del BounceToggleLock[CurrentBounce_Editing]
-        destroyEffect(BounceEffects[CurrentBounce_Editing])
-        del BounceEffects[CurrentBounce_Editing]
-        del BouncePadCheckpoints[CurrentBounce_Editing]
+        UpdateCache()
+        KillBallChase = KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
+    elif eventPlayer.EditModeSelection == 3 and len(BouncePositions) != 0 and SelectedCheckpoint_Editing != 0 and hostPlayer.BouncePosition_Cache:
+        del BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+        del BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+        del BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+        del BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+        del BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+        destroyEffect(BounceEffects[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]])
+        del BounceEffects[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+        del BouncePadCheckpoints[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
         if CurrentBounce_Editing <= 0:
             goto lbl_2
         CurrentBounce_Editing -= 1
         lbl_2:
-        CurrentBouncePosition_Editing = BouncePositions[CurrentBounce_Editing]
+        UpdateCache()
+        CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+    RebuildEffects()
     UpdateCache()
 
 rule "Checkpoint | Move | Ultimate + Interact":
@@ -749,24 +765,13 @@ rule "Checkpoint | Select Previous | Interact + Crouch":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer == hostPlayer
     
-    if eventPlayer.EditModeSelection == 1:
-        if SelectedCheckpoint_Editing <= 0:
-            goto lbl_0
-        SelectedCheckpoint_Editing -= 1
-        lbl_0:
-    elif eventPlayer.EditModeSelection == 2:
-        if SelectedKillball_Editing <= 0:
-            goto lbl_1
-        SelectedKillball_Editing -= 1
-        KillBallChase = KillBallPositions[SelectedKillball_Editing]
-        lbl_1:
+    if eventPlayer.EditModeSelection == 2:
+        # current = ( current - 1 ) % len(cache)
+        SelectedKillball_Editing = (SelectedKillball_Editing - 1) % len(eventPlayer.KillIndex_Cache)
+        KillBallChase = KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
     elif eventPlayer.EditModeSelection == 3:
-        if CurrentBounce_Editing <= 0:
-            goto lbl_2
-        CurrentBounce_Editing -= 1
-        CurrentBouncePosition_Editing = BouncePositions[CurrentBounce_Editing]
-        lbl_2:
-
+        CurrentBounce_Editing = (CurrentBounce_Editing - 1) % len(eventPlayer.BounceIndex_Cache)
+        CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
 
 rule "Checkpoint | Select Next | Interact + Jump":
     @Event eachPlayer
@@ -775,45 +780,35 @@ rule "Checkpoint | Select Next | Interact + Jump":
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
     @Condition eventPlayer == hostPlayer
     
-    if eventPlayer.EditModeSelection == 1:
-        if SelectedCheckpoint_Editing == len(CheckpointPositions) - 1:
-            goto lbl_0
-        SelectedCheckpoint_Editing += 1
-        lbl_0:
-    elif eventPlayer.EditModeSelection == 2:
-        if SelectedKillball_Editing == len(KillBallPositions) - 1:
-            goto lbl_1
-        SelectedKillball_Editing += 1
-        KillBallChase = KillBallPositions[SelectedKillball_Editing]
-        lbl_1:
+    if eventPlayer.EditModeSelection == 2:
+        # current = ( current + 1 ) % len(cache)
+        SelectedKillball_Editing = (SelectedKillball_Editing + 1) % len(eventPlayer.KillIndex_Cache)
+        KillBallChase = KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
     elif eventPlayer.EditModeSelection == 3:
-        if CurrentBounce_Editing == len(BouncePositions) - 1:
-            goto lbl_2
-        CurrentBounce_Editing += 1
-        CurrentBouncePosition_Editing = BouncePositions[CurrentBounce_Editing]
-        lbl_2:
+        CurrentBounce_Editing = (CurrentBounce_Editing + 1) % len(eventPlayer.BounceIndex_Cache)
+        CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
 
 
-rule "Checkpoint | Hide All | Interact + Dash":
-    @Event eachPlayer
-    @Condition hostPlayer.EditorOn
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_1) == true
-    @Condition eventPlayer == hostPlayer
+# rule "Checkpoint | Hide All | Interact + Dash":
+#     @Event eachPlayer
+#     @Condition hostPlayer.EditorOn
+#     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
+#     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1) == true
+#     @Condition eventPlayer == hostPlayer
     
-    for SelectedCheckpoint_Editing in range(len(CheckpointRings_Editing) - 1, 0, -1):
-        destroyEffect(CheckpointRings_Editing[SelectedCheckpoint_Editing])
-        del CheckpointRings_Editing[SelectedCheckpoint_Editing]
-    SelectedCheckpoint_Editing = -2
+#     for SelectedCheckpoint_Editing in range(len(CheckpointRings_Editing) - 1, 0, -1):
+#         destroyEffect(CheckpointRings_Editing[SelectedCheckpoint_Editing])
+#         del CheckpointRings_Editing[SelectedCheckpoint_Editing]
+#     SelectedCheckpoint_Editing = -2
 
 
-rule "Checkpoint | Show All |":
-    @Condition hostPlayer.EditorOn
-    @Condition SelectedCheckpoint_Editing == -2
+# rule "Checkpoint | Show All |":
+#     @Condition hostPlayer.EditorOn
+#     @Condition SelectedCheckpoint_Editing == -2
     
-    for SelectedCheckpoint_Editing in range(len(CheckpointPositions)):
-        createEffect(getAllPlayers(), Effect.RING, Color.RED, CheckpointPositions[SelectedCheckpoint_Editing], 1, EffectReeval.VISIBILITY)
-        CheckpointRings_Editing.append(getLastCreatedEntity())
+#     for SelectedCheckpoint_Editing in range(len(CheckpointPositions)):
+#         createEffect(getAllPlayers(), Effect.RING, Color.RED, CheckpointPositions[SelectedCheckpoint_Editing], 1, EffectReeval.VISIBILITY)
+#         CheckpointRings_Editing.append(getLastCreatedEntity())
 
 
 rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
@@ -838,7 +833,9 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
         # eventPlayer.Timer += 9999
         # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
         # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
-    UpdateCache()
+    if eventPlayer == hostPlayer:
+        eventPlayer.MovedCheckpoint = true
+    UpdateCache()    
 
 
 rule "Teleport | Add | Interact + Reload":

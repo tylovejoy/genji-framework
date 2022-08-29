@@ -183,6 +183,7 @@ playervar LockState 11                      # bool                      --- lock
 playervar PauseTimer 12                     # float                     --- time in spectate/invincible, chased
 playervar Temp 13
 playervar BhopUsed 14                       # int                       --- Bhop has been used 1, 0 if not, should be bool
+playervar MovedCheckpoint 15
 playervar PracticeCheckpoint 16             # int                       --- Saved practice checkpoint
 playervar PracticeToggle 17                 # int                       --- if player is in practice mode 1 else 0
 #playervar LeaderboardTimerCapture 19        # float                     --- Saves players time for leaderboard
@@ -206,6 +207,9 @@ playervar BounceStrength_Cache 53
 playervar BounceUlt_Cache 54
 playervar BounceDash_Cache 55
 playervar BounceLock_Cache 56
+
+playervar BounceIndex_Cache 57
+playervar KillIndex_Cache 58
 
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
 

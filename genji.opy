@@ -127,27 +127,22 @@ def UpdateCache():
     eventPlayer.KillPosition_Cache = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
 
-    # eventPlayer.BouncePosition_Cache = []
-    # eventPlayer.BounceStrength_Cache = []
-    # eventPlayer.BounceUlt_Cache = []
-    # eventPlayer.BounceDash_Cache = []
-    # eventPlayer.BounceLock_Cache = []
+    if not hostPlayer.EditorOn:
+        return
 
-    # for TempIterator1 in range(len(BouncePadCheckpoints)):
-    #     if BouncePadCheckpoints[TempIterator1] == eventPlayer.CurrentCheckpoint:
-    #         eventPlayer.BouncePosition_Cache.append(BouncePositions[TempIterator1])
-    #         eventPlayer.BounceStrength_Cache.append(BounceStrength[TempIterator1])
-    #         eventPlayer.BounceUlt_Cache.append(BounceToggleUlt[TempIterator1])
-    #         eventPlayer.BounceDash_Cache.append(BounceToggleDash[TempIterator1])
-    #         eventPlayer.BounceLock_Cache.append(BounceToggleLock[TempIterator1])
+        
+    eventPlayer.BounceIndex_Cache = [e for e in [(i if e2 == eventPlayer.CurrentCheckpoint else -1) for e2, i in BouncePadCheckpoints] if  e >=0]
+    eventPlayer.KillIndex_Cache = [e for e in [(i if e2 == eventPlayer.CurrentCheckpoint else -1) for e2, i in KillballCheckpoints] if  e >=0]
 
-    # eventPlayer.KillPosition_Cache = []
-    # eventPlayer.KillRadii_Cache = []
+    if eventPlayer.MovedCheckpoint:
+        SelectedCheckpoint_Editing = eventPlayer.CurrentCheckpoint
+        SelectedKillball_Editing = 0 if eventPlayer.KillIndex_Cache else 99999
+        KillBallChase = KillBallPositions[eventPlayer.KillIndex_Cache[SelectedKillball_Editing]] if len(eventPlayer.KillIndex_Cache) else vect(0,0,0)
+        CurrentBounce_Editing = 0 if eventPlayer.BounceIndex_Cache else 99999
+        CurrentBouncePosition_Editing = BouncePositions[eventPlayer.BounceIndex_Cache[CurrentBounce_Editing]] if len(eventPlayer.BounceIndex_Cache) else vect(0,0,0)
+        eventPlayer.MovedCheckpoint = false
 
-    # for TempIterator1 in range(len(KillballCheckpoints)):
-    #     if KillballCheckpoints[TempIterator1] == eventPlayer.CurrentCheckpoint:
-    #         eventPlayer.KillPosition_Cache.append(KillBallPositions[TempIterator1])
-    #         eventPlayer.KillRadii_Cache.append(KillBallRadii[TempIterator1])
+    
     
 #!include "editor.opy"
 
@@ -694,7 +689,7 @@ rule "Checkpoint | Arrived":
     @Condition eventPlayer.isOnGround() == true
     @Condition (eventPlayer.EditModeSelection >= 1 or eventPlayer.InvincibleToggle == 0) == true
     @Condition eventPlayer.LockState == false
-
+    eventPlayer.MovedCheckpoint = true
     # kill player if not colleted the locks
     if len([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true]) > 0:
         if len([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true and i in eventPlayer.LockCollected]) < len([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true]):
@@ -835,7 +830,8 @@ rule "Bounce Ball | Activate":
     #A = sorted(A, lambda o: distance(vect(0, 0, 0), o))
 
     #eventPlayer.applyImpulse(Vector.UP, BounceStrength[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-    eventPlayer.applyImpulse(Vector.UP, eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+    if eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched] != 0:
+        eventPlayer.applyImpulse(Vector.UP, eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
     #eventPlayer.bounceindex = [i for i in BouncePadCheckpoints if i == eventPlayer.CurrentCheckpoint and distance(BouncePositions[], eventPlayer) < 2 ]
 
     #if BounceToggleDash[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])] == true:
@@ -1303,9 +1299,9 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
     @Condition isGameInProgress() == true
     
-    wait(2)
+    waitUntil(any([x.hasSpawned() for x in getAllPlayers()]), 99999)
     #Init dummy at arbitrary location
-    createDummy(Hero.DVA, hostPlayer.getTeam(), -1, vect(0, 200, 0), vect(0, 0, 0))
+    createDummy(Hero.DVA, [player for player in getAllPlayers() if player.hasSpawned() and not player.isDummy()][0].getTeam(), -1, vect(0, 200, 0), vect(0, 0, 0))
     MsDestructo = getLastCreatedEntity()
     MsDestructo.startForcingName("Ms. Destructo")
     wait(1)
