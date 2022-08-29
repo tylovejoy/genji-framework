@@ -78,11 +78,12 @@ new features:
 
 0.9.6 - date 29-8-2022
 fixed:
-- killball distance orb moves smoothly, and slightly slower
+- killball distance orb/purple bounce aura moves smoothly, and slightly slower
 - other players changing effect/checkpoint selection in editor (ACTUALLY FIXED)
 - display next checkpoint effects _only_ when there is another checkpoint.
 new features:
 - orange orbs are now strength 0 by default.
+- allow effects on checkpoint 0. This still needs to be thoroughly tested.
 - disallow checkpoints being too close. 
     In other words, rings cannot overlap and neither can the checking distance (1.4). 
     This also means you cannot walk into another checkpoint, you will have to leave the ground.
