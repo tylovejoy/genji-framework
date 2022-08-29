@@ -51,3 +51,26 @@ added:
 
 adjustments:
 - time remaining now always shows
+
+0.9.3 
+fixed:
+- orbs not working as intended
+- effect optimizations
+
+0.9.4
+new features:
+- cached effects for quicker calculations
+- checkpoint insert function
+fixed:
+- deleting checkpoints breaks effects
+
+0.9.5 - date 29-8-2022
+fixed:
+- dva not spawning sometimes
+- guide opening/closing during map save
+- other players changing effect/checkpoint selection in editor
+- bounce orb impulsing with 0 strength
+- fixed typos ("contorl" and "intial")
+new features:
+- checkpoint selection is now done with Checkpoint Skipping
+- only effects on the current checkpoint are selectable and editable
