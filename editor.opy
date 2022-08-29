@@ -838,8 +838,8 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
         # eventPlayer.Timer += 9999
         # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
         # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
-    if eventPlayer == hostPlayer:
-        eventPlayer.MovedCheckpoint = true
+    
+    eventPlayer.MovedCheckpoint = true
     UpdateCache()    
 
 
