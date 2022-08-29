@@ -707,6 +707,7 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Delete | Interact + Secondary Fire":
         del CheckpointPositions[SelectedCheckpoint_Editing]
         del CheckpointRings_Editing[SelectedCheckpoint_Editing]
         if SelectedCheckpoint_Editing <= 0:
+            SelectedCheckpoint_Editing = -1
             goto lbl_0
         SelectedCheckpoint_Editing -= 1
         lbl_0:
