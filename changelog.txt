@@ -74,3 +74,4 @@ fixed:
 new features:
 - checkpoint selection is now done with Checkpoint Skipping
 - only effects on the current checkpoint are selectable and editable
+- removed show all checkpoints
