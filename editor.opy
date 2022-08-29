@@ -593,6 +593,10 @@ rule "Checkpoint | Create | Interact + Primary Fire":
     @Condition eventPlayer == hostPlayer
     
     if eventPlayer.EditModeSelection == 1:
+        if SelectedCheckpoint_Editing != -1 and distance(eventPlayer, CheckpointPositions[SelectedCheckpoint_Editing]) <= 2.8:
+            smallMessage(eventPlayer, "Cannot place checkpoints too close.")
+            return
+
         if SelectedCheckpoint_Editing == len(CheckpointPositions) - 1:
             CheckpointPositions.append(eventPlayer.getPosition() - vect(0, 0, 0))
             SelectedCheckpoint_Editing = len(CheckpointPositions) - 1
