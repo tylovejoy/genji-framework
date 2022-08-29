@@ -1299,9 +1299,9 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
     @Condition isGameInProgress() == true
     
-    wait(2)
+    waitUntil(any([x.hasSpawned() for x in getAllPlayers()]), 99999)
     #Init dummy at arbitrary location
-    createDummy(Hero.DVA, hostPlayer.getTeam(), -1, vect(0, 200, 0), vect(0, 0, 0))
+    createDummy(Hero.DVA, [player for player in getAllPlayers() if player.hasSpawned() and not player.isDummy()][0].getTeam(), -1, vect(0, 200, 0), vect(0, 0, 0))
     MsDestructo = getLastCreatedEntity()
     MsDestructo.startForcingName("Ms. Destructo")
     wait(1)
