@@ -91,6 +91,8 @@ new features:
 0.9.7 - date 5-9-2022
 fixed:
 - unable to place a checkpoint after deleting all checkpoints
-
+- able to skip to checkpoint -1
+- selected checkpoint in HUD
 new features:
-- add text and icon to teleporter exit while in editor
+- added text and icon to teleporter exit while in editor
+- Added checkpoint hitbox toggle to editor
