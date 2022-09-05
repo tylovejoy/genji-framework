@@ -130,6 +130,13 @@ def UpdateCache():
     if not hostPlayer.EditorOn:
         return
 
+    destroyEffect(eventPlayer.EffectSizeArray)
+    eventPlayer.EffectSizeArray = []
+    createEffect(eventPlayer if eventPlayer.EffectSizeToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint], 1.4, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    eventPlayer.EffectSizeArray.append(getLastCreatedEntity())
+    createEffect(eventPlayer if eventPlayer.EffectSizeToggle and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.4, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    eventPlayer.EffectSizeArray.append(getLastCreatedEntity())
+
         
     eventPlayer.BounceIndex_Cache = [e for e in [(i if e2 == eventPlayer.CurrentCheckpoint else -1) for e2, i in BouncePadCheckpoints] if  e >=0]
     eventPlayer.KillIndex_Cache = [e for e in [(i if e2 == eventPlayer.CurrentCheckpoint else -1) for e2, i in KillballCheckpoints] if  e >=0]

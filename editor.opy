@@ -141,7 +141,8 @@ rule "HUD | Guide":
         "{0} + {1} | Create New Checkpoint\n"
         "{0} + {2} | Delete selected Checkpoint\n"
         "{0} + {3} | Add teleport to Checkpoint\n"
-        "{0} + {4} | Set Checkpoint to current position\n".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE)),
+        "{0} + {4} | Set Checkpoint to current position\n"
+        "{0} + {5} | Toggle Checkpoint Hitbox".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1)),
         # "{0} + {5} | Select previous Checkpoint\n"
         # "{0} + {6} | Select next Checkpoint\n"
         # "{0} + {7} | Show all checkpoints".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_1)),
@@ -229,12 +230,12 @@ rule "HUD | Guide":
     )
 
     hudText(hostPlayer,
-        "Selected Checkpoint: {0}{1}\norb limit: {2}/{3}".format(
-            SelectedCheckpoint_Editing, 
-            "\nCurrent Kill Orb's radius: {0}".format(
+        "{0}\norb limit: {1}/{2}".format(
+            "Checkpoint Mode" if hostPlayer.EditModeSelection == 1 else  
+            "Current Kill Orb's radius: {0}".format(
                 KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
             ) if hostPlayer.EditModeSelection == 2 else 
-            "\nCurrent Bounce Orb's strength: {0}".format(
+            "Current Bounce Orb's strength: {0}".format(
                 BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
                 ) if hostPlayer.EditModeSelection == 3 
                 else "",
@@ -795,17 +796,15 @@ rule "Kill Orb / Bounce Orb | Select Next | Interact + Jump":
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
 
 
-# rule "Checkpoint | Hide All | Interact + Dash":
-#     @Event eachPlayer
-#     @Condition hostPlayer.EditorOn
-#     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
-#     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1) == true
-#     @Condition eventPlayer == hostPlayer
+rule "Checkpoint | Toggle Checkpoint Sizes | Interact + Dash":
+    @Event eachPlayer
+    @Condition hostPlayer.EditorOn
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_1) == true
+    @Condition eventPlayer == hostPlayer
     
-#     for SelectedCheckpoint_Editing in range(len(CheckpointRings_Editing) - 1, 0, -1):
-#         destroyEffect(CheckpointRings_Editing[SelectedCheckpoint_Editing])
-#         del CheckpointRings_Editing[SelectedCheckpoint_Editing]
-#     SelectedCheckpoint_Editing = -2
+    eventPlayer.EffectSizeToggle = not eventPlayer.EffectSizeToggle
+    
 
 
 # rule "Checkpoint | Show All |":
@@ -825,6 +824,8 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
 
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
+        if eventPlayer.CurrentCheckpoint == 0:
+            return
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
         eventPlayer.CurrentCheckpoint -= 1
         if eventPlayer.PracticeToggle == 1:
@@ -832,6 +833,8 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
         # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
         # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
     else:
+        if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
+            return
         eventPlayer.CurrentCheckpoint += 1
         if eventPlayer.PracticeToggle == 1:
             eventPlayer.PracticeCheckpoint += 1
