@@ -211,6 +211,9 @@ playervar BounceLock_Cache 56
 playervar BounceIndex_Cache 57
 playervar KillIndex_Cache 58
 
+playervar EffectSizeArray 60
+playervar EffectSizeToggle 61
+
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
 
 

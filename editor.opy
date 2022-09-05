@@ -141,7 +141,8 @@ rule "HUD | Guide":
         "{0} + {1} | Create New Checkpoint\n"
         "{0} + {2} | Delete selected Checkpoint\n"
         "{0} + {3} | Add teleport to Checkpoint\n"
-        "{0} + {4} | Set Checkpoint to current position\n".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE)),
+        "{0} + {4} | Set Checkpoint to current position\n"
+        "{0} + {5} | Toggle Checkpoint Hitbox".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1)),
         # "{0} + {5} | Select previous Checkpoint\n"
         # "{0} + {6} | Select next Checkpoint\n"
         # "{0} + {7} | Show all checkpoints".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_1)),
@@ -229,12 +230,12 @@ rule "HUD | Guide":
     )
 
     hudText(hostPlayer,
-        "Selected Checkpoint: {0}{1}\norb limit: {2}/{3}".format(
-            SelectedCheckpoint_Editing, 
-            "\nCurrent Kill Orb's radius: {0}".format(
+        "{0}\norb limit: {1}/{2}".format(
+            "Checkpoint Mode" if hostPlayer.EditModeSelection == 1 else  
+            "Current Kill Orb's radius: {0}".format(
                 KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
             ) if hostPlayer.EditModeSelection == 2 else 
-            "\nCurrent Bounce Orb's strength: {0}".format(
+            "Current Bounce Orb's strength: {0}".format(
                 BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
                 ) if hostPlayer.EditModeSelection == 3 
                 else "",
@@ -256,14 +257,24 @@ rule "HUD | Guide Effects":
     # createIcon(getAllPlayers(), CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.RED, true)
     # createInWorldText(getAllPlayers(), "Selected Checkpoint", CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.5, 0), 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
     ###createEffect(getAllPlayers(), Effect.SPHERE, Color.RED, H[J], I[J], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    # Purple bounce selectino aura
     createEffect(getAllPlayers() if SelectedCheckpoint_Editing != -1 and hostPlayer.BouncePosition_Cache else null, Effect.GOOD_AURA, Color.PURPLE, CurrentBouncePosition_Editing, 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     #Don't open it easily, the action will be too long
     
+    # Selected kill orb text
     createInWorldText(getAllPlayers() if SelectedCheckpoint_Editing != -1 and hostPlayer.KillPosition_Cache else null, "Selected Kill Orb", KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+    # Red distance orb for kill orb
     createEffect(getAllPlayers() if SelectedCheckpoint_Editing != -1 and hostPlayer.KillPosition_Cache else null, Effect.ORB, Color.RED, KillBallChase, 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    # Distance # text for kill orb
     createInWorldText(getAllPlayers() if SelectedCheckpoint_Editing != -1 and hostPlayer.KillPosition_Cache else null, l"{0} m".format(distance(hostPlayer, KillBallChase)), KillBallChase - vect(0, 1.5, 0), 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
+    # Selected kill orb arrow icon
     createIcon(getAllPlayers() if SelectedCheckpoint_Editing != -1 and hostPlayer.KillPosition_Cache else null, KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.RED, true)
+    # Purple sphere for teleport location
     createEffect(getAllPlayers() if len(CheckpointPositions[SelectedCheckpoint_Editing] ) > 1 else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[SelectedCheckpoint_Editing][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    # Teleport arrow icon
+    createIcon(getAllPlayers() if len(CheckpointPositions[SelectedCheckpoint_Editing] ) > 1 else null, CheckpointPositions[SelectedCheckpoint_Editing][1] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.PURPLE, true)
+    # Teleport text
+    createInWorldText(getAllPlayers() if len(CheckpointPositions[SelectedCheckpoint_Editing] ) > 1 else null, "TELEPORTER EXIT", CheckpointPositions[SelectedCheckpoint_Editing][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
 
 
 rule "Fly/Noclip Toggle | Hold Deflect":
@@ -579,7 +590,7 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
     @Condition eventPlayer == hostPlayer
     
     if eventPlayer.EditModeSelection == 1:
-        if SelectedCheckpoint_Editing != -1 and distance(eventPlayer, CheckpointPositions[SelectedCheckpoint_Editing]) <= 2.8:
+        if SelectedCheckpoint_Editing != -1 and distance(eventPlayer, CheckpointPositions[SelectedCheckpoint_Editing]) <= 1.4:
             smallMessage(eventPlayer, "Cannot place checkpoints too close.")
             return
 
@@ -588,7 +599,7 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
             SelectedCheckpoint_Editing = len(CheckpointPositions) - 1
         else:
             insert(CheckpointPositions, SelectedCheckpoint_Editing + 1, eventPlayer.getPosition())
-            SelectedCheckpoint_Editing = SelectedCheckpoint_Editing + 1
+            SelectedCheckpoint_Editing = SelectedCheckpoint_Editing + 1            
             KillballCheckpoints = [x + (1 if x >= SelectedCheckpoint_Editing else 0) for x in KillballCheckpoints]
             BouncePadCheckpoints = [x + (1 if x >= SelectedCheckpoint_Editing else 0) for x in BouncePadCheckpoints]
             UpdateCache()
@@ -707,6 +718,7 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Delete | Interact + Secondary Fire":
         del CheckpointPositions[SelectedCheckpoint_Editing]
         del CheckpointRings_Editing[SelectedCheckpoint_Editing]
         if SelectedCheckpoint_Editing <= 0:
+            SelectedCheckpoint_Editing = -1
             goto lbl_0
         SelectedCheckpoint_Editing -= 1
         lbl_0:
@@ -784,17 +796,15 @@ rule "Kill Orb / Bounce Orb | Select Next | Interact + Jump":
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
 
 
-# rule "Checkpoint | Hide All | Interact + Dash":
-#     @Event eachPlayer
-#     @Condition hostPlayer.EditorOn
-#     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
-#     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1) == true
-#     @Condition eventPlayer == hostPlayer
+rule "Checkpoint | Toggle Checkpoint Sizes | Interact + Dash":
+    @Event eachPlayer
+    @Condition hostPlayer.EditorOn
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_1) == true
+    @Condition eventPlayer == hostPlayer
     
-#     for SelectedCheckpoint_Editing in range(len(CheckpointRings_Editing) - 1, 0, -1):
-#         destroyEffect(CheckpointRings_Editing[SelectedCheckpoint_Editing])
-#         del CheckpointRings_Editing[SelectedCheckpoint_Editing]
-#     SelectedCheckpoint_Editing = -2
+    eventPlayer.EffectSizeToggle = not eventPlayer.EffectSizeToggle
+    
 
 
 # rule "Checkpoint | Show All |":
@@ -814,6 +824,8 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
 
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
+        if eventPlayer.CurrentCheckpoint == 0:
+            return
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
         eventPlayer.CurrentCheckpoint -= 1
         if eventPlayer.PracticeToggle == 1:
@@ -821,6 +833,8 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
         # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
         # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
     else:
+        if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
+            return
         eventPlayer.CurrentCheckpoint += 1
         if eventPlayer.PracticeToggle == 1:
             eventPlayer.PracticeCheckpoint += 1
@@ -849,9 +863,10 @@ rule "Teleport | Add | Interact + Reload":
 
     CheckpointPositions[SelectedCheckpoint_Editing] = [
         CheckpointPositions[SelectedCheckpoint_Editing][0] 
-            if len(CheckpointPositions[SelectedCheckpoint_Editing]) != 0 else 
-            CheckpointPositions[SelectedCheckpoint_Editing], hostPlayer.getPosition()
-            ]
+            if len(CheckpointPositions[SelectedCheckpoint_Editing]) != 0 
+            else CheckpointPositions[SelectedCheckpoint_Editing], 
+        hostPlayer.getPosition()
+    ]
 
     smallMessage(getAllPlayers(), "Teleport has been added for checkpoint {0}".format(SelectedCheckpoint_Editing))
 
