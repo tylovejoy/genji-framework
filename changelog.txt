@@ -93,6 +93,7 @@ fixed:
 - unable to place a checkpoint after deleting all checkpoints
 - able to skip to checkpoint -1
 - selected checkpoint in HUD
+- checkpoints can noe be overlapping but not the centers of each.
 new features:
 - added text and icon to teleporter exit while in editor
 - Added checkpoint hitbox toggle to editor
