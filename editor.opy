@@ -589,7 +589,7 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
     @Condition eventPlayer == hostPlayer
     
     if eventPlayer.EditModeSelection == 1:
-        if SelectedCheckpoint_Editing != -1 and distance(eventPlayer, CheckpointPositions[SelectedCheckpoint_Editing]) <= 2.8:
+        if SelectedCheckpoint_Editing != -1 and distance(eventPlayer, CheckpointPositions[SelectedCheckpoint_Editing]) <= 1.4:
             smallMessage(eventPlayer, "Cannot place checkpoints too close.")
             return
 
@@ -598,7 +598,7 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
             SelectedCheckpoint_Editing = len(CheckpointPositions) - 1
         else:
             insert(CheckpointPositions, SelectedCheckpoint_Editing + 1, eventPlayer.getPosition())
-            SelectedCheckpoint_Editing = SelectedCheckpoint_Editing + 1
+            SelectedCheckpoint_Editing = SelectedCheckpoint_Editing + 1            
             KillballCheckpoints = [x + (1 if x >= SelectedCheckpoint_Editing else 0) for x in KillballCheckpoints]
             BouncePadCheckpoints = [x + (1 if x >= SelectedCheckpoint_Editing else 0) for x in BouncePadCheckpoints]
             UpdateCache()
@@ -860,9 +860,10 @@ rule "Teleport | Add | Interact + Reload":
 
     CheckpointPositions[SelectedCheckpoint_Editing] = [
         CheckpointPositions[SelectedCheckpoint_Editing][0] 
-            if len(CheckpointPositions[SelectedCheckpoint_Editing]) != 0 else 
-            CheckpointPositions[SelectedCheckpoint_Editing], hostPlayer.getPosition()
-            ]
+            if len(CheckpointPositions[SelectedCheckpoint_Editing]) != 0 
+            else CheckpointPositions[SelectedCheckpoint_Editing], 
+        hostPlayer.getPosition()
+    ]
 
     smallMessage(getAllPlayers(), "Teleport has been added for checkpoint {0}".format(SelectedCheckpoint_Editing))
 
