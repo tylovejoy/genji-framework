@@ -1,0 +1,20 @@
+
+############################################################################################################
+reload + cp position bug
+------------------------------------------------------------------------------------------------------------
+On 6CX8C cp 4, you can go on the ground under the cp and press reload at same time. 
+It should reset you from touching the ground, but instead it puts you on the next cp.
+The checkpoint is on a panel thing that barely sticks out the wall.
+The ground below the panel the cp is on is not within the 1.4m radius. 
+
+reason not fixed:
+Hard to reproduce and no other checkpoints with this bug are known to us.
+
+reporter: jack
+
+data:
+- the map data is set on toggle 12, the cp in question is number 4
+- example clip https://cdn.discordapp.com/attachments/999420219900571658/1015391741458792460/Desktop_2022.09.03_-_00.44.56.04.mp4
+- checkpoint picture: https://cdn.discordapp.com/attachments/999420219900571658/1015395673732042782/unknown.png
+
+############################################################################################################
