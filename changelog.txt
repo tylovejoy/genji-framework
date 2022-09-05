@@ -87,3 +87,10 @@ new features:
 - disallow checkpoints being too close. 
     In other words, rings cannot overlap and neither can the checking distance (1.4). 
     This also means you cannot walk into another checkpoint, you will have to leave the ground.
+
+0.9.7 - date 5-9-2022
+fixed:
+- unable to place a checkpoint after deleting all checkpoints
+
+new features:
+- add text and icon to teleporter exit while in editor
