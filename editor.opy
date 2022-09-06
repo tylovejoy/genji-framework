@@ -603,7 +603,8 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
             KillballCheckpoints = [x + (1 if x >= SelectedCheckpoint_Editing else 0) for x in KillballCheckpoints]
             BouncePadCheckpoints = [x + (1 if x >= SelectedCheckpoint_Editing else 0) for x in BouncePadCheckpoints]
             UpdateCache()
-            RebuildEffects()
+            RebuildKillOrbs()
+            RebuildBounceOrbs()
         smallMessage(getAllPlayers(), "New Checkpoint has been created")
     elif eventPlayer.EditModeSelection == 2:
         # if eventPlayer.CurrentCheckpoint == 0:
@@ -627,7 +628,8 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
         UpdateCache()
         SelectedKillball_Editing = len(hostPlayer.KillIndex_Cache) - 1
         KillBallChase = KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
-        RebuildEffects()
+        RebuildKillOrbs()
+    
         bigMessage(getAllPlayers(), "New Kill Orb has been created! \r\nIt's only valid for checkpoint {0}".format(eventPlayer.CurrentCheckpoint))
     elif eventPlayer.EditModeSelection == 3:
         # if eventPlayer.CurrentCheckpoint == 0:
@@ -662,7 +664,7 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
         UpdateCache()
         CurrentBounce_Editing = len(hostPlayer.BounceIndex_Cache) - 1
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
-        RebuildEffects()
+        RebuildBounceOrbs()
         bigMessage(getAllPlayers(), "New Bounce Orb has been created! \r\nIt's only valid for checkpoint {0}".format(eventPlayer.CurrentCheckpoint))
     
     
@@ -684,6 +686,7 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Delete | Interact + Secondary Fire":
         for TempIterator1 in range(len(eventPlayer.Temp)):
             destroyEffect(KillBallEffects[eventPlayer.Temp[TempIterator1]])
             del KillBallEffects[eventPlayer.Temp[TempIterator1]]
+            wait()
         # Remove specified checkpoint
         KillballCheckpoints = [x for x in KillballCheckpoints if x != SelectedCheckpoint_Editing]
         # Decrement checkpoints after removed one
@@ -700,6 +703,7 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Delete | Interact + Secondary Fire":
         for TempIterator1 in range(len(eventPlayer.Temp)):
             destroyEffect(BounceEffects[eventPlayer.Temp[TempIterator1]])
             del BounceEffects[eventPlayer.Temp[TempIterator1]]
+            wait()
 
         # Remove specified checkpoint
         BouncePadCheckpoints = [x for x in BouncePadCheckpoints if x != SelectedCheckpoint_Editing]
@@ -722,8 +726,10 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Delete | Interact + Secondary Fire":
             goto lbl_0
         SelectedCheckpoint_Editing -= 1
         lbl_0:
+        RebuildKillOrbs()
+        RebuildBounceOrbs()
         smallMessage(getAllPlayers(), "Checkpoint has been deleted")
-    elif eventPlayer.EditModeSelection == 2 and len(KillBallPositions) != 0 and SelectedCheckpoint_Editing != 0 and hostPlayer.KillPosition_Cache:
+    elif eventPlayer.EditModeSelection == 2 and len(KillBallPositions) != 0 and hostPlayer.KillPosition_Cache:
         del KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
         del KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
         del KillballCheckpoints[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
@@ -734,8 +740,9 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Delete | Interact + Secondary Fire":
         SelectedKillball_Editing -= 1
         lbl_1:
         UpdateCache()
+        RebuildKillOrbs()
         KillBallChase = KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
-    elif eventPlayer.EditModeSelection == 3 and len(BouncePositions) != 0 and SelectedCheckpoint_Editing != 0 and hostPlayer.BouncePosition_Cache:
+    elif eventPlayer.EditModeSelection == 3 and len(BouncePositions) != 0 and hostPlayer.BouncePosition_Cache:
         del BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
         del BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
         del BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
@@ -749,8 +756,8 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Delete | Interact + Secondary Fire":
         CurrentBounce_Editing -= 1
         lbl_2:
         UpdateCache()
+        RebuildBounceOrbs()
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
-    RebuildEffects()
     UpdateCache()
 
 rule "Checkpoint | Move | Ultimate + Interact":
@@ -775,9 +782,11 @@ rule "Kill Orb / Bounce Orb | Select Previous | Interact + Crouch":
     if eventPlayer.EditModeSelection == 2:
         # current = ( current - 1 ) % len(cache)
         SelectedKillball_Editing = (SelectedKillball_Editing - 1) % len(eventPlayer.KillIndex_Cache)
+        SelectedKillball_Editing = SelectedKillball_Editing if SelectedKillball_Editing != 0 else len(eventPlayer.KillIndex_Cache)
         KillBallChase = KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
     elif eventPlayer.EditModeSelection == 3:
         CurrentBounce_Editing = (CurrentBounce_Editing - 1) % len(eventPlayer.BounceIndex_Cache)
+        CurrentBounce_Editing = CurrentBounce_Editing if CurrentBounce_Editing != 0 else len(eventPlayer.BounceIndex_Cache)
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
 
 rule "Kill Orb / Bounce Orb | Select Next | Interact + Jump":
