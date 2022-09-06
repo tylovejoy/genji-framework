@@ -367,7 +367,7 @@ rule "Bounce Ball | Toggle Dash | Ultimate + Secondary Fire":
     UpdateCache()
 
 
-rule "Bounce Ball | Toggle Lock| Ultimate + deflect":
+rule "Bounce Ball | Toggle Lock | Ultimate + deflect":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
@@ -382,6 +382,7 @@ rule "Bounce Ball | Toggle Lock| Ultimate + deflect":
         BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = 0
     elif BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] == true:
         BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = false
+        BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = 10
     UpdateCache()
 
 

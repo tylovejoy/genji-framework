@@ -104,3 +104,5 @@ fixed:
 - restarting disallowing checkpoint creation
 - selecting previous orbs selects orbs on different levels
 - effect generation causing lag and crashing server
+new features:
+- default green bounce orbs to 10 strength
