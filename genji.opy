@@ -540,7 +540,7 @@ def checkpointFailReset():
     @Name "SUB | Checkpoint Fail"
     eventPlayer.LockCollected = null
     eventPlayer.cancelPrimaryAction()
-    if eventPlayer.EditModeSelection < 1:
+    if eventPlayer.EditModeSelection < 1 and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
         eventPlayer.setAbility1Enabled(false)
         eventPlayer.setUltEnabled(false)
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
@@ -1169,7 +1169,7 @@ rule "Combo | Quick Reset | Reload, Hold Reload to Enable":
             kill(eventPlayer, null)
         eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], true)
         eventPlayer.flytoggle = null
-        if eventPlayer.EditModeSelection >= 1 or eventPlayer.InvincibleToggle == 1:
+        if eventPlayer.EditModeSelection >= 1 or eventPlayer.InvincibleToggle == 1 or eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
             goto lbl_0
         eventPlayer.setUltEnabled(false)
         eventPlayer.setAbility1Enabled(false)
