@@ -952,7 +952,7 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
         waitUntil(eventPlayer.isOnGround(), 0.6)
         eventPlayer.LockState = false
         return
-        
+
     eventPlayer.flytoggle = null
     eventPlayer.CurrentCheckpoint = 0  
     eventPlayer.PracticeToggle = 0
