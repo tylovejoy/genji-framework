@@ -943,12 +943,21 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
+    # @Condition eventPlayer.isUsingAbility1() == false if DashExploitToggle else true
     eventPlayer.LockState = true
+
+    if DashExploitToggle and eventPlayer.isUsingAbility1():
+        smallMessage(eventPlayer, "Dash Start is banned!")
+        eventPlayer.cancelPrimaryAction()
+        waitUntil(eventPlayer.isOnGround(), 0.6)
+        eventPlayer.LockState = false
+        return
+        
     eventPlayer.flytoggle = null
-    eventPlayer.CurrentCheckpoint = 0
-    eventPlayer.InvincibleToggle = 0
+    eventPlayer.CurrentCheckpoint = 0  
     eventPlayer.PracticeToggle = 0
     eventPlayer.PracticeCheckpoint = 0
+    eventPlayer.InvincibleToggle = 0
 
     if "{0}".format(eventPlayer) in SavedProgress:
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
@@ -958,16 +967,6 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
         SavedProgress.remove("{0}".format(eventPlayer))
-    # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].remove(eventPlayer)
-    
-    
-    # CheckpointEffect_Sub()
-
-    if eventPlayer.InvincibleToggle == 0 and DashExploitToggle and eventPlayer.isUsingAbility2():
-        smallMessage(eventPlayer, "Dash Start is banned!")
-        waitUntil(not eventPlayer.isUsingAbility2(), 0.5)
-        
-    
     StartGame_Sub()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     #Portal1PlayerList.remove(eventPlayer)
