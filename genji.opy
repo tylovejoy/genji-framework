@@ -1,6 +1,6 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(3) # 0 is editor, rest is numbers
 #!define touchground false
 #!define cpcheat false
 #!define inspectoron true
@@ -228,9 +228,9 @@ rule "Setup and Variables":
     hudText(getAllPlayers() if LeaderBoardFull[4] != null else null, heroIcon(Hero.GENJI), LeaderBoardFull[4][0], "{0} ".format(LeaderBoardFull[4][2]), HudPosition.RIGHT, 5, Color.GREEN, Color.GREEN, Color.GREEN,HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     #hudSubtext(getAllPlayers(), "-   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -", HudPosition.RIGHT, -5, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)    
 
-    hudHeader([i for i in getAllPlayers() if i.LeaderboardToggle], "　　　　 {0} Leaderboard {0} 　　　".format(iconString(Icon.FLAG)), HudPosition.TOP, -9999, Color.BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudHeader(localPlayer.LeaderboardToggle, "　　　　 {0} Leaderboard {0} 　　　".format(iconString(Icon.FLAG)), HudPosition.TOP, -9999, Color.BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     hudHeader(
-        [i for i in getAllPlayers() if i.LeaderboardToggle],
+        localPlayer.LeaderboardToggle,
         "　　　　　　　　　　　　　　　　　　\n"
         "　 1:　{0} - {5}　\n"
         "　 2:　{1} - {6}　\n"
@@ -247,10 +247,10 @@ rule "Setup and Variables":
         LeaderBoardFull[2][2] if LeaderBoardFull[2] else "",
         LeaderBoardFull[3][2] if LeaderBoardFull[3] else "",
         LeaderBoardFull[4][2] if LeaderBoardFull[4] else ""
-        ),HudPosition.TOP, -999, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+        ),HudPosition.TOP, -999, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
 
     hudHeader(
-       [i for i in getAllPlayers() if i.LeaderboardToggle and LeaderBoardFull[5]]  ,
+        localPlayer.LeaderboardToggle if LeaderBoardFull[5] else null,
         "　　　　　　　　　　　　　　　　　　\n"
         "　 6:　{0} - {5}　\n"
         "　 7:　{1} - {6}　\n"
@@ -270,7 +270,7 @@ rule "Setup and Variables":
         ),HudPosition.TOP, -998, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     
     hudHeader( 
-       [i for i in getAllPlayers() if i.LeaderboardToggle and LeaderBoardFull[10]],
+       localPlayer.LeaderboardToggle if LeaderBoardFull[10] else null,
         "　　　　　　　　　　　　　　　　　　\n"
         "　11:　{0} - {5}　\n"
         "　12:　{1} - {6}　\n"
@@ -290,7 +290,7 @@ rule "Setup and Variables":
         ),HudPosition.TOP, -997, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     
     hudHeader(
-        [i for i in getAllPlayers() if i.LeaderboardToggle and LeaderBoardFull[15]],
+        localPlayer.LeaderboardToggle if LeaderBoardFull[15] else null,
         "　　　　　　　　　　　　　　　　　　\n"
         "　16:　{0} - {5}　\n"
         "　17:　{1} - {6}　\n"
@@ -1296,8 +1296,8 @@ rule "leaderboard test ai ":
     wait(1)
     #wait(60)
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint+1]+ Vector.UP) # teleport not needed
-*/
 
+*/
 
 #!include "mechanics.opy"
 
