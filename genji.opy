@@ -247,7 +247,7 @@ rule "Setup and Variables":
         LeaderBoardFull[2][2] if LeaderBoardFull[2] else "",
         LeaderBoardFull[3][2] if LeaderBoardFull[3] else "",
         LeaderBoardFull[4][2] if LeaderBoardFull[4] else ""
-        ),HudPosition.TOP, -999, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+        ),HudPosition.TOP, -999, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
     hudHeader(
         localPlayer.LeaderboardToggle if LeaderBoardFull[5] else null,
