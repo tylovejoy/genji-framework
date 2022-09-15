@@ -111,3 +111,12 @@ new features:
 fixed:
 - no dash when resetting after finishing level
 - dash start not banning properly
+
+1.0.0 - date 9/9/2022
+Stable release
+- added Leaderboard on localplayer
+
+
+1.0.1 - date 12-9-2022
+- fixed orb selection not working properly
+- slowed down orb location editing

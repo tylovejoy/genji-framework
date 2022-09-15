@@ -3,7 +3,7 @@
 editortoggle(0) # 0 is editor, rest is numbers
 #!define touchground false
 #!define cpcheat false
-#!define inspectoron true
+#!define inspectoron false
 
 # settings ##############################
 # limit on how many orbs can be made
