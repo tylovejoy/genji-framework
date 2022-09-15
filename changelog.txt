@@ -97,3 +97,17 @@ fixed:
 new features:
 - added text and icon to teleporter exit while in editor
 - Added checkpoint hitbox toggle to editor
+
+0.9.8 - date 5-9-2022
+fixed:
+- no dash at start until restart
+- restarting disallowing checkpoint creation
+- selecting previous orbs selects orbs on different levels
+- effect generation causing lag and crashing server
+new features:
+- default green bounce orbs to 10 strength
+
+0.9.9 - date 7/9/2022
+fixed:
+- no dash when resetting after finishing level
+- dash start not banning properly

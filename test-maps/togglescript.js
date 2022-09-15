@@ -15,7 +15,8 @@ if (x == 0){
     9: "test-maps/lavamap.opy", // some lava and balls
     10: "test-maps/bounce_demo.opy", // bounce demo - fisho - no original code but uploaded to X05Y0 on new fw
     11: "test-maps/bounce_heaven.opy",
-    12: "test-maps/bug_reload_completcp.opy" // bug were you can complete a cp by reloading while not standing on the ground
+    12: "test-maps/bug_reload_completcp.opy", // bug were you can complete a cp by reloading while not standing on the ground
+    13: "test-maps/dashstart.opy" // dash start not banned
     }[x]
 
     selectedmap = {
@@ -30,7 +31,8 @@ if (x == 0){
     9: "busan",
     10: "hollywood",
     11: "workshopChamber",
-    12: "hanamura"
+    12: "hanamura",
+    13: "watchpointGibraltar"
     }[x]
 
     x = '#!define editorordata #!include "'+ datafiles + '"\n #!define selectedmap "' + selectedmap + '"' + '\n #!define editoron false'
