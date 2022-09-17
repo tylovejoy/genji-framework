@@ -1,9 +1,9 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(3) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #!define touchground false
 #!define cpcheat false
-#!define inspectoron true
+#!define inspectoron false
 
 # settings ##############################
 # limit on how many orbs can be made
@@ -218,7 +218,7 @@ rule "Setup and Variables":
     */
 
     # new board
-    hudSubtext(getAllPlayers() if LeaderBoardFull[0] else null, " \n<    Top 5    >", HudPosition.RIGHT, 0, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers() if LeaderBoardFull[0] else null, " \n{0} Top 5 {0}".format(abilityIconString(Hero.GENJI,Button.PRIMARY_FIRE)), HudPosition.RIGHT, 0, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     hudText(getAllPlayers() if LeaderBoardFull[0] != null else null, heroIcon(Hero.GENJI), LeaderBoardFull[0][0], "{0} ".format(LeaderBoardFull[0][2]), HudPosition.RIGHT, 1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudText(getAllPlayers() if LeaderBoardFull[1] != null else null, heroIcon(Hero.GENJI), LeaderBoardFull[1][0], "{0} ".format(LeaderBoardFull[1][2]), HudPosition.RIGHT, 2, Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudText(getAllPlayers() if LeaderBoardFull[2] != null else null, heroIcon(Hero.GENJI), LeaderBoardFull[2][0], "{0} ".format(LeaderBoardFull[2][2]), HudPosition.RIGHT, 3, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
