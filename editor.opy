@@ -564,7 +564,7 @@ rule "Kill Orb / Bounce Orb | Move Toward/Backward | Deflect + Primary Fire":
             wait()
             return
         while eventPlayer.isHoldingButton(Button.ABILITY_2) == true and (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
-            KillBallChase += eventPlayer.getFacingDirection() * (0.125 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.125)
+            KillBallChase += eventPlayer.getFacingDirection() * (0.0625 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.0625)
             wait()
 
         KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] = KillBallChase
@@ -574,7 +574,7 @@ rule "Kill Orb / Bounce Orb | Move Toward/Backward | Deflect + Primary Fire":
             wait()
             return
         while eventPlayer.isHoldingButton(Button.ABILITY_2) == true and (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
-            CurrentBouncePosition_Editing += eventPlayer.getFacingDirection() * (0.125 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.125)
+            CurrentBouncePosition_Editing += eventPlayer.getFacingDirection() * (0.0625 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.0625)
             wait()
         
         BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = CurrentBouncePosition_Editing
@@ -783,11 +783,11 @@ rule "Kill Orb / Bounce Orb | Select Previous | Interact + Crouch":
     if eventPlayer.EditModeSelection == 2:
         # current = ( current - 1 ) % len(cache)
         SelectedKillball_Editing = (SelectedKillball_Editing - 1) % len(eventPlayer.KillIndex_Cache)
-        SelectedKillball_Editing = SelectedKillball_Editing if SelectedKillball_Editing != 0 else len(eventPlayer.KillIndex_Cache)
+        SelectedKillball_Editing = SelectedKillball_Editing if SelectedKillball_Editing >= 0 else len(eventPlayer.KillIndex_Cache) - 1
         KillBallChase = KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
     elif eventPlayer.EditModeSelection == 3:
         CurrentBounce_Editing = (CurrentBounce_Editing - 1) % len(eventPlayer.BounceIndex_Cache)
-        CurrentBounce_Editing = CurrentBounce_Editing if CurrentBounce_Editing != 0 else len(eventPlayer.BounceIndex_Cache)
+        CurrentBounce_Editing = CurrentBounce_Editing if CurrentBounce_Editing >= 0 else len(eventPlayer.BounceIndex_Cache) - 1
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
 
 rule "Kill Orb / Bounce Orb | Select Next | Interact + Jump":
