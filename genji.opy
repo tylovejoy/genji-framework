@@ -1024,12 +1024,14 @@ rule "Combo | Toggle Invincible Mode | Melee + Reload":
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
     @Condition eventPlayer.isUsingAbility1() == false
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
+    #@Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isUsingUltimate() == false
     eventPlayer.LockCollected = null
     eventPlayer.flytoggle = null
     if eventPlayer.InvincibleToggle == 0:
+        if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
+            return
         chase(eventPlayer.PauseTimer, 999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
         SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 2] = eventPlayer.Timer
         SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 4] = getTotalTimeElapsed()
@@ -1074,9 +1076,14 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
     @Condition eventPlayer.EditModeSelection < 1
     @Condition eventPlayer.isUsingAbility1() == false
     @Condition eventPlayer.CurrentCheckpoint <= len(CheckpointPositions) - 1
-    @Condition eventPlayer.InvincibleToggle != 1
+    #@Condition eventPlayer.InvincibleToggle != 1
     @Condition eventPlayer.isAlive() == true
     
+    if eventPlayer.InvincibleToggle == 1:
+        smallMessage(eventPlayer, "Cannot leave practice mode while also in invincible mode")
+        wait()
+        return
+
     eventPlayer.LockState = true
     #waitUntil(eventPlayer.isUsingUltimate() == false or eventPlayer.PracticeToggle == 0, 3)
     if eventPlayer.isUsingUltimate():
@@ -1139,7 +1146,12 @@ rule "Combo | Practice Restart | Interact":
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
     @Condition eventPlayer.EditModeSelection < 1
     @Condition eventPlayer.PracticeToggle
+    @Condition eventPlayer.SpectateToggle != 1
     #@Condition eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint <= 0 == true
+    waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), 0.9)
+    if eventPlayer.isHoldingButton(Button.INTERACT):
+        return
+
     eventPlayer.LockCollected = null
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
