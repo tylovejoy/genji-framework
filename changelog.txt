@@ -123,3 +123,8 @@ Stable release
 
 1.0.2 - date 15-9-2022
 - changed TOP 5 HUD header text to shurikens instead of "< >"
+
+1.0.3 - date 18-9-2022
+- In practice mode, you now have to stop holding interact to go back to the practice checkpoint. This is done so you can use spectate mode without going back to the cp. (They are bound to same key)
+- You now get an error message if you try to leave practice mode without leaving invincible mode. This was already not possible, there just wasnt a message.
+- You can now leave invincible mode while on the last cp. This was locking players into invin+practice mode until they changed cps.
