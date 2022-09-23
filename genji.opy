@@ -8,6 +8,7 @@ editortoggle(0) # 0 is editor, rest is numbers
 # settings ##############################
 # limit on how many orbs can be made
 #!define fxlimit 193
+#!define portaldistance 1.1
 
 #!include "settings.opy"
 #!include "definitions.opy"

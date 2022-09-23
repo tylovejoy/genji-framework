@@ -130,7 +130,7 @@ rule "Disable Portal For Specific CPs <---- EDIT ME":
         Portal2PlayerList.remove(eventPlayer)
 */
 
-rule "control map portal - placement - toggled via workshop":
+rule "pre-set control map portal - placement - toggled via workshop":
     @Condition PortalOn
     wait(5, Wait.ABORT_WHEN_FALSE)
     if getCurrentMap() == Map.BUSAN:
@@ -187,23 +187,83 @@ rule "control map portal - placement - toggled via workshop":
         )
 
 
-rule "control map portal - function - toggled via workshop":
+rule "pre-set control map portal - function - toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
     @Condition len(PortalLoc) != null
     @Condition eventPlayer.InvincibleToggle or eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
     @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc]) == true
     
-    if PortalDest[
-            PortalLoc.index(
-               sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0]
-            )
-       ] != vect(0,0,0):
+    if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] != vect(0,0,0):
+        eventPlayer.teleport(
+            PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] 
+        )
 
-            eventPlayer.teleport(
-            PortalDest[
-                    PortalLoc.index(
-                    sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0]
-                    )
-            ] 
-            )
+    /*
+    CustomPortalStart = [vect(0,0,0)]
+    CustomPortalEndpoint = [vect(1,0,0)]
+    CustomPortalCP = [999]
+
+ #Portal start position
+    CustomPortalStart = [vect(13.921, 2.3, -15.789),vect(18.227, 3, -19.014), vect(19.495, 2, -6.232)]
+    #Portal end position (on same number as start position)
+    CustomPortalEndpoint = [vect(3.615, 7, -3.645), vect(18.600, 7, -4.271), vect(19.495, 12, -6.232)]
+    #Portal checkpoint (on same number as start position) 
+    #999 = apply portal to entire map
+    CustomPortalCP = [2, 999,3]
+    #warning: This can cause you to exceed global orb/portal limit. 
+    #make sure portal + orbs do not go past the limit.
+    #don't touch the rest of the rule
+    */
+
+rule "custom portals - data <---- EDIT ME":
+    @Disabled
+    #Portal start position
+    CustomPortalStart = [vect(0,0,0)]
+    #Portal end position (on same number as start position)
+    CustomPortalEndpoint = [vect(0,10,0)]
+    #Portal checkpoint (on same number as start position) 
+    #999 = apply portal to entire map
+    CustomPortalCP = [999]
+    #warning: This can cause you to exceed global orb/portal limit. 
+    #make sure portal + orbs do not go past the limit.
+    #don't touch the rest of the rule
+    wait(1)
+    for TempIterator1 in range(len(CustomPortalStart)):
+        createEffect(
+            [i for i in getAllPlayers() if 
+                i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or 
+                CustomPortalCP[evalOnce(TempIterator1)] == 999
+            ],
+            Effect.GOOD_AURA, 
+            Color.WHITE,
+            CustomPortalStart[evalOnce(TempIterator1)], 
+            0.6,
+            EffectReeval.VISIBILITY
+        )
+        wait(0.16)
+
+rule "custom portals - function":
+    @Disabled
+    @Event eachPlayer
+    @Condition len(CustomPortalStart) > 0
+
+    @Condition (any([
+        distance(eventPlayer.getPosition() + vect(0, 0.2, 0), ent) < portaldistance and 
+        CustomPortalCP[i] in [999, eventPlayer.CurrentCheckpoint]
+        for ent, i in CustomPortalStart
+        ])) == true
+
+    eventPlayer.PortalLoop = 0
+    for eventPlayer.PortalLoop in range(len(CustomPortalStart)):
+        if (
+            distance(
+                eventPlayer.getPosition() + vect(0, 0.2, 0), 
+                CustomPortalStart[eventPlayer.PortalLoop]
+            ) < portaldistance and 
+            CustomPortalCP[eventPlayer.PortalLoop] in [999, eventPlayer.CurrentCheckpoint]
+            ):
+            eventPlayer.teleport(CustomPortalEndpoint[eventPlayer.PortalLoop])
+            return
+
+    wait(1)

@@ -159,6 +159,11 @@ globalvar PortalDest 42                     # [vect]                    --- port
 globalvar PortalOn 43                       # bool                      --- portals enabled
 
 globalvar Difficultyhud 44                  # number                    --- workshop toggle to display difficulty hud
+
+globalvar CustomPortalStart 45              # [vect]                    --- custom portal start 
+globalvar CustomPortalEndpoint 46           # [vect]                    --- custom portal end points
+globalvar CustomPortalCP 47                 # [int]                     --- custom portal checkpoints
+
 #Player variables
 
 playervar CurrentCheckpoint 0               # int                       --- Current Checkpoint
@@ -199,6 +204,7 @@ playervar TracesOff 43                      # bool                      --- turn
 playervar EditorOn 45                       # bool                      --- on all players, but only gets checked from host player
 playervar LockCollected 46                  # number                    --- amount collected lock this cp
 playervar bouncetouched 47                  # int                       --- cache of the bouncepad id you are currently touching
+playervar PortalLoop 48                     # int                       --- loop to select portal
 
 playervar KillPosition_Cache 50
 playervar KillRadii_Cache 51
