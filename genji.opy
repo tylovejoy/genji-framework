@@ -116,6 +116,7 @@ def RebuildKillOrbs():
 
 def BuildPortals():
     @Name "SUB | Rebuild Portals"
+    # custom portals
     if CustomPortalStart:
         for TempIterator1 in range(len(CustomPortalStart)):
             createEffect(
@@ -130,7 +131,7 @@ def BuildPortals():
                 EffectReeval.VISIBILITY
             )
             wait(0.16)
-    
+    # pre-set portals
     if PortalDest:
         for TempIterator1 in range(len(PortalLoc)):
             createEffect(
@@ -361,24 +362,28 @@ rule "Setup and Variables":
     hudSubtext(getAllPlayers(), "{0} {1} |  {2}".format( "" if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset"), HudPosition.RIGHT, -18, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | leaderboard".format(buttonString(Button.MELEE)), HudPosition.RIGHT, -17, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     
-    hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | Preview orb/portal{1}".format(buttonString(Button.PRIMARY_FIRE),"\nWalk left/right | preview others\nAim | change preview angle" if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else ""), HudPosition.RIGHT, -16, Color.GREEN if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    #hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | Preview orb/portal{1}".format(buttonString(Button.PRIMARY_FIRE),"\nWalk left/right | preview others\nAim | change preview angle" if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else ""), HudPosition.RIGHT, -16, Color.GREEN if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    #hudText(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, null,"Walk left/right | preview others\nAim | change preview angle" if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else "", "Hold {0} | Preview orb/portal".format(buttonString(Button.PRIMARY_FIRE)), HudPosition.RIGHT, -16, Color.GREEN, Color.LIME_GREEN, Color.GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR , SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null,  "Hold {0} | Preview orb/portal".format(buttonString(Button.PRIMARY_FIRE)), HudPosition.RIGHT, -16, Color.GREEN if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else Color.GREEN if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    hudSubheader(getAllPlayers() if hostPlayer.EditModeSelection < 1 and localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else null, "Walk left/right | preview others\nAim | change preview angle", HudPosition.RIGHT, -15, Color.LIME_GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-    hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else ""), HudPosition.RIGHT, -15, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else ""), HudPosition.RIGHT, -14,Color.GREEN if localPlayer.invis else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+
+    hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else ""), HudPosition.RIGHT, -14, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else ""), HudPosition.RIGHT, -13,Color.GREEN if localPlayer.invis else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     #hudSubtext([i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1 and i.PracticeToggle != 1], "Hold {0} | Toggle Traces".format(abilityIconString(Hero.GENJI,Button.ULTIMATE)), HudPosition.RIGHT, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)  
     hudSubtext(
         [i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1 and i.PracticeToggle != 1], 
         "Hold {0} | Traces{1}".format(abilityIconString(Hero.GENJI,Button.ULTIMATE), "" if localPlayer.TracesOff else " | ON "), 
-        HudPosition.RIGHT, -13, Color.WHITE if localPlayer.TracesOff else Color.GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        HudPosition.RIGHT, -12, Color.WHITE if localPlayer.TracesOff else Color.GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )  
    
-    hudSubtext(getAllPlayers() if localPlayer.EditModeSelection < 1 else null,"{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.CurrentCheckpoint - localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else ""),HudPosition.RIGHT, -12, Color.GREEN if localPlayer.PracticeToggle else Color.GRAY if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers() if localPlayer.EditModeSelection < 1 else null,"{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.CurrentCheckpoint - localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else ""),HudPosition.RIGHT, -11, Color.GREEN if localPlayer.PracticeToggle else Color.GRAY if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     
     hudSubheader([i for i in getAllPlayers() if i.PracticeToggle and hostPlayer.EditModeSelection < 1],
         "{0} + {1} | Next level\n"
         "{0} + {2} | Previous level\n"
         "{3} | Start from practice cp ".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT)),
-        HudPosition.RIGHT, -11, Color.LIME_GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+        HudPosition.RIGHT, -10, Color.LIME_GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
     if not hostPlayer.EditorOn:
         Difficultyhud = createWorkshopSetting(enum[
@@ -842,6 +847,7 @@ rule "preview things":
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.EditModeSelection < 1
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
+    @Condition not eventPlayer.isHoldingButton(Button.CROUCH)
 
     eventPlayer.PreviewsArray = [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint]
     eventPlayer.PreviewsArray.append( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true])
