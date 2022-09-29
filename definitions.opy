@@ -197,6 +197,9 @@ playervar JumpCount 26                      # int                       --- jump
 playervar MultiClimbCountHUD 28             # HUD                       --- climb counter
 playervar QuickRestartToggle 31             # int                       --- If quick restart is enabled or not, should be bool
 playervar MultiClimbCount 32                # int                       --- climb count # for HUD
+
+playervar PreviewsArray 38                  # array                     --- store preview positions
+playervar PreviewsI 39                      # int                       --- preview itterator
 playervar invis 40                          # bool                      --- invis toggle added by fisho
 playervar flytoggle 41                      # vector/null               --- null if not flying, else vector position, added by fisho
 playervar savemaphud 42                     # array                     --- array of save map hud ids
@@ -205,6 +208,7 @@ playervar EditorOn 45                       # bool                      --- on a
 playervar LockCollected 46                  # number                    --- amount collected lock this cp
 playervar bouncetouched 47                  # int                       --- cache of the bouncepad id you are currently touching
 playervar PortalLoop 48                     # int                       --- loop to select portal
+
 
 playervar KillPosition_Cache 50
 playervar KillRadii_Cache 51
@@ -229,4 +233,5 @@ subroutine CheckpointEffect_Sub 0
 subroutine StartGame_Sub 1
 subroutine KILLBALL 3
 subroutine pinball 4
+subroutine BuildPortals 5
 subroutine Leaderboardupdate # fishos

@@ -128,3 +128,11 @@ Stable release
 - In practice mode, you now have to stop holding interact to go back to the practice checkpoint. This is done so you can use spectate mode without going back to the cp. (They are bound to same key)
 - You now get an error message if you try to leave practice mode without leaving invincible mode. This was already not possible, there just wasnt a message.
 - You can now leave invincible mode while on the last cp. This was locking players into invin+practice mode until they changed cps.
+
+1.0.4 - date XXXXXXXX
+added:
+- Custom portals, these can be found in the addon rule section
+- orb/portal preview - for now bound to primary fire
+
+fixed:
+- fixed some portal fx bug (moved custom/pre-set portals to build sub)

@@ -132,7 +132,7 @@ rule "Disable Portal For Specific CPs <---- EDIT ME":
 
 rule "pre-set control map portal - placement - toggled via workshop":
     @Condition PortalOn
-    wait(5, Wait.ABORT_WHEN_FALSE)
+    wait(2, Wait.ABORT_WHEN_FALSE) # overwrite pasta
     if getCurrentMap() == Map.BUSAN:
         #"down > sanc","down > meka","sanc > down","sanc > meka","meka > sanc","meka > down"
         PortalNames = ["Sanctuary","MEKA base","Downtown","MEKA base","Sanctuary","Downtown"]
@@ -166,7 +166,7 @@ rule "pre-set control map portal - placement - toggled via workshop":
     else:
         PortalDest = null
         return
-    
+    /*
     for TempIterator1 in range(len(PortalLoc)):
         createEffect(
             [i for i in getAllPlayers() if i.InvincibleToggle or i.CurrentCheckpoint == len(CheckpointPositions) - 1],
@@ -186,7 +186,7 @@ rule "pre-set control map portal - placement - toggled via workshop":
             1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
         )
 
-
+    */
 rule "pre-set control map portal - function - toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
@@ -198,23 +198,6 @@ rule "pre-set control map portal - function - toggled via workshop":
         eventPlayer.teleport(
             PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] 
         )
-
-    /*
-    CustomPortalStart = [vect(0,0,0)]
-    CustomPortalEndpoint = [vect(1,0,0)]
-    CustomPortalCP = [999]
-
- #Portal start position
-    CustomPortalStart = [vect(13.921, 2.3, -15.789),vect(18.227, 3, -19.014), vect(19.495, 2, -6.232)]
-    #Portal end position (on same number as start position)
-    CustomPortalEndpoint = [vect(3.615, 7, -3.645), vect(18.600, 7, -4.271), vect(19.495, 12, -6.232)]
-    #Portal checkpoint (on same number as start position) 
-    #999 = apply portal to entire map
-    CustomPortalCP = [2, 999,3]
-    #warning: This can cause you to exceed global orb/portal limit. 
-    #make sure portal + orbs do not go past the limit.
-    #don't touch the rest of the rule
-    */
 
 rule "custom portals - data <---- EDIT ME":
     @Disabled
@@ -228,7 +211,13 @@ rule "custom portals - data <---- EDIT ME":
     #warning: This can cause you to exceed global orb/portal limit. 
     #make sure portal + orbs do not go past the limit.
     #don't touch the rest of the rule
-    wait(1)
+
+    /*
+    CustomPortalStart  =  [vect(-19.025, 2.803, 4.488), vect(-25.488, 4.543, -2.096),  vect(-13.323, 3, 11.138)]
+    CustomPortalEndpoint = [vect(-18.117, 13, 1.818), vect(-25.488, 18, -2.096), vect(-3.271, 13, -3.563)]
+    CustomPortalCP = [2,999,4]
+    */
+    /*
     for TempIterator1 in range(len(CustomPortalStart)):
         createEffect(
             [i for i in getAllPlayers() if 
@@ -242,7 +231,7 @@ rule "custom portals - data <---- EDIT ME":
             EffectReeval.VISIBILITY
         )
         wait(0.16)
-
+    */
 rule "custom portals - function":
     @Disabled
     @Event eachPlayer
