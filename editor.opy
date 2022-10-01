@@ -230,7 +230,7 @@ rule "HUD | Guide":
     )
 
     hudText(hostPlayer,
-        "{0}\norb limit: {1}/{2}".format(
+        "{0}\norb/portal limit: {1}/{2}".format(
             "Checkpoint Mode" if hostPlayer.EditModeSelection == 1 else  
             "Current Kill Orb's radius: {0}".format(
                 KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
@@ -239,7 +239,7 @@ rule "HUD | Guide":
                 BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
                 ) if hostPlayer.EditModeSelection == 3 
                 else "",
-            len(BouncePositions) + len(KillBallPositions),
+            len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart),
             fxlimit
             ),
             
@@ -611,8 +611,8 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
         # if eventPlayer.CurrentCheckpoint == 0:
         #     bigMessage(getAllPlayers(), "Cannot place Kill Orb on first checkpoint")
         # else:
-        if len(BouncePositions) + len(KillBallPositions) >= fxlimit:
-            bigMessage(getAllPlayers(), "Orb limit reached for this map, delete old orbs first")
+        if len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart) >= fxlimit:
+            bigMessage(getAllPlayers(), "Orb/portal limit reached for this map, delete old orbs first")
             wait()
             return
         KillBallPositions.append(eventPlayer.getPosition())
@@ -636,8 +636,8 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
         # if eventPlayer.CurrentCheckpoint == 0:
         #     bigMessage(getAllPlayers(), "Cannot place bounce orb on first checkpoint")
         # else:
-        if len(BouncePositions) + len(KillBallPositions) >= fxlimit:
-            bigMessage(getAllPlayers(), "Orb limit reached for this map, delete old orbs first")
+        if len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart) >= fxlimit:
+            bigMessage(getAllPlayers(), "Orb/portal limit reached for this map, delete old orbs first")
             wait()
             return
         BouncePositions.append(eventPlayer.getPosition())

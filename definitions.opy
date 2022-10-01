@@ -159,6 +159,11 @@ globalvar PortalDest 42                     # [vect]                    --- port
 globalvar PortalOn 43                       # bool                      --- portals enabled
 
 globalvar Difficultyhud 44                  # number                    --- workshop toggle to display difficulty hud
+
+globalvar CustomPortalStart 45              # [vect]                    --- custom portal start 
+globalvar CustomPortalEndpoint 46           # [vect]                    --- custom portal end points
+globalvar CustomPortalCP 47                 # [int]                     --- custom portal checkpoints
+
 #Player variables
 
 playervar CurrentCheckpoint 0               # int                       --- Current Checkpoint
@@ -192,6 +197,9 @@ playervar JumpCount 26                      # int                       --- jump
 playervar MultiClimbCountHUD 28             # HUD                       --- climb counter
 playervar QuickRestartToggle 31             # int                       --- If quick restart is enabled or not, should be bool
 playervar MultiClimbCount 32                # int                       --- climb count # for HUD
+
+playervar PreviewsArray 38                  # array                     --- store preview positions
+playervar PreviewsI 39                      # int                       --- preview itterator
 playervar invis 40                          # bool                      --- invis toggle added by fisho
 playervar flytoggle 41                      # vector/null               --- null if not flying, else vector position, added by fisho
 playervar savemaphud 42                     # array                     --- array of save map hud ids
@@ -199,6 +207,8 @@ playervar TracesOff 43                      # bool                      --- turn
 playervar EditorOn 45                       # bool                      --- on all players, but only gets checked from host player
 playervar LockCollected 46                  # number                    --- amount collected lock this cp
 playervar bouncetouched 47                  # int                       --- cache of the bouncepad id you are currently touching
+playervar PortalLoop 48                     # int                       --- loop to select portal
+
 
 playervar KillPosition_Cache 50
 playervar KillRadii_Cache 51
@@ -223,4 +233,5 @@ subroutine CheckpointEffect_Sub 0
 subroutine StartGame_Sub 1
 subroutine KILLBALL 3
 subroutine pinball 4
+subroutine BuildPortals 5
 subroutine Leaderboardupdate # fishos
