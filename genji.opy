@@ -8,7 +8,9 @@ editortoggle(0) # 0 is editor, rest is numbers
 # settings ##############################
 # limit on how many orbs can be made
 #!define fxlimit 193
-#!define portaldistance 1.1
+#!define portaldistance 1.3
+#!define bounceorbdistance 1.4
+#(1.6 if eventPlayer.isUsingAbility1() else 1.4)
 
 #!include "settings.opy"
 #!include "definitions.opy"
@@ -842,13 +844,14 @@ rule "Checkpoint | Finish effects":
 
 
 
-rule "preview things":
+rule "Preview orbs/portals":
     @Event eachPlayer
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.EditModeSelection < 1
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition not eventPlayer.isHoldingButton(Button.CROUCH)
 
+    wait(0.9, Wait.ABORT_WHEN_FALSE)
     eventPlayer.PreviewsArray = [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint]
     eventPlayer.PreviewsArray.append( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true])
     
@@ -922,6 +925,8 @@ rule "Kill Orb | Activate":
     checkpointFailReset()
 
 
+
+
 rule "Bounce Ball | Activate":
     @Event eachPlayer
     @Hero genji
@@ -931,12 +936,12 @@ rule "Bounce Ball | Activate":
     # @Condition (any([distance(i, eventPlayer) < 1.2 and not (i in eventPlayer.LockCollected) and BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint for i in BouncePositions])) == true
     # @Condition eventPlayer.CurrentCheckpoint != 0
     @Condition eventPlayer.BouncePosition_Cache != []
-    @Condition (any([distance(i, eventPlayer) < 1.2 for i in eventPlayer.BouncePosition_Cache])) == true
+    @Condition (any([distance(i, eventPlayer) < bounceorbdistance for i in eventPlayer.BouncePosition_Cache])) == true
     
     eventPlayer.bouncetouched = eventPlayer.BouncePosition_Cache.index( # cashe the touched bouncepad number
         sorted(
             [i for i in eventPlayer.BouncePosition_Cache if 
-                distance(eventPlayer, i) < 1.2 and 
+                distance(eventPlayer, i) < bounceorbdistance and 
                 # BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and
                 not (i in eventPlayer.LockCollected) 
             ],lambda x: distance(eventPlayer, x)
@@ -953,12 +958,14 @@ rule "Bounce Ball | Activate":
     if eventPlayer.BounceDash_Cache[eventPlayer.bouncetouched]:
         eventPlayer.setAbility1Enabled(true)
         smallMessage(eventPlayer, "Dash is ready")
+        playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     #if BounceToggleUlt[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])] == true:
     if  eventPlayer.BounceUlt_Cache[eventPlayer.bouncetouched]:
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
         smallMessage(eventPlayer, "Ultimate is ready")
+        playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     #if BounceToggleLock[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])] == true:
     if eventPlayer.BounceLock_Cache[eventPlayer.bouncetouched]:
