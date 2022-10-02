@@ -9,6 +9,8 @@ editortoggle(0) # 0 is editor, rest is numbers
 # limit on how many orbs can be made
 #!define fxlimit 193
 #!define portaldistance 1.3
+#!define bounceorbdistance 1.4
+#(1.6 if eventPlayer.isUsingAbility1() else 1.4)
 
 #!include "settings.opy"
 #!include "definitions.opy"
@@ -923,8 +925,7 @@ rule "Kill Orb | Activate":
     checkpointFailReset()
 
 
-#!define bounceorbdistance 1.4
-#(1.6 if eventPlayer.isUsingAbility1() else 1.4)
+
 
 rule "Bounce Ball | Activate":
     @Event eachPlayer
