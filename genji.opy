@@ -665,7 +665,7 @@ def StartGame_Sub():
     # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
     eventPlayer.LockCollected = null
     eventPlayer.InvincibleToggle = 0
-    eventPlayer.LockState = false
+    # eventPlayer.LockState = false
     UpdateCache()
 
 
@@ -1086,6 +1086,7 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     #Portal1PlayerList.remove(eventPlayer)
     #Portal2PlayerList.remove(eventPlayer)
+    wait()
     eventPlayer.LockState = false
     
 
