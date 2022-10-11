@@ -272,14 +272,13 @@ rule "Ban | Emote Savehop":
     checkpointFailReset()
         
 rule "Ban | Create Bhop":
-    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Create Bhop", false, 2) == true
-    BhopBanToggle = true
+    wait(1)
+    BhopBanToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Create Bhop", false, 2)
 
 rule "Ban | Deathbhop":
-    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Deathbhop", false, 4) == true
-    DeathBhopBan = true
-
+    wait(1)
+    DeathBhopBan = createWorkshopSetting(bool, "Ban Switch", "Ban Deathbhop", false, 4)
 
 rule "Ban | Dash Start":
-    @Condition createWorkshopSetting(bool, "Ban Switch", "Ban Dash Start", false, 4) == true
-    DashExploitToggle = true
+    wait(1)
+    DashExploitToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Dash Start", false, 4)
