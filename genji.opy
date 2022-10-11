@@ -46,10 +46,71 @@ rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
 editorordata
 
 rule "Credits here <---- INSERT YOUR NAME HERE": 
+    # NOHUDTAG
+    /*
     hudSubtext(getAllPlayers(), "made by: name", HudPosition.LEFT, -15, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "map code: XXXXX", HudPosition.LEFT, -14, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    */
+    
+    /* T1mur4TR 's code teporary hud*/
+    createInWorldText(
+        localPlayer,
+        /*
+        "cntrl+e+f: full restart\n"
+        "r + v: invincible\n"
+        "r: quick reset\n"
+        "f(hold): spectate\n"
+        "q+v: practice mode"
+        ,
+        updateEveryTick(
+            localPlayer.getEyePosition() + 200 * localPlayer.getFacingDirection() + 127 
+            * crossProduct(localPlayer.getFacingDirection(), worldVector(Vector.LEFT*0.65, localPlayer, Transform.ROTATION)) - 208 *  # left*how far down
+            worldVector(Vector.LEFT*0.9, localPlayer, Transform.ROTATION) # left * how far mid
+        ),*/
+        "crouch + {4} + {0}: full restart\n"
+        "{1} + {2}: invincible\n"
+        "{1}: quick reset\n"
+        "{0}(hold): spectate\n"
+        "{3} + {2}: practice mode".format(
+            buttonString(Button.INTERACT),
+            buttonString(Button.RELOAD),
+            buttonString(Button.MELEE),
+            buttonString(Button.ULTIMATE),
+            buttonString(Button.ABILITY_2)
+        ),
+        updateEveryTick(
+            localPlayer.getEyePosition() + 200 * localPlayer.getFacingDirection() + 127 
+            * crossProduct(localPlayer.getFacingDirection(), worldVector(Vector.LEFT*0.65, localPlayer, Transform.ROTATION)) - 208 *  # left*how far down
+            worldVector(Vector.LEFT*0.9, localPlayer, Transform.ROTATION) # left * how far mid
+        ),
+        1.3, 
+        Clip.NONE, 
+        WorldTextReeval.VISIBILITY_POSITION_AND_STRING, 
+        Color.WHITE,
+        SpecVisibility.DEFAULT
+    )
 
+     createInWorldText(
+        localPlayer, 
+        "Map by: X \nCode: X \nDiscord:dsc.gg/genjiparkour", 
+        updateEveryTick(
+            localPlayer.getEyePosition() + 200 * localPlayer.getFacingDirection() + 131 
+            * crossProduct(localPlayer.getFacingDirection(), worldVector(Vector.LEFT*0.65, localPlayer, Transform.ROTATION)) + 206 * 
+            worldVector(Vector.LEFT*0.9, localPlayer, Transform.ROTATION)),
+       
+        1.3, Clip.NONE, WorldTextReeval.VISIBILITY_AND_POSITION, Color.PURPLE, SpecVisibility.DEFAULT
+    )
+
+    createInWorldText(
+       localPlayer,
+       "Level: {0} / {1}\nTime: {2}".format(localPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1,localPlayer.Timer), 
+       updateEveryTick(
+        localPlayer.getEyePosition() + 200 * localPlayer.getFacingDirection() + 124 
+        * crossProduct(localPlayer.getFacingDirection(), worldVector(Vector.LEFT*0.9, localPlayer, Transform.ROTATION))
+        ), 
+        1.4, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT
+    )
 
 rule "Custom difficulty hud":
     @Disabled
@@ -625,9 +686,23 @@ def CheckpointEffect_Sub():
     eventPlayer.PlayerEffects[2] = getLastCreatedEntity()
     createIcon(eventPlayer if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + vect(0, 1, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
     eventPlayer.PlayerEffects[3] = getLastCreatedEntity()
+    
+    # NOHUDTAG 
+    # orginal hud
     createInWorldText(eventPlayer if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else null, "Come here", CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT)
-    eventPlayer.PlayerEffects[4] = getLastCreatedText()
+    
+    # new hud
+    /*
+    createInWorldText(
+        eventPlayer,
+        "Come here\nLevel: {0} / {1} - Time:{2}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1,eventPlayer.Timer) if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else "Completed in {0}".format(eventPlayer.Timer),
+        CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]  if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else CheckpointPositions[len(CheckpointPositions)-1]
+        , 
+        1.3, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT
+    )
+    */
 
+    eventPlayer.PlayerEffects[4] = getLastCreatedText()
 
 def StartGame_Sub():
     @Name "SUB | Start Game"
@@ -1428,7 +1503,7 @@ rule "leaderboard test ai ":
 #!include "mechanics.opy"
 
 #!include "addons.opy"
-
+/*
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
     @Condition isGameInProgress() == true
@@ -1459,4 +1534,4 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     MsDestructo = 0
 
 
-
+*/
