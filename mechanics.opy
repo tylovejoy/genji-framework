@@ -157,6 +157,7 @@ rule "HUD | Wallclimb Used":
     
     destroyHudText(eventPlayer.MultiClimbCountHUD)
     hudHeader(eventPlayer, "Climb", HudPosition.LEFT, 2, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    smallMessage(eventPlayer,"climbed") # NOHUDTAG
     eventPlayer.MultiClimbCountHUD = getLastCreatedText()
 
 

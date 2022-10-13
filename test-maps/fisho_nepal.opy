@@ -16,8 +16,6 @@ rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
     PortalDest = [vect(-40.19, 13.292, -0.105), vect(78.43, 128.292, 0.149), vect(-190.54, -93.569, 0.122), vect(78.43, 128.292, 0.149), vect(-190.54, -93.569, 0.122), vect(-40.19, 13.292, -0.105)]
     PortalOn = false
     Difficultyhud = 2
-    CustomPortalStart = [vect(83.734, 145.208, -0.418), vect(81.16, 179.126, -0.082), vect(-50.356, 62.664, 0.621)]
-    CustomPortalEndpoint = [vect(81.16, 275, -0.082), vect(-50.25, 100, 0.352), vect(-174.77, -59.179, -0.316)]
     CustomPortalCP = [31, 31, 31]
 
 
@@ -41,7 +39,7 @@ rule "In world text for certain Checkpoints <---- EDIT ME":
 
 rule "custom portals - data <---- EDIT ME":
     #Portal start position
-    CustomPortalStart = [vect(83.734, 145.208, -0.418), vect(81.16, 179.126, -0.082), vect(-50.356, 62.664, 0.621)]
+    CustomPortalStart = [vect(83.734, 145.208, -0.418), vect(81.16, 179.126, -0.082), vect(-50.356, 70 0.621)]
     #Portal end position (on same number as start position)
     CustomPortalEndpoint = [vect(81.16, 250, -0.082), vect(-50.25, 120, 0.621), vect(-173.972, -59.179, 0.021)]
     #Portal checkpoint (on same number as start position) 
