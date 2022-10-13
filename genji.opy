@@ -102,6 +102,7 @@ rule "Credits here <---- INSERT YOUR NAME HERE":
         1.3, Clip.NONE, WorldTextReeval.VISIBILITY_AND_POSITION, Color.PURPLE, SpecVisibility.DEFAULT
     )
 
+     # ingamehud
     createInWorldText(
        localPlayer,
        "Level: {0} / {1}\nTime: {2}".format(localPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1,localPlayer.Timer), 
@@ -111,6 +112,7 @@ rule "Credits here <---- INSERT YOUR NAME HERE":
         ), 
         1.4, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT
     )
+    
 
 rule "Custom difficulty hud":
     @Disabled
@@ -648,7 +650,10 @@ rule "Initialize and CP HUD":
     #CheckpointEffect_Sub is the checkpoint effect display
     CheckpointEffect_Sub()
     
-    eventPlayer.disableGamemodeHud()
+    #ingamehud
+    eventPlayer.disableGamemodeHud() # enable to undo hud thuing
+    #ingamehud - disable next
+    #setObjectiveDescription(getAllPlayers(), "Level: {0} / {1}\nTime: {2}".format(localPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1,localPlayer.Timer),HudReeval.VISIBILITY_AND_STRING)
 
 
 def checkpointFailReset():
@@ -1503,6 +1508,19 @@ rule "leaderboard test ai ":
 #!include "mechanics.opy"
 
 #!include "addons.opy"
+
+rule "ult limit":
+    @Event eachPlayer
+    @Condition eventPlayer.isUsingUltimate()
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
+    @Condition  eventPlayer.InvincibleToggle == 0
+
+    wait(1.2)
+    eventPlayer.disallowButton(Button.PRIMARY_FIRE)
+    waitUntil(not eventPlayer.isUsingUltimate(),2)
+    wait()
+    eventPlayer.allowButton(Button.PRIMARY_FIRE)
+
 /*
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
