@@ -112,10 +112,10 @@ rule "HUD | Show/Hide Guide | Hold Melee":
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     if eventPlayer.GuideToggle == 1:
         eventPlayer.GuideToggle = 2
-        smallMessage(eventPlayer, "Guide is hidden")
+        smallMessage(eventPlayer, "   Guide is hidden")
     else:
         eventPlayer.GuideToggle = 1
-        smallMessage(eventPlayer, "Guide is open")
+        smallMessage(eventPlayer, "   Guide is open")
 
 
 rule "HUD | Show Guide On Spawn":
@@ -324,13 +324,13 @@ rule "Change Edit Mode | Hold Dash":
     eventPlayer.flytoggle = null
     if eventPlayer.EditModeSelection == 1:
         eventPlayer.EditModeSelection = 2
-        smallMessage(hostPlayer, "Current mode: Kill Orb")
+        smallMessage(hostPlayer, "   Current mode: Kill Orb")
     elif eventPlayer.EditModeSelection == 2:
         eventPlayer.EditModeSelection = 3
-        smallMessage(hostPlayer, "Current mode: Bounce Orb")
+        smallMessage(hostPlayer, "   Current mode: Bounce Orb")
     elif eventPlayer.EditModeSelection == 3:
         eventPlayer.EditModeSelection = 1
-        smallMessage(hostPlayer, "Current mode: Checkpoint")
+        smallMessage(hostPlayer, "   Current mode: Checkpoint")
 
 
 rule "Bounce Ball | Toggle Ultimate | Ultimate + Primary Fire":
@@ -592,7 +592,7 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
     
     if eventPlayer.EditModeSelection == 1:
         if SelectedCheckpoint_Editing != -1 and distance(eventPlayer, CheckpointPositions[SelectedCheckpoint_Editing]) <= 1.4:
-            smallMessage(eventPlayer, "Cannot place checkpoints too close.")
+            smallMessage(eventPlayer, "   Cannot place checkpoints too close.")
             return
 
         if SelectedCheckpoint_Editing == len(CheckpointPositions) - 1:
@@ -606,7 +606,7 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
             UpdateCache()
             RebuildKillOrbs()
             RebuildBounceOrbs()
-        smallMessage(getAllPlayers(), "New Checkpoint has been created")
+        smallMessage(getAllPlayers(), "   New Checkpoint has been created")
     elif eventPlayer.EditModeSelection == 2:
         # if eventPlayer.CurrentCheckpoint == 0:
         #     bigMessage(getAllPlayers(), "Cannot place Kill Orb on first checkpoint")
@@ -729,7 +729,7 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Delete | Interact + Secondary Fire":
         lbl_0:
         RebuildKillOrbs()
         RebuildBounceOrbs()
-        smallMessage(getAllPlayers(), "Checkpoint has been deleted")
+        smallMessage(getAllPlayers(), "   Checkpoint has been deleted")
     elif eventPlayer.EditModeSelection == 2 and len(KillBallPositions) != 0 and hostPlayer.KillPosition_Cache:
         del KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
         del KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
@@ -768,9 +768,9 @@ rule "Checkpoint | Move | Ultimate + Interact":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer == hostPlayer
     
-    smallMessage(getAllPlayers(), "Checkpoint {0} has been deleted".format(SelectedCheckpoint_Editing) if len(CheckpointPositions[SelectedCheckpoint_Editing]) != 0 else "")
+    smallMessage(getAllPlayers(), "   Checkpoint {0} has been deleted".format(SelectedCheckpoint_Editing) if len(CheckpointPositions[SelectedCheckpoint_Editing]) != 0 else "")
     CheckpointPositions[SelectedCheckpoint_Editing] = eventPlayer.getPosition() - vect(0, 0, 0)
-    smallMessage(getAllPlayers(), "Checkpoint has been moved to your position")
+    smallMessage(getAllPlayers(), "   Checkpoint has been moved to your position")
 
 
 rule "Kill Orb / Bounce Orb | Select Previous | Interact + Crouch":
@@ -825,38 +825,6 @@ rule "Checkpoint | Toggle Checkpoint Sizes | Interact + Dash":
 #         createEffect(getAllPlayers(), Effect.RING, Color.RED, CheckpointPositions[SelectedCheckpoint_Editing], 1, EffectReeval.VISIBILITY)
 #         CheckpointRings_Editing.append(getLastCreatedEntity())
 
-
-rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
-    @Event eachPlayer
-    @Condition eventPlayer.LockState == false
-    @Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle == 1
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
-
-    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-        if eventPlayer.CurrentCheckpoint == 0:
-            return
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
-        eventPlayer.CurrentCheckpoint -= 1
-        if eventPlayer.PracticeToggle == 1:
-            eventPlayer.PracticeCheckpoint -= 1
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
-    else:
-        if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
-            return
-        eventPlayer.CurrentCheckpoint += 1
-        if eventPlayer.PracticeToggle == 1:
-            eventPlayer.PracticeCheckpoint += 1
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
-        # eventPlayer.Timer += 9999
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
-    
-    eventPlayer.MovedCheckpoint = true
-    UpdateCache()    
-
-
 rule "Teleport | Add | Interact + Reload":
     @Condition hostPlayer.EditorOn
     @Condition hostPlayer.isHoldingButton(Button.MELEE) == false
@@ -878,7 +846,7 @@ rule "Teleport | Add | Interact + Reload":
         hostPlayer.getPosition()
     ]
 
-    smallMessage(getAllPlayers(), "Teleport has been added for checkpoint {0}".format(SelectedCheckpoint_Editing))
+    smallMessage(getAllPlayers(), "   Teleport has been added for checkpoint {0}".format(SelectedCheckpoint_Editing))
 
 
 

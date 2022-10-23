@@ -8,6 +8,7 @@ rule "------------------------------------------------------------------------ A
 rule "Add Blade to Checkpoint <---- EDIT ME":
     @Disabled
     #Change "-1" to certain Checkpoints' number. For example if you want to add Blade to Checkpoint 2 and 6 change one of "-1" to 2 and other "-1" to 6
+    wait(1)
     BladeEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
 
@@ -15,6 +16,7 @@ rule "Add Blade to Checkpoint <---- EDIT ME":
 rule "Add Dash to Checkpoint <---- EDIT ME":
     @Disabled
     #Change "-1" to certain Checkpoints' number. For example if you want to add Dash to Checkpoint 7 and 1 change one of "-1" to 7 and other "-1" to 1
+    wait(1)
     DashEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
 
@@ -201,6 +203,7 @@ rule "pre-set control map portal - function - toggled via workshop":
 
 rule "custom portals - data <---- EDIT ME":
     @Disabled
+    wait(1)
     #Portal start position
     CustomPortalStart = [vect(0,0,0)]
     #Portal end position (on same number as start position)
