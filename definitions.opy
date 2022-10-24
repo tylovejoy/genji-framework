@@ -146,7 +146,7 @@ globalvar SavedProgress 30                  # list[Any]                 --- save
 #globalvar toplistTimes 33
 #globalvar toplistSortedTimes 34
 globalvar LeaderBoardFull 32                # [[name,second,prettytime]]--- sorted list of 0-19 leaderboard entries
-
+globalvar LeaderBoardHuds 33
 globalvar BhopBanToggle 35                  # bool                      --- Enabled if Bhop is banned
 globalvar TempIterator1 38                  # int                       --- temp iterator
 
@@ -235,3 +235,4 @@ subroutine KILLBALL 3
 subroutine pinball 4
 subroutine BuildPortals 5
 subroutine Leaderboardupdate # fishos
+subroutine CreateLeaderBoard

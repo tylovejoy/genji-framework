@@ -1,6 +1,6 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(14) # 0 is editor, rest is numbers
+editortoggle(4) # 0 is editor, rest is numbers
 #!define touchground false
 #!define cpcheat false
 #!define inspectoron false
@@ -11,6 +11,9 @@ editortoggle(14) # 0 is editor, rest is numbers
 #!define portaldistance 1.3
 #!define bounceorbdistance 1.4
 #(1.6 if eventPlayer.isUsingAbility1() else 1.4)
+
+#disable overpy map detection
+#!disableCustomMapDetectionFix 
 
 #!include "settings.opy"
 #!include "definitions.opy"
@@ -267,87 +270,7 @@ rule "Setup and Variables":
     hudText(getAllPlayers() if LeaderBoardFull[4] != null else null, heroIcon(Hero.GENJI), LeaderBoardFull[4][0], "{0} ".format(LeaderBoardFull[4][2]), HudPosition.RIGHT, 5, Color.GREEN, Color.GREEN, Color.GREEN,HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     #hudSubtext(getAllPlayers(), "-   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -", HudPosition.RIGHT, -5, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)    
 
-    hudHeader(localPlayer.LeaderboardToggle, "　　　　 {0} Leaderboard {0} 　　　".format(iconString(Icon.FLAG)), HudPosition.TOP, -9999, Color.BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    hudHeader(
-        localPlayer.LeaderboardToggle,
-        "　　　　　　　　　　　　　　　　　　\n"
-        "　 1:　{0} - {5}　\n"
-        "　 2:　{1} - {6}　\n"
-        "　 3:　{2} - {7}　\n"
-        "　 4:　{3} - {8}　\n"
-        "　 5:　{4} - {9}\n".format(
-        LeaderBoardFull[0][0] if LeaderBoardFull[0] else "",
-        LeaderBoardFull[1][0] if LeaderBoardFull[1] else "",
-        LeaderBoardFull[2][0] if LeaderBoardFull[2] else "",
-        LeaderBoardFull[3][0] if LeaderBoardFull[3] else "",
-        LeaderBoardFull[4][0] if LeaderBoardFull[4] else "",
-        LeaderBoardFull[0][2] if LeaderBoardFull[0] else "",
-        LeaderBoardFull[1][2] if LeaderBoardFull[1] else "",
-        LeaderBoardFull[2][2] if LeaderBoardFull[2] else "",
-        LeaderBoardFull[3][2] if LeaderBoardFull[3] else "",
-        LeaderBoardFull[4][2] if LeaderBoardFull[4] else ""
-        ),HudPosition.TOP, -999, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-
-    hudHeader(
-        localPlayer.LeaderboardToggle if LeaderBoardFull[5] else null,
-        "　　　　　　　　　　　　　　　　　　\n"
-        "　 6:　{0} - {5}　\n"
-        "　 7:　{1} - {6}　\n"
-        "　 8:　{2} - {7}　\n"
-        "　 9:　{3} - {8}　\n"
-        "　10:　{4} - {9}\n".format(
-        LeaderBoardFull[5][0] if LeaderBoardFull[5] else "",
-        LeaderBoardFull[6][0] if LeaderBoardFull[6] else "",
-        LeaderBoardFull[7][0] if LeaderBoardFull[7] else "",
-        LeaderBoardFull[8][0] if LeaderBoardFull[8] else "",
-        LeaderBoardFull[9][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[5][2] if LeaderBoardFull[5] else "",
-        LeaderBoardFull[6][2] if LeaderBoardFull[6] else "",
-        LeaderBoardFull[7][2] if LeaderBoardFull[7] else "",
-        LeaderBoardFull[8][2] if LeaderBoardFull[8] else "",
-        LeaderBoardFull[9][2] if LeaderBoardFull[9] else ""
-        ),HudPosition.TOP, -998, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    
-    hudHeader( 
-       localPlayer.LeaderboardToggle if LeaderBoardFull[10] else null,
-        "　　　　　　　　　　　　　　　　　　\n"
-        "　11:　{0} - {5}　\n"
-        "　12:　{1} - {6}　\n"
-        "　13:　{2} - {7}　\n"
-        "　14:　{3} - {8}　\n"
-        "　15:　{4} - {9}\n".format(
-        LeaderBoardFull[10][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[11][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[12][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[13][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[14][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[10][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[11][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[12][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[13][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[14][2] if LeaderBoardFull[9] else ""
-        ),HudPosition.TOP, -997, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    
-    hudHeader(
-        localPlayer.LeaderboardToggle if LeaderBoardFull[15] else null,
-        "　　　　　　　　　　　　　　　　　　\n"
-        "　16:　{0} - {5}　\n"
-        "　17:　{1} - {6}　\n"
-        "　18:　{2} - {7}　\n"
-        "　19:　{3} - {8}　\n"
-        "　20:　{4} - {9}\n".format(
-        LeaderBoardFull[15][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[16][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[17][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[18][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[19][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[15][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[16][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[17][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[18][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[19][2] if LeaderBoardFull[9] else ""
-        ),HudPosition.TOP, -996, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-
+    CreateLeaderBoard()
     hudSubtext(getAllPlayers(), "                                                   \r\n  \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n", HudPosition.TOP, -6, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     
     # normal
@@ -532,6 +455,109 @@ rule "Initialize and CP HUD":
     eventPlayer.disableGamemodeHud()
 
 
+def CreateLeaderBoard():
+    @Name "leaderboard hud"
+    LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
+    destroyHudText(LeaderBoardHuds[0])
+    destroyHudText(LeaderBoardHuds[1])
+    destroyHudText(LeaderBoardHuds[2])
+    destroyHudText(LeaderBoardHuds[3])
+    destroyHudText(LeaderBoardHuds[4])
+    destroyHudText(LeaderBoardHuds[5])
+    wait()
+    hudHeader(localPlayer.LeaderboardToggle, "　　　　 {0} Leaderboard {0} 　　　".format(iconString(Icon.FLAG)), HudPosition.TOP, -9999, Color.BLUE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+    LeaderBoardHuds[0] = getLastCreatedText()
+
+    hudHeader(
+        localPlayer.LeaderboardToggle,
+        "　　　　　　　　　　　　　　　　　　\n"
+        "　 1:　{0} - {5}　\n"
+        "　 2:　{1} - {6}　\n"
+        "　 3:　{2} - {7}　\n"
+        "　 4:　{3} - {8}　\n"
+        "　 5:　{4} - {9}\n".format(
+        LeaderBoardFull[0][0] if LeaderBoardFull[0] else "",
+        LeaderBoardFull[1][0] if LeaderBoardFull[1] else "",
+        LeaderBoardFull[2][0] if LeaderBoardFull[2] else "",
+        LeaderBoardFull[3][0] if LeaderBoardFull[3] else "",
+        LeaderBoardFull[4][0] if LeaderBoardFull[4] else "",
+        LeaderBoardFull[0][2] if LeaderBoardFull[0] else "",
+        LeaderBoardFull[1][2] if LeaderBoardFull[1] else "",
+        LeaderBoardFull[2][2] if LeaderBoardFull[2] else "",
+        LeaderBoardFull[3][2] if LeaderBoardFull[3] else "",
+        LeaderBoardFull[4][2] if LeaderBoardFull[4] else ""
+        ),HudPosition.TOP, -999, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+    LeaderBoardHuds[1] = getLastCreatedText()
+
+    if not LeaderBoardFull[5]:
+        return
+    hudHeader(
+        localPlayer.LeaderboardToggle,
+        "　　　　　　　　　　　　　　　　　　\n"
+        "　 6:　{0} - {5}　\n"
+        "　 7:　{1} - {6}　\n"
+        "　 8:　{2} - {7}　\n"
+        "　 9:　{3} - {8}　\n"
+        "　10:　{4} - {9}\n".format(
+        LeaderBoardFull[5][0] if LeaderBoardFull[5] else "",
+        LeaderBoardFull[6][0] if LeaderBoardFull[6] else "",
+        LeaderBoardFull[7][0] if LeaderBoardFull[7] else "",
+        LeaderBoardFull[8][0] if LeaderBoardFull[8] else "",
+        LeaderBoardFull[9][0] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[5][2] if LeaderBoardFull[5] else "",
+        LeaderBoardFull[6][2] if LeaderBoardFull[6] else "",
+        LeaderBoardFull[7][2] if LeaderBoardFull[7] else "",
+        LeaderBoardFull[8][2] if LeaderBoardFull[8] else "",
+        LeaderBoardFull[9][2] if LeaderBoardFull[9] else ""
+        ),HudPosition.TOP, -998, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+    LeaderBoardHuds[2] = getLastCreatedText()
+
+    if not LeaderBoardFull[10]:
+        return
+    hudHeader( 
+       localPlayer.LeaderboardToggle,
+        "　　　　　　　　　　　　　　　　　　\n"
+        "　11:　{0} - {5}　\n"
+        "　12:　{1} - {6}　\n"
+        "　13:　{2} - {7}　\n"
+        "　14:　{3} - {8}　\n"
+        "　15:　{4} - {9}\n".format(
+        LeaderBoardFull[10][0] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[11][0] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[12][0] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[13][0] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[14][0] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[10][2] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[11][2] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[12][2] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[13][2] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[14][2] if LeaderBoardFull[9] else ""
+        ),HudPosition.TOP, -997, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+    LeaderBoardHuds[3] = getLastCreatedText()
+
+    if not LeaderBoardFull[15]:
+        return
+    hudHeader(
+        localPlayer.LeaderboardToggle,
+        "　　　　　　　　　　　　　　　　　　\n"
+        "　16:　{0} - {5}　\n"
+        "　17:　{1} - {6}　\n"
+        "　18:　{2} - {7}　\n"
+        "　19:　{3} - {8}　\n"
+        "　20:　{4} - {9}\n".format(
+        LeaderBoardFull[15][0] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[16][0] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[17][0] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[18][0] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[19][0] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[15][2] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[16][2] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[17][2] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[18][2] if LeaderBoardFull[9] else "",
+        LeaderBoardFull[19][2] if LeaderBoardFull[9] else ""
+        ),HudPosition.TOP, -996, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+    LeaderBoardHuds[5] = getLastCreatedText()
+
 def checkpointFailReset():
     @Name "SUB | Checkpoint Fail"
     eventPlayer.LockCollected = null
@@ -630,12 +656,12 @@ def Leaderboardupdate():
             #printLog("{0} - {1} - replace own old time".format(eventPlayer,eventPlayer.Timer))
             LeaderBoardFull.remove( [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)])
             LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)]] )
-
+            CreateLeaderBoard()
     else: # you are not in list yet
         if len(LeaderBoardFull) < 20: # board has room for more
             #printLog("{0} - {1} - room on board".format(eventPlayer,eventPlayer.Timer))
             LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)] ])
-
+            CreateLeaderBoard()
         else: # 20 entries already
             if LeaderBoardFull[19][1] < eventPlayer.Timer:  # your time lower then last entry
                 #printLog("{0} - {1} - existing times are better".format(eventPlayer,eventPlayer.Timer))
@@ -644,8 +670,9 @@ def Leaderboardupdate():
                 #printLog("{0} - {1} - replace lowest time".format(eventPlayer,eventPlayer.Timer))
                 del LeaderBoardFull[19]
                 LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)]] )
-
-    LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
+                CreateLeaderBoard()
+    #LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
+    #CreateLeaderBoard()
     lb0:
 
 
