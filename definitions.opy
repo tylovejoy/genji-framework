@@ -129,7 +129,7 @@ globalvar BounceToggleLock 25               # list[bool]                --- lock
 
 globalvar KillballCheckpoints 26            # list[list[int]]           --- 2d list of checkpoints that havea kill ball [[0], [3]]
 globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d list like killballnumber
-globalvar DeathBhopBan 28               # bool                      --- Ban bhop from reset
+globalvar DeathBhopBan 28                   # bool                      --- Ban bhop from reset
 
 # sequential data
 #0 eventPlayer, 
@@ -164,6 +164,8 @@ globalvar CustomPortalStart 45              # [vect]                    --- cust
 globalvar CustomPortalEndpoint 46           # [vect]                    --- custom portal end points
 globalvar CustomPortalCP 47                 # [int]                     --- custom portal checkpoints
 
+globalvar CompMode 50                       # bool                      --- competitive mode toggle
+globalvar CompTime 51                       # int                       --- compt mode time limit
 #Player variables
 
 playervar CurrentCheckpoint 0               # int                       --- Current Checkpoint
