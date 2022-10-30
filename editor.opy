@@ -23,7 +23,6 @@ rule "HUD | Clear Excess Data & Save Map":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
     @Condition eventPlayer == hostPlayer
-
     wait(0.5, Wait.ABORT_WHEN_FALSE)
     SelectedCheckpoint_Editing = 0
     CheckpointRings_Editing = 0
@@ -42,8 +41,7 @@ rule "HUD | Clear Excess Data & Save Map":
     SavedProgress = 0
     LeaderBoardFull = []
     PortalOn = false
-    #bigMessage(getAllPlayers(), "Excess data has been cleared")
-    #bigMessage(getAllPlayers(), "Excess data has been cleared")
+
     enableInspector()
 
     hudHeader(eventPlayer, 
@@ -118,6 +116,11 @@ rule "HUD | Show/Hide Guide | Hold Melee":
         smallMessage(eventPlayer, "   Guide is open")
 
 
+rule "test":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH)
+    
+
 rule "HUD | Show Guide On Spawn":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
@@ -129,15 +132,14 @@ rule "HUD | Show Guide On Spawn":
 rule "HUD | Guide":
     #@Condition hostPlayer.EditorOn
     # condition messes up if host player leaves
-
     waitUntil(hostPlayer.hasSpawned(), 90)
-    wait(0.5)
+    wait(5)
     if not hostPlayer.EditorOn:
         return
 
     hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
         " \n{0}".format(    
-    [   
+        [   
         "{0} + {1} | Create New Checkpoint\n"
         "{0} + {2} | Delete selected Checkpoint\n"
         "{0} + {3} | Add teleport to Checkpoint\n"
@@ -250,7 +252,7 @@ rule "HUD | Guide":
 rule "HUD | Guide Effects":
     #@Condition hostPlayer.EditorOn
     waitUntil(hostPlayer.hasSpawned(), 90)
-    wait(0.5)
+    wait(5)
     if not hostPlayer.EditorOn:
         return
     
@@ -276,6 +278,12 @@ rule "HUD | Guide Effects":
     # Teleport text
     createInWorldText(getAllPlayers() if len(CheckpointPositions[SelectedCheckpoint_Editing] ) > 1 else null, "TELEPORTER EXIT", CheckpointPositions[SelectedCheckpoint_Editing][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
 
+    wait(1)
+    if CompMode:
+        CompAtmpNum = 0
+        CompTime = 99999
+        getAllPlayers().AttemptCount = null
+        getAllPlayers().CompDone = false
 
 rule "Fly/Noclip Toggle | Hold Deflect":
     @Event eachPlayer

@@ -1,10 +1,15 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(4) # 0 is editor, rest is numbers
+#14 nepal 4 mini 6 busan
 #!define touchground false
 #!define cpcheat false
 #!define inspectoron false
-#!define compmodetoggle false
+
+#!define compmodetoggle true
+#!define attemptcount 3
+#!define comptimelimit 15
+#!define comprestartlimit true
 
 # settings ##############################
 # limit on how many orbs can be made
@@ -30,14 +35,9 @@ rule "fisho cp cheat for overpy toggle":
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
         eventPlayer.CurrentCheckpoint -= 1
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
     else:
         eventPlayer.CurrentCheckpoint += 1
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
-        #eventPlayer.Timer += 9999 
 
 rule "------------------------------------------------------------------------ Map pasta ------------------------------------------------------------------------ ":
     @Delimiter
@@ -141,14 +141,14 @@ def BuildPortals():
     if PortalDest:
         for TempIterator1 in range(len(PortalLoc)):
             createEffect(
-                    [i for i in getAllPlayers() if i.InvincibleToggle or i.CurrentCheckpoint == len(CheckpointPositions) - 1],
-                    Effect.BAD_AURA, 
-                    #Color.AQUA if localPlayer.portalselect != evalOnce(i) else Color.ORANGE, 
-                    Color.AQUA if evalOnce(TempIterator1) % 2 == 1 else Color.ORANGE,
-                    #[Color.AQUA, Color.GREEN, Color.RED, Color.BLUE, Color.LIME_GREEN, Color.ROSE][evalOnce(i)],
-                    PortalLoc[evalOnce(TempIterator1)], 
-                    0.6,
-                    EffectReeval.VISIBILITY
+                [i for i in getAllPlayers() if i.InvincibleToggle or i.CurrentCheckpoint == len(CheckpointPositions) - 1],
+                Effect.BAD_AURA, 
+                #Color.AQUA if localPlayer.portalselect != evalOnce(i) else Color.ORANGE, 
+                Color.AQUA if evalOnce(TempIterator1) % 2 == 1 else Color.ORANGE,
+                #[Color.AQUA, Color.GREEN, Color.RED, Color.BLUE, Color.LIME_GREEN, Color.ROSE][evalOnce(i)],
+                PortalLoc[evalOnce(TempIterator1)], 
+                0.6,
+                EffectReeval.VISIBILITY
                 )
 
             createInWorldText(
@@ -190,9 +190,6 @@ def UpdateCache():
         CurrentBounce_Editing = 0 if eventPlayer.BounceIndex_Cache else 99999
         CurrentBouncePosition_Editing = BouncePositions[eventPlayer.BounceIndex_Cache[CurrentBounce_Editing]] if len(eventPlayer.BounceIndex_Cache) else vect(0,0,0)
         eventPlayer.MovedCheckpoint = false
-
-    
-    
 #!include "editor.opy"
 
 rule "------------------------------------------------------------------------  General rules ------------------------------------------------------------------------ ":
@@ -200,14 +197,9 @@ rule "------------------------------------------------------------------------  
     @Disabled
 
 
-
 rule "Setup and Variables":
     if not inspectoron:
         disableInspector()
-    
-    CompMode = createWorkshopSetting(bool, "map settings","Competitive mode" ,  compmodetoggle , 10)
-    CompTime = createWorkshopSetting(int[5:240], "map settings", "competitive time limit", 120, 10)
- 
 
     getAllPlayers().disableRespawn()
     disableGamemodeCompletion()
@@ -237,7 +229,13 @@ rule "Setup and Variables":
     BounceToggleLock = BounceToggleLock if len(BounceToggleLock) else []
     LeaderBoardFull = []
     wait(1)
-
+    
+    # -! comp minutes !- fill in second to last number
+    CompTime = createWorkshopSetting(int[1:240], "Competitive mode", "time limit", comptimelimit, 101) # 5-240
+    # -! comp count !- fill in second to last number
+    CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode", "attempt count", attemptcount, 102) 
+    CompRestartLimit = createWorkshopSetting(bool, "Competitive mode","disable restart during run" , comprestartlimit , 103)
+    CompMode = createWorkshopSetting(bool, "Competitive mode","Turn on competitive mode" , compmodetoggle , 100)
     SelectedCheckpoint_Editing = len(CheckpointPositions) - 1 # This probably isn't necessary
     # KILLBALL()
     # wait(2)
@@ -247,12 +245,28 @@ rule "Setup and Variables":
     SavedProgress = []
     
     if CompMode:
-        hudSubtext(getAllPlayers(), "competitive mode\n time:{0}".format(CompTime),HudPosition.TOP, -100, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-
+        hudText(
+            getAllPlayers(), 
+            null, 
+            "competition is over!" if CompTime <= 0 else
+            "time left: {0} min{1}".format(
+                CompTime, 
+                "\nYou are out of attemps" if localPlayer.AttemptCount == -1 else
+                "\nAttempt {0} / {1}".format(localPlayer.AttemptCount, CompAtmpNum) if CompAtmpNum > 0 
+                else ""
+                ),  
+            "competitive mode" if CompTime > 0 else "competitive mode\n\n\n", 
+            HudPosition.TOP, -9876, 
+            Color.YELLOW, 
+            Color.RED if localPlayer.AttemptCount == -1 and CompAtmpNum > 0 else Color.YELLOW, 
+            Color.YELLOW, 
+            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        )
+        
     else:
         hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else ""), HudPosition.RIGHT, -14, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
         hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else ""), HudPosition.RIGHT, -13,Color.GREEN if localPlayer.invis else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-            hudSubtext(getAllPlayers() if localPlayer.EditModeSelection < 1 else null,"{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.CurrentCheckpoint - localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else ""),HudPosition.RIGHT, -11, Color.GREEN if localPlayer.PracticeToggle else Color.GRAY if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+        hudSubtext(getAllPlayers() if localPlayer.EditModeSelection < 1 else null,"{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.CurrentCheckpoint - localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else ""),HudPosition.RIGHT, -11, Color.GREEN if localPlayer.PracticeToggle else Color.GRAY if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     
         hudSubheader([i for i in getAllPlayers() if i.PracticeToggle and hostPlayer.EditModeSelection < 1],
             "{0} + {1} | Next level\n"
@@ -260,7 +274,7 @@ rule "Setup and Variables":
             "{3} | Start from practice cp ".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT)),
             HudPosition.RIGHT, -10, Color.LIME_GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
-    CreateLeaderBoard()
+    async(CreateLeaderBoard(), AsyncBehavior.RESTART)
     hudSubtext(getAllPlayers(), "                                                   \r\n  \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n", HudPosition.TOP, -6, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     
     # normal
@@ -269,10 +283,9 @@ rule "Setup and Variables":
         HudPosition.RIGHT, -20, 
         Color.WHITE,
         HudReeval.VISIBILITY_AND_STRING, 
-        SpecVisibility.DEFAULT)
+        SpecVisibility.DEFAULT
+    )
     
-   
-
     hudSubtext(getAllPlayers(), "{0} {1} |  {2}".format( "" if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset"), HudPosition.RIGHT, -18, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | leaderboard".format(buttonString(Button.MELEE)), HudPosition.RIGHT, -17, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     
@@ -290,7 +303,6 @@ rule "Setup and Variables":
         HudPosition.RIGHT, -12, Color.WHITE if localPlayer.TracesOff else Color.GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )  
    
-
     if not hostPlayer.EditorOn:
         Difficultyhud = createWorkshopSetting(enum[
             "beginner",
@@ -386,14 +398,21 @@ rule "Match time":
     while TimeRemaining > 0:
         wait(60)
         TimeRemaining --
-        CompTime --
         if CompMode:
-            if CompTime < 1:
-                declarePlayerVictory(LeaderBoardFull[0])
+            CompTime --
+            if CompTime == 0:
+                bigMessage(getAllPlayers(),"time's up")
+                getAllPlayers().CompDone = true
+                getAllPlayers().InvincibleToggle = 1
+                stopChasingVariable(getAllPlayers().Timer)
+                getAllPlayers().setUltEnabled(true)
+                getAllPlayers().setUltCharge(100)
+                getAllPlayers().setAbility1Enabled(true)
+                wait(0.032)
+                async(CreateLeaderBoard(), AsyncBehavior.RESTART)            
 
     bigMessage(getAllPlayers(), "maximum lobby time expired, restarting")
     wait(5)
-
     if getCurrentGamemode() == Gamemode.FFA:
         declarePlayerVictory(hostPlayer)
     else:
@@ -405,13 +424,41 @@ rule "Genji Swapper 9000":
     if not eventPlayer.isDummy():
         eventPlayer.startForcingHero(Hero.GENJI)
 
-
+playervar instructionhud
 rule "Initialize and CP HUD":
     @Event eachPlayer
     #@Hero genji
     @Condition eventPlayer.hasSpawned() == true
     @Condition eventPlayer.getCurrentHero() == Hero.GENJI
-    
+    if getTotalTimeElapsed() < 3:
+        wait(2) # make sure everything loaded, specialy things like comp mode
+    if CompMode:
+        eventPlayer.setInvisibility(Invis.ALL)
+        if not "{0}".format(eventPlayer) in CompAtmpSaveNames:
+            CompAtmpSaveNames.append("{0}".format(eventPlayer))
+            CompAtmpSaveCount.append(1)
+            eventPlayer.AttemptCount = 1
+            eventPlayer.setMoveSpeed(0)
+            
+            hudHeader(eventPlayer,"                                                                                                                           ", HudPosition.TOP, -21, Color.WHITE, HudReeval.NONE,SpecVisibility.DEFAULT)
+            eventPlayer.instructionhud[0] = getLastCreatedText()
+            # replace the instructions custom string for your own instructions. type \n for enter/next line
+            hudText(eventPlayer,null,"\n(instructions here)\n",null,HudPosition.TOP, -20, Color.ORANGE, Color.WHITE, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT)
+            eventPlayer.instructionhud[1] = getLastCreatedText()
+            hudHeader(eventPlayer,"                                   Press {0} to start                                ".format(Button.INTERACT), HudPosition.TOP, -19, Color.WHITE, HudReeval.NONE,SpecVisibility.DEFAULT)
+            eventPlayer.instructionhud[2] = getLastCreatedText()
+            waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT),1)
+            waitUntil(eventPlayer.isHoldingButton(Button.INTERACT),99999)
+            eventPlayer.setMoveSpeed(100)
+            destroyHudText(eventPlayer.instructionhud[0])
+            destroyHudText(eventPlayer.instructionhud[1]) 
+            destroyHudText(eventPlayer.instructionhud[2])
+
+        else:
+            eventPlayer.AttemptCount = CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))]
+            smallMessage(eventPlayer,"now {0}".format( eventPlayer.AttemptCount))
+        if eventPlayer.AttemptCount == (-1) or CompTime < 1:
+            eventPlayer.CompDone = true
 
     hudSubtext(eventPlayer, "{0} {1}".format("Level ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext( # display locks collected
@@ -437,12 +484,19 @@ rule "Initialize and CP HUD":
     CheckpointEffect_Sub()
     
     eventPlayer.disableGamemodeHud()
-    wait(0.2) # let comp mode rule load
-    if CompMode:
-        eventPlayer.setInvisibility(Invis.ALL)
+    
 
 def CreateLeaderBoard():
     @Name "leaderboard hud"
+    # sub is tied to player so remade turned global
+    LeaderBoardRemake = false
+    wait()
+    LeaderBoardRemake = true
+
+
+rule "remake leaderboard": # for global isntead of tied to player
+    @Condition LeaderBoardRemake
+
     LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
     destroyHudText(LeaderBoardHuds[0])
     destroyHudText(LeaderBoardHuds[1])
@@ -450,130 +504,216 @@ def CreateLeaderBoard():
     destroyHudText(LeaderBoardHuds[3])
     destroyHudText(LeaderBoardHuds[4])
     destroyHudText(LeaderBoardHuds[5])
-    
     destroyHudText(LeaderBoardHuds[6])
     destroyHudText(LeaderBoardHuds[7])
     destroyHudText(LeaderBoardHuds[8])
     destroyHudText(LeaderBoardHuds[9])
     destroyHudText(LeaderBoardHuds[10])
-  
-    # new board
-    if LeaderBoardFull[0]:
-        hudSubtext(getAllPlayers()," \n{0} Top 5 {0}".format(abilityIconString(Hero.GENJI,Button.PRIMARY_FIRE)), HudPosition.RIGHT, 0, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        LeaderBoardHuds[0] = getLastCreatedText()
-        hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0][2], HudPosition.RIGHT, 1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        LeaderBoardHuds[1] = getLastCreatedText()
     
-    if LeaderBoardFull[1]:
-        hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[1][0], LeaderBoardFull[1][2], HudPosition.RIGHT, 2, Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        LeaderBoardHuds[2] = getLastCreatedText()
-    
-    if LeaderBoardFull[2]:
-        hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[2][0], LeaderBoardFull[2][2], HudPosition.RIGHT, 3, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        LeaderBoardHuds[3] = getLastCreatedText()
-    
-    if LeaderBoardFull[3]:
-        hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[3][0], LeaderBoardFull[3][2], HudPosition.RIGHT, 4, Color.LIME_GREEN, Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        LeaderBoardHuds[4] = getLastCreatedText()
-    
-    if LeaderBoardFull[4]:
-        hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4][2], HudPosition.RIGHT, 5, Color.GREEN, Color.GREEN, Color.GREEN,HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        LeaderBoardHuds[5] = getLastCreatedText()
+    #wait()
+    # 20 board comp and non comp
+    if not CompMode or (CompMode and CompTime > 0):    
+        # top 5
+        if LeaderBoardFull[0]:
+            hudSubtext(getAllPlayers()," \n{0} Top 5 {0}".format(abilityIconString(Hero.GENJI,Button.PRIMARY_FIRE)), HudPosition.RIGHT, 0, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            LeaderBoardHuds[0] = getLastCreatedText()
+            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0][2], HudPosition.RIGHT, 1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            LeaderBoardHuds[1] = getLastCreatedText()
+        if LeaderBoardFull[1]:
+            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[1][0], LeaderBoardFull[1][2], HudPosition.RIGHT, 2, Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            LeaderBoardHuds[2] = getLastCreatedText()
+        if LeaderBoardFull[2]:
+            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[2][0], LeaderBoardFull[2][2], HudPosition.RIGHT, 3, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            LeaderBoardHuds[3] = getLastCreatedText()
+        if LeaderBoardFull[3]:
+            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[3][0], LeaderBoardFull[3][2], HudPosition.RIGHT, 4, Color.LIME_GREEN, Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            LeaderBoardHuds[4] = getLastCreatedText()
+        if LeaderBoardFull[4]:
+            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4][2], HudPosition.RIGHT, 5, Color.GREEN, Color.GREEN, Color.GREEN,HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            LeaderBoardHuds[5] = getLastCreatedText()
 
-    hudHeader(localPlayer.LeaderboardToggle, "　　　　 {0} Leaderboard {0} 　　　".format(iconString(Icon.FLAG)), HudPosition.TOP, -9999, Color.BLUE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
-    LeaderBoardHuds[6] = getLastCreatedText()
+        hudHeader(localPlayer.LeaderboardToggle, "　　　　 {0} Leaderboard {0} 　　　".format(iconString(Icon.FLAG)), HudPosition.TOP, -780, Color.BLUE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+        LeaderBoardHuds[6] = getLastCreatedText()
 
-    hudHeader(
-        localPlayer.LeaderboardToggle,
-        "　　　　　　　　　　　　　　　　　　\n"
-        "　 1:　{0} - {5}　\n"
-        "　 2:　{1} - {6}　\n"
-        "　 3:　{2} - {7}　\n"
-        "　 4:　{3} - {8}　\n"
-        "　 5:　{4} - {9}\n".format(
-        LeaderBoardFull[0][0] if LeaderBoardFull[0] else "",
-        LeaderBoardFull[1][0] if LeaderBoardFull[1] else "",
-        LeaderBoardFull[2][0] if LeaderBoardFull[2] else "",
-        LeaderBoardFull[3][0] if LeaderBoardFull[3] else "",
-        LeaderBoardFull[4][0] if LeaderBoardFull[4] else "",
-        LeaderBoardFull[0][2] if LeaderBoardFull[0] else "",
-        LeaderBoardFull[1][2] if LeaderBoardFull[1] else "",
-        LeaderBoardFull[2][2] if LeaderBoardFull[2] else "",
-        LeaderBoardFull[3][2] if LeaderBoardFull[3] else "",
-        LeaderBoardFull[4][2] if LeaderBoardFull[4] else ""
-        ),HudPosition.TOP, -999, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
-    LeaderBoardHuds[7] = getLastCreatedText()
+        hudHeader(
+            localPlayer.LeaderboardToggle,
+            "　　　　　　　　　　　　　　　　　　\n"
+            "　 1:　{0} - {5}　\n"
+            "　 2:　{1} - {6}　\n"
+            "　 3:　{2} - {7}　\n"
+            "　 4:　{3} - {8}　\n"
+            "　 5:　{4} - {9}\n".format(
+            LeaderBoardFull[0][0] if LeaderBoardFull[0] else "",
+            LeaderBoardFull[1][0] if LeaderBoardFull[1] else "",
+            LeaderBoardFull[2][0] if LeaderBoardFull[2] else "",
+            LeaderBoardFull[3][0] if LeaderBoardFull[3] else "",
+            LeaderBoardFull[4][0] if LeaderBoardFull[4] else "",
+            LeaderBoardFull[0][2] if LeaderBoardFull[0] else "",
+            LeaderBoardFull[1][2] if LeaderBoardFull[1] else "",
+            LeaderBoardFull[2][2] if LeaderBoardFull[2] else "",
+            LeaderBoardFull[3][2] if LeaderBoardFull[3] else "",
+            LeaderBoardFull[4][2] if LeaderBoardFull[4] else ""
+            ),HudPosition.TOP, -779, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        LeaderBoardHuds[7] = getLastCreatedText()
 
+        if LeaderBoardFull[5]:
+            hudHeader(
+                localPlayer.LeaderboardToggle,
+                "　　　　　　　　　　　　　　　　　　\n"
+                "　 6:　{0} - {5}　\n"
+                "　 7:　{1} - {6}　\n"
+                "　 8:　{2} - {7}　\n"
+                "　 9:　{3} - {8}　\n"
+                "　10:　{4} - {9}\n".format(
+                LeaderBoardFull[5][0] if LeaderBoardFull[5] else "",
+                LeaderBoardFull[6][0] if LeaderBoardFull[6] else "",
+                LeaderBoardFull[7][0] if LeaderBoardFull[7] else "",
+                LeaderBoardFull[8][0] if LeaderBoardFull[8] else "",
+                LeaderBoardFull[9][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[5][2] if LeaderBoardFull[5] else "",
+                LeaderBoardFull[6][2] if LeaderBoardFull[6] else "",
+                LeaderBoardFull[7][2] if LeaderBoardFull[7] else "",
+                LeaderBoardFull[8][2] if LeaderBoardFull[8] else "",
+                LeaderBoardFull[9][2] if LeaderBoardFull[9] else ""
+                ),HudPosition.TOP, -778, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            LeaderBoardHuds[8] = getLastCreatedText()
 
+        if LeaderBoardFull[10]:
+            hudHeader( 
+            localPlayer.LeaderboardToggle,
+                "　　　　　　　　　　　　　　　　　　\n"
+                "　11:　{0} - {5}　\n"
+                "　12:　{1} - {6}　\n"
+                "　13:　{2} - {7}　\n"
+                "　14:　{3} - {8}　\n"
+                "　15:　{4} - {9}\n".format(
+                LeaderBoardFull[10][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[11][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[12][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[13][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[14][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[10][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[11][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[12][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[13][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[14][2] if LeaderBoardFull[9] else ""
+                ),HudPosition.TOP, -777, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            LeaderBoardHuds[9] = getLastCreatedText()
 
-    if not LeaderBoardFull[5]:
-        return
-    hudHeader(
-        localPlayer.LeaderboardToggle,
-        "　　　　　　　　　　　　　　　　　　\n"
-        "　 6:　{0} - {5}　\n"
-        "　 7:　{1} - {6}　\n"
-        "　 8:　{2} - {7}　\n"
-        "　 9:　{3} - {8}　\n"
-        "　10:　{4} - {9}\n".format(
-        LeaderBoardFull[5][0] if LeaderBoardFull[5] else "",
-        LeaderBoardFull[6][0] if LeaderBoardFull[6] else "",
-        LeaderBoardFull[7][0] if LeaderBoardFull[7] else "",
-        LeaderBoardFull[8][0] if LeaderBoardFull[8] else "",
-        LeaderBoardFull[9][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[5][2] if LeaderBoardFull[5] else "",
-        LeaderBoardFull[6][2] if LeaderBoardFull[6] else "",
-        LeaderBoardFull[7][2] if LeaderBoardFull[7] else "",
-        LeaderBoardFull[8][2] if LeaderBoardFull[8] else "",
-        LeaderBoardFull[9][2] if LeaderBoardFull[9] else ""
-        ),HudPosition.TOP, -998, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
-    LeaderBoardHuds[8] = getLastCreatedText()
+        if LeaderBoardFull[15]:
+            hudHeader(
+                localPlayer.LeaderboardToggle,
+                "　　　　　　　　　　　　　　　　　　\n"
+                "　16:　{0} - {5}　\n"
+                "　17:　{1} - {6}　\n"
+                "　18:　{2} - {7}　\n"
+                "　19:　{3} - {8}　\n"
+                "　20:　{4} - {9}\n".format(
+                LeaderBoardFull[15][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[16][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[17][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[18][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[19][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[15][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[16][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[17][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[18][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[19][2] if LeaderBoardFull[9] else ""
+                ),HudPosition.TOP, -776, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            LeaderBoardHuds[10] = getLastCreatedText()
+        
+    else: # if comp time run out
+        hudHeader(getAllPlayers(), "　　　　 {0} Leaderboard {0} 　　　".format(iconString(Icon.FLAG)), HudPosition.TOP, -780, Color.BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        LeaderBoardHuds[6] = getLastCreatedText()
 
-    if not LeaderBoardFull[10]:
-        return
-    hudHeader( 
-       localPlayer.LeaderboardToggle,
-        "　　　　　　　　　　　　　　　　　　\n"
-        "　11:　{0} - {5}　\n"
-        "　12:　{1} - {6}　\n"
-        "　13:　{2} - {7}　\n"
-        "　14:　{3} - {8}　\n"
-        "　15:　{4} - {9}\n".format(
-        LeaderBoardFull[10][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[11][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[12][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[13][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[14][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[10][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[11][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[12][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[13][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[14][2] if LeaderBoardFull[9] else ""
-        ),HudPosition.TOP, -997, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
-    LeaderBoardHuds[9] = getLastCreatedText()
+        hudHeader(
+            getAllPlayers(),
+            "　　　　　　　　　　　　　　　　　　\n"
+            "　 1:　{0} - {5}　\n"
+            "　 2:　{1} - {6}　\n"
+            "　 3:　{2} - {7}　\n"
+            "　 4:　{3} - {8}　\n"
+            "　 5:　{4} - {9}\n".format(
+            LeaderBoardFull[0][0] if LeaderBoardFull[0] else "",
+            LeaderBoardFull[1][0] if LeaderBoardFull[1] else "",
+            LeaderBoardFull[2][0] if LeaderBoardFull[2] else "",
+            LeaderBoardFull[3][0] if LeaderBoardFull[3] else "",
+            LeaderBoardFull[4][0] if LeaderBoardFull[4] else "",
+            LeaderBoardFull[0][2] if LeaderBoardFull[0] else "",
+            LeaderBoardFull[1][2] if LeaderBoardFull[1] else "",
+            LeaderBoardFull[2][2] if LeaderBoardFull[2] else "",
+            LeaderBoardFull[3][2] if LeaderBoardFull[3] else "",
+            LeaderBoardFull[4][2] if LeaderBoardFull[4] else ""
+            ),HudPosition.TOP, -779, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+        LeaderBoardHuds[7] = getLastCreatedText()
 
-    if not LeaderBoardFull[15]:
-        return
-    hudHeader(
-        localPlayer.LeaderboardToggle,
-        "　　　　　　　　　　　　　　　　　　\n"
-        "　16:　{0} - {5}　\n"
-        "　17:　{1} - {6}　\n"
-        "　18:　{2} - {7}　\n"
-        "　19:　{3} - {8}　\n"
-        "　20:　{4} - {9}\n".format(
-        LeaderBoardFull[15][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[16][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[17][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[18][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[19][0] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[15][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[16][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[17][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[18][2] if LeaderBoardFull[9] else "",
-        LeaderBoardFull[19][2] if LeaderBoardFull[9] else ""
-        ),HudPosition.TOP, -996, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
-    LeaderBoardHuds[10] = getLastCreatedText()
+        if LeaderBoardFull[5]:
+            hudHeader(
+                getAllPlayers(),
+                "　　　　　　　　　　　　　　　　　　\n"
+                "　 6:　{0} - {5}　\n"
+                "　 7:　{1} - {6}　\n"
+                "　 8:　{2} - {7}　\n"
+                "　 9:　{3} - {8}　\n"
+                "　10:　{4} - {9}\n".format(
+                LeaderBoardFull[5][0] if LeaderBoardFull[5] else "",
+                LeaderBoardFull[6][0] if LeaderBoardFull[6] else "",
+                LeaderBoardFull[7][0] if LeaderBoardFull[7] else "",
+                LeaderBoardFull[8][0] if LeaderBoardFull[8] else "",
+                LeaderBoardFull[9][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[5][2] if LeaderBoardFull[5] else "",
+                LeaderBoardFull[6][2] if LeaderBoardFull[6] else "",
+                LeaderBoardFull[7][2] if LeaderBoardFull[7] else "",
+                LeaderBoardFull[8][2] if LeaderBoardFull[8] else "",
+                LeaderBoardFull[9][2] if LeaderBoardFull[9] else ""
+                ),HudPosition.TOP, -778, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+            LeaderBoardHuds[8] = getLastCreatedText()
+
+        if LeaderBoardFull[10]:  
+            hudHeader( 
+                getAllPlayers(),
+                "　　　　　　　　　　　　　　　　　　\n"
+                "　11:　{0} - {5}　\n"
+                "　12:　{1} - {6}　\n"
+                "　13:　{2} - {7}　\n"
+                "　14:　{3} - {8}　\n"
+                "　15:　{4} - {9}\n".format(
+                LeaderBoardFull[10][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[11][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[12][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[13][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[14][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[10][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[11][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[12][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[13][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[14][2] if LeaderBoardFull[9] else ""
+                ),HudPosition.TOP, -777, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+            LeaderBoardHuds[9] = getLastCreatedText()
+
+        if LeaderBoardFull[15]:
+            hudHeader(
+                getAllPlayers(),
+                "　　　　　　　　　　　　　　　　　　\n"
+                "　16:　{0} - {5}　\n"
+                "　17:　{1} - {6}　\n"
+                "　18:　{2} - {7}　\n"
+                "　19:　{3} - {8}　\n"
+                "　20:　{4} - {9}\n".format(
+                LeaderBoardFull[15][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[16][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[17][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[18][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[19][0] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[15][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[16][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[17][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[18][2] if LeaderBoardFull[9] else "",
+                LeaderBoardFull[19][2] if LeaderBoardFull[9] else ""
+                ),HudPosition.TOP, -776, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+            LeaderBoardHuds[10] = getLastCreatedText()
+
+    wait()
 
 def checkpointFailReset():
     @Name "SUB | Checkpoint Fail"
@@ -616,6 +756,15 @@ def CheckpointEffect_Sub():
 
 def StartGame_Sub():
     @Name "SUB | Start Game"
+    if CompMode and (CompTime < 1 or eventPlayer.CompDone):
+        eventPlayer.InvincibleToggle = 1
+        eventPlayer.LeaderboardToggle = true
+        eventPlayer.setUltEnabled(true)
+        eventPlayer.setUltCharge(100)
+        eventPlayer.setAbility1Enabled(true)
+        eventPlayer.CompDone = true
+        return
+
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
     if len(CheckpointPositions) != 0:
@@ -673,12 +822,12 @@ def Leaderboardupdate():
             #printLog("{0} - {1} - replace own old time".format(eventPlayer,eventPlayer.Timer))
             LeaderBoardFull.remove( [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)])
             LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)]] )
-            CreateLeaderBoard()
+            async(CreateLeaderBoard(), AsyncBehavior.RESTART)
     else: # you are not in list yet
         if len(LeaderBoardFull) < 20: # board has room for more
             #printLog("{0} - {1} - room on board".format(eventPlayer,eventPlayer.Timer))
             LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)] ])
-            CreateLeaderBoard()
+            async(CreateLeaderBoard(), AsyncBehavior.RESTART)
         else: # 20 entries already
             if LeaderBoardFull[19][1] < eventPlayer.Timer:  # your time lower then last entry
                 #printLog("{0} - {1} - existing times are better".format(eventPlayer,eventPlayer.Timer))
@@ -687,9 +836,9 @@ def Leaderboardupdate():
                 #printLog("{0} - {1} - replace lowest time".format(eventPlayer,eventPlayer.Timer))
                 del LeaderBoardFull[19]
                 LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)]] )
-                CreateLeaderBoard()
+                async(CreateLeaderBoard(), AsyncBehavior.RESTART)
     #LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
-    #CreateLeaderBoard()
+    #async(CreateLeaderBoard(), AsyncBehavior.RESTART)
     lb0:
 
 
@@ -736,6 +885,7 @@ rule "Checkpoint | Arrived":
     @Condition eventPlayer.isOnGround() == true
     @Condition (eventPlayer.EditModeSelection >= 1 or eventPlayer.InvincibleToggle == 0) == true
     @Condition eventPlayer.LockState == false
+    @Condition CompMode == false or CompTime > 0
     eventPlayer.MovedCheckpoint = true
     # kill player if not colleted the locks
     if len([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true]) > 0:
@@ -768,9 +918,6 @@ rule "Checkpoint | Arrived":
         SavedProgress.remove("{0}".format(eventPlayer))
         SavedProgress.append(["{0}".format(eventPlayer), eventPlayer.CurrentCheckpoint, eventPlayer.Timer, eventPlayer, getTotalTimeElapsed(), 0, 0])
         #save.append(["{0}".format(eventPlayer), eventPlayer.A, eventPlayer.D, eventPlayer, getTotalTimeElapsed(), 0, 0])
-
-    # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-    # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
     
     lbl_1:
     if eventPlayer.EditModeSelection < 1:
@@ -779,27 +926,26 @@ rule "Checkpoint | Arrived":
     if eventPlayer.EditModeSelection >= 1:
         return
     if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1: # complete lvl
-   
         eventPlayer.setAbility1Enabled(true)
-        #eventPlayer.setUltEnabled(true)
-        #eventPlayer.setUltCharge(100)
-
         if eventPlayer.PracticeToggle != 1:
             eventPlayer.setUltEnabled(true)
             eventPlayer.setUltCharge(100)
 
             stopChasingVariable(eventPlayer.Timer)
-            #bigMessage(getAllPlayers(), "{0} {1} {2}".format(eventPlayer, "Mission complete! Time", l"{0}".format(prettyTime(eventPlayer.Timer))))
             bigMessage(getAllPlayers(), "{0} {1}".format(eventPlayer, "Mission complete! Time {0}".format(prettyTime(eventPlayer.Timer))))
-            # destroyEffect(eventPlayer.PlayerEffects[0])
-            # destroyEffect(eventPlayer.PlayerEffects[1])
-            # destroyEffect(eventPlayer.PlayerEffects[2])
-            # destroyIcon(eventPlayer.PlayerEffects[3])
-            # destroyInWorldText(eventPlayer.PlayerEffects[4])
-            #Portal1PlayerList.append(eventPlayer)
-            #Portal2PlayerList.append(eventPlayer)
             eventPlayer.PortalText = 2
             Leaderboardupdate()
+            if CompMode:
+                if CompAtmpNum > 0:
+                    
+                    if eventPlayer.AttemptCount == CompAtmpNum: 
+                        CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = -1 
+                        eventPlayer.AttemptCount = -1                     
+                        eventPlayer.CompDone = true
+                    else:
+                        CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.AttemptCount + 1
+                        
+                
     lbl_0:
 
 
@@ -1035,6 +1181,7 @@ rule "Combo | Leaderboard Toggle | Melee toggle":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.EditModeSelection < 1
+    @Condition CompMode == false or not eventPlayer.CompDone 
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.LeaderboardToggle = not eventPlayer.LeaderboardToggle
 
@@ -1045,6 +1192,40 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     # @Condition eventPlayer.isUsingAbility1() == false if DashExploitToggle else true
+    #@Condition CompMode == false or not eventPlayer.CompDone 
+        
+    if CompMode:
+        if CompTime < 1 :
+            smallMessage(eventPlayer, "   The competition is over")
+            wait()
+            return
+        if eventPlayer.CompDone:
+            wait()
+            return
+
+        if CompRestartLimit and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
+            smallMessage(eventPlayer,"   Restart during run is disabled for this competition")
+            wait()
+            return
+
+        # if comprestartdisable
+        # if not on last cp
+        # msg mid run restarting is disabled
+        if CompAtmpNum > 0: 
+            if eventPlayer.AttemptCount == CompAtmpNum:
+                smallMessage(eventPlayer, "   You are on your last attempt")
+                wait()
+                return
+            if eventPlayer.AttemptCount == (-1):
+                smallMessage(eventPlayer, "   You are out of attempts")
+                wait()
+                return
+          
+            eventPlayer.AttemptCount ++
+            CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.AttemptCount
+            
+            # if on last cp then dont up the count                           
+
     eventPlayer.LockState = true
 
     if DashExploitToggle and eventPlayer.isUsingAbility1():
@@ -1129,6 +1310,7 @@ rule "Combo | Toggle Invincible Mode | Melee + Reload":
     #@Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isUsingUltimate() == false
+    @Condition CompMode == false or not eventPlayer.CompDone 
     eventPlayer.LockCollected = null
     eventPlayer.flytoggle = null
     if eventPlayer.InvincibleToggle == 0:
@@ -1408,14 +1590,11 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
     eventPlayer.MovedCheckpoint = true
     UpdateCache()    
 
-
-
 /*
 globalvar itemp
 rule "leaderboard test bots":
 
-    
-
+    #wait(40)
     wait(8) # wait for other entities to be created
     for itemp in range(22):
      
@@ -1423,7 +1602,7 @@ rule "leaderboard test bots":
         wait(0.1)
         getLastCreatedEntity().startForcingName("bot number: {0}".format(len([i for i in getAllPlayers() if i.isDummy() and i.getCurrentHero() == Hero.GENJI]) ))
         
-
+  
     itemp = 9999
 
 rule "leaderboard test ai ":
@@ -1432,6 +1611,7 @@ rule "leaderboard test ai ":
     @Condition eventPlayer.isDummy()
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) #- 1
     @Condition itemp == 9999
+ 
     # jump each ######################
     ###wait(0.2 + eventPlayer.getSlot()/30)
     #waitUntil(eventPlayer.isOnGround(),1)
@@ -1443,6 +1623,7 @@ rule "leaderboard test ai ":
     
     # jump to last ###############################
     wait(3 + eventPlayer.getSlot()*2)
+    #wait(1)
     eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 2
     checkpointFailReset()
     wait(1)
@@ -1455,10 +1636,10 @@ rule "leaderboard test ai ":
 
 #!include "addons.opy"
 
+
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
     @Condition isGameInProgress() == true
-    getAllPlayers().exclude(
     waitUntil(any([x.hasSpawned() for x in getAllPlayers()]), 99999)
     #Init dummy at arbitrary location
     createDummy(Hero.DVA, [player for player in getAllPlayers() if player.hasSpawned() and not player.isDummy()][0].getTeam(), -1, vect(0, 200, 0), vect(0, 0, 0))

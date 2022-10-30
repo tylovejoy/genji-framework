@@ -147,6 +147,7 @@ globalvar SavedProgress 30                  # list[Any]                 --- save
 #globalvar toplistSortedTimes 34
 globalvar LeaderBoardFull 32                # [[name,second,prettytime]]--- sorted list of 0-19 leaderboard entries
 globalvar LeaderBoardHuds 33
+globalvar LeaderBoardRemake 34              # bool                      --- indicate board needs remaking
 globalvar BhopBanToggle 35                  # bool                      --- Enabled if Bhop is banned
 globalvar TempIterator1 38                  # int                       --- temp iterator
 
@@ -166,8 +167,11 @@ globalvar CustomPortalCP 47                 # [int]                     --- cust
 
 globalvar CompMode 50                       # bool                      --- competitive mode toggle
 globalvar CompTime 51                       # int                       --- compt mode time limit
+globalvar CompAtmpNum 52                    # int                       --- compt mode attempt limit
+globalvar CompAtmpSaveNames 53              # [strings]                 --- comp name list
+globalvar CompAtmpSaveCount 54              # [int]                      --- compt attempt list
+globalvar CompRestartLimit 55               # bool                      --- resest limiter
 #Player variables
-
 playervar CurrentCheckpoint 0               # int                       --- Current Checkpoint
 
 #PlayerEffects data
@@ -211,7 +215,6 @@ playervar LockCollected 46                  # number                    --- amou
 playervar bouncetouched 47                  # int                       --- cache of the bouncepad id you are currently touching
 playervar PortalLoop 48                     # int                       --- loop to select portal
 
-
 playervar KillPosition_Cache 50
 playervar KillRadii_Cache 51
 playervar BouncePosition_Cache 52
@@ -225,6 +228,8 @@ playervar KillIndex_Cache 58
 
 playervar EffectSizeArray 60
 playervar EffectSizeToggle 61
+playervar CompDone 65                       # bool                      --- out of atemps or time?
+playervar AttemptCount 66                   # int                       --- amound of attemps remaining
 
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
 
