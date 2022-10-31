@@ -171,6 +171,9 @@ globalvar CompAtmpNum 52                    # int                       --- comp
 globalvar CompAtmpSaveNames 53              # [strings]                 --- comp name list
 globalvar CompAtmpSaveCount 54              # [int]                      --- compt attempt list
 globalvar CompRestartLimit 55               # bool                      --- resest limiter
+
+globalvar TitleData 56                      # [[cp ,[title],[color]]    --- title addon 
+
 #Player variables
 playervar CurrentCheckpoint 0               # int                       --- Current Checkpoint
 
@@ -230,6 +233,8 @@ playervar EffectSizeArray 60
 playervar EffectSizeToggle 61
 playervar CompDone 65                       # bool                      --- out of atemps or time?
 playervar AttemptCount 66                   # int                       --- amound of attemps remaining
+playervar instructionhud 67
+playervar TitleStore 68                     # textid                    --- store curent  title textid
 
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
 
@@ -243,3 +248,4 @@ subroutine pinball 4
 subroutine BuildPortals 5
 subroutine Leaderboardupdate # fishos
 subroutine CreateLeaderBoard
+subroutine UpdateTitle

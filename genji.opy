@@ -1,14 +1,14 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(4) # 0 is editor, rest is numbers
+editortoggle(14) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan
 #!define touchground false
 #!define cpcheat false
 #!define inspectoron false
 
-#!define compmodetoggle true
+#!define compmodetoggle false
 #!define attemptcount 3
-#!define comptimelimit 15
+#!define comptimelimit 1
 #!define comprestartlimit true
 
 # settings ##############################
@@ -54,6 +54,8 @@ rule "Credits here <---- INSERT YOUR NAME HERE":
     hudSubtext(getAllPlayers(), "map code: XXXXX", HudPosition.LEFT, -14, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
+    # text id debug
+    #hudSubtext(getAllPlayers(), getNumberOfTextIds(), HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
 rule "Custom difficulty hud":
     @Disabled
@@ -62,9 +64,7 @@ rule "Custom difficulty hud":
     #1) workshop settings > difficulty > set to "dont display"
     #2) enable this rule
     #3) type your difficulty in the hud below
-    hudSubheader(getAllPlayers(), 
-        "Difficulty: custom", 
-        HudPosition.TOP, -24,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubheader(getAllPlayers(), "Difficulty: custom", HudPosition.TOP, -24,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
 
 rule "Display World Record": 
@@ -245,7 +245,9 @@ rule "Setup and Variables":
     SavedProgress = []
     
     if CompMode:
-        hudText(
+        /*
+        # full hud with localplayer
+        hudText(   
             getAllPlayers(), 
             null, 
             "competition is over!" if CompTime <= 0 else
@@ -262,7 +264,18 @@ rule "Setup and Variables":
             Color.YELLOW, 
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
-        
+        */
+        hudText(
+            getAllPlayers(), 
+            null, 
+            null,  
+            "competitive mode" if CompTime > 0 else "competitive mode\n\n\n", 
+            HudPosition.TOP, -850, 
+            Color.YELLOW, 
+            Color.RED if localPlayer.AttemptCount == -1 and CompAtmpNum > 0 else Color.YELLOW, 
+            Color.YELLOW, 
+            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        )
     else:
         hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else ""), HudPosition.RIGHT, -14, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
         hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else ""), HudPosition.RIGHT, -13,Color.GREEN if localPlayer.invis else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
@@ -275,22 +288,17 @@ rule "Setup and Variables":
             HudPosition.RIGHT, -10, Color.LIME_GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
     async(CreateLeaderBoard(), AsyncBehavior.RESTART)
-    hudSubtext(getAllPlayers(), "                                                   \r\n  \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n", HudPosition.TOP, -6, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    # padding for custom gud
+    hudSubtext(getAllPlayers(), "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv", HudPosition.TOP, -1, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     
     # normal
+    ###hudSubtext(getAllPlayers(), "{0}+{1}+{2} | Restart".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT)), HudPosition.RIGHT, -20, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), 
-        "{0}+{1}+{2} | Restart".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT)), 
-        HudPosition.RIGHT, -20, 
-        Color.WHITE,
-        HudReeval.VISIBILITY_AND_STRING, 
-        SpecVisibility.DEFAULT
-    )
+        "{0}+{1}+{2} | Restart\nHold {3} | leaderboard".format(
+        buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)), HudPosition.RIGHT, -20, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     
     hudSubtext(getAllPlayers(), "{0} {1} |  {2}".format( "" if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset"), HudPosition.RIGHT, -18, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | leaderboard".format(buttonString(Button.MELEE)), HudPosition.RIGHT, -17, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    
-    #hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | Preview orb/portal{1}".format(buttonString(Button.PRIMARY_FIRE),"\nWalk left/right | preview others\nAim | change preview angle" if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else ""), HudPosition.RIGHT, -16, Color.GREEN if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-    #hudText(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, null,"Walk left/right | preview others\nAim | change preview angle" if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else "", "Hold {0} | Preview orb/portal".format(buttonString(Button.PRIMARY_FIRE)), HudPosition.RIGHT, -16, Color.GREEN, Color.LIME_GREEN, Color.GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR , SpecVisibility.DEFAULT)
+    ###hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | leaderboard".format(buttonString(Button.MELEE)), HudPosition.RIGHT, -17, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null,  "Hold {0} | Preview orb/portal".format(buttonString(Button.PRIMARY_FIRE)), HudPosition.RIGHT, -16, Color.GREEN if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else Color.GREEN if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     hudSubheader(getAllPlayers() if hostPlayer.EditModeSelection < 1 and localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else null, "Walk left/right | preview others\nAim | change preview angle", HudPosition.RIGHT, -15, Color.LIME_GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
@@ -424,22 +432,22 @@ rule "Genji Swapper 9000":
     if not eventPlayer.isDummy():
         eventPlayer.startForcingHero(Hero.GENJI)
 
-playervar instructionhud
+
 rule "Initialize and CP HUD":
     @Event eachPlayer
     #@Hero genji
     @Condition eventPlayer.hasSpawned() == true
     @Condition eventPlayer.getCurrentHero() == Hero.GENJI
+    eventPlayer.disableGamemodeHud()
     if getTotalTimeElapsed() < 3:
         wait(2) # make sure everything loaded, specialy things like comp mode
     if CompMode:
         eventPlayer.setInvisibility(Invis.ALL)
-        if not "{0}".format(eventPlayer) in CompAtmpSaveNames:
+        if not "{0}".format(eventPlayer) in CompAtmpSaveNames: # instructions and settings for comp start
             CompAtmpSaveNames.append("{0}".format(eventPlayer))
             CompAtmpSaveCount.append(1)
             eventPlayer.AttemptCount = 1
             eventPlayer.setMoveSpeed(0)
-            
             hudHeader(eventPlayer,"                                                                                                                           ", HudPosition.TOP, -21, Color.WHITE, HudReeval.NONE,SpecVisibility.DEFAULT)
             eventPlayer.instructionhud[0] = getLastCreatedText()
             # replace the instructions custom string for your own instructions. type \n for enter/next line
@@ -453,12 +461,21 @@ rule "Initialize and CP HUD":
             destroyHudText(eventPlayer.instructionhud[0])
             destroyHudText(eventPlayer.instructionhud[1]) 
             destroyHudText(eventPlayer.instructionhud[2])
-
+            hudSubheader(eventPlayer,
+                "!competition is over!" if CompTime <= 0 else
+                "time left: {0} min{1}".format(
+                    CompTime, 
+                    "\nYou are out of attemps" if eventPlayer.AttemptCount == -1 else
+                    "\nAttempt {0} / {1}".format(eventPlayer.AttemptCount, CompAtmpNum) if CompAtmpNum > 0 
+                    else "" 
+                    ),HudPosition.TOP, -860, Color.YELLOW, HudReeval.STRING, SpecVisibility.DEFAULT
+                )
         else:
             eventPlayer.AttemptCount = CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))]
             smallMessage(eventPlayer,"now {0}".format( eventPlayer.AttemptCount))
         if eventPlayer.AttemptCount == (-1) or CompTime < 1:
             eventPlayer.CompDone = true
+
 
     hudSubtext(eventPlayer, "{0} {1}".format("Level ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext( # display locks collected
@@ -468,8 +485,7 @@ rule "Initialize and CP HUD":
             len([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true])
         ),HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(eventPlayer, "Time {0}".format(prettyTime(eventPlayer.Timer)), HudPosition.LEFT, -5, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT) #LEFT, -2
-    #hudSubheader(eventPlayer,"{0}{1}".format("Invis on\n" if eventPlayer.invis else "","You are invincible" if eventPlayer.InvincibleToggle else "") , HudPosition.TOP, -12, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    
+
     eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron 
         , 0) # breaks if the defined thing is on the same line
 
@@ -483,7 +499,7 @@ rule "Initialize and CP HUD":
     #CheckpointEffect_Sub is the checkpoint effect display
     CheckpointEffect_Sub()
     
-    eventPlayer.disableGamemodeHud()
+   
     
 
 def CreateLeaderBoard():
@@ -764,6 +780,8 @@ def StartGame_Sub():
         eventPlayer.setAbility1Enabled(true)
         eventPlayer.CompDone = true
         return
+   
+    UpdateTitle()
 
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
@@ -802,6 +820,14 @@ def StartGame_Sub():
     # eventPlayer.LockState = false
     UpdateCache()
 
+def UpdateTitle():
+    @Name "Tittle "
+    #eventPlayer.startCamera(eventPlayer.getEyePosition() + eventPlayer.getFacingDirection() * -2, eventPlayer.getEyePosition(), 10)
+    if TitleData == null or CompMode or eventPlayer.PracticeToggle == 1 or not eventPlayer.CurrentCheckpoint in TitleData[0]: 
+        return
+    destroyInWorldText(eventPlayer.TitleStore)
+    createInWorldText(getAllPlayers(),TitleData[1][TitleData[0].index(eventPlayer.CurrentCheckpoint)], eventPlayer,1.1,Clip.NONE, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.CurrentCheckpoint)], SpecVisibility.DEFAULT)
+    eventPlayer.TitleStore = getLastCreatedText()
 
 def Leaderboardupdate():
     @Name "SUB | Leaderboard Update"
@@ -816,29 +842,22 @@ def Leaderboardupdate():
     # [ [name, seconds, prettytime] ]
     if "{0}".format(eventPlayer) in [i[0] for i in LeaderBoardFull]: # you already have a time
         if eventPlayer.Timer > [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)][0][1]: # new time worse
-            #printLog("{0} - {1} - worse time then old".format(eventPlayer,eventPlayer.Timer))
             goto lb0
         else: # new time better
-            #printLog("{0} - {1} - replace own old time".format(eventPlayer,eventPlayer.Timer))
             LeaderBoardFull.remove( [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)])
             LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)]] )
             async(CreateLeaderBoard(), AsyncBehavior.RESTART)
     else: # you are not in list yet
         if len(LeaderBoardFull) < 20: # board has room for more
-            #printLog("{0} - {1} - room on board".format(eventPlayer,eventPlayer.Timer))
             LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)] ])
             async(CreateLeaderBoard(), AsyncBehavior.RESTART)
         else: # 20 entries already
             if LeaderBoardFull[19][1] < eventPlayer.Timer:  # your time lower then last entry
-                #printLog("{0} - {1} - existing times are better".format(eventPlayer,eventPlayer.Timer))
                 goto lb0
             else: # you beat the last entry, thus replacing it
-                #printLog("{0} - {1} - replace lowest time".format(eventPlayer,eventPlayer.Timer))
                 del LeaderBoardFull[19]
                 LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)]] )
                 async(CreateLeaderBoard(), AsyncBehavior.RESTART)
-    #LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
-    #async(CreateLeaderBoard(), AsyncBehavior.RESTART)
     lb0:
 
 
@@ -900,7 +919,7 @@ rule "Checkpoint | Arrived":
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
     bigMessage(eventPlayer, "{0} {1}".format("Arrived at", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)))
-
+    UpdateTitle()
 
     if eventPlayer.PracticeToggle == 1:
         eventPlayer.PracticeCheckpoint += 1
@@ -1192,7 +1211,6 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     # @Condition eventPlayer.isUsingAbility1() == false if DashExploitToggle else true
-    #@Condition CompMode == false or not eventPlayer.CompDone 
         
     if CompMode:
         if CompTime < 1 :
@@ -1202,15 +1220,10 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
         if eventPlayer.CompDone:
             wait()
             return
-
         if CompRestartLimit and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
             smallMessage(eventPlayer,"   Restart during run is disabled for this competition")
             wait()
             return
-
-        # if comprestartdisable
-        # if not on last cp
-        # msg mid run restarting is disabled
         if CompAtmpNum > 0: 
             if eventPlayer.AttemptCount == CompAtmpNum:
                 smallMessage(eventPlayer, "   You are on your last attempt")
@@ -1222,9 +1235,7 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
                 return
           
             eventPlayer.AttemptCount ++
-            CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.AttemptCount
-            
-            # if on last cp then dont up the count                           
+            CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.AttemptCount                        
 
     eventPlayer.LockState = true
 
@@ -1251,8 +1262,6 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
         SavedProgress.remove("{0}".format(eventPlayer))
     StartGame_Sub()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
-    #Portal1PlayerList.remove(eventPlayer)
-    #Portal2PlayerList.remove(eventPlayer)
     wait()
     eventPlayer.LockState = false
     
@@ -1590,7 +1599,7 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
     eventPlayer.MovedCheckpoint = true
     UpdateCache()    
 
-/*
+
 globalvar itemp
 rule "leaderboard test bots":
 
@@ -1622,6 +1631,7 @@ rule "leaderboard test ai ":
     
     
     # jump to last ###############################
+    eventPlayer.forceButtonPress(Button.INTERACT)
     wait(3 + eventPlayer.getSlot()*2)
     #wait(1)
     eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 2
@@ -1630,7 +1640,7 @@ rule "leaderboard test ai ":
     #wait(60)
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint+1]+ Vector.UP) # teleport not needed
 
-*/
+
 
 #!include "mechanics.opy"
 

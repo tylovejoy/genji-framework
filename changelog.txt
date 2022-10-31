@@ -149,6 +149,7 @@ fixed:
     - forces everyone to be invisible to eachother
     - disabled practice mode and spec mode
     - enabled via workshop settings and inside the web aplications settings tab
+- titles addon: gain ingame title above name after reaching checkpoints treshholds
 
 - leaderboards now get remade instead of constandly re-evaluating
 - made it so ult and dash addon overwrite map data
