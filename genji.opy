@@ -823,7 +823,7 @@ def StartGame_Sub():
 def UpdateTitle():
     @Name "Tittle "
     #eventPlayer.startCamera(eventPlayer.getEyePosition() + eventPlayer.getFacingDirection() * -2, eventPlayer.getEyePosition(), 10)
-    if TitleData == null or CompMode or eventPlayer.PracticeToggle == 1 or not eventPlayer.CurrentCheckpoint in TitleData[0] or eventPlayer.EditorOn: 
+    if TitleData == null or CompMode or eventPlayer.PracticeToggle == 1 or eventPlayer.EditorOn or not eventPlayer.CurrentCheckpoint in TitleData[0]: 
         return
     destroyInWorldText(eventPlayer.TitleStore)
     createInWorldText(getAllPlayers(),TitleData[1][TitleData[0].index(eventPlayer.CurrentCheckpoint)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.CurrentCheckpoint)], SpecVisibility.DEFAULT)
