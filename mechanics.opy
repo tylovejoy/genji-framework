@@ -159,7 +159,7 @@ rule "HUD | Multiclimbs Used":
     destroyHudText(eventPlayer.MultiClimbCountHUD)
     hudHeader(eventPlayer, "Climb{0}".format("({0})".format(eventPlayer.MultiClimbCount) if eventPlayer.MultiClimbCount > 0 else ""), HudPosition.LEFT, 2, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     eventPlayer.MultiClimbCountHUD = getLastCreatedText()
-
+ 
 
 rule "HUD | Wallclimb Used":
     @Event eachPlayer
