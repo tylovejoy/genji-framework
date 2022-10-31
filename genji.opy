@@ -1,6 +1,6 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(14) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan
 #!define touchground false
 #!define cpcheat false
@@ -9,7 +9,7 @@ editortoggle(14) # 0 is editor, rest is numbers
 #!define compmodetoggle false
 #!define attemptcount 3
 #!define comptimelimit 1
-#!define comprestartlimit true
+#!define comprestartlimit false
 
 # settings ##############################
 # limit on how many orbs can be made
