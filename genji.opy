@@ -826,7 +826,7 @@ def UpdateTitle():
     if TitleData == null or CompMode or eventPlayer.PracticeToggle == 1 or not eventPlayer.CurrentCheckpoint in TitleData[0] or eventPlayer.EditorOn: 
         return
     destroyInWorldText(eventPlayer.TitleStore)
-    createInWorldText(getAllPlayers(),TitleData[1][TitleData[0].index(eventPlayer.CurrentCheckpoint)], eventPlayer,1.1,Clip.NONE, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.CurrentCheckpoint)], SpecVisibility.DEFAULT)
+    createInWorldText(getAllPlayers(),TitleData[1][TitleData[0].index(eventPlayer.CurrentCheckpoint)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.CurrentCheckpoint)], SpecVisibility.DEFAULT)
     eventPlayer.TitleStore = getLastCreatedText()
 
 def Leaderboardupdate():
