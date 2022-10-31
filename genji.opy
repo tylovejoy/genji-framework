@@ -8,7 +8,7 @@ editortoggle(0) # 0 is editor, rest is numbers
 
 #!define compmodetoggle false
 #!define attemptcount 3
-#!define comptimelimit 1
+#!define comptimelimit 120
 #!define comprestartlimit false
 
 # settings ##############################
