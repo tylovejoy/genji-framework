@@ -956,7 +956,6 @@ rule "Checkpoint | Arrived":
             Leaderboardupdate()
             if CompMode:
                 if CompAtmpNum > 0:
-                    
                     if eventPlayer.AttemptCount == CompAtmpNum: 
                         CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = -1 
                         eventPlayer.AttemptCount = -1                     
@@ -1599,7 +1598,7 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
     eventPlayer.MovedCheckpoint = true
     UpdateCache()    
 
-
+/*
 globalvar itemp
 rule "leaderboard test bots":
 
@@ -1640,7 +1639,7 @@ rule "leaderboard test ai ":
     #wait(60)
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint+1]+ Vector.UP) # teleport not needed
 
-
+*/
 
 #!include "mechanics.opy"
 
