@@ -171,8 +171,9 @@ globalvar CompAtmpNum 52                    # int                       --- comp
 globalvar CompAtmpSaveNames 53              # [strings]                 --- comp name list
 globalvar CompAtmpSaveCount 54              # [int]                      --- compt attempt list
 globalvar CompRestartLimit 55               # bool                      --- resest limiter
+globalvar instructiontext 56                # [text]                    --- array of instructions
 
-globalvar TitleData 56                      # [[cp ,[title],[color]]    --- title addon 
+globalvar TitleData 57                      # [[cp ,[title],[color]]    --- title addon 
 
 #Player variables
 playervar CurrentCheckpoint 0               # int                       --- Current Checkpoint
@@ -218,6 +219,7 @@ playervar LockCollected 46                  # number                    --- amou
 playervar bouncetouched 47                  # int                       --- cache of the bouncepad id you are currently touching
 playervar PortalLoop 48                     # int                       --- loop to select portal
 
+playervar BounceLockMax_Cache 49
 playervar KillPosition_Cache 50
 playervar KillRadii_Cache 51
 playervar BouncePosition_Cache 52

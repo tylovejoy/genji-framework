@@ -152,10 +152,10 @@ fixed:
 - titles addon: gain ingame title above name after reaching checkpoints treshholds
 
 - leaderboards now get remade instead of constandly re-evaluating
-- made it so ult and dash addon overwrite map data
 - added spaces to message starts
 - moved practice mode skip cp out of editor rules to avoid confusion
-
+- lockorb check optimized
+- made it so ult and dash addon overwrite map data
 
 fixed:
 - leaving spec now doesnt instandly trigger practice mode reset

@@ -116,11 +116,6 @@ rule "HUD | Show/Hide Guide | Hold Melee":
         smallMessage(eventPlayer, "   Guide is open")
 
 
-rule "test":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH)
-    
-
 rule "HUD | Show Guide On Spawn":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
@@ -230,7 +225,77 @@ rule "HUD | Guide":
             "on" if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off"
         ), HudPosition.TOP, -16, Color.GREEN if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
+    
+    
+    hudText(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
+    
+        "{0}".format(
+            " Selected Checkpoint \n Vector: {0}{1} ".format(
+                CheckpointPositions[SelectedCheckpoint_Editing],
+                "" if len(CheckpointPositions[SelectedCheckpoint_Editing]) <2 else
+                "\nTeleport:{0}".format(CheckpointPositions[SelectedCheckpoint_Editing][1])
+            )
+            if hostPlayer.EditModeSelection == 1 else  
 
+            " Selected Kill Orb \n Vector: {1} \n radius: {0} ".format(
+                KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]],
+                KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
+                
+            ) 
+            if hostPlayer.EditModeSelection == 2 else 
+
+            " Selected Bounce Orb \n Vector: {1} \n strength: {0} \n Lock: {2} \n Dash: {3} \n Ult: {4} ".format(
+                BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
+                BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
+                BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
+                BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
+                BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+
+                ) 
+            if hostPlayer.EditModeSelection == 3 else 
+                
+            ""),
+                        
+        null,
+        null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
+        HudPosition.LEFT, 50, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        )
+    /*
+    hudHeader(hostPlayer, "orb/portal limit: {0}/{1}".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart),fxlimit), HudPosition.TOP, -21, Color.WHITE, HudReeval.VISIBILITY_AND_STRING)
+
+    hudText(hostPlayer,
+        #"{0}\norb/portal limit: {1}/{2}".format(
+        "{0}".format(
+            "Checkpoint Mode\nVector:{0}{1}".format(
+                CheckpointPositions[SelectedCheckpoint_Editing],
+                "" if len(CheckpointPositions[SelectedCheckpoint_Editing]) <2 else
+                "\nTeleport:{0}".format(CheckpointPositions[SelectedCheckpoint_Editing][1])
+            )
+            if hostPlayer.EditModeSelection == 1 else  
+
+            "Current Kill Orb's\nVector:{1}\nradius: {0}".format(
+                KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]],
+                KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
+                
+            ) 
+            if hostPlayer.EditModeSelection == 2 else 
+
+            "Current Bounce Orb's\nVector:{1}\nstrength: {0}".format(
+                BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
+                BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+                ) 
+            if hostPlayer.EditModeSelection == 3 else 
+                
+            ""),
+                        
+        null,
+        null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
+        HudPosition.TOP, -20, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        )
+        */
+    
+    # original without vector display
+    /*
     hudText(hostPlayer,
         "{0}\norb/portal limit: {1}/{2}".format(
             "Checkpoint Mode" if hostPlayer.EditModeSelection == 1 else  
@@ -248,6 +313,20 @@ rule "HUD | Guide":
         null,
         null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
         HudPosition.TOP, -20, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    */
+
+    # orb limit count
+     hudText(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
+        "orb/portal limit: {0}/{1}".format(
+            len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart),
+            fxlimit
+            ),
+            
+        null,
+        null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
+        HudPosition.TOP, -20, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    
+
 
 rule "HUD | Guide Effects":
     #@Condition hostPlayer.EditorOn
