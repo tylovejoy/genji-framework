@@ -4,6 +4,17 @@ rule "------------------------------------------------------------------------ C
     @Delimiter
     @Disabled
 
+rule "prevent ult swing":
+    @Event eachPlayer
+    @Condition eventPlayer.isUsingUltimate()
+    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
+    @Condition  eventPlayer.InvincibleToggle == 0
+    # prevents slashign in last second of ult, because it extends the duration
+    wait(1.2)
+    eventPlayer.disallowButton(Button.PRIMARY_FIRE)
+    waitUntil(not eventPlayer.isUsingUltimate(),2)
+    wait()
+    eventPlayer.allowButton(Button.PRIMARY_FIRE)
 
 rule "Checking | Jump":
     @Event eachPlayer
@@ -78,7 +89,7 @@ rule "Checking | Bhop":
     @Condition eventPlayer.isJumping() == true
     
     eventPlayer.BhopUsed = 1
-    smallMessage(eventPlayer, "Bhop")
+    smallMessage(eventPlayer, "   Bhop")
 
 
 rule "Checking | Create Bhop":
@@ -93,10 +104,10 @@ rule "Checking | Create Bhop":
     @Condition eventPlayer.isCrouching() == true
     eventPlayer.BhopUsed = 0
     if BhopBanToggle == true and eventPlayer.InvincibleToggle == 0 and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
-        smallMessage(eventPlayer, "Create Bhop is banned!")
+        smallMessage(eventPlayer, "   Create Bhop is banned!")
         checkpointFailReset()
         return
-    smallMessage(eventPlayer, "Bhop has been created!")    
+    smallMessage(eventPlayer, "   Bhop has been created!")    
 
 
 rule "Checking | Bhop/Double Jump Initialization":
@@ -148,7 +159,7 @@ rule "HUD | Multiclimbs Used":
     destroyHudText(eventPlayer.MultiClimbCountHUD)
     hudHeader(eventPlayer, "Climb{0}".format("({0})".format(eventPlayer.MultiClimbCount) if eventPlayer.MultiClimbCount > 0 else ""), HudPosition.LEFT, 2, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     eventPlayer.MultiClimbCountHUD = getLastCreatedText()
-
+ 
 
 rule "HUD | Wallclimb Used":
     @Event eachPlayer
@@ -212,7 +223,7 @@ rule "Ban | Wallclimb for specific CPs <---- EDIT ME":
 
     if eventPlayer.WallclimbUsed == 1:
         checkpointFailReset()
-        smallMessage(eventPlayer, "Climb is banned!")
+        smallMessage(eventPlayer, "   Climb is banned!")
 
 
 rule "Ban | Bhop for specific CPs      <---- EDIT ME":
@@ -229,7 +240,7 @@ rule "Ban | Bhop for specific CPs      <---- EDIT ME":
 
     if eventPlayer.BhopUsed == 1:
         checkpointFailReset()
-        smallMessage(eventPlayer, "Bhop is banned!")
+        smallMessage(eventPlayer, "   Bhop is banned!")
 
 
 rule "Ban | Triple Jump":
@@ -243,7 +254,7 @@ rule "Ban | Triple Jump":
     
     if eventPlayer.isOnWall():
         return
-    smallMessage(eventPlayer, "Triple Jump is banned!")
+    smallMessage(eventPlayer, "   Triple Jump is banned!")
     checkpointFailReset()
 
 
@@ -258,7 +269,7 @@ rule "Ban | Multiclimb":
     # @Condition eventPlayer.WallclimbUsed == 2
     
     # eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
-    smallMessage(eventPlayer, "Multiclimb is banned!")
+    smallMessage(eventPlayer, "   Multiclimb is banned!")
     checkpointFailReset() 
     
 rule "Ban | Emote Savehop":
@@ -268,7 +279,7 @@ rule "Ban | Emote Savehop":
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.isCommunicatingEmote() == true
     
-    smallMessage(eventPlayer, "Emote Savehop is banned!")
+    smallMessage(eventPlayer, "   Emote Savehop is banned!")
     checkpointFailReset()
         
 rule "Ban | Create Bhop":
