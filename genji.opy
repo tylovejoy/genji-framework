@@ -1,6 +1,6 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(10) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly
 #!define touchground false
 #!define cpcheat false
@@ -1634,11 +1634,12 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
         eventPlayer.CurrentCheckpoint -= 1
         if eventPlayer.PracticeToggle == 1:
             eventPlayer.PracticeCheckpoint -= 1
-
+        wait(0.16)
     else:
         if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
             return
         eventPlayer.LockState = true
+
         #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
         eventPlayer.CurrentCheckpoint += 1
         if eventPlayer.PracticeToggle == 1:
