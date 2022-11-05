@@ -1,0 +1,9 @@
+
+
+
+comp mode:
+- set true after initial loading to avoid global var problem
+- the attempt limit and time limit is enforcedby forcing invinsible and disabling the toggle
+- 2 seperate arrays for save names and save progres are used to save the attempt count. everytime your atempt update it also updates in the save.
+- attemps count down when someone restarts a run. if someone finish a run the save data wil be reduced by 1 while the ingame one stays even, this way if you rejoin, you still get your attempt used.
+- time limit is checked via regular match time rule

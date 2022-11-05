@@ -141,3 +141,22 @@ fixed:
 - dash/ultimate orbs now make same sound as lock orbs when collected.
 - increased hitbox range of custom portals and orbs
 - you now have to hold priamry fire to start previewing
+
+1.0.6 - date 29-10-2022:
+- comp mode: (tournament mode)
+    - sets a timelimit via a workshop slider
+    - set maximum attempt limit, or keep on 0 for unlimited attemps
+    - forces everyone to be invisible to eachother
+    - disabled practice mode and spec mode
+    - enabled via workshop settings and inside the web aplications settings tab
+- titles addon: gain ingame title above name after reaching checkpoints treshholds
+
+- leaderboards now get remade instead of constandly re-evaluating
+- added spaces to message starts
+- moved practice mode skip cp out of editor rules to avoid confusion
+- lockorb check optimized
+- made it so ult and dash addon overwrite map data
+
+fixed:
+- leaving spec now doesnt instandly trigger practice mode reset
+- fixed exploit were you could swing at the end of ult to extend the duration

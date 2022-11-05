@@ -8,6 +8,7 @@ rule "------------------------------------------------------------------------ A
 rule "Add Blade to Checkpoint <---- EDIT ME":
     @Disabled
     #Change "-1" to certain Checkpoints' number. For example if you want to add Blade to Checkpoint 2 and 6 change one of "-1" to 2 and other "-1" to 6
+    wait(1)
     BladeEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
 
@@ -15,8 +16,42 @@ rule "Add Blade to Checkpoint <---- EDIT ME":
 rule "Add Dash to Checkpoint <---- EDIT ME":
     @Disabled
     #Change "-1" to certain Checkpoints' number. For example if you want to add Dash to Checkpoint 7 and 1 change one of "-1" to 7 and other "-1" to 1
+    wait(1)
     DashEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
+
+
+rule "Title Data <---- EDIT ME":
+    @Disabled
+    # checkpoint number
+    TitleData[0] = [
+    0,
+    10,
+    20,
+    30,
+    40,
+    50
+    ]
+
+    # title
+    TitleData[1] = [
+    "Bunny",
+    "Jumper",
+    "Ninja",
+    "Pro",
+    "Expert",
+    "Master"
+    ]
+
+    # color
+    TitleData[2] = [
+    Color.LIME_GREEN,
+    Color.WHITE,
+    Color.YELLOW,
+    Color.ORANGE,
+    Color.PURPLE,
+    Color.RED
+    ]
 
 /*
 rule "Portal 1 -> 2 <---- EDIT ME":
@@ -60,12 +95,16 @@ rule "Portal 3 -> 1 <---- EDIT ME":
 */
 rule "In world text for certain Checkpoints <---- EDIT ME":
     @Disabled
+    # warning: adding text might go over the text limit and caues huds to not apear
     createInWorldText([x for x in getAllPlayers() if x.CurrentCheckpoint == 0], "Text for checkpoint 0", vect(0, 0, 0), 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
     createInWorldText([x for x in getAllPlayers() if x.CurrentCheckpoint == 1], "Text for checkpoint 1", vect(0, 0, 0), 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
     createInWorldText([x for x in getAllPlayers() if x.CurrentCheckpoint == 2], "Text for checkpoint 2", vect(0, 0, 0), 3, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
 rule "HUD text for certain Checkpoints <---- EDIT ME":
     @Disabled
+    # first one is padding, leave it
+    hudSubtext(getAllPlayers(), "                                                   \r\n  \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n", HudPosition.TOP, -6, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    # warning: adding text might go over the text limit and caues huds to not apear
     hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 0], "Text for checkpoint 0", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 1], "Text for checkpoint 1", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 2], "Text for checkpoint 2", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
@@ -201,6 +240,7 @@ rule "pre-set control map portal - function - toggled via workshop":
 
 rule "custom portals - data <---- EDIT ME":
     @Disabled
+    wait(1)
     #Portal start position
     CustomPortalStart = [vect(0,0,0)]
     #Portal end position (on same number as start position)

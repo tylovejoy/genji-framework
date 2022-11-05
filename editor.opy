@@ -23,7 +23,6 @@ rule "HUD | Clear Excess Data & Save Map":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
     @Condition eventPlayer == hostPlayer
-
     wait(0.5, Wait.ABORT_WHEN_FALSE)
     SelectedCheckpoint_Editing = 0
     CheckpointRings_Editing = 0
@@ -42,8 +41,7 @@ rule "HUD | Clear Excess Data & Save Map":
     SavedProgress = 0
     LeaderBoardFull = []
     PortalOn = false
-    #bigMessage(getAllPlayers(), "Excess data has been cleared")
-    #bigMessage(getAllPlayers(), "Excess data has been cleared")
+
     enableInspector()
 
     hudHeader(eventPlayer, 
@@ -112,10 +110,10 @@ rule "HUD | Show/Hide Guide | Hold Melee":
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     if eventPlayer.GuideToggle == 1:
         eventPlayer.GuideToggle = 2
-        smallMessage(eventPlayer, "Guide is hidden")
+        smallMessage(eventPlayer, "   Guide is hidden")
     else:
         eventPlayer.GuideToggle = 1
-        smallMessage(eventPlayer, "Guide is open")
+        smallMessage(eventPlayer, "   Guide is open")
 
 
 rule "HUD | Show Guide On Spawn":
@@ -129,15 +127,14 @@ rule "HUD | Show Guide On Spawn":
 rule "HUD | Guide":
     #@Condition hostPlayer.EditorOn
     # condition messes up if host player leaves
-
     waitUntil(hostPlayer.hasSpawned(), 90)
-    wait(0.5)
+    wait(5)
     if not hostPlayer.EditorOn:
         return
 
     hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
         " \n{0}".format(    
-    [   
+        [   
         "{0} + {1} | Create New Checkpoint\n"
         "{0} + {2} | Delete selected Checkpoint\n"
         "{0} + {3} | Add teleport to Checkpoint\n"
@@ -228,7 +225,77 @@ rule "HUD | Guide":
             "on" if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off"
         ), HudPosition.TOP, -16, Color.GREEN if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
+    
+    
+    hudText(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
+    
+        "{0}".format(
+            " Selected Checkpoint \n Vector: {0}{1} ".format(
+                CheckpointPositions[SelectedCheckpoint_Editing],
+                "" if len(CheckpointPositions[SelectedCheckpoint_Editing]) <2 else
+                "\nTeleport:{0}".format(CheckpointPositions[SelectedCheckpoint_Editing][1])
+            )
+            if hostPlayer.EditModeSelection == 1 else  
 
+            " Selected Kill Orb \n Vector: {1} \n radius: {0} ".format(
+                KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]],
+                KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
+                
+            ) 
+            if hostPlayer.EditModeSelection == 2 else 
+
+            " Selected Bounce Orb \n Vector: {1} \n strength: {0} \n Lock: {2} \n Dash: {3} \n Ult: {4} ".format(
+                BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
+                BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
+                BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
+                BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
+                BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+
+                ) 
+            if hostPlayer.EditModeSelection == 3 else 
+                
+            ""),
+                        
+        null,
+        null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
+        HudPosition.LEFT, 50, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        )
+    /*
+    hudHeader(hostPlayer, "orb/portal limit: {0}/{1}".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart),fxlimit), HudPosition.TOP, -21, Color.WHITE, HudReeval.VISIBILITY_AND_STRING)
+
+    hudText(hostPlayer,
+        #"{0}\norb/portal limit: {1}/{2}".format(
+        "{0}".format(
+            "Checkpoint Mode\nVector:{0}{1}".format(
+                CheckpointPositions[SelectedCheckpoint_Editing],
+                "" if len(CheckpointPositions[SelectedCheckpoint_Editing]) <2 else
+                "\nTeleport:{0}".format(CheckpointPositions[SelectedCheckpoint_Editing][1])
+            )
+            if hostPlayer.EditModeSelection == 1 else  
+
+            "Current Kill Orb's\nVector:{1}\nradius: {0}".format(
+                KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]],
+                KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
+                
+            ) 
+            if hostPlayer.EditModeSelection == 2 else 
+
+            "Current Bounce Orb's\nVector:{1}\nstrength: {0}".format(
+                BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
+                BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+                ) 
+            if hostPlayer.EditModeSelection == 3 else 
+                
+            ""),
+                        
+        null,
+        null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
+        HudPosition.TOP, -20, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        )
+        */
+    
+    # original without vector display
+    /*
     hudText(hostPlayer,
         "{0}\norb/portal limit: {1}/{2}".format(
             "Checkpoint Mode" if hostPlayer.EditModeSelection == 1 else  
@@ -246,11 +313,25 @@ rule "HUD | Guide":
         null,
         null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
         HudPosition.TOP, -20, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    */
+
+    # orb limit count
+     hudText(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
+        "orb/portal limit: {0}/{1}".format(
+            len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart),
+            fxlimit
+            ),
+            
+        null,
+        null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
+        HudPosition.TOP, -20, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    
+
 
 rule "HUD | Guide Effects":
     #@Condition hostPlayer.EditorOn
     waitUntil(hostPlayer.hasSpawned(), 90)
-    wait(0.5)
+    wait(5)
     if not hostPlayer.EditorOn:
         return
     
@@ -276,6 +357,12 @@ rule "HUD | Guide Effects":
     # Teleport text
     createInWorldText(getAllPlayers() if len(CheckpointPositions[SelectedCheckpoint_Editing] ) > 1 else null, "TELEPORTER EXIT", CheckpointPositions[SelectedCheckpoint_Editing][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
 
+    wait(1)
+    if CompMode:
+        CompAtmpNum = 0
+        CompTime = 99999
+        getAllPlayers().AttemptCount = null
+        getAllPlayers().CompDone = false
 
 rule "Fly/Noclip Toggle | Hold Deflect":
     @Event eachPlayer
@@ -324,13 +411,13 @@ rule "Change Edit Mode | Hold Dash":
     eventPlayer.flytoggle = null
     if eventPlayer.EditModeSelection == 1:
         eventPlayer.EditModeSelection = 2
-        smallMessage(hostPlayer, "Current mode: Kill Orb")
+        smallMessage(hostPlayer, "   Current mode: Kill Orb")
     elif eventPlayer.EditModeSelection == 2:
         eventPlayer.EditModeSelection = 3
-        smallMessage(hostPlayer, "Current mode: Bounce Orb")
+        smallMessage(hostPlayer, "   Current mode: Bounce Orb")
     elif eventPlayer.EditModeSelection == 3:
         eventPlayer.EditModeSelection = 1
-        smallMessage(hostPlayer, "Current mode: Checkpoint")
+        smallMessage(hostPlayer, "   Current mode: Checkpoint")
 
 
 rule "Bounce Ball | Toggle Ultimate | Ultimate + Primary Fire":
@@ -592,7 +679,7 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
     
     if eventPlayer.EditModeSelection == 1:
         if SelectedCheckpoint_Editing != -1 and distance(eventPlayer, CheckpointPositions[SelectedCheckpoint_Editing]) <= 1.4:
-            smallMessage(eventPlayer, "Cannot place checkpoints too close.")
+            smallMessage(eventPlayer, "   Cannot place checkpoints too close.")
             return
 
         if SelectedCheckpoint_Editing == len(CheckpointPositions) - 1:
@@ -606,7 +693,7 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
             UpdateCache()
             RebuildKillOrbs()
             RebuildBounceOrbs()
-        smallMessage(getAllPlayers(), "New Checkpoint has been created")
+        smallMessage(getAllPlayers(), "   New Checkpoint has been created")
     elif eventPlayer.EditModeSelection == 2:
         # if eventPlayer.CurrentCheckpoint == 0:
         #     bigMessage(getAllPlayers(), "Cannot place Kill Orb on first checkpoint")
@@ -729,7 +816,7 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Delete | Interact + Secondary Fire":
         lbl_0:
         RebuildKillOrbs()
         RebuildBounceOrbs()
-        smallMessage(getAllPlayers(), "Checkpoint has been deleted")
+        smallMessage(getAllPlayers(), "   Checkpoint has been deleted")
     elif eventPlayer.EditModeSelection == 2 and len(KillBallPositions) != 0 and hostPlayer.KillPosition_Cache:
         del KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
         del KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
@@ -768,9 +855,9 @@ rule "Checkpoint | Move | Ultimate + Interact":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition eventPlayer == hostPlayer
     
-    smallMessage(getAllPlayers(), "Checkpoint {0} has been deleted".format(SelectedCheckpoint_Editing) if len(CheckpointPositions[SelectedCheckpoint_Editing]) != 0 else "")
+    smallMessage(getAllPlayers(), "   Checkpoint {0} has been deleted".format(SelectedCheckpoint_Editing) if len(CheckpointPositions[SelectedCheckpoint_Editing]) != 0 else "")
     CheckpointPositions[SelectedCheckpoint_Editing] = eventPlayer.getPosition() - vect(0, 0, 0)
-    smallMessage(getAllPlayers(), "Checkpoint has been moved to your position")
+    smallMessage(getAllPlayers(), "   Checkpoint has been moved to your position")
 
 
 rule "Kill Orb / Bounce Orb | Select Previous | Interact + Crouch":
@@ -825,38 +912,6 @@ rule "Checkpoint | Toggle Checkpoint Sizes | Interact + Dash":
 #         createEffect(getAllPlayers(), Effect.RING, Color.RED, CheckpointPositions[SelectedCheckpoint_Editing], 1, EffectReeval.VISIBILITY)
 #         CheckpointRings_Editing.append(getLastCreatedEntity())
 
-
-rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
-    @Event eachPlayer
-    @Condition eventPlayer.LockState == false
-    @Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle == 1
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
-
-    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-        if eventPlayer.CurrentCheckpoint == 0:
-            return
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
-        eventPlayer.CurrentCheckpoint -= 1
-        if eventPlayer.PracticeToggle == 1:
-            eventPlayer.PracticeCheckpoint -= 1
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
-    else:
-        if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
-            return
-        eventPlayer.CurrentCheckpoint += 1
-        if eventPlayer.PracticeToggle == 1:
-            eventPlayer.PracticeCheckpoint += 1
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
-        # eventPlayer.Timer += 9999
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
-    
-    eventPlayer.MovedCheckpoint = true
-    UpdateCache()    
-
-
 rule "Teleport | Add | Interact + Reload":
     @Condition hostPlayer.EditorOn
     @Condition hostPlayer.isHoldingButton(Button.MELEE) == false
@@ -878,7 +933,7 @@ rule "Teleport | Add | Interact + Reload":
         hostPlayer.getPosition()
     ]
 
-    smallMessage(getAllPlayers(), "Teleport has been added for checkpoint {0}".format(SelectedCheckpoint_Editing))
+    smallMessage(getAllPlayers(), "   Teleport has been added for checkpoint {0}".format(SelectedCheckpoint_Editing))
 
 
 
