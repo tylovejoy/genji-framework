@@ -1437,7 +1437,7 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
         CheckpointPositions[eventPlayer.CurrentCheckpoint], true
     )
     */
-    eventPlayer.LockCollected = []
+    
     if eventPlayer.PracticeToggle == 0:
         eventPlayer.startForcingPosition(
             CheckpointPositions[eventPlayer.CurrentCheckpoint] 
@@ -1462,6 +1462,8 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
         #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint])
         eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint
         eventPlayer.PracticeCheckpoint = 0
+        eventPlayer.LockCollected = []
+        UpdateCache()
         wait(0.1)
         eventPlayer.PracticeToggle = 0
         bigMessage(eventPlayer, "Normal mode")
@@ -1499,7 +1501,6 @@ rule "Combo | Practice Restart | Interact":
     if eventPlayer.isHoldingButton(Button.INTERACT):
         return
     
-    eventPlayer.LockCollected = []
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
     if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
@@ -1512,6 +1513,8 @@ rule "Combo | Practice Restart | Interact":
     #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
     eventPlayer.PracticeCheckpoint = 0
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.2)
+    eventPlayer.LockCollected = []
+    UpdateCache()
   
 
 rule "Combo | Quick Reset | Reload, Hold Reload to Enable":
@@ -1622,29 +1625,32 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
     @Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle == 1
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
-
+    
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         if eventPlayer.CurrentCheckpoint == 0:
             return
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
+        eventPlayer.LockState = true
+        #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
         eventPlayer.CurrentCheckpoint -= 1
         if eventPlayer.PracticeToggle == 1:
             eventPlayer.PracticeCheckpoint -= 1
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint + 1].remove(eventPlayer)
+
     else:
         if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
             return
+        eventPlayer.LockState = true
+        #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
         eventPlayer.CurrentCheckpoint += 1
         if eventPlayer.PracticeToggle == 1:
             eventPlayer.PracticeCheckpoint += 1
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
-        # eventPlayer.Timer += 9999
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
-        # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint - 1].remove(eventPlayer)
-    
+    wait()
+    checkpointFailReset()
+    wait()
+    eventPlayer.LockState = false
     eventPlayer.MovedCheckpoint = true
-    UpdateCache()    
+    UpdateCache() 
+    waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.32)
+    #wait(0.5)  
 
 /*
 globalvar itemp
