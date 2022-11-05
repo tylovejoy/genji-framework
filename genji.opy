@@ -1634,7 +1634,6 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
         eventPlayer.CurrentCheckpoint -= 1
         if eventPlayer.PracticeToggle == 1:
             eventPlayer.PracticeCheckpoint -= 1
-        wait(0.16)
     else:
         if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
             return
@@ -1646,7 +1645,7 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
             eventPlayer.PracticeCheckpoint += 1
     wait()
     checkpointFailReset()
-    wait()
+    wait(0.064)
     eventPlayer.LockState = false
     eventPlayer.MovedCheckpoint = true
     UpdateCache() 
