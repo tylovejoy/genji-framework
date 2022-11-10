@@ -1,10 +1,12 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(10) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly
 #!define touchground false
 #!define cpcheat false
 #!define inspectoron false
+
+#!define testaitoggle #!include "test-ai.opy"
 
 #!define compmodetoggle false
 #!define attemptcount 5
@@ -42,7 +44,6 @@ rule "fisho cp cheat for overpy toggle":
 rule "------------------------------------------------------------------------ Map pasta ------------------------------------------------------------------------ ":
     @Delimiter
     @Disabled
-
 
 rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
     @Delimiter
@@ -1652,53 +1653,11 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.32)
     #wait(0.5)  
 
-/*
-globalvar itemp
-rule "leaderboard test bots":
-
-    #wait(40)
-    wait(8) # wait for other entities to be created
-    for itemp in range(19):
-     
-        createDummy(Hero.GENJI, Team.1, -1, null, null)
-        wait(0.1)
-        getLastCreatedEntity().startForcingName("bot number: {0}".format(len([i for i in getAllPlayers() if i.isDummy() and i.getCurrentHero() == Hero.GENJI]) ))
-        
-  
-    itemp = 9999
-
-rule "leaderboard test ai ":
-    @Event eachPlayer
-    @Hero genji
-    @Condition eventPlayer.isDummy()
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) #- 1
-    @Condition itemp == 9999
- 
-    # jump each ######################
-    ###wait(0.2 + eventPlayer.getSlot()/30)
-    #waitUntil(eventPlayer.isOnGround(),1)
-    #wait( eventPlayer.getSlot()/30)
-    #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]+Vector.UP)
-    #if RULE_CONDITION:
-    #    goto RULE_START
-    
-    
-    # jump to last ###############################
-    eventPlayer.forceButtonPress(Button.INTERACT)
-    wait(3 + eventPlayer.getSlot()*2)
-    #wait(1)
-    eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 2
-    checkpointFailReset()
-    wait(1)
-    #wait(60)
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint+1]+ Vector.UP) # teleport not needed
-*/
 
 
 #!include "mechanics.opy"
 
 #!include "addons.opy"
-
 
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
@@ -1852,4 +1811,5 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     MsDestructo = 0
 
 
-
+# enable/disable the include via defines
+testaitoggle 
