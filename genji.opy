@@ -1,12 +1,12 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(10) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly
 #!define touchground false
 #!define cpcheat false
 #!define inspectoron false
 
-#!define testaitoggle #!include "test-ai.opy"
+#!define testaitoggle ##!include "test-ai.opy"
 
 #!define compmodetoggle false
 #!define attemptcount 5
@@ -52,9 +52,11 @@ editorordata
 
 rule "Credits here <---- INSERT YOUR NAME HERE": 
     hudSubtext(getAllPlayers(), "made by: name", HudPosition.LEFT, HO.data_name, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    HudStoreEdit.append(getLastCreatedText())
     hudSubtext(getAllPlayers(), "map code: XXXXX", HudPosition.LEFT, HO.data_code, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    HudStoreEdit.append(getLastCreatedText())
     hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-
+    HudStoreEdit.append(getLastCreatedText())
     # text id debug
     #hudSubtext(getAllPlayers(), getNumberOfTextIds(), HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
@@ -66,7 +68,7 @@ rule "Custom difficulty hud":
     #2) enable this rule
     #3) type your difficulty in the hud below
     hudSubheader(getAllPlayers(), "Difficulty: custom", HudPosition.TOP, HO.data_dif,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-
+    HudStoreEdit.append(getLastCreatedText())
 
 rule "Display World Record": 
     @Disabled
@@ -363,7 +365,10 @@ rule "Setup and Variables":
                 Color.RED,
                 rgb(150, 0, 0)
                 ][Difficultyhud]
-                , HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+                , HudReeval.VISIBILITY, SpecVisibility.DEFAULT
+            )
+            HudStoreEdit.append(getLastCreatedText())
+
     wait(5)
     KILLBALL()
     wait(2)
@@ -744,7 +749,7 @@ def checkpointFailReset():
         eventPlayer.disallowButton(Button.JUMP)
         wait(0.1)
         eventPlayer.allowButton(Button.JUMP)        
-    if eventPlayer.CurrentCheckpoint == 0:
+    if eventPlayer.CurrentCheckpoint == 0 and not eventPlayer.PracticeToggle > 0:
         eventPlayer.Timer = 0
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)

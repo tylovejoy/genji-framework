@@ -174,7 +174,7 @@ globalvar CompRestartLimit 55               # bool                      --- rese
 globalvar instructiontext 56                # [text]                    --- array of instructions
 
 globalvar TitleData 57                      # [[cp ,[title],[color]]    --- title addon 
-
+globalvar HudStoreEdit 58                   # [textid]                  --- list of huds to delete if editormode is on
 #Player variables
 playervar CurrentCheckpoint 0               # int                       --- Current Checkpoint
 

@@ -44,7 +44,9 @@ rule "HUD | Clear Excess Data & Save Map":
 
     enableInspector()
 
-    hudHeader(eventPlayer, 
+    hudText(eventPlayer,  
+        " ",
+        null,
         "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
         "   0. clear excess data:\n"
         " Automatically done when opening this window\n\n"
@@ -59,12 +61,15 @@ rule "HUD | Clear Excess Data & Save Map":
         "   3. Workshop settings:\n"
         " ESC→SHOW LOBBY→SETTINGS→ workshop settings →\n"
         " toggle 'Editor mode' off\n"
-        " Select display difficulty\n"
-        , HudPosition.TOP, HO.edit_clearec1, Color.LIME_GREEN, HudReeval.NONE
+        " Select display difficulty\n", 
+       HudPosition.TOP, HO.edit_clearec1, Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
     )
+    
     eventPlayer.savemaphud[0] = getLastCreatedText()
 
-    hudHeader(eventPlayer, 
+    hudText(eventPlayer,  
+        " ",
+        null,
         "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
         "   4. Create initial sharecode:\n" 
         " ESC→SHOW LOBBY→SETTINGS→SHARE CODE→\n"
@@ -77,8 +82,8 @@ rule "HUD | Clear Excess Data & Save Map":
         
         "   6. Update for credits:\n"
         " ESC→SHOW LOBBY→SETTINGS→SHARE CODE→\n"
-        " UPLOAD TO EXISTING CODE→ PASTE THE CODE YOU CREATED IN STEP 4\n"
-        , HudPosition.TOP, HO.edit_clearec2, Color.LIME_GREEN, HudReeval.NONE
+        " UPLOAD TO EXISTING CODE→ PASTE THE CODE YOU CREATED IN STEP 4\n",
+        HudPosition.TOP, HO.edit_clearec2, Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
     )
     eventPlayer.savemaphud[1] = getLastCreatedText()
 
@@ -124,16 +129,25 @@ rule "HUD | Show Guide On Spawn":
     eventPlayer.EditModeSelection = 1
     eventPlayer.GuideToggle = 1
 
-rule "HUD | Guide":
+rule "Editor | initialize":
     #@Condition hostPlayer.EditorOn
     # condition messes up if host player leaves
     waitUntil(hostPlayer.hasSpawned(), 90)
     wait(5)
     if not hostPlayer.EditorOn:
+        HudStoreEdit = null
         return
 
+
+    while len(HudStoreEdit) > 0:
+        destroyHudText(HudStoreEdit[0])
+        destroyInWorldText(HudStoreEdit[0])
+        del HudStoreEdit[0]
+
+    wait()
+    # huds ========================================
     hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
-        " \n{0}".format(    
+        " {0}".format(    
         [   
         "{0} + {1} | Create New Checkpoint\n"
         "{0} + {2} | Delete selected Checkpoint\n"
@@ -147,16 +161,17 @@ rule "HUD | Guide":
         "{0} + {1} | Create new kill orb\n"
         "{0} + {2} | Delete selected orb\n"
         "{0} + {3} | Select previous orb\n"
-        "{0} + {4} | Select next orb\n"
+        "{0} + {4} | Select next orb\n\n"
         "{5} + {4} | Increase orb size\n"
         "{5} + {3} | Decrease orb size\n"
         "{5} + {1} | Move orb forward\n"
         "{5} + {2} | Move orb Backward".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2)),
  
         "{0} + {1} | Create new Bounce orb\n"
-        "{0} + {2} | Delete selected orb\n"
         "{0} + {3} | Select previous orb\n"
         "{0} + {4} | Select next orb\n"
+        "\n"
+        "{0} + {2} | Delete selected orb\n"
         "{5} + {4} | Increase orb strength\n"
         "{5} + {3} | Decrease orb strength\n"
         "{5} + {1} | Move orb forward\n"
@@ -178,20 +193,46 @@ rule "HUD | Guide":
     )
 
     hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
-    "save map: hold {0} + {1} + {2} and follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
+    "to save map hold {0} + {1} + {2}\nand follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
         HudPosition.LEFT, HO.edit_savemap, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     
+    
     hudText(getAllPlayers(),  #  LEFT at -6 original position
-        "Current mode: {0}".format(["Checkpoints","Kill Orb","Bounce Orb"][hostPlayer.EditModeSelection -1])
-        if localPlayer == hostPlayer else "Current editor/host: {0}".format(hostPlayer)
+        /*
+        " Current mode: {1} {0} ".format(
+            ["Checkpoints" ,"Kill Orb ","Bounce Orb "][hostPlayer.EditModeSelection -1],
+            [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON)][hostPlayer.EditModeSelection -1]
+            )
+        */
+        " {1} {0} ".format(
+            ["Checkpoints mode" ,"Kill Orb mode","Bounce Orb mode"][hostPlayer.EditModeSelection -1],
+            [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON)][hostPlayer.EditModeSelection -1]
+        ) if localPlayer == hostPlayer else " Current editor/host: {0} ".format(hostPlayer)
         , null, null,   
-        HudPosition.RIGHT, HO.edit_host_mode, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        HudPosition.TOP, HO.edit_host_mode, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-    hudText(hostPlayer, null, null, # original part of the one ontop of it
-        "Hold {0} to change mode\n".format(buttonString(Button.ABILITY_1)),      
-        HudPosition.RIGHT, HO.edit_changemode, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+    hudText(hostPlayer, 
+        null,  # original part of the one ontop of it
+        "Hold {0} to change mode".format(buttonString(Button.ABILITY_1)),   
+        null,   
+        HudPosition.TOP, HO.edit_changemode, Color.SKY_BLUE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
+    /*
+    hudText(hostPlayer, 
+    
+        "Current mode: {0}".format(["Checkpoints","Kill Orb","Bounce Orb"][hostPlayer.EditModeSelection -1])
+        if localPlayer == hostPlayer else "Current editor/host: {0}".format(hostPlayer),
+          
+        null, 
+        "Hold {0} to change mode\n".format(buttonString(Button.ABILITY_1)),   
+        HudPosition.TOP,
+        HO.edit_changemode, 
+        Color.SKY_BLUE, Color.SKY_BLUE, Color.SKY_BLUE, 
+        HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+    )
+    */
+
     /*
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
         "{3} + {4} | orb give ultimate | {0} \n"
@@ -204,32 +245,38 @@ rule "HUD | Guide":
     )
     */
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
-        "{0} + {1} | orb give ultimate | {2}".format(
+        "{0} + {1} | orb give ult {3} | {2}".format(
+       #"orb gives {3} | {2} | {0} + {1}".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.PRIMARY_FIRE), 
-            "on" if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off"
+            "on" if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off",
+            abilityIconString(Hero.GENJI, Button.ULTIMATE)
         ), HudPosition.LEFT, HO.edit_orb_ult, Color.GREEN  if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
-        "{0} + {1} | orb gives dash | {2}".format(
+        "{0} + {1} | orb give dash {3} | {2}".format(
+        #"orb gives {3} | {2} | {0} + {1} ".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.SECONDARY_FIRE),
-            "on" if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off"
+            "on" if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off",
+            abilityIconString(Hero.GENJI, Button.ABILITY_1)
         ), HudPosition.LEFT, HO.edit_orb_dash, Color.GREEN  if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null,
-        "{0} + {1} | orb unlocks checkpoint | {2}\n".format(
+        "{0} + {1} | unlocks checkpoint {3} | {2}\n".format(
+        #"unlocks checkpoint | {2} | {0} + {1}\n".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.ABILITY_2),
-            "on" if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off"
+            "on" if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off",
+            iconString(Icon.ASTERISK)
         ), HudPosition.LEFT, HO.edit_orb_lock, Color.GREEN if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
     # curent selected thing data
     hudText(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
     
-        "{0}".format(
+        "\n{0}\n".format(
             " Selected Checkpoint \n Vector: {0}{1} ".format(
                 CheckpointPositions[SelectedCheckpoint_Editing],
                 "" if len(CheckpointPositions[SelectedCheckpoint_Editing]) <2 else
@@ -268,24 +315,18 @@ rule "HUD | Guide":
 
     # orb limit count
      hudText(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
-        "orb/portal limit: {0}/{1}".format(
+        " orb/portal limit: {0}/{1} ".format(
             len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart),
             fxlimit
             ),
             
         null,
         null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
-        HudPosition.TOP, HO.edit_orblimit, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+        HudPosition.LEFT, HO.edit_orblimit, Color.BLUE, Color.SKY_BLUE,Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     
+    wait()
+    # effects ==================================
 
-
-rule "HUD | Guide Effects":
-    #@Condition hostPlayer.EditorOn
-    waitUntil(hostPlayer.hasSpawned(), 90)
-    wait(5)
-    if not hostPlayer.EditorOn:
-        return
-    
     # createIcon(getAllPlayers(), CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.RED, true)
     # createInWorldText(getAllPlayers(), "Selected Checkpoint", CheckpointPositions[SelectedCheckpoint_Editing] + vect(0, 0.5, 0), 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
     ###createEffect(getAllPlayers(), Effect.SPHERE, Color.RED, H[J], I[J], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)

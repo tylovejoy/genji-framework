@@ -70,23 +70,29 @@ settings {
 
 enum HO:
     # Left #####################
-    data_name = -100,
+    data_name = -200,
     data_code,
     data_dsc,
-    
     edit_savemap,
+    
+    game_timer,
+    game_bhop,
+    game_climb,
 
+    edit_orblimit,
     edit_selecteddata,
     edit_orb_ult,
     edit_orb_dash,
     edit_orb_lock,
 
-    game_timer,
-    game_bhop,
-    game_climb,
+
 
     leftend,
     # Top #####################
+    edit_clearec1,
+    edit_clearec2,
+    edit_clearec3,
+
     comp_info,
     comp_instructtop,
     comp_instruct1,
@@ -95,15 +101,13 @@ enum HO:
     comp_instruct4,
     comp_instructbottom,
 
+ 
+    edit_changemode,
+    edit_host_mode,
     data_dif,
-    edit_orblimit,
     game_level_orb,
 
-    edit_clearec1,
-    edit_clearec2,
-    edit_clearec3,
 
- 
 
     filler_custommsg,
     add_custommsg1,
@@ -121,16 +125,13 @@ enum HO:
     topend,
     # Right #####################
     data_remaingtime,
-    edit_host_mode,
-    edit_changemode,
-    edit_instructions_general,
-    edit_instructions_edit,
+    
+
 
     com_restart_n_board,
     com_invincible,
     com_quickres,
     com_spec,
-
     com_invis,
     com_traces,
 
@@ -138,6 +139,9 @@ enum HO:
     com_practicesub,
     com_preview,
     com_previewsub,
+
+    edit_instructions_general,
+    edit_instructions_edit,
 
     board_top5,
 
