@@ -782,7 +782,7 @@ def checkpointFailReset():
         eventPlayer.disallowButton(Button.JUMP)
         wait(0.1)
         eventPlayer.allowButton(Button.JUMP)        
-    if eventPlayer.CurrentCheckpoint == 0:
+    if eventPlayer.CurrentCheckpoint == 0 and not eventPlayer.PracticeToggle > 0:
         eventPlayer.Timer = 0
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
