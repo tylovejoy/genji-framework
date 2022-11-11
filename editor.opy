@@ -2,7 +2,7 @@
 
 /*
 rule "server load hud":
-    hudHeader(getAllPlayers(), "{0} - {1} - {2}".format(getServerLoad(), getPeakServerLoad(), getAverageServerLoad()), HudPosition.RIGHT, -999, Color.WHITE, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    hudHeader(getAllPlayers(), "{0} - {1} - {2}".format(getServerLoad(), getPeakServerLoad(), getAverageServerLoad()), HudPosition.RIGHT, HO.rightend, Color.WHITE, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 */
 
 rule "------------------------------------------------------------------------  Editor ------------------------------------------------------------------------":
@@ -60,7 +60,7 @@ rule "HUD | Clear Excess Data & Save Map":
         " ESC→SHOW LOBBY→SETTINGS→ workshop settings →\n"
         " toggle 'Editor mode' off\n"
         " Select display difficulty\n"
-        , HudPosition.TOP, -99, Color.LIME_GREEN, HudReeval.NONE
+        , HudPosition.TOP, HO.edit_clearec1, Color.LIME_GREEN, HudReeval.NONE
     )
     eventPlayer.savemaphud[0] = getLastCreatedText()
 
@@ -78,13 +78,13 @@ rule "HUD | Clear Excess Data & Save Map":
         "   6. Update for credits:\n"
         " ESC→SHOW LOBBY→SETTINGS→SHARE CODE→\n"
         " UPLOAD TO EXISTING CODE→ PASTE THE CODE YOU CREATED IN STEP 4\n"
-        , HudPosition.TOP, -98, Color.LIME_GREEN, HudReeval.NONE
+        , HudPosition.TOP, HO.edit_clearec2, Color.LIME_GREEN, HudReeval.NONE
     )
     eventPlayer.savemaphud[1] = getLastCreatedText()
 
     hudHeader(eventPlayer, 
         "    > Press Interact to close this window <    "
-        , HudPosition.TOP, -97, Color.LIME_GREEN, HudReeval.NONE
+        , HudPosition.TOP, HO.edit_clearec3, Color.LIME_GREEN, HudReeval.NONE
     )
     eventPlayer.savemaphud[2] = getLastCreatedText()
 
@@ -162,7 +162,7 @@ rule "HUD | Guide":
         "{5} + {1} | Move orb forward\n"
         "{5} + {2} | Move orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
         ][hostPlayer.EditModeSelection-1]), 
-        HudPosition.RIGHT, 10, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     hudSubtext(hostPlayer, #if hostPlayer.GuideToggle else null, 
@@ -174,23 +174,23 @@ rule "HUD | Guide":
         "Hold {3} | toggle guide\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.MELEE), buttonString(Button.ABILITY_2))
         if hostPlayer.GuideToggle == 1  else
         "Hold {0} | toggle guide".format(buttonString(Button.MELEE)),
-        HudPosition.RIGHT, 11, Color.GREEN if hostPlayer.GuideToggle == 1 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle == 1 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
     hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
     "save map: hold {0} + {1} + {2} and follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
-        HudPosition.LEFT, -12, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        HudPosition.LEFT, HO.edit_savemap, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     
     hudText(getAllPlayers(),  #  LEFT at -6 original position
         "Current mode: {0}".format(["Checkpoints","Kill Orb","Bounce Orb"][hostPlayer.EditModeSelection -1])
         if localPlayer == hostPlayer else "Current editor/host: {0}".format(hostPlayer)
         , null, null,   
-        HudPosition.RIGHT, -60, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        HudPosition.RIGHT, HO.edit_host_mode, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     hudText(hostPlayer, null, null, # original part of the one ontop of it
         "Hold {0} to change mode\n".format(buttonString(Button.ABILITY_1)),      
-        HudPosition.RIGHT, -59, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        HudPosition.RIGHT, HO.edit_changemode, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     /*
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
@@ -208,14 +208,14 @@ rule "HUD | Guide":
             buttonString(Button.ULTIMATE), 
             buttonString(Button.PRIMARY_FIRE), 
             "on" if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off"
-        ), HudPosition.TOP, -18, Color.GREEN  if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        ), HudPosition.LEFT, HO.edit_orb_ult, Color.GREEN  if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
         "{0} + {1} | orb gives dash | {2}".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.SECONDARY_FIRE),
             "on" if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off"
-        ), HudPosition.TOP, -17, Color.GREEN  if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        ), HudPosition.LEFT, HO.edit_orb_dash, Color.GREEN  if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null,
@@ -223,10 +223,10 @@ rule "HUD | Guide":
             buttonString(Button.ULTIMATE), 
             buttonString(Button.ABILITY_2),
             "on" if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off"
-        ), HudPosition.TOP, -16, Color.GREEN if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        ), HudPosition.LEFT, HO.edit_orb_lock, Color.GREEN if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
-    
+    # curent selected thing data
     hudText(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
     
         "{0}".format(
@@ -243,77 +243,28 @@ rule "HUD | Guide":
                 
             ) 
             if hostPlayer.EditModeSelection == 2 else 
-
+            /*
             " Selected Bounce Orb \n Vector: {1} \n strength: {0} \n Lock: {2} \n Dash: {3} \n Ult: {4} ".format(
                 BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
                 BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
                 BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
                 BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
                 BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
-
-                ) 
-            if hostPlayer.EditModeSelection == 3 else 
-                
-            ""),
-                        
-        null,
-        null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
-        HudPosition.LEFT, 50, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
-        )
-    /*
-    hudHeader(hostPlayer, "orb/portal limit: {0}/{1}".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart),fxlimit), HudPosition.TOP, -21, Color.WHITE, HudReeval.VISIBILITY_AND_STRING)
-
-    hudText(hostPlayer,
-        #"{0}\norb/portal limit: {1}/{2}".format(
-        "{0}".format(
-            "Checkpoint Mode\nVector:{0}{1}".format(
-                CheckpointPositions[SelectedCheckpoint_Editing],
-                "" if len(CheckpointPositions[SelectedCheckpoint_Editing]) <2 else
-                "\nTeleport:{0}".format(CheckpointPositions[SelectedCheckpoint_Editing][1])
-            )
-            if hostPlayer.EditModeSelection == 1 else  
-
-            "Current Kill Orb's\nVector:{1}\nradius: {0}".format(
-                KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]],
-                KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
-                
-            ) 
-            if hostPlayer.EditModeSelection == 2 else 
-
-            "Current Bounce Orb's\nVector:{1}\nstrength: {0}".format(
+            ) */
+            
+            " Selected Bounce Orb \n Vector: {1} \n strength: {0}".format(
                 BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
                 BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
-                ) 
+            ) 
+
             if hostPlayer.EditModeSelection == 3 else 
                 
             ""),
                         
         null,
         null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
-        HudPosition.TOP, -20, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
         )
-        */
-    
-    # original without vector display
-    /*
-    hudText(hostPlayer,
-        "{0}\norb/portal limit: {1}/{2}".format(
-            "Checkpoint Mode" if hostPlayer.EditModeSelection == 1 else  
-            "Current Kill Orb's radius: {0}".format(
-                KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
-            ) if hostPlayer.EditModeSelection == 2 else 
-            "Current Bounce Orb's strength: {0}".format(
-                BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
-                ) if hostPlayer.EditModeSelection == 3 
-                else "",
-            len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart),
-            fxlimit
-            ),
-            
-        null,
-        null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
-        HudPosition.TOP, -20, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    */
 
     # orb limit count
      hudText(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
@@ -324,7 +275,7 @@ rule "HUD | Guide":
             
         null,
         null,#"Current Bounce Orb's Ultimate: {0}\nCurrent Bounce Orb's Dash: {1}".format(BounceToggleUlt[CurrentBounce_Editing], BounceToggleDash[CurrentBounce_Editing]) if hostPlayer.EditModeSelection == 3 else "",
-        HudPosition.TOP, -20, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+        HudPosition.TOP, HO.edit_orblimit, Color.RED, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     
 
 
@@ -553,91 +504,8 @@ rule "Kill Orb | Decrease Size | Deflect + Crouch":
             # KillBallEffects = []
             # KILLBALL()
     UpdateCache()
-/*
-rule "Kill Orb | Move Toward | Deflect + Primary Fire":
-    @Event eachPlayer
-    @Condition hostPlayer.EditorOn
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
-    @Condition eventPlayer == hostPlayer
-    @Condition eventPlayer.EditModeSelection > 1
-    
-    if eventPlayer.EditModeSelection == 2:
-        if KillBallChase != KillBallPositions[SelectedKillball_Editing]:
-            goto lbl_0
-        chase(KillBallChase, eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * (distance(eventPlayer.getPosition(), KillBallPositions[SelectedKillball_Editing]) + 5)), rate=1, ChaseReeval.DESTINATION_AND_RATE)
-        lbl_0:
-        wait(0.25)
-        if RULE_CONDITION:
-            goto RULE_START
-        stopChasingVariable(KillBallChase)
-        KillBallPositions[SelectedKillball_Editing] = KillBallChase
-        wait()
-        for TempIterator1 in range(len(KillBallPositions)):
-            destroyEffect(KillBallEffects[TempIterator1])
-            wait()
-        wait()
-        KillBallEffects = []
-        KILLBALL()
-    elif eventPlayer.EditModeSelection == 3:
-        if CurrentBouncePosition_Editing != BouncePositions[CurrentBounce_Editing]:
-            goto lbl_1
-        #chase(CurrentBouncePosition_Editing, eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * (distance(eventPlayer.getPosition(), BouncePositions[CurrentBounce_Editing]) + 5)), rate=1, ChaseReeval.DESTINATION_AND_RATE)
-        CurrentBouncePosition_Editing = CurrentBouncePosition_Editing + (eventPlayer.getFacingDirection() *5)
-        
-        #eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * (distance(eventPlayer.getPosition(), BouncePositions[CurrentBounce_Editing]) + 5))
-        lbl_1:
-        wait(0.25)
-        if RULE_CONDITION:
-            goto RULE_START
-        #stopChasingVariable(CurrentBouncePosition_Editing)
-        BouncePositions[CurrentBounce_Editing] = CurrentBouncePosition_Editing
-        wait()
-        for TempIterator1 in range(len(BouncePositions)):
-            destroyEffect(BounceEffects[TempIterator1])
-            wait()
-        wait()
-        BounceEffects = []
-        pinball()
 
-rule "Kill Orb | Move Backward | Deflect + Secondary Fire":
-    @Event eachPlayer
-    @Condition hostPlayer.EditorOn
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
-    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
-    @Condition eventPlayer == hostPlayer
-    @Condition eventPlayer.EditModeSelection > 1
-    
-    if eventPlayer.EditModeSelection == 2:
-        if KillBallChase != KillBallPositions[SelectedKillball_Editing]:
-            goto lbl_0
-        chase(KillBallChase, eventPlayer.getEyePosition() - (eventPlayer.getFacingDirection() * (distance(eventPlayer.getPosition(), KillBallPositions[SelectedKillball_Editing]) + 5)), rate=1, ChaseReeval.DESTINATION_AND_RATE)
-        lbl_0:
-        wait(0.25)
-        if RULE_CONDITION:
-            goto RULE_START
-        stopChasingVariable(KillBallChase)
-        KillBallPositions[SelectedKillball_Editing] = KillBallChase
-        for TempIterator1 in range(len(KillBallPositions)):
-            destroyEffect(KillBallEffects[TempIterator1])
-        KillBallEffects = []
-        KILLBALL()
-    elif eventPlayer.EditModeSelection == 3:
-        if CurrentBouncePosition_Editing != BouncePositions[CurrentBounce_Editing]:
-            goto lbl_1
-        chase(CurrentBouncePosition_Editing, eventPlayer.getEyePosition() - (eventPlayer.getFacingDirection() * (distance(eventPlayer.getPosition(), BouncePositions[CurrentBounce_Editing]) + 5)), rate=1, ChaseReeval.DESTINATION_AND_RATE)
-        lbl_1:
-        wait(0.25)
-        if RULE_CONDITION:
-            goto RULE_START
-        stopChasingVariable(CurrentBouncePosition_Editing)
-        BouncePositions[CurrentBounce_Editing] = CurrentBouncePosition_Editing
-        for TempIterator1 in range(len(BouncePositions)):
-            destroyEffect(BounceEffects[TempIterator1])
-        BounceEffects = []
-        pinball()
 
-*/
 rule "Kill Orb / Bounce Orb | Move Toward/Backward | Deflect + Primary Fire":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn

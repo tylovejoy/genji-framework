@@ -4,11 +4,11 @@
 #!define testbotnumber 19
 
 # create = wait for all to finish, startdelay = delay after al of em are created
-#!define waitforcreate false
-#!define aistartdelay 10
+#!define waitforcreate true
+#!define aistartdelay true
 #!define creationdelay 8 
 
-#!define leaderboardai false
+#!define leaderboardai true
 
 #!define aiactiondelay 3 + (testAI.index(eventPlayer) * 2)
 ##!define aiactiondelay 3
@@ -39,7 +39,7 @@ rule "server load hud":
             AvrgMinDisplay
         ), 
         
-        HudPosition.LEFT, 1000, 
+        HudPosition.LEFT, HO.leftend, 
         Color.RED if getAverageServerLoad() > 220 else 
         Color.ORANGE if getAverageServerLoad() > 190 else 
         Color.YELLOW if getAverageServerLoad() > 160  else 
@@ -101,13 +101,14 @@ rule "leaderboard test ai":
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) #- 1
     @Condition (waitforcreate and AIcreated) or not waitforcreate
     
-    if CompMode:
-        eventPlayer.forceButtonPress(Button.INTERACT)
-        wait(0.16)
 
     if aistartdelay:
         wait(aiactiondelay )
 
+    if CompMode:
+        wait(0.16)
+        eventPlayer.forceButtonPress(Button.INTERACT)
+        wait(0.16)
         
     else:
         wait(1)

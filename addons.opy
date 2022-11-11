@@ -102,12 +102,12 @@ rule "In world text for certain Checkpoints <---- EDIT ME":
 
 rule "HUD text for certain Checkpoints <---- EDIT ME":
     @Disabled
-    # first one is padding, leave it
-    hudSubtext(getAllPlayers(), "                                                   \r\n  \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n", HudPosition.TOP, -6, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    # warning: adding text might go over the text limit and caues huds to not apear
-    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 0], "Text for checkpoint 0", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 1], "Text for checkpoint 1", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 2], "Text for checkpoint 2", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    #  Don't touch this first hud, its padding to get your huds in place
+    hudSubtext(getAllPlayers(), "                                                   \r\n  \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n", HudPosition.TOP, HO.filler_custommsg, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    # Edit text here - warning: adding text might go over the text limit and cause huds to not apear
+    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 0], "Text for checkpoint 0", HudPosition.TOP, HO.add_custommsg1, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 1], "Text for checkpoint 1", HudPosition.TOP, HO.add_custommsg2, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 2], "Text for checkpoint 2", HudPosition.TOP, HO.add_custommsg3, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 /*
 rule "Portal Effect - Text":
     @Disabled

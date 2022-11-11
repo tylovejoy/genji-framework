@@ -157,7 +157,7 @@ rule "HUD | Multiclimbs Used":
     @Condition eventPlayer.hasSpawned() == true
     
     destroyHudText(eventPlayer.MultiClimbCountHUD)
-    hudHeader(eventPlayer, "Climb{0}".format("({0})".format(eventPlayer.MultiClimbCount) if eventPlayer.MultiClimbCount > 0 else ""), HudPosition.LEFT, 2, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudHeader(eventPlayer, "Climb{0}".format("({0})".format(eventPlayer.MultiClimbCount) if eventPlayer.MultiClimbCount > 0 else ""), HudPosition.LEFT, HO.game_climb, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     eventPlayer.MultiClimbCountHUD = getLastCreatedText()
  
 
@@ -167,7 +167,7 @@ rule "HUD | Wallclimb Used":
     @Condition eventPlayer.hasSpawned() == true
     
     destroyHudText(eventPlayer.MultiClimbCountHUD)
-    hudHeader(eventPlayer, "Climb", HudPosition.LEFT, 2, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudHeader(eventPlayer, "Climb", HudPosition.LEFT, HO.game_climb, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     eventPlayer.MultiClimbCountHUD = getLastCreatedText()
 
 
@@ -186,7 +186,7 @@ rule "HUD | Bhop":
         @Condition eventPlayer.hasSpawned() == true
         
         wait(1)
-        hudHeader(eventPlayer, "Bhop", HudPosition.LEFT, 1, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.COLOR, SpecVisibility.DEFAULT)
+        hudHeader(eventPlayer, "Bhop", HudPosition.LEFT, HO.game_bhop, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.COLOR, SpecVisibility.DEFAULT)
 
 
 rule "HUD | Bhop Indicator | Unused | Green":

@@ -10,7 +10,7 @@ editortoggle(10) # 0 is editor, rest is numbers
 
 #!define compmodetoggle false
 #!define attemptcount 5
-#!define comptimelimit 120
+#!define comptimelimit 1
 #!define comprestartlimit false
 
 # settings ##############################
@@ -51,9 +51,9 @@ rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
 editorordata
 
 rule "Credits here <---- INSERT YOUR NAME HERE": 
-    hudSubtext(getAllPlayers(), "made by: name", HudPosition.LEFT, -15, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers(), "map code: XXXXX", HudPosition.LEFT, -14, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "made by: name", HudPosition.LEFT, HO.data_name, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "map code: XXXXX", HudPosition.LEFT, HO.data_code, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
     # text id debug
     #hudSubtext(getAllPlayers(), getNumberOfTextIds(), HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
@@ -65,7 +65,7 @@ rule "Custom difficulty hud":
     #1) workshop settings > difficulty > set to "dont display"
     #2) enable this rule
     #3) type your difficulty in the hud below
-    hudSubheader(getAllPlayers(), "Difficulty: custom", HudPosition.TOP, -24,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubheader(getAllPlayers(), "Difficulty: custom", HudPosition.TOP, HO.data_dif,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
 
 rule "Display World Record": 
@@ -78,12 +78,13 @@ rule "Display World Record":
         null,
         " \n{0} world record {0}".format(iconString(Icon.FIRE)),
         "name and time here",#"Tony hawk - 69 sec",
-        HudPosition.RIGHT, -1, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     
     # enable rule and fill in your record here
 
 
 rule "Friend Title <----  DISPLAY MESSAGE HERE (ON PLAYER)":
+    @Disabled
     @Event eachPlayer
     @Condition eventPlayer.hasSpawned() == true
     
@@ -254,57 +255,52 @@ rule "Setup and Variables":
     SavedProgress = []
     
     if CompMode:
-        hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                                                                                                           ", HudPosition.TOP, -22, Color.WHITE, HudReeval.VISIBILITY,SpecVisibility.DEFAULT)
+        hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                                                                                                           ", HudPosition.TOP, HO.comp_instructtop, Color.WHITE, HudReeval.VISIBILITY,SpecVisibility.DEFAULT)
         # replace the instructions custom string for your own instructions. type \n for enter/next line
         if instructiontext[0]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[0], HudPosition.TOP, -21, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[0], HudPosition.TOP, HO.comp_instruct1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         if instructiontext[1]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[1], HudPosition.TOP, -20, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[1], HudPosition.TOP, HO.comp_instruct2, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         if instructiontext[2]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[2], HudPosition.TOP, -19, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[2], HudPosition.TOP, HO.comp_instruct3, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         if instructiontext[3]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[3], HudPosition.TOP, -18, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                   Press {0} to start                                ".format(buttonString(Button.INTERACT)), HudPosition.TOP, -17, Color.WHITE, HudReeval.VISIBILITY_AND_STRING,SpecVisibility.DEFAULT)
-        
-           
+            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[3], HudPosition.TOP, HO.comp_instruct4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                   Press {0} to start                                ".format(buttonString(Button.INTERACT)), HudPosition.TOP, HO.comp_instructbottom, Color.WHITE, HudReeval.VISIBILITY_AND_STRING,SpecVisibility.DEFAULT)
+                
 
     else:
-        hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else ""), HudPosition.RIGHT, -14, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-        hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else ""), HudPosition.RIGHT, -13,Color.GREEN if localPlayer.invis else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-        hudSubtext(getAllPlayers() if localPlayer.EditModeSelection < 1 else null,"{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.CurrentCheckpoint - localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else ""),HudPosition.RIGHT, -11, Color.GREEN if localPlayer.PracticeToggle else Color.GRAY if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+        hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else ""), HudPosition.RIGHT, HO.com_spec, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+        hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else ""), HudPosition.RIGHT, HO.com_invis, Color.GREEN if localPlayer.invis else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+        hudSubtext(getAllPlayers() if localPlayer.EditModeSelection < 1 else null,"{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.CurrentCheckpoint - localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else ""),HudPosition.RIGHT, HO.com_practice, Color.GREEN if localPlayer.PracticeToggle else Color.GRAY if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     
         hudSubheader([i for i in getAllPlayers() if i.PracticeToggle and hostPlayer.EditModeSelection < 1],
             "{0} + {1} | Next level\n"
             "{0} + {2} | Previous level\n"
             "{3} | Start from practice cp ".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT)),
-            HudPosition.RIGHT, -10, Color.LIME_GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+            HudPosition.RIGHT, HO.com_practicesub, Color.LIME_GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         hudSubtext(
             [i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1 and i.PracticeToggle != 1], 
             "Hold {0} | Traces{1}".format(abilityIconString(Hero.GENJI,Button.ULTIMATE), "" if localPlayer.TracesOff else " | ON "), 
-            HudPosition.RIGHT, -12, Color.WHITE if localPlayer.TracesOff else Color.GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+            HudPosition.RIGHT, HO.com_traces, Color.WHITE if localPlayer.TracesOff else Color.GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )  
    
-    #async(CreateLeaderBoard(), AsyncBehavior.RESTART)
     CreateLeaderBoard()
     # padding for custom gud
-    hudSubtext(getAllPlayers(), "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv", HudPosition.TOP, -1, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv", HudPosition.TOP, HO.fillermain, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     
     # normal
-    ###hudSubtext(getAllPlayers(), "{0}+{1}+{2} | Restart".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT)), HudPosition.RIGHT, -20, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), 
         "{0}+{1}+{2} | Restart\nHold {3} | leaderboard".format(
-        buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)), HudPosition.RIGHT, -20, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+        buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)), HudPosition.RIGHT, HO.com_restart_n_board, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     
-    hudSubtext(getAllPlayers(), "{0} {1} |  {2}".format( "" if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset"), HudPosition.RIGHT, -18, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    ###hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | leaderboard".format(buttonString(Button.MELEE)), HudPosition.RIGHT, -17, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null,  "Hold {0} | Preview orb/portal".format(buttonString(Button.PRIMARY_FIRE)), HudPosition.RIGHT, -16, Color.GREEN if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else Color.GREEN if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-    hudSubheader(getAllPlayers() if hostPlayer.EditModeSelection < 1 and localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else null, "Walk left/right | preview others\nAim | change preview angle", HudPosition.RIGHT, -15, Color.LIME_GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "{0} {1} |  {2}".format( "" if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset"), HudPosition.RIGHT, HO.com_quickres, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null,  "Hold {0} | Preview orb/portal".format(buttonString(Button.PRIMARY_FIRE)), HudPosition.RIGHT, HO.com_preview, Color.GREEN if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else Color.GREEN if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    hudSubheader(getAllPlayers() if hostPlayer.EditModeSelection < 1 and localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else null, "Walk left/right | preview others\nAim | change preview angle", HudPosition.RIGHT, HO.com_previewsub, Color.LIME_GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-    hudSubtext(getAllPlayers(), "{0}+{1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.InvincibleToggle == 1 else ""), HudPosition.RIGHT, -19, Color.GREEN if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "{0}+{1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.InvincibleToggle == 1 else ""), HudPosition.RIGHT, HO.com_invincible, Color.GREEN if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
    
-    #hudSubtext([i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1 and i.PracticeToggle != 1], "Hold {0} | Toggle Traces".format(abilityIconString(Hero.GENJI,Button.ULTIMATE)), HudPosition.RIGHT, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)  
-  
+
     if not hostPlayer.EditorOn:
         Difficultyhud = createWorkshopSetting(enum[
             "beginner",
@@ -347,7 +343,7 @@ rule "Setup and Variables":
                 "extreme",
                 "extreme +",
                 "hell"][Difficultyhud], 
-                HudPosition.TOP, -24,
+                HudPosition.TOP, HO.data_dif,
                 [
                 Color.GREEN,
                 Color.LIME_GREEN,
@@ -396,7 +392,7 @@ rule "Match time":
     pauseMatchTime()
     wait(5)
     TimeRemaining = 265 #269
-    hudSubheader(getAllPlayers(), "  Server Restarts In {0} Min  ".format(TimeRemaining), HudPosition.RIGHT, -200, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+    hudSubheader(getAllPlayers(), "  Server Restarts In {0} Min  ".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     while TimeRemaining > 0:
         wait(60)
         TimeRemaining --
@@ -452,7 +448,7 @@ rule "Initialize and CP HUD":
             ),
             "competitive mode" if CompTime > 0 else "competitive mode\n\n\n"
             , 
-            HudPosition.TOP, -860, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.STRING, SpecVisibility.DEFAULT
+            HudPosition.TOP, HO.comp_info, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.STRING, SpecVisibility.DEFAULT
          ) 
         if not "{0}".format(eventPlayer) in CompAtmpSaveNames: # instructions and settings for comp start
             eventPlayer.instructionhud = true
@@ -473,18 +469,8 @@ rule "Initialize and CP HUD":
             #kill(eventPlayer, null)
     
 
-    hudSubtext(eventPlayer, "Time {0}".format(prettyTime(eventPlayer.Timer)), HudPosition.LEFT, -5, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT) #LEFT, -2
-    /*
-    # original
-    hudSubtext(eventPlayer, "{0} {1}".format("Level ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudSubtext( # display locks collected
-        [eventPlayer if len([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true] ) > 0 else null], 
-        "{0} / {1} orange orbs".format(
-            "0" if eventPlayer.LockCollected == 0 else len(eventPlayer.LockCollected) -1,
-            len([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true])
-        ),HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    */
-    # orange sub+text
+    hudSubtext(eventPlayer, "Time {0}".format(prettyTime(eventPlayer.Timer)), HudPosition.LEFT, HO.game_timer, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT) #LEFT, -2
+
     hudText(eventPlayer, 
         null, 
         "orange orbs {0} / {1}".format(
@@ -494,34 +480,9 @@ rule "Initialize and CP HUD":
             eventPlayer.CurrentCheckpoint, 
             len(CheckpointPositions) - 1
         ),    
-        HudPosition.TOP, -14, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
+        HudPosition.TOP, HO.game_level_orb, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
     )
-    # in same
-    /*
-    hudText(eventPlayer, null, 
-        null,
-        "Level {0} / {1}\n{2}".format(
-            eventPlayer.CurrentCheckpoint, 
-            len(CheckpointPositions) - 1,
-            "orange orbs {0} / {1}".format(
-                len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache
-            ) if eventPlayer.BounceLockMax_Cache else ""),
-        HudPosition.TOP, -14, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
-    )
-    */
-    /*
-    # on same line
-    hudText(eventPlayer, null, 
-        null,
-        "Level {0} / {1}{2}".format(
-            eventPlayer.CurrentCheckpoint, 
-            len(CheckpointPositions) - 1,
-            " | orange orbs {0} / {1}".format(
-                len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache
-            ) if eventPlayer.BounceLockMax_Cache else ""),
-        HudPosition.TOP, -14, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
-    )
-    */
+
     eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron 
         , 0) # breaks if the defined thing is on the same line
 
@@ -567,24 +528,24 @@ rule "remake leaderboard": # for global isntead of tied to player
     if not CompMode or (CompMode and CompTime > 0):    
         # top 5
         if LeaderBoardFull[0]:
-            hudSubtext(getAllPlayers()," \n{0} Top 5 {0}".format(abilityIconString(Hero.GENJI,Button.PRIMARY_FIRE)), HudPosition.RIGHT, 0, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudSubtext(getAllPlayers()," \n{0} Top 5 {0}".format(abilityIconString(Hero.GENJI,Button.PRIMARY_FIRE)), HudPosition.RIGHT, HO.board_top5, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
             LeaderBoardHuds[0] = getLastCreatedText()
-            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0][2], HudPosition.RIGHT, 1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0][2], HudPosition.RIGHT, HO.board_top5+1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
             LeaderBoardHuds[1] = getLastCreatedText()
         if LeaderBoardFull[1]:
-            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[1][0], LeaderBoardFull[1][2], HudPosition.RIGHT, 2, Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[1][0], LeaderBoardFull[1][2], HudPosition.RIGHT, HO.board_top5+2, Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
             LeaderBoardHuds[2] = getLastCreatedText()
         if LeaderBoardFull[2]:
-            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[2][0], LeaderBoardFull[2][2], HudPosition.RIGHT, 3, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[2][0], LeaderBoardFull[2][2], HudPosition.RIGHT, HO.board_top5+3, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
             LeaderBoardHuds[3] = getLastCreatedText()
         if LeaderBoardFull[3]:
-            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[3][0], LeaderBoardFull[3][2], HudPosition.RIGHT, 4, Color.LIME_GREEN, Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[3][0], LeaderBoardFull[3][2], HudPosition.RIGHT, HO.board_top5+4, Color.LIME_GREEN, Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
             LeaderBoardHuds[4] = getLastCreatedText()
         if LeaderBoardFull[4]:
-            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4][2], HudPosition.RIGHT, 5, Color.GREEN, Color.GREEN, Color.GREEN,HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4][2], HudPosition.RIGHT, HO.board_top5+5, Color.GREEN, Color.GREEN, Color.GREEN,HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
             LeaderBoardHuds[5] = getLastCreatedText()
 
-        hudHeader(localPlayer.LeaderboardToggle, "　　　　 {0} Leaderboard {0} 　　　".format(iconString(Icon.FLAG)), HudPosition.TOP, -780, Color.BLUE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+        hudHeader(localPlayer.LeaderboardToggle, "　　　　 {0} Leaderboard {0} 　　　".format(iconString(Icon.FLAG)), HudPosition.TOP, HO.board_header, Color.BLUE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
         LeaderBoardHuds[6] = getLastCreatedText()
 
         hudHeader(
@@ -605,7 +566,7 @@ rule "remake leaderboard": # for global isntead of tied to player
             LeaderBoardFull[2][2] if LeaderBoardFull[2] else "",
             LeaderBoardFull[3][2] if LeaderBoardFull[3] else "",
             LeaderBoardFull[4][2] if LeaderBoardFull[4] else ""
-            ),HudPosition.TOP, -779, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            ),HudPosition.TOP, HO.board_display1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         LeaderBoardHuds[7] = getLastCreatedText()
 
         if LeaderBoardFull[5]:
@@ -627,7 +588,7 @@ rule "remake leaderboard": # for global isntead of tied to player
                 LeaderBoardFull[7][2] if LeaderBoardFull[7] else "",
                 LeaderBoardFull[8][2] if LeaderBoardFull[8] else "",
                 LeaderBoardFull[9][2] if LeaderBoardFull[9] else ""
-                ),HudPosition.TOP, -778, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+                ),HudPosition.TOP, HO.board_display2, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
             LeaderBoardHuds[8] = getLastCreatedText()
 
         if LeaderBoardFull[10]:
@@ -649,7 +610,7 @@ rule "remake leaderboard": # for global isntead of tied to player
                 LeaderBoardFull[12][2] if LeaderBoardFull[9] else "",
                 LeaderBoardFull[13][2] if LeaderBoardFull[9] else "",
                 LeaderBoardFull[14][2] if LeaderBoardFull[9] else ""
-                ),HudPosition.TOP, -777, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+                ),HudPosition.TOP, HO.board_display3, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
             LeaderBoardHuds[9] = getLastCreatedText()
 
         if LeaderBoardFull[15]:
@@ -671,7 +632,7 @@ rule "remake leaderboard": # for global isntead of tied to player
                 LeaderBoardFull[17][2] if LeaderBoardFull[9] else "",
                 LeaderBoardFull[18][2] if LeaderBoardFull[9] else "",
                 LeaderBoardFull[19][2] if LeaderBoardFull[9] else ""
-                ),HudPosition.TOP, -776, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+                ),HudPosition.TOP, HO.board_display4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
             LeaderBoardHuds[10] = getLastCreatedText()
         
     else: # if comp time run out
@@ -696,7 +657,7 @@ rule "remake leaderboard": # for global isntead of tied to player
             LeaderBoardFull[2][2] if LeaderBoardFull[2] else "",
             LeaderBoardFull[3][2] if LeaderBoardFull[3] else "",
             LeaderBoardFull[4][2] if LeaderBoardFull[4] else ""
-            ),HudPosition.TOP, -779, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+            ),HudPosition.TOP, HO.board_display1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
         LeaderBoardHuds[7] = getLastCreatedText()
 
         if LeaderBoardFull[5]:
@@ -718,7 +679,7 @@ rule "remake leaderboard": # for global isntead of tied to player
                 LeaderBoardFull[7][2] if LeaderBoardFull[7] else "",
                 LeaderBoardFull[8][2] if LeaderBoardFull[8] else "",
                 LeaderBoardFull[9][2] if LeaderBoardFull[9] else ""
-                ),HudPosition.TOP, -778, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+                ),HudPosition.TOP, HO.board_display2, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
             LeaderBoardHuds[8] = getLastCreatedText()
 
         if LeaderBoardFull[10]:  
@@ -740,7 +701,7 @@ rule "remake leaderboard": # for global isntead of tied to player
                 LeaderBoardFull[12][2] if LeaderBoardFull[9] else "",
                 LeaderBoardFull[13][2] if LeaderBoardFull[9] else "",
                 LeaderBoardFull[14][2] if LeaderBoardFull[9] else ""
-                ),HudPosition.TOP, -777, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+                ),HudPosition.TOP, HO.board_display3, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
             LeaderBoardHuds[9] = getLastCreatedText()
 
         if LeaderBoardFull[15]:
@@ -762,7 +723,7 @@ rule "remake leaderboard": # for global isntead of tied to player
                 LeaderBoardFull[17][2] if LeaderBoardFull[9] else "",
                 LeaderBoardFull[18][2] if LeaderBoardFull[9] else "",
                 LeaderBoardFull[19][2] if LeaderBoardFull[9] else ""
-                ),HudPosition.TOP, -776, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+                ),HudPosition.TOP, HO.board_display4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
             LeaderBoardHuds[10] = getLastCreatedText()
 
     #wait()
