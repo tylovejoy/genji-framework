@@ -251,4 +251,6 @@ subroutine Leaderboardupdate # fishos
 subroutine CreateLeaderBoard
 subroutine UpdateTitle
 
-
+subroutine DashUltGive
+subroutine CheckUlt
+subroutine CheckDash

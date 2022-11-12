@@ -1,6 +1,6 @@
 
 if (x == 0){
-    x = `#!define editorordata #\n #!define selectedmap "workshopChamber"\n#!define editoron true`
+    x = `#!define editorordata #\n #!define selectedmap "workshopChamber"\n#!define editoron true\n`
 
 } else {
     datafiles = {
@@ -37,7 +37,7 @@ if (x == 0){
     14: "nepal"
     }[x]
 
-    x = '#!define editorordata #!include "'+ datafiles + '"\n #!define selectedmap "' + selectedmap + '"' + '\n #!define editoron false'
+    x = '#!define editorordata #!include "'+ datafiles + '"\n #!define selectedmap "' + selectedmap + '"' + '\n #!define editoron false\n'
 
 }
 

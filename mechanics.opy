@@ -4,31 +4,12 @@ rule "------------------------------------------------------------------------ C
     @Delimiter
     @Disabled
 
-rule "prevent ult swing":
-    @Event eachPlayer
-    @Condition eventPlayer.isUsingUltimate()
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    @Condition  eventPlayer.InvincibleToggle == 0
-    # prevents slashign in last second of ult, because it extends the duration
-    wait(1.2)
-    eventPlayer.disallowButton(Button.PRIMARY_FIRE)
-    waitUntil(not eventPlayer.isUsingUltimate(),2)
-    wait()
-    eventPlayer.allowButton(Button.PRIMARY_FIRE)
-
 rule "Checking | Jump":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
     @Condition eventPlayer.JumpCount != 2
     
-    #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
-    #When this rule is turned on, the effect is "open three stages for a specific checkpoint", 
-    #and when it is turned off, it means "ban all levels for three stages"
-    #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
-    #Notes must be read! The effect of this condition being turned on is "Automatically open three stages after customs clearance", 
-    #and if it is turned off, it will still be banned for three stages after customs clearance.
-    #@Condition eventPlayer.A < len(A) - 1
     eventPlayer.JumpCount += 1
 
 
@@ -47,13 +28,6 @@ rule "Checking | In the air":
     @Condition eventPlayer.JumpCount == 0
     @Condition eventPlayer.isInAir() == true
     
-    #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
-    #When this rule is turned on, the effect is "open three stages for a specific checkpoint", 
-    #and when it is turned off, it means "ban all levels for three stages"
-    #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
-    #Notes must be read! The effect of this condition being turned on is "Automatically open three stages after customs clearance", 
-    #and if it is turned off, it will still be banned for three stages after customs clearance.
-    #@Condition eventPlayer.A < len(A) - 1
     eventPlayer.JumpCount = 1
 
 
@@ -109,39 +83,25 @@ rule "Checking | Create Bhop":
         return
     smallMessage(eventPlayer, "   Bhop has been created!")    
 
-
+/*
 rule "Checking | Bhop/Double Jump Initialization":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.isOnGround() == true
-    
-    #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
-    # When this rule is turned on, the effect is "open three stages in a specific checkpoint", 
-    # and when it is turned off, it will be "banned three stages in all levels"
-    #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
-    # Notes must be read! When this condition is turned on, the effect is "Automatically open three stages after customs clearance", 
-    # and if it is turned off, three stages will still be banned after customs clearance.
-    #@Condition eventPlayer.A < len(A) - 1
+
     eventPlayer.JumpCount = 0
     eventPlayer.WallclimbUsed = 2
     wait(0)
     if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed != 2) and eventPlayer.isOnGround():
         goto RULE_START
     eventPlayer.BhopUsed = 1
-
+*/
 
 rule "Checking | Double jump, initialized with small jump":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.isOnGround() == true
     
-    #The number "-1" after the variable A is the number of levels. For details, please refer to "Give the knife". 
-    #When this rule is turned on, the effect is "open three stages for a specific checkpoint", 
-    #and when it is turned off, it means "ban all levels for three stages"
-    #@Condition (eventPlayer.A != -1 or eventPlayer.A != -1 or false) == true
-    #Notes must be read! The effect of this condition being turned on is "Automatically open three stages after customs clearance", 
-    #and if it is turned off, it will still be banned for three stages after customs clearance.
-    #@Condition eventPlayer.A < len(A) - 1
     eventPlayer.JumpCount = 0
     eventPlayer.WallclimbUsed = 2
     eventPlayer.MultiClimbCount = 0
@@ -165,12 +125,19 @@ rule "HUD | Wallclimb Used":
     @Event eachPlayer
     @Condition eventPlayer.WallclimbUsed == 1
     @Condition eventPlayer.hasSpawned() == true
-    
+
     destroyHudText(eventPlayer.MultiClimbCountHUD)
-    hudHeader(eventPlayer, "Climb", HudPosition.LEFT, HO.game_climb, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudHeader(eventPlayer, " Climb ", HudPosition.LEFT, HO.game_climb, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     eventPlayer.MultiClimbCountHUD = getLastCreatedText()
 
-
+/*
+rule "HUD | Wallclimb":
+    @Event eachPlayer
+    @Condition eventPlayer.hasSpawned() == true
+    #destroyHudText(eventPlayer.MultiClimbCountHUD)
+    hudHeader(eventPlayer, "Climb{0}".format("" if MultiClimbCount < 1 else " "+MultiClimbCount), HudPosition.LEFT, HO.game_climb, Color.RED if eventPlayer.WallclimbUsed == 1 else Color.GREEN, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    #eventPlayer.MultiClimbCountHUD = getLastCreatedText()
+*/
 rule "HUD | Multiclimb Counter":
     @Event eachPlayer
     @Condition eventPlayer.isOnWall() == true
@@ -182,11 +149,11 @@ rule "HUD | Multiclimb Counter":
 
 
 rule "HUD | Bhop":
-        @Event eachPlayer
-        @Condition eventPlayer.hasSpawned() == true
-        
-        wait(1)
-        hudHeader(eventPlayer, "Bhop", HudPosition.LEFT, HO.game_bhop, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.COLOR, SpecVisibility.DEFAULT)
+    @Event eachPlayer
+    @Condition eventPlayer.hasSpawned() == true
+    
+    wait(1)
+    hudHeader(eventPlayer, "Bhop", HudPosition.LEFT, HO.game_bhop, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.COLOR, SpecVisibility.DEFAULT)
 
 
 rule "HUD | Bhop Indicator | Unused | Green":
@@ -282,14 +249,39 @@ rule "Ban | Emote Savehop":
     smallMessage(eventPlayer, "   Emote Savehop is banned!")
     checkpointFailReset()
         
-rule "Ban | Create Bhop":
+rule "Ban | Create Bhop | Deathbhop | Dash Start":
     wait(1)
     BhopBanToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Create Bhop", false, 2)
-
-rule "Ban | Deathbhop":
-    wait(1)
     DeathBhopBan = createWorkshopSetting(bool, "Ban Switch", "Ban Deathbhop", false, 4)
-
-rule "Ban | Dash Start":
-    wait(1)
     DashExploitToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Dash Start", false, 4)
+
+/*
+globalvar BanLists
+playervar ban_bhop
+
+rule "All bans":
+    wait(1)
+    BhopBanToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Create Bhop", false, 2)
+    DeathBhopBan = createWorkshopSetting(bool, "Ban Switch", "Ban Deathbhop", false, 4)
+    DashExploitToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Dash Start", false, 4)
+
+    # bans below only apply if workshoptoggle is OFF
+    #
+    # ban triple
+    BanLists[0] = []
+    
+    # ban multi cps
+    BanLists[1] = []
+    
+    # ban emote
+    BanLists[2] = []
+
+enum ban:
+    bhop,
+    triple,
+
+subroutine CheckBansdef 
+
+def CheckBans():
+    eventPlayer.ban_bhop = (BhopBanToggle or eventPlayer.CurrentCheckpoint in BanLists[ban.bhop])
+*/
