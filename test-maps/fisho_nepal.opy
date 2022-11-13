@@ -13,13 +13,13 @@ rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
     LeaderBoardFull = []
     PortalOn = false
     Difficultyhud = 2
-
+/*
 
 rule "Credits here <---- INSERT YOUR NAME HERE":
     hudSubtext(getAllPlayers(), "made by: FishoFire", HudPosition.LEFT, -15, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "map code: 75RRX", HudPosition.LEFT, -14, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-
+*/
 
 rule "Add Dash to Checkpoint <---- EDIT ME":
     #Change "-1" to certain Checkpoints' number. For example if you want to add Dash to Checkpoint 7 and 1 change one of "-1" to 7 and other "-1" to 1

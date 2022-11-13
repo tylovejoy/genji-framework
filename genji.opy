@@ -1,6 +1,6 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(10) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly
 #!define touchground false
 #!define cpcheat false
@@ -56,9 +56,40 @@ rule "Credits here <---- INSERT YOUR NAME HERE":
     hudSubtext(getAllPlayers(), "map code: XXXXX", HudPosition.LEFT, HO.data_code, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
     hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    HudStoreEdit.append(getLastCreatedText())
+    #HudStoreEdit.append(getLastCreatedText())
     # text id debug
     #hudSubtext(getAllPlayers(), getNumberOfTextIds(), HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+
+
+rule "Ban per CP <---- edit me":
+    wait(1)
+    # workshop toggle tursn ALL checkpoints on and ignore the list
+    # enter the checkpoint numbers inside the lists
+    # ======================
+    # ban  climb >
+    BanLists[ban.climb] = [1,8]
+    # ======================
+    # ban  bhop >
+    BanLists[ban.bhop] = [2,8]
+    # ======================
+    # ban  triple >
+    BanLists[ban.triple] = [3,8,9]
+    # ======================
+    # ban  multi >
+    BanLists[ban.multi] = [4,8,9]
+    # ======================
+    # ban create >
+    BanLists[ban.create] = [5,8,9]
+    # ====================== 
+    # ban dedhop >
+    BanLists[ban.dedhop] = [6,8]
+    # ======================
+    # ban emote >
+    BanLists[ban.emote] = [7,8]
+    # ======================
+    # dash exploit (via toggles dont edit)
+    DashExploitToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Create Bhop", false, 2)
+    
 
 rule "Custom difficulty hud":
     @Disabled
@@ -168,7 +199,7 @@ def BuildPortals():
                 PortalLoc[evalOnce(TempIterator1)] + vect(0,1,0), 
                 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
             )
-
+playervar banstring
 def UpdateCache():
     @Name "SUB | Update Effect Cache"
     
@@ -180,10 +211,33 @@ def UpdateCache():
     eventPlayer.KillPosition_Cache = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.BounceLockMax_Cache = len([i for i in eventPlayer.BounceLock_Cache if i])
-
     async(CheckUlt(), AsyncBehavior.RESTART)
     async(CheckDash(), AsyncBehavior.RESTART)
+    #eventPlayer.banstring = ""
+    eventPlayer.ban_climb = (createWorkshopSetting(bool, "Ban Switch", "Ban Wallclimb all cps", false, 2) or eventPlayer.CurrentCheckpoint in BanLists[ban.climb])
+    eventPlayer.ban_bhop = (createWorkshopSetting(bool, "Ban Switch", "Ban Create Bhop all cps", false, 2) or eventPlayer.CurrentCheckpoint in BanLists[ban.bhop])
+    eventPlayer.ban_triple = (createWorkshopSetting(bool, "Ban Switch", "Ban Triple Jump all cps", false, 0) or eventPlayer.CurrentCheckpoint in BanLists[ban.triple])
+    eventPlayer.ban_multi = ( createWorkshopSetting(bool, "Ban Switch", "Ban Multiclimb all cps", false, 1) or eventPlayer.CurrentCheckpoint in BanLists[ban.multi])
+    eventPlayer.ban_create = (createWorkshopSetting(bool, "Ban Switch", "Ban Bhop all cps", false, 3)  or eventPlayer.CurrentCheckpoint in BanLists[ban.create])
+    eventPlayer.ban_dedhop = (createWorkshopSetting(bool, "Ban Switch", "Ban Deathbhop all cps", false, 4) or eventPlayer.CurrentCheckpoint in BanLists[ban.dedhop])
+    eventPlayer.ban_emote = (createWorkshopSetting(bool, "Ban Switch", "Ban Emote Savehop all cps", false, 3)  or eventPlayer.CurrentCheckpoint in BanLists[ban.emote])
 
+    eventPlayer.banstring = "bans: {0}{1}{2}{3}{4}{5}{6}".format(
+        "Multi," if eventPlayer.ban_multi else "",
+        "Create," if eventPlayer.ban_create else "",
+        "Tripe," if eventPlayer.ban_triple else "",
+        "Emote,"  if eventPlayer.ban_emote else "",
+        "Ded," if eventPlayer.ban_dedhop else "",
+        "Climb," if eventPlayer.ban_climb else "",
+        "Bhop," if eventPlayer.ban_bhop else ""
+    )
+  
+ 
+    if eventPlayer.banstring == "bans: ":
+        eventPlayer.banstring = ""
+    else:
+        eventPlayer.banstring = eventPlayer.banstring.substring(0,strLen(eventPlayer.banstring)-1)
+    
     if not hostPlayer.EditorOn:
         return
 
@@ -205,6 +259,7 @@ def UpdateCache():
         CurrentBounce_Editing = 0 if eventPlayer.BounceIndex_Cache else 99999
         CurrentBouncePosition_Editing = BouncePositions[eventPlayer.BounceIndex_Cache[CurrentBounce_Editing]] if len(eventPlayer.BounceIndex_Cache) else vect(0,0,0)
         eventPlayer.MovedCheckpoint = false
+
 #!include "editor.opy"
 
 rule "------------------------------------------------------------------------  General rules ------------------------------------------------------------------------ ":
@@ -390,7 +445,6 @@ rule "Setup and Variables":
     RebuildKillOrbs()
     RebuildBounceOrbs()
     
-
 rule "Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
         wait(0.25)
@@ -475,8 +529,26 @@ rule "Initialize and CP HUD":
         if eventPlayer.AttemptCount == (-1) or CompTime < 1:
             eventPlayer.CompDone = true
 
+    #
     hudSubtext(eventPlayer, "Time {0}".format(prettyTime(eventPlayer.Timer)), HudPosition.LEFT, HO.game_timer, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT) #LEFT, -2
+    #hudText(eventPlayer, null, eventPlayer.banstring,  "Time {0}".format(prettyTime(eventPlayer.Timer)), HudPosition.LEFT, HO.game_timer, Color.WHITE,Color.WHITE,Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT) #LEFT, -2
     hudText(eventPlayer, 
+        null, 
+        "{0}{1}{2}".format(
+            eventPlayer.banstring,
+            "\n" if eventPlayer.banstring and eventPlayer.BounceLockMax_Cache else "",
+            "orange orbs {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else ""
+        )
+        ,
+        "Level {0} / {1}".format(
+            eventPlayer.CurrentCheckpoint, 
+            len(CheckpointPositions) - 1
+        ),    
+        HudPosition.TOP, HO.game_level_orb, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
+    )
+    /*
+    hudText(eventPlayer, 
+        #eventPlayer.banstring,
         null, 
         "orange orbs {0} / {1}".format(
             len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache
@@ -487,7 +559,8 @@ rule "Initialize and CP HUD":
         ),    
         HudPosition.TOP, HO.game_level_orb, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
     )
-   
+    */
+
     StartGame_Sub()  #StartGame_Sub is the initialization of the game
     eventPlayer.SpectateToggle = 0
     eventPlayer.WallclimbUsed = 2 #Climbing the wall prompts the HUD
@@ -735,9 +808,9 @@ def checkpointFailReset():
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
     eventPlayer.teleport( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() )
         #CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
-    if DeathBhopBan == true and eventPlayer.InvincibleToggle == 0 and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
+    if eventPlayer.ban_dedhop and eventPlayer.InvincibleToggle == 0 and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
         # if eventPlayer.isOnWall():
-        #     smallMessage(eventPlayer, "Deathbhop is banned!")
+        #smallMessage(eventPlayer, "Deathbhop is banned!")
         eventPlayer.disallowButton(Button.JUMP)
         wait(0.1)
         eventPlayer.allowButton(Button.JUMP)        
@@ -963,34 +1036,30 @@ rule "Checkpoint | Arrived":
                 
     lbl_0:
 
-#globalvar colorarray
+
+
 rule "Checkpoint | Finish effects":
     # rainbow drops
     @Event eachPlayer
     @Condition eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
-    @Condition eventPlayer.EditModeSelection < 1
     @Condition eventPlayer.isMoving() == true
-    @Condition eventPlayer.TracesOff == false
     @Condition eventPlayer.PracticeToggle != 1
+    @Condition eventPlayer.TracesOff == false
+    @Condition eventPlayer.EditModeSelection < 1
     @Condition not CompMode
-
     
-    #!define CompleteRingColors rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255)
-    ##!define CompleteRingColors colorarray[ (floor(getTotalTimeElapsed()*2))%len(colorarray)]
-    #colorarray = [Color.RED, Color.ORANGE, Color.YELLOW, Color.LIME_GREEN, Color.GREEN, Color.TURQUOISE, Color.BLUE, Color.PURPLE,  Color.VIOLET, Color.ROSE]
-
-    # rgb((cosDeg(modeList * 360 - 0) + 0.5) * 255, (cosDeg(modeList * 360 - 120) + 0.5) * 255, (cosDeg(modeList * 360 - 240) + 0.5) * 255)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, CompleteRingColors, eventPlayer.getPosition(), 1.6)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, CompleteRingColors, eventPlayer.getPosition(), 1.4)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, CompleteRingColors, eventPlayer.getPosition(), 1.2)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, CompleteRingColors, eventPlayer.getPosition(), 1)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, CompleteRingColors, eventPlayer.getPosition(), 0.8)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, CompleteRingColors, eventPlayer.getPosition(), 0.6)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, CompleteRingColors, eventPlayer.getPosition(), 0.4)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, CompleteRingColors, eventPlayer.getPosition(), 0.2)
-    
-    wait(0.34)
-    #wait(0.48)
+    eventPlayer.finishfxcache = [Color.RED, Color.ORANGE, Color.YELLOW, Color.LIME_GREEN, Color.GREEN, Color.TURQUOISE, Color.BLUE, Color.PURPLE, Color.VIOLET, Color.ROSE][(floor(getTotalTimeElapsed()*2))%10]
+    #eventPlayer.finishfxcache =  rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255)
+    wait(0.16)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 1.6)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 1.4)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 1.2)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 1)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.8)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.6)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.4)
+    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.2)
+    wait(0.16) # original 0.34 total
     if RULE_CONDITION:
         goto RULE_START
 
@@ -999,10 +1068,11 @@ rule "Preview orbs/portals":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition not eventPlayer.isHoldingButton(Button.CROUCH)
-    #@Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.EditModeSelection < 1
 
     wait(0.9, Wait.ABORT_WHEN_FALSE)
+    if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
+        return
     eventPlayer.PreviewsArray = [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint]
     eventPlayer.PreviewsArray.append( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true])
     
@@ -1033,8 +1103,8 @@ rule "Toggle Traces":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
-    @Condition eventPlayer.EditModeSelection < 1
     @Condition eventPlayer.PracticeToggle != 1
+    @Condition eventPlayer.EditModeSelection < 1
     @Condition not CompMode
     
     wait(1, Wait.ABORT_WHEN_FALSE)
@@ -1258,9 +1328,9 @@ rule "Combo | Enter Spectate | Hold Interact":
         lbl_0:
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
         if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
-            goto lbl_1
-        eventPlayer.setUltEnabled(false)
-        eventPlayer.setAbility1Enabled(false)
+            goto lbl_1   
+        async(CheckUlt(),AsyncBehavior.NOOP)
+        async(CheckDash(), AsyncBehavior.NOOP) 
         if eventPlayer.PracticeToggle == 1:
             goto lbl_1
         chase(eventPlayer.Timer, 10000, rate=1, ChaseReeval.DESTINATION_AND_RATE)
@@ -1522,7 +1592,7 @@ def CheckDash():
         lbl_a:
         wait()        
         eventPlayer.setAbility1Enabled(true)
-        eventPlayer.setAbilityCooldown(Button.ABILITY_1, 0)
+        #eventPlayer.setAbilityCooldown(Button.ABILITY_1, 0)
 
     else:
         eventPlayer.setAbility1Enabled(false)
@@ -1540,14 +1610,11 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
         if eventPlayer.CurrentCheckpoint == 0:
             return
         eventPlayer.LockState = true
-        #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
         eventPlayer.CurrentCheckpoint -= 1
     else:
         if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
             return
         eventPlayer.LockState = true
-
-        #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
         eventPlayer.CurrentCheckpoint += 1
     wait()
     checkpointFailReset()

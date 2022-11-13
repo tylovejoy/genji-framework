@@ -147,7 +147,7 @@ rule "Editor | initialize":
     wait()
     # huds ========================================
     hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
-        " {0}".format(    
+        "{0}".format(    
         [   
         "{0} + {1} | Create New Checkpoint\n"
         "{0} + {2} | Delete selected Checkpoint\n"
@@ -191,9 +191,9 @@ rule "Editor | initialize":
         "Hold {0} | toggle guide".format(buttonString(Button.MELEE)),
         HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle == 1 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
-
-    hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
-    "to save map hold {0} + {1} + {2}\nand follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
+    
+    hudSubheader(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
+    "to save map hold {0} + {1} + {2} and follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
         HudPosition.LEFT, HO.edit_savemap, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     
@@ -218,33 +218,8 @@ rule "Editor | initialize":
         null,   
         HudPosition.TOP, HO.edit_changemode, Color.SKY_BLUE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-    /*
-    hudText(hostPlayer, 
-    
-        "Current mode: {0}".format(["Checkpoints","Kill Orb","Bounce Orb"][hostPlayer.EditModeSelection -1])
-        if localPlayer == hostPlayer else "Current editor/host: {0}".format(hostPlayer),
-          
-        null, 
-        "Hold {0} to change mode\n".format(buttonString(Button.ABILITY_1)),   
-        HudPosition.TOP,
-        HO.edit_changemode, 
-        Color.SKY_BLUE, Color.SKY_BLUE, Color.SKY_BLUE, 
-        HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
-    )
-    */
 
-    /*
-    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
-        "{3} + {4} | orb give ultimate | {0} \n"
-        "{3} + {5} | orb gives dash | {1} \n"
-        "{3} + {6} | orb unlocks checkpoint | {2}".format(
-            "on" if BounceToggleUlt[CurrentBounce_Editing] != 0 else "off", 
-            buttonString(Button.ULTIMATE), 
-            buttonString(Button.PRIMARY_FIRE), 
-        ), HudPosition.TOP, -18, Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
-    )
-    */
-    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
+    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 and hostPlayer.GuideToggle == 1 else null, 
         "{0} + {1} | orb give ult {3} | {2}".format(
        #"orb gives {3} | {2} | {0} + {1}".format(
             buttonString(Button.ULTIMATE), 
@@ -253,7 +228,7 @@ rule "Editor | initialize":
             abilityIconString(Hero.GENJI, Button.ULTIMATE)
         ), HudPosition.LEFT, HO.edit_orb_ult, Color.GREEN  if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
-    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null, 
+    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 and hostPlayer.GuideToggle == 1 else null, 
         "{0} + {1} | orb give dash {3} | {2}".format(
         #"orb gives {3} | {2} | {0} + {1} ".format(
             buttonString(Button.ULTIMATE), 
@@ -263,7 +238,7 @@ rule "Editor | initialize":
         ), HudPosition.LEFT, HO.edit_orb_dash, Color.GREEN  if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
-    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 else null,
+    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 and hostPlayer.GuideToggle == 1 else null,
         "{0} + {1} | unlocks checkpoint {3} | {2}\n".format(
         #"unlocks checkpoint | {2} | {0} + {1}\n".format(
             buttonString(Button.ULTIMATE), 

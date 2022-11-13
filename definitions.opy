@@ -129,8 +129,8 @@ globalvar BounceToggleLock 25               # list[bool]                --- lock
 
 globalvar KillballCheckpoints 26            # list[list[int]]           --- 2d list of checkpoints that havea kill ball [[0], [3]]
 globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d list like killballnumber
-globalvar DeathBhopBan 28                   # bool                      --- Ban bhop from reset
-
+#globalvar DeathBhopBan 28                   # bool                      --- Ban bhop from reset
+globalvar BanLists 29                       # [list]                    --- 2d array of each baned cp
 # sequential data
 #0 eventPlayer, 
 #1 current checkpoint, 
@@ -208,6 +208,7 @@ playervar MultiClimbCountHUD 28             # HUD                       --- clim
 playervar QuickRestartToggle 31             # int                       --- If quick restart is enabled or not, should be bool
 playervar MultiClimbCount 32                # int                       --- climb count # for HUD
 
+playervar finishfxcache                     # color                     --- color of fx after finish the map
 playervar PreviewsArray 38                  # array                     --- store preview positions
 playervar PreviewsI 39                      # int                       --- preview itterator
 playervar invis 40                          # bool                      --- invis toggle added by fisho
@@ -238,6 +239,15 @@ playervar AttemptCount 66                   # int                       --- amou
 playervar instructionhud 67
 playervar TitleStore 68                     # textid                    --- store curent  title textid
 
+playervar ban_climb 70
+playervar ban_bhop 71
+playervar ban_triple 72
+playervar ban_multi 73
+playervar ban_create 74
+playervar ban_dedhop 75
+playervar ban_dashstart 76
+playervar ban_emote 77
+
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
 
 
@@ -254,3 +264,87 @@ subroutine UpdateTitle
 subroutine DashUltGive
 subroutine CheckUlt
 subroutine CheckDash
+
+
+enum ban:
+    climb,
+    bhop,
+    triple,
+    multi,
+    create,
+    emote,
+    dedhop,
+
+
+enum HO:
+    # Left #####################
+    data_name = -200,
+    data_code,
+    data_dsc,
+    edit_savemap,
+    
+    game_timer,
+    game_bhop,
+    game_climb,
+
+    edit_orblimit,
+    edit_selecteddata,
+    edit_orb_ult,
+    edit_orb_dash,
+    edit_orb_lock,
+
+    leftend,
+    # Top #####################
+    edit_clearec1,
+    edit_clearec2,
+    edit_clearec3,
+
+    comp_info,
+    comp_instructtop,
+    comp_instruct1,
+    comp_instruct2,
+    comp_instruct3,
+    comp_instruct4,
+    comp_instructbottom,
+
+    edit_changemode,
+    edit_host_mode,
+    data_dif,
+    game_level_orb,
+
+    filler_custommsg,
+    add_custommsg1,
+    add_custommsg2,
+    add_custommsg3,
+
+    board_header,
+    board_display1,
+    board_display2,
+    board_display3,
+    board_display4,
+
+    fillermain, # push skirmish etc down
+    topend,
+    # Right #####################
+    data_remaingtime,
+
+    com_restart_n_board,
+    com_invincible,
+    com_quickres,
+    com_spec,
+    com_invis,
+    com_traces,
+
+    com_practice,
+    com_practicesub,
+    com_preview,
+    com_previewsub,
+
+    edit_instructions_general,
+    edit_instructions_edit,
+
+    board_top5,
+    wr,
+
+    rightend,
+    # End #####################
