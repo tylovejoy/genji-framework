@@ -190,7 +190,7 @@ playervar Timer 3                           # float                     --- Time
 playervar EditModeSelection 4               # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
 playervar SpectateToggle 5                  # int                       --- Spectate Toggle, should be bool
 playervar ArrayIterator 6                   # MsDestructo Iterator
-playervar PortalText 7                      # In-World Text             --- Portal String inworld text
+#playervar PortalText 7                      # In-World Text             --- Portal String inworld text
 playervar MapVectorArray 8                  # MsDestructo Vectors
 playervar WallclimbUsed 9                   # int                       --- 1 if wall climb has been used 2 if not, should be bool
 playervar GuideToggle 10                    # int                       --- Guide Enabled (1) /Disabled (2), should be bool
@@ -201,8 +201,8 @@ playervar BhopUsed 14                       # int                       --- Bhop
 playervar MovedCheckpoint 15
 playervar PracticeCheckpoint 16             # int                       --- Saved practice checkpoint
 playervar PracticeToggle 17                 # int                       --- if player is in practice mode 1 else 0
-#playervar LeaderboardTimerCapture 19        # float                     --- Saves players time for leaderboard
 playervar LeaderboardToggle 19              # bool                      --- show/hide leaderboard
+playervar NotOnLastCp 20                    # bool                      --- false if you are noton the last cp or level below 2 cps
 playervar JumpCount 26                      # int                       --- jump tracking count, 0, 1, 2
 playervar MultiClimbCountHUD 28             # HUD                       --- climb counter
 playervar QuickRestartToggle 31             # int                       --- If quick restart is enabled or not, should be bool
@@ -239,14 +239,15 @@ playervar AttemptCount 66                   # int                       --- amou
 playervar instructionhud 67
 playervar TitleStore 68                     # textid                    --- store curent  title textid
 
-playervar ban_climb 70
-playervar ban_bhop 71
-playervar ban_triple 72
-playervar ban_multi 73
-playervar ban_create 74
-playervar ban_dedhop 75
-playervar ban_dashstart 76
-playervar ban_emote 77
+playervar banstring 70                      # str                       --- displayed bans
+playervar ban_triple 71
+playervar ban_multi 72
+playervar ban_create 73
+playervar ban_dedhop 74
+playervar ban_dashstart 75
+playervar ban_emote 76
+playervar ban_climb 77
+playervar ban_bhop 78
 
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
 
@@ -267,13 +268,13 @@ subroutine CheckDash
 
 
 enum ban:
-    climb,
-    bhop,
     triple,
     multi,
     create,
     emote,
     dedhop,
+    climb,
+    bhop,
 
 
 enum HO:

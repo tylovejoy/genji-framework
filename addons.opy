@@ -104,8 +104,8 @@ rule "pre-set control map portal - placement - toggled via workshop":
 rule "pre-set control map portal - function - toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
+    @Condition eventPlayer.InvincibleToggle or not eventPlayer.NotOnLastCp
     @Condition len(PortalLoc) != null
-    @Condition eventPlayer.InvincibleToggle or eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
     @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc]) == true
     
     if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] != vect(0,0,0):
