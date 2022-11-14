@@ -83,20 +83,6 @@ rule "Checking | Create Bhop":
         return
     smallMessage(eventPlayer, "   Bhop has been created!")    
 
-/*
-rule "Checking | Bhop/Double Jump Initialization":
-    @Event eachPlayer
-    @Hero genji
-    @Condition eventPlayer.isOnGround() == true
-
-    eventPlayer.JumpCount = 0
-    eventPlayer.WallclimbUsed = 2
-    wait(0)
-    if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed != 2) and eventPlayer.isOnGround():
-        goto RULE_START
-    eventPlayer.BhopUsed = 1
-*/
-
 rule "Checking | Double jump, initialized with small jump":
     @Event eachPlayer
     @Hero genji
@@ -138,7 +124,8 @@ rule "HUD | Wallclimb":
     @Event eachPlayer
     @Condition eventPlayer.hasSpawned() == true
     hudHeader(eventPlayer, "Climb{0}".format(
-        "" if eventPlayer.MultiClimbCount < 1 else " "+eventPlayer.MultiClimbCount
+        "" if eventPlayer.MultiClimbCount < 1 else
+        " ({})".format(eventPlayer.MultiClimbCount)
         ), 
         HudPosition.LEFT, HO.game_climb, 
         Color.GREEN if eventPlayer.WallclimbUsed == 2 else Color.RED, 
@@ -191,10 +178,8 @@ rule "Ban | Wallclimb for specific CPs <---- EDIT ME":
     @Condition eventPlayer.InvincibleToggle == 0
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.WallclimbUsed == 1
-    #@Condition distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= 2
-    #if eventPlayer.WallclimbUsed == 1:
-        checkpointFailReset()
-        smallMessage(eventPlayer, "   Climb is banned!")
+    checkpointFailReset()
+    smallMessage(eventPlayer, "   Climb is banned!")
 
 
 rule "Ban | Bhop for specific CPs      <---- EDIT ME":
@@ -204,11 +189,8 @@ rule "Ban | Bhop for specific CPs      <---- EDIT ME":
     @Condition eventPlayer.InvincibleToggle == 0
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.BhopUsed == 1
-    #@Condition distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= 2
-
-    #if eventPlayer.BhopUsed == 1:
-        checkpointFailReset()
-        smallMessage(eventPlayer, "   Bhop is banned!")
+    checkpointFailReset()
+    smallMessage(eventPlayer, "   Bhop is banned!")
 
 
 rule "Ban | Triple Jump":
@@ -219,9 +201,9 @@ rule "Ban | Triple Jump":
     @Condition eventPlayer.getVerticalSpeed() >= 5.8
     @Condition eventPlayer.JumpCount == 1
     @Condition eventPlayer.isUsingAbility1() == false
-    
-    if eventPlayer.isOnWall():
-        return
+    @Condition not eventPlayer.isOnWall()
+    #if eventPlayer.isOnWall():
+    #    return
     smallMessage(eventPlayer, "   Triple Jump is banned!")
     checkpointFailReset()
 
@@ -232,14 +214,11 @@ rule "Ban | Multiclimb":
     @Condition eventPlayer.InvincibleToggle == 0
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
     @Condition eventPlayer.MultiClimbCount > 0
-    # @Condition eventPlayer.isOnWall() == true
-    # @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
-    # @Condition eventPlayer.WallclimbUsed == 2
     
-    # eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
     smallMessage(eventPlayer, "   Multiclimb is banned!")
     checkpointFailReset() 
-    
+
+
 rule "Ban | Emote Savehop":
     @Event eachPlayer
     @Condition eventPlayer.ban_emote
@@ -249,7 +228,6 @@ rule "Ban | Emote Savehop":
     
     smallMessage(eventPlayer, "   Emote Savehop is banned!")
     checkpointFailReset()
-        
 
 
 
@@ -261,3 +239,17 @@ rule "Ban | Emote Savehop":
 
 
 
+/*
+# removed coz duplicatewith "Checking | Double jump, initialized with small jump"
+rule "Checking | Bhop/Double Jump Initialization":
+    @Event eachPlayer
+    @Hero genji
+    @Condition eventPlayer.isOnGround() == true
+
+    eventPlayer.JumpCount = 0
+    eventPlayer.WallclimbUsed = 2
+    wait(0)
+    if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed != 2) and eventPlayer.isOnGround():
+        goto RULE_START
+    eventPlayer.BhopUsed = 1
+*/
