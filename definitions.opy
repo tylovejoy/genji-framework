@@ -208,7 +208,7 @@ playervar MultiClimbCountHUD 28             # HUD                       --- clim
 playervar QuickRestartToggle 31             # int                       --- If quick restart is enabled or not, should be bool
 playervar MultiClimbCount 32                # int                       --- climb count # for HUD
 
-playervar finishfxcache                     # color                     --- color of fx after finish the map
+playervar finishfxcache  33                   # color                     --- color of fx after finish the map
 playervar PreviewsArray 38                  # array                     --- store preview positions
 playervar PreviewsI 39                      # int                       --- preview itterator
 playervar invis 40                          # bool                      --- invis toggle added by fisho
@@ -248,6 +248,10 @@ playervar ban_dashstart 75
 playervar ban_emote 76
 playervar ban_climb 77
 playervar ban_bhop 78
+
+playervar splittime 79 
+playervar splitdisplay 80
+playervar splitson 81
 
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
 

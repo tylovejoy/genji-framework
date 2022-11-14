@@ -224,18 +224,18 @@ def UpdateCache():
     eventPlayer.ban_climb = (createWorkshopSetting(bool, "Ban Switch", "Ban Wallclimb all cps", false, 2) or eventPlayer.CurrentCheckpoint in BanLists[ban.climb])
     eventPlayer.ban_bhop = (createWorkshopSetting(bool, "Ban Switch", "Ban Create Bhop all cps", false, 2) or eventPlayer.CurrentCheckpoint in BanLists[ban.bhop])
 
+    
+    eventPlayer.banstring = "bans: {0}{1}{2}{3}{4}{5}{6}".format(
+        "Multi, " if eventPlayer.ban_multi else "",
+        "Create, " if eventPlayer.ban_create else "",
+        "Tripe, " if eventPlayer.ban_triple else "",
+        "Emote, "  if eventPlayer.ban_emote else "",
+        "Ded, " if eventPlayer.ban_dedhop else "",
+        "Climb, " if eventPlayer.ban_climb else "",
+        "Bhop, " if eventPlayer.ban_bhop else ""
+    )
     /*
     eventPlayer.banstring = "bans: {0}{1}{2}{3}{4}{5}{6}".format(
-        "Multi," if eventPlayer.ban_multi else "",
-        "Create," if eventPlayer.ban_create else "",
-        "Tripe," if eventPlayer.ban_triple else "",
-        "Emote,"  if eventPlayer.ban_emote else "",
-        "Ded," if eventPlayer.ban_dedhop else "",
-        "Climb," if eventPlayer.ban_climb else "",
-        "Bhop," if eventPlayer.ban_bhop else ""
-    )
-    */
-    eventPlayer.banstring = "cp bans: {0}{1}{2}{3}{4}{5}{6}".format(
         "Mu, " if eventPlayer.ban_multi else "",
         "Cr, " if eventPlayer.ban_create else "",
         "Tr, " if eventPlayer.ban_triple else "",
@@ -244,9 +244,9 @@ def UpdateCache():
         "Cl, " if eventPlayer.ban_climb else "",
         "Bh, " if eventPlayer.ban_bhop else ""
     )
-  
+    */
  
-    if eventPlayer.banstring == "cp bans: ":
+    if eventPlayer.banstring == "bans: ":
         eventPlayer.banstring = ""
     else:
         eventPlayer.banstring = eventPlayer.banstring.substring(0,strLen(eventPlayer.banstring)-2)
@@ -823,6 +823,7 @@ def checkpointFailReset():
         eventPlayer.allowButton(Button.JUMP)        
     if eventPlayer.CurrentCheckpoint == 0 and eventPlayer.PracticeToggle == 0:
         eventPlayer.Timer = 0
+        eventPlayer.splittime = 0
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
         wait()
@@ -876,6 +877,7 @@ def StartGame_Sub():
             eventPlayer.teleport(CheckpointPositions[0] + vect(0, 1, 0))
             eventPlayer.CurrentCheckpoint = 0
             eventPlayer.Timer = 0
+            eventPlayer.splittime = 0
             stopChasingVariable(eventPlayer.PauseTimer)
             eventPlayer.PauseTimer = 0
             SavedProgress.append(["{0}".format(eventPlayer), eventPlayer.CurrentCheckpoint, eventPlayer.Timer, eventPlayer, getTotalTimeElapsed(), 0, 0])
@@ -1004,10 +1006,16 @@ rule "Arrive | Ground reset | traces":
             eventPlayer.LockCollected = []
             eventPlayer.CurrentCheckpoint += 1
             UpdateCache()
+            eventPlayer.splitdisplay =  eventPlayer.Timer - eventPlayer.splittime
             wait()
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
             playEffect(eventPlayer if CompMode or eventPlayer.invis else getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
-            bigMessage(eventPlayer, "Arrived at {0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1))
+            bigMessage(eventPlayer, "Arrived at {0} / {1}{2}".format(
+                eventPlayer.CurrentCheckpoint, 
+                len(CheckpointPositions) - 1, 
+                " - Split {}".format(eventPlayer.splitdisplay) if eventPlayer.splitson else ""
+                ))
+            eventPlayer.splittime = eventPlayer.Timer
             UpdateTitle()
             if eventPlayer.PracticeToggle == 1:
                 wait(0.16)
@@ -1092,16 +1100,21 @@ rule "Toggle Traces":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     #@Condition not eventPlayer.NotOnLastCp
-    @Condition eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
+    #@Condition eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
     @Condition eventPlayer.PracticeToggle != 1
     @Condition eventPlayer.EditModeSelection < 1
     @Condition not CompMode
     
+    /*
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.TracesOff = not eventPlayer.TracesOff
     #playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
     smallMessage(eventPlayer, "   Traces {0}".format("off" if eventPlayer.TracesOff else "on"))    
     playEffect(eventPlayer, DynamicEffect.DEBUFF_IMPACT_SOUND, null, eventPlayer, 100)
+    */
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    eventPlayer.splitson = not eventPlayer.splitson
+    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
 
 rule "Kill Orb | Activate":
     @Event eachPlayer
@@ -1244,6 +1257,10 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
         del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
         SavedProgress.remove("{0}".format(eventPlayer))
+    
+    if eventPlayer.isDead():
+        eventPlayer.respawn()
+
     StartGame_Sub()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     wait()
