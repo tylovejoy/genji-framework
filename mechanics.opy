@@ -150,7 +150,7 @@ rule "Ban | Wallclimb for specific CPs <---- EDIT ME":
     @Event eachPlayer
     @Condition eventPlayer.ban_climb
     @Condition eventPlayer.InvincibleToggle == 0
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
+    @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.WallclimbUsed == 1
     checkpointFailReset()
     smallMessage(eventPlayer, "   Climb is banned!")
@@ -161,8 +161,11 @@ rule "Ban | Bhop for specific CPs      <---- EDIT ME":
     @Event eachPlayer
     @Condition eventPlayer.ban_bhop
     @Condition eventPlayer.InvincibleToggle == 0
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
+    @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.BhopUsed == 1
+    @Condition not eventPlayer.LockState
+    @Condition distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) > 1.4
+    #@Condition distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) > 1.4
     checkpointFailReset()
     smallMessage(eventPlayer, "   Bhop is banned!")
 
@@ -171,7 +174,7 @@ rule "Ban | Triple Jump":
     @Event eachPlayer
     @Condition eventPlayer.ban_triple
     @Condition eventPlayer.InvincibleToggle == 0
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
+    @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.getVerticalSpeed() >= 5.8
     @Condition eventPlayer.JumpCount == 1
     @Condition eventPlayer.isUsingAbility1() == false
@@ -186,18 +189,17 @@ rule "Ban | Multiclimb":
     @Event eachPlayer
     @Condition eventPlayer.ban_multi
     @Condition eventPlayer.InvincibleToggle == 0
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
+    @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.MultiClimbCount > 0
     
     smallMessage(eventPlayer, "   Multiclimb is banned!")
     checkpointFailReset() 
 
-
 rule "Ban | Emote Savehop":
     @Event eachPlayer
     @Condition eventPlayer.ban_emote
     @Condition eventPlayer.InvincibleToggle == 0
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
+    @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.isCommunicatingEmote() == true
     
     smallMessage(eventPlayer, "   Emote Savehop is banned!")

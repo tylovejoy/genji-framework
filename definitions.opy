@@ -214,7 +214,7 @@ playervar PreviewsI 39                      # int                       --- prev
 playervar invis 40                          # bool                      --- invis toggle added by fisho
 playervar flytoggle 41                      # vector/null               --- null if not flying, else vector position, added by fisho
 playervar savemaphud 42                     # array                     --- array of save map hud ids
-playervar TracesOff 43                      # bool                      --- turn traces (ring explosion fx) off
+#playervar TracesOff 43                      # bool                      --- turn traces (ring explosion fx) off
 playervar EditorOn 45                       # bool                      --- on all players, but only gets checked from host player
 playervar LockCollected 46                  # number                    --- amount collected lock this cp
 playervar bouncetouched 47                  # int                       --- cache of the bouncepad id you are currently touching
@@ -338,12 +338,12 @@ enum HO:
     com_quickres,
     com_spec,
     com_invis,
-    com_traces,
+    com_splits,
 
-    com_practice,
-    com_practicesub,
     com_preview,
     com_previewsub,
+    com_practice,
+    com_practicesub,
 
     edit_instructions_general,
     edit_instructions_edit,
