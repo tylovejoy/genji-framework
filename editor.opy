@@ -113,12 +113,10 @@ rule "HUD | Show/Hide Guide | Hold Melee":
     if eventPlayer.isHoldingButton(Button.INTERACT) or eventPlayer.isHoldingButton(Button.RELOAD):
         return
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
-    if eventPlayer.GuideToggle == 1:
-        eventPlayer.GuideToggle = 2
-        smallMessage(eventPlayer, "   Guide is hidden")
-    else:
-        eventPlayer.GuideToggle = 1
-        smallMessage(eventPlayer, "   Guide is open")
+    
+    smallMessage(eventPlayer, "   Guide is open" if eventPlayer.GuideToggle else "   Guide is hidden") 
+    eventPlayer.GuideToggle = not eventPlayer.GuideToggle 
+
 
 
 rule "HUD | Show Guide On Spawn": # maybe also for when u pass host?
@@ -127,7 +125,7 @@ rule "HUD | Show Guide On Spawn": # maybe also for when u pass host?
     @Condition eventPlayer.hasSpawned() == true
     
     eventPlayer.EditModeSelection = 1
-    eventPlayer.GuideToggle = 1
+    eventPlayer.GuideToggle = true
 
 rule "Editor | initialize":
     #@Condition hostPlayer.EditorOn
@@ -146,7 +144,7 @@ rule "Editor | initialize":
 
     wait()
     # huds ========================================
-    hudSubtext(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
+    hudSubtext(hostPlayer if hostPlayer.GuideToggle else null, 
         "{0}".format(    
         [   
         "{0} + {1} | Create New Checkpoint\n"
@@ -187,12 +185,12 @@ rule "Editor | initialize":
         #"In invincbile mode:\n"
         "{4} | Fly (checkpoint mode only)\n"
         "Hold {3} | toggle guide\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.MELEE), buttonString(Button.ABILITY_2))
-        if hostPlayer.GuideToggle == 1  else
+        if hostPlayer.GuideToggle else
         "Hold {0} | toggle guide".format(buttonString(Button.MELEE)),
-        HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle == 1 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
-    hudSubheader(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
+    hudSubheader(hostPlayer if hostPlayer.GuideToggle else null, 
     "to save map hold {0} + {1} + {2} and follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
         HudPosition.LEFT, HO.edit_savemap, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
@@ -212,14 +210,14 @@ rule "Editor | initialize":
         , null, null,   
         HudPosition.TOP, HO.edit_host_mode, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-    hudText(hostPlayer, 
+    hudText(hostPlayer if hostPlayer.GuideToggle else null, 
         null,  # original part of the one ontop of it
         "Hold {0} to change mode".format(buttonString(Button.ABILITY_1)),   
         null,   
         HudPosition.TOP, HO.edit_changemode, Color.SKY_BLUE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 and hostPlayer.GuideToggle == 1 else null, 
+    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 and hostPlayer.GuideToggle else null, 
         "{0} + {1} | orb give ult {3} | {2}".format(
        #"orb gives {3} | {2} | {0} + {1}".format(
             buttonString(Button.ULTIMATE), 
@@ -228,7 +226,7 @@ rule "Editor | initialize":
             abilityIconString(Hero.GENJI, Button.ULTIMATE)
         ), HudPosition.LEFT, HO.edit_orb_ult, Color.GREEN  if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
-    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 and hostPlayer.GuideToggle == 1 else null, 
+    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 and hostPlayer.GuideToggle else null, 
         "{0} + {1} | orb give dash {3} | {2}".format(
         #"orb gives {3} | {2} | {0} + {1} ".format(
             buttonString(Button.ULTIMATE), 
@@ -238,7 +236,7 @@ rule "Editor | initialize":
         ), HudPosition.LEFT, HO.edit_orb_dash, Color.GREEN  if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
-    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 and hostPlayer.GuideToggle == 1 else null,
+    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 3 and hostPlayer.GuideToggle else null,
         "{0} + {1} | unlocks checkpoint {3} | {2}\n".format(
         #"unlocks checkpoint | {2} | {0} + {1}\n".format(
             buttonString(Button.ULTIMATE), 
@@ -249,7 +247,7 @@ rule "Editor | initialize":
     )
     
     # curent selected thing data
-    hudText(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
+    hudText(hostPlayer if hostPlayer.GuideToggle else null, 
     
         "\n{0}\n".format(
             " Selected Checkpoint \n Vector: {0}{1} ".format(
@@ -289,7 +287,7 @@ rule "Editor | initialize":
         )
 
     # orb limit count
-     hudText(hostPlayer if hostPlayer.GuideToggle == 1 else null, 
+     hudText(hostPlayer if hostPlayer.GuideToggle else null, 
         " orb/portal limit: {0}/{1} ".format(
             len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart),
             fxlimit

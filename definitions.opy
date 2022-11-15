@@ -185,27 +185,27 @@ playervar CurrentCheckpoint 0               # int                       --- Curr
 #3 - Next arrow icon, 
 #4 - Next "Come here" text
 playervar PlayerEffects 1                   # list[effect]              --- Player effect data array  
-playervar InvincibleToggle 2                # int                       --- invincible/normal mode toggle, should be bool
+playervar InvincibleToggle 2                # bool                       --- invincible/normal mode toggle now a bool
 playervar Timer 3                           # float                     --- Timer, chased.
 playervar EditModeSelection 4               # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
-playervar SpectateToggle 5                  # int                       --- Spectate Toggle, should be bool
+playervar SpectateToggle 5                  # bool                       --- turned into bool
 playervar ArrayIterator 6                   # MsDestructo Iterator
 #playervar PortalText 7                      # In-World Text             --- Portal String inworld text
 playervar MapVectorArray 8                  # MsDestructo Vectors
-playervar WallclimbUsed 9                   # int                       --- 1 if wall climb has been used 2 if not, should be bool
-playervar GuideToggle 10                    # int                       --- Guide Enabled (1) /Disabled (2), should be bool
+playervar WallclimbUsed 9                   # bool                      --- turned into bool
+playervar GuideToggle 10                    # bool                       --- turned into bool, shows/hides editor hud
 playervar LockState 11                      # bool                      --- locked means you are curently runing arrive checkpoint rule
 playervar PauseTimer 12                     # float                     --- time in spectate/invincible, chased
 playervar Temp 13
-playervar BhopUsed 14                       # int                       --- Bhop has been used 1, 0 if not, should be bool
+playervar BhopUsed 14                       # bool                      --- turned into bool
 playervar MovedCheckpoint 15
 playervar PracticeCheckpoint 16             # int                       --- Saved practice checkpoint
-playervar PracticeToggle 17                 # int                       --- if player is in practice mode 1 else 0
+playervar PracticeToggle 17                 # int                       --- turned into bool
 playervar LeaderboardToggle 19              # bool                      --- show/hide leaderboard
 playervar NotOnLastCp 20                    # bool                      --- false if you are noton the last cp or level below 2 cps
 playervar JumpCount 26                      # int                       --- jump tracking count, 0, 1, 2
 playervar MultiClimbCountHUD 28             # HUD                       --- climb counter
-playervar QuickRestartToggle 31             # int                       --- If quick restart is enabled or not, should be bool
+playervar QuickRestartToggle 31             # bool                      -- enable reload to restart cp
 playervar MultiClimbCount 32                # int                       --- climb count # for HUD
 
 playervar finishfxcache  33                   # color                     --- color of fx after finish the map
