@@ -4,6 +4,23 @@ rule "------------------------------------------------------------------------ A
     @Delimiter
     @Disabled
 
+/*
+text per cp
+rule "changinghudrule":
+       
+    hudHeader(
+        getAllPlayers(), 
+        "Text for checkpoint 1" if localPlayer.CurrentCheckpoint == 1 else
+        "Text for checkpoint 3" if localPlayer.CurrentCheckpoint == 3 else
+        "Text for checkpoint 4" if localPlayer.CurrentCheckpoint == 4 else
+        "", 
+        HudPosition.TOP, 
+        -4,
+        Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+    )
+*/
+ #HO.add_custommsg1, 
+
 rule "Add Blade to Checkpoint <---- EDIT ME":
     @Disabled
     #Change "-1" to certain Checkpoints' number. For example if you want to add Blade to Checkpoint 2 and 6 change one of "-1" to 2 and other "-1" to 6
@@ -60,10 +77,12 @@ rule "HUD text for certain Checkpoints <---- EDIT ME":
     #  Don't touch this first hud, its padding to get your huds in place
     hudSubtext(getAllPlayers(), "                                                   \r\n  \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n", HudPosition.TOP, HO.filler_custommsg, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     # Edit text here - warning: adding text might go over the text limit and cause huds to not apear
-    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 0], "Text for checkpoint 0", HudPosition.TOP, HO.add_custommsg1, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 1], "Text for checkpoint 1", HudPosition.TOP, HO.add_custommsg2, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 2], "Text for checkpoint 2", HudPosition.TOP, HO.add_custommsg3, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 0], "Text for checkpoint 0", HudPosition.TOP, HO.add_custommsg1, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 1], "Text for checkpoint 1", HudPosition.TOP, HO.add_custommsg2, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 2], "Text for checkpoint 2", HudPosition.TOP, HO.add_custommsg3, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
+    
+ 
 
 rule "pre-set control map portal - placement - toggled via workshop":
     @Condition PortalOn

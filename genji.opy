@@ -313,10 +313,6 @@ rule "Setup and Variables":
     CompRestartLimit = createWorkshopSetting(bool, "Competitive mode","disable restart during run" , comprestartlimit , 103)
     CompMode = createWorkshopSetting(bool, "Competitive mode","Turn on competitive mode" , compmodetoggle , 100)
     SelectedCheckpoint_Editing = len(CheckpointPositions) - 1 # This probably isn't necessary
-    # KILLBALL()
-    # wait(2)
-    # pinball()
-
     PortalOn = createWorkshopSetting(bool, "map settings","enable portals (control maps)",true,0)
     SavedProgress = []
     
@@ -335,7 +331,6 @@ rule "Setup and Variables":
                 
 
     else:
-        hudSubtext(getAllPlayers(), "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else ""), HudPosition.RIGHT, HO.com_spec, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
         HudStoreEdit.append(getLastCreatedText())
         hudSubtext(getAllPlayers(), "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else ""), HudPosition.RIGHT, HO.com_invis, Color.GREEN if localPlayer.invis else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
         HudStoreEdit.append(getLastCreatedText())
@@ -350,6 +345,7 @@ rule "Setup and Variables":
         )
       
    
+    hudSubtext(getAllPlayers(), "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else ""), HudPosition.RIGHT, HO.com_spec, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     CreateLeaderBoard()
     # padding for custom gud
     hudSubtext(getAllPlayers(), "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv", HudPosition.TOP, HO.fillermain, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
@@ -492,6 +488,7 @@ rule "Initialize and CP HUD":
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
     eventPlayer.preloadHero(Hero.GENJI)
+    eventPlayer.setRespawnTime(0)
     wait(2) # make sure everything loaded, specialy things like comp mode
 
     if not eventPlayer.isDummy():
@@ -1252,26 +1249,27 @@ rule "Combo | Enter Spectate | Hold Interact":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
     @Condition not eventPlayer.isHoldingButton(Button.ABILITY_2) == true
-    @Condition eventPlayer.EditModeSelection < 1
+    #@Condition eventPlayer.EditModeSelection < 1
     @Condition not CompMode
     wait(1, Wait.ABORT_WHEN_FALSE)
     smallMessage(eventPlayer, "   Hold Interact again to turn off spectate mode")
-    if eventPlayer.isAlive():
+    if not eventPlayer.SpectateToggle:
         if eventPlayer.NotOnLastCp:
             chase(eventPlayer.PauseTimer, 999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
             SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 2] = eventPlayer.Timer
             SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 4] = getTotalTimeElapsed()
             SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 1
-        eventPlayer.setRespawnTime(9999)
-        eventPlayer.SpectateToggle = true
+        #eventPlayer.setRespawnTime(9999)
+        eventPlayer.disableRespawn()
+        #eventPlayer.SpectateToggle = true
         stopChasingVariable(eventPlayer.Timer)
         wait(0.2)
         kill(eventPlayer, null)
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
     else:
-        if eventPlayer.EditModeSelection < 1:
-            eventPlayer.respawn()
-            eventPlayer.SpectateToggle = false
+        #if eventPlayer.EditModeSelection < 1:
+        eventPlayer.respawn()
+        #    eventPlayer.SpectateToggle = false
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
      
         if eventPlayer.NotOnLastCp and not eventPlayer.PracticeToggle:
@@ -1280,7 +1278,7 @@ rule "Combo | Enter Spectate | Hold Interact":
         async(CheckUlt(),AsyncBehavior.RESTART)
         async(CheckDash(), AsyncBehavior.RESTART) 
    
-        eventPlayer.setRespawnTime(0)
+        eventPlayer.enableRespawn()
         eventPlayer.InvincibleToggle = false
         eventPlayer.LockCollected = []
         if eventPlayer.NotOnLastCp:
@@ -1288,7 +1286,8 @@ rule "Combo | Enter Spectate | Hold Interact":
             SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 5] = eventPlayer.PauseTimer
             eventPlayer.PauseTimer = 0
             SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 0
-
+    
+    eventPlayer.SpectateToggle = not eventPlayer.SpectateToggle
 
 rule "Combo | Toggle Invincible Mode | Melee + Reload":
     @Event eachPlayer
