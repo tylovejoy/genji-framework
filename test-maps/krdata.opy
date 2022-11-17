@@ -18,5 +18,5 @@ rule "test data":
     BounceToggleDash = []
     KillballCheckpoints = [11]
     BouncePadCheckpoints = []
-    SavedProgress = [0, 19.664, 0, 29.503, 0, 1]
+
     

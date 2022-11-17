@@ -129,16 +129,8 @@ globalvar BounceToggleLock 25               # list[bool]                --- lock
 
 globalvar KillballCheckpoints 26            # list[list[int]]           --- 2d list of checkpoints that havea kill ball [[0], [3]]
 globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d list like killballnumber
-#globalvar DeathBhopBan 28                   # bool                      --- Ban bhop from reset
-globalvar BanLists 29                       # [list]                    --- 2d array of each baned cp
-# sequential data
-#0 eventPlayer, 
-#1 current checkpoint, 
-#2 timer gets stored here, 
-#3 eventPlayer stored, 
-#4 totalElapsedTime , 
-#5 PausedTimer amount, 
-#6 bool timer paused
+
+# old save progresion, removed but kept in here for legacy pasta purposes
 globalvar SavedProgress 30                  # list[Any]                 --- saves player data in array for rejoining, sequential data
 
 # Leaderboard stuff
@@ -158,7 +150,6 @@ globalvar PortalNames 40                    # [str]                     --- disp
 globalvar PortalLoc 41                      # [vect]                    --- portal position
 globalvar PortalDest 42                     # [vect]                    --- portal destination
 globalvar PortalOn 43                       # bool                      --- portals enabled
-
 globalvar Difficultyhud 44                  # number                    --- workshop toggle to display difficulty hud
 
 globalvar CustomPortalStart 45              # [vect]                    --- custom portal start 
@@ -172,9 +163,36 @@ globalvar CompAtmpSaveNames 53              # [strings]                 --- comp
 globalvar CompAtmpSaveCount 54              # [int]                      --- compt attempt list
 globalvar CompRestartLimit 55               # bool                      --- resest limiter
 globalvar instructiontext 56                # [text]                    --- array of instructions
-
 globalvar TitleData 57                      # [[cp ,[title],[color]]    --- title addon 
 globalvar HudStoreEdit 58                   # [textid]                  --- list of huds to delete if editormode is on
+
+globalvar SaveName 60
+globalvar SaveCp 61
+globalvar SaveEnt 62
+globalvar SaveTimer 63
+globalvar SaveElapsed 64
+globalvar SavePauseTime 65
+globalvar SavePauseEnabled 66
+globalvar SaveSplit 67
+#globalvar SaveSplitToggle 68
+#globalvar SaveQuick 69
+
+# per cp iwt or hud
+globalvar CpHudText 75
+globalvar CpHudCp 76
+globalvar CpIwtText 77
+globalvar CpIwtCp 78
+globalvar CpIwtPos 79
+
+globalvar BanTriple 80
+globalvar BanMulti 81
+globalvar BanCreate 82
+globalvar BanDead 83
+globalvar BanEmote 84
+globalvar BanClimb 85
+globalvar BanBhop 86
+
+
 #Player variables
 playervar CurrentCheckpoint 0               # int                       --- Current Checkpoint
 
@@ -247,7 +265,7 @@ playervar ban_dedhop 74
 playervar ban_dashstart 75
 playervar ban_emote 76
 playervar ban_climb 77
-playervar ban_bhop 78
+#playervar ban_bhop 78
 
 playervar splittime 79 
 playervar splitdisplay 80
@@ -269,17 +287,10 @@ subroutine UpdateTitle
 subroutine DashUltGive
 subroutine CheckUlt
 subroutine CheckDash
-
-
-enum ban:
-    triple,
-    multi,
-    create,
-    emote,
-    dedhop,
-    climb,
-    bhop,
-
+subroutine DeleteSave
+subroutine MakeSave
+subroutine StartPauseTimer
+subroutine StopPauseTimer
 
 enum HO:
     # Left #####################

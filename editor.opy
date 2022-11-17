@@ -14,9 +14,9 @@ rule "------------------------------------------------------------------------  
 rule "HUD | Clear Excess Data & Save Map":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
-    @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
-    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
+    @Condition eventPlayer.isHoldingButton(Button.MELEE)
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT)
+    @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition eventPlayer == hostPlayer
     wait(0.5, Wait.ABORT_WHEN_FALSE)
     SelectedCheckpoint_Editing = 0
@@ -31,7 +31,18 @@ rule "HUD | Clear Excess Data & Save Map":
     TempIterator1 = 0
     BounceEffects = 0
     CurrentBouncePosition_Editing = 0
-    SavedProgress = 0
+
+    SaveName = []
+    SaveCp = []
+    SaveTimer = []
+    SaveEnt = []
+    SaveSplit = []
+    SavePauseTime = []
+    SavePauseEnabled = []
+    SaveElapsed = []
+    #SaveSplitToggle = [] 
+    #SaveQuick = []
+
     LeaderBoardFull = []
     PortalOn = false
 
@@ -96,7 +107,7 @@ rule "HUD | Clear Excess Data & Save Map":
 rule "HUD | Show/Hide Guide | Hold Melee":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
-    @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
+    @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false
     @Condition eventPlayer == hostPlayer
@@ -113,7 +124,7 @@ rule "HUD | Show/Hide Guide | Hold Melee":
 rule "HUD | Show Guide On Spawn": # maybe also for when u pass host?
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
-    @Condition eventPlayer.hasSpawned() == true
+    @Condition eventPlayer.hasSpawned()
     
     eventPlayer.EditModeSelection = 1
     eventPlayer.GuideToggle = true
@@ -320,7 +331,7 @@ rule "Change Edit Mode | Hold Dash":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_1) == true
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
     
     wait(0.84, Wait.ABORT_WHEN_FALSE)
     eventPlayer.flytoggle = null
@@ -341,7 +352,7 @@ rule "Bounce Ball | Toggle ult / dash / lock":
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.EditModeSelection == 3
-    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
+    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) or eventPlayer.isHoldingButton(Button.ABILITY_2) 
     @Condition len(BouncePositions) != 0
     
@@ -381,17 +392,17 @@ rule "Kill Orb / Bounce Orb | Move Toward/Backward | Deflect + Primary Fire":
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.EditModeSelection > 1
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) 
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) 
     
     if eventPlayer.EditModeSelection == 2 and len(KillBallPositions) > 0:
-        while eventPlayer.isHoldingButton(Button.ABILITY_2) == true and (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
+        while eventPlayer.isHoldingButton(Button.ABILITY_2) and (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
             KillBallChase += eventPlayer.getFacingDirection() * (0.0625 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.0625)
             wait()
         KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] = KillBallChase
 
     elif eventPlayer.EditModeSelection == 3 and len(BouncePositions) > 0:
-        while eventPlayer.isHoldingButton(Button.ABILITY_2) == true and (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
+        while eventPlayer.isHoldingButton(Button.ABILITY_2) and (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
             CurrentBouncePosition_Editing += eventPlayer.getFacingDirection() * (0.0625 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.0625)
             wait()  
         BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = CurrentBouncePosition_Editing
@@ -403,8 +414,8 @@ rule "Kill Orb / Bounce Orb | Move Toward/Backward | Deflect + Primary Fire":
 rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == true
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT)
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition eventPlayer == hostPlayer
     
     if eventPlayer.EditModeSelection == 1:
@@ -477,8 +488,8 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
 rule "Checkpoint / Kill Orb / Bounce Orb | Delete | Interact + Secondary Fire":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
-    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT) 
+    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer == hostPlayer
     
     if eventPlayer.EditModeSelection == 1:
@@ -567,8 +578,8 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Delete | Interact + Secondary Fire":
 rule "Checkpoint | Move | Ultimate + Interact":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
-    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
+    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer == hostPlayer
     
     smallMessage(getAllPlayers(), "   Checkpoint {0} has been deleted".format(SelectedCheckpoint_Editing) if len(CheckpointPositions[SelectedCheckpoint_Editing]) != 0 else "")
@@ -581,8 +592,8 @@ rule "Kill Orb / Bounce Orb | Selection change":
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.EditModeSelection > 1
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true or eventPlayer.isHoldingButton(Button.JUMP)
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT)
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH) or eventPlayer.isHoldingButton(Button.JUMP)
     if eventPlayer.EditModeSelection == 2:
         if eventPlayer.isHoldingButton(Button.CROUCH):
             SelectedKillball_Editing = (SelectedKillball_Editing - 1) % len(eventPlayer.KillIndex_Cache)
@@ -604,16 +615,16 @@ rule "Checkpoint | Toggle Checkpoint Sizes | Interact + Dash":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_1) == true
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT)
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
     
     eventPlayer.EffectSizeToggle = not eventPlayer.EffectSizeToggle
     
 
 rule "Teleport | Add | Interact + Reload":
     @Condition hostPlayer.EditorOn
-    @Condition hostPlayer.isHoldingButton(Button.INTERACT) == true
-    @Condition hostPlayer.isHoldingButton(Button.RELOAD) == true
+    @Condition hostPlayer.isHoldingButton(Button.INTERACT)
+    @Condition hostPlayer.isHoldingButton(Button.RELOAD)
     @Condition hostPlayer.isHoldingButton(Button.MELEE) == false
     @Condition len(CheckpointPositions) > 1
     @Condition hostPlayer.EditModeSelection == 1

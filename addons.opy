@@ -37,52 +37,54 @@ rule "Title Data <---- EDIT ME":
     @Disabled
     # checkpoint number
     TitleData[0] = [
-    0,
-    10,
-    20,
-    30,
-    40,
-    50
+        0,
+        10,
+        20,
+        30,
+        40,
+        50
     ]
 
     # title
     TitleData[1] = [
-    "Bunny",
-    "Jumper",
-    "Ninja",
-    "Pro",
-    "Expert",
-    "Master"
+        "Bunny",
+        "Jumper",
+        "Ninja",
+        "Pro",
+        "Expert",
+        "Master"
     ]
 
     # color
     TitleData[2] = [
-    Color.LIME_GREEN,
-    Color.WHITE,
-    Color.YELLOW,
-    Color.ORANGE,
-    Color.PURPLE,
-    Color.RED
+        Color.LIME_GREEN,
+        Color.WHITE,
+        Color.YELLOW,
+        Color.ORANGE,
+        Color.PURPLE,
+        Color.RED
     ]
-
-rule "In world text for certain Checkpoints <---- EDIT ME":
-    @Disabled
-    # warning: adding text might go over the text limit and caues huds to not apear
-    createInWorldText([x for x in getAllPlayers() if x.CurrentCheckpoint == 0], "Text for checkpoint 0", vect(0, 0, 0), 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    createInWorldText([x for x in getAllPlayers() if x.CurrentCheckpoint == 1], "Text for checkpoint 1", vect(0, 0, 0), 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    createInWorldText([x for x in getAllPlayers() if x.CurrentCheckpoint == 2], "Text for checkpoint 2", vect(0, 0, 0), 3, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
 rule "HUD text for certain Checkpoints <---- EDIT ME":
     @Disabled
-    #  Don't touch this first hud, its padding to get your huds in place
-    hudSubtext(getAllPlayers(), "                                                   \r\n  \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n", HudPosition.TOP, HO.filler_custommsg, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    # Edit text here - warning: adding text might go over the text limit and cause huds to not apear
-    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 0], "Text for checkpoint 0", HudPosition.TOP, HO.add_custommsg1, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 1], "Text for checkpoint 1", HudPosition.TOP, HO.add_custommsg2, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 2], "Text for checkpoint 2", HudPosition.TOP, HO.add_custommsg3, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-
+    wait(0.5)
+    # in CpHudText fill in text
+    # in CpHudCp fill in the at wich to display
+    # the example fill shows a text for cp 0 and cp 3
+    CpHudText = ["text cp 0","text cp 3"]
+    CpHudCp = [0, 3]
     
- 
+rule "In world text for certain Checkpoints <---- EDIT ME":
+    @Disabled
+    wait(0.5)
+    # in CpIwtText fill in text
+    # in CpIwtCp fill in cp at wich to display
+    # in CpIwtPos fill in the vector
+    # the example fill shows a text for cp 0 and cp 3
+    CpIwtText = ["text cp 0","text cp 3"]
+    CpIwtCp = [1, 3]
+    CpIwtPos = [vect(0,0,0), vect(0,0,0)]
+  
 
 rule "pre-set control map portal - placement - toggled via workshop":
     @Condition PortalOn
@@ -125,7 +127,7 @@ rule "pre-set control map portal - function - toggled via workshop":
     @Condition PortalOn
     @Condition eventPlayer.InvincibleToggle or not eventPlayer.NotOnLastCp
     @Condition len(PortalLoc) != null
-    @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc]) == true
+    @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc])
     
     if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] != vect(0,0,0):
         eventPlayer.teleport(

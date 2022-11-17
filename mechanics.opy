@@ -4,28 +4,53 @@ rule "------------------------------------------------------------------------ C
     @Delimiter
     @Disabled
 
-
-rule "HUD | Wallclimb and Bhop":
+rule "Ult combined rule":
     @Event eachPlayer
-    @Condition eventPlayer.hasSpawned() == true
-    wait(1)
-    hudHeader(eventPlayer, "Climb{0}".format(
-        "" if eventPlayer.MultiClimbCount < 1 else
-        " ({0})".format(eventPlayer.MultiClimbCount)
-        ), 
-        HudPosition.LEFT, HO.game_climb, 
-        Color.RED if eventPlayer.WallclimbUsed else Color.GREEN, 
-        HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
-    )
-    
-    hudHeader(eventPlayer, "Bhop", HudPosition.LEFT, HO.game_bhop, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.COLOR, SpecVisibility.DEFAULT)
+    @Condition eventPlayer.isUsingUltimate()
+    wait(1.8, Wait.ABORT_WHEN_FALSE)
+    if eventPlayer.NotOnLastCp and (not eventPlayer.InvincibleToggle):
+        eventPlayer.disallowButton(Button.PRIMARY_FIRE) # disable primary fire because of slash exploit
+    waitUntil(not eventPlayer.isUsingUltimate(),2)
+    wait()
+    eventPlayer.allowButton(Button.PRIMARY_FIRE)
+    async(CheckUlt(), AsyncBehavior.RESTART) # sets ult charge back if done with map etc
+        
 
+rule "Dash rule":
+    @Event eachPlayer
+    @Condition eventPlayer.isUsingAbility1()
+    async(CheckDash(), AsyncBehavior.RESTART)
 
+def CheckUlt(): # checks if ult should be turned on
+    waitUntil(not eventPlayer.isUsingUltimate(), 2)
+    if eventPlayer.InvincibleToggle or eventPlayer.EditorOn or (not eventPlayer.NotOnLastCp):
+        goto lbl_a #skip msg if these
+    elif eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 1.4: 
+        smallMessage(eventPlayer, "   Ultimate is ready") 
+        lbl_a:
+        wait()        
+        eventPlayer.setUltEnabled(true)
+        eventPlayer.setUltCharge(100)
+    else:
+        eventPlayer.setUltEnabled(false)
+     
+
+def CheckDash(): # checks if dash should be  turned on
+    waitUntil(not eventPlayer.isUsingAbility1(), 2)
+    if eventPlayer.InvincibleToggle or eventPlayer.EditorOn or (not eventPlayer.NotOnLastCp):
+        goto lbl_a #skip msg if these
+    elif eventPlayer.CurrentCheckpoint in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 1.4: 
+        smallMessage(eventPlayer, "   Dash is ready") 
+        lbl_a:
+        wait()        
+        eventPlayer.setAbility1Enabled(true)
+    else:
+        eventPlayer.setAbility1Enabled(false)
 
 rule "Checking | Jump":
     @Event eachPlayer
     @Hero genji
-    @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
+    @Condition eventPlayer.isHoldingButton(Button.JUMP)
     @Condition eventPlayer.JumpCount != 2
     
     eventPlayer.JumpCount += 1
@@ -35,7 +60,7 @@ rule "Checking | Bhop in the air":
     @Event eachPlayer
     @Condition eventPlayer.JumpCount == 0
     @Condition eventPlayer.isInAir() == true
-    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
+    @Condition eventPlayer.isHoldingButton(Button.JUMP)
     
     eventPlayer.BhopUsed = false
 
@@ -44,7 +69,7 @@ rule "Checking | In the air":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.JumpCount == 0
-    @Condition eventPlayer.isInAir() == true
+    @Condition eventPlayer.isInAir()
     
     eventPlayer.JumpCount = 1
 
@@ -60,8 +85,8 @@ rule "Checking | Triple jump":
 rule "Checking | Player on the wall":
     @Event eachPlayer
     #This rule is also linked to the determination of wall climbing, please do not close/delete
-    @Condition eventPlayer.isOnWall() == true
-    @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
+    @Condition eventPlayer.isOnWall()
+    @Condition eventPlayer.isHoldingButton(Button.JUMP)
     
     eventPlayer.JumpCount = 2
     eventPlayer.WallclimbUsed = true
@@ -70,7 +95,7 @@ rule "Checking | Player on the wall":
 
 rule "Checking | Using Emote":
     @Event eachPlayer
-    @Condition eventPlayer.isCommunicatingEmote() == true
+    #@Condition eventPlayer.isCommunicatingEmote() == true
     
     eventPlayer.BhopUsed = false
 
@@ -78,22 +103,21 @@ rule "Checking | Using Emote":
 rule "Checking | Bhop":
     @Event eachPlayer
     @Condition not eventPlayer.BhopUsed
-    @Condition eventPlayer.isJumping() == true
+    @Condition eventPlayer.isJumping()
     
     eventPlayer.BhopUsed = true
     smallMessage(eventPlayer, "   Bhop")
 
-
 rule "Checking | Create Bhop":
     # Credit: Githuboy#5249
     @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition eventPlayer.isInAir() == true
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH)
+    @Condition eventPlayer.isInAir()
     @Condition eventPlayer.isOnWall() == false
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     @Condition eventPlayer.isJumping() == false
     @Condition eventPlayer.isOnGround() == false
-    @Condition eventPlayer.isCrouching() == true
+    @Condition eventPlayer.isCrouching()
     eventPlayer.BhopUsed = false
     if BhopBanToggle == true and eventPlayer.InvincibleToggle == false and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
         smallMessage(eventPlayer, "   Create Bhop is banned!")
@@ -104,7 +128,7 @@ rule "Checking | Create Bhop":
 rule "Checking | Double jump, initialized with small jump":
     @Event eachPlayer
     @Hero genji
-    @Condition eventPlayer.isOnGround() == true
+    @Condition eventPlayer.isOnGround()
     
     eventPlayer.JumpCount = 0
     eventPlayer.WallclimbUsed = false
@@ -117,21 +141,21 @@ rule "Checking | Double jump, initialized with small jump":
 
 rule "HUD | Multiclimb Counter":
     @Event eachPlayer
-    @Condition eventPlayer.isOnWall() == true
+    @Condition eventPlayer.isOnWall()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     @Condition not eventPlayer.WallclimbUsed
     eventPlayer.MultiClimbCount += 1
 
 rule "HUD | Bhop Indicator | Unused | Green":
     @Event eachPlayer
-    @Condition eventPlayer.isOnGround() == true
+    @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     eventPlayer.BhopHUDColor = Color.GREEN
 
 
 rule "HUD | Bhop Indicator | Used | Red":
     @Event eachPlayer
-    @Condition eventPlayer.isJumping() == true
+    @Condition eventPlayer.isJumping()
     eventPlayer.BhopHUDColor = Color.RED
 
 
@@ -149,20 +173,6 @@ rule "Ban | Wallclimb for specific CPs <---- EDIT ME":
     @Condition eventPlayer.WallclimbUsed
     checkpointFailReset()
     smallMessage(eventPlayer, "   Climb is banned!")
-
-
-rule "Ban | Bhop for specific CPs      <---- EDIT ME":
-    # Credit: TITANXPASCAL#5554
-    @Event eachPlayer
-    @Condition eventPlayer.ban_bhop
-    @Condition not eventPlayer.InvincibleToggle
-    @Condition eventPlayer.NotOnLastCp
-    @Condition eventPlayer.BhopUsed
-    @Condition not eventPlayer.LockState
-    @Condition distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) > 1.4
-    checkpointFailReset()
-    smallMessage(eventPlayer, "   Bhop is banned!")
-
 
 rule "Ban | Triple Jump":
     @Event eachPlayer
@@ -191,7 +201,7 @@ rule "Ban | Emote Savehop":
     @Condition eventPlayer.ban_emote
     @Condition not eventPlayer.InvincibleToggle
     @Condition eventPlayer.NotOnLastCp
-    @Condition eventPlayer.isCommunicatingEmote() == true
+    #@Condition eventPlayer.isCommunicatingEmote() == true
     smallMessage(eventPlayer, "   Emote Savehop is banned!")
     checkpointFailReset()
 
@@ -223,7 +233,22 @@ rule "HUD | Wallclimb Used":
     eventPlayer.MultiClimbCountHUD = getLastCreatedText()
 */
 
-
+/*
+# bricked because u can fallbhop, and it can triger on usign double
+rule "Ban | Bhop for specific CPs      <---- EDIT ME":
+    # Credit: TITANXPASCAL#5554
+    @Event eachPlayer
+    @Condition eventPlayer.ban_bhop
+    @Condition not eventPlayer.InvincibleToggle
+    @Condition eventPlayer.NotOnLastCp
+    #@Condition 
+    @Condition not eventPlayer.LockState
+    @Condition distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) > 1.4
+    #@Condition distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= 2
+    if eventPlayer.BhopUsed == 1: 
+        checkpointFailReset()
+        smallMessage(eventPlayer, "   Bhop is banned!")
+*/
 
 /*
 # removed coz duplicatewith "Checking | Double jump, initialized with small jump"

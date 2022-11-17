@@ -2,8 +2,76 @@
 
 
 comp mode:
-- set true after initial loading to avoid global var problem
-- the attempt limit and time limit is enforcedby forcing invinsible and disabling the toggle
-- 2 seperate arrays for save names and save progres are used to save the attempt count. everytime your atempt update it also updates in the save.
-- attemps count down when someone restarts a run. if someone finish a run the save data wil be reduced by 1 while the ingame one stays even, this way if you rejoin, you still get your attempt used.
-- time limit is checked via regular match time rule
+    - set true after initial loading to avoid global var problem
+    - the attempt limit and time limit is enforcedby forcing invinsible and disabling the toggle
+    - 2 seperate arrays for save names and save progres are used to save the attempt count. everytime your atempt update it also updates in the save.
+    - attemps count down when someone restarts a run. if someone finish a run the save data wil be reduced by 1 while the ingame one stays even, this way if you rejoin, you still get your attempt used.
+    - time limit is checked via regular match time rule
+
+
+bans:
+    on updating cache a cp it checks if the toggle is true or the cp is in the cp ban list
+    if it is then player variable tracks if player is baned from tht tech
+    the mechanics checks check that player variable instead of constandly the 
+    the cache triggers on landing on a cp, on skiping a cp etc so its the right way to keep the variable correct
+
+
+dash/ult reworked:
+    wenever a dash or ult is used, it waits until its done to perform a check ult/dash sub
+    in cache update ult/dash, the cache triggers on landing on a cp, on skiping a cp etc so its the right way to retriger easily
+    anywere i could think of that should give or take away dashe this sub is trigered
+    
+    on trigger it waits until the skill is done
+    affterwards it checks if you should be gratned it again or if it should be disabled
+    this includes if you are stil standing on cp or off it or invis mode etc
+    
+    since the subs auto triger after the skills, it doesnt have to constnadly set charge or anything for invis and finish
+    it just gives the charge when ult is turned on at the same time
+
+    the using ult also disables primary fire for a while
+    this is because using slash at the end of your ult makes it last longer
+
+save:
+    pausing: going into spec, practice or invis etc
+        if we didnt track pause time, one could leave and the time would be reset to last complete.
+        saving only time on ariving would make it reset.
+        u cannot save when someone leaves because var is already gone.
+        for this reason the time is calculated with elapsed time, run time and pause time combined
+    update:
+        - sometimes a specific data is updated once, like cp number
+        - sometimes it updates the entire set
+         - saves get fully delted and replaced when  entering a cp
+        this is viable because you cannot complete a cp in invis/spec
+        and because there is a thing that makes it not save if in practice mode
+
+    old version 
+        - was sequencial array
+        array: name, cp, player entitiy, etc
+        - lookup was done like array[index eventplayer] + 1 for cp
+        but during enitity lookup +/- from enitty instead of name
+
+        old array = SavedProgress < kept ingame to deal with pasted things
+        first number is index accesed from name
+        second number is index if accesed from entity
+        0 and -3 ; eventplayer name > SaveName
+        1 and -2 ; cp  > SaveCp
+        2 and -1 ; timer > SaveTimer
+        3 and 0; eventplayer real  > SaveEnt
+        4 and 1; totaltimeelapsed > SaveElapsed
+        5 and 2; pausetimer > SavePauseTime
+        6 and 3; ? > SaveUnkown
+
+
+    new version:
+        - array for each data stored to make it faster and lighter to acces
+
+        arrays: Name, cp, entity, timer, elapsed time, pausetime, pausetimeenabled, savesplit
+        - remember to always whipe them on saving a map via clear exces data
+        - both name and enitity have to be stored
+            when a player leaves u cannot acces their player variables so you NEED to use entity
+            when a player rejoins they get a new entity so to find it you NEED the old name
+
+        - pause timer start/stop turned into subs
+        - make/delete time also now subs
+
+    

@@ -30,13 +30,15 @@ rule "server load hud":
         getAllPlayers(), 
         "Load: {0} / Avrg: {1} \n"
         "Mavrg: {3} / Last: {4} \n"
-        "Minu: {5} / Peak: {2}".format(
+        "Minu: {5} / Peak: {2} \n"
+        "hudcount: {6}".format(
             getServerLoad(), 
             getAverageServerLoad(),
             getPeakServerLoad(),
             AvrgSecDisplay,
             LastTimePeak,
-            AvrgMinDisplay
+            AvrgMinDisplay,
+            getNumberOfTextIds()
         ), 
         
         HudPosition.LEFT, HO.leftend, 

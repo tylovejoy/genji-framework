@@ -9,6 +9,5 @@ rule "map data":
     BounceToggleLock = [false, false, true, false, true, false, true, true, false, false, true]
     killballnumber = []
     pinballnumber = [1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]
-    save = [0, 3.584, 0, 910.639, 0, 1]
     LeaderBoardFull = []
 
