@@ -547,18 +547,7 @@ rule "Player Initialize and game HUD":
         "Time {0}".format(prettyTime(eventPlayer.Timer)), 
         HudPosition.LEFT, HO.game_timer, Color.WHITE, Color.GRAY, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT)
     
-    /*
-    hudSubtext(eventPlayer, 
-        "Time {0} - Practice {1}".format(prettyTime(eventPlayer.Timer),eventPlayer.practicetimer) 
-        #if eventPlayer.PracticeToggle else
-        #"Time {0}".format(prettyTime(eventPlayer.Timer)) 
-        
-        , 
-        HudPosition.LEFT, HO.game_timer, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
-        ) 
-    */
-    hudText(eventPlayer, 
-        null, 
+    hudText(eventPlayer, null, 
         "orange orbs {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else "",
         "{3}{2}Level {0} / {1}".format(
             eventPlayer.CurrentCheckpoint, 
@@ -568,27 +557,6 @@ rule "Player Initialize and game HUD":
         ),    
         HudPosition.TOP, HO.game_level_orb, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
     )
-    
-    /*
-    # bans in orb
-    hudSubtext(eventPlayer, "Time {0}".format(prettyTime(eventPlayer.Timer)), HudPosition.LEFT, HO.game_timer, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT) 
-    hudText(eventPlayer, null, "{0}{1}{2}".format(eventPlayer.banstring,"\n" if eventPlayer.banstring and eventPlayer.BounceLockMax_Cache else "","orange orbs {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else "") ,"Level {0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1), HudPosition.TOP, HO.game_level_orb, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
-    )
-    */
-    /*
-    # bans in time
-    eventPlayer.banstring in second null
-    split from time
-    hudText(eventPlayer, null, eventPlayer.banstring, "Time {0}".format(prettyTime(eventPlayer.Timer)), HudPosition.LEFT, HO.game_timer, Color.WHITE,Color.BLACK,Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT)
-    */
-    /*
-    # bans in timer but aligned
-    # in time  but aligned
-    hudText(eventPlayer, null, null, "{1}Time {0} ".format(prettyTime(eventPlayer.Timer),eventPlayer.banstring), HudPosition.LEFT, HO.game_timer, Color.WHITE,Color.WHITE,Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT)
-    hudText(eventPlayer,  null, "orange orbs {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else "","Level {0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1),HudPosition.TOP, HO.game_level_orb, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
-    )
-    */
-
     # climb/bhop indicators
     hudHeader(eventPlayer, "Climb{0}".format("" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount)), HudPosition.LEFT, HO.game_climb, Color.RED if eventPlayer.WallclimbUsed else Color.GREEN, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT)
     hudHeader(eventPlayer, "Bhop", HudPosition.LEFT, HO.game_bhop, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.COLOR, SpecVisibility.DEFAULT)

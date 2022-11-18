@@ -243,8 +243,7 @@ rule "Editor | initialize":
             if hostPlayer.EditModeSelection == 1 else  
             " Selected Kill Orb \n Vector: {1} \n radius: {0} ".format(
                 KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]],
-                KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
-                
+                KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]      
             ) 
             if hostPlayer.EditModeSelection == 2 else             
             " Selected Bounce Orb \n Vector: {1} \n strength: {0}".format(
@@ -254,9 +253,7 @@ rule "Editor | initialize":
             if hostPlayer.EditModeSelection == 3 else   
             ""
             ),              
-        null,
-        null,
-        HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        null, null, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     # orb limit count
