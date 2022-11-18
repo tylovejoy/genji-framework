@@ -95,7 +95,7 @@ rule "Checking | Player on the wall":
 
 rule "Checking | Using Emote":
     @Event eachPlayer
-    #@Condition eventPlayer.isCommunicatingEmote() == true
+    @Condition eventPlayer.isCommunicatingEmote() == true
     
     eventPlayer.BhopUsed = false
 
@@ -120,7 +120,7 @@ rule "Checking | Create Bhop":
     @Condition eventPlayer.isCrouching()
     eventPlayer.BhopUsed = false
     if BhopBanToggle == true and eventPlayer.InvincibleToggle == false and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
-        smallMessage(eventPlayer, "   Create Bhop is banned!")
+        smallMessage(eventPlayer, "   Create Bhop ♂ is banned!")
         checkpointFailReset()
         return
     smallMessage(eventPlayer, "   Bhop has been created!")    
@@ -172,7 +172,7 @@ rule "Ban | Wallclimb for specific CPs <---- EDIT ME":
     @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.WallclimbUsed
     checkpointFailReset()
-    smallMessage(eventPlayer, "   Climb is banned!")
+    smallMessage(eventPlayer, "   Climb ↑ is banned!")
 
 rule "Ban | Triple Jump":
     @Event eachPlayer
@@ -183,7 +183,7 @@ rule "Ban | Triple Jump":
     @Condition eventPlayer.JumpCount == 1
     @Condition eventPlayer.isUsingAbility1() == false
     @Condition not eventPlayer.isOnWall()
-    smallMessage(eventPlayer, "   Triple Jump is banned!")
+    smallMessage(eventPlayer, "   Triple Jump ▲ is banned!")
     checkpointFailReset()
 
 
@@ -193,7 +193,7 @@ rule "Ban | Multiclimb":
     @Condition not eventPlayer.InvincibleToggle
     @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.MultiClimbCount > 0
-    smallMessage(eventPlayer, "   Multiclimb is banned!")
+    smallMessage(eventPlayer, "   Multiclimb ∞ is banned!")
     checkpointFailReset() 
 
 rule "Ban | Emote Savehop":
@@ -201,8 +201,8 @@ rule "Ban | Emote Savehop":
     @Condition eventPlayer.ban_emote
     @Condition not eventPlayer.InvincibleToggle
     @Condition eventPlayer.NotOnLastCp
-    #@Condition eventPlayer.isCommunicatingEmote() == true
-    smallMessage(eventPlayer, "   Emote Savehop is banned!")
+    @Condition eventPlayer.isCommunicatingEmote() == true
+    smallMessage(eventPlayer, "   Emote Savehop ♥ is banned!")
     checkpointFailReset()
 
 

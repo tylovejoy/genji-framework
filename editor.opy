@@ -238,7 +238,7 @@ rule "Editor | initialize":
             " Selected Checkpoint \n Vector: {0}{1} ".format(
                 CheckpointPositions[SelectedCheckpoint_Editing],
                 "" if len(CheckpointPositions[SelectedCheckpoint_Editing]) <2 else
-                "\nTeleport:{0}".format(CheckpointPositions[SelectedCheckpoint_Editing][1])
+                "\n Teleport: {0}".format(CheckpointPositions[SelectedCheckpoint_Editing][1])
             )
             if hostPlayer.EditModeSelection == 1 else  
             " Selected Kill Orb \n Vector: {1} \n radius: {0} ".format(
@@ -413,10 +413,10 @@ rule "Kill Orb / Bounce Orb | Move Toward/Backward | Deflect + Primary Fire":
 
 rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
     @Event eachPlayer
-    @Condition hostPlayer.EditorOn
+    @Condition eventPlayer.EditorOn
+    @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
-    @Condition eventPlayer == hostPlayer
     
     if eventPlayer.EditModeSelection == 1:
         if SelectedCheckpoint_Editing != -1 and distance(eventPlayer, CheckpointPositions[SelectedCheckpoint_Editing]) <= 1.4:
@@ -424,17 +424,23 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Create | Interact + Primary Fire":
             return
 
         if SelectedCheckpoint_Editing == len(CheckpointPositions) - 1:
-            CheckpointPositions.append(eventPlayer.getPosition() - vect(0, 0, 0))
+            CheckpointPositions.append(eventPlayer.getPosition() ) # - vect(0, 0, 0)
             SelectedCheckpoint_Editing = len(CheckpointPositions) - 1
+            UpdateCache()
+            #eventPlayer.CurrentCheckpoint ++
         else:
             insert(CheckpointPositions, SelectedCheckpoint_Editing + 1, eventPlayer.getPosition())
             SelectedCheckpoint_Editing = SelectedCheckpoint_Editing + 1            
             KillballCheckpoints = [x + (1 if x >= SelectedCheckpoint_Editing else 0) for x in KillballCheckpoints]
             BouncePadCheckpoints = [x + (1 if x >= SelectedCheckpoint_Editing else 0) for x in BouncePadCheckpoints]
             UpdateCache()
+            #if len(CheckpointPositions) > 2:
+            #    eventPlayer.CurrentCheckpoint = SelectedCheckpoint_Editing + 1
             RebuildKillOrbs()
             RebuildBounceOrbs()
         smallMessage(getAllPlayers(), "   New Checkpoint has been created")
+        #UpdateCache()
+
     elif eventPlayer.EditModeSelection == 2:
         if len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart) >= fxlimit:
             bigMessage(getAllPlayers(), "Orb/portal limit reached for this map, delete old orbs first")
