@@ -1,6 +1,6 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(10) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly
 #!define touchground false
 #!define cpcheat false
@@ -188,7 +188,7 @@ def BuildPortals():
 
 def UpdateCache():
     @Name "SUB | Update Effect Cache"
-    eventPlayer.NotOnLastCp = (eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 and len(CheckpointPositions)  > 2)
+    eventPlayer.NotOnLastCp = (eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 and len(CheckpointPositions)  > 1)
     
     eventPlayer.BouncePosition_Cache = [_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.BounceStrength_Cache = [_ for _, i in BounceStrength if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
@@ -218,7 +218,6 @@ def UpdateCache():
         eventPlayer.ban_multi = true
         eventPlayer.banstring = "∞ {}".format(eventPlayer.banstring)
 
-
     eventPlayer.ban_create = false
     if createWorkshopSetting(bool, "Ban Switch", "Ban Createbhop on all cps", false, 2):
         eventPlayer.ban_create = true
@@ -226,14 +225,12 @@ def UpdateCache():
         eventPlayer.ban_create = true
         eventPlayer.banstring = "♂ {}".format(eventPlayer.banstring)
 
-
     eventPlayer.ban_dedhop = false
     if createWorkshopSetting(bool, "Ban Switch", "Ban Deathbhop on all cps", false, 3):
         eventPlayer.ban_dedhop = true
     elif eventPlayer.CurrentCheckpoint in BanDead:
         eventPlayer.ban_dedhop = true
         eventPlayer.banstring = "X {}".format(eventPlayer.banstring)
-
 
     eventPlayer.ban_emote = false
     if createWorkshopSetting(bool, "Ban Switch", "Ban Emote Savehop on all cps", false, 4):
@@ -243,7 +240,7 @@ def UpdateCache():
         eventPlayer.banstring = "♥ {}".format(eventPlayer.banstring)
 
     eventPlayer.ban_climb = false
-    if createWorkshopSetting(bool, "Ban Switch", "Ban Emote Savehop on all cps", false, 5):
+    if createWorkshopSetting(bool, "Ban Switch", "Ban Wallclimb on all cps", false, 5):
         eventPlayer.ban_climb = true
     elif eventPlayer.CurrentCheckpoint in BanClimb:
         eventPlayer.ban_climb = true
@@ -494,7 +491,7 @@ rule "Match time":
         declareTeamVictory(hostPlayer.getTeam())
 
 
-rule "Initialize and game HUD":
+rule "Player Initialize and game HUD":
     @Event eachPlayer
     eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron , 0) # Turn Editor On
     eventPlayer.disableGamemodeHud()
@@ -545,7 +542,21 @@ rule "Initialize and game HUD":
             eventPlayer.CompDone = true
     
     # ban icons in level
-    hudSubtext(eventPlayer, "Time {0}".format(prettyTime(eventPlayer.Timer)), HudPosition.LEFT, HO.game_timer, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT) 
+    hudText(eventPlayer, null, 
+        "Practice Time {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "", 
+        "Time {0}".format(prettyTime(eventPlayer.Timer)), 
+        HudPosition.LEFT, HO.game_timer, Color.WHITE, Color.GRAY, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT)
+    
+    /*
+    hudSubtext(eventPlayer, 
+        "Time {0} - Practice {1}".format(prettyTime(eventPlayer.Timer),eventPlayer.practicetimer) 
+        #if eventPlayer.PracticeToggle else
+        #"Time {0}".format(prettyTime(eventPlayer.Timer)) 
+        
+        , 
+        HudPosition.LEFT, HO.game_timer, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
+        ) 
+    */
     hudText(eventPlayer, 
         null, 
         "orange orbs {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else "",
@@ -840,7 +851,7 @@ def StartGame_Sub():
             #eventPlayer.QuickRestartToggle = SaveQuick[SaveEnt.index(eventPlayer)]
             #eventPlayer.splitson = SaveSplitToggle[SaveEnt.index(eventPlayer)]
         else:
-            eventPlayer.teleport(CheckpointPositions[0] + vect(0, 1, 0))
+            eventPlayer.teleport(CheckpointPositions[0] + Vector.UP)
             eventPlayer.CurrentCheckpoint = 0
             eventPlayer.Timer = 0
             eventPlayer.splittime = 0
@@ -925,16 +936,20 @@ rule "Arrive | Ground reset | traces":
             eventPlayer.LockCollected = []
             eventPlayer.CurrentCheckpoint += 1
             UpdateCache()
-            if not eventPlayer.PracticeToggle:
+            if eventPlayer.PracticeToggle:
+                eventPlayer.splitdisplay =  eventPlayer.practicetimer - eventPlayer.splittime
+            else:
                 eventPlayer.splitdisplay =  eventPlayer.Timer - eventPlayer.splittime
+            
             wait()
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
             playEffect(eventPlayer if CompMode or eventPlayer.invis else getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
-            bigMessage(eventPlayer, "Arrived at {0} / {1}{2}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1, " - Split {}".format(eventPlayer.splitdisplay) if eventPlayer.splitson and eventPlayer.PracticeToggle == false else ""))
+            bigMessage(eventPlayer, "Arrived at {0} / {1}{2}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1, " - Split {}".format(eventPlayer.splitdisplay) if eventPlayer.splitson else ""))
             UpdateTitle()
             if eventPlayer.isUsingUltimate():
                 kill(eventPlayer, null)
             if eventPlayer.PracticeToggle:
+                eventPlayer.splittime = eventPlayer.practicetimer
                 goto lbla
             
             eventPlayer.splittime = eventPlayer.Timer
@@ -942,6 +957,7 @@ rule "Arrive | Ground reset | traces":
 
             if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1 and (not eventPlayer.EditorOn) and (not eventPlayer.PracticeToggle): # complete lvl
                 stopChasingVariable(eventPlayer.Timer)
+                stopChasingVariable(eventPlayer.practicetimer) 
                 wait()
                 bigMessage(getAllPlayers(), "Mission complete! Time {0}".format(prettyTime(eventPlayer.Timer)))
                 DeleteSave()
@@ -1017,12 +1033,14 @@ rule "Kill Orb | Activate":
     @Event eachPlayer
     @Condition eventPlayer.KillPosition_Cache != []
     @Condition not eventPlayer.InvincibleToggle
+    @Condition eventPlayer.NotOnLastCp
     @Condition (any([distance(i, eventPlayer) <= eventPlayer.KillRadii_Cache[eventPlayer.KillPosition_Cache.index(i)] for i in eventPlayer.KillPosition_Cache]))
     checkpointFailReset()
 
 rule "Bounce Ball | Activate":
     @Event eachPlayer
     @Condition eventPlayer.BouncePosition_Cache != []
+    @Condition eventPlayer.NotOnLastCp
     @Condition (any([distance(i, eventPlayer) < bounceorbdistance for i in eventPlayer.BouncePosition_Cache]))
     
     eventPlayer.bouncetouched = eventPlayer.BouncePosition_Cache.index( # cashe the touched bouncepad number
@@ -1057,6 +1075,7 @@ rule "Death Reset":
     @Event playerDied
     @Condition not eventPlayer.SpectateToggle
     @Condition not eventPlayer.CompDone
+    #@Condition len(CheckpointPositions) >= 2
     
     eventPlayer.clearStatusEffect(Status.PHASED_OUT)
     eventPlayer.resurrect()
@@ -1140,7 +1159,8 @@ rule "Combo | Restart Run | Crouch + Interact + Deflect":
     eventPlayer.PracticeToggle = false
     eventPlayer.PracticeCheckpoint = 0
     eventPlayer.InvincibleToggle = false
-
+    stopChasingVariable(eventPlayer.practicetimer)
+    eventPlayer.practicetimer = 0
     if eventPlayer in SaveEnt:
         DeleteSave()
     
@@ -1162,13 +1182,18 @@ rule "Combo | Enter Spectate | Hold Interact":
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
     @Condition not CompMode
     wait(1, Wait.ABORT_WHEN_FALSE)
+    if eventPlayer.EditorOn: # editor has interact combos
+        wait(0.5, Wait.ABORT_WHEN_FALSE)
+
     smallMessage(eventPlayer, "   Hold Interact again to turn off spectate mode")
-    
     if eventPlayer.SpectateToggle:
         eventPlayer.respawn()
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
-        if eventPlayer.NotOnLastCp and (not eventPlayer.PracticeToggle):
-            chase(eventPlayer.Timer, 10000, rate=1, ChaseReeval.NONE)
+        if eventPlayer.NotOnLastCp:
+            if eventPlayer.PracticeToggle:
+                chase(eventPlayer.practicetimer, 9999999, rate=1, ChaseReeval.NONE)
+            else:
+                chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE)
 
         async(CheckUlt(),AsyncBehavior.RESTART)
         async(CheckDash(), AsyncBehavior.RESTART) 
@@ -1180,6 +1205,7 @@ rule "Combo | Enter Spectate | Hold Interact":
     else:
         if eventPlayer.NotOnLastCp:
             StartPauseTimer()
+        stopChasingVariable(eventPlayer.practicetimer)
         stopChasingVariable(eventPlayer.Timer)
         eventPlayer.disableRespawn()
         wait(0.2)
@@ -1205,6 +1231,7 @@ rule "Combo | Toggle Invincible Mode | Melee + Reload":
         wait(0.1)
         if eventPlayer.PracticeToggle:
             bigMessage(eventPlayer, "Practice mode")
+            chase(eventPlayer.practicetimer, 9999999, rate=1, ChaseReeval.NONE)
         else:
             bigMessage(eventPlayer, "Normal mode")
             chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE)
@@ -1217,6 +1244,7 @@ rule "Combo | Toggle Invincible Mode | Melee + Reload":
             return
         StartPauseTimer()
         stopChasingVariable(eventPlayer.Timer)
+        stopChasingVariable(eventPlayer.practicetimer)
         bigMessage(eventPlayer, "Invincible mode")
         eventPlayer.flytoggle = null
         wait(0.2)
@@ -1253,8 +1281,10 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
         eventPlayer.LockCollected = []
         UpdateCache()
         wait(0.1)
+        stopChasingVariable(eventPlayer.practicetimer)
         bigMessage(eventPlayer, "Normal mode")
         if eventPlayer.NotOnLastCp:
+            eventPlayer.splittime = eventPlayer.Timer
             chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE) #abs removed
             StopPauseTimer()
         async(CheckUlt(), AsyncBehavior.RESTART)
@@ -1268,10 +1298,12 @@ rule "Combo | Toggle Practice Mode | Melee + Ultimate":
         eventPlayer.stopForcingPosition()
         if eventPlayer.NotOnLastCp:
             StartPauseTimer()
+        eventPlayer.splittime = 0
+        eventPlayer.practicetimer = 0
+        chase(eventPlayer.practicetimer, 9999999, rate=1, ChaseReeval.NONE)
         wait(0.2)
         
-
-
+   
     eventPlayer.PracticeToggle = not eventPlayer.PracticeToggle 
     wait(0.3)
     eventPlayer.LockState = false
@@ -1300,6 +1332,8 @@ rule "Combo | Practice Restart | Interact":
         kill(eventPlayer, null)
     #if eventPlayer.NotOnLastCp:
     #    Sub0()
+    eventPlayer.practicetimer = 0
+    eventPlayer.splittime = 0
     eventPlayer.teleport(CheckpointPositions[eventPlayer.PracticeCheckpoint])
     eventPlayer.CurrentCheckpoint = eventPlayer.PracticeCheckpoint
 
@@ -1328,7 +1362,7 @@ rule "Combo | Quick Reset | Reload, Hold Reload to Enable":
         wait(0.16)
     wait(1, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
-    #eventPlayer.QuickRestartToggle = not eventPlayer.QuickRestartToggle
+    eventPlayer.QuickRestartToggle = not eventPlayer.QuickRestartToggle
     #SaveQuick[SaveEnt.index(eventPlayer)] = eventPlayer.QuickRestartToggle
     bigMessage(eventPlayer, "Quick reset is enabled" if eventPlayer.QuickRestartToggle else "Quick reset is disabled")
 
@@ -1354,19 +1388,29 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.NotOnLastCp) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
     @Condition eventPlayer.LockState == false
     @Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle
-    
+    eventPlayer.splittime = 0
+    eventPlayer.practicetimer = 0
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         if eventPlayer.CurrentCheckpoint == 0:
             return
         eventPlayer.LockState = true
-        eventPlayer.CurrentCheckpoint -= 1
+        
+        if (len(CheckpointPositions[eventPlayer.CurrentCheckpoint -1]) > 1 and distance(CheckpointPositions[eventPlayer.CurrentCheckpoint ][0], CheckpointPositions[eventPlayer.CurrentCheckpoint-1][1]) < 1.4):
+            # if last cp is an instand complete teleport cp, go back further
+            eventPlayer.CurrentCheckpoint -= 2 
+        else:
+            eventPlayer.CurrentCheckpoint -= 1
     else:
         if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
             return
         eventPlayer.LockState = true
         eventPlayer.CurrentCheckpoint += 1
+
     wait()
     checkpointFailReset()
+    #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last()+ vect(0,0.2,0))
+    #eventPlayer.cancelPrimaryAction()
+    #eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
     wait(0.064)
     eventPlayer.LockState = false
     eventPlayer.MovedCheckpoint = true
