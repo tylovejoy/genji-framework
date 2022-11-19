@@ -231,13 +231,32 @@ rule "Editor | initialize":
             iconString(Icon.ASTERISK)
         ), HudPosition.LEFT, HO.edit_orb_lock, Color.GREEN if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
-    
+    # 10659
     # curent selected thing data
     hudText(hostPlayer if hostPlayer.GuideToggle else null, 
+         
+            "\n Selected Checkpoint \n Vector: {0}{1} \n".format(
+                CheckpointPositions[SelectedCheckpoint_Editing],
+                "" if len(CheckpointPositions[SelectedCheckpoint_Editing]) < 2 else
+                "\n Teleport: {0}".format(CheckpointPositions[SelectedCheckpoint_Editing][1])
+            )
+            if hostPlayer.EditModeSelection == 1 else  
+            "\n Selected Kill Orb \n Vector: {1} \n radius: {0} \n".format(
+                KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]],
+                KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]      
+            ) 
+            if hostPlayer.EditModeSelection == 2 else             
+            "\n Selected Bounce Orb \n Vector: {1} \n strength: {0} \n".format(
+                BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
+                BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+            )
+            if hostPlayer.EditModeSelection == 3 else   
+            ""
+        /*
         "\n{0}\n".format(
             " Selected Checkpoint \n Vector: {0}{1} ".format(
                 CheckpointPositions[SelectedCheckpoint_Editing],
-                "" if len(CheckpointPositions[SelectedCheckpoint_Editing]) <2 else
+                "" if len(CheckpointPositions[SelectedCheckpoint_Editing]) < 2 else
                 "\n Teleport: {0}".format(CheckpointPositions[SelectedCheckpoint_Editing][1])
             )
             if hostPlayer.EditModeSelection == 1 else  
@@ -252,7 +271,8 @@ rule "Editor | initialize":
             ) 
             if hostPlayer.EditModeSelection == 3 else   
             ""
-            ),              
+            */
+            ,              
         null, null, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
@@ -276,8 +296,8 @@ rule "Editor | initialize":
     createInWorldText(getAllPlayers() if SelectedCheckpoint_Editing != -1 and hostPlayer.KillPosition_Cache else null, "Selected Kill Orb", KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
     # Red distance orb for kill orb
     createEffect(getAllPlayers() if SelectedCheckpoint_Editing != -1 and hostPlayer.KillPosition_Cache else null, Effect.ORB, Color.RED, KillBallChase, 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    # Distance # text for kill orb
-    createInWorldText(getAllPlayers() if SelectedCheckpoint_Editing != -1 and hostPlayer.KillPosition_Cache else null, l"{0} m".format(distance(hostPlayer, KillBallChase)), KillBallChase - vect(0, 1.5, 0), 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
+    # Distance # text for kill orb (removed the L from M string)
+    createInWorldText(getAllPlayers() if SelectedCheckpoint_Editing != -1 and hostPlayer.KillPosition_Cache else null, "{0} m".format(distance(hostPlayer, KillBallChase)), KillBallChase - vect(0, 1.5, 0), 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.RED, SpecVisibility.DEFAULT)
     # Selected kill orb arrow icon
     createIcon(getAllPlayers() if SelectedCheckpoint_Editing != -1 and hostPlayer.KillPosition_Cache else null, KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.RED, true)
     # Purple sphere for teleport location
@@ -581,9 +601,9 @@ rule "Checkpoint / Kill Orb / Bounce Orb | Delete | Interact + Secondary Fire":
 rule "Checkpoint | Move | Ultimate + Interact":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
+    @Condition eventPlayer == hostPlayer    
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
-    @Condition eventPlayer == hostPlayer
     
     smallMessage(getAllPlayers(), "   Checkpoint {0} has been deleted".format(SelectedCheckpoint_Editing) if len(CheckpointPositions[SelectedCheckpoint_Editing]) != 0 else "")
     CheckpointPositions[SelectedCheckpoint_Editing] = eventPlayer.getPosition() - vect(0, 0, 0)
@@ -646,6 +666,5 @@ rule "Teleport | Add | Interact + Reload":
 
     smallMessage(getAllPlayers(), "   Teleport has been added for checkpoint {0}".format(SelectedCheckpoint_Editing))
 
-
-
+    
 
