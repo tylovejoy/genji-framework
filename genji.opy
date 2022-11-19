@@ -143,8 +143,8 @@ def RebuildBounceOrbs():
             1, 
             EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
-            BounceEffects.append(getLastCreatedEntity())
-            wait()
+    BounceEffects.append(getLastCreatedEntity())
+    wait()
 
 def RebuildKillOrbs():
     @Name "SUB | Rebuild Kill Orbs"
@@ -200,7 +200,6 @@ def UpdateCache():
     eventPlayer.BounceLockMax_Cache = len([i for i in eventPlayer.BounceLock_Cache if i])
     async(CheckUlt(), AsyncBehavior.RESTART)
     async(CheckDash(), AsyncBehavior.RESTART)
-
     
     eventPlayer.banstring = ""
     
