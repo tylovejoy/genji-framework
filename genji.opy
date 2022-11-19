@@ -262,7 +262,7 @@ def UpdateCache():
     eventPlayer.KillIndex_Cache = [e for e in [(i if e2 == eventPlayer.CurrentCheckpoint else -1) for e2, i in KillballCheckpoints] if  e >=0]
 
     if eventPlayer.MovedCheckpoint and eventPlayer == hostPlayer:
-        SelectedCheckpoint_Editing = eventPlayer.CurrentCheckpoint
+        #SelectedCheckpoint_Editing = eventPlayer.CurrentCheckpoint
         SelectedKillball_Editing = 0 if eventPlayer.KillIndex_Cache else 99999
         KillBallChase = KillBallPositions[eventPlayer.KillIndex_Cache[SelectedKillball_Editing]] if len(eventPlayer.KillIndex_Cache) else vect(0,0,0)
         CurrentBounce_Editing = 0 if eventPlayer.BounceIndex_Cache else 99999
@@ -308,7 +308,7 @@ rule "Setup and Variables":
     LeaderBoardFull = []
     wait(1)
     PortalOn = createWorkshopSetting(bool, "map settings","enable portals (control maps)",true,0)
-    SelectedCheckpoint_Editing = len(CheckpointPositions) - 1 # This probably isn't necessary
+    #SelectedCheckpoint_Editing = len(CheckpointPositions) - 1 # This probably isn't necessary
         
     CompMode = createWorkshopSetting(bool, "Competitive mode","Turn on competitive mode" , compmodetoggle , 100)
     if CompMode:
@@ -493,6 +493,7 @@ rule "Match time":
 rule "Player Initialize and game HUD":
     @Event eachPlayer
     eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron , 0) # Turn Editor On
+    eventPlayer.GuideToggle = eventPlayer.EditorOn
     eventPlayer.disableGamemodeHud()
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
@@ -828,8 +829,8 @@ def StartGame_Sub():
     
     chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE)
    
-    if hostPlayer.EditorOn:
-        SelectedCheckpoint_Editing = 0 if SelectedCheckpoint_Editing != -1 else -1
+    #if hostPlayer.EditorOn:
+    #    SelectedCheckpoint_Editing = 0 if SelectedCheckpoint_Editing != -1 else -1
 
     eventPlayer.setStatusEffect(null, Status.PHASED_OUT, 9999)
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
