@@ -100,7 +100,7 @@
 
 #Global variables
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
-globalvar SelectedCheckpoint_Editing 1      # int                       --- selected checkpoint
+globalvar SelectedCheckpoint_Editing 1 # legacy      # int                       --- selected checkpoint
 globalvar CheckpointRings_Editing 2         # list[effect]              --- Holds checkpoint effects in editing context
 globalvar MsDestructo 3                     # MsDestructo Player
 globalvar TimeRemaining 4
