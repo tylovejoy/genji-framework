@@ -174,8 +174,7 @@ globalvar SaveElapsed 64
 globalvar SavePauseTime 65
 globalvar SavePauseEnabled 66
 globalvar SaveSplit 67
-#globalvar SaveSplitToggle 68
-#globalvar SaveQuick 69
+
 
 # per cp iwt or hud
 globalvar CpHudText 75
