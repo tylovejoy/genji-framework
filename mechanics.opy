@@ -4,7 +4,7 @@ rule "------------------------------------------------------------------------ C
     @Delimiter
     @Disabled
 
-rule "Ult combined rule":
+rule "Checking | ult combined rule":
     @Event eachPlayer
     @Condition eventPlayer.isUsingUltimate()
     wait(1.8, Wait.ABORT_WHEN_FALSE)
@@ -16,7 +16,7 @@ rule "Ult combined rule":
     async(CheckUlt(), AsyncBehavior.RESTART) # sets ult charge back if done with map etc
         
 
-rule "Dash rule":
+rule "Checking | Dash combined rule":
     @Event eachPlayer
     @Condition eventPlayer.isUsingAbility1()
     async(CheckDash(), AsyncBehavior.RESTART)

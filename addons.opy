@@ -21,19 +21,19 @@ rule "changinghudrule":
 */
  #HO.add_custommsg1, 
 
-rule "Add Blade to Checkpoint <---- EDIT ME":
+rule "Addon | Add Blade to Checkpoint <---- EDIT ME":
     @Disabled
     #Change "-1" to certain Checkpoints' number. For example if you want to add Blade to Checkpoint 2 and 6 change one of "-1" to 2 and other "-1" to 6
     wait(1)
     BladeEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
-rule "Add Dash to Checkpoint <---- EDIT ME":
+rule "Addon | Add Dash to Checkpoint <---- EDIT ME":
     @Disabled
     #Change "-1" to certain Checkpoints' number. For example if you want to add Dash to Checkpoint 7 and 1 change one of "-1" to 7 and other "-1" to 1
     wait(1)
     DashEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
     
-rule "Title Data <---- EDIT ME":
+rule "Addon | Title Data <---- EDIT ME":
     @Disabled
     # checkpoint number
     TitleData[0] = [
@@ -65,7 +65,7 @@ rule "Title Data <---- EDIT ME":
         Color.RED
     ]
 
-rule "HUD text for certain Checkpoints <---- EDIT ME":
+rule "Addon | HUD text for certain Checkpoints <---- EDIT ME":
     @Disabled
     wait(0.5)
     # in CpHudText fill in text
@@ -74,7 +74,7 @@ rule "HUD text for certain Checkpoints <---- EDIT ME":
     CpHudText = ["text cp 0","text cp 3"]
     CpHudCp = [0, 3]
     
-rule "In world text for certain Checkpoints <---- EDIT ME":
+rule "Addon | In world text for certain Checkpoints <---- EDIT ME":
     @Disabled
     wait(0.5)
     # in CpIwtText fill in text
@@ -86,7 +86,7 @@ rule "In world text for certain Checkpoints <---- EDIT ME":
     CpIwtPos = [vect(0,0,0), vect(0,0,0)]
   
 
-rule "pre-set control map portal - placement - toggled via workshop":
+rule "Addon | pre-set control map portal | placement | toggled via workshop":
     @Condition PortalOn
     wait(2, Wait.ABORT_WHEN_FALSE) # overwrite pasta
     if getCurrentMap() == Map.BUSAN:
@@ -122,7 +122,7 @@ rule "pre-set control map portal - placement - toggled via workshop":
     else:
         PortalDest = null
         return
-rule "pre-set control map portal - function - toggled via workshop":
+rule "Addon | pre-set control map portal | function | toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
     @Condition eventPlayer.InvincibleToggle or not eventPlayer.NotOnLastCp
@@ -134,7 +134,7 @@ rule "pre-set control map portal - function - toggled via workshop":
             PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] 
         )
 
-rule "custom portals - data <---- EDIT ME":
+rule "Addon | custom portals | data <---- EDIT ME":
     @Disabled
     #warning: This can cause you to exceed global orb/portal limit. 
     #make sure portal + orbs do not go past the limit.
@@ -147,7 +147,7 @@ rule "custom portals - data <---- EDIT ME":
     #999 = apply portal to entire map
     CustomPortalCP = [999]
 
-rule "custom portals - function":
+rule "Addon | custom portals | function":
     @Disabled
     @Event eachPlayer
     @Condition len(CustomPortalStart) > 0

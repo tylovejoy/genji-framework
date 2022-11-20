@@ -18,8 +18,12 @@ editortoggle(0) # 0 is editor, rest is numbers
 # limit on how many orbs can be made
 #!define fxlimit 193
 #!define portaldistance 1.3
+
+# 1.4
 #!define bounceorbdistance 1.4
-#(1.6 if eventPlayer.isUsingAbility1() else 1.4)
+#0
+#!define bounceoffset + vect(0,0.8,0)
+##!define bounceoffset + vect(0,0,0)
 
 #disable overpy map detection
 #!disableMapDetectionFix 
@@ -42,12 +46,49 @@ rule "fisho cp cheat for overpy toggle":
         eventPlayer.CurrentCheckpoint += 1
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
 
+
+
+/*
+rule "orbradiustest": # show radius on all bounce orbs
+    wait(8)   
+    for TempIterator1 in range(0,len(BouncePadCheckpoints)):
+        createEffect(
+            [i for i in getAllPlayers() if i.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], 
+            Effect.SPHERE, 
+            Color.WHITE, 
+            BouncePositions[evalOnce(TempIterator1)], #bounceoffset,
+            bounceorbdistance,
+            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+        )
+
+        createEffect(
+            [i for i in getAllPlayers() if i.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], 
+            Effect.SPHERE, 
+            Color.RED, 
+            BouncePositions[evalOnce(TempIterator1)], #bounceoffset,
+            0.1,
+            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+        )
+
+
+rule "orbradiustest": # show player orb hit detection
+    @Event eachPlayer
+    
+    eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), 15)
+    
+    createEffect(getAllPlayers(), Effect.SPHERE, Color.RED, updateEveryTick( eventPlayer.getPosition() bounceoffset), 0.1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR) 
+    createEffect(getAllPlayers(), Effect.SPHERE, Color.ORANGE, updateEveryTick( eventPlayer.getPosition() bounceoffset), 0.03, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR) 
+
+    # own orb radius
+    createEffect(getAllPlayers(), Effect.SPHERE, Color.YELLOW, updateEveryTick( eventPlayer.getPosition() bounceoffset), bounceorbdistance, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR) 
+*/
 rule "------------------------------------------------------------------------ Map pasta ------------------------------------------------------------------------ ":
     @Delimiter
     @Disabled
 
 rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
     @Delimiter
+
 
 editorordata
 
@@ -95,8 +136,7 @@ rule "Custom difficulty hud":
 rule "Display World Record": 
     @Disabled
     @Delimiter
-    #1) enable this rule
-    #2) type your entry in the textfield that says "name and time here"
+    #type your entry in the textfield that says "name and time here"
     hudText(getAllPlayers(), null," \n{0} world record {0}".format(iconString(Icon.FIRE)),"name and time here", HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
 
@@ -245,9 +285,6 @@ def UpdateCache():
         eventPlayer.ban_climb = true
         eventPlayer.banstring = "↑ {}".format(eventPlayer.banstring)
 
-    #eventPlayer.banstring = eventPlayer.banstring.substring(0,strLen(eventPlayer.banstring)-2)
-    #eventPlayer.banstring  = "{0}                         \u0001\n".format(eventPlayer.banstring)
-
     if not hostPlayer.EditorOn:
         return
 
@@ -375,75 +412,16 @@ rule "Setup and Variables":
 
 
     if not hostPlayer.EditorOn:
-        Difficultyhud = createWorkshopSetting(enum[
-            "beginner",
-            "easy-",
-            "easy",
-            "easy+",
-            "medium-",
-            "medium",
-            "medium+",
-            "hard-",
-            "hard",
-            "hard+",
-            "very hard-",
-            "very hard",
-            "very hard+",
-            "extreme-",
-            "extreme",
-            "extreme+",
-            "hell",
-            "don't display"
-            ],"map settings","difficulty (display hud)",0, 0)
+        Difficultyhud = createWorkshopSetting(enum[ "beginner", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display"],"map settings","difficulty (display hud)",0, 0)
 
         if Difficultyhud < 17: # 17th entry is dont display
-            hudSubheader(getAllPlayers(), 
-                [
-                "beginner",
-                "easy -",
-                "easy",
-                "easy +",
-                "medium -",
-                "medium",
-                "medium +",
-                "hard -",
-                "hard",
-                "hard +",
-                "very hard -",
-                "very hard",
-                "very hard +",
-                "extreme -",
-                "extreme",
-                "extreme +",
-                "hell"][Difficultyhud], 
-                HudPosition.TOP, HO.data_dif,
-                [
-                Color.GREEN,
-                Color.LIME_GREEN,
-                Color.LIME_GREEN,
-                Color.LIME_GREEN,
-                Color.YELLOW,
-                Color.YELLOW,
-                Color.YELLOW,
-                Color.ORANGE,
-                Color.ORANGE,
-                Color.ORANGE,
-                rgb(255, 69, 0),
-                rgb(255, 69, 0),
-                rgb(255, 69, 0),
-                Color.RED,
-                Color.RED,
-                Color.RED,
-                rgb(150, 0, 0)
-                ][Difficultyhud]
-                , HudReeval.VISIBILITY, SpecVisibility.DEFAULT
-            )
+            hudSubheader(getAllPlayers(), ["beginner", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell"][Difficultyhud], HudPosition.TOP, HO.data_dif,[Color.GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.YELLOW,Color.YELLOW,Color.YELLOW, Color.ORANGE,Color.ORANGE,Color.ORANGE,rgb(255, 69, 0), rgb(255, 69, 0), rgb(255, 69, 0), Color.RED, Color.RED, Color.RED, rgb(150, 0, 0)][Difficultyhud], HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
             HudStoreEdit.append(getLastCreatedText())
 
     wait(5)
     KILLBALL()
     wait(2)
-    pinball()
+    pinball() #
     wait(2)
     BuildPortals()
     # Check for editor/host spawn to redo effect reeval
@@ -576,10 +554,7 @@ def DeleteSave():
     del SavePauseTime[SaveEnt.index(eventPlayer)]
     del SavePauseEnabled[SaveEnt.index(eventPlayer)]
     del SaveSplit[SaveEnt.index(eventPlayer)]
-    #del SaveSplitToggle[SaveEnt.index(eventPlayer)]
-    #del SaveQuick[SaveEnt.index(eventPlayer)]
-
-    del SaveEnt[SaveEnt.index(eventPlayer)]
+    del SaveEnt[SaveEnt.index(eventPlayer)] # must always be last because its the index itself
 
 def MakeSave():
     @Name "make save"
@@ -816,8 +791,6 @@ def StartGame_Sub():
             SavePauseTime[SaveEnt.index(eventPlayer)] = 0
             SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
             eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint] + Vector.UP)
-            #eventPlayer.QuickRestartToggle = SaveQuick[SaveEnt.index(eventPlayer)]
-            #eventPlayer.splitson = SaveSplitToggle[SaveEnt.index(eventPlayer)]
         else:
             eventPlayer.teleport(CheckpointPositions[0] + Vector.UP)
             eventPlayer.CurrentCheckpoint = 0
@@ -828,10 +801,6 @@ def StartGame_Sub():
             MakeSave()
     
     chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE)
-   
-    #if hostPlayer.EditorOn:
-    #    SelectedCheckpoint_Editing = 0 if SelectedCheckpoint_Editing != -1 else -1
-
     eventPlayer.setStatusEffect(null, Status.PHASED_OUT, 9999)
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
     eventPlayer.LockCollected = []
@@ -994,7 +963,6 @@ rule "Combo | Toggle Splits":
     
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.splitson = not eventPlayer.splitson
-    #SaveSplitToggle[SaveEnt.index(eventPlayer)] = eventPlayer.splitson
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
 
 rule "Kill Orb | Activate":
@@ -1005,26 +973,22 @@ rule "Kill Orb | Activate":
     @Condition (any([distance(i, eventPlayer) <= eventPlayer.KillRadii_Cache[eventPlayer.KillPosition_Cache.index(i)] for i in eventPlayer.KillPosition_Cache]))
     checkpointFailReset()
 
+
 rule "Bounce Ball | Activate":
     @Event eachPlayer
     @Condition eventPlayer.BouncePosition_Cache != []
-    @Condition eventPlayer.NotOnLastCp
-    @Condition (any([distance(i, eventPlayer) < bounceorbdistance for i in eventPlayer.BouncePosition_Cache]))
+    #@Condition eventPlayer.NotOnLastCp
+    @Condition (any([distance(i, eventPlayer.getPosition() bounceoffset) < bounceorbdistance for i in eventPlayer.BouncePosition_Cache]))
     
     eventPlayer.bouncetouched = eventPlayer.BouncePosition_Cache.index( # cashe the touched bouncepad number
         sorted(
-            [i for i in eventPlayer.BouncePosition_Cache if distance(eventPlayer, i) < bounceorbdistance and not (i in eventPlayer.LockCollected) ],
+            [i for i in eventPlayer.BouncePosition_Cache if distance(eventPlayer bounceoffset, i ) < bounceorbdistance and not (i in eventPlayer.LockCollected) ],
             lambda x: distance(eventPlayer, x)
             )[0]
         )
 
     if eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched] != 0:
         eventPlayer.applyImpulse(Vector.UP, eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-    
-    if eventPlayer.BounceDash_Cache[eventPlayer.bouncetouched]:
-        eventPlayer.setAbility1Enabled(true)
-        smallMessage(eventPlayer, "   Dash is ready")
-        playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     if eventPlayer.BounceUlt_Cache[eventPlayer.bouncetouched]:
         eventPlayer.setUltEnabled(true)
@@ -1037,7 +1001,17 @@ rule "Bounce Ball | Activate":
         smallMessage(eventPlayer, "   orb has been collected")
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
-  
+    if eventPlayer.BounceDash_Cache[eventPlayer.bouncetouched]:
+        if eventPlayer.isUsingAbility1():
+            waitUntil(not eventPlayer.isUsingAbility1(), 1)
+            wait(0.032) # wait til set false by check
+        eventPlayer.setAbility1Enabled(true)
+        smallMessage(eventPlayer, "   Dash is ready")
+        playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
+
+    wait(0.24)
+    if RULE_CONDITION:
+        goto RULE_START
 
 rule "Death Reset":
     @Event playerDied
@@ -1327,11 +1301,10 @@ rule "Combo | Quick Reset | Reload, Hold Reload to Enable":
         wait(0.1)
         eventPlayer.stopForcingPosition()
         eventPlayer.flytoggle = null
-        wait(0.16)
+        wait(0.24)
     wait(1, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     eventPlayer.QuickRestartToggle = not eventPlayer.QuickRestartToggle
-    #SaveQuick[SaveEnt.index(eventPlayer)] = eventPlayer.QuickRestartToggle
     bigMessage(eventPlayer, "Quick reset is enabled" if eventPlayer.QuickRestartToggle else "Quick reset is disabled")
 
 

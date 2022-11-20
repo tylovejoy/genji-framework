@@ -18,7 +18,8 @@ if (x == 0){
     12: "test-maps/bug_reload_completcp.opy", // bug were you can complete a cp by reloading while not standing on the ground
     13: "test-maps/dashstart.opy", // dash start not banned
     14: "test-maps/fisho_nepal.opy", // fisho's nepal map
-    15: "test-maps/fishodorado.opy" // my dorado
+    15: "test-maps/fishodorado.opy", // my dorado
+    16: "test-maps/bounces_close.opy"
     }[x]
 
     selectedmap = {
@@ -36,7 +37,8 @@ if (x == 0){
     12: "hanamura",
     13: "watchpointGibraltar",
     14: "nepal",
-    15: "dorado"
+    15: "dorado",
+    16: "busan"
     }[x]
 
     x = '#!define editorordata #!include "'+ datafiles + '"\n #!define selectedmap "' + selectedmap + '"' + '\n #!define editoron false\n'
