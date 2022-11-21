@@ -80,7 +80,7 @@ rule "orbradiustest": # show player orb hit detection
     createEffect(getAllPlayers(), Effect.SPHERE, Color.ORANGE, updateEveryTick( eventPlayer.getPosition() bounceoffset), 0.03, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR) 
 
     # own orb radius
-    createEffect(getAllPlayers(), Effect.SPHERE, Color.YELLOW, updateEveryTick( eventPlayer.getPosition() bounceoffset), bounceorbdistance, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR) 
+    #createEffect(getAllPlayers(), Effect.SPHERE, Color.YELLOW, updateEveryTick( eventPlayer.getPosition() bounceoffset), bounceorbdistance, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR) 
 */
 rule "------------------------------------------------------------------------ Map pasta ------------------------------------------------------------------------ ":
     @Delimiter
@@ -553,7 +553,6 @@ def DeleteSave():
     del SaveElapsed[SaveEnt.index(eventPlayer)]
     del SavePauseTime[SaveEnt.index(eventPlayer)]
     del SavePauseEnabled[SaveEnt.index(eventPlayer)]
-    del SaveSplit[SaveEnt.index(eventPlayer)]
     del SaveEnt[SaveEnt.index(eventPlayer)] # must always be last because its the index itself
 
 def MakeSave():
@@ -564,7 +563,6 @@ def MakeSave():
     SaveEnt.append(eventPlayer)
     SaveElapsed.append(getTotalTimeElapsed())
     SavePauseTime.append(0)
-    SaveSplit.append(eventPlayer.splittime)
     SavePauseEnabled.append(false)
 
 def StartPauseTimer():
@@ -786,7 +784,6 @@ def StartGame_Sub():
             SaveEnt[SaveName.index("{}".format(eventPlayer))] = eventPlayer
             eventPlayer.CurrentCheckpoint = SaveCp[SaveEnt.index(eventPlayer)]
             eventPlayer.Timer = SaveTimer[SaveEnt.index(eventPlayer)]
-            eventPlayer.splittime = SaveSplit[SaveEnt.index(eventPlayer)] 
             SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
             SavePauseTime[SaveEnt.index(eventPlayer)] = 0
             SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
@@ -795,11 +792,11 @@ def StartGame_Sub():
             eventPlayer.teleport(CheckpointPositions[0] + Vector.UP)
             eventPlayer.CurrentCheckpoint = 0
             eventPlayer.Timer = 0
-            eventPlayer.splittime = 0
             stopChasingVariable(eventPlayer.PauseTimer)
             eventPlayer.PauseTimer = 0
             MakeSave()
     
+    eventPlayer.splittime = 0
     chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE)
     eventPlayer.setStatusEffect(null, Status.PHASED_OUT, 9999)
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
@@ -873,11 +870,7 @@ rule "Arrive | Ground reset | traces":
             eventPlayer.LockCollected = []
             eventPlayer.CurrentCheckpoint += 1
             UpdateCache()
-            if eventPlayer.PracticeToggle:
-                eventPlayer.splitdisplay =  eventPlayer.practicetimer - eventPlayer.splittime
-            else:
-                eventPlayer.splitdisplay =  eventPlayer.Timer - eventPlayer.splittime
-            
+            eventPlayer.splitdisplay =  (eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer) - eventPlayer.splittime
             wait()
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
             playEffect(eventPlayer if CompMode or eventPlayer.invis else getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
@@ -890,7 +883,6 @@ rule "Arrive | Ground reset | traces":
                 goto lbla
             
             eventPlayer.splittime = eventPlayer.Timer
-            SaveSplit[SaveEnt.index(eventPlayer)] = eventPlayer.splittime
 
             if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1 and (not eventPlayer.EditorOn) and (not eventPlayer.PracticeToggle): # complete lvl
                 stopChasingVariable(eventPlayer.Timer)
@@ -1161,8 +1153,8 @@ rule "Combo | Toggle Invincible Mode | Melee + Reload":
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition eventPlayer.isUsingAbility1() == false
-    @Condition eventPlayer.isAlive()
     @Condition eventPlayer.isUsingUltimate() == false
+    @Condition eventPlayer.isAlive()
     @Condition (not CompMode) or (not eventPlayer.CompDone)
     eventPlayer.LockCollected = []
     eventPlayer.flytoggle = null
@@ -1261,19 +1253,18 @@ rule "Combo | Practice Restart | Interact":
     @Condition not eventPlayer.EditorOn
     @Condition eventPlayer.PracticeToggle
    
-    if eventPlayer.SpectateToggle:
+    #  first 2 ifs prevent collide with spec
+    if eventPlayer.SpectateToggle: 
         waitUntil(eventPlayer.isAlive(), 9999)
         waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), 2)
         return
-    
     waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), 0.9)
     if eventPlayer.isHoldingButton(Button.INTERACT):
         return
     
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
-    #if eventPlayer.NotOnLastCp:
-    #    Sub0()
+
     eventPlayer.practicetimer = 0
     eventPlayer.splittime = 0
     eventPlayer.teleport(CheckpointPositions[eventPlayer.PracticeCheckpoint])
@@ -1349,17 +1340,11 @@ rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
 
     wait()
     checkpointFailReset()
-    #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last()+ vect(0,0.2,0))
-    #eventPlayer.cancelPrimaryAction()
-    #eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
     wait(0.064)
     eventPlayer.LockState = false
     eventPlayer.MovedCheckpoint = true
     UpdateCache() 
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.32)
-    #wait(0.5)  
-
-
 
 
 #!include "mechanics.opy"
@@ -1380,10 +1365,10 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     [
         0,
         Map.HANAMURA,
-        Map.HANAMURA_WINTER,
+        # Map.HANAMURA_WINTER,
         Map.HORIZON_LUNAR_COLONY,
         Map.PARIS,
-        # Map.TEMPLE_OF_ANUBIS,
+        Map.TEMPLE_OF_ANUBIS,
         Map.DORADO,
         Map.HAVANA,
         Map.JUNKERTOWN,
@@ -1391,58 +1376,58 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         Map.ROUTE66,
         Map.WATCHPOINT_GIBRALTAR,
         Map.BLIZZ_WORLD,
-        Map.BLIZZ_WORLD_WINTER,
+        # Map.BLIZZ_WORLD_WINTER,
         Map.EICHENWALDE,
-        Map.EICHENWALDE_HALLOWEEN,
+        # Map.EICHENWALDE_HALLOWEEN,
         Map.HOLLYWOOD,
         # Map.HOLLYWOOD_HALLOWEEN,
         Map.KINGS_ROW,
-        Map.KINGS_ROW_WINTER,
-        # Map.NUMBANI,
+        # Map.KINGS_ROW_WINTER,
+        Map.NUMBANI,
         Map.AYUTTHAYA,
-        Map.BUSAN_DOWNTOWN_LNY,
-        Map.BUSAN_SANCTUARY_LNY,
-        Map.ILIOS_LIGHTHOUSE,
+        # Map.BUSAN_DOWNTOWN_LNY,
+        # Map.BUSAN_SANCTUARY_LNY,
+        # Map.ILIOS_LIGHTHOUSE,
         # Map.ILIOS_RUINS,
-        Map.ILIOS_WELL,
-        Map.LIJIANG_CONTROL_CENTER,
-        Map.LIJIANG_CONTROL_CENTER_LNY,
-        Map.LIJIANG_GARDEN,
-        Map.LIJIANG_GARDEN_LNY,
-        Map.LIJIANG_NIGHT_MARKET,
-        Map.LIJIANG_NIGHT_MARKET_LNY,
-        Map.NEPAL_SANCTUM,
-        Map.NEPAL_SHRINE,
-        Map.NEPAL_VILLAGE,
+        # Map.ILIOS_WELL,
+        # Map.LIJIANG_CONTROL_CENTER,
+        # Map.LIJIANG_CONTROL_CENTER_LNY,
+        # Map.LIJIANG_GARDEN,
+        # Map.LIJIANG_GARDEN_LNY,
+        # Map.LIJIANG_NIGHT_MARKET,
+        # Map.LIJIANG_NIGHT_MARKET_LNY,
+        # Map.NEPAL_SANCTUM,
+        # Map.NEPAL_SHRINE,
+        # Map.NEPAL_VILLAGE,
         # Map.NEPAL_VILLAGE_WINTER,
-        Map.OASIS_CITY_CENTER,
-        Map.OASIS_GARDENS,
-        Map.OASIS_UNIVERSITY,
+        # Map.OASIS_CITY_CENTER,
+        # Map.OASIS_GARDENS,
+        # Map.OASIS_UNIVERSITY,
         Map.BLACK_FOREST,
-        Map.BLACK_FOREST_WINTER,
+        # Map.BLACK_FOREST_WINTER,
         Map.CASTILLO,
-        # Map.ECOPOINT_ANTARCTICA,
+        Map.ECOPOINT_ANTARCTICA,
         # Map.ECOPOINT_ANTARCTICA_WINTER,
         Map.CHATEAU_GUILLARD,
-        Map.CHATEAU_GUILLARD_HALLOWEEN,
+        # Map.CHATEAU_GUILLARD_HALLOWEEN,
         Map.KANEZAKA,
-        # Map.NECROPOLIS,
+        Map.NECROPOLIS,
         Map.PETRA,
         Map.VOLSKAYA,
         Map.PRACTICE_RANGE,
         Map.ILIOS,
         Map.BUSAN,
         Map.LIJIANG_TOWER,
-        Map.LIJIANG_TOWER_LNY,
+        # Map.LIJIANG_TOWER_LNY,
         Map.NEPAL,
         Map.OASIS,
         Map.MALEVENTO
-    ],  # 
+    ],  #
         [vect(15.759, 30.576, -27.201)],  # Map.HANAMURA,
-        [vect(15.759, 30.576, -27.201)],  # Map.HANAMURA_WINTER,
+        # [vect(15.759, 30.576, -27.201)],  # Map.HANAMURA_WINTER,
         [vect(31.759, 40.003, -59.476)],  # Map.HORIZON_LUNAR_COLONY,
         [vect(-54.508, 40.179, -10.866)],  # Map.PARIS,
-        # [vect(-26.78, 23.366, 40.284)],  # Map.TEMPLE_OF_ANUBIS,
+        [vect(-26.78, 23.366, 40.284)],  # Map.TEMPLE_OF_ANUBIS,
         [vect(69.418, 42.103, -17.712)],  # Map.DORADO,
         [vect(9.382, 38.635, -81.276)],  # Map.HAVANA,
         [vect(9.382, 38.635, -81.276)],  # Map.JUNKERTOWN,
@@ -1450,53 +1435,55 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         [vect(30.313, 28.237, -16.925)],  # Map.ROUTE66,
         [vect(73.985, 26.198, -109.338)],  # Map.WATCHPOINT_GIBRALTAR,
         [vect(-21.03, 35.127, 88.381)],  # Map.BLIZZ_WORLD,
-        [vect(-21.03, 35.127, 88.381)],  # Map.BLIZZ_WORLD_WINTER,
+        # [vect(-21.03, 35.127, 88.381)],  # Map.BLIZZ_WORLD_WINTER,
         [vect(54.798, 40.964, -82.78)],  # Map.EICHENWALDE,
-        [vect(54.798, 40.964, -82.78)],  # Map.EICHENWALDE_HALLOWEEN,
+        # [vect(54.798, 40.964, -82.78)],  # Map.EICHENWALDE_HALLOWEEN,
         [vect(-0.355, 28.167, -22.396)],  # Map.HOLLYWOOD,
         # [vect(-0.355, 28.167, -22.396)],  # Map.HOLLYWOOD_HALLOWEEN,
         [vect(-56.869, 24.061, -32.132)],  # Map.KINGS_ROW,
-        [vect(-56.869, 24.061, -32.132)],  # Map.KINGS_ROW_WINTER,
-        # [vect(105.299, 22.764, 14.89)],  # Map.NUMBANI,
+        # [vect(-56.869, 24.061, -32.132)],  # Map.KINGS_ROW_WINTER,
+        [vect(105.299, 22.764, 14.89)],  # Map.NUMBANI,
         [vect(16.965, 26.541, -7.13)],  # Map.AYUTTHAYA,
-        [vect(51.885, 37.172, -113.654)],  # Map.BUSAN_DOWNTOWN_LNY,
-        [vect(-329.934, 56.136, 149.839)],  # Map.BUSAN_SANCTUARY_LNY,
-        [vect(322.988, 15.716, -37.732)],  # Map.ILIOS_LIGHTHOUSE,
+        # [vect(51.885, 37.172, -113.654)],  # Map.BUSAN_DOWNTOWN_LNY,
+        # [vect(-329.934, 56.136, 149.839)],  # Map.BUSAN_SANCTUARY_LNY,
+        # [vect(322.988, 15.716, -37.732)],  # Map.ILIOS_LIGHTHOUSE,
         # [vect(27.711, 87.241, -161.298)],  # Map.ILIOS_RUINS,
-        [vect(-223.895, 34.756, 0.89)],  # Map.ILIOS_WELL,
-        [vect(-5.808, 324.398, 282.523)],  # Map.LIJIANG_CONTROL_CENTER,
-        [vect(-5.808, 324.398, 282.523)],  # Map.LIJIANG_CONTROL_CENTER_LNY,
-        [vect(-0.414, 156.197, 148.681)],  # Map.LIJIANG_GARDEN,
-        [vect(-0.414, 156.197, 148.681)],  # Map.LIJIANG_GARDEN_LNY,
-        [vect(-0.381, 53.736, -33.335)],  # Map.LIJIANG_NIGHT_MARKET,
-        [vect(-0.381, 53.736, -33.335)],  # Map.LIJIANG_NIGHT_MARKET_LNY,
-        [vect(83.1, 178.926, 0.593)],  # Map.NEPAL_SANCTUM,
-        [vect(-49.803, 63.29, -0.413)],  # Map.NEPAL_SHRINE,
-        [vect(-184.659, -38.73, -0.783)],  # Map.NEPAL_VILLAGE,
+        # [vect(-223.895, 34.756, 0.89)],  # Map.ILIOS_WELL,
+        # [vect(-5.808, 324.398, 282.523)],  # Map.LIJIANG_CONTROL_CENTER,
+        # [vect(-5.808, 324.398, 282.523)],  # Map.LIJIANG_CONTROL_CENTER_LNY,
+        # [vect(-0.414, 156.197, 148.681)],  # Map.LIJIANG_GARDEN,
+        # [vect(-0.414, 156.197, 148.681)],  # Map.LIJIANG_GARDEN_LNY,
+        # [vect(-0.381, 53.736, -33.335)],  # Map.LIJIANG_NIGHT_MARKET,
+        # [vect(-0.381, 53.736, -33.335)],  # Map.LIJIANG_NIGHT_MARKET_LNY,
+        # [vect(83.1, 178.926, 0.593)],  # Map.NEPAL_SANCTUM,
+        # [vect(-49.803, 63.29, -0.413)],  # Map.NEPAL_SHRINE,
+        # [vect(-184.659, -38.73, -0.783)],  # Map.NEPAL_VILLAGE,
         # [vect(-184.659, -38.73, -0.783)],  # Map.NEPAL_VILLAGE_WINTER,
-        [vect(150.125, 30.619, 251.966)],  # Map.OASIS_CITY_CENTER,
-        [vect(134.888, 36.76, -240.736)],  # Map.OASIS_GARDENS,
-        [vect(-195.549, 60.35, -0.098)],  # Map.OASIS_UNIVERSITY,
+        # [vect(150.125, 30.619, 251.966)],  # Map.OASIS_CITY_CENTER,
+        # [vect(134.888, 36.76, -240.736)],  # Map.OASIS_GARDENS,
+        # [vect(-195.549, 60.35, -0.098)],  # Map.OASIS_UNIVERSITY,
         [vect(-9.622, 44.751, 5.635)],  # Map.BLACK_FOREST,
-        [vect(-9.622, 44.751, 5.635)],  # Map.BLACK_FOREST_WINTER,
+        # [vect(-9.622, 44.751, 5.635)],  # Map.BLACK_FOREST_WINTER,
         [vect(-100.828, 76.566, 60.021)],  # Map.CASTILLO,
-        # [vect(-6.186, 35.564, 1.378)],  # Map.ECOPOINT_ANTARCTICA,
+        [vect(-6.186, 35.564, 1.378)],  # Map.ECOPOINT_ANTARCTICA,
         # [vect(-6.186, 35.564, 1.378)],  # Map.ECOPOINT_ANTARCTICA_WINTER,
         [vect(200.414, 82.412, 78.813)],  # Map.CHATEAU_GUILLARD,
-        [vect(200.414, 82.412, 78.813)],  # Map.CHATEAU_GUILLARD_HALLOWEEN,
+        # [vect(200.414, 82.412, 78.813)],  # Map.CHATEAU_GUILLARD_HALLOWEEN,
         [vect(-36.319, 32.305, 0.472)],  # Map.KANEZAKA,
-        # [vect(-1.144, 47.168, -2.946)],  # Map.NECROPOLIS,
+        [vect(-1.144, 47.168, -2.946)],  # Map.NECROPOLIS,
         [vect(9.678, 28.313, 13.4)],  # Map.PETRA,
         [vect(-49.147, 22.344, 76.844)],  # Map.VOLSKAYA,
         [vect(54.948, 50.769, 3.93)],  # Map.PRACTICE_RANGE,
         [vect(322.988, 40, -37.732), vect(27.711, 100, -161.298), vect(-223.895, 50, 0.89)], # Map.ILIOS,
         [vect(51.885, 37.172, -113.654), vect(-329.934, 56.136, 149.839), vect(227.21, 43.353, 252.64)],  # Map.BUSAN,
         [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)],  # Map.LIJIANG_TOWER,
-        [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)],  # Map.LIJIANG_TOWER_LNY,
+        # [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)],  # Map.LIJIANG_TOWER_LNY,
         [vect(83.1, 178.926, 0.593), vect(-49.803, 63.29, -0.413), vect(-184.659, -38.73, -0.783)],  # Map.NEPAL,
         [vect(150.125, 30.619, 251.966), vect(134.888, 36.76, -240.736), vect(-195.549, 60.35, -0.098)],  # Map.OASIS,
         [vect(17.808, 35.955, 17.505)]  # Map.MALEVENTO
     ]
+
+
 
 
 

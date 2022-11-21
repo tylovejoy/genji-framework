@@ -36,7 +36,6 @@ rule "Editor | Clear Excess Data to Save Map":
     SaveCp = []
     SaveTimer = []
     SaveEnt = []
-    SaveSplit = []
     SavePauseTime = []
     SavePauseEnabled = []
     SaveElapsed = []
@@ -558,6 +557,7 @@ rule "Editor | delete cp/orb":
         RebuildBounceOrbs()
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
     UpdateCache()
+    wait()
 
 rule "Editor | move cp":
     @Event eachPlayer
@@ -569,7 +569,7 @@ rule "Editor | move cp":
     #smallMessage(getAllPlayers(), "   Checkpoint {0} has been deleted".format(hostPlayer.CurrentCheckpoint) if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) != 0 else "")
     CheckpointPositions[hostPlayer.CurrentCheckpoint] = eventPlayer.getPosition() - vect(0, 0, 0)
     smallMessage(getAllPlayers(), "   Checkpoint has been moved to your position")
-
+    wait()
 
 rule "Editor | select orb":
     @Event eachPlayer
@@ -594,7 +594,8 @@ rule "Editor | select orb":
             CurrentBounce_Editing = (CurrentBounce_Editing + 1) % len(eventPlayer.BounceIndex_Cache)
         
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
-        
+    wait()
+
 rule "Editor | display size display":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
@@ -603,7 +604,7 @@ rule "Editor | display size display":
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
     
     eventPlayer.EffectSizeToggle = not eventPlayer.EffectSizeToggle
-    
+    wait()
 
 rule "Editor | add teleport":
     @Condition hostPlayer.EditorOn
@@ -626,7 +627,7 @@ rule "Editor | add teleport":
     ]
 
     smallMessage(getAllPlayers(), "   Teleport has been added for checkpoint {0}".format(hostPlayer.CurrentCheckpoint))
-
+    wait()
     
 rule "Editor | move slowly":
     @Event eachPlayer
@@ -639,7 +640,7 @@ rule "Editor | move slowly":
     #@Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false
     #@Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false
     wait(0.5, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.setMoveSpeed(1.5)
+    eventPlayer.setMoveSpeed(3)
     eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), 15)
     
     #while eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.EditModeSelection == 0 and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false:

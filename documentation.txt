@@ -65,7 +65,7 @@ save:
     new version:
         - array for each data stored to make it faster and lighter to acces
 
-        arrays: Name, cp, entity, timer, elapsed time, pausetime, pausetimeenabled, savesplit
+        arrays: Name, cp, entity, timer, elapsed time, pausetime, pausetimeenabled
         - remember to always whipe them on saving a map via clear exces data
         - both name and enitity have to be stored
             when a player leaves u cannot acces their player variables so you NEED to use entity
