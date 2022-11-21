@@ -173,7 +173,7 @@ globalvar SaveTimer 63
 globalvar SaveElapsed 64
 globalvar SavePauseTime 65
 globalvar SavePauseEnabled 66
-globalvar SaveSplit 67
+
 
 
 # per cp iwt or hud
