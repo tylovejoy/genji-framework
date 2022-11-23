@@ -19,7 +19,8 @@ if (x == 0){
     13: "test-maps/dashstart.opy", // dash start not banned
     14: "test-maps/fisho_nepal.opy", // fisho's nepal map
     15: "test-maps/fishodorado.opy", // my dorado
-    16: "test-maps/bounces_close.opy"
+    16: "test-maps/bounces_close.opy",
+    17: "test-maps/routetest.opy"
     }[x]
 
     selectedmap = {
@@ -38,7 +39,8 @@ if (x == 0){
     13: "watchpointGibraltar",
     14: "nepal",
     15: "dorado",
-    16: "busan"
+    16: "busan",
+    17: "route66"
     }[x]
 
     x = '#!define editorordata #!include "'+ datafiles + '"\n #!define selectedmap "' + selectedmap + '"' + '\n #!define editoron false\n'

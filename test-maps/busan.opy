@@ -13,3 +13,11 @@ rule "test data for portals":
     killballnumber = []
     pinballnumber = []
     LeaderBoardFull = []
+    
+    # dash
+    SHIFT = [0,2]
+
+    Dao = [0,1]
+
+
+

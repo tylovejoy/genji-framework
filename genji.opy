@@ -6,11 +6,11 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!define cpcheat false
 #!define inspectoron false
 
-#!define testaitoggle ##!include "test-ai.opy"
+#!define testaitoggle ##!include "test-scripts.opy"
 
 #!define compmodetoggle false
 #!define attemptcount 5
-#!define comptimelimit 1
+#!define comptimelimit 120
 #!define comprestartlimit false
 # defaults: off, atempt:5, 120 min, restart:false
 
@@ -19,11 +19,11 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!define fxlimit 193
 #!define portaldistance 1.3
 
-# 1.4
+# distance range for player - orb 1.4
 #!define bounceorbdistance 1.4
-#0
-#!define bounceoffset + vect(0,0.8,0)
-##!define bounceoffset + vect(0,0,0)
+# eight added to player for orb detection. inludes the + 
+#!define bounceoffset + vect(0,0.7,0)
+
 
 #disable overpy map detection
 #!disableMapDetectionFix 
@@ -47,41 +47,6 @@ rule "fisho cp cheat for overpy toggle":
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
 
 
-
-/*
-rule "orbradiustest": # show radius on all bounce orbs
-    wait(8)   
-    for TempIterator1 in range(0,len(BouncePadCheckpoints)):
-        createEffect(
-            [i for i in getAllPlayers() if i.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], 
-            Effect.SPHERE, 
-            Color.WHITE, 
-            BouncePositions[evalOnce(TempIterator1)], #bounceoffset,
-            bounceorbdistance,
-            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
-        )
-
-        createEffect(
-            [i for i in getAllPlayers() if i.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], 
-            Effect.SPHERE, 
-            Color.RED, 
-            BouncePositions[evalOnce(TempIterator1)], #bounceoffset,
-            0.1,
-            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
-        )
-
-
-rule "orbradiustest": # show player orb hit detection
-    @Event eachPlayer
-    
-    eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), 15)
-    
-    createEffect(getAllPlayers(), Effect.SPHERE, Color.RED, updateEveryTick( eventPlayer.getPosition() bounceoffset), 0.1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR) 
-    createEffect(getAllPlayers(), Effect.SPHERE, Color.ORANGE, updateEveryTick( eventPlayer.getPosition() bounceoffset), 0.03, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR) 
-
-    # own orb radius
-    #createEffect(getAllPlayers(), Effect.SPHERE, Color.YELLOW, updateEveryTick( eventPlayer.getPosition() bounceoffset), bounceorbdistance, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR) 
-*/
 rule "------------------------------------------------------------------------ Map pasta ------------------------------------------------------------------------ ":
     @Delimiter
     @Disabled
@@ -94,7 +59,7 @@ editorordata
 
 rule "Credits here <---- INSERT YOUR NAME HERE": 
     hudSubtext(getAllPlayers(), "made by: name", HudPosition.LEFT, HO.data_name, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    HudStoreEdit.append(getLastCreatedText())
+    HudStoreEdit.append(getLastCreatedText()) # appending these makes em removed in editor
     hudSubtext(getAllPlayers(), "map code: XXXXX", HudPosition.LEFT, HO.data_code, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
     hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
@@ -130,7 +95,7 @@ rule "Custom difficulty hud":
     #1) workshop settings > difficulty > set to "dont display"
     #2) enable this rule
     #3) type your difficulty in the hud below
-    hudSubheader(getAllPlayers(), "Difficulty: custom", HudPosition.TOP, HO.data_dif,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubheader(getAllPlayers(), "enter custom difficulty here", HudPosition.TOP, HO.data_dif,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
 
 rule "Display World Record": 
@@ -317,6 +282,7 @@ rule "Setup and Variables":
     if not inspectoron:
         disableInspector()
 
+    # version 1.7
     disableGamemodeCompletion()
     disableScoring()
     disableMusic()
@@ -509,8 +475,10 @@ rule "Player Initialize and game HUD":
             CompAtmpSaveCount.append(1)
             eventPlayer.AttemptCount = 1
             eventPlayer.setMoveSpeed(0)
+            eventPlayer.setAbility1Enabled(false)
+            eventPlayer.setUltEnabled(false)
             waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT),1)
-            waitUntil(eventPlayer.isHoldingButton(Button.INTERACT),99999)
+            waitUntil(eventPlayer.isHoldingButton(Button.INTERACT) or CompTime < 1,99999)
             eventPlayer.setMoveSpeed(100)
             eventPlayer.instructionhud = false
         else:
@@ -1511,27 +1479,3 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
 
 # enable/disable the include via defines
 testaitoggle 
-
-/*
-rule "hud thing":
-
-    hudSubheader( getAllPlayers(), 
-        "                                                   \r\n \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"
-        , HudPosition.TOP, -173, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
-
-    )
-
-   
-
-    hudText(
-        getAllPlayers(), 
-
-        "cp1 text" if localPlayer.A == 1 else
-        "cp2 text" if localPlayer.A == 2 else
-        "cp3 text" if localPlayer.A == 3 else
-        "cp5 text" if localPlayer.A == 5 else
-        ""
-        null, 
-        null, 
-        HudPosition.TOP, -172, Color.WHITE, Color.WHITE, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-        */
