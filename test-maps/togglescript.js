@@ -4,7 +4,7 @@ if (x == 0){
 
 } else {
     datafiles = {
-    1: "test-maps/krdata.opy", // 7JXAM - Vertigo - kings row
+    1: "test-maps/1quicktest.opy", // spot free to pur temporary maps in
     2: "test-maps/hollydata.opy", // 1W8FF -  Kami - hollywood 
     3: "test-maps/route.opy", // 4QETZV - FRENCHFRIES - route 
     4: "test-maps/minimap.opy", // tiny 3 cp workshop map by me
@@ -24,7 +24,7 @@ if (x == 0){
     }[x]
 
     selectedmap = {
-    1: "kingsRow",
+    1: "rialto",
     2: "hollywood",
     3: "route66",
     4: "workshopChamber",
