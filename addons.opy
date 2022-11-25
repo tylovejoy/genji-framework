@@ -70,9 +70,9 @@ rule "Addon | HUD text for certain Checkpoints <---- EDIT ME":
     wait(0.5)
     # in CpHudText fill in text
     # in CpHudCp fill in the at wich to display
-    # the example fill shows a text for cp 0 and cp 3
-    CpHudText = ["text cp 0","text cp 3"]
-    CpHudCp = [0, 3]
+    # the example fill shows a text for cp 1 and cp 3
+    CpHudText = ["text cp 1","text cp 3"]
+    CpHudCp = [1, 3]
     
 rule "Addon | In world text for certain Checkpoints <---- EDIT ME":
     @Disabled
@@ -80,11 +80,12 @@ rule "Addon | In world text for certain Checkpoints <---- EDIT ME":
     # in CpIwtText fill in text
     # in CpIwtCp fill in cp at wich to display
     # in CpIwtPos fill in the vector
-    # the example fill shows a text for cp 0 and cp 3
-    CpIwtText = ["text cp 0","text cp 3"]
+    # the example fill shows a text for cp 1 and cp 3
+    CpIwtText = ["text cp 1","text cp 3"]
     CpIwtCp = [1, 3]
     CpIwtPos = [vect(0,0,0), vect(0,0,0)]
-  
+    # color is for all, not per cp
+    CpIwtColor = Color.LIME_GREEN
 
 rule "Addon | pre-set control map portal | placement | toggled via workshop":
     @Condition PortalOn

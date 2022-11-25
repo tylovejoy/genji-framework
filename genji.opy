@@ -374,7 +374,7 @@ rule "Setup and Variables":
             CpIwtText[CpIwtCp.index(localPlayer.CurrentCheckpoint)]
             if localPlayer.CurrentCheckpoint in CpIwtCp else "",
             CpIwtPos[CpIwtCp.index(localPlayer.CurrentCheckpoint)], 
-            2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.LIME_GREEN, SpecVisibility.DEFAULT)
+            2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, CpIwtColor, SpecVisibility.DEFAULT)
 
 
     if not hostPlayer.EditorOn:
@@ -676,7 +676,7 @@ def Leaderboardupdate():
     # [ [name, seconds, prettytime] ]
     if "{0}".format(eventPlayer) in [i[0] for i in LeaderBoardFull]: # you already have a time
         if eventPlayer.Timer > [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)][0][1]: # new time worse
-            goto lb0
+            goto lb_a
         else: # new time better
             LeaderBoardFull.remove( [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)])
             LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)]] )
@@ -687,12 +687,12 @@ def Leaderboardupdate():
             CreateLeaderBoard()
         else: # 20 entries already
             if LeaderBoardFull[19][1] < eventPlayer.Timer:  # your time lower then last entry
-                goto lb0
+                goto lb_a
             else: # you beat the last entry, thus replacing it
                 del LeaderBoardFull[19]
                 LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)]] )
                 CreateLeaderBoard()
-    lb0:
+    lb_a:
 
 def checkpointFailReset():
     @Name "SUB | Checkpoint Fail"

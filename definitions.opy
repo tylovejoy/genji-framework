@@ -177,11 +177,12 @@ globalvar SavePauseEnabled 66
 
 
 # per cp iwt or hud
-globalvar CpHudText 75
-globalvar CpHudCp 76
-globalvar CpIwtText 77
-globalvar CpIwtCp 78
-globalvar CpIwtPos 79
+globalvar CpHudText 74
+globalvar CpHudCp 75
+globalvar CpIwtText 76
+globalvar CpIwtCp 77
+globalvar CpIwtPos 78
+globalvar CpIwtColor 79
 
 globalvar BanTriple 80
 globalvar BanMulti 81
