@@ -1,6 +1,6 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(18) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly
 #!define touchground false
 #!define cpcheat false
@@ -33,9 +33,9 @@ editortoggle(0) # 0 is editor, rest is numbers
 
 rule "fisho cp cheat for overpy toggle":
     @Event eachPlayer
+    @Condition cpcheat
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.NotOnLastCp) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
-    @Condition cpcheat
     @Condition not eventPlayer.EditorOn
     @Condition not eventPlayer.PracticeToggle   
 
@@ -205,47 +205,54 @@ def UpdateCache():
     eventPlayer.BounceLockMax_Cache = len([i for i in eventPlayer.BounceLock_Cache if i])    
     
     eventPlayer.banstring = ""
-    eventPlayer.ban_triple = false
+    wait()
     if createWorkshopSetting(bool, "Ban Switch", "Ban Triple Jump on all cps", false, 0):
         eventPlayer.ban_triple = true
     elif eventPlayer.CurrentCheckpoint in BanTriple:
-        eventPlayer.ban_triple = true
         eventPlayer.banstring = "▲ {}".format(eventPlayer.banstring)
- 
-    eventPlayer.ban_multi = false
+        eventPlayer.ban_triple = true
+    else:
+        eventPlayer.ban_triple = false
+
     if createWorkshopSetting(bool, "Ban Switch", "Ban Multiclimb on all cps", false, 1):
         eventPlayer.ban_multi = true
     elif eventPlayer.CurrentCheckpoint in BanMulti:
-        eventPlayer.ban_multi = true
         eventPlayer.banstring = "∞ {}".format(eventPlayer.banstring)
+        eventPlayer.ban_multi = true
+    else:
+        eventPlayer.ban_multi = false
 
-    eventPlayer.ban_create = false
     if createWorkshopSetting(bool, "Ban Switch", "Ban Createbhop on all cps", false, 2):
         eventPlayer.ban_create = true
     elif eventPlayer.CurrentCheckpoint in BanCreate:
-        eventPlayer.ban_create = true
         eventPlayer.banstring = "♂ {}".format(eventPlayer.banstring)
+        eventPlayer.ban_create = true
+    else:
+        eventPlayer.ban_create = false
 
-    eventPlayer.ban_dedhop = false
     if createWorkshopSetting(bool, "Ban Switch", "Ban Deathbhop on all cps", false, 3):
         eventPlayer.ban_dedhop = true
     elif eventPlayer.CurrentCheckpoint in BanDead:
-        eventPlayer.ban_dedhop = true
         eventPlayer.banstring = "X {}".format(eventPlayer.banstring)
+        eventPlayer.ban_dedhop = true
+    else:
+        eventPlayer.ban_dedhop = false
 
-    eventPlayer.ban_emote = false
     if createWorkshopSetting(bool, "Ban Switch", "Ban Emote Savehop on all cps", false, 4):
         eventPlayer.ban_emote = true
     elif eventPlayer.CurrentCheckpoint in BanEmote:
-        eventPlayer.ban_emote = true
         eventPlayer.banstring = "♥ {}".format(eventPlayer.banstring)
-
-    eventPlayer.ban_climb = false
+        eventPlayer.ban_emote = true
+    else:
+        eventPlayer.ban_emote = false
+    
     if createWorkshopSetting(bool, "Ban Switch", "Ban Wallclimb on all cps", false, 5):
         eventPlayer.ban_climb = true
     elif eventPlayer.CurrentCheckpoint in BanClimb:
-        eventPlayer.ban_climb = true
         eventPlayer.banstring = "↑ {}".format(eventPlayer.banstring)
+        eventPlayer.ban_climb = true
+    else:
+        eventPlayer.ban_climb = false
 
     wait()
     async(CheckUlt(), AsyncBehavior.RESTART)

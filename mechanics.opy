@@ -102,7 +102,7 @@ rule "Checking | Player on the wall":
 
 rule "Checking | Using Emote":
     @Event eachPlayer
-    #@Condition eventPlayer.isCommunicatingEmote() == true
+    @Condition eventPlayer.isCommunicatingEmote() == true
     
     eventPlayer.BhopUsed = false
 
@@ -208,7 +208,7 @@ rule "Ban | Emote Savehop":
     @Condition eventPlayer.ban_emote
     @Condition not eventPlayer.InvincibleToggle
     @Condition eventPlayer.NotOnLastCp
-    #@Condition eventPlayer.isCommunicatingEmote() == true
+    @Condition eventPlayer.isCommunicatingEmote() == true
     smallMessage(eventPlayer, "   Emote Savehop ♥ is banned!")
     checkpointFailReset()
 
