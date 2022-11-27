@@ -16,7 +16,7 @@
     #!define testaion true
 
     ##### should do 19 max #####
-    #!define testbotnumber 10
+    #!define testbotnumber 8
     ##### wait for all bots to be created #####
     #!define waitforcreate true
     ##### delay after all bots are created - toggle #####
@@ -146,7 +146,7 @@ rule "orbradiustest": # show player orb hit detection
         createEffect(getAllPlayers(), Effect.SPHERE, Color.RED, updateEveryTick( eventPlayer.getPosition() bounceoffset), 0.1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR) 
         createEffect(getAllPlayers(), Effect.SPHERE, Color.ORANGE, updateEveryTick( eventPlayer.getPosition() bounceoffset), 0.03, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR) 
 
-    if show_playerradius
+    if show_playerradius:
         # own orb radius
         createEffect(getAllPlayers(), Effect.SPHERE, Color.YELLOW, updateEveryTick( eventPlayer.getPosition() bounceoffset), bounceorbdistance, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR) 
 

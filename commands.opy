@@ -291,30 +291,31 @@ rule "Practice Restart | Interact":
     eventPlayer.LockCollected = []
     UpdateCache()
 
-
 rule "Skip | Crouch + Primary/Secondary Fire":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
-    @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.NotOnLastCp) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) )
     @Condition eventPlayer.LockState == false
     @Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle
+    
     eventPlayer.splittime = 0
     eventPlayer.practicetimer = 0
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-        if eventPlayer.CurrentCheckpoint == 0:
-            return
         eventPlayer.LockState = true
-        
-        if (len(CheckpointPositions[eventPlayer.CurrentCheckpoint -1]) > 1 and distance(CheckpointPositions[eventPlayer.CurrentCheckpoint ][0], CheckpointPositions[eventPlayer.CurrentCheckpoint-1][1]) < 1.4):
+        if eventPlayer.CurrentCheckpoint < 1:
+            eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 1
+        elif (len(CheckpointPositions[eventPlayer.CurrentCheckpoint -1]) > 1 and distance(CheckpointPositions[eventPlayer.CurrentCheckpoint ][0], CheckpointPositions[eventPlayer.CurrentCheckpoint-1][1]) < 1.4):
             # if last cp is an instand complete teleport cp, go back further
             eventPlayer.CurrentCheckpoint -= 2 
         else:
             eventPlayer.CurrentCheckpoint -= 1
     else:
-        if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
-            return
         eventPlayer.LockState = true
-        eventPlayer.CurrentCheckpoint += 1
+        
+        if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
+            eventPlayer.CurrentCheckpoint = 0
+        else:
+            eventPlayer.CurrentCheckpoint += 1
 
     wait()
     checkpointFailReset()
@@ -322,9 +323,9 @@ rule "Skip | Crouch + Primary/Secondary Fire":
     eventPlayer.LockState = false
     eventPlayer.MovedCheckpoint = true
     UpdateCache() 
-    waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.32)
-
-
+    waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.28) # faster if you spam button
+    if RULE_CONDITION:
+        goto RULE_START
 
 rule "Quick Reset | Reload, Hold Reload to Enable":
     @Event eachPlayer

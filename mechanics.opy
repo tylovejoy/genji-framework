@@ -23,7 +23,7 @@ rule "Checking | Dash combined rule":
 
 def CheckUlt(): # checks if ult should be turned on
     waitUntil(not eventPlayer.isUsingUltimate(), 2)
-    if eventPlayer.InvincibleToggle or eventPlayer.EditorOn or (not eventPlayer.NotOnLastCp):
+    if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):
         goto lbl_a #skip msg if these
     elif eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 1.4: 
         smallMessage(eventPlayer, "   Ultimate is ready") 
@@ -31,18 +31,25 @@ def CheckUlt(): # checks if ult should be turned on
         wait()        
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
+    elif eventPlayer.EditorOn:
+        wait()        
+        eventPlayer.setUltEnabled(true)
+        eventPlayer.setUltCharge(100)
+
     else:
         eventPlayer.setUltEnabled(false)
      
 
 def CheckDash(): # checks if dash should be  turned on
     waitUntil(not eventPlayer.isUsingAbility1(), 2)
-    if eventPlayer.InvincibleToggle or eventPlayer.EditorOn or (not eventPlayer.NotOnLastCp):
+    if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):
         goto lbl_a #skip msg if these
     elif eventPlayer.CurrentCheckpoint in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 1.4: 
         smallMessage(eventPlayer, "   Dash is ready") 
         lbl_a:
         wait()        
+        eventPlayer.setAbility1Enabled(true)
+    elif eventPlayer.EditorOn: # seeprate so msg stil plays
         eventPlayer.setAbility1Enabled(true)
     else:
         eventPlayer.setAbility1Enabled(false)

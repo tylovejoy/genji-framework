@@ -1,6 +1,6 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(18) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly
 #!define touchground false
 #!define cpcheat false
@@ -392,6 +392,7 @@ rule "Setup and Variables":
     BuildPortals()
     # Check for editor/host spawn to redo effect reeval
     waitUntil(hostPlayer.hasSpawned(), 99999)
+    wait()
     if not hostPlayer.EditorOn:
         return
     
@@ -730,7 +731,30 @@ def CheckpointEffect_Sub():
     eventPlayer.PlayerEffects[2] = getLastCreatedEntity()
     createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
     eventPlayer.PlayerEffects[3] = getLastCreatedEntity()
-    createInWorldText(eventPlayer if eventPlayer.NotOnLastCp else null, "Come here", CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT)
+    
+    #  "orange orbs {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else "",
+    #createInWorldText(eventPlayer if eventPlayer.NotOnLastCp else null, "Come here", CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT)
+    
+    createInWorldText(
+        eventPlayer if eventPlayer.NotOnLastCp else null, 
+        "Locked" if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
+        "Come here"
+        
+        #"CP Locked {0}".format(iconString(Icon.WARNING)) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
+        #"Come here"
+
+        
+        #"Come here {0}".format(iconString(Icon.WARNING)) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
+        #"Come here"
+
+        #"{0} collect orbs first".format(iconString(Icon.WARNING)) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
+        #"Come here"
+        , 
+        CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 
+        1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT
+    )
+    
+    
     eventPlayer.PlayerEffects[4] = getLastCreatedText()
 
 
@@ -976,11 +1000,12 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     @Condition isGameInProgress()
     waitUntil(any([x.hasSpawned() for x in getAllPlayers()]), 99999)
     #Init dummy at arbitrary location
-    createDummy(Hero.DVA, [player for player in getAllPlayers() if player.hasSpawned() and not player.isDummy()][0].getTeam(), -1, vect(0, 200, 0), vect(0, 0, 0))
+    # previously -1 slot, now extra dummy enabled to spawn outside of player slot to prevent overwrite of slot
+    createDummy(Hero.DVA, [player for player in getAllPlayers() if player.hasSpawned() and not player.isDummy()][0].getTeam(), 20, vect(0, 200, 0), vect(0, 0, 0))
     MsDestructo = getLastCreatedEntity()
-    MsDestructo.startForcingName("Ms. Destructo")
+    #MsDestructo.startForcingName("Ms. Destructo") #disabled because translated this line gives errors
     wait(1)
-    MsDestructo.setInvisibility(Invis.ALL)
+    #MsDestructo.setInvisibility(Invis.ALL)
     MsDestructo.MapVectorArray = [
     [
         0,
@@ -1041,7 +1066,15 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         # Map.LIJIANG_TOWER_LNY,
         Map.NEPAL,
         Map.OASIS,
-        Map.MALEVENTO
+        Map.MALEVENTO,
+
+        Map.CIRCUIT_ROYAL,
+        Map.ESPERANCA,
+        Map.NEW_QUEEN_STREET,
+        Map.PARAISO,
+        Map.COLOSSEO,
+        Map.MIDTOWN
+
     ],  #
         [vect(15.759, 30.576, -27.201)],  # Map.HANAMURA,
         # [vect(15.759, 30.576, -27.201)],  # Map.HANAMURA_WINTER,
@@ -1100,7 +1133,14 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         # [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)],  # Map.LIJIANG_TOWER_LNY,
         [vect(83.1, 178.926, 0.593), vect(-49.803, 63.29, -0.413), vect(-184.659, -38.73, -0.783)],  # Map.NEPAL,
         [vect(150.125, 30.619, 251.966), vect(134.888, 36.76, -240.736), vect(-195.549, 60.35, -0.098)],  # Map.OASIS,
-        [vect(17.808, 35.955, 17.505)]  # Map.MALEVENTO
+        [vect(17.808, 35.955, 17.505)],  # Map.MALEVENTO
+        
+        [vect(13, 61, -37)], # Map.CIRCUIT_ROYAL
+        [vect(0,50,0)], # Map.ESPERANCA
+        [vect(0,35,25), vect(0,8, 23.77)], # Map.NEW_QUEEN_STREET
+        [vect(-29, 40, -36.9)], #Map.PARAISO
+        [vect(0,40,0)], # Map.COLOSSEO
+        [vect(49.3, 45, -2.83)] # Mid town
     ]
 
     for MsDestructo.ArrayIterator in range(len(MsDestructo.MapVectorArray[MsDestructo.MapVectorArray[0].index(getCurrentMap())])):
@@ -1124,3 +1164,12 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
 
 # enable/disable the include via defines
 testaitoggle 
+/*
+Map.CIRCUIT_ROYAL
+Map.ESPERANCA
+Map.NEW_QUEEN_STREET
+Map.PARAISO
+
+Map.COLOSSEO
+Map.MIDTOWN
+*/
