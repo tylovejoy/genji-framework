@@ -1,6 +1,6 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(18) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly
 #!define touchground false
 #!define cpcheat false
@@ -202,12 +202,9 @@ def UpdateCache():
     eventPlayer.BounceLock_Cache = [_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.KillPosition_Cache = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.BounceLockMax_Cache = len([i for i in eventPlayer.BounceLock_Cache if i])
-    async(CheckUlt(), AsyncBehavior.RESTART)
-    async(CheckDash(), AsyncBehavior.RESTART)
+    eventPlayer.BounceLockMax_Cache = len([i for i in eventPlayer.BounceLock_Cache if i])    
     
     eventPlayer.banstring = ""
-    
     eventPlayer.ban_triple = false
     if createWorkshopSetting(bool, "Ban Switch", "Ban Triple Jump on all cps", false, 0):
         eventPlayer.ban_triple = true
@@ -250,7 +247,11 @@ def UpdateCache():
         eventPlayer.ban_climb = true
         eventPlayer.banstring = "↑ {}".format(eventPlayer.banstring)
 
-    if not hostPlayer.EditorOn:
+    wait()
+    async(CheckUlt(), AsyncBehavior.RESTART)
+    async(CheckDash(), AsyncBehavior.RESTART)
+
+    if not eventPlayer.EditorOn:
         return
 
     destroyEffect(eventPlayer.EffectSizeArray)
@@ -737,16 +738,12 @@ def CheckpointEffect_Sub():
     
     createInWorldText(
         eventPlayer if eventPlayer.NotOnLastCp else null, 
-        "Locked" if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
-        "Come here"
-        
+        #"Locked" if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
+        #"Come here"
         #"CP Locked {0}".format(iconString(Icon.WARNING)) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
         #"Come here"
-
-        
-        #"Come here {0}".format(iconString(Icon.WARNING)) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
-        #"Come here"
-
+        "{0} Come here {0}".format(iconString(Icon.WARNING)) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
+        "Come here"
         #"{0} collect orbs first".format(iconString(Icon.WARNING)) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
         #"Come here"
         , 
@@ -857,7 +854,7 @@ rule "Arrive | Ground reset | traces":
             if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache: # kill player if not colleted the locks
                 smallMessage(eventPlayer, "   ! collect ALL orange orbs to unlock !")
                 kill(eventPlayer, null)
-                return
+                goto lbla
             eventPlayer.LockCollected = []
             eventPlayer.CurrentCheckpoint += 1
             UpdateCache()
@@ -866,6 +863,7 @@ rule "Arrive | Ground reset | traces":
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
             playEffect(eventPlayer if CompMode or eventPlayer.invis else getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
             bigMessage(eventPlayer, "Arrived at {0} / {1}{2}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1, " - Split {}".format(eventPlayer.splitdisplay) if eventPlayer.splitson else ""))
+            wait()
             UpdateTitle()
             if eventPlayer.isUsingUltimate():
                 kill(eventPlayer, null)
@@ -1164,12 +1162,3 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
 
 # enable/disable the include via defines
 testaitoggle 
-/*
-Map.CIRCUIT_ROYAL
-Map.ESPERANCA
-Map.NEW_QUEEN_STREET
-Map.PARAISO
-
-Map.COLOSSEO
-Map.MIDTOWN
-*/

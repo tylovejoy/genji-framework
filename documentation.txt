@@ -4,7 +4,10 @@
 editor toggle
     first thing the game does when a player is spawned is set their editor to true if ws toggle is enabled
     game waits until hostplayer is spawned
-    if hostplayer has editoron, it initializes al the fx, deletes unused ones etc
+    if hostplayer has editoron, it initializes 
+        - editor fx get made, some unused game husd are deleted, etc
+        the deleted huds that are to be deleted are stored in a variable
+        all of this is done in the editor's initialize rule
     editoron checks for editor are done on host player
     since the var is on in each player, whoever is already in the game before host already has the correct value
 
