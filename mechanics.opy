@@ -76,7 +76,7 @@ rule "Checking | In the air":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.JumpCount == 0
-    @Condition eventPlayer.isInAir() == true
+    @Condition eventPlayer.isInAir() 
     
     eventPlayer.JumpCount = 1
 
@@ -155,6 +155,8 @@ rule "Checking | Double jump, initialized with small jump":
     if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
         goto RULE_START
     eventPlayer.BhopUsed = true
+
+    #if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
 
 
 rule "HUD | Multiclimb Counter":
