@@ -131,7 +131,18 @@ rule "Checking | Create Bhop":
         checkpointFailReset()
         return
     smallMessage(eventPlayer, "   Bhop has been created!")    
-
+/*
+rule "Checking | Bhop/Double Jump Initialization":
+    @Event eachPlayer
+    @Hero genji
+    @Condition eventPlayer.isOnGround() 
+    eventPlayer.JumpCount = 0
+    eventPlayer.WallclimbUsed = false
+    wait(0)
+    if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
+        goto RULE_START
+    eventPlayer.BhopUsed = true
+*/
 rule "Checking | Double jump, initialized with small jump":
     @Event eachPlayer
     @Hero genji
@@ -190,6 +201,7 @@ rule "Ban | Triple Jump":
     @Condition eventPlayer.JumpCount == 1
     @Condition eventPlayer.isUsingAbility1() == false
     @Condition not eventPlayer.isOnWall()
+ 
     smallMessage(eventPlayer, "   Triple Jump ▲ is banned!")
     checkpointFailReset()
 
