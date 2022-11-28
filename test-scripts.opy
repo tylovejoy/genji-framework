@@ -1,19 +1,21 @@
 #!mainFile "genji.opy"
 
+##### general #####
+    # 100 is non
+    #!define slowmotion 80
+    #!define 3thpersoncam false
+
+##### average load show #####
+    #!define avrgon false
+
 ##### orb visialize #####
-    #!define orb_visialon true
+    #!define orb_visialon false
 
     #!define show_playerradius false
     #!define show_orbradius true
 
-##### 3th person camera #####
-    #!define 3thpersoncam true
-
-##### average load show #####
-    #!define avrgon true
-
 #### test bots #####
-    #!define testaion true
+    #!define testaion false
 
     ##### should do 19 max #####
     #!define testbotnumber 8
@@ -32,8 +34,6 @@
     ##### AI #####
         #!define leaderboardai true 
 
-
-
 globalvar AvrgSecStore
 globalvar AvrgSecDisplay
 globalvar LastTimePeak
@@ -44,6 +44,38 @@ globalvar AvrgMinStoreLen
 globalvar testAI
 globalvar AIcreated
 
+
+# temps ######################################################################################################################################################
+
+
+# general ######################################################################################################################################################
+
+rule "slowmo":
+    setSlowMotion(slowmotion)
+
+
+rule "3th person cam":
+    @Condition 3thpersoncam
+    @Event eachPlayer
+    @Condition eventPlayer.hasSpawned()
+    eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), 15)
+
+rule "multi purpose hud":
+    hudSubheader(getAllPlayers(), 
+        "hud count {}\n"
+        "jump count {}\n"
+        "vert speed {}"
+        "".format(
+        getNumberOfTextIds(),
+        localPlayer.JumpCount,
+        localPlayer.getVerticalSpeed()
+        
+        ),
+        HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )
+
+
+  
 # Load Calc ######################################################################################################################################################
 
 rule "server load hud":
@@ -52,17 +84,15 @@ rule "server load hud":
         getAllPlayers(), 
         "Load: {0} / Avrg: {1} \n"
         "Mavrg: {3} / Last: {4} \n"
-        "Minu: {5} / Peak: {2} \n"
-        "hudcount: {6}".format(
+        "Minu: {5} / Peak: {2} \n".format(
             getServerLoad(), 
             getAverageServerLoad(),
             getPeakServerLoad(),
             AvrgSecDisplay,
             LastTimePeak,
-            AvrgMinDisplay,
-            getNumberOfTextIds()
+            AvrgMinDisplay
         ), 
-        
+    
         HudPosition.LEFT, HO.leftend, 
         Color.RED if getAverageServerLoad() > 220 else 
         Color.ORANGE if getAverageServerLoad() > 190 else 
@@ -106,12 +136,6 @@ rule "Avrg Seconds":
     wait(mintime)
     goto RULE_START
 
-rule "orbradiustest": # show radius on all bounce orbs
-    @Condition 3thpersoncam
-    @Event eachPlayer
-    @Condition eventPlayer.hasSpawned()
-    eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), 15)
-    
 # orb radius ######################################################################################################################################################
 
 rule "orbradiustest": # show radius on all bounce orbs

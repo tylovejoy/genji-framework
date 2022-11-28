@@ -66,8 +66,8 @@ rule "Checking | Jump":
 rule "Checking | Bhop in the air":
     @Event eachPlayer
     @Condition eventPlayer.JumpCount == 0
-    @Condition eventPlayer.isInAir() == true
-    @Condition eventPlayer.isHoldingButton(Button.JUMP)
+    @Condition eventPlayer.isInAir() 
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false #?????? why wasnt this as fales
     
     eventPlayer.BhopUsed = false
 
@@ -76,7 +76,7 @@ rule "Checking | In the air":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.JumpCount == 0
-    @Condition eventPlayer.isInAir()
+    @Condition eventPlayer.isInAir() == true
     
     eventPlayer.JumpCount = 1
 
@@ -84,7 +84,7 @@ rule "Checking | In the air":
 rule "Checking | Triple jump":
     @Event eachPlayer
     @Condition eventPlayer.JumpCount == 1
-    
+    # actualy just checks if you been in the air for atleast 0.1 seconds
     wait(0.1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.JumpCount = 2
 
@@ -119,12 +119,12 @@ rule "Checking | Create Bhop":
     # Credit: Githuboy#5249
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
+    @Condition eventPlayer.isCrouching()
     @Condition eventPlayer.isInAir()
     @Condition eventPlayer.isOnWall() == false
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     @Condition eventPlayer.isJumping() == false
     @Condition eventPlayer.isOnGround() == false
-    @Condition eventPlayer.isCrouching()
     eventPlayer.BhopUsed = false
     if BhopBanToggle == true and eventPlayer.InvincibleToggle == false and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
         smallMessage(eventPlayer, "   Create Bhop ♂ is banned!")
@@ -200,8 +200,9 @@ rule "Ban | Triple Jump":
     @Condition eventPlayer.getVerticalSpeed() >= 5.8
     @Condition eventPlayer.JumpCount == 1
     @Condition eventPlayer.isUsingAbility1() == false
-    @Condition not eventPlayer.isOnWall()
- 
+    #@Condition not eventPlayer.isOnWall()
+    if eventPlayer.isOnWall():
+        return
     smallMessage(eventPlayer, "   Triple Jump ▲ is banned!")
     checkpointFailReset()
 
