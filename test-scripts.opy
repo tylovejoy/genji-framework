@@ -2,7 +2,7 @@
 
 ##### general #####
     # 100 is non
-    #!define slowmotion 80
+    #!define slowmotion 100
     #!define 3thpersoncam false
 
 ##### average load show #####
@@ -46,19 +46,7 @@ globalvar AIcreated
 
 
 # temps ######################################################################################################################################################
-globalvar abcdef = 0.2
-rule "test triple":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.MELEE)
 
-    eventPlayer.forceButtonPress(Button.JUMP)
-    wait(0.1)
-    waitUntil(eventPlayer.getAltitude() < abcdef and not eventPlayer.isOnGround(), 2)
-    wait()
-    eventPlayer.forceButtonPress(Button.JUMP)
-    #wait(0.5)
-    #eventPlayer.forceButtonPress(Button.JUMP)
-    #abcdef += 0.025
 # general ######################################################################################################################################################
 
 rule "slowmo":
@@ -77,13 +65,13 @@ rule "multi purpose hud":
         "jump count {}\n"
         "vert speed {}\n"
         "onground {}\n"
-        "abcdef {}"
+        "fx count: {}\n"
         "".format(
         getNumberOfTextIds(),
         localPlayer.JumpCount,
         localPlayer.getVerticalSpeed(),
         localPlayer.isOnGround(),
-        abcdef
+        getNumberOfEntityIds()
         ),
         HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )

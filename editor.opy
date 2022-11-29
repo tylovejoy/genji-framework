@@ -435,9 +435,9 @@ rule "Editor | delete cp/orb":
         del CheckpointRings_Editing[hostPlayer.CurrentCheckpoint]
         if hostPlayer.CurrentCheckpoint <= 0:
             hostPlayer.CurrentCheckpoint = -1
-            goto lbl_0
+            goto lbl_a
         hostPlayer.CurrentCheckpoint -= 1
-        lbl_0:
+        lbl_a:
         RebuildKillOrbs()
         RebuildBounceOrbs()
         smallMessage(getAllPlayers(), "   Checkpoint has been deleted")
@@ -449,9 +449,9 @@ rule "Editor | delete cp/orb":
         destroyEffect(KillBallEffects[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]])
         del KillBallEffects[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
         if SelectedKillball_Editing <= 0:
-            goto lbl_1
+            goto lbl_b
         SelectedKillball_Editing -= 1
-        lbl_1:
+        lbl_b:
         UpdateCache()
         RebuildKillOrbs()
         KillBallChase = KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
@@ -465,9 +465,9 @@ rule "Editor | delete cp/orb":
         del BounceEffects[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
         del BouncePadCheckpoints[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
         if CurrentBounce_Editing <= 0:
-            goto lbl_2
+            goto lbl_c
         CurrentBounce_Editing -= 1
-        lbl_2:
+        lbl_c:
         UpdateCache()
         RebuildBounceOrbs()
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]

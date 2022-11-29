@@ -52,7 +52,7 @@
 
 # ----------------PLAYER------------------
 #!define CurrentCheckpoint A
-#!define PlayerEffects B
+##!define PlayerEffects B
 #!define InvincibleToggle C
 #!define Timer D
 #!define EditModeSelection E
@@ -89,7 +89,6 @@
 
 
 # ----------------SUBS------------------
-#!define CheckpointEffect_Sub Sub0
 #!define StartGame_Sub Sub1
 ##!define KILLBALL KILLBALL
 ##!define pinball pinball
@@ -202,7 +201,7 @@ playervar CurrentCheckpoint 0               # int                       --- Curr
 #2 - Next lightshaft, 
 #3 - Next arrow icon, 
 #4 - Next "Come here" text
-playervar PlayerEffects 1                   # list[effect]              --- Player effect data array  
+#playervar PlayerEffects 1                   # list[effect]              --- Player effect data array  
 playervar InvincibleToggle 2                # bool                       --- invincible/normal mode toggle now a bool
 playervar Timer 3                           # float                     --- Timer, chased.
 playervar EditModeSelection 4               # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
@@ -276,7 +275,6 @@ playervar BhopHUDColor 85                   # Color                     --- Colo
 
 
 #Subroutine names
-subroutine CheckpointEffect_Sub 0
 subroutine StartGame_Sub 1
 subroutine KILLBALL 3
 subroutine pinball 4

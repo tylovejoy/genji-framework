@@ -8,7 +8,6 @@ rule "Toggle Leaderboard | Hold Melee":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition not eventPlayer.EditorOn
-
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.LeaderboardToggle = not eventPlayer.LeaderboardToggle
 
@@ -16,18 +15,15 @@ rule "Toggle Splits | Hold Ult":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition not eventPlayer.EditorOn
-    
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.splitson = not eventPlayer.splitson
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
-
 
 rule "Toggle Invisible | Hold Deflect":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition not eventPlayer.EditorOn
     @Condition not CompMode
-
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.invis = not eventPlayer.invis
     eventPlayer.setInvisibility(Invis.NONE)
@@ -41,7 +37,6 @@ rule "Preview orbs/portals | Hold Primary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition not eventPlayer.EditorOn
-
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 0.9)
     if not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
         return
@@ -69,13 +64,11 @@ rule "Preview orbs/portals | Hold Primary":
     eventPlayer.setMoveSpeed(100)
     eventPlayer.PreviewsArray = null
 
-
 rule "Restart Run | Crouch + Interact + Deflect":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) 
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
-
     if CompMode:      
         wait()
         if CompTime < 1:
@@ -134,7 +127,7 @@ rule "Enter Spectate | Hold Interact":
     @Condition not CompMode
     wait(1, Wait.ABORT_WHEN_FALSE)
     if eventPlayer.EditorOn: # editor has interact combos
-        wait(0.5, Wait.ABORT_WHEN_FALSE)
+        wait(1, Wait.ABORT_WHEN_FALSE)
 
     smallMessage(eventPlayer, "   Hold Interact again to turn off spectate mode")
     if eventPlayer.SpectateToggle:
@@ -189,7 +182,7 @@ rule "Toggle Invincible Mode | Melee + Reload":
             StopPauseTimer()
         eventPlayer.stopForcingPosition()
         eventPlayer.flytoggle = null
-
+        
     else:
         if not eventPlayer.NotOnLastCp:
             return
@@ -204,7 +197,6 @@ rule "Toggle Invincible Mode | Melee + Reload":
     async( CheckUlt(), AsyncBehavior.RESTART)
     async( CheckDash(), AsyncBehavior.RESTART)
     
-
 
 rule "Toggle Practice Mode | Melee + Ultimate":
     @Event eachPlayer

@@ -15,7 +15,6 @@ rule "Checking | ult combined rule":
     eventPlayer.allowButton(Button.PRIMARY_FIRE)
     async(CheckUlt(), AsyncBehavior.RESTART) # sets ult charge back if done with map etc
         
-
 rule "Checking | Dash combined rule":
     @Event eachPlayer
     @Condition eventPlayer.isUsingAbility1()
@@ -39,7 +38,6 @@ def CheckUlt(): # checks if ult should be turned on
     else:
         eventPlayer.setUltEnabled(false)
      
-
 def CheckDash(): # checks if dash should be  turned on
     waitUntil(not eventPlayer.isUsingAbility1(), 2)
     if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):
@@ -59,18 +57,14 @@ rule "Checking | Jump":
     @Hero genji
     @Condition eventPlayer.isHoldingButton(Button.JUMP)
     @Condition eventPlayer.JumpCount != 2
-    
     eventPlayer.JumpCount += 1
-
 
 rule "Checking | Bhop in the air":
     @Event eachPlayer
     @Condition eventPlayer.JumpCount == 0
     @Condition eventPlayer.isInAir() 
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false #?????? why wasnt this as fales
-    
     eventPlayer.BhopUsed = false
-
 
 rule "Checking | In the air":
     @Event eachPlayer
@@ -80,7 +74,6 @@ rule "Checking | In the air":
     
     eventPlayer.JumpCount = 1
 
-
 rule "Checking | Triple jump":
     @Event eachPlayer
     @Condition eventPlayer.JumpCount == 1
@@ -88,30 +81,23 @@ rule "Checking | Triple jump":
     wait(0.1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.JumpCount = 2
 
-
 rule "Checking | Player on the wall":
     @Event eachPlayer
     #This rule is also linked to the determination of wall climbing, please do not close/delete
     @Condition eventPlayer.isOnWall()
     @Condition eventPlayer.isHoldingButton(Button.JUMP)
-    
     eventPlayer.JumpCount = 2
     eventPlayer.WallclimbUsed = true
-
-
 
 rule "Checking | Using Emote":
     @Event eachPlayer
     @Condition eventPlayer.isCommunicatingEmote() == true
-    
     eventPlayer.BhopUsed = false
-
 
 rule "Checking | Bhop":
     @Event eachPlayer
     @Condition not eventPlayer.BhopUsed
     @Condition eventPlayer.isJumping()
-    
     eventPlayer.BhopUsed = true
     smallMessage(eventPlayer, "   Bhop")
 
@@ -131,23 +117,11 @@ rule "Checking | Create Bhop":
         checkpointFailReset()
         return
     smallMessage(eventPlayer, "   Bhop has been created!")    
-/*
-rule "Checking | Bhop/Double Jump Initialization":
-    @Event eachPlayer
-    @Hero genji
-    @Condition eventPlayer.isOnGround() 
-    eventPlayer.JumpCount = 0
-    eventPlayer.WallclimbUsed = false
-    wait(0)
-    if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
-        goto RULE_START
-    eventPlayer.BhopUsed = true
-*/
+
 rule "Checking | Double jump, initialized with small jump":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.isOnGround()
-    
     eventPlayer.JumpCount = 0
     eventPlayer.WallclimbUsed = false
     eventPlayer.MultiClimbCount = 0
@@ -157,7 +131,6 @@ rule "Checking | Double jump, initialized with small jump":
     eventPlayer.BhopUsed = true
 
     #if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
-
 
 rule "HUD | Multiclimb Counter":
     @Event eachPlayer
@@ -172,17 +145,14 @@ rule "HUD | Bhop Indicator | Unused | Green":
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     eventPlayer.BhopHUDColor = Color.GREEN
 
-
 rule "HUD | Bhop Indicator | Used | Red":
     @Event eachPlayer
     @Condition eventPlayer.isJumping()
     eventPlayer.BhopHUDColor = Color.RED
 
-
 rule "-------------------------------------------------------------------------- Bans --------------------------------------------------------------------------":
     @Delimiter
     @Disabled
-
 
 rule "Ban | Wallclimb for specific CPs <---- EDIT ME":
     # Credit: TITANXPASCAL#5554
@@ -202,12 +172,9 @@ rule "Ban | Triple Jump":
     @Condition eventPlayer.getVerticalSpeed() >= 5.8
     @Condition eventPlayer.JumpCount == 1
     @Condition eventPlayer.isUsingAbility1() == false
-    #@Condition not eventPlayer.isOnWall()
-    if eventPlayer.isOnWall():
-        return
+    @Condition not eventPlayer.isOnWall()
     smallMessage(eventPlayer, "   Triple Jump ▲ is banned!")
     checkpointFailReset()
-
 
 rule "Ban | Multiclimb":
     @Event eachPlayer

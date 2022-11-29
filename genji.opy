@@ -6,7 +6,8 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!define cpcheat false
 #!define inspectoron false
 
-#!define testaitoggle #!include "test-scripts.opy"
+# disable via double ## at include, not the define because the define needs to exist
+#!define testaitoggle ##!include "test-scripts.opy"
 
 #!define compmodetoggle false
 #!define attemptcount 5
@@ -454,7 +455,18 @@ rule "Player Initialize and game HUD":
     eventPlayer.setRespawnTime(0)
     eventPlayer.SpectateToggle = false
     eventPlayer.WallclimbUsed = false #Climbing the wall prompts the HUD
-    wait(2) # make sure everything loaded, specialy things like comp mode
+    eventPlayer.JumpCount = 0
+    
+    #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
+    wait(1) 
+    createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), 1, EffectReeval.POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, Color.LIME_GREEN, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    wait(0.5)
+    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
+    wait(0.5)
+    createInWorldText(eventPlayer if eventPlayer.NotOnLastCp else null, "{0} collect orbs first".format(iconString(Icon.WARNING)) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else "Come here", CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT)
+    wait(1)  
 
     if not eventPlayer.isDummy():
         eventPlayer.startForcingHero(Hero.GENJI)
@@ -518,9 +530,7 @@ rule "Player Initialize and game HUD":
     
     wait()
     StartGame_Sub()  # initialization of the game
-    wait()
-    CheckpointEffect_Sub()  #CheckpointEffect_Sub is the checkpoint effect display
-        
+   
 def DeleteSave():
     @Name "delete save" 
     del SaveName[SaveEnt.index(eventPlayer)]
@@ -685,7 +695,7 @@ def Leaderboardupdate():
     # [ [name, seconds, prettytime] ]
     if "{0}".format(eventPlayer) in [i[0] for i in LeaderBoardFull]: # you already have a time
         if eventPlayer.Timer > [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)][0][1]: # new time worse
-            goto lb_a
+            goto lbl_a
         else: # new time better
             LeaderBoardFull.remove( [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)])
             LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)]] )
@@ -696,12 +706,12 @@ def Leaderboardupdate():
             CreateLeaderBoard()
         else: # 20 entries already
             if LeaderBoardFull[19][1] < eventPlayer.Timer:  # your time lower then last entry
-                goto lb_a
+                goto lbl_a
             else: # you beat the last entry, thus replacing it
                 del LeaderBoardFull[19]
                 LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)]] )
                 CreateLeaderBoard()
-    lb_a:
+    lbl_a:
 
 def checkpointFailReset():
     @Name "SUB | Checkpoint Fail"
@@ -725,42 +735,6 @@ def checkpointFailReset():
    
     async(CheckUlt(), AsyncBehavior.RESTART)
     async(CheckDash(), AsyncBehavior.RESTART)
-
-
-def CheckpointEffect_Sub():
-    @Name "SUB | Checkpoint Effects"
-    if eventPlayer.PlayerEffects[0] != null:
-        return
-    createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), 1, EffectReeval.POSITION_AND_RADIUS)
-    eventPlayer.PlayerEffects[0] = getLastCreatedEntity()
-    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, Color.LIME_GREEN, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    eventPlayer.PlayerEffects[1] = getLastCreatedEntity()
-    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    eventPlayer.PlayerEffects[2] = getLastCreatedEntity()
-    createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
-    eventPlayer.PlayerEffects[3] = getLastCreatedEntity()
-    
-    #  "orange orbs {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else "",
-    #createInWorldText(eventPlayer if eventPlayer.NotOnLastCp else null, "Come here", CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT)
-    
-    createInWorldText(
-        eventPlayer if eventPlayer.NotOnLastCp else null, 
-        #"Locked" if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
-        #"Come here"
-        #"CP Locked {0}".format(iconString(Icon.WARNING)) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
-        #"Come here"
-        "{0} Come here {0}".format(iconString(Icon.WARNING)) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
-        "Come here"
-        #"{0} collect orbs first".format(iconString(Icon.WARNING)) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
-        #"Come here"
-        , 
-        CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 
-        1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT
-    )
-    
-    
-    eventPlayer.PlayerEffects[4] = getLastCreatedText()
-
 
 def StartGame_Sub():
     @Name "SUB | Start Game"
@@ -833,14 +807,13 @@ def pinball():
         BounceEffects.append(getLastCreatedEntity())
         wait()
 
-
 rule "Arrive | Ground reset | traces":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isAlive()
-
     if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
+        
         if (eventPlayer.isMoving() and eventPlayer.PracticeToggle == false and eventPlayer.invis == false and eventPlayer.EditorOn == false and CompMode == false):
             # traces ----------------------------------------------------------------------------------------------------
             eventPlayer.finishfxcache = [Color.RED, Color.ORANGE, Color.YELLOW, Color.LIME_GREEN, Color.GREEN, Color.TURQUOISE, Color.BLUE, Color.PURPLE, Color.VIOLET, Color.ROSE][(floor(getTotalTimeElapsed()*2))%10]
@@ -853,7 +826,7 @@ rule "Arrive | Ground reset | traces":
             playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.8)
             playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.6)
             playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.4)
-            wait(0.128)
+            wait(0.128)     
     elif eventPlayer.NotOnLastCp and eventPlayer.InvincibleToggle == false and (CompMode == false or CompTime > 0) and eventPlayer.LockState == false:
         if distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= 1.4:
             # arrived ----------------------------------------------------------------------------------------------------
@@ -861,7 +834,7 @@ rule "Arrive | Ground reset | traces":
             if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache: # kill player if not colleted the locks
                 smallMessage(eventPlayer, "   ! collect ALL orange orbs to unlock !")
                 kill(eventPlayer, null)
-                goto lbla
+                goto lbl_abc
             eventPlayer.LockCollected = []
             eventPlayer.CurrentCheckpoint += 1
             UpdateCache()
@@ -876,7 +849,7 @@ rule "Arrive | Ground reset | traces":
                 kill(eventPlayer, null)
             if eventPlayer.PracticeToggle:
                 eventPlayer.splittime = eventPlayer.practicetimer
-                goto lbla
+                goto lbl_abc
             
             eventPlayer.splittime = eventPlayer.Timer
 
@@ -901,14 +874,14 @@ rule "Arrive | Ground reset | traces":
                 DeleteSave()
                 MakeSave()
 
-        elif distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) > 1.4 and not touchground:
+        elif distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) > 1.4:
             # ground reset ----------------------------------------------------------------------------------------------------
             checkpointFailReset()
 
-    lbla:
+    lbl_abc:
     wait(0.048)
     if RULE_CONDITION:
-        goto RULE_START                  
+        goto RULE_START               
    
 rule "Kill Orb | Activate":
     @Event eachPlayer
@@ -921,7 +894,7 @@ rule "Kill Orb | Activate":
 rule "Bounce Ball | Activate":
     @Event eachPlayer
     @Condition eventPlayer.BouncePosition_Cache != []
-    #@Condition eventPlayer.NotOnLastCp
+    #@Condition eventPlayer.NotOnLastCp # disabled coz editor
     @Condition (any([distance(i, eventPlayer.getPosition() bounceoffset) < bounceorbdistance for i in eventPlayer.BouncePosition_Cache]))
     
     eventPlayer.bouncetouched = eventPlayer.BouncePosition_Cache.index( # cashe the touched bouncepad number
@@ -1165,7 +1138,5 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     MsDestructo.ArrayIterator = 0
     MsDestructo = 0
  
-
-
 # enable/disable the include via defines
 testaitoggle 
