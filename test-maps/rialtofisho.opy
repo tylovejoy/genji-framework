@@ -28,24 +28,47 @@ rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
     LeaderBoardFull = []
     Difficultyhud = 2
 
-
-rule "Add Blade to Checkpoint <---- EDIT ME":
+rule "Addon | Add Blade to Checkpoint <---- EDIT ME":
     #Change "-1" to certain Checkpoints' number. For example if you want to add Blade to Checkpoint 2 and 6 change one of "-1" to 2 and other "-1" to 6
     wait(1)
     Dao = [32]
 
 
-rule "Add Dash to Checkpoint <---- EDIT ME":
+rule "Addon | Add Dash to Checkpoint <---- EDIT ME":
     #Change "-1" to certain Checkpoints' number. For example if you want to add Dash to Checkpoint 7 and 1 change one of "-1" to 7 and other "-1" to 1
     wait(1)
     SHIFT = [11, 14, 27, 33, 37]
 
 
-rule "Title Data <---- EDIT ME":
+rule "Addon | Title Data <---- EDIT ME":
     #checkpoint number
-    TitleData[0] = [0, 10, 20, 30, 40]
+    TitleData[0] = [0, 6, 13, 20, 33, 43]
     #title
-    TitleData[1] = ["bunny", "pro", "ninja", "spiderman", "Rialto Royalty"]
+    TitleData[1] = ["afraid of heights", "bunny", "mario", "ninja", "spiderman", "Rialto Royalty"]
     #color
-    TitleData[2] = [Color.LIME_GREEN, Color.BLUE, Color.PURPLE, Color.ORANGE, Color.RED]
+    TitleData[2] = [Color.LIME_GREEN, Color.GREEN, Color.RED, Color.PURPLE, Color.ORANGE, Color.ROSE]
+
+
+rule "Addon | HUD text for certain Checkpoints <---- EDIT ME":
+    wait(0.5)
+    #in CpHudText fill in text
+    # in CpHudCp fill in the at wich to display
+    # the example fill shows a text for cp 1 and cp 3
+    CpHudText = [" Some checkpoints are locked untill you collect orange orbs. ", " Ultimate gives movement speed, this also makes you climb slightly higher. "]
+    CpHudCp = [19, 32]
+
+
+rule "Addon | In world text for certain Checkpoints <---- EDIT ME":
+    wait(0.5)
+    #in CpIwtText fill in text
+    # in CpIwtCp fill in cp at wich to display
+    # in CpIwtPos fill in the vector
+    # the example fill shows a text for cp 1 and cp 3
+    CpIwtText = ["Super mario pipe"]
+    CpIwtCp = [12]
+    CpIwtPos = [vect(39.99, 3.11, -31.93)]
+    #color is for all, not per cp
+    CpIwtColor = Color.LIME_GREEN
+
+
 
