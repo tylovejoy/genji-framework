@@ -891,7 +891,7 @@ rule "Kill Orb | Activate":
     @Condition (any([distance(i, eventPlayer) <= eventPlayer.KillRadii_Cache[eventPlayer.KillPosition_Cache.index(i)] for i in eventPlayer.KillPosition_Cache]))
     checkpointFailReset()
 
-rule "Bounce Ball | Activate":
+rule "Bounce Ball / Orb | Activate":
     @Event eachPlayer
     @Condition eventPlayer.BouncePosition_Cache != []
     #@Condition eventPlayer.NotOnLastCp # disabled coz editor

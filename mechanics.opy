@@ -20,6 +20,7 @@ rule "Checking | Dash combined rule":
     @Condition eventPlayer.isUsingAbility1()
     async(CheckDash(), AsyncBehavior.RESTART)
 
+
 def CheckUlt(): # checks if ult should be turned on
     waitUntil(not eventPlayer.isUsingUltimate(), 2)
     if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):
@@ -35,9 +36,11 @@ def CheckUlt(): # checks if ult should be turned on
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
 
-    else:
+    elif distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 2: # used to be just else, but have to deal with multi ult orbs
         eventPlayer.setUltEnabled(false)
-     
+        eventPlayer.setUltCharge(0)
+
+
 def CheckDash(): # checks if dash should be  turned on
     waitUntil(not eventPlayer.isUsingAbility1(), 2)
     if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):

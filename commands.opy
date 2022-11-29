@@ -208,7 +208,7 @@ rule "Toggle Practice Mode | Melee + Ultimate":
     @Condition not CompMode 
 
     if eventPlayer.InvincibleToggle:
-        smallMessage(eventPlayer, "   Cannot leave practice mode while also in invincible mode")
+        smallMessage(eventPlayer, "   Cannot toggle practice mode while in invincible")
         wait()
         return
 
