@@ -17,7 +17,7 @@ rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
     #orb position - Vector(123.456,123.456,123.456)
     TQ = [vect(52.04, 19.35, -122.1), vect(60.13, 17.81, -118.08), vect(64.57, 18.38, -117.79), vect(70.38, 18.79, -117.49), vect(66.88, 11.81, -117.13), vect(66.92, 13.21, -117.12), vect(69.13, 13.37, -112.29), vect(72.76, 20, -112.39), vect(74.67, 26.5, -110.8)]
     #orb bounce strength - Number 123.456 - default bounce is 10 - 0 means dont bounce
-    EditMode = [0, 10, 10, 0, 10, 0, 0, 0, 0]
+    EditMode = [0, 10, 5, 0, 10, 0, 0, 0, 0]
     #orb gives ult - True or False
     TQ5 = [false, false, false, false, false, false, false, false, false]
     #orb gives dash - True or False

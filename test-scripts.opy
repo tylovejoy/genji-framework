@@ -3,7 +3,7 @@
 ##### general #####
     # 100 is non
     #!define slowmotion 100
-    #!define 3thpersoncam false
+    #!define 3thpersoncam true
 
 ##### average load show #####
     #!define avrgon false
@@ -62,16 +62,14 @@ rule "3th person cam":
 rule "multi purpose hud":
     hudSubheader(getAllPlayers(), 
         "hud count {}\n"
-        "jump count {}\n"
-        "vert speed {}\n"
-        "onground {}\n"
         "fx count: {}\n"
+        "bouncetouched: {}\n"
+        "bouncelast: {} \n"
         "".format(
         getNumberOfTextIds(),
-        localPlayer.JumpCount,
-        localPlayer.getVerticalSpeed(),
-        localPlayer.isOnGround(),
-        getNumberOfEntityIds()
+        getNumberOfEntityIds(),
+        localPlayer.bouncetouched,
+        localPlayer.bouncetouchedlast
         ),
         HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )

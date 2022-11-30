@@ -245,9 +245,9 @@ playervar BounceStrength_Cache 53
 playervar BounceUlt_Cache 54
 playervar BounceDash_Cache 55
 playervar BounceLock_Cache 56
-
 playervar BounceIndex_Cache 57
 playervar KillIndex_Cache 58
+playervar bouncetouchedlast 59 
 
 playervar EffectSizeArray 60
 playervar EffectSizeToggle 61

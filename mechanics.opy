@@ -36,7 +36,7 @@ def CheckUlt(): # checks if ult should be turned on
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
 
-    elif distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 2: # used to be just else, but have to deal with multi ult orbs
+    elif distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 2 or eventPlayer.getUltCharge() < 100: # used to be just else, but have to deal with multi ult orbs
         eventPlayer.setUltEnabled(false)
         eventPlayer.setUltCharge(0)
 

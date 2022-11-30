@@ -37,7 +37,7 @@ rule "Addon | Title Data <---- EDIT ME":
     @Disabled
     # checkpoint number
     TitleData[0] = [
-        0,
+        0, 
         10,
         20,
         30,

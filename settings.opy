@@ -51,8 +51,8 @@ settings {
                 "enableSpawningWithUlt": true,
                 "ability1Cooldown%": 0,
                 "ultDuration%": 25,
-                "passiveUltGen%": 500,
-                "ultGen%": 500
+                "passiveUltGen%": 0,
+                "ultGen%": 10
             },
             "enabledHeroes": [
                 "genji"

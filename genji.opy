@@ -456,7 +456,7 @@ rule "Player Initialize and game HUD":
     eventPlayer.SpectateToggle = false
     eventPlayer.WallclimbUsed = false #Climbing the wall prompts the HUD
     eventPlayer.JumpCount = 0
-    
+    eventPlayer.bouncetouchedlast = -1
     #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
     wait(1) 
     createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), 1, EffectReeval.POSITION_AND_RADIUS)
@@ -744,12 +744,12 @@ def StartGame_Sub():
         eventPlayer.disableRespawn()
         kill(eventPlayer,null)
         return
-   
-    UpdateTitle()
+
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
     if len(CheckpointPositions) != 0:
-        if "{0}".format(eventPlayer) in SaveName:
+        destroyInWorldText(eventPlayer.TitleStore) # restarting reset t itle even if non on cp 0
+        if "{0}".format(eventPlayer) in SaveName: # load saved progres
             SaveEnt[SaveName.index("{}".format(eventPlayer))] = eventPlayer
             eventPlayer.CurrentCheckpoint = SaveCp[SaveEnt.index(eventPlayer)]
             eventPlayer.Timer = SaveTimer[SaveEnt.index(eventPlayer)]
@@ -757,6 +757,18 @@ def StartGame_Sub():
             SavePauseTime[SaveEnt.index(eventPlayer)] = 0
             SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
             eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint] + Vector.UP)
+            if TitleData != null and  any([i for i in TitleData[0] if i <= eventPlayer.CurrentCheckpoint]) and (not eventPlayer.EditorOn ): # if any title data, find last cp
+                
+                createInWorldText(
+                    getAllPlayers() if not eventPlayer.invis else null,
+                    TitleData[1][TitleData[0].index(
+                    sorted([i for i in TitleData[0] if i <= eventPlayer.CurrentCheckpoint], lambda i:i*-1)[0])], 
+                    eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, 
+                    TitleData[2][TitleData[0].index(sorted([i for i in TitleData[0] if i <= eventPlayer.CurrentCheckpoint], lambda i:i*-1)[0])], 
+                    SpecVisibility.DEFAULT
+                )
+                eventPlayer.TitleStore = getLastCreatedText()
+
         else:
             eventPlayer.teleport(CheckpointPositions[0] + Vector.UP)
             eventPlayer.CurrentCheckpoint = 0
@@ -764,6 +776,7 @@ def StartGame_Sub():
             stopChasingVariable(eventPlayer.PauseTimer)
             eventPlayer.PauseTimer = 0
             MakeSave()
+            UpdateTitle()
     
     eventPlayer.splittime = 0
     chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE)
@@ -857,7 +870,8 @@ rule "Arrive | Ground reset | traces":
                 stopChasingVariable(eventPlayer.Timer)
                 stopChasingVariable(eventPlayer.practicetimer) 
                 wait()
-                bigMessage(getAllPlayers(), "Mission complete! Time {0}".format(prettyTime(eventPlayer.Timer)))
+                bigMessage(getAllPlayers(), "{0} Mission complete! Time {1}".format(eventPlayer, prettyTime(eventPlayer.Timer)))
+                
                 DeleteSave()
                 Leaderboardupdate()
                 if CompMode and CompAtmpNum > 0:
@@ -874,7 +888,7 @@ rule "Arrive | Ground reset | traces":
                 DeleteSave()
                 MakeSave()
 
-        elif distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) > 1.4:
+        elif distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) > 1.4 and not touchground:
             # ground reset ----------------------------------------------------------------------------------------------------
             checkpointFailReset()
 
@@ -891,6 +905,8 @@ rule "Kill Orb | Activate":
     @Condition (any([distance(i, eventPlayer) <= eventPlayer.KillRadii_Cache[eventPlayer.KillPosition_Cache.index(i)] for i in eventPlayer.KillPosition_Cache]))
     checkpointFailReset()
 
+
+
 rule "Bounce Ball / Orb | Activate":
     @Event eachPlayer
     @Condition eventPlayer.BouncePosition_Cache != []
@@ -903,6 +919,15 @@ rule "Bounce Ball / Orb | Activate":
             lambda x: distance(eventPlayer, x)
             )[0]
         )
+
+    if eventPlayer.bouncetouched == eventPlayer.bouncetouchedlast: # prevent same one trigering twice in a row
+        wait(0.24)
+        eventPlayer.bouncetouchedlast = -1 # -1 because null becomes 0 and thats a legit index
+        if RULE_CONDITION:
+            goto RULE_START
+        return #only return if no others in radius
+
+    eventPlayer.bouncetouchedlast = eventPlayer.bouncetouched 
 
     if eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched] != 0:
         eventPlayer.applyImpulse(Vector.UP, eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
@@ -929,6 +954,8 @@ rule "Bounce Ball / Orb | Activate":
     wait(0.24)
     if RULE_CONDITION:
         goto RULE_START
+
+    eventPlayer.bouncetouchedlast = -1
 
 rule "Death Reset":
     @Event playerDied
