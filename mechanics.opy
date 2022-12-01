@@ -31,6 +31,7 @@ def CheckUlt(): # checks if ult should be turned on
         wait()        
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
+        
     elif eventPlayer.EditorOn:
         wait()        
         eventPlayer.setUltEnabled(true)
@@ -115,7 +116,7 @@ rule "Checking | Create Bhop":
     @Condition eventPlayer.isJumping() == false
     @Condition eventPlayer.isOnGround() == false
     eventPlayer.BhopUsed = false
-    if BhopBanToggle == true and eventPlayer.InvincibleToggle == false and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
+    if eventPlayer.ban_create and eventPlayer.InvincibleToggle == false and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
         smallMessage(eventPlayer, "   Create Bhop ♂ is banned!")
         checkpointFailReset()
         return
