@@ -6,17 +6,25 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!define cpcheat false
 #!define inspectoron false
 
+# disable via double ## at include, not the define because the define needs to exist
+#!define testaitoggle ##!include "test-scripts.opy"
+
 #!define compmodetoggle false
 #!define attemptcount 5
 #!define comptimelimit 120
 #!define comprestartlimit false
+# defaults: off, atempt:5, 120 min, restart:false
 
 # settings ##############################
 # limit on how many orbs can be made
 #!define fxlimit 193
 #!define portaldistance 1.3
+
+# distance range for player - orb 1.4
 #!define bounceorbdistance 1.4
-#(1.6 if eventPlayer.isUsingAbility1() else 1.4)
+# eight added to player for orb detection. inludes the + 
+#!define bounceoffset + vect(0,0.7,0)
+
 
 #disable overpy map detection
 #!disableMapDetectionFix 
@@ -26,9 +34,9 @@ editortoggle(0) # 0 is editor, rest is numbers
 
 rule "fisho cp cheat for overpy toggle":
     @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
     @Condition cpcheat
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH)
+    @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.NotOnLastCp) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
     @Condition not eventPlayer.EditorOn
     @Condition not eventPlayer.PracticeToggle   
 
@@ -39,52 +47,71 @@ rule "fisho cp cheat for overpy toggle":
         eventPlayer.CurrentCheckpoint += 1
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
 
+
 rule "------------------------------------------------------------------------ Map pasta ------------------------------------------------------------------------ ":
     @Delimiter
     @Disabled
 
-
 rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
     @Delimiter
+
 
 editorordata
 
 rule "Credits here <---- INSERT YOUR NAME HERE": 
-    hudSubtext(getAllPlayers(), "made by: name", HudPosition.LEFT, -15, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers(), "map code: XXXXX", HudPosition.LEFT, -14, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "made by: name", HudPosition.LEFT, HO.data_name, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    HudStoreEdit.append(getLastCreatedText()) # appending these makes em removed in editor
+    hudSubtext(getAllPlayers(), "map code: XXXXX", HudPosition.LEFT, HO.data_code, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    HudStoreEdit.append(getLastCreatedText())
+    hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    #HudStoreEdit.append(getLastCreatedText())
 
-    # text id debug
-    #hudSubtext(getAllPlayers(), getNumberOfTextIds(), HudPosition.LEFT, -13, Color.AQUA, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+rule "Ban per CP <---- edit me":
+    # Enter the checkpoint/level numbers in the lists below to apply the ban on them
+    # Remember the workshop toggle overwrites this list
+    wait(1)
+    # ======================
+    # ban  triple >
+    BanTriple = []
+    # ban  multi >
+    BanMulti = []
+    # ban create >
+    BanCreate = []
+    # ban dedhop >
+    BanDead = []
+    # ban emote >
+    BanEmote = []
+    # ban  climb >
+    BanClimb = []
+    # ======================
+    # dash exploit (via toggles don't edit)
+    DashExploitToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Create Bhop", false, 2)
+    
+    # ban  bhop >
+    #BanBhop = [2,3]
 
 rule "Custom difficulty hud":
     @Disabled
     @Delimiter
-
     #1) workshop settings > difficulty > set to "dont display"
     #2) enable this rule
     #3) type your difficulty in the hud below
-    hudSubheader(getAllPlayers(), "Difficulty: custom", HudPosition.TOP, -24,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-
+    hudSubheader(getAllPlayers(), "enter custom difficulty here", HudPosition.TOP, HO.data_dif,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    HudStoreEdit.append(getLastCreatedText())
 
 rule "Display World Record": 
     @Disabled
     @Delimiter
-
-    #1) enable this rule
-    #2) type your entry in the textfield that says "name and time here"
-    hudText(getAllPlayers() if not hostPlayer.EditorOn else null,
-        null,
-        " \n{0} world record {0}".format(iconString(Icon.FIRE)),
-        "name and time here",#"Tony hawk - 69 sec",
-        HudPosition.RIGHT, -1, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    
-    # enable rule and fill in your record here
+    #type your entry in the textfield that says "name and time here"
+    hudText(getAllPlayers(), null," \n{0} world record {0}".format(iconString(Icon.FIRE)),"name and time here", HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    HudStoreEdit.append(getLastCreatedText())
 
 
 rule "Friend Title <----  DISPLAY MESSAGE HERE (ON PLAYER)":
+    @Disabled
+    @Delimiter
     @Event eachPlayer
-    @Condition eventPlayer.hasSpawned() == true
+    @Condition eventPlayer.hasSpawned()
     
     #In the field custom string your nickname
     if "your nickname <-------" == "{0}".format(eventPlayer):
@@ -96,11 +123,18 @@ rule "Friend Title <----  DISPLAY MESSAGE HERE (ON PLAYER)":
         createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
 rule "Comp Mode instruction message":
-    #There is a limit to how much text a hud can have. For this reason 4 huds are available. Spread message over the 4 huds. Empty them if they are not needed.
+    #Instructions that show when you start comp mode.
+    #Due to the hud text limit, you there is 4 huds available.
+    #If you dont need a field just empty the textfield.
     instructiontext[0] = "Change in Comp Mode instruction message hud 1"
     instructiontext[1] = "Change in Comp Mode instruction message hud 2"
     instructiontext[2] = "Change in Comp Mode instruction message hud 2"
     instructiontext[3] = "Change in Comp Mode instruction message hud 2"
+
+
+rule "------------------------------------------------------------------------  General functions ------------------------------------------------------------------------ ":
+    @Delimiter
+    @Disabled
 
 def RebuildBounceOrbs():
     @Name "SUB | Rebuild Bounce Orbs"
@@ -115,8 +149,8 @@ def RebuildBounceOrbs():
             1, 
             EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
-            BounceEffects.append(getLastCreatedEntity())
-            wait()
+    BounceEffects.append(getLastCreatedEntity())
+    wait()
 
 def RebuildKillOrbs():
     @Name "SUB | Rebuild Kill Orbs"
@@ -133,12 +167,8 @@ def BuildPortals():
     if CustomPortalStart:
         for TempIterator1 in range(len(CustomPortalStart)):
             createEffect(
-                [i for i in getAllPlayers() if 
-                    i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or 
-                    CustomPortalCP[evalOnce(TempIterator1)] == 999
-                ],
-                Effect.GOOD_AURA, 
-                Color.WHITE,
+                [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
+                Effect.GOOD_AURA, Color.WHITE,
                 CustomPortalStart[evalOnce(TempIterator1)], 
                 0.6,
                 EffectReeval.VISIBILITY
@@ -148,18 +178,15 @@ def BuildPortals():
     if PortalDest:
         for TempIterator1 in range(len(PortalLoc)):
             createEffect(
-                [i for i in getAllPlayers() if i.InvincibleToggle or i.CurrentCheckpoint == len(CheckpointPositions) - 1],
+                [i for i in getAllPlayers() if i.InvincibleToggle or not i.NotOnLastCp],
                 Effect.BAD_AURA, 
-                #Color.AQUA if localPlayer.portalselect != evalOnce(i) else Color.ORANGE, 
                 Color.AQUA if evalOnce(TempIterator1) % 2 == 1 else Color.ORANGE,
-                #[Color.AQUA, Color.GREEN, Color.RED, Color.BLUE, Color.LIME_GREEN, Color.ROSE][evalOnce(i)],
                 PortalLoc[evalOnce(TempIterator1)], 
                 0.6,
                 EffectReeval.VISIBILITY
-                )
-
+            )
             createInWorldText(
-                [i for i in getAllPlayers() if i.InvincibleToggle or i.CurrentCheckpoint == len(CheckpointPositions) - 1], 
+                [i for i in getAllPlayers() if i.InvincibleToggle or not i.NotOnLastCp], 
                 "{0}".format(PortalNames[evalOnce(TempIterator1)]), 
                 PortalLoc[evalOnce(TempIterator1)] + vect(0,1,0), 
                 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
@@ -167,6 +194,7 @@ def BuildPortals():
 
 def UpdateCache():
     @Name "SUB | Update Effect Cache"
+    eventPlayer.NotOnLastCp = (eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 and len(CheckpointPositions)  > 1)
     
     eventPlayer.BouncePosition_Cache = [_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.BounceStrength_Cache = [_ for _, i in BounceStrength if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
@@ -175,29 +203,83 @@ def UpdateCache():
     eventPlayer.BounceLock_Cache = [_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.KillPosition_Cache = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.BounceLockMax_Cache = len([i for i in eventPlayer.BounceLock_Cache if i])
+    eventPlayer.BounceLockMax_Cache = len([i for i in eventPlayer.BounceLock_Cache if i])    
+    
+    eventPlayer.banstring = ""
+    wait()
+    if createWorkshopSetting(bool, "Ban Switch", "Ban Triple Jump on all cps", false, 0):
+        eventPlayer.ban_triple = true
+    elif eventPlayer.CurrentCheckpoint in BanTriple:
+        eventPlayer.banstring = "▲ {}".format(eventPlayer.banstring)
+        eventPlayer.ban_triple = true
+    else:
+        eventPlayer.ban_triple = false
 
-    if not hostPlayer.EditorOn:
+    if createWorkshopSetting(bool, "Ban Switch", "Ban Multiclimb on all cps", false, 1):
+        eventPlayer.ban_multi = true
+    elif eventPlayer.CurrentCheckpoint in BanMulti:
+        eventPlayer.banstring = "∞ {}".format(eventPlayer.banstring)
+        eventPlayer.ban_multi = true
+    else:
+        eventPlayer.ban_multi = false
+
+    if createWorkshopSetting(bool, "Ban Switch", "Ban Createbhop on all cps", false, 2):
+        eventPlayer.ban_create = true
+    elif eventPlayer.CurrentCheckpoint in BanCreate:
+        eventPlayer.banstring = "♂ {}".format(eventPlayer.banstring)
+        eventPlayer.ban_create = true
+    else:
+        eventPlayer.ban_create = false
+
+    if createWorkshopSetting(bool, "Ban Switch", "Ban Deathbhop on all cps", false, 3):
+        eventPlayer.ban_dedhop = true
+    elif eventPlayer.CurrentCheckpoint in BanDead:
+        eventPlayer.banstring = "X {}".format(eventPlayer.banstring)
+        eventPlayer.ban_dedhop = true
+    else:
+        eventPlayer.ban_dedhop = false
+
+    if createWorkshopSetting(bool, "Ban Switch", "Ban Emote Savehop on all cps", false, 4):
+        eventPlayer.ban_emote = true
+    elif eventPlayer.CurrentCheckpoint in BanEmote:
+        eventPlayer.banstring = "♥ {}".format(eventPlayer.banstring)
+        eventPlayer.ban_emote = true
+    else:
+        eventPlayer.ban_emote = false
+    
+    if createWorkshopSetting(bool, "Ban Switch", "Ban Wallclimb on all cps", false, 5):
+        eventPlayer.ban_climb = true
+    elif eventPlayer.CurrentCheckpoint in BanClimb:
+        eventPlayer.banstring = "↑ {}".format(eventPlayer.banstring)
+        eventPlayer.ban_climb = true
+    else:
+        eventPlayer.ban_climb = false
+
+    wait()
+    async(CheckUlt(), AsyncBehavior.RESTART)
+    async(CheckDash(), AsyncBehavior.RESTART)
+
+    if not eventPlayer.EditorOn:
         return
 
     destroyEffect(eventPlayer.EffectSizeArray)
     eventPlayer.EffectSizeArray = []
     createEffect(eventPlayer if eventPlayer.EffectSizeToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint], 1.4, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.EffectSizeArray.append(getLastCreatedEntity())
-    createEffect(eventPlayer if eventPlayer.EffectSizeToggle and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.4, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.EffectSizeToggle and eventPlayer.NotOnLastCp else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.4, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.EffectSizeArray.append(getLastCreatedEntity())
 
-        
     eventPlayer.BounceIndex_Cache = [e for e in [(i if e2 == eventPlayer.CurrentCheckpoint else -1) for e2, i in BouncePadCheckpoints] if  e >=0]
     eventPlayer.KillIndex_Cache = [e for e in [(i if e2 == eventPlayer.CurrentCheckpoint else -1) for e2, i in KillballCheckpoints] if  e >=0]
 
     if eventPlayer.MovedCheckpoint and eventPlayer == hostPlayer:
-        SelectedCheckpoint_Editing = eventPlayer.CurrentCheckpoint
+        #SelectedCheckpoint_Editing = eventPlayer.CurrentCheckpoint
         SelectedKillball_Editing = 0 if eventPlayer.KillIndex_Cache else 99999
         KillBallChase = KillBallPositions[eventPlayer.KillIndex_Cache[SelectedKillball_Editing]] if len(eventPlayer.KillIndex_Cache) else vect(0,0,0)
         CurrentBounce_Editing = 0 if eventPlayer.BounceIndex_Cache else 99999
         CurrentBouncePosition_Editing = BouncePositions[eventPlayer.BounceIndex_Cache[CurrentBounce_Editing]] if len(eventPlayer.BounceIndex_Cache) else vect(0,0,0)
         eventPlayer.MovedCheckpoint = false
+
 #!include "editor.opy"
 
 rule "------------------------------------------------------------------------  General rules ------------------------------------------------------------------------ ":
@@ -209,15 +291,15 @@ rule "Setup and Variables":
     if not inspectoron:
         disableInspector()
 
-    getAllPlayers().disableRespawn()
+    # version 1.7.0
     disableGamemodeCompletion()
     disableScoring()
     disableMusic()
     disableAnnouncer()
-    #pauseMatchTime()
     startForcingSpawn(Team.ALL,  0)
     startForcingSpawn(Team.ALL,  1)
     startForcingSpawn(Team.ALL,  2)
+
     BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints != null else []
     DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints != null  else  []
     BouncePadCheckpoints = BouncePadCheckpoints if len(BouncePadCheckpoints) else []
@@ -237,151 +319,95 @@ rule "Setup and Variables":
     BounceToggleLock = BounceToggleLock if len(BounceToggleLock) else []
     LeaderBoardFull = []
     wait(1)
-    
-    # -! comp minutes !- fill in second to last number
-    CompTime = createWorkshopSetting(int[1:240], "Competitive mode", "time limit", comptimelimit, 101) # 5-240
-    # -! comp count !- fill in second to last number
-    CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode", "attempt count", attemptcount, 102) 
-    CompRestartLimit = createWorkshopSetting(bool, "Competitive mode","disable restart during run" , comprestartlimit , 103)
-    CompMode = createWorkshopSetting(bool, "Competitive mode","Turn on competitive mode" , compmodetoggle , 100)
-    SelectedCheckpoint_Editing = len(CheckpointPositions) - 1 # This probably isn't necessary
-    # KILLBALL()
-    # wait(2)
-    # pinball()
-
     PortalOn = createWorkshopSetting(bool, "map settings","enable portals (control maps)",true,0)
-    SavedProgress = []
-    
+    #SelectedCheckpoint_Editing = len(CheckpointPositions) - 1 # This probably isn't necessary
+        
+    CompMode = createWorkshopSetting(bool, "Competitive mode","Turn on competitive mode" , compmodetoggle , 100)
     if CompMode:
-        hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                                                                                                           ", HudPosition.TOP, -22, Color.WHITE, HudReeval.VISIBILITY,SpecVisibility.DEFAULT)
+        # -! comp minutes !- 
+        CompTime = createWorkshopSetting(int[1:240], "Competitive mode", "time limit", comptimelimit, 101) # 5-240
+        # -! comp attempt count !- 
+        CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode", "attempt count", attemptcount, 102) 
+        # -! comp restartlimiter !-
+        CompRestartLimit = createWorkshopSetting(bool, "Competitive mode","disable restart during run" , comprestartlimit , 103)
+
+        hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                                                                                                           ", HudPosition.TOP, HO.comp_instructtop, Color.WHITE, HudReeval.VISIBILITY,SpecVisibility.DEFAULT)
         # replace the instructions custom string for your own instructions. type \n for enter/next line
         if instructiontext[0]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[0], HudPosition.TOP, -21, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[0], HudPosition.TOP, HO.comp_instruct1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         if instructiontext[1]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[1], HudPosition.TOP, -20, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[1], HudPosition.TOP, HO.comp_instruct2, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         if instructiontext[2]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[2], HudPosition.TOP, -19, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[2], HudPosition.TOP, HO.comp_instruct3, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         if instructiontext[3]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[3], HudPosition.TOP, -18, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                   Press {0} to start                                ".format(buttonString(Button.INTERACT)), HudPosition.TOP, -17, Color.WHITE, HudReeval.VISIBILITY_AND_STRING,SpecVisibility.DEFAULT)
-        
-           
-
+            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[3], HudPosition.TOP, HO.comp_instruct4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                   Press {0} to start                                ".format(buttonString(Button.INTERACT)), HudPosition.TOP, HO.comp_instructbottom, Color.WHITE, HudReeval.VISIBILITY_AND_STRING,SpecVisibility.DEFAULT)
+                
     else:
-        hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else ""), HudPosition.RIGHT, -14, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-        hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else ""), HudPosition.RIGHT, -13,Color.GREEN if localPlayer.invis else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-        hudSubtext(getAllPlayers() if localPlayer.EditModeSelection < 1 else null,"{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.CurrentCheckpoint - localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else ""),HudPosition.RIGHT, -11, Color.GREEN if localPlayer.PracticeToggle else Color.GRAY if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-    
-        hudSubheader([i for i in getAllPlayers() if i.PracticeToggle and hostPlayer.EditModeSelection < 1],
-            "{0} + {1} | Next level\n"
-            "{0} + {2} | Previous level\n"
-            "{3} | Start from practice cp ".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT)),
-            HudPosition.RIGHT, -10, Color.LIME_GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
-        )
-        hudSubtext(
-            [i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1 and i.PracticeToggle != 1], 
-            "Hold {0} | Traces{1}".format(abilityIconString(Hero.GENJI,Button.ULTIMATE), "" if localPlayer.TracesOff else " | ON "), 
-            HudPosition.RIGHT, -12, Color.WHITE if localPlayer.TracesOff else Color.GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
-        )  
+        hudSubtext(getAllPlayers(), "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else ""), HudPosition.RIGHT, HO.com_spec, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+        
+        hudSubtext(getAllPlayers(), "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else ""), HudPosition.RIGHT, HO.com_invis, Color.GREEN if localPlayer.invis else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+        HudStoreEdit.append(getLastCreatedText())
+        hudSubtext(getAllPlayers() ,"{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else ""),HudPosition.RIGHT, HO.com_practice, Color.GREEN if localPlayer.PracticeToggle else Color.GRAY if localPlayer.InvincibleToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+        HudStoreEdit.append(getLastCreatedText())
+        hudSubheader([i for i in getAllPlayers() if i.PracticeToggle],"{0} + {1} | Next level\n{0} + {2} | Previous level\n{3} | Start from practice cp ".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT)), HudPosition.RIGHT, HO.com_practicesub, Color.LIME_GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+        HudStoreEdit.append(getLastCreatedText())
    
-    #async(CreateLeaderBoard(), AsyncBehavior.RESTART)
     CreateLeaderBoard()
-    # padding for custom gud
-    hudSubtext(getAllPlayers(), "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv", HudPosition.TOP, -1, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    # padding for custom hud display
+    hudSubtext(getAllPlayers(), "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv", HudPosition.TOP, HO.fillermain, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     
-    # normal
-    ###hudSubtext(getAllPlayers(), "{0}+{1}+{2} | Restart".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT)), HudPosition.RIGHT, -20, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers(), 
-        "{0}+{1}+{2} | Restart\nHold {3} | leaderboard".format(
-        buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)), HudPosition.RIGHT, -20, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "{0}+{1}+{2} | Restart\nHold {3} | leaderboard".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)), HudPosition.RIGHT, HO.com_restart_n_board, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "{0} {1} |  {2}".format( "" if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset"), HudPosition.RIGHT, HO.com_quickres, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(), "{0}+{1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.InvincibleToggle else ""), HudPosition.RIGHT, HO.com_invincible, Color.GREEN if localPlayer.InvincibleToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     
-    hudSubtext(getAllPlayers(), "{0} {1} |  {2}".format( "" if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset"), HudPosition.RIGHT, -18, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    ###hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null, "Hold {0} | leaderboard".format(buttonString(Button.MELEE)), HudPosition.RIGHT, -17, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudSubtext(getAllPlayers() if hostPlayer.EditModeSelection < 1 else null,  "Hold {0} | Preview orb/portal".format(buttonString(Button.PRIMARY_FIRE)), HudPosition.RIGHT, -16, Color.GREEN if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else Color.GREEN if localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-    hudSubheader(getAllPlayers() if hostPlayer.EditModeSelection < 1 and localPlayer.isHoldingButton(Button.PRIMARY_FIRE) else null, "Walk left/right | preview others\nAim | change preview angle", HudPosition.RIGHT, -15, Color.LIME_GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubtext(getAllPlayers(),  "Hold {0} | Preview orb/portal".format(buttonString(Button.PRIMARY_FIRE)), HudPosition.RIGHT, HO.com_preview, Color.GREEN if localPlayer.PreviewsArray else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    HudStoreEdit.append(getLastCreatedText())
+    hudSubheader(getAllPlayers() if localPlayer.PreviewsArray else null, "Walk left/right | preview others\nAim | change preview angle", HudPosition.RIGHT, HO.com_previewsub, Color.LIME_GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    HudStoreEdit.append(getLastCreatedText())
+    hudSubtext(getAllPlayers(), "Hold {0} | Splits{1}".format(buttonString(Button.ULTIMATE), " | ON " if localPlayer.splitson else ""), HudPosition.RIGHT, HO.com_splits, Color.GREEN if localPlayer.splitson else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)  
+    HudStoreEdit.append(getLastCreatedText())
+ 
+    if CpHudText != null: # text per cp
+        #hudSubtext(getAllPlayers(), "                                                   \r\n  \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n", HudPosition.TOP, HO.filler_custommsg, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        hudHeader(
+            getAllPlayers(),    
+            CpHudText[CpHudCp.index(localPlayer.CurrentCheckpoint)]
+            if localPlayer.CurrentCheckpoint in CpHudCp else "", 
+            HudPosition.TOP, HO.add_custommsg1, 
+            Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-    hudSubtext(getAllPlayers(), "{0}+{1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.InvincibleToggle == 1 else ""), HudPosition.RIGHT, -19, Color.GREEN if localPlayer.InvincibleToggle == 1 else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-   
-    #hudSubtext([i for i in getAllPlayers() if i.CurrentCheckpoint == len(CheckpointPositions) - 1 and i.EditModeSelection < 1 and i.PracticeToggle != 1], "Hold {0} | Toggle Traces".format(abilityIconString(Hero.GENJI,Button.ULTIMATE)), HudPosition.RIGHT, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)  
-  
+    if CpIwtText != null:
+        createInWorldText(
+            getAllPlayers(), 
+            CpIwtText[CpIwtCp.index(localPlayer.CurrentCheckpoint)]
+            if localPlayer.CurrentCheckpoint in CpIwtCp else "",
+            CpIwtPos[CpIwtCp.index(localPlayer.CurrentCheckpoint)], 
+            2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, CpIwtColor, SpecVisibility.DEFAULT)
+
+
     if not hostPlayer.EditorOn:
-        Difficultyhud = createWorkshopSetting(enum[
-            "beginner",
-            "easy-",
-            "easy",
-            "easy+",
-            "medium-",
-            "medium",
-            "medium+",
-            "hard-",
-            "hard",
-            "hard+",
-            "very hard-",
-            "very hard",
-            "very hard+",
-            "extreme-",
-            "extreme",
-            "extreme+",
-            "hell",
-            "don't display"
-            ],"map settings","difficulty (display hud)",0, 0)
+        Difficultyhud = createWorkshopSetting(enum[ "beginner", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display"],"map settings","difficulty (display hud)",0, 0)
 
         if Difficultyhud < 17: # 17th entry is dont display
-            hudSubheader(getAllPlayers(), 
-                [
-                "beginner",
-                "easy -",
-                "easy",
-                "easy +",
-                "medium -",
-                "medium",
-                "medium +",
-                "hard -",
-                "hard",
-                "hard +",
-                "very hard -",
-                "very hard",
-                "very hard +",
-                "extreme -",
-                "extreme",
-                "extreme +",
-                "hell"][Difficultyhud], 
-                HudPosition.TOP, -24,
-                [
-                Color.GREEN,
-                Color.LIME_GREEN,
-                Color.LIME_GREEN,
-                Color.LIME_GREEN,
-                Color.YELLOW,
-                Color.YELLOW,
-                Color.YELLOW,
-                Color.ORANGE,
-                Color.ORANGE,
-                Color.ORANGE,
-                rgb(255, 69, 0),
-                rgb(255, 69, 0),
-                rgb(255, 69, 0),
-                Color.RED,
-                Color.RED,
-                Color.RED,
-                rgb(150, 0, 0)
-                ][Difficultyhud]
-                , HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudSubheader(getAllPlayers(), ["beginner", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell"][Difficultyhud], HudPosition.TOP, HO.data_dif,[Color.GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.YELLOW,Color.YELLOW,Color.YELLOW, Color.ORANGE,Color.ORANGE,Color.ORANGE,rgb(255, 69, 0), rgb(255, 69, 0), rgb(255, 69, 0), Color.RED, Color.RED, Color.RED, rgb(150, 0, 0)][Difficultyhud], HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            HudStoreEdit.append(getLastCreatedText())
+
     wait(5)
     KILLBALL()
     wait(2)
-    pinball()
+    pinball() #
     wait(2)
     BuildPortals()
     # Check for editor/host spawn to redo effect reeval
     waitUntil(hostPlayer.hasSpawned(), 99999)
+    wait()
     if not hostPlayer.EditorOn:
         return
     
     RebuildKillOrbs()
     RebuildBounceOrbs()
     
-
 rule "Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
         wait(0.25)
@@ -394,8 +420,8 @@ rule "Match time":
     setMatchTime(69)
     pauseMatchTime()
     wait(5)
-    TimeRemaining = 265 #269
-    hudSubheader(getAllPlayers(), "  Server Restarts In {0} Min  ".format(TimeRemaining), HudPosition.RIGHT, -200, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+    TimeRemaining = 265
+    hudSubheader(getAllPlayers(), "  Server Restarts In {0} Min  ".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     while TimeRemaining > 0:
         wait(60)
         TimeRemaining --
@@ -404,11 +430,7 @@ rule "Match time":
             if CompTime == 0:
                 bigMessage(getAllPlayers(),"time's up")
                 getAllPlayers().CompDone = true
-                #getAllPlayers().InvincibleToggle = 1
                 stopChasingVariable(getAllPlayers().Timer)
-                #getAllPlayers().setUltEnabled(true)
-                #getAllPlayers().setUltCharge(100)
-                #getAllPlayers().setAbility1Enabled(true)
                 getAllPlayers().disableRespawn()
                 kill(getAllPlayers(), null)
                 wait(0.032)
@@ -422,21 +444,37 @@ rule "Match time":
         declareTeamVictory(hostPlayer.getTeam())
 
 
-rule "Genji Swapper 9000":
+rule "Player Initialize and game HUD":
     @Event eachPlayer
+    eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron , 0) # Turn Editor On
+    eventPlayer.GuideToggle = eventPlayer.EditorOn
+    eventPlayer.disableGamemodeHud()
+    eventPlayer.enableDeathSpectateAllPlayers()
+    eventPlayer.enableDeathSpectateTargetHud()
+    eventPlayer.preloadHero(Hero.GENJI)
+    eventPlayer.setRespawnTime(0)
+    eventPlayer.SpectateToggle = false
+    eventPlayer.WallclimbUsed = false #Climbing the wall prompts the HUD
+    eventPlayer.JumpCount = 0
+    eventPlayer.bouncetouchedlast = -1
+    #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
+    wait(1) 
+    createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), 1, EffectReeval.POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, Color.LIME_GREEN, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    wait(0.5)
+    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
+    wait(0.5)
+    createInWorldText(eventPlayer if eventPlayer.NotOnLastCp else null, "{0} collect orbs first".format(iconString(Icon.WARNING)) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else "Come here", CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT)
+    wait(1)  
+
     if not eventPlayer.isDummy():
         eventPlayer.startForcingHero(Hero.GENJI)
+    elif eventPlayer.getCurrentHero() != Hero.GENJI: # only do the things on genji test bots
+        return
 
+    waitUntil(eventPlayer.hasSpawned(), 9999)
 
-
-rule "Initialize and CP HUD":
-    @Event eachPlayer
-    #@Hero genji
-    @Condition eventPlayer.hasSpawned() == true
-    @Condition eventPlayer.getCurrentHero() == Hero.GENJI
-    eventPlayer.disableGamemodeHud()
-    if getTotalTimeElapsed() < 3:
-        wait(2) # make sure everything loaded, specialy things like comp mode
     if CompMode:
         eventPlayer.setInvisibility(Invis.ALL)
         hudText(
@@ -449,18 +487,19 @@ rule "Initialize and CP HUD":
                 "\nAttempt {0} / {1}".format(eventPlayer.AttemptCount, CompAtmpNum) if CompAtmpNum > 0 
                 else "" 
             ),
-            "competitive mode" if CompTime > 0 else "competitive mode\n\n\n"
-            , 
-            HudPosition.TOP, -860, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.STRING, SpecVisibility.DEFAULT
-         ) 
+            "competitive mode" if CompTime > 0 else "competitive mode\n\n\n", 
+            HudPosition.TOP, HO.comp_info, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.STRING, SpecVisibility.DEFAULT
+        ) 
         if not "{0}".format(eventPlayer) in CompAtmpSaveNames: # instructions and settings for comp start
             eventPlayer.instructionhud = true
             CompAtmpSaveNames.append("{0}".format(eventPlayer))
             CompAtmpSaveCount.append(1)
             eventPlayer.AttemptCount = 1
             eventPlayer.setMoveSpeed(0)
+            eventPlayer.setAbility1Enabled(false)
+            eventPlayer.setUltEnabled(false)
             waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT),1)
-            waitUntil(eventPlayer.isHoldingButton(Button.INTERACT),99999)
+            waitUntil(eventPlayer.isHoldingButton(Button.INTERACT) or CompTime < 1,99999)
             eventPlayer.setMoveSpeed(100)
             eventPlayer.instructionhud = false
         else:
@@ -468,466 +507,309 @@ rule "Initialize and CP HUD":
             smallMessage(eventPlayer,"now {0}".format( eventPlayer.AttemptCount))
         if eventPlayer.AttemptCount == (-1) or CompTime < 1:
             eventPlayer.CompDone = true
-            #eventPlayer.disableRespawn()
-            #kill(eventPlayer, null)
     
-
-    hudSubtext(eventPlayer, "Time {0}".format(prettyTime(eventPlayer.Timer)), HudPosition.LEFT, -5, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT) #LEFT, -2
-    /*
-    # original
-    hudSubtext(eventPlayer, "{0} {1}".format("Level ", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)), HudPosition.TOP, -14, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudSubtext( # display locks collected
-        [eventPlayer if len([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true] ) > 0 else null], 
-        "{0} / {1} orange orbs".format(
-            "0" if eventPlayer.LockCollected == 0 else len(eventPlayer.LockCollected) -1,
-            len([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true])
-        ),HudPosition.TOP, -13, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    */
-    # orange sub+text
-    hudText(eventPlayer, 
-        null, 
-        "orange orbs {0} / {1}".format(
-                len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache
-            ) if eventPlayer.BounceLockMax_Cache else "",
-        "Level {0} / {1}".format(
+    # ban icons in level
+    hudText(eventPlayer, null, 
+        "Practice Time {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "", 
+        "Time {0}".format(prettyTime(eventPlayer.Timer)), 
+        HudPosition.LEFT, HO.game_timer, Color.WHITE, Color.GRAY, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT)
+    
+    hudText(eventPlayer, null, 
+        "orange orbs {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else "",
+        "{3}{2}Level {0} / {1}".format(
             eventPlayer.CurrentCheckpoint, 
-            len(CheckpointPositions) - 1
+            len(CheckpointPositions) - 1,
+            "\n" if eventPlayer.banstring else "",
+            eventPlayer.banstring if eventPlayer.banstring else ""
         ),    
-        HudPosition.TOP, -14, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
+        HudPosition.TOP, HO.game_level_orb, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
     )
-    # in same
-    /*
-    hudText(eventPlayer, null, 
-        null,
-        "Level {0} / {1}\n{2}".format(
-            eventPlayer.CurrentCheckpoint, 
-            len(CheckpointPositions) - 1,
-            "orange orbs {0} / {1}".format(
-                len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache
-            ) if eventPlayer.BounceLockMax_Cache else ""),
-        HudPosition.TOP, -14, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
-    )
-    */
-    /*
-    # on same line
-    hudText(eventPlayer, null, 
-        null,
-        "Level {0} / {1}{2}".format(
-            eventPlayer.CurrentCheckpoint, 
-            len(CheckpointPositions) - 1,
-            " | orange orbs {0} / {1}".format(
-                len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache
-            ) if eventPlayer.BounceLockMax_Cache else ""),
-        HudPosition.TOP, -14, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
-    )
-    */
-    eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron 
-        , 0) # breaks if the defined thing is on the same line
-
-    #StartGame_Sub is the initialization of the game
-    StartGame_Sub()
-    eventPlayer.enableDeathSpectateAllPlayers()
-    eventPlayer.enableDeathSpectateTargetHud()
-    eventPlayer.SpectateToggle = 0
-    #Climbing the wall prompts the HUD
-    eventPlayer.WallclimbUsed = 2
-    #CheckpointEffect_Sub is the checkpoint effect display
-    CheckpointEffect_Sub()
+    # climb/bhop indicators
+    hudHeader(eventPlayer, "Climb{0}".format("" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount)), HudPosition.LEFT, HO.game_climb, Color.RED if eventPlayer.WallclimbUsed else Color.GREEN, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    hudHeader(eventPlayer, "Bhop", HudPosition.LEFT, HO.game_bhop, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.COLOR, SpecVisibility.DEFAULT)
     
+    wait()
+    StartGame_Sub()  # initialization of the game
    
-    
+def DeleteSave():
+    @Name "delete save" 
+    del SaveName[SaveEnt.index(eventPlayer)]
+    del SaveCp[SaveEnt.index(eventPlayer)]
+    del SaveTimer[SaveEnt.index(eventPlayer)]
+    del SaveElapsed[SaveEnt.index(eventPlayer)]
+    del SavePauseTime[SaveEnt.index(eventPlayer)]
+    del SavePauseEnabled[SaveEnt.index(eventPlayer)]
+    del SaveEnt[SaveEnt.index(eventPlayer)] # must always be last because its the index itself
+
+def MakeSave():
+    @Name "make save"
+    SaveName.append("{}".format(eventPlayer))
+    SaveCp.append(eventPlayer.CurrentCheckpoint)
+    SaveTimer.append(eventPlayer.Timer)
+    SaveEnt.append(eventPlayer)
+    SaveElapsed.append(getTotalTimeElapsed())
+    SavePauseTime.append(0)
+    SavePauseEnabled.append(false)
+
+def StartPauseTimer():
+    @Name "start pause timer"
+    chase(eventPlayer.PauseTimer, 999999, rate=1, ChaseReeval.NONE)
+    SaveTimer[SaveEnt.index(eventPlayer)] = eventPlayer.Timer
+    SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
+    SavePauseEnabled[SaveEnt.index(eventPlayer)] = true
+
+def StopPauseTimer():
+    @Name "stop pause timer"
+    stopChasingVariable(eventPlayer.PauseTimer)
+    SavePauseTime[SaveEnt.index(eventPlayer)] = eventPlayer.PauseTimer
+    eventPlayer.PauseTimer = 0
+    SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
 
 def CreateLeaderBoard():
     @Name "leaderboard hud"
-    # sub is tied to player so remade turned global
+    # turns into global rule so it doesnt delete when player leaves
     LeaderBoardRemake = false
     wait()
     LeaderBoardRemake = true
-
-
+ 
 rule "remake leaderboard": # for global isntead of tied to player
-    @Condition LeaderBoardRemake
+    @Condition LeaderBoardRemake   
     wait() # account for delay in completion
     LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
-    destroyHudText(LeaderBoardHuds[0])
-    destroyHudText(LeaderBoardHuds[1])
-    destroyHudText(LeaderBoardHuds[2])
-    destroyHudText(LeaderBoardHuds[3])
-    destroyHudText(LeaderBoardHuds[4])
-    destroyHudText(LeaderBoardHuds[5])
-    destroyHudText(LeaderBoardHuds[6])
-    destroyHudText(LeaderBoardHuds[7])
-    destroyHudText(LeaderBoardHuds[8])
-    destroyHudText(LeaderBoardHuds[9])
-    destroyHudText(LeaderBoardHuds[10])
     
-    #wait()
-    # 20 board comp and non comp
-    if not CompMode or (CompMode and CompTime > 0):    
-        # top 5
-        if LeaderBoardFull[0]:
-            hudSubtext(getAllPlayers()," \n{0} Top 5 {0}".format(abilityIconString(Hero.GENJI,Button.PRIMARY_FIRE)), HudPosition.RIGHT, 0, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-            LeaderBoardHuds[0] = getLastCreatedText()
-            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0][2], HudPosition.RIGHT, 1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-            LeaderBoardHuds[1] = getLastCreatedText()
-        if LeaderBoardFull[1]:
-            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[1][0], LeaderBoardFull[1][2], HudPosition.RIGHT, 2, Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-            LeaderBoardHuds[2] = getLastCreatedText()
-        if LeaderBoardFull[2]:
-            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[2][0], LeaderBoardFull[2][2], HudPosition.RIGHT, 3, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-            LeaderBoardHuds[3] = getLastCreatedText()
-        if LeaderBoardFull[3]:
-            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[3][0], LeaderBoardFull[3][2], HudPosition.RIGHT, 4, Color.LIME_GREEN, Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-            LeaderBoardHuds[4] = getLastCreatedText()
-        if LeaderBoardFull[4]:
-            hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4][2], HudPosition.RIGHT, 5, Color.GREEN, Color.GREEN, Color.GREEN,HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-            LeaderBoardHuds[5] = getLastCreatedText()
+    while len(LeaderBoardHuds) > 0: 
+        destroyHudText(LeaderBoardHuds[0])
+        del LeaderBoardHuds[0]
+    
+    # top 5
+    if LeaderBoardFull[0]:
+        hudSubtext(getAllPlayers()," \n{0} Top 5 {0}".format(abilityIconString(Hero.GENJI,Button.PRIMARY_FIRE)), HudPosition.RIGHT, HO.board_top5, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        LeaderBoardHuds.append(getLastCreatedText())
+        hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0][2], HudPosition.RIGHT, HO.board_top5+1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        LeaderBoardHuds.append(getLastCreatedText())
+    if LeaderBoardFull[1]:
+        hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[1][0], LeaderBoardFull[1][2], HudPosition.RIGHT, HO.board_top5+2, Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        LeaderBoardHuds.append(getLastCreatedText())
+    if LeaderBoardFull[2]:
+        hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[2][0], LeaderBoardFull[2][2], HudPosition.RIGHT, HO.board_top5+3, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        LeaderBoardHuds.append(getLastCreatedText())
+    if LeaderBoardFull[3]:
+        hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[3][0], LeaderBoardFull[3][2], HudPosition.RIGHT, HO.board_top5+4, Color.LIME_GREEN, Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        LeaderBoardHuds.append(getLastCreatedText())
+    if LeaderBoardFull[4]:
+        hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4][2], HudPosition.RIGHT, HO.board_top5+5, Color.GREEN, Color.GREEN, Color.GREEN,HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        LeaderBoardHuds.append(getLastCreatedText())
 
-        hudHeader(localPlayer.LeaderboardToggle, "　　　　 {0} Leaderboard {0} 　　　".format(iconString(Icon.FLAG)), HudPosition.TOP, -780, Color.BLUE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
-        LeaderBoardHuds[6] = getLastCreatedText()
+    hudHeader(getAllPlayers() if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle, "　　　　 {0} Leaderboard {0} 　　　".format(iconString(Icon.FLAG)), HudPosition.TOP, HO.board_header, Color.BLUE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
+    LeaderBoardHuds.append(getLastCreatedText())
+    hudHeader(
+        getAllPlayers() if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
+        "　　　　　　　　　　　　　　　　　　\n"
+        "　 1:　{0} - {5}　\n"
+        "　 2:　{1} - {6}　\n"
+        "　 3:　{2} - {7}　\n"
+        "　 4:　{3} - {8}　\n"
+        "　 5:　{4} - {9}\n".format(
+        LeaderBoardFull[0][0] if LeaderBoardFull[0] else "",
+        LeaderBoardFull[1][0] if LeaderBoardFull[1] else "",
+        LeaderBoardFull[2][0] if LeaderBoardFull[2] else "",
+        LeaderBoardFull[3][0] if LeaderBoardFull[3] else "",
+        LeaderBoardFull[4][0] if LeaderBoardFull[4] else "",
+        LeaderBoardFull[0][2] if LeaderBoardFull[0] else "",
+        LeaderBoardFull[1][2] if LeaderBoardFull[1] else "",
+        LeaderBoardFull[2][2] if LeaderBoardFull[2] else "",
+        LeaderBoardFull[3][2] if LeaderBoardFull[3] else "",
+        LeaderBoardFull[4][2] if LeaderBoardFull[4] else ""
+        ),HudPosition.TOP, HO.board_display1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    LeaderBoardHuds.append(getLastCreatedText())
 
+    if LeaderBoardFull[5]:
         hudHeader(
-            localPlayer.LeaderboardToggle,
+            getAllPlayers() if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
             "　　　　　　　　　　　　　　　　　　\n"
-            "　 1:　{0} - {5}　\n"
-            "　 2:　{1} - {6}　\n"
-            "　 3:　{2} - {7}　\n"
-            "　 4:　{3} - {8}　\n"
-            "　 5:　{4} - {9}\n".format(
-            LeaderBoardFull[0][0] if LeaderBoardFull[0] else "",
-            LeaderBoardFull[1][0] if LeaderBoardFull[1] else "",
-            LeaderBoardFull[2][0] if LeaderBoardFull[2] else "",
-            LeaderBoardFull[3][0] if LeaderBoardFull[3] else "",
-            LeaderBoardFull[4][0] if LeaderBoardFull[4] else "",
-            LeaderBoardFull[0][2] if LeaderBoardFull[0] else "",
-            LeaderBoardFull[1][2] if LeaderBoardFull[1] else "",
-            LeaderBoardFull[2][2] if LeaderBoardFull[2] else "",
-            LeaderBoardFull[3][2] if LeaderBoardFull[3] else "",
-            LeaderBoardFull[4][2] if LeaderBoardFull[4] else ""
-            ),HudPosition.TOP, -779, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        LeaderBoardHuds[7] = getLastCreatedText()
+            "　 6:　{0} - {5}　\n"
+            "　 7:　{1} - {6}　\n"
+            "　 8:　{2} - {7}　\n"
+            "　 9:　{3} - {8}　\n"
+            "　10:　{4} - {9}\n".format(
+            LeaderBoardFull[5][0] if LeaderBoardFull[5] else "",
+            LeaderBoardFull[6][0] if LeaderBoardFull[6] else "",
+            LeaderBoardFull[7][0] if LeaderBoardFull[7] else "",
+            LeaderBoardFull[8][0] if LeaderBoardFull[8] else "",
+            LeaderBoardFull[9][0] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[5][2] if LeaderBoardFull[5] else "",
+            LeaderBoardFull[6][2] if LeaderBoardFull[6] else "",
+            LeaderBoardFull[7][2] if LeaderBoardFull[7] else "",
+            LeaderBoardFull[8][2] if LeaderBoardFull[8] else "",
+            LeaderBoardFull[9][2] if LeaderBoardFull[9] else ""
+            ),HudPosition.TOP, HO.board_display2, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        LeaderBoardHuds.append(getLastCreatedText())
 
-        if LeaderBoardFull[5]:
-            hudHeader(
-                localPlayer.LeaderboardToggle,
-                "　　　　　　　　　　　　　　　　　　\n"
-                "　 6:　{0} - {5}　\n"
-                "　 7:　{1} - {6}　\n"
-                "　 8:　{2} - {7}　\n"
-                "　 9:　{3} - {8}　\n"
-                "　10:　{4} - {9}\n".format(
-                LeaderBoardFull[5][0] if LeaderBoardFull[5] else "",
-                LeaderBoardFull[6][0] if LeaderBoardFull[6] else "",
-                LeaderBoardFull[7][0] if LeaderBoardFull[7] else "",
-                LeaderBoardFull[8][0] if LeaderBoardFull[8] else "",
-                LeaderBoardFull[9][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[5][2] if LeaderBoardFull[5] else "",
-                LeaderBoardFull[6][2] if LeaderBoardFull[6] else "",
-                LeaderBoardFull[7][2] if LeaderBoardFull[7] else "",
-                LeaderBoardFull[8][2] if LeaderBoardFull[8] else "",
-                LeaderBoardFull[9][2] if LeaderBoardFull[9] else ""
-                ),HudPosition.TOP, -778, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-            LeaderBoardHuds[8] = getLastCreatedText()
+    if LeaderBoardFull[10]:
+        hudHeader( 
+        getAllPlayers() if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
+            "　　　　　　　　　　　　　　　　　　\n"
+            "　11:　{0} - {5}　\n"
+            "　12:　{1} - {6}　\n"
+            "　13:　{2} - {7}　\n"
+            "　14:　{3} - {8}　\n"
+            "　15:　{4} - {9}\n".format(
+            LeaderBoardFull[10][0] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[11][0] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[12][0] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[13][0] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[14][0] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[10][2] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[11][2] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[12][2] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[13][2] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[14][2] if LeaderBoardFull[9] else ""
+            ),HudPosition.TOP, HO.board_display3, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        LeaderBoardHuds.append(getLastCreatedText())
 
-        if LeaderBoardFull[10]:
-            hudHeader( 
-            localPlayer.LeaderboardToggle,
-                "　　　　　　　　　　　　　　　　　　\n"
-                "　11:　{0} - {5}　\n"
-                "　12:　{1} - {6}　\n"
-                "　13:　{2} - {7}　\n"
-                "　14:　{3} - {8}　\n"
-                "　15:　{4} - {9}\n".format(
-                LeaderBoardFull[10][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[11][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[12][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[13][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[14][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[10][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[11][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[12][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[13][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[14][2] if LeaderBoardFull[9] else ""
-                ),HudPosition.TOP, -777, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-            LeaderBoardHuds[9] = getLastCreatedText()
-
-        if LeaderBoardFull[15]:
-            hudHeader(
-                localPlayer.LeaderboardToggle,
-                "　　　　　　　　　　　　　　　　　　\n"
-                "　16:　{0} - {5}　\n"
-                "　17:　{1} - {6}　\n"
-                "　18:　{2} - {7}　\n"
-                "　19:　{3} - {8}　\n"
-                "　20:　{4} - {9}\n".format(
-                LeaderBoardFull[15][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[16][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[17][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[18][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[19][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[15][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[16][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[17][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[18][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[19][2] if LeaderBoardFull[9] else ""
-                ),HudPosition.TOP, -776, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-            LeaderBoardHuds[10] = getLastCreatedText()
-        
-    else: # if comp time run out
-        hudHeader(getAllPlayers(), "　　　　 {0} Leaderboard {0} 　　　".format(iconString(Icon.FLAG)), HudPosition.TOP, -780, Color.BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        LeaderBoardHuds[6] = getLastCreatedText()
-
+    if LeaderBoardFull[15]:
         hudHeader(
-            getAllPlayers(),
+            getAllPlayers() if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
             "　　　　　　　　　　　　　　　　　　\n"
-            "　 1:　{0} - {5}　\n"
-            "　 2:　{1} - {6}　\n"
-            "　 3:　{2} - {7}　\n"
-            "　 4:　{3} - {8}　\n"
-            "　 5:　{4} - {9}\n".format(
-            LeaderBoardFull[0][0] if LeaderBoardFull[0] else "",
-            LeaderBoardFull[1][0] if LeaderBoardFull[1] else "",
-            LeaderBoardFull[2][0] if LeaderBoardFull[2] else "",
-            LeaderBoardFull[3][0] if LeaderBoardFull[3] else "",
-            LeaderBoardFull[4][0] if LeaderBoardFull[4] else "",
-            LeaderBoardFull[0][2] if LeaderBoardFull[0] else "",
-            LeaderBoardFull[1][2] if LeaderBoardFull[1] else "",
-            LeaderBoardFull[2][2] if LeaderBoardFull[2] else "",
-            LeaderBoardFull[3][2] if LeaderBoardFull[3] else "",
-            LeaderBoardFull[4][2] if LeaderBoardFull[4] else ""
-            ),HudPosition.TOP, -779, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
-        LeaderBoardHuds[7] = getLastCreatedText()
+            "　16:　{0} - {5}　\n"
+            "　17:　{1} - {6}　\n"
+            "　18:　{2} - {7}　\n"
+            "　19:　{3} - {8}　\n"
+            "　20:　{4} - {9}\n".format(
+            LeaderBoardFull[15][0] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[16][0] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[17][0] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[18][0] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[19][0] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[15][2] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[16][2] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[17][2] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[18][2] if LeaderBoardFull[9] else "",
+            LeaderBoardFull[19][2] if LeaderBoardFull[9] else ""
+            ),HudPosition.TOP, HO.board_display4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        LeaderBoardHuds.append(getLastCreatedText())
 
-        if LeaderBoardFull[5]:
-            hudHeader(
-                getAllPlayers(),
-                "　　　　　　　　　　　　　　　　　　\n"
-                "　 6:　{0} - {5}　\n"
-                "　 7:　{1} - {6}　\n"
-                "　 8:　{2} - {7}　\n"
-                "　 9:　{3} - {8}　\n"
-                "　10:　{4} - {9}\n".format(
-                LeaderBoardFull[5][0] if LeaderBoardFull[5] else "",
-                LeaderBoardFull[6][0] if LeaderBoardFull[6] else "",
-                LeaderBoardFull[7][0] if LeaderBoardFull[7] else "",
-                LeaderBoardFull[8][0] if LeaderBoardFull[8] else "",
-                LeaderBoardFull[9][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[5][2] if LeaderBoardFull[5] else "",
-                LeaderBoardFull[6][2] if LeaderBoardFull[6] else "",
-                LeaderBoardFull[7][2] if LeaderBoardFull[7] else "",
-                LeaderBoardFull[8][2] if LeaderBoardFull[8] else "",
-                LeaderBoardFull[9][2] if LeaderBoardFull[9] else ""
-                ),HudPosition.TOP, -778, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
-            LeaderBoardHuds[8] = getLastCreatedText()
-
-        if LeaderBoardFull[10]:  
-            hudHeader( 
-                getAllPlayers(),
-                "　　　　　　　　　　　　　　　　　　\n"
-                "　11:　{0} - {5}　\n"
-                "　12:　{1} - {6}　\n"
-                "　13:　{2} - {7}　\n"
-                "　14:　{3} - {8}　\n"
-                "　15:　{4} - {9}\n".format(
-                LeaderBoardFull[10][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[11][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[12][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[13][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[14][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[10][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[11][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[12][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[13][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[14][2] if LeaderBoardFull[9] else ""
-                ),HudPosition.TOP, -777, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
-            LeaderBoardHuds[9] = getLastCreatedText()
-
-        if LeaderBoardFull[15]:
-            hudHeader(
-                getAllPlayers(),
-                "　　　　　　　　　　　　　　　　　　\n"
-                "　16:　{0} - {5}　\n"
-                "　17:　{1} - {6}　\n"
-                "　18:　{2} - {7}　\n"
-                "　19:　{3} - {8}　\n"
-                "　20:　{4} - {9}\n".format(
-                LeaderBoardFull[15][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[16][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[17][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[18][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[19][0] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[15][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[16][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[17][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[18][2] if LeaderBoardFull[9] else "",
-                LeaderBoardFull[19][2] if LeaderBoardFull[9] else ""
-                ),HudPosition.TOP, -776, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.NEVER)
-            LeaderBoardHuds[10] = getLastCreatedText()
-
-    #wait()
+def Leaderboardupdate():
+    @Name "SUB | Leaderboard Update"
+    # [i[0] for i in var1]   list of first element of each in var 1
+    # [ [name, seconds, prettytime] ]
+    if "{0}".format(eventPlayer) in [i[0] for i in LeaderBoardFull]: # you already have a time
+        if eventPlayer.Timer > [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)][0][1]: # new time worse
+            goto lbl_a
+        else: # new time better
+            LeaderBoardFull.remove( [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)])
+            LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)]] )
+            CreateLeaderBoard()
+    else: # you are not in list yet
+        if len(LeaderBoardFull) < 20: # board has room for more
+            LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)] ])
+            CreateLeaderBoard()
+        else: # 20 entries already
+            if LeaderBoardFull[19][1] < eventPlayer.Timer:  # your time lower then last entry
+                goto lbl_a
+            else: # you beat the last entry, thus replacing it
+                del LeaderBoardFull[19]
+                LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)]] )
+                CreateLeaderBoard()
+    lbl_a:
 
 def checkpointFailReset():
     @Name "SUB | Checkpoint Fail"
     eventPlayer.LockCollected = []
     eventPlayer.cancelPrimaryAction()
-    if eventPlayer.EditModeSelection < 1 and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
-        eventPlayer.setAbility1Enabled(false)
-        eventPlayer.setUltEnabled(false)
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
-    if DeathBhopBan == true and eventPlayer.InvincibleToggle == 0 and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
+    eventPlayer.teleport( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() )
+    if eventPlayer.ban_dedhop and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp:
         # if eventPlayer.isOnWall():
-        #     smallMessage(eventPlayer, "Deathbhop is banned!")
+        #smallMessage(eventPlayer, "Deathbhop is banned!")
         eventPlayer.disallowButton(Button.JUMP)
         wait(0.1)
         eventPlayer.allowButton(Button.JUMP)        
-    if eventPlayer.CurrentCheckpoint == 0 and not eventPlayer.PracticeToggle > 0:
+    if eventPlayer.CurrentCheckpoint == 0 and not eventPlayer.PracticeToggle:
         eventPlayer.Timer = 0
+        eventPlayer.splittime = 0
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
-
-
-def CheckpointEffect_Sub():
-    @Name "SUB | Checkpoint Effects"
-
-    if eventPlayer.PlayerEffects[0] != null:
-        return
-    createEffect(eventPlayer if eventPlayer.CurrentCheckpoint <= len(CheckpointPositions) - 1 else null, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    eventPlayer.PlayerEffects[0] = getLastCreatedEntity()
-    createEffect(eventPlayer if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else null, Effect.RING, Color.LIME_GREEN, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    eventPlayer.PlayerEffects[1] = getLastCreatedEntity()
-    createEffect(eventPlayer if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else null, Effect.LIGHT_SHAFT, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    eventPlayer.PlayerEffects[2] = getLastCreatedEntity()
-    createIcon(eventPlayer if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + vect(0, 1, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
-    eventPlayer.PlayerEffects[3] = getLastCreatedEntity()
-    createInWorldText(eventPlayer if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 else null, "Come here", CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT)
-    eventPlayer.PlayerEffects[4] = getLastCreatedText()
-
+        wait()
+   
+    async(CheckUlt(), AsyncBehavior.RESTART)
+    async(CheckDash(), AsyncBehavior.RESTART)
 
 def StartGame_Sub():
     @Name "SUB | Start Game"
     if CompMode and (CompTime < 1 or eventPlayer.CompDone):
-        #eventPlayer.InvincibleToggle = 1
         eventPlayer.LeaderboardToggle = true
-        #eventPlayer.setUltEnabled(true)
-        #eventPlayer.setUltCharge(100)
-        #eventPlayer.setAbility1Enabled(true)
         eventPlayer.CompDone = true
-        
         eventPlayer.disableRespawn()
         kill(eventPlayer,null)
         return
-   
-    UpdateTitle()
 
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
     if len(CheckpointPositions) != 0:
-        if "{0}".format(eventPlayer) in SavedProgress:
-            #if "{0}".format(eventPlayer) in save == true:
-            eventPlayer.CurrentCheckpoint = SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-            eventPlayer.Timer = SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 2]
-            SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 3] = eventPlayer
-            SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 4] = getTotalTimeElapsed()
-            SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 5] = 0
-            SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 0
-            eventPlayer.teleport(CheckpointPositions[SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]] + vect(0, 1, 0))
+        destroyInWorldText(eventPlayer.TitleStore) # restarting reset t itle even if non on cp 0
+        if "{0}".format(eventPlayer) in SaveName: # load saved progres
+            SaveEnt[SaveName.index("{}".format(eventPlayer))] = eventPlayer
+            eventPlayer.CurrentCheckpoint = SaveCp[SaveEnt.index(eventPlayer)]
+            eventPlayer.Timer = SaveTimer[SaveEnt.index(eventPlayer)]
+            SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
+            SavePauseTime[SaveEnt.index(eventPlayer)] = 0
+            SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
+            eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint] + Vector.UP)
+            if TitleData != null and  any([i for i in TitleData[0] if i <= eventPlayer.CurrentCheckpoint]) and (not eventPlayer.EditorOn ): # if any title data, find last cp
+                
+                createInWorldText(
+                    getAllPlayers() if not eventPlayer.invis else null,
+                    TitleData[1][TitleData[0].index(
+                    sorted([i for i in TitleData[0] if i <= eventPlayer.CurrentCheckpoint], lambda i:i*-1)[0])], 
+                    eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, 
+                    TitleData[2][TitleData[0].index(sorted([i for i in TitleData[0] if i <= eventPlayer.CurrentCheckpoint], lambda i:i*-1)[0])], 
+                    SpecVisibility.DEFAULT
+                )
+                eventPlayer.TitleStore = getLastCreatedText()
+
         else:
-            eventPlayer.teleport(CheckpointPositions[0] + vect(0, 1, 0))
+            eventPlayer.teleport(CheckpointPositions[0] + Vector.UP)
             eventPlayer.CurrentCheckpoint = 0
             eventPlayer.Timer = 0
             stopChasingVariable(eventPlayer.PauseTimer)
             eventPlayer.PauseTimer = 0
-            SavedProgress.append(["{0}".format(eventPlayer), eventPlayer.CurrentCheckpoint, eventPlayer.Timer, eventPlayer, getTotalTimeElapsed(), 0, 0])
-    chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
-    # eventPlayer.PortalText = []
-    if eventPlayer.EditModeSelection < 1 and not hostPlayer.EditorOn:
-        eventPlayer.setAbility1Enabled(false)
-        eventPlayer.setUltEnabled(false)
-    else:
-        SelectedCheckpoint_Editing = 0 if SelectedCheckpoint_Editing != -1 else -1
-        eventPlayer.setAbility1Enabled(true)
-        eventPlayer.setUltEnabled(true)
-        eventPlayer.setUltCharge(100)
+            MakeSave()
+            UpdateTitle()
+    
+    eventPlayer.splittime = 0
+    chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE)
     eventPlayer.setStatusEffect(null, Status.PHASED_OUT, 9999)
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
-    # ListPlayersAtCheckpoints[eventPlayer.CurrentCheckpoint].append(eventPlayer)
     eventPlayer.LockCollected = []
-    eventPlayer.InvincibleToggle = 0
+    eventPlayer.InvincibleToggle = false
     # eventPlayer.LockState = false
     UpdateCache()
 
 def UpdateTitle():
     @Name "Tittle "
-    #eventPlayer.startCamera(eventPlayer.getEyePosition() + eventPlayer.getFacingDirection() * -2, eventPlayer.getEyePosition(), 10)
-    if TitleData == null or CompMode or eventPlayer.PracticeToggle == 1 or eventPlayer.EditorOn or not eventPlayer.CurrentCheckpoint in TitleData[0]: 
+    if TitleData == null or CompMode or eventPlayer.PracticeToggle or eventPlayer.EditorOn or (not eventPlayer.CurrentCheckpoint in TitleData[0]): 
         return
     destroyInWorldText(eventPlayer.TitleStore)
     createInWorldText(getAllPlayers() if not eventPlayer.invis else null,TitleData[1][TitleData[0].index(eventPlayer.CurrentCheckpoint)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.CurrentCheckpoint)], SpecVisibility.DEFAULT)
     eventPlayer.TitleStore = getLastCreatedText()
 
-def Leaderboardupdate():
-    @Name "SUB | Leaderboard Update"
-    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-    del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-    SavedProgress.remove("{0}".format(eventPlayer))
-    # [i[0] for i in var1]   list of first element of each in var 1
-    # [ [name, seconds, prettytime] ]
-    if "{0}".format(eventPlayer) in [i[0] for i in LeaderBoardFull]: # you already have a time
-        if eventPlayer.Timer > [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)][0][1]: # new time worse
-            goto lb0
-        else: # new time better
-            LeaderBoardFull.remove( [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)])
-            LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)]] )
-            #async(CreateLeaderBoard(), AsyncBehavior.RESTART)
-            CreateLeaderBoard()
-    else: # you are not in list yet
-        if len(LeaderBoardFull) < 20: # board has room for more
-            LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)] ])
-            #async(CreateLeaderBoard(), AsyncBehavior.RESTART)
-            CreateLeaderBoard()
-        else: # 20 entries already
-            if LeaderBoardFull[19][1] < eventPlayer.Timer:  # your time lower then last entry
-                goto lb0
-            else: # you beat the last entry, thus replacing it
-                del LeaderBoardFull[19]
-                LeaderBoardFull.append( [["{0}".format(eventPlayer),eventPlayer.Timer, prettyTime(eventPlayer.Timer)]] )
-                #async(CreateLeaderBoard(), AsyncBehavior.RESTART)
-                CreateLeaderBoard()
-    lb0:
-
-
 def KILLBALL():
     @Name "SUB | Kill Orb Effects"
-    
-    if KillBallPositions == [] or hostPlayer.EditorOn == true:
+    if KillBallPositions == [] or hostPlayer.EditorOn:
         return
-    
     for TempIterator1 in range(0, len(KillBallPositions)):
         createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
         KillBallEffects.append(getLastCreatedEntity())
         wait()
 
-
 def pinball():
     @Name "SUB | Bounce Ball Effects"
-    
-    if BouncePositions == [] or hostPlayer.EditorOn == true:
+    if BouncePositions == [] or hostPlayer.EditorOn:
         return
-
-    /*
-    for TempIterator1 in range(0, len(BouncePositions)):
-        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], Effect.ORB, Color.ORANGE if BounceToggleLock[evalOnce(TempIterator1)] else Color.GREEN, BouncePositions[evalOnce(TempIterator1)], 1, EffectReeval.VISIBILITY_AND_COLOR)
-        BounceEffects.append(getLastCreatedEntity())
-    */
     for TempIterator1 in range(0, len(BouncePositions)):
         createEffect(
-            #[x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], 
             [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected], 
             Effect.ORB, 
             Color.ORANGE if BounceToggleLock[TempIterator1] else Color.GREEN, 
@@ -938,73 +820,61 @@ def pinball():
         BounceEffects.append(getLastCreatedEntity())
         wait()
 
-rule "Checkpoint | Arrived":
+rule "Arrive | Ground reset | traces":
     @Event eachPlayer
-    @Condition eventPlayer.isOnGround() == true
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    @Condition distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= 1.4
-    @Condition (eventPlayer.EditModeSelection >= 1 or eventPlayer.InvincibleToggle == 0) == true
-    @Condition eventPlayer.LockState == false
-    @Condition CompMode == false or CompTime > 0
-    eventPlayer.MovedCheckpoint = true
-    # kill player if not colleted the locks
-    /*
-    if len([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true]) > 0:
-        if len([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true and i in eventPlayer.LockCollected]) < len([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true]):
-            smallMessage(eventPlayer, "   ! collect ALL orange orbs to unlock !")
-            kill(eventPlayer, null)
-            return
-    */
-    if eventPlayer.BounceLockMax_Cache:
-        if len(eventPlayer.LockCollected)< eventPlayer.BounceLockMax_Cache:
-            smallMessage(eventPlayer, "   ! collect ALL orange orbs to unlock !")
-            kill(eventPlayer, null)
-            return
+    @Hero genji
+    @Condition eventPlayer.isOnGround()
+    @Condition eventPlayer.isAlive()
+    if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
+        
+        if (eventPlayer.isMoving() and eventPlayer.PracticeToggle == false and eventPlayer.invis == false and eventPlayer.EditorOn == false and CompMode == false):
+            # traces ----------------------------------------------------------------------------------------------------
+            eventPlayer.finishfxcache = [Color.RED, Color.ORANGE, Color.YELLOW, Color.LIME_GREEN, Color.GREEN, Color.TURQUOISE, Color.BLUE, Color.PURPLE, Color.VIOLET, Color.ROSE][(floor(getTotalTimeElapsed()*2))%10]
+            #eventPlayer.finishfxcache =  rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255)
+            wait(0.16)
+            # 1.6 - 0.2 in 0.2 steps
+            playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 1.4)
+            playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 1.2)
+            playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 1)
+            playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.8)
+            playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.6)
+            playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.4)
+            wait(0.128)     
+    elif eventPlayer.NotOnLastCp and eventPlayer.InvincibleToggle == false and (CompMode == false or CompTime > 0) and eventPlayer.LockState == false:
+        if distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= 1.4:
+            # arrived ----------------------------------------------------------------------------------------------------
+            eventPlayer.MovedCheckpoint = true
+            if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache: # kill player if not colleted the locks
+                smallMessage(eventPlayer, "   ! collect ALL orange orbs to unlock !")
+                kill(eventPlayer, null)
+                goto lbl_abc
+            eventPlayer.LockCollected = []
+            eventPlayer.CurrentCheckpoint += 1
+            UpdateCache()
+            eventPlayer.splitdisplay =  (eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer) - eventPlayer.splittime
+            wait()
+            playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
+            playEffect(eventPlayer if CompMode or eventPlayer.invis else getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
+            bigMessage(eventPlayer, "Arrived at {0} / {1}{2}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1, " - Split {}".format(eventPlayer.splitdisplay) if eventPlayer.splitson else ""))
+            wait()
+            UpdateTitle()
+            if eventPlayer.isUsingUltimate():
+                kill(eventPlayer, null)
+            if eventPlayer.PracticeToggle:
+                eventPlayer.splittime = eventPlayer.practicetimer
+                goto lbl_abc
+            
+            eventPlayer.splittime = eventPlayer.Timer
 
-    eventPlayer.LockCollected = []
-    eventPlayer.CurrentCheckpoint += 1
-    UpdateCache()
-    
-    playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
-    playEffect(eventPlayer if CompMode or eventPlayer.invis else getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
-    bigMessage(eventPlayer, "{0} {1}".format("Arrived at", "{0} / {1}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1)))
-    UpdateTitle()
-
-    if eventPlayer.PracticeToggle == 1:
-        eventPlayer.PracticeCheckpoint += 1
-        if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
-            goto lbl_0
-        if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
-            goto lbl_1
-    else:  # normal cp, but also runs when completed
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        SavedProgress.remove("{0}".format(eventPlayer))
-        SavedProgress.append(["{0}".format(eventPlayer), eventPlayer.CurrentCheckpoint, eventPlayer.Timer, eventPlayer, getTotalTimeElapsed(), 0, 0])
-        #save.append(["{0}".format(eventPlayer), eventPlayer.A, eventPlayer.D, eventPlayer, getTotalTimeElapsed(), 0, 0])
-    
-    lbl_1:
-    if eventPlayer.EditModeSelection < 1:
-        eventPlayer.setUltEnabled(false)
-        eventPlayer.setAbility1Enabled(false)
-    if eventPlayer.EditModeSelection >= 1:
-        return
-    if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1: # complete lvl
-        eventPlayer.setAbility1Enabled(true)
-        if eventPlayer.PracticeToggle != 1:
-            eventPlayer.setUltEnabled(true)
-            eventPlayer.setUltCharge(100)
-
-            stopChasingVariable(eventPlayer.Timer)
-            bigMessage(getAllPlayers(), "{0} {1}".format(eventPlayer, "Mission complete! Time {0}".format(prettyTime(eventPlayer.Timer))))
-            eventPlayer.PortalText = 2
-            Leaderboardupdate()
-            if CompMode:
-                if CompAtmpNum > 0:
+            if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1 and (not eventPlayer.EditorOn) and (not eventPlayer.PracticeToggle): # complete lvl
+                stopChasingVariable(eventPlayer.Timer)
+                stopChasingVariable(eventPlayer.practicetimer) 
+                wait()
+                bigMessage(getAllPlayers(), "{0} Mission complete! Time {1}".format(eventPlayer, prettyTime(eventPlayer.Timer)))
+                
+                DeleteSave()
+                Leaderboardupdate()
+                if CompMode and CompAtmpNum > 0:
                     if eventPlayer.AttemptCount == CompAtmpNum: 
                         CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = -1 
                         eventPlayer.AttemptCount = -1                     
@@ -1014,711 +884,141 @@ rule "Checkpoint | Arrived":
                         kill(eventPlayer,null)
                     else:
                         CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.AttemptCount + 1
-                        
-                
-    lbl_0:
+            else: # update save
+                DeleteSave()
+                MakeSave()
 
+        elif distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) > 1.4 and not touchground:
+            # ground reset ----------------------------------------------------------------------------------------------------
+            checkpointFailReset()
 
-rule "Checkpoint | Finish effects":
-    # rainbow drops
-    @Event eachPlayer
-    @Condition eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
-    @Condition eventPlayer.EditModeSelection < 1
-    @Condition eventPlayer.isMoving() == true
-    @Condition eventPlayer.TracesOff == false
-    @Condition eventPlayer.PracticeToggle != 1
-    @Condition not CompMode
-    #@Condition (eventPlayer.isMoving() == true or eventPlayer.isHoldingButton(Button.JUMP) == true) == true
-
-    # rgb((cosDeg(modeList * 360 - 0) + 0.5) * 255, (cosDeg(modeList * 360 - 120) + 0.5) * 255, (cosDeg(modeList * 360 - 240) + 0.5) * 255)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255), eventPlayer.getPosition(), 1.6)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255), eventPlayer.getPosition(), 1.4)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255), eventPlayer.getPosition(), 1.2)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255), eventPlayer.getPosition(), 1)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255), eventPlayer.getPosition(), 0.8)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255), eventPlayer.getPosition(), 0.6)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255), eventPlayer.getPosition(), 0.4)
-    playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255), eventPlayer.getPosition(), 0.2)
-    
-    wait(0.34)
+    lbl_abc:
+    wait(0.048)
     if RULE_CONDITION:
-        goto RULE_START
-
-
-
-
-rule "Preview orbs/portals":
-    @Event eachPlayer
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    @Condition eventPlayer.EditModeSelection < 1
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
-    @Condition not eventPlayer.isHoldingButton(Button.CROUCH)
-
-    wait(0.9, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.PreviewsArray = [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.PreviewsArray.append( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true])
-    
-    if len(eventPlayer.PreviewsArray) < 1 or eventPlayer.PreviewsArray == null: # test if this doesnt mes up with empty thigns being apended
-        wait()
-        return
-
-    eventPlayer.setMoveSpeed(0)
-    eventPlayer.PreviewsI = 0
-    eventPlayer.startCamera(
-        eventPlayer.PreviewsArray[eventPlayer.PreviewsI] + eventPlayer.getFacingDirection()*-3.5, # do distance check?
-        eventPlayer.PreviewsArray[eventPlayer.PreviewsI],
-        15
-    )
-
-    while eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isAlive():
-        if eventPlayer.getThrottle().x < -0.5:
-            if eventPlayer.PreviewsI + 1 >= len(eventPlayer.PreviewsArray):
-                eventPlayer.PreviewsI = 0
-            else:
-                eventPlayer.PreviewsI ++
-            waitUntil(eventPlayer.getThrottle().x > -0.5, 1)
-
-        elif eventPlayer.getThrottle().x > 0.5:
-            if eventPlayer.PreviewsI > 0:
-                eventPlayer.PreviewsI --
-            else:
-                eventPlayer.PreviewsI = len(eventPlayer.PreviewsArray) -1
-
-            waitUntil(eventPlayer.getThrottle().x < 0.5, 1)
- 
-        wait()
-    
-    eventPlayer.stopCamera()
-    eventPlayer.setMoveSpeed(100)
-
-
-rule "Toggle Traces":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
-    @Condition eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
-    @Condition eventPlayer.EditModeSelection < 1
-    @Condition eventPlayer.PracticeToggle != 1
-    @Condition not CompMode
-    
-    wait(1, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.TracesOff = not eventPlayer.TracesOff
-    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
-
-    smallMessage(eventPlayer, "   Traces {0}".format("off" if eventPlayer.TracesOff else "on"))    
-    playEffect(eventPlayer, DynamicEffect.DEBUFF_IMPACT_SOUND, null, eventPlayer, 100)
-
+        goto RULE_START               
+   
 rule "Kill Orb | Activate":
     @Event eachPlayer
-    @Hero genji
-    # @Condition eventPlayer.CurrentCheckpoint != 0
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    @Condition eventPlayer.InvincibleToggle == 0
-    # @Condition (KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[0])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[1])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[2])] == eventPlayer.CurrentCheckpoint or KillballCheckpoints[KillBallPositions.index(([player for player in KillBallPositions if distance(eventPlayer, player) <= KillBallRadii[KillBallPositions.index(player)]])[3])] == eventPlayer.CurrentCheckpoint) == true
     @Condition eventPlayer.KillPosition_Cache != []
-    @Condition (any([distance(i, eventPlayer) <= eventPlayer.KillRadii_Cache[eventPlayer.KillPosition_Cache.index(i)] for i in eventPlayer.KillPosition_Cache])) == true
-    # kill(eventPlayer, null)
+    @Condition not eventPlayer.InvincibleToggle
+    @Condition eventPlayer.NotOnLastCp
+    @Condition (any([distance(i, eventPlayer) <= eventPlayer.KillRadii_Cache[eventPlayer.KillPosition_Cache.index(i)] for i in eventPlayer.KillPosition_Cache]))
     checkpointFailReset()
 
 
 
-
-rule "Bounce Ball | Activate":
+rule "Bounce Ball / Orb | Activate":
     @Event eachPlayer
-    @Hero genji
-
-    # original
-    #@Condition BouncePadCheckpoints[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer, player) <= 1.2])] == eventPlayer.CurrentCheckpoint
-    # @Condition (any([distance(i, eventPlayer) < 1.2 and not (i in eventPlayer.LockCollected) and BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint for i in BouncePositions])) == true
-    # @Condition eventPlayer.CurrentCheckpoint != 0
     @Condition eventPlayer.BouncePosition_Cache != []
-    @Condition (any([distance(i, eventPlayer) < bounceorbdistance for i in eventPlayer.BouncePosition_Cache])) == true
+    #@Condition eventPlayer.NotOnLastCp # disabled coz editor
+    @Condition (any([distance(i, eventPlayer.getPosition() bounceoffset) < bounceorbdistance for i in eventPlayer.BouncePosition_Cache]))
     
     eventPlayer.bouncetouched = eventPlayer.BouncePosition_Cache.index( # cashe the touched bouncepad number
         sorted(
-            [i for i in eventPlayer.BouncePosition_Cache if 
-                distance(eventPlayer, i) < bounceorbdistance and 
-                # BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and
-                not (i in eventPlayer.LockCollected) 
-            ],lambda x: distance(eventPlayer, x)
+            [i for i in eventPlayer.BouncePosition_Cache if distance(eventPlayer bounceoffset, i ) < bounceorbdistance and not (i in eventPlayer.LockCollected) ],
+            lambda x: distance(eventPlayer, x)
             )[0]
         )
-    #A = sorted(A, lambda o: distance(vect(0, 0, 0), o))
 
-    #eventPlayer.applyImpulse(Vector.UP, BounceStrength[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+    if eventPlayer.bouncetouched == eventPlayer.bouncetouchedlast: # prevent same one trigering twice in a row
+        wait(0.24)
+        eventPlayer.bouncetouchedlast = -1 # -1 because null becomes 0 and thats a legit index
+        if RULE_CONDITION:
+            goto RULE_START
+        return #only return if no others in radius
+
+    eventPlayer.bouncetouchedlast = eventPlayer.bouncetouched 
+
     if eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched] != 0:
         eventPlayer.applyImpulse(Vector.UP, eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-    #eventPlayer.bounceindex = [i for i in BouncePadCheckpoints if i == eventPlayer.CurrentCheckpoint and distance(BouncePositions[], eventPlayer) < 2 ]
 
-    #if BounceToggleDash[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])] == true:
-    if eventPlayer.BounceDash_Cache[eventPlayer.bouncetouched]:
-        eventPlayer.setAbility1Enabled(true)
-        smallMessage(eventPlayer, "   Dash is ready")
-        playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
-
-    #if BounceToggleUlt[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])] == true:
-    if  eventPlayer.BounceUlt_Cache[eventPlayer.bouncetouched]:
+    if eventPlayer.BounceUlt_Cache[eventPlayer.bouncetouched]:
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
         smallMessage(eventPlayer, "   Ultimate is ready")
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
-    #if BounceToggleLock[BouncePositions.index([player for player in BouncePositions if distance(eventPlayer.getPosition(), player) <= 2])] == true:
     if eventPlayer.BounceLock_Cache[eventPlayer.bouncetouched]:
-        #if not [i for i in BouncePositions if distance(i, eventPlayer) < 2 and BounceToggleLock[BouncePositions.index(i)] == true and BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint][0] in eventPlayer.LockCollected:  
-            eventPlayer.LockCollected.append(eventPlayer.BouncePosition_Cache[eventPlayer.bouncetouched])
-            smallMessage(eventPlayer, "   orb has been collected")
-            playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
+        eventPlayer.LockCollected.append(eventPlayer.BouncePosition_Cache[eventPlayer.bouncetouched])
+        smallMessage(eventPlayer, "   orb has been collected")
+        playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
-    # used to check 2 meters on togles
+    if eventPlayer.BounceDash_Cache[eventPlayer.bouncetouched]:
+        if eventPlayer.isUsingAbility1():
+            waitUntil(not eventPlayer.isUsingAbility1(), 1)
+            wait(0.032) # wait til set false by check
+        eventPlayer.setAbility1Enabled(true)
+        smallMessage(eventPlayer, "   Dash is ready")
+        playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
+
+    wait(0.24)
+    if RULE_CONDITION:
+        goto RULE_START
+
+    eventPlayer.bouncetouchedlast = -1
 
 rule "Death Reset":
     @Event playerDied
-    @Condition eventPlayer.SpectateToggle != 1
-    @Condition len(CheckpointPositions) >= 2
+    @Condition not eventPlayer.SpectateToggle
     @Condition not eventPlayer.CompDone
-    eventPlayer.LockCollected = []
+    #@Condition len(CheckpointPositions) >= 2
+    
     eventPlayer.clearStatusEffect(Status.PHASED_OUT)
     eventPlayer.resurrect()
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
-
-
-
-
-rule "Ground Reset":
-    @Event eachPlayer
-    @Hero genji
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    @Condition len(CheckpointPositions) >= 2
-    @Condition eventPlayer.InvincibleToggle == 0
-    @Condition eventPlayer.SpectateToggle != 1
-    @Condition eventPlayer.isOnGround() == true   
-    @Condition eventPlayer.LockState == false 
-    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])) > 1.4
-    @Condition not touchground
-
     checkpointFailReset()
 
-
-rule "Player Effect":
+rule "Player Phase":
     @Event eachPlayer
-    @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.hasStatusEffect(Status.PHASED_OUT) == false
+    @Condition eventPlayer.isAlive()
     
     eventPlayer.setStatusEffect(null, Status.PHASED_OUT, 9999)
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
 
 
-
-rule "Ultimate Charge":
-    @Event eachPlayer
-    @Condition eventPlayer.getUltCharge() < 100
-    
-    eventPlayer.setUltCharge(100)
-
-
 rule "Player Leaves":
     @Event playerLeft
-
-    #if player's cur_checkpoint is 0, delete save info
-    if SavedProgress[SavedProgress.index(eventPlayer) - 2] == 0:
-        del SavedProgress[SavedProgress.index(eventPlayer) + 1]
-        del SavedProgress[SavedProgress.index(eventPlayer) + 1]
-        del SavedProgress[SavedProgress.index(eventPlayer) + 1]
-        del SavedProgress[SavedProgress.index(eventPlayer) - 1]
-        del SavedProgress[SavedProgress.index(eventPlayer) - 1]
-        del SavedProgress[SavedProgress.index(eventPlayer) - 1]
-        SavedProgress.remove(eventPlayer)
+    if SaveCp[SaveEnt.index(eventPlayer)] == 0: # delete if player didnt do first cp
+       DeleteSave()
     else:
-        if SavedProgress[SavedProgress.index(eventPlayer) - 2] >= len(CheckpointPositions) - 1:
-            goto lbl_0
-        if SavedProgress[SavedProgress.index(eventPlayer) + 3] == 1:
-            goto lbl_1
-        SavedProgress[SavedProgress.index(eventPlayer) - 1] = getTotalTimeElapsed() - (SavedProgress[SavedProgress.index(eventPlayer) + 1]) - (SavedProgress[SavedProgress.index(eventPlayer) + 2]) + (SavedProgress[SavedProgress.index(eventPlayer) - 1])
-        lbl_0:
-        lbl_1:
-        SavedProgress[SavedProgress.index(eventPlayer) + 2] = 0
-        SavedProgress[SavedProgress.index(eventPlayer) + 3] = 0
+        if SaveCp[SaveEnt.index(eventPlayer)] >= len(CheckpointPositions) - 1 or SavePauseEnabled[SaveEnt.index(eventPlayer)]: # level complete or ?
+            goto lbl_a
+        SaveTimer[SaveEnt.index(eventPlayer)]  = (
+            getTotalTimeElapsed() - 
+            SaveElapsed[SaveEnt.index(eventPlayer)]  - 
+            SavePauseTime[SaveEnt.index(eventPlayer)]  + 
+            SaveTimer[SaveEnt.index(eventPlayer)] 
+        )        
+        lbl_a:
+        SavePauseTime[SaveEnt.index(eventPlayer)] = 0
+        SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
 
 
-rule "Combo | Leaderboard Toggle | Melee toggle":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.MELEE)
-    @Condition eventPlayer.EditModeSelection < 1
-    #@Condition CompMode == false or not eventPlayer.CompDone 
-    wait(1, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.LeaderboardToggle = not eventPlayer.LeaderboardToggle
-
-
-rule "Combo | Restart Run | Crouch + Interact + Deflect":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
-    # @Condition eventPlayer.isUsingAbility1() == false if DashExploitToggle else true
-        
-    if CompMode:
-        if CompTime < 1 :
-            smallMessage(eventPlayer, "   The competition is over")
-            wait()
-            return
-        if eventPlayer.CompDone:
-            wait()
-            return
-        if CompRestartLimit and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
-            smallMessage(eventPlayer,"   Restart during run is disabled for this competition")
-            wait()
-            return
-        if CompAtmpNum > 0: 
-            if eventPlayer.AttemptCount == CompAtmpNum:
-                smallMessage(eventPlayer, "   You are on your last attempt")
-                wait()
-                return
-            if eventPlayer.AttemptCount == (-1):
-                smallMessage(eventPlayer, "   You are out of attempts")
-                wait()
-                return
-          
-            eventPlayer.AttemptCount ++
-            CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.AttemptCount                        
-
-    eventPlayer.LockState = true
-
-    if DashExploitToggle and eventPlayer.isUsingAbility1():
-        smallMessage(eventPlayer, "   Dash Start is banned!")
-        eventPlayer.cancelPrimaryAction()
-        waitUntil(eventPlayer.isOnGround(), 0.6)
-        eventPlayer.LockState = false
-        return
-
-    eventPlayer.flytoggle = null
-    eventPlayer.CurrentCheckpoint = 0  
-    eventPlayer.PracticeToggle = 0
-    eventPlayer.PracticeCheckpoint = 0
-    eventPlayer.InvincibleToggle = 0
-
-    if "{0}".format(eventPlayer) in SavedProgress:
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        del SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 1]
-        SavedProgress.remove("{0}".format(eventPlayer))
-    StartGame_Sub()
-    playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
-    wait()
-    eventPlayer.LockState = false
-    if CompMode:
-        wait(1)
-    else:
-        wait()
-
-rule "Combo | Enter Spectate | Hold Interact":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
-    @Condition not eventPlayer.isHoldingButton(Button.ABILITY_2) == true
-    @Condition eventPlayer.EditModeSelection < 1
-    @Condition not CompMode
-    wait(1, Wait.ABORT_WHEN_FALSE)
-    smallMessage(eventPlayer, "   Hold Interact again to turn off spectate mode")
-    if eventPlayer.isAlive():
-        if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
-            chase(eventPlayer.PauseTimer, 999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
-            SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 2] = eventPlayer.Timer
-            SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 4] = getTotalTimeElapsed()
-            SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 1
-        eventPlayer.setRespawnTime(9999)
-        eventPlayer.SpectateToggle = 1
-        stopChasingVariable(eventPlayer.Timer)
-        wait(0.2)
-        kill(eventPlayer, null)
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
-    else:
-        if eventPlayer.EditModeSelection >= 1:
-            goto lbl_0
-        eventPlayer.respawn()
-        eventPlayer.SpectateToggle = 0
-        lbl_0:
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
-        if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
-            goto lbl_1
-        eventPlayer.setUltEnabled(false)
-        eventPlayer.setAbility1Enabled(false)
-        if eventPlayer.PracticeToggle == 1:
-            goto lbl_1
-        chase(eventPlayer.Timer, 10000, rate=1, ChaseReeval.DESTINATION_AND_RATE)
-        lbl_1:
-        eventPlayer.setRespawnTime(0)
-        eventPlayer.InvincibleToggle = 0
-        eventPlayer.LockCollected = []
-        if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
-            stopChasingVariable(eventPlayer.PauseTimer)
-            SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 5] = eventPlayer.PauseTimer
-            eventPlayer.PauseTimer = 0
-            SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 0
-
-
-rule "Combo | Toggle Invincible Mode | Melee + Reload":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
-    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
-    @Condition eventPlayer.isUsingAbility1() == false
-    #@Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    @Condition eventPlayer.isAlive() == true
-    @Condition eventPlayer.isUsingUltimate() == false
-    @Condition CompMode == false or not eventPlayer.CompDone 
-    eventPlayer.LockCollected = []
-    eventPlayer.flytoggle = null
-    if eventPlayer.InvincibleToggle == 0:
-        if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
-            return
-        chase(eventPlayer.PauseTimer, 999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
-        SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 2] = eventPlayer.Timer
-        SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 4] = getTotalTimeElapsed()
-        SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 1
-        stopChasingVariable(eventPlayer.Timer)
-        bigMessage(eventPlayer, "Invincible mode")
-        eventPlayer.flytoggle = null
-        eventPlayer.setUltEnabled(true)
-        eventPlayer.setUltCharge(100)
-        eventPlayer.setAbility1Enabled(true)
-        wait(0.2)
-        eventPlayer.InvincibleToggle = 1
-    
-    else:
-        eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], true)
-        if eventPlayer.EditModeSelection >= 1:
-            goto lbl_1
-        eventPlayer.setUltEnabled(false)
-        eventPlayer.setAbility1Enabled(false)
-        lbl_1:
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
-        wait(0.1)
-        eventPlayer.InvincibleToggle = 0
-        if eventPlayer.PracticeToggle == 1:
-            bigMessage(eventPlayer, "Practice mode")
-        else:
-            bigMessage(eventPlayer, "Normal mode")
-            chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.DESTINATION_AND_RATE)
-            stopChasingVariable(eventPlayer.PauseTimer)
-            SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 5] = eventPlayer.PauseTimer
-            eventPlayer.PauseTimer = 0
-            SavedProgress[SavedProgress.index("{0}".format(eventPlayer)) + 6] = 0
-        eventPlayer.stopForcingPosition()
-        eventPlayer.flytoggle = null
-        
-
-
-rule "Combo | Toggle Practice Mode | Melee + Ultimate":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
-    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
-    @Condition eventPlayer.EditModeSelection < 1
-    @Condition eventPlayer.isUsingAbility1() == false
-    @Condition eventPlayer.CurrentCheckpoint <= len(CheckpointPositions) - 1
-    #@Condition eventPlayer.InvincibleToggle != 1
-    @Condition eventPlayer.isAlive() == true
-    @Condition not CompMode 
-    if eventPlayer.InvincibleToggle == 1:
-        smallMessage(eventPlayer, "   Cannot leave practice mode while also in invincible mode")
-        wait()
-        return
-
-    eventPlayer.LockState = true
-    #waitUntil(eventPlayer.isUsingUltimate() == false or eventPlayer.PracticeToggle == 0, 3)
-    if eventPlayer.isUsingUltimate():
-        kill(eventPlayer, null)
-      
-    wait(0.16)
-    /*
-    eventPlayer.startForcingPosition(
-        CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint] 
-        if eventPlayer.PracticeToggle == 1 else 
-        CheckpointPositions[eventPlayer.CurrentCheckpoint], true
-    )
-    */
-    
-    if eventPlayer.PracticeToggle == 0:
-        eventPlayer.startForcingPosition(
-            CheckpointPositions[eventPlayer.CurrentCheckpoint] 
-            if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) == 0 else
-            CheckpointPositions[eventPlayer.CurrentCheckpoint][1]  
-                 , true
-        )
-        stopChasingVariable(eventPlayer.Timer)
-        bigMessage(eventPlayer, "Practice mode")
-        eventPlayer.stopForcingPosition()
-        wait(0.2)
-        eventPlayer.PracticeToggle = 1
-    else:
-         eventPlayer.startForcingPosition(
-            CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint] 
-            if len(CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint]) == 0 else
-            CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint][1]
-            , true
-        )
-        checkpointFailReset()
-        eventPlayer.setAbility1Enabled(false)
-        #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint])
-        eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint
-        eventPlayer.PracticeCheckpoint = 0
-        eventPlayer.LockCollected = []
-        UpdateCache()
-        wait(0.1)
-        eventPlayer.PracticeToggle = 0
-        bigMessage(eventPlayer, "Normal mode")
-        if eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
-            chase(eventPlayer.Timer, abs(9999999), rate=1, ChaseReeval.DESTINATION_AND_RATE)
-        else:
-            eventPlayer.setUltEnabled(true)
-            eventPlayer.setUltCharge(100)
-            eventPlayer.setAbility1Enabled(true)
-        eventPlayer.stopForcingPosition()
-
-    wait(0.3)
-    eventPlayer.LockState = false
-
-rule "Combo | Practice Restart | Interact":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
-    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
-    @Condition eventPlayer.isHoldingButton(Button.MELEE) == false
-    @Condition eventPlayer.isAlive() == true or eventPlayer.SpectateToggle != 0
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == false
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
-    @Condition eventPlayer.EditModeSelection < 1
-    @Condition eventPlayer.PracticeToggle
-    #@Condition eventPlayer.SpectateToggle != 1
-    #@Condition eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint <= 0 == true
-
-    
-    if eventPlayer.SpectateToggle != 0:
-        waitUntil(eventPlayer.isAlive(), 9999)
-        waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), 2)
-        return
-    
-    waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), 0.9)
-    if eventPlayer.isHoldingButton(Button.INTERACT):
-        return
-    
-    if eventPlayer.isUsingUltimate():
-        kill(eventPlayer, null)
-    if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
-        Sub0()
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint])
-    #broken
-    #eventPlayer.PracticeCheckpoint = eventPlayer.CurrentCheckpoint
-    eventPlayer.CurrentCheckpoint = eventPlayer.CurrentCheckpoint - eventPlayer.PracticeCheckpoint
-    #broken
-    #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
-    eventPlayer.PracticeCheckpoint = 0
-    eventPlayer.setStatusEffect(null, Status.ROOTED, 0.2)
-    eventPlayer.LockCollected = []
-    UpdateCache()
-  
-
-rule "Combo | Quick Reset | Reload, Hold Reload to Enable":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
-    #@Condition eventPlayer.EditModeSelection < 1
-    
-    if eventPlayer.isHoldingButton(Button.MELEE):
-        return
-    if eventPlayer.QuickRestartToggle == true:
-        eventPlayer.LockCollected = []
-        if eventPlayer.isUsingUltimate():
-            kill(eventPlayer, null)
-        eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint], true)
-        eventPlayer.flytoggle = null
-        if eventPlayer.EditModeSelection >= 1 or eventPlayer.InvincibleToggle == 1 or eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
-            goto lbl_0
-        eventPlayer.setUltEnabled(false)
-        eventPlayer.setAbility1Enabled(false)
-        lbl_0:
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint][1] if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[eventPlayer.CurrentCheckpoint])
-        wait(0.1)
-        eventPlayer.stopForcingPosition()
-        eventPlayer.flytoggle = null
-    wait(1, Wait.ABORT_WHEN_FALSE)
-    if eventPlayer.QuickRestartToggle == false:
-        eventPlayer.QuickRestartToggle = true
-        bigMessage(eventPlayer, "Quick reset is enabled")
-        playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
-    elif eventPlayer.QuickRestartToggle == true:
-        playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
-        eventPlayer.QuickRestartToggle = false
-        bigMessage(eventPlayer, "Quick reset is disabled")
-
-
-rule "Combo | Invisible Toggle | Hold Deflect":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
-    @Condition eventPlayer.EditModeSelection < 1
-    @Condition not CompMode
-
-    wait(1, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.invis = not eventPlayer.invis
-    eventPlayer.setInvisibility(Invis.NONE)
-    if eventPlayer.invis:
-        eventPlayer.setInvisibility(Invis.ALL)
-
-    smallMessage(eventPlayer, "   Invisible {0}".format("on" if eventPlayer.invis else "off"))    
-    playEffect(eventPlayer, DynamicEffect.DEBUFF_IMPACT_SOUND, null, eventPlayer, 100)
-
-
-rule "Limit Ultimate":
-    @Event eachPlayer
-    @Hero genji
-    #The function of this rule is: ULT can only be used once when running the map
-    @Condition eventPlayer.isUsingUltimate() == true
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    @Condition eventPlayer.EditModeSelection < 1
-    @Condition eventPlayer.InvincibleToggle == 0
-    
-    eventPlayer.setUltEnabled(false)
-
-
-rule "Limit Dash":
-    @Event eachPlayer
-    #The function of this rule is: DASH can only be used once when running the map
-    @Condition eventPlayer.isUsingAbility1() == true
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    @Condition eventPlayer.EditModeSelection < 1
-    @Condition eventPlayer.InvincibleToggle == 0
-    
-    eventPlayer.setAbility1Enabled(false)
-
-
-rule "Give Blade":
-    @Event eachPlayer
-    @Condition eventPlayer.isOnGround() == true
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    @Condition eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints == true
-    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) > 1 else CheckpointPositions[eventPlayer.CurrentCheckpoint])) <= 1.4
-    @Condition eventPlayer.isUsingUltimate() == false
-    
-    wait(0.1)
-    if eventPlayer.isUsingUltimate():
-        return
-    eventPlayer.setUltEnabled(true)
-    eventPlayer.setUltCharge(100)
-    smallMessage(eventPlayer, "   Ultimate is ready")
-
-
-rule "Give Dash":
-    @Event eachPlayer
-    @Condition eventPlayer.isOnGround() == true
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1
-    #@Condition distance(eventPlayer, A[eventPlayer.A]) <= 1.4
-    @Condition eventPlayer.CurrentCheckpoint in DashEnabledCheckpoints == true
-    @Condition (distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) > 1 else CheckpointPositions[eventPlayer.CurrentCheckpoint])) <= 1.4
-    @Condition eventPlayer.isUsingAbility1() == false
-    
-    eventPlayer.setAbility1Enabled(true)
-    smallMessage(eventPlayer, "   Dash is ready")
-
-
-
-rule "Checkpoint | Skip | Crouch + Primary/Secondary Fire":
-    @Event eachPlayer
-    @Condition eventPlayer.LockState == false
-    @Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle == 1
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
-    @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
-    
-    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-        if eventPlayer.CurrentCheckpoint == 0:
-            return
-        eventPlayer.LockState = true
-        #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
-        eventPlayer.CurrentCheckpoint -= 1
-        if eventPlayer.PracticeToggle == 1:
-            eventPlayer.PracticeCheckpoint -= 1
-        # wait(0.16)
-    else:
-        if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
-            return
-        eventPlayer.LockState = true
-
-        #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
-        eventPlayer.CurrentCheckpoint += 1
-        if eventPlayer.PracticeToggle == 1:
-            eventPlayer.PracticeCheckpoint += 1
-    wait()
-    checkpointFailReset()
-    wait(0.064)
-    eventPlayer.LockState = false
-    eventPlayer.MovedCheckpoint = true
-    UpdateCache() 
-    waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.32)
-    #wait(0.5)  
-
-/*
-globalvar itemp
-rule "leaderboard test bots":
-
-    #wait(40)
-    wait(8) # wait for other entities to be created
-    for itemp in range(19):
-     
-        createDummy(Hero.GENJI, Team.1, -1, null, null)
-        wait(0.1)
-        getLastCreatedEntity().startForcingName("bot number: {0}".format(len([i for i in getAllPlayers() if i.isDummy() and i.getCurrentHero() == Hero.GENJI]) ))
-        
-  
-    itemp = 9999
-
-rule "leaderboard test ai ":
-    @Event eachPlayer
-    @Hero genji
-    @Condition eventPlayer.isDummy()
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) #- 1
-    @Condition itemp == 9999
- 
-    # jump each ######################
-    ###wait(0.2 + eventPlayer.getSlot()/30)
-    #waitUntil(eventPlayer.isOnGround(),1)
-    #wait( eventPlayer.getSlot()/30)
-    #eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]+Vector.UP)
-    #if RULE_CONDITION:
-    #    goto RULE_START
-    
-    
-    # jump to last ###############################
-    eventPlayer.forceButtonPress(Button.INTERACT)
-    wait(3 + eventPlayer.getSlot()*2)
-    #wait(1)
-    eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 2
-    checkpointFailReset()
-    wait(1)
-    #wait(60)
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint+1]+ Vector.UP) # teleport not needed
-*/
-
+#!include "commands.opy"     
 
 #!include "mechanics.opy"
 
 #!include "addons.opy"
 
-
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
-    @Condition isGameInProgress() == true
+    @Condition isGameInProgress()
     waitUntil(any([x.hasSpawned() for x in getAllPlayers()]), 99999)
     #Init dummy at arbitrary location
-    createDummy(Hero.DVA, [player for player in getAllPlayers() if player.hasSpawned() and not player.isDummy()][0].getTeam(), -1, vect(0, 200, 0), vect(0, 0, 0))
+    # previously -1 slot, now extra dummy enabled to spawn outside of player slot to prevent overwrite of slot
+    createDummy(Hero.DVA, [player for player in getAllPlayers() if player.hasSpawned() and not player.isDummy()][0].getTeam(), 20, vect(0, 200, 0), vect(0, 0, 0))
     MsDestructo = getLastCreatedEntity()
-    MsDestructo.startForcingName("Ms. Destructo")
+    #MsDestructo.startForcingName("Ms. Destructo") #disabled because translated this line gives errors
     wait(1)
-    MsDestructo.setInvisibility(Invis.ALL)
+    #MsDestructo.setInvisibility(Invis.ALL)
     MsDestructo.MapVectorArray = [
     [
         0,
         Map.HANAMURA,
-        Map.HANAMURA_WINTER,
+        # Map.HANAMURA_WINTER,
         Map.HORIZON_LUNAR_COLONY,
         Map.PARIS,
-        # Map.TEMPLE_OF_ANUBIS,
+        Map.TEMPLE_OF_ANUBIS,
         Map.DORADO,
         Map.HAVANA,
         Map.JUNKERTOWN,
@@ -1726,58 +1026,66 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         Map.ROUTE66,
         Map.WATCHPOINT_GIBRALTAR,
         Map.BLIZZ_WORLD,
-        Map.BLIZZ_WORLD_WINTER,
+        # Map.BLIZZ_WORLD_WINTER,
         Map.EICHENWALDE,
-        Map.EICHENWALDE_HALLOWEEN,
+        # Map.EICHENWALDE_HALLOWEEN,
         Map.HOLLYWOOD,
         # Map.HOLLYWOOD_HALLOWEEN,
         Map.KINGS_ROW,
-        Map.KINGS_ROW_WINTER,
-        # Map.NUMBANI,
+        # Map.KINGS_ROW_WINTER,
+        Map.NUMBANI,
         Map.AYUTTHAYA,
-        Map.BUSAN_DOWNTOWN_LNY,
-        Map.BUSAN_SANCTUARY_LNY,
-        Map.ILIOS_LIGHTHOUSE,
+        # Map.BUSAN_DOWNTOWN_LNY,
+        # Map.BUSAN_SANCTUARY_LNY,
+        # Map.ILIOS_LIGHTHOUSE,
         # Map.ILIOS_RUINS,
-        Map.ILIOS_WELL,
-        Map.LIJIANG_CONTROL_CENTER,
-        Map.LIJIANG_CONTROL_CENTER_LNY,
-        Map.LIJIANG_GARDEN,
-        Map.LIJIANG_GARDEN_LNY,
-        Map.LIJIANG_NIGHT_MARKET,
-        Map.LIJIANG_NIGHT_MARKET_LNY,
-        Map.NEPAL_SANCTUM,
-        Map.NEPAL_SHRINE,
-        Map.NEPAL_VILLAGE,
+        # Map.ILIOS_WELL,
+        # Map.LIJIANG_CONTROL_CENTER,
+        # Map.LIJIANG_CONTROL_CENTER_LNY,
+        # Map.LIJIANG_GARDEN,
+        # Map.LIJIANG_GARDEN_LNY,
+        # Map.LIJIANG_NIGHT_MARKET,
+        # Map.LIJIANG_NIGHT_MARKET_LNY,
+        # Map.NEPAL_SANCTUM,
+        # Map.NEPAL_SHRINE,
+        # Map.NEPAL_VILLAGE,
         # Map.NEPAL_VILLAGE_WINTER,
-        Map.OASIS_CITY_CENTER,
-        Map.OASIS_GARDENS,
-        Map.OASIS_UNIVERSITY,
+        # Map.OASIS_CITY_CENTER,
+        # Map.OASIS_GARDENS,
+        # Map.OASIS_UNIVERSITY,
         Map.BLACK_FOREST,
-        Map.BLACK_FOREST_WINTER,
+        # Map.BLACK_FOREST_WINTER,
         Map.CASTILLO,
-        # Map.ECOPOINT_ANTARCTICA,
+        Map.ECOPOINT_ANTARCTICA,
         # Map.ECOPOINT_ANTARCTICA_WINTER,
         Map.CHATEAU_GUILLARD,
-        Map.CHATEAU_GUILLARD_HALLOWEEN,
+        # Map.CHATEAU_GUILLARD_HALLOWEEN,
         Map.KANEZAKA,
-        # Map.NECROPOLIS,
+        Map.NECROPOLIS,
         Map.PETRA,
         Map.VOLSKAYA,
         Map.PRACTICE_RANGE,
         Map.ILIOS,
         Map.BUSAN,
         Map.LIJIANG_TOWER,
-        Map.LIJIANG_TOWER_LNY,
+        # Map.LIJIANG_TOWER_LNY,
         Map.NEPAL,
         Map.OASIS,
-        Map.MALEVENTO
-    ],  # 
+        Map.MALEVENTO,
+
+        Map.CIRCUIT_ROYAL,
+        Map.ESPERANCA,
+        Map.NEW_QUEEN_STREET,
+        Map.PARAISO,
+        Map.COLOSSEO,
+        Map.MIDTOWN
+
+    ],  #
         [vect(15.759, 30.576, -27.201)],  # Map.HANAMURA,
-        [vect(15.759, 30.576, -27.201)],  # Map.HANAMURA_WINTER,
+        # [vect(15.759, 30.576, -27.201)],  # Map.HANAMURA_WINTER,
         [vect(31.759, 40.003, -59.476)],  # Map.HORIZON_LUNAR_COLONY,
         [vect(-54.508, 40.179, -10.866)],  # Map.PARIS,
-        # [vect(-26.78, 23.366, 40.284)],  # Map.TEMPLE_OF_ANUBIS,
+        [vect(-26.78, 23.366, 40.284)],  # Map.TEMPLE_OF_ANUBIS,
         [vect(69.418, 42.103, -17.712)],  # Map.DORADO,
         [vect(9.382, 38.635, -81.276)],  # Map.HAVANA,
         [vect(9.382, 38.635, -81.276)],  # Map.JUNKERTOWN,
@@ -1785,55 +1093,60 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         [vect(30.313, 28.237, -16.925)],  # Map.ROUTE66,
         [vect(73.985, 26.198, -109.338)],  # Map.WATCHPOINT_GIBRALTAR,
         [vect(-21.03, 35.127, 88.381)],  # Map.BLIZZ_WORLD,
-        [vect(-21.03, 35.127, 88.381)],  # Map.BLIZZ_WORLD_WINTER,
+        # [vect(-21.03, 35.127, 88.381)],  # Map.BLIZZ_WORLD_WINTER,
         [vect(54.798, 40.964, -82.78)],  # Map.EICHENWALDE,
-        [vect(54.798, 40.964, -82.78)],  # Map.EICHENWALDE_HALLOWEEN,
+        # [vect(54.798, 40.964, -82.78)],  # Map.EICHENWALDE_HALLOWEEN,
         [vect(-0.355, 28.167, -22.396)],  # Map.HOLLYWOOD,
         # [vect(-0.355, 28.167, -22.396)],  # Map.HOLLYWOOD_HALLOWEEN,
         [vect(-56.869, 24.061, -32.132)],  # Map.KINGS_ROW,
-        [vect(-56.869, 24.061, -32.132)],  # Map.KINGS_ROW_WINTER,
-        # [vect(105.299, 22.764, 14.89)],  # Map.NUMBANI,
+        # [vect(-56.869, 24.061, -32.132)],  # Map.KINGS_ROW_WINTER,
+        [vect(105.299, 22.764, 14.89)],  # Map.NUMBANI,
         [vect(16.965, 26.541, -7.13)],  # Map.AYUTTHAYA,
-        [vect(51.885, 37.172, -113.654)],  # Map.BUSAN_DOWNTOWN_LNY,
-        [vect(-329.934, 56.136, 149.839)],  # Map.BUSAN_SANCTUARY_LNY,
-        [vect(322.988, 15.716, -37.732)],  # Map.ILIOS_LIGHTHOUSE,
+        # [vect(51.885, 37.172, -113.654)],  # Map.BUSAN_DOWNTOWN_LNY,
+        # [vect(-329.934, 56.136, 149.839)],  # Map.BUSAN_SANCTUARY_LNY,
+        # [vect(322.988, 15.716, -37.732)],  # Map.ILIOS_LIGHTHOUSE,
         # [vect(27.711, 87.241, -161.298)],  # Map.ILIOS_RUINS,
-        [vect(-223.895, 34.756, 0.89)],  # Map.ILIOS_WELL,
-        [vect(-5.808, 324.398, 282.523)],  # Map.LIJIANG_CONTROL_CENTER,
-        [vect(-5.808, 324.398, 282.523)],  # Map.LIJIANG_CONTROL_CENTER_LNY,
-        [vect(-0.414, 156.197, 148.681)],  # Map.LIJIANG_GARDEN,
-        [vect(-0.414, 156.197, 148.681)],  # Map.LIJIANG_GARDEN_LNY,
-        [vect(-0.381, 53.736, -33.335)],  # Map.LIJIANG_NIGHT_MARKET,
-        [vect(-0.381, 53.736, -33.335)],  # Map.LIJIANG_NIGHT_MARKET_LNY,
-        [vect(83.1, 178.926, 0.593)],  # Map.NEPAL_SANCTUM,
-        [vect(-49.803, 63.29, -0.413)],  # Map.NEPAL_SHRINE,
-        [vect(-184.659, -38.73, -0.783)],  # Map.NEPAL_VILLAGE,
+        # [vect(-223.895, 34.756, 0.89)],  # Map.ILIOS_WELL,
+        # [vect(-5.808, 324.398, 282.523)],  # Map.LIJIANG_CONTROL_CENTER,
+        # [vect(-5.808, 324.398, 282.523)],  # Map.LIJIANG_CONTROL_CENTER_LNY,
+        # [vect(-0.414, 156.197, 148.681)],  # Map.LIJIANG_GARDEN,
+        # [vect(-0.414, 156.197, 148.681)],  # Map.LIJIANG_GARDEN_LNY,
+        # [vect(-0.381, 53.736, -33.335)],  # Map.LIJIANG_NIGHT_MARKET,
+        # [vect(-0.381, 53.736, -33.335)],  # Map.LIJIANG_NIGHT_MARKET_LNY,
+        # [vect(83.1, 178.926, 0.593)],  # Map.NEPAL_SANCTUM,
+        # [vect(-49.803, 63.29, -0.413)],  # Map.NEPAL_SHRINE,
+        # [vect(-184.659, -38.73, -0.783)],  # Map.NEPAL_VILLAGE,
         # [vect(-184.659, -38.73, -0.783)],  # Map.NEPAL_VILLAGE_WINTER,
-        [vect(150.125, 30.619, 251.966)],  # Map.OASIS_CITY_CENTER,
-        [vect(134.888, 36.76, -240.736)],  # Map.OASIS_GARDENS,
-        [vect(-195.549, 60.35, -0.098)],  # Map.OASIS_UNIVERSITY,
+        # [vect(150.125, 30.619, 251.966)],  # Map.OASIS_CITY_CENTER,
+        # [vect(134.888, 36.76, -240.736)],  # Map.OASIS_GARDENS,
+        # [vect(-195.549, 60.35, -0.098)],  # Map.OASIS_UNIVERSITY,
         [vect(-9.622, 44.751, 5.635)],  # Map.BLACK_FOREST,
-        [vect(-9.622, 44.751, 5.635)],  # Map.BLACK_FOREST_WINTER,
+        # [vect(-9.622, 44.751, 5.635)],  # Map.BLACK_FOREST_WINTER,
         [vect(-100.828, 76.566, 60.021)],  # Map.CASTILLO,
-        # [vect(-6.186, 35.564, 1.378)],  # Map.ECOPOINT_ANTARCTICA,
+        [vect(-6.186, 35.564, 1.378)],  # Map.ECOPOINT_ANTARCTICA,
         # [vect(-6.186, 35.564, 1.378)],  # Map.ECOPOINT_ANTARCTICA_WINTER,
         [vect(200.414, 82.412, 78.813)],  # Map.CHATEAU_GUILLARD,
-        [vect(200.414, 82.412, 78.813)],  # Map.CHATEAU_GUILLARD_HALLOWEEN,
+        # [vect(200.414, 82.412, 78.813)],  # Map.CHATEAU_GUILLARD_HALLOWEEN,
         [vect(-36.319, 32.305, 0.472)],  # Map.KANEZAKA,
-        # [vect(-1.144, 47.168, -2.946)],  # Map.NECROPOLIS,
+        [vect(-1.144, 47.168, -2.946)],  # Map.NECROPOLIS,
         [vect(9.678, 28.313, 13.4)],  # Map.PETRA,
         [vect(-49.147, 22.344, 76.844)],  # Map.VOLSKAYA,
         [vect(54.948, 50.769, 3.93)],  # Map.PRACTICE_RANGE,
         [vect(322.988, 40, -37.732), vect(27.711, 100, -161.298), vect(-223.895, 50, 0.89)], # Map.ILIOS,
         [vect(51.885, 37.172, -113.654), vect(-329.934, 56.136, 149.839), vect(227.21, 43.353, 252.64)],  # Map.BUSAN,
         [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)],  # Map.LIJIANG_TOWER,
-        [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)],  # Map.LIJIANG_TOWER_LNY,
+        # [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)],  # Map.LIJIANG_TOWER_LNY,
         [vect(83.1, 178.926, 0.593), vect(-49.803, 63.29, -0.413), vect(-184.659, -38.73, -0.783)],  # Map.NEPAL,
         [vect(150.125, 30.619, 251.966), vect(134.888, 36.76, -240.736), vect(-195.549, 60.35, -0.098)],  # Map.OASIS,
-        [vect(17.808, 35.955, 17.505)]  # Map.MALEVENTO
+        [vect(17.808, 35.955, 17.505)],  # Map.MALEVENTO
+        
+        [vect(13, 61, -37)], # Map.CIRCUIT_ROYAL
+        [vect(0,50,0)], # Map.ESPERANCA
+        [vect(0,35,25), vect(0,8, 23.77)], # Map.NEW_QUEEN_STREET
+        [vect(-29, 40, -36.9)], #Map.PARAISO
+        [vect(0,40,0)], # Map.COLOSSEO
+        [vect(49.3, 45, -2.83)] # Mid town
     ]
-
-
 
     for MsDestructo.ArrayIterator in range(len(MsDestructo.MapVectorArray[MsDestructo.MapVectorArray[0].index(getCurrentMap())])):
         MsDestructo.startForcingPosition(MsDestructo.MapVectorArray[MsDestructo.MapVectorArray.index(getCurrentMap())][MsDestructo.ArrayIterator], true)
@@ -1851,6 +1164,6 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     MsDestructo.MapVectorArray = 0
     MsDestructo.ArrayIterator = 0
     MsDestructo = 0
-
-
-
+ 
+# enable/disable the include via defines
+testaitoggle 

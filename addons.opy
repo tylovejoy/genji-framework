@@ -4,172 +4,90 @@ rule "------------------------------------------------------------------------ A
     @Delimiter
     @Disabled
 
+/*
+text per cp
+rule "changinghudrule":
+       
+    hudHeader(
+        getAllPlayers(), 
+        "Text for checkpoint 1" if localPlayer.CurrentCheckpoint == 1 else
+        "Text for checkpoint 3" if localPlayer.CurrentCheckpoint == 3 else
+        "Text for checkpoint 4" if localPlayer.CurrentCheckpoint == 4 else
+        "", 
+        HudPosition.TOP, 
+        -4,
+        Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+    )
+*/
+ #HO.add_custommsg1, 
 
-rule "Add Blade to Checkpoint <---- EDIT ME":
+rule "Addon | Add Blade to Checkpoint <---- EDIT ME":
     @Disabled
     #Change "-1" to certain Checkpoints' number. For example if you want to add Blade to Checkpoint 2 and 6 change one of "-1" to 2 and other "-1" to 6
     wait(1)
     BladeEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
-
-
-rule "Add Dash to Checkpoint <---- EDIT ME":
+rule "Addon | Add Dash to Checkpoint <---- EDIT ME":
     @Disabled
     #Change "-1" to certain Checkpoints' number. For example if you want to add Dash to Checkpoint 7 and 1 change one of "-1" to 7 and other "-1" to 1
     wait(1)
     DashEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
-
-
-
-rule "Title Data <---- EDIT ME":
+    
+rule "Addon | Title Data <---- EDIT ME":
     @Disabled
     # checkpoint number
     TitleData[0] = [
-    0,
-    10,
-    20,
-    30,
-    40,
-    50
+        0, 
+        10,
+        20,
+        30,
+        40,
+        50
     ]
 
     # title
     TitleData[1] = [
-    "Bunny",
-    "Jumper",
-    "Ninja",
-    "Pro",
-    "Expert",
-    "Master"
+        "Bunny",
+        "Jumper",
+        "Ninja",
+        "Pro",
+        "Expert",
+        "Master"
     ]
 
     # color
     TitleData[2] = [
-    Color.LIME_GREEN,
-    Color.WHITE,
-    Color.YELLOW,
-    Color.ORANGE,
-    Color.PURPLE,
-    Color.RED
+        Color.LIME_GREEN,
+        Color.WHITE,
+        Color.YELLOW,
+        Color.ORANGE,
+        Color.PURPLE,
+        Color.RED
     ]
 
-/*
-rule "Portal 1 -> 2 <---- EDIT ME":
+rule "Addon | HUD text for certain Checkpoints <---- EDIT ME":
     @Disabled
-    @Event eachPlayer
-    #Modify vector (0, 0, 0) to start teleport position
-    @Condition distance(eventPlayer, vect(0, 0, 0)) <= 1.4
-    #Modify "-1" to the number of levels of the portal checkpoint
-    @Condition (eventPlayer.CurrentCheckpoint == -1 or eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1) == true
-
-    #Modify the vector (0, 0, 0) to the position where the teleport ends
-    eventPlayer.teleport(vect(0, 0, 0))
-    #If you don't want to find the coordinates, send it directly to checkpoint 0
-    eventPlayer.teleport(CheckpointPositions[0])
-
-rule "Portal 2 -> 3 <---- EDIT ME":
+    wait(0.5)
+    # in CpHudText fill in text
+    # in CpHudCp fill in the at wich to display
+    # the example fill shows a text for cp 1 and cp 3
+    CpHudText = ["text cp 1","text cp 3"]
+    CpHudCp = [1, 3]
+    
+rule "Addon | In world text for certain Checkpoints <---- EDIT ME":
     @Disabled
-    @Event eachPlayer
-    #Modify vector (0, 0, 0) to start teleport position
-    @Condition distance(eventPlayer, vect(0, 0, 0)) <= 1.4
-    #Modify "-1" to the number of levels of the portal checkpoint
-    @Condition (eventPlayer.CurrentCheckpoint == -1 or eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1) == true
+    wait(0.5)
+    # in CpIwtText fill in text
+    # in CpIwtCp fill in cp at wich to display
+    # in CpIwtPos fill in the vector
+    # the example fill shows a text for cp 1 and cp 3
+    CpIwtText = ["text cp 1","text cp 3"]
+    CpIwtCp = [1, 3]
+    CpIwtPos = [vect(0,0,0), vect(0,0,0)]
+    # color is for all, not per cp
+    CpIwtColor = Color.LIME_GREEN
 
-    #Modify the vector (0, 0, 0) to the position where the teleport ends
-    eventPlayer.teleport(vect(0, 0, 0))
-    #If you don't want to find the coordinates, send it directly to checkpoint 0
-    eventPlayer.teleport(CheckpointPositions[0])
-
-rule "Portal 3 -> 1 <---- EDIT ME":
-    @Disabled
-    @Event eachPlayer
-    #Modify vector (0, 0, 0) to start teleport position
-    @Condition distance(eventPlayer, vect(0, 0, 0)) <= 1.4
-    #Modify "-1" to the number of levels of the portal checkpoint
-    @Condition (eventPlayer.CurrentCheckpoint == -1 or eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1) == true
-
-    #Modify the vector (0, 0, 0) to the position where the teleport ends
-    eventPlayer.teleport(vect(0, 0, 0))
-    #If you don't want to find the coordinates, send it directly to checkpoint 0
-    eventPlayer.teleport(CheckpointPositions[0])
-*/
-rule "In world text for certain Checkpoints <---- EDIT ME":
-    @Disabled
-    # warning: adding text might go over the text limit and caues huds to not apear
-    createInWorldText([x for x in getAllPlayers() if x.CurrentCheckpoint == 0], "Text for checkpoint 0", vect(0, 0, 0), 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    createInWorldText([x for x in getAllPlayers() if x.CurrentCheckpoint == 1], "Text for checkpoint 1", vect(0, 0, 0), 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    createInWorldText([x for x in getAllPlayers() if x.CurrentCheckpoint == 2], "Text for checkpoint 2", vect(0, 0, 0), 3, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-
-rule "HUD text for certain Checkpoints <---- EDIT ME":
-    @Disabled
-    # first one is padding, leave it
-    hudSubtext(getAllPlayers(), "                                                   \r\n  \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n", HudPosition.TOP, -6, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    # warning: adding text might go over the text limit and caues huds to not apear
-    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 0], "Text for checkpoint 0", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 1], "Text for checkpoint 1", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    hudHeader([x for x in getAllPlayers() if x.CurrentCheckpoint == 2], "Text for checkpoint 2", HudPosition.TOP, -4, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-/*
-rule "Portal Effect - Text":
-    @Disabled
-    @Event eachPlayer
-
-    #Change Vector (0, 0, 0) to starting position of Portal 1-2
-    createInWorldText(eventPlayer, "{0}{1}".format(eventPlayer.PortalText, "Send to next target to next map"), vect(276.288, -17.222, -74.522), 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.YELLOW, SpecVisibility.DEFAULT)
-    #Change Vector (1, 1, 1) to starting position of Portal 2-3
-    createInWorldText(eventPlayer, "{0}{1}".format(eventPlayer.PortalText, "Send to next target to next map"), vect(1, 1, 1), 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.YELLOW, SpecVisibility.DEFAULT)
-
-rule "Portal Effects":
-    @Disabled
-    #Effects of Portal 1-2
-    createEffect(Portal1PlayerList, Effect.RING, Color.LIME_GREEN, vect(0, 0, 0), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    #Effects of Portal 1-2
-    createEffect(Portal1PlayerList, Effect.LIGHT_SHAFT, Color.RED, vect(276.288, -17.222, -74.522), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    #Effects of Portal 2-3
-    createEffect(Portal2PlayerList, Effect.RING, Color.LIME_GREEN, vect(1, 1, 1), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    #Effects of Portal 2-3
-    createEffect(Portal2PlayerList, Effect.LIGHT_SHAFT, Color.RED, vect(1, 1, 1), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    #Effects of Portal 3-1
-    createEffect(Portal1PlayerList, Effect.RING, Color.LIME_GREEN, vect(2, 2, 2), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    #Effects of Portal 3-1
-    createEffect(Portal1PlayerList, Effect.LIGHT_SHAFT, Color.RED, vect(2, 2, 2), 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    #Change Vector  (0, 0, 0) to starting position of Portal 3-1
-    createInWorldText(Portal1PlayerList, "to next map", vect(0, 0, 0), 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.YELLOW, SpecVisibility.DEFAULT)
-
-rule "Enable Portal For Specific CPs <---- EDIT ME":
-    @Disabled
-    @Event eachPlayer
-    #Change "-1" to the number of checkpoints of the checkpoint where the two portals are located
-    @Condition (eventPlayer.CurrentCheckpoint == -1 or eventPlayer.CurrentCheckpoint == -1 or eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1) == true
-
-    eventPlayer.PortalText = 1
-    #Change "-1" to the number of checkpoints where the first portal is located
-    if eventPlayer.CurrentCheckpoint == -1:
-        Portal1PlayerList.append(eventPlayer)
-        #Change "-2" to the number of checkpoints where the second portal is located
-    elif eventPlayer.CurrentCheckpoint == -2:
-        Portal2PlayerList.append(eventPlayer)
-        #No changes required
-    elif eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
-        Portal2PlayerList.append(eventPlayer)
-        Portal1PlayerList.append(eventPlayer)
-        eventPlayer.PortalText = 2
-
-rule "Disable Portal For Specific CPs <---- EDIT ME":
-    @Disabled
-    @Event eachPlayer
-    #Modify "-2" to the number of checkpoints after the two portals have been teleported
-    @Condition (eventPlayer.CurrentCheckpoint == -2 or eventPlayer.CurrentCheckpoint == -2 or false) == true
-
-    eventPlayer.PortalText = 0
-    #Modify the "-2" here to the number of checkpoints after the first portal has passed
-    if eventPlayer.CurrentCheckpoint == -2:
-        Portal1PlayerList.remove(eventPlayer)
-        #Modify the "-2" here to the number of checkpoints after the second portal has passed
-    elif eventPlayer.CurrentCheckpoint == -2:
-        Portal2PlayerList.remove(eventPlayer)
-*/
-
-rule "pre-set control map portal - placement - toggled via workshop":
+rule "Addon | pre-set control map portal | placement | toggled via workshop":
     @Condition PortalOn
     wait(2, Wait.ABORT_WHEN_FALSE) # overwrite pasta
     if getCurrentMap() == Map.BUSAN:
@@ -205,41 +123,22 @@ rule "pre-set control map portal - placement - toggled via workshop":
     else:
         PortalDest = null
         return
-    /*
-    for TempIterator1 in range(len(PortalLoc)):
-        createEffect(
-            [i for i in getAllPlayers() if i.InvincibleToggle or i.CurrentCheckpoint == len(CheckpointPositions) - 1],
-            Effect.BAD_AURA, 
-            #Color.AQUA if localPlayer.portalselect != evalOnce(i) else Color.ORANGE, 
-            Color.AQUA if evalOnce(TempIterator1) % 2 == 1 else Color.ORANGE,
-            #[Color.AQUA, Color.GREEN, Color.RED, Color.BLUE, Color.LIME_GREEN, Color.ROSE][evalOnce(i)],
-            PortalLoc[evalOnce(TempIterator1)], 
-            0.6,
-            EffectReeval.VISIBILITY
-        )
-
-        createInWorldText(
-            [i for i in getAllPlayers() if i.InvincibleToggle or i.CurrentCheckpoint == len(CheckpointPositions) - 1], 
-            "{0}".format(PortalNames[evalOnce(TempIterator1)]), 
-            PortalLoc[evalOnce(TempIterator1)] + vect(0,1,0), 
-            1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
-        )
-
-    */
-rule "pre-set control map portal - function - toggled via workshop":
+rule "Addon | pre-set control map portal | function | toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
+    @Condition eventPlayer.InvincibleToggle or not eventPlayer.NotOnLastCp
     @Condition len(PortalLoc) != null
-    @Condition eventPlayer.InvincibleToggle or eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1
-    @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc]) == true
+    @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc])
     
     if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] != vect(0,0,0):
         eventPlayer.teleport(
             PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] 
         )
 
-rule "custom portals - data <---- EDIT ME":
+rule "Addon | custom portals | data <---- EDIT ME":
     @Disabled
+    #warning: This can cause you to exceed global orb/portal limit. 
+    #make sure portal + orbs do not go past the limit.
     wait(1)
     #Portal start position
     CustomPortalStart = [vect(0,0,0)]
@@ -248,31 +147,8 @@ rule "custom portals - data <---- EDIT ME":
     #Portal checkpoint (on same number as start position) 
     #999 = apply portal to entire map
     CustomPortalCP = [999]
-    #warning: This can cause you to exceed global orb/portal limit. 
-    #make sure portal + orbs do not go past the limit.
-    #don't touch the rest of the rule
 
-    /*
-    CustomPortalStart  =  [vect(-19.025, 2.803, 4.488), vect(-25.488, 4.543, -2.096),  vect(-13.323, 3, 11.138)]
-    CustomPortalEndpoint = [vect(-18.117, 13, 1.818), vect(-25.488, 18, -2.096), vect(-3.271, 13, -3.563)]
-    CustomPortalCP = [2,999,4]
-    */
-    /*
-    for TempIterator1 in range(len(CustomPortalStart)):
-        createEffect(
-            [i for i in getAllPlayers() if 
-                i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or 
-                CustomPortalCP[evalOnce(TempIterator1)] == 999
-            ],
-            Effect.GOOD_AURA, 
-            Color.WHITE,
-            CustomPortalStart[evalOnce(TempIterator1)], 
-            0.6,
-            EffectReeval.VISIBILITY
-        )
-        wait(0.16)
-    */
-rule "custom portals - function":
+rule "Addon | custom portals | function":
     @Disabled
     @Event eachPlayer
     @Condition len(CustomPortalStart) > 0

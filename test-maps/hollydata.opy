@@ -10,4 +10,3 @@ rule "test data":
     KillballCheckpoints = [5, 15, 20]
     BouncePadCheckpoints = []
     #MsDestructo = [null]
-    SavedProgress = [0, 51.95, 0, 62.095, 0, 1]

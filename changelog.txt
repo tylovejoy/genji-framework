@@ -160,3 +160,25 @@ fixed:
 fixed:
 - leaving spec now doesnt instandly trigger practice mode reset
 - fixed exploit were you could swing at the end of ult to extend the duration
+
+1.7 - date 3-12-2022:
+    - ban per cp added. they also display with an icon in the hud. These bans can be added via web interfaces and ingame there is a rule under mapdata.
+    - redid the hud/iwt addon so that the text changes depending on wich cp you are on
+    - added splits (replaces trace toggle). they track time spend since last cp. Practice mode has a seperate split and timer now.
+    - orb hithitboxes are now 0.7 higher. this means it checks fyour midle of your body instead of your feet. this makes it so collecting them feels more accurate.
+        now if your face goes torugh them, you actually collect them.
+    - redid how ult/dash checks, fixing the issue were you sometimes didnt have dash/ult on their cps
+    - you can now hold skip cp buttons to keep going. going back from cp 0 brings you to last cp and last cp brings you back to 0
+    - when a cp is locked, the "come here" text is replaced by "collect orbs first"
+    - made it so dva doesnt get overwriten by a player joining. on that the spawn dummybot extension is now enabled. care if you have your own enabled.
+    - re-organized some hud and made it so preview mechanics dont display everytime you primary fire
+
+    - editor now has precise placement, hold ult in cp mode to move the cp slowly
+    - you can now spec in the editor (but takes another second of holding button)
+    - redid some editor hud and hide some hud if the editor is on
+    
+    - optimized and cleaned up a lot of the code behind the scenes
+    important notes for map updates:
+    - orbs hitboxes are now 0.7 higher on the Y and detect your midle instead of your feet. double check your orbs.
+    - dummy extension is now enabled for dva, meaning if you have other extensions you might need to disable dva or a player slot
+    - triple jump ban doesnt work on workshop maps

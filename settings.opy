@@ -3,7 +3,7 @@
 settings {
     "main": {
         "description": "  ~ The Official Genji Parkour Editor ~\nCode: 54CRY\nAdapted by: nebula#11571/FishoFire#2431",
-        "modeName": "Genji Parkour v1.6.3"
+        "modeName": "Genji Parkour v1.7"
     },
     "lobby": {
         "allowPlayersInQueue": true,
@@ -51,8 +51,8 @@ settings {
                 "enableSpawningWithUlt": true,
                 "ability1Cooldown%": 0,
                 "ultDuration%": 25,
-                "passiveUltGen%": 500,
-                "ultGen%": 500
+                "passiveUltGen%": 0,
+                "ultGen%": 10
             },
             "enabledHeroes": [
                 "genji"
@@ -64,4 +64,9 @@ settings {
 # extensions
 
 #!extension playMoreEffects
-##!extension spawnMoreDummyBots
+#!extension spawnMoreDummyBots
+
+
+
+
+

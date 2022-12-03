@@ -18,3 +18,21 @@ data:
 - checkpoint picture: https://cdn.discordapp.com/attachments/999420219900571658/1015395673732042782/unknown.png
 
 ############################################################################################################
+triple jump ban doesnt work on workshop maps anymore
+    - works outside of ws maps but not inside
+
+    - some debuging
+        - removing waits from merged arrive rule work
+        - spliting merged rule makes it work
+        - these 2 could work, but decrease performance and functionality on all other maps
+        - even if the ifs are all set to true==false and it only waits, it doesnt work. code not working after disabled sounds like a workshop bug.
+        - it does work with that wait if only first part of rule is enabled and the code inside the if is disabled and the other ifs are removed
+    We decided there are not many workshop maps and they dont need triple jump ban
+    re-writing the arrive and  decreasing the performance for 99% of maps wouldnt be worth.
+
+    - specific problem: jump count is not properly tracked. on ws maps jumpcount doesnt reset back to 1
+        - on ws maps, the jumpcount doesnt go to 1 for a split second when triple jumping, unlike normal maps
+        - the rules for jupcount shouldnt be affected but they are
+        - jumpcount tracks +- if a player has been in the air for a moment
+
+  
