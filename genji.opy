@@ -291,7 +291,7 @@ rule "Setup and Variables":
     if not inspectoron:
         disableInspector()
 
-    # version 1.7
+    # version 1.7.0
     disableGamemodeCompletion()
     disableScoring()
     disableMusic()
