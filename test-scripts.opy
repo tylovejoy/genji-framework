@@ -3,10 +3,10 @@
 ##### general #####
     # 100 is non
     #!define slowmotion 100
-    #!define 3thpersoncam true
+    #!define 3thpersoncam false
 
 ##### average load show #####
-    #!define avrgon false
+    #!define avrgon true
 
 ##### orb visialize #####
     #!define orb_visialon false

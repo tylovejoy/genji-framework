@@ -22,6 +22,8 @@ rule "Checking | Dash combined rule":
 
 
 def CheckUlt(): # checks if ult should be turned on
+    if eventPlayer.LockState:
+        eventPlayer.setUltCharge(0) # for dash start etc you can be away from cp so the keep charge triggers
     waitUntil(not eventPlayer.isUsingUltimate(), 2)
     if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):
         goto lbl_a #skip msg if these
