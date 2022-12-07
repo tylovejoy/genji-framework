@@ -4,6 +4,20 @@ rule "------------------------------------------------------------------------ C
     @Delimiter
     @Disabled
 
+rule "Fake | Triple Jump":
+    @Event eachPlayer
+    @Condition eventPlayer.JumpCount == 1
+    #@Condition eventPlayer.isJumping()  == false
+    @Condition eventPlayer.isUsingAbility1() == false
+    @Condition not eventPlayer.isOnWall()
+    @Condition eventPlayer.isHoldingButton(Button.JUMP)
+    #@Condition eventPlayer.isOnGround()
+    @Condition eventPlayer.getAltitude() < 1
+    @Condition eventPlayer.getVerticalSpeed() < 1
+    smallMessage(eventPlayer, "triple")
+    eventPlayer.applyImpulse(Vector.UP, 15, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+
+
 rule "Checking | ult combined rule":
     @Event eachPlayer
     @Condition eventPlayer.isUsingUltimate()
