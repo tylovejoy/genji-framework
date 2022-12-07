@@ -109,19 +109,18 @@ rule "Fake | Triple Jump | jump count check + ground checks": # method B
 
     # problem, now it auto counts when u hold jump again
     # and it doesnt when you actual want to
-
     waitUntil(eventPlayer.JumpCount == 0 or eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD) or eventPlayer.hasStatusEffect(Status.ROOTED), 999)
     if eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD) or eventPlayer.hasStatusEffect(Status.ROOTED) or eventPlayer.isHoldingButton(Button.JUMP):
         return
     if eventPlayer.JumpCount == 0 and eventPlayer.isHoldingButton(Button.JUMP):
         return
-    waitUntil((eventPlayer.JumpCount == 1 and eventPlayer.isHoldingButton(Button.JUMP)) or eventPlayer.JumpCount == 2, 0.32)
+    waitUntil((eventPlayer.JumpCount == 1 and eventPlayer.isHoldingButton(Button.JUMP)) or eventPlayer.JumpCount == 2, 0.48)
     if eventPlayer.JumpCount == 1 and eventPlayer.isHoldingButton(Button.JUMP):
         if eventPlayer.ban_triple and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp:
             smallMessage(eventPlayer, "   Triple Jump ▲ is banned!")
             return
         smallMessage(eventPlayer, "   triple jump ▲")
-        eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+        eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
 
 
 
@@ -144,11 +143,12 @@ rule "Fake | Triple Jump | basic jumpcount check":
 
 
 rule "Fake | Triple Jump | most basic ground check": # method A
-    #@Disabled
+    @Disabled
     @Event eachPlayer
     @Condition eventPlayer.isOnGround()
+    @Condition not eventPlayer.isHoldingButton(Button.RELOAD) 
 
-    waitUntil(eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP), 0.064)
+    waitUntil(eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP), 0.048)
     if eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD) or eventPlayer.hasStatusEffect(Status.ROOTED) :
         return
     if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping() :
@@ -156,11 +156,53 @@ rule "Fake | Triple Jump | most basic ground check": # method A
             smallMessage(eventPlayer, "   Triple Jump ▲ is banned!")
             return
         smallMessage(eventPlayer, "   triple jump ▲")
-        eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+        eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
 
     # what stops it from trigering from ground? it doesnt becuse ground only became true recently
     # perhaps altiude > 0.1 and < 0.3 with waituntil?
 
+    # unfortunatly works after double
+
+
+
+
+
+
+
+rule "Fake | Triple Jump | ": # method c
+    #@Disabled
+    @Event eachPlayer
+    @Hero genji
+
+    @Condition eventPlayer.isOnGround() == false # has to be in air first becaues need to know diferents between normal jump and double
+    @Condition eventPlayer.isJumping() # this goes false when double jumping
+
+    @Condition eventPlayer.getAltitude() < 0.3 # make it so the wait isnt to long by only staring when close to ground
+    @Condition eventPlayer.getVerticalSpeed() < 0 # make it so the wait isnt to long by only staring when close to ground
+    
+    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false # dont triger on reset
+    @Condition eventPlayer.isUsingAbility1() == false
+    @Condition eventPlayer.isOnWall() == false
+
+    # and not reload etc
+
+    waitUntil(eventPlayer.isOnGround() or not eventPlayer.isJumping() or eventPlayer.isOnWall() or  eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD), 999) # if you double jump before touching ground, reset
+    if eventPlayer.isOnGround() == false and eventPlayer.isJumping() == false or eventPlayer.isHoldingButton(Button.RELOAD): # 
+        return
+    
+    waitUntil(
+        (eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP))
+        
+        or eventPlayer.isOnWall() or  eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD), 0.048) # window on the ground were you can press jump
+    if eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD) or eventPlayer.hasStatusEffect(Status.ROOTED):
+        return
+
+    if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping() :
+        if eventPlayer.ban_triple and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp:
+            smallMessage(eventPlayer, "   Triple Jump ▲ is banned!")
+            return
+        smallMessage(eventPlayer, "   triple jump ▲")
+        eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
 
 
 
