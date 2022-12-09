@@ -169,36 +169,47 @@ rule "Fake | Triple Jump | most basic ground check": # method A
 
 
 
-rule "Fake | Triple Jump | ": # method c
+rule "addon | Fake Triple Jump": # method c
     #@Disabled
     @Event eachPlayer
     @Hero genji
 
-    @Condition eventPlayer.isOnGround() == false # has to be in air first becaues need to know diferents between normal jump and double
-    @Condition eventPlayer.isJumping() # this goes false when double jumping
+    # check starts in air when not double jumping, this is to detect double jumping
+    @Condition eventPlayer.isOnGround() == false 
+    @Condition eventPlayer.isJumping() # false when double jumping
 
-    @Condition eventPlayer.getAltitude() < 0.3 # make it so the wait isnt to long by only staring when close to ground
-    @Condition eventPlayer.getVerticalSpeed() < 0 # make it so the wait isnt to long by only staring when close to ground
+    @Condition eventPlayer.getAltitude() < 0.5 # prevent rest of code from runing if you are not gona be close to ground
+    @Condition eventPlayer.getVerticalSpeed() < 0 # avoid trigering on start of jump, only when u go downwards
     
-    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false # dont triger on reset
+    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false # don't triger on reset
     @Condition eventPlayer.isUsingAbility1() == false
     @Condition eventPlayer.isOnWall() == false
 
-    # and not reload etc
-
-    waitUntil(eventPlayer.isOnGround() or not eventPlayer.isJumping() or eventPlayer.isOnWall() or  eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD), 999) # if you double jump before touching ground, reset
-    if eventPlayer.isOnGround() == false and eventPlayer.isJumping() == false or eventPlayer.isHoldingButton(Button.RELOAD): # 
+    waitUntil(
+        eventPlayer.isOnGround() or 
+        eventPlayer.isJumping() == false or 
+        eventPlayer.isOnWall() or  
+        eventPlayer.isUsingAbility1() or 
+        eventPlayer.isHoldingButton(Button.RELOAD)
+        , 999
+    ) # if you double jump or climb etc before touching ground, reset
+    
+    if eventPlayer.isOnGround() == false and eventPlayer.isJumping() == false or eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD) : # 
         return
     
     waitUntil(
-        (eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP))
-        
-        or eventPlayer.isOnWall() or  eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD), 0.048) # window on the ground were you can press jump
+        (eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP)) or
+        eventPlayer.isOnWall() or  
+        eventPlayer.isUsingAbility1() or 
+        eventPlayer.isHoldingButton(Button.RELOAD),
+        0.048
+    ) # window on the ground were you can press jump
+
     if eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD) or eventPlayer.hasStatusEffect(Status.ROOTED):
         return
 
     if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping() :
-        if eventPlayer.ban_triple and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp:
+        if eventPlayer.ban_triple and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp: # handle bans and invincible
             smallMessage(eventPlayer, "   Triple Jump ▲ is banned!")
             return
         smallMessage(eventPlayer, "   triple jump ▲")
