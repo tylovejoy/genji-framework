@@ -85,7 +85,7 @@ rule "Ban per CP <---- edit me":
     BanClimb = []
     # ======================
     # dash exploit (via toggles don't edit)
-    DashExploitToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Create Bhop", false, 2)
+    DashExploitToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Dash Start", false, 2)
     
     # ban  bhop >
     #BanBhop = [2,3]
