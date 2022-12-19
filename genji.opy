@@ -7,7 +7,7 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!define inspectoron false
 
 # disable via double ## at include, not the define because the define needs to exist
-#!define testaitoggle #!include "test-scripts.opy"
+#!define testaitoggle ##!include "test-scripts.opy"
 
 #!define compmodetoggle false
 #!define attemptcount 5

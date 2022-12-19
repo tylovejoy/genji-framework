@@ -217,6 +217,6 @@ rule "Addon | Fake Triple Jump": # method c
         if eventPlayer.ban_triple and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp: # handle bans and invincible
             smallMessage(eventPlayer, "   Triple Jump ▲ is banned!")
             return
-        smallMessage(eventPlayer, "   triple jump ▲")
+        #smallMessage(eventPlayer, "   triple jump ▲")
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
 
