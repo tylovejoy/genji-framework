@@ -1078,8 +1078,9 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         Map.NEW_QUEEN_STREET,
         Map.PARAISO,
         Map.COLOSSEO,
-        Map.MIDTOWN
+        Map.MIDTOWN,
 
+        Map.SHAMBALI_MONASTERY
     ],  #
         [vect(15.759, 30.576, -27.201)],  # Map.HANAMURA,
         # [vect(15.759, 30.576, -27.201)],  # Map.HANAMURA_WINTER,
@@ -1145,7 +1146,8 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         [vect(0,35,25), vect(0,8, 23.77)], # Map.NEW_QUEEN_STREET
         [vect(-29, 40, -36.9)], #Map.PARAISO
         [vect(0,40,0)], # Map.COLOSSEO
-        [vect(49.3, 45, -2.83)] # Mid town
+        [vect(49.3, 45, -2.83)], # Mid town
+        [vect(-50, 81, 130)] # shambal
     ]
 
     for MsDestructo.ArrayIterator in range(len(MsDestructo.MapVectorArray[MsDestructo.MapVectorArray[0].index(getCurrentMap())])):
