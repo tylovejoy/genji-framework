@@ -190,4 +190,5 @@ fixed:
 
 1.7.2 - data 19-12-2022:
     - fake triple addon rule
+    - dva added to shambali
     - fix wrong name in ban for dash start
