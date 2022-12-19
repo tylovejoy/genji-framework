@@ -182,3 +182,12 @@ fixed:
     - orbs hitboxes are now 0.7 higher on the Y and detect your midle instead of your feet. double check your orbs.
     - dummy extension is now enabled for dva, meaning if you have other extensions you might need to disable dva or a player slot
     - triple jump ban doesnt work on workshop maps
+
+1.7.1 - ?
+    - fixed ult start bug
+    - some editor all player mesages are now only for host player
+
+
+1.7.2 - data 19-12-2022:
+    - fake triple addon rule
+    - fix wrong name in ban for dash start
