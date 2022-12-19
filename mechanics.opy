@@ -182,6 +182,8 @@ rule "Ban | Triple Jump":
     smallMessage(eventPlayer, "   Triple Jump ▲ is banned!")
     checkpointFailReset()
 
+
+
 rule "Ban | Multiclimb":
     @Event eachPlayer
     @Condition eventPlayer.ban_multi
