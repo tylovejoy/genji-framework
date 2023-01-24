@@ -3,10 +3,12 @@
 ##### general #####
     # 100 is non
     #!define slowmotion 100
-    #!define 3thpersoncam true
+
+    #!define 3thpersoncam false
+    #!define camspeed 15
 
 ##### average load show #####
-    #!define avrgon false
+    #!define avrgon true
 
 ##### orb visialize #####
     #!define orb_visialon false
@@ -57,19 +59,26 @@ rule "3th person cam":
     @Condition 3thpersoncam
     @Event eachPlayer
     @Condition eventPlayer.hasSpawned()
-    eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), 15)
+    eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), camspeed)
 
 rule "multi purpose hud":
     hudSubheader(getAllPlayers(), 
         "hud count {}\n"
         "fx count: {}\n"
-        "bouncetouched: {}\n"
-        "bouncelast: {} \n"
+        "vertical speed: {}\n"
+        "is jumping: {} \n"
+        "jump count: {}\n"
+        "isOnGround: {}\n"
+        "altitude: {}\n"
+        ""
         "".format(
         getNumberOfTextIds(),
         getNumberOfEntityIds(),
-        localPlayer.bouncetouched,
-        localPlayer.bouncetouchedlast
+        localPlayer.getVerticalSpeed(),
+        localPlayer.isJumping(),
+        localPlayer.JumpCount,
+        localPlayer.isOnGround(),
+        localPlayer.getAltitude()
         ),
         HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )

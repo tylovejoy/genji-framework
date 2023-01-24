@@ -592,7 +592,7 @@ rule "Editor | cp add teleport":
         hostPlayer.getPosition()
     ]
 
-    smallMessage(getAllPlayers(), "   Teleport has been added for checkpoint {0}".format(hostPlayer.CurrentCheckpoint))
+    smallMessage(hostPlayer, "   Teleport has been added for checkpoint {0}".format(hostPlayer.CurrentCheckpoint))
     wait()
 
 rule "Editor | move cp once":
@@ -604,7 +604,7 @@ rule "Editor | move cp once":
     
     #smallMessage(getAllPlayers(), "   Checkpoint {0} has been deleted".format(hostPlayer.CurrentCheckpoint) if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) != 0 else "")
     CheckpointPositions[hostPlayer.CurrentCheckpoint] = eventPlayer.getPosition() - vect(0, 0, 0)
-    smallMessage(getAllPlayers(), "   Checkpoint has been moved to your position")
+    smallMessage(hostPlayer, "   Checkpoint has been moved to your position")
     wait()
 
 rule "Editor | move cp slowly":

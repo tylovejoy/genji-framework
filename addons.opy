@@ -172,3 +172,51 @@ rule "Addon | custom portals | function":
             return
 
     wait(1)
+
+
+rule "Addon | Fake Triple Jump": # method c
+    @Disabled
+    @Event eachPlayer
+    @Hero genji
+
+    # check starts in air when not double jumping, this is to detect double jumping
+    @Condition eventPlayer.isOnGround() == false 
+    @Condition eventPlayer.isJumping() # false when double jumping
+
+    @Condition eventPlayer.getAltitude() < 0.5 # prevent rest of code from runing if you are not gona be close to ground
+    @Condition eventPlayer.getVerticalSpeed() < 0 # avoid trigering on start of jump, only when u go downwards
+    
+    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false # don't triger on reset
+    @Condition eventPlayer.isUsingAbility1() == false
+    @Condition eventPlayer.isOnWall() == false
+
+    waitUntil(
+        eventPlayer.isOnGround() or 
+        eventPlayer.isJumping() == false or 
+        eventPlayer.isOnWall() or  
+        eventPlayer.isUsingAbility1() or 
+        eventPlayer.isHoldingButton(Button.RELOAD)
+        , 999
+    ) # if you double jump or climb etc before touching ground, reset
+    
+    if eventPlayer.isOnGround() == false and eventPlayer.isJumping() == false or eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD) : # 
+        return
+    
+    waitUntil(
+        (eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP)) or
+        eventPlayer.isOnWall() or  
+        eventPlayer.isUsingAbility1() or 
+        eventPlayer.isHoldingButton(Button.RELOAD),
+        0.048
+    ) # window on the ground were you can press jump
+
+    if eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD) or eventPlayer.hasStatusEffect(Status.ROOTED):
+        return
+
+    if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping() :
+        if eventPlayer.ban_triple and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp: # handle bans and invincible
+            smallMessage(eventPlayer, "   Triple Jump ▲ is banned!")
+            return
+        #smallMessage(eventPlayer, "   triple jump ▲")
+        eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+

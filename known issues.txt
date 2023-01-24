@@ -1,4 +1,7 @@
 
+
+
+
 ############################################################################################################
 reload + cp position bug
 ------------------------------------------------------------------------------------------------------------
@@ -35,4 +38,18 @@ triple jump ban doesnt work on workshop maps anymore
         - the rules for jupcount shouldnt be affected but they are
         - jumpcount tracks +- if a player has been in the air for a moment
 
-  
+############################################################################################################
+spray bug
+------------------------------------------------------------------------------------------------------------
+in 1.7 you lose your spray after you leave spectate:
+1) wait a moment, it doesnt happen in first seconds of match
+2) spray
+3) go in spectate, the spray still here
+4) leave spectate, now the spray is gone
+
+This was introduced in 1.7. I did some testing and even disabling most of the spectate and on dead rules.
+It turned out that dva was the culprit.
+Specifically the single action that respawns dva causes it to happen.
+it only hapens on respawning via spec, not in normal deads.
+
+reporter: yato / shade
