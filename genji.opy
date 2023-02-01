@@ -1162,11 +1162,11 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         MsDestructo.disableEnvironmentCollision(true)
         MsDestructo.setUltEnabled(true)
         MsDestructo.setUltCharge(100)
-        wait(3)
+        wait(4)
         MsDestructo.startForcingButton(Button.ULTIMATE)
-        wait(5)
+        wait(6)
         MsDestructo.respawn()
-        wait(3)
+        wait(4)
     destroyDummy(MsDestructo.getTeam(), MsDestructo.getSlot())
     # Remove MsDestructo data when done
     MsDestructo.MapVectorArray = 0
