@@ -291,7 +291,7 @@ rule "Setup and Variables":
     if not inspectoron:
         disableInspector()
 
-    # version 1.7.2
+    # version 1.7.3
     disableGamemodeCompletion()
     disableScoring()
     disableMusic()
@@ -744,6 +744,12 @@ def StartGame_Sub():
         eventPlayer.disableRespawn()
         kill(eventPlayer,null)
         return
+    
+    if DashExploitToggle:
+        eventPlayer.setAbility1Enabled(false)
+        if eventPlayer.isUsingAbility1():
+            waitUntil(not eventPlayer.isUsingAbility1(), 1.5)
+            smallMessage(eventPlayer, "   Dash Start is banned!")            
 
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
