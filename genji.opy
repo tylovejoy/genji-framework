@@ -744,6 +744,12 @@ def StartGame_Sub():
         eventPlayer.disableRespawn()
         kill(eventPlayer,null)
         return
+    
+    if DashExploitToggle:
+        eventPlayer.setAbility1Enabled(false)
+        if eventPlayer.isUsingAbility1():
+            waitUntil(not eventPlayer.isUsingAbility1(), 1.5)
+            smallMessage(eventPlayer, "   Dash Start is banned!")            
 
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
