@@ -69,9 +69,8 @@ rule "Restart Run | Crouch + Interact + Deflect":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) 
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
-    # @Condition not eventPlayer.isHoldingButton(Button.ABILITY_1)
     @Condition not eventPlayer.isUsingAbility1()
-    
+
     eventPlayer.LockState = true
     if DashExploitToggle:
         eventPlayer.InvincibleToggle = false
@@ -81,7 +80,6 @@ rule "Restart Run | Crouch + Interact + Deflect":
         if eventPlayer.isUsingAbility1():
             eventPlayer.disallowButton(Button.ABILITY_1)
             smallMessage(eventPlayer, "   Dash Start is banned!")
-            # waitUntil(not eventPlayer.isMoving(), 999)
             eventPlayer.LockState = false
             eventPlayer.allowButton(Button.ABILITY_1)
             return
