@@ -191,6 +191,8 @@ globalvar BanEmote 84
 globalvar BanClimb 85
 globalvar BanBhop 86
 
+globalvar DestructoIter 90
+globalvar MapVectorArray 91
 
 #Player variables
 playervar CurrentCheckpoint 0               # int                       --- Current Checkpoint
@@ -206,9 +208,9 @@ playervar InvincibleToggle 2                # bool                       --- inv
 playervar Timer 3                           # float                     --- Timer, chased.
 playervar EditModeSelection 4               # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
 playervar SpectateToggle 5                  # bool                       --- turned into bool
-playervar ArrayIterator 6                   # MsDestructo Iterator
+#playervar ArrayIterator 6                   # MsDestructo Iterator
 #playervar PortalText 7                      # In-World Text             --- Portal String inworld text
-playervar MapVectorArray 8                  # MsDestructo Vectors
+#playervar MapVectorArray 8                  # MsDestructo Vectors
 playervar WallclimbUsed 9                   # bool                      --- turned into bool
 playervar GuideToggle 10                    # bool                       --- turned into bool, shows/hides editor hud
 playervar LockState 11                      # bool                      --- locked means you are curently runing arrive checkpoint rule
