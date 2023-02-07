@@ -192,3 +192,16 @@ fixed:
     - fake triple addon rule
     - dva added to shambali
     - fix wrong name in ban for dash start
+
+1.7.3 - ?
+    - fixed an issue with dash start ban not working
+
+1.7.4 - ?
+    - fixed an issue with dva disapearing to fast.
+
+1.7.5 - 6-2-2023
+    - changed how Dva works. This should fix some issues with her not working on special versions of maps. 
+    now unless the map is in the exception list, she wil just explode on default co-ordinates that work on most maps.
+
+1.7.6 - 6-2-2023
+    - added version display to prepare for submision validation
