@@ -205,3 +205,6 @@ fixed:
 
 1.7.6 - 6-2-2023
     - added version display to prepare for submision validation
+
+1.7.7 - 12-2-2023
+    - added support for new map ANTARCTIC PENINSULA (DVa, Portals)
