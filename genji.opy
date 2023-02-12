@@ -421,7 +421,7 @@ rule "Match time":
     wait(5)
     TimeRemaining = 265
     #hudSubheader(getAllPlayers(), "  Server Restarts In {0} Min  ".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
-    hudSubheader(getAllPlayers(), "Server Restarts In {0} Min - V1.7.6".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+    hudSubheader(getAllPlayers(), "Server Restarts In {0} Min - V1.7.7".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     
     while TimeRemaining > 0:
         wait(60)
