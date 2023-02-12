@@ -120,6 +120,11 @@ rule "Addon | pre-set control map portal | placement | toggled via workshop":
         PortalLoc = [vect(-211.137, 20, -5.084), vect(-211.346, 20, 5.029), vect(143.061, 8.377, -245.04), vect(139.333, 8.377, -249.964), vect(157.297, 12.522, 255.759), vect(151.452, 12.522, 261.099)]
         PortalDest = [vect(134.366, 7.829, -240.53), vect(158.27, 11.814, 262.272), vect(-206.269, 19.292, 0.103), vect(158.283, 11.814, 262.283), vect(134.318, 7.829, -240.667), vect(-206.269, 19.292, 0.103)]
 
+    elif getCurrentMap() == Map.ANTARCTIC_PENINSULA:
+        PortalNames = ["labs", "icebreaker", "Sublevel", "icebreaker", "labs", "Sublevel"]
+        PortalLoc = [vect(280.66, -12.15, -223.65), vect(273.27, 42.74, 198.15), vect(266.58, 42.74, 198.17), vect(-58.29, -154, 63.03), vect(-58.36, -154, 56.47), vect(287.08, -12.15, -223.59)]
+        PortalDest = [vect(270, 42.7, 190.44), vect(284.07, -12.75, -216.15), vect(-53.51, -154.5, 60.08), vect(284.07, -12.75, -216.15), vect(270, 42.7, 190.44), vect(-53.51, -154.5, 60.08)]
+
     else:
         PortalDest = null
         return

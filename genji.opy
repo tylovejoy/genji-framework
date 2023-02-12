@@ -1033,6 +1033,9 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         case Map.NEW_QUEEN_STREET:
             MapVectorArray = [vect(-13.79, 1.96, 15.92), vect(0,35,25), vect(0,8, 23.77), vect(13.28, 2, 15)]
             break
+        case Map.ANTARCTIC_PENINSULA:
+            MapVectorArray = [vect(-86, -110, 59), vect(277, 132, 170), vect(283, 57, -235)]
+            break
         default:
             # This default covers almost every map
             MapVectorArray = [
