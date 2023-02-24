@@ -82,7 +82,7 @@ rule "Ban per CP <---- edit me":
     # ban emote >
     BanEmote = [-1]
     # ban  climb >
-    BanClimb = [0,1,2,3,4,5]
+    BanClimb = [-1]
     # ======================
     # dash exploit (via toggles don't edit)
     DashExploitToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Dash Start", false, 2)
