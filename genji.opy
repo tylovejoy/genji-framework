@@ -52,7 +52,7 @@ rule "------------------------------------------------------------------------ M
     @Delimiter
     @Disabled
 
-rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
+rule "Map Data <---- INSERT YOUR MAP DATA HERE":
     @Delimiter
 
 
@@ -107,7 +107,7 @@ rule "Display World Record":
     HudStoreEdit.append(getLastCreatedText())
 
 
-rule "Friend Title <----  DISPLAY MESSAGE HERE (ON PLAYER)":
+rule "Friend Title <---- DISPLAY MESSAGE HERE (ON PLAYER)":
     @Disabled
     @Delimiter
     @Event eachPlayer
@@ -421,7 +421,7 @@ rule "Match time":
     wait(5)
     TimeRemaining = 265
     #hudSubheader(getAllPlayers(), "  Server Restarts In {0} Min  ".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
-    hudSubheader(getAllPlayers(), "Server Restarts In {0} Min - V1.7.7".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+    hudSubheader(getAllPlayers(), "Server Restarts In {0} Min - V1.7.8".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     
     while TimeRemaining > 0:
         wait(60)
@@ -858,6 +858,12 @@ rule "Arrive | Ground reset | traces":
             eventPlayer.LockCollected = []
             eventPlayer.CurrentCheckpoint += 1
             UpdateCache()
+            if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) > 1:# teleport cps
+                eventPlayer.startForcingPosition( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ,false)
+                wait(0.1)
+                eventPlayer.flytoggle = null
+                eventPlayer.stopForcingPosition()
+            
             eventPlayer.splitdisplay =  (eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer) - eventPlayer.splittime
             wait()
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
@@ -872,7 +878,7 @@ rule "Arrive | Ground reset | traces":
                 goto lbl_abc
             
             eventPlayer.splittime = eventPlayer.Timer
-
+                
             if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1 and (not eventPlayer.EditorOn) and (not eventPlayer.PracticeToggle): # complete lvl
                 stopChasingVariable(eventPlayer.Timer)
                 stopChasingVariable(eventPlayer.practicetimer) 
@@ -894,13 +900,13 @@ rule "Arrive | Ground reset | traces":
             else: # update save
                 DeleteSave()
                 MakeSave()
-
         elif distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) > 1.4 and not touchground:
             # ground reset ----------------------------------------------------------------------------------------------------
             checkpointFailReset()
 
     lbl_abc:
     wait(0.048)
+
     if RULE_CONDITION:
         goto RULE_START               
    

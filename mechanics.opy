@@ -135,7 +135,6 @@ rule "Checking | Double jump, initialized with small jump":
     if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
         goto RULE_START
     eventPlayer.BhopUsed = true
-
     #if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
 
 rule "HUD | Multiclimb Counter":
@@ -160,7 +159,7 @@ rule "--------------------------------------------------------------------------
     @Delimiter
     @Disabled
 
-rule "Ban | Wallclimb for specific CPs <---- EDIT ME":
+rule "Ban | Wallclimb for specific CPs":
     # Credit: TITANXPASCAL#5554
     @Event eachPlayer
     @Condition eventPlayer.ban_climb
@@ -182,8 +181,6 @@ rule "Ban | Triple Jump":
     smallMessage(eventPlayer, "   Triple Jump ▲ is banned!")
     checkpointFailReset()
 
-
-
 rule "Ban | Multiclimb":
     @Event eachPlayer
     @Condition eventPlayer.ban_multi
@@ -202,62 +199,3 @@ rule "Ban | Emote Savehop":
     smallMessage(eventPlayer, "   Emote Savehop ♥ is banned!")
     checkpointFailReset()
 
-
-
-
-
-
-
-/*
-old multi hud
-rule "HUD | Multiclimbs Used":
-    @Event eachPlayer
-    @Condition not eventPlayer.WallclimbUsed
-    @Condition eventPlayer.hasSpawned() == true
-    
-    destroyHudText(eventPlayer.MultiClimbCountHUD)
-    hudHeader(eventPlayer, "Climb{0}".format("({0})".format(eventPlayer.MultiClimbCount) if eventPlayer.MultiClimbCount > 0 else ""), HudPosition.LEFT, HO.game_climb, Color.GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    eventPlayer.MultiClimbCountHUD = getLastCreatedText()
- 
-
-rule "HUD | Wallclimb Used":
-    @Event eachPlayer
-    @Condition eventPlayer.WallclimbUsed
-    @Condition eventPlayer.hasSpawned() == true
-
-    destroyHudText(eventPlayer.MultiClimbCountHUD)
-    hudHeader(eventPlayer, "Climb", HudPosition.LEFT, HO.game_climb, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    eventPlayer.MultiClimbCountHUD = getLastCreatedText()
-*/
-
-/*
-# bricked because u can fallbhop, and it can triger on usign double
-rule "Ban | Bhop for specific CPs      <---- EDIT ME":
-    # Credit: TITANXPASCAL#5554
-    @Event eachPlayer
-    @Condition eventPlayer.ban_bhop
-    @Condition not eventPlayer.InvincibleToggle
-    @Condition eventPlayer.NotOnLastCp
-    #@Condition 
-    @Condition not eventPlayer.LockState
-    @Condition distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) > 1.4
-    #@Condition distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= 2
-    if eventPlayer.BhopUsed == 1: 
-        checkpointFailReset()
-        smallMessage(eventPlayer, "   Bhop is banned!")
-*/
-
-/*
-# removed coz duplicatewith "Checking | Double jump, initialized with small jump"
-rule "Checking | Bhop/Double Jump Initialization":
-    @Event eachPlayer
-    @Hero genji
-    @Condition eventPlayer.isOnGround() == true
-
-    eventPlayer.JumpCount = 0
-    eventPlayer.WallclimbUsed = false
-    wait(0)
-    if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
-        goto RULE_START
-    eventPlayer.BhopUsed = true
-*/

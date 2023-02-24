@@ -43,6 +43,14 @@ rule "Editor | Clear Excess Data to Save Map":
     LeaderBoardFull = []
     PortalOn = false
 
+    TitleData = null
+    CpHudText = null
+    CpHudCp = null
+    CpIwtText = null
+    CpIwtCp = null
+    CpIwtPos = null
+    CpIwtColor = null
+
     enableInspector()
 
     hudText(eventPlayer,  
