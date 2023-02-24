@@ -30,7 +30,7 @@ rule "Addon | Add Blade to Checkpoint <---- EDIT ME":
 rule "Addon | Add Dash to Checkpoint <---- EDIT ME":
     @Disabled
     #Change "-1" to certain Checkpoints' number. For example if you want to add Dash to Checkpoint 7 and 1 change one of "-1" to 7 and other "-1" to 1
-    wait(1)
+    wait(1) 
     DashEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
     
 rule "Addon | Title Data <---- EDIT ME":
@@ -128,6 +128,7 @@ rule "Addon | pre-set control map portal | placement | toggled via workshop":
     else:
         PortalDest = null
         return
+        
 rule "Addon | pre-set control map portal | function | toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
