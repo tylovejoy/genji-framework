@@ -72,17 +72,17 @@ rule "Ban per CP <---- edit me":
     wait(1)
     # ======================
     # ban  triple >
-    BanTriple = []
+    BanTriple = [-1]
     # ban  multi >
-    BanMulti = []
+    BanMulti = [-1]
     # ban create >
-    BanCreate = []
+    BanCreate = [-1]
     # ban dedhop >
-    BanDead = []
+    BanDead = [-1]
     # ban emote >
-    BanEmote = []
+    BanEmote = [-1]
     # ban  climb >
-    BanClimb = []
+    BanClimb = [-1]
     # ======================
     # dash exploit (via toggles don't edit)
     DashExploitToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Dash Start", false, 2)
@@ -420,7 +420,6 @@ rule "Match time":
     pauseMatchTime()
     wait(5)
     TimeRemaining = 265
-    #hudSubheader(getAllPlayers(), "  Server Restarts In {0} Min  ".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     hudSubheader(getAllPlayers(), "Server Restarts In {0} Min - V1.7.8".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     
     while TimeRemaining > 0:
