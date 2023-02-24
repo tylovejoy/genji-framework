@@ -208,3 +208,9 @@ fixed:
 
 1.7.7 - 12-2-2023
     - added support for new map ANTARCTIC PENINSULA (DVa, Portals)
+
+1.7.8 - 24-2-2023
+    - fixed a bug that caused teleports checkpoints to wait before trigering
+    - fixed wallclimb ban rule incorectly having the editme tag while not requiring editing (this is done in ban per cp rule)
+    - more addon data now cleaned on saving map in editor map, preventing some bugs
+    - ban per cp now defaults to -1. this doesnt functionally change anything other then give you an array by default instead of empty array
