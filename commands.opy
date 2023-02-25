@@ -162,6 +162,8 @@ rule "Toggle Invincible Mode | Melee + Reload":
     @Condition eventPlayer.isUsingUltimate() == false
     @Condition eventPlayer.isAlive()
     @Condition (not CompMode) or (not eventPlayer.CompDone)
+    @Condition not eventPlayer.LockState
+
     eventPlayer.LockCollected = []
     eventPlayer.flytoggle = null
 
