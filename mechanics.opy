@@ -166,7 +166,8 @@ rule "Ban | Wallclimb for specific CPs":
     @Condition not eventPlayer.InvincibleToggle
     @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.WallclimbUsed
-    checkpointFailReset()
+    #checkpointFailReset()
+    #eventPlayer.setStatusEffect(null,Status.BURNING, 0.1)
     smallMessage(eventPlayer, "   Climb ↑ is banned!")
 
 rule "Ban | Triple Jump":

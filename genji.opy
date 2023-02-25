@@ -420,7 +420,7 @@ rule "Match time":
     pauseMatchTime()
     wait(5)
     TimeRemaining = 265
-    hudSubheader(getAllPlayers(), "Server Restarts In {0} Min - V1.7.8".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+    hudSubheader(getAllPlayers(), "Server Restarts In {0} Min - V1.7.8b".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     
     while TimeRemaining > 0:
         wait(60)
@@ -853,6 +853,10 @@ rule "Arrive | Ground reset | traces":
             if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache: # kill player if not colleted the locks
                 smallMessage(eventPlayer, "   ! collect ALL orange orbs to unlock !")
                 kill(eventPlayer, null)
+                goto lbl_abc
+            if eventPlayer.ban_climb and eventPlayer.WallclimbUsed:
+                smallMessage(eventPlayer, "   Climb ↑ is banned!")
+                checkpointFailReset()
                 goto lbl_abc
             eventPlayer.LockCollected = []
             eventPlayer.CurrentCheckpoint += 1
