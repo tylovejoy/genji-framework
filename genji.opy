@@ -420,7 +420,7 @@ rule "Match time":
     pauseMatchTime()
     wait(5)
     TimeRemaining = 265
-    hudSubheader(getAllPlayers(), "Server Restarts In {0} Min - V1.7.8b".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+    hudSubheader(getAllPlayers(), "Server Restarts In {0} Min - V1.7.8c".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     
     while TimeRemaining > 0:
         wait(60)
@@ -626,7 +626,7 @@ rule "remake leaderboard": # for global isntead of tied to player
     if LeaderBoardFull[5]:
         hudHeader(
             getAllPlayers() if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
-            "　　　　　　　　　　　　　　　　　　\n"
+            "　　　　　　　　　　　　　　　　　 　\n"
             "　 6:　{0} - {5}　\n"
             "　 7:　{1} - {6}　\n"
             "　 8:　{2} - {7}　\n"
