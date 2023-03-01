@@ -85,7 +85,7 @@ rule "Ban per CP <---- edit me":
     BanClimb = [-1]
     # ======================
     # dash exploit (via toggles don't edit)
-    DashExploitToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Dash Start", false, 2)
+    DashExploitToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Dash Start", true, 2)
     
     # ban  bhop >
     #BanBhop = [2,3]
@@ -420,7 +420,7 @@ rule "Match time":
     pauseMatchTime()
     wait(5)
     TimeRemaining = 265
-    hudSubheader(getAllPlayers(), "Server Restarts In {0} Min - V1.7.8c".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+    hudSubheader(getAllPlayers(), "Server Restarts In {0} Min - V1.7.9".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     
     while TimeRemaining > 0:
         wait(60)
@@ -978,7 +978,7 @@ rule "Death Reset":
     @Condition not eventPlayer.SpectateToggle
     @Condition not eventPlayer.CompDone
     #@Condition len(CheckpointPositions) >= 2
-    
+    wait(0.24) # prevent crash on dead spaming 0.24 works
     eventPlayer.clearStatusEffect(Status.PHASED_OUT)
     eventPlayer.resurrect()
     checkpointFailReset()
@@ -987,9 +987,12 @@ rule "Player Phase":
     @Event eachPlayer
     @Condition eventPlayer.hasStatusEffect(Status.PHASED_OUT) == false
     @Condition eventPlayer.isAlive()
-    
+    #wait(0.32)
+    if eventPlayer.hasStatusEffect(Status.INVINCIBLE):
+        wait(0.16)
     eventPlayer.setStatusEffect(null, Status.PHASED_OUT, 9999)
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
+
 
 
 rule "Player Leaves":
@@ -1008,6 +1011,43 @@ rule "Player Leaves":
         lbl_a:
         SavePauseTime[SaveEnt.index(eventPlayer)] = 0
         SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
+
+
+rule "AFK timer":
+    @Event eachPlayer
+    @Condition eventPlayer.isMoving() == false
+    @Condition eventPlayer.isAlive()
+    @Condition not eventPlayer.EditorOn
+    wait(60, Wait.ABORT_WHEN_FALSE)
+    # raycast to prevent camera stuck on low wall
+    eventPlayer.startCamera(
+        eventPlayer.getPosition() + 
+        Vector.UP * 
+        (
+        distance(
+            eventPlayer.getPosition(),
+            raycast(eventPlayer.getPosition(),eventPlayer.getPosition()+vect(0,4,0), null, null,false).getHitPosition()
+        ) - 1
+        ) ,
+        eventPlayer.getPosition(), 
+        10
+    )
+    # clear status to apply sleep, auto re-aply via normal aply rule
+    eventPlayer.clearStatusEffect(Status.PHASED_OUT)
+    wait()
+    eventPlayer.clearStatusEffect(Status.INVINCIBLE)
+    wait()
+    eventPlayer.setStatusEffect(null, Status.ASLEEP, 9999)
+    # cancel it after jumping or not sleep, reset cures sleep
+    waitUntil(eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.hasStatusEffect(Status.ASLEEP) == false, 99999)
+    eventPlayer.clearStatusEffect(Status.ASLEEP)
+    eventPlayer.stopCamera()
+    waitUntil(eventPlayer.isOnWall(), 2)
+    if eventPlayer.isOnWall(): # prevent save bhop climb
+        eventPlayer.cancelPrimaryAction() 
+
+    if RULE_CONDITION:
+        goto RULE_START
 
 
 #!include "commands.opy"     

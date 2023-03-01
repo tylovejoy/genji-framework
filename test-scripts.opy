@@ -17,10 +17,10 @@
     #!define show_orbradius true
 
 #### test bots #####
-    #!define testaion false
+    #!define testaion true
 
     ##### should do 19 max #####
-    #!define testbotnumber 8
+    #!define testbotnumber 19
     ##### wait for all bots to be created #####
     #!define waitforcreate true
     ##### delay after all bots are created - toggle #####
@@ -34,7 +34,8 @@
     ##!define aiactiondelay (testAI.index(eventPlayer) * 2)
 
     ##### AI #####
-        #!define leaderboardai true 
+        #!define leaderboardai false 
+        #!define actionai false
 
 globalvar AvrgSecStore
 globalvar AvrgSecDisplay
@@ -65,20 +66,13 @@ rule "multi purpose hud":
     hudSubheader(getAllPlayers(), 
         "hud count {}\n"
         "fx count: {}\n"
-        "vertical speed: {}\n"
-        "is jumping: {} \n"
-        "jump count: {}\n"
-        "isOnGround: {}\n"
-        "altitude: {}\n"
+        "angles: {} : {}\n"
         ""
         "".format(
         getNumberOfTextIds(),
         getNumberOfEntityIds(),
-        localPlayer.getVerticalSpeed(),
-        localPlayer.isJumping(),
-        localPlayer.JumpCount,
-        localPlayer.isOnGround(),
-        localPlayer.getAltitude()
+        localPlayer.getHorizontalFacingAngle(),
+        localPlayer.getVerticalFacingAngle()
         ),
         HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
@@ -223,3 +217,55 @@ rule "leaderboard test ai":
     wait(1)
     eventPlayer.LockCollected = eventPlayer.BouncePosition_Cache
     eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint+1]+ Vector.UP) # teleport not needed
+
+
+rule "action test ai":
+    @Event eachPlayer
+    @Condition testaion
+    @Condition actionai
+    @Condition eventPlayer in testAI
+    @Condition (waitforcreate and AIcreated) or not waitforcreate
+
+    if aistartdelay:
+        wait(aiactiondelay )
+
+    eventPlayer.CurrentCheckpoint = 13
+    wait()
+    UpdateCache()
+    wait()
+    checkpointFailReset()
+    wait()
+    eventPlayer.startFacing(angleToDirection(-3.5, 35), 360, Relativity.TO_WORLD, FacingReeval.NONE)
+    #eventPlayer.startFacing(Vector.UP, 360, Relativity.TO_WORLD, FacingReeval.NONE)
+    wait()
+    # invis mode
+    eventPlayer.startForcingButton(Button.MELEE)
+    wait()
+    eventPlayer.startForcingButton(Button.RELOAD)
+    wait()
+    eventPlayer.stopForcingButton(Button.MELEE)
+    # spam repeat
+    wait(1)
+    while hostPlayer.CurrentCheckpoint < 15:
+        #eventPlayer.forceButtonPress(Button.ABILITY_1)
+        eventPlayer.forceButtonPress(Button.JUMP)
+        wait(0.032)
+
+
+        #eventPlayer.InvincibleToggle = true
+
+/*
+rule "test dead":
+    @Event eachPlayer
+
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT)
+    wait(1)
+    while not eventPlayer.isHoldingButton(Button.INTERACT):
+        kill(eventPlayer,null)
+        wait()
+        eventPlayer.teleport(eventPlayer.getPosition()+vect(0,0.1,0))
+         wait()
+        eventPlayer.forceButtonPress(Button.ABILITY_1)
+        wait(0.32)
+  
+*/
