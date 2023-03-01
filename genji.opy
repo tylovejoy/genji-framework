@@ -626,7 +626,7 @@ rule "remake leaderboard": # for global isntead of tied to player
     if LeaderBoardFull[5]:
         hudHeader(
             getAllPlayers() if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
-            "　　　　　　　　　　　　　　　　　 　\n"
+            "　　　　　　　　　　　　　　　　　　\n"
             "　 6:　{0} - {5}　\n"
             "　 7:　{1} - {6}　\n"
             "　 8:　{2} - {7}　\n"
@@ -977,7 +977,6 @@ rule "Death Reset":
     @Event playerDied
     @Condition not eventPlayer.SpectateToggle
     @Condition not eventPlayer.CompDone
-    #@Condition len(CheckpointPositions) >= 2
     wait(0.24) # prevent crash on dead spaming 0.24 works
     eventPlayer.clearStatusEffect(Status.PHASED_OUT)
     eventPlayer.resurrect()
@@ -987,8 +986,7 @@ rule "Player Phase":
     @Event eachPlayer
     @Condition eventPlayer.hasStatusEffect(Status.PHASED_OUT) == false
     @Condition eventPlayer.isAlive()
-    #wait(0.32)
-    if eventPlayer.hasStatusEffect(Status.INVINCIBLE):
+    if eventPlayer.hasStatusEffect(Status.INVINCIBLE): # delay if its for sleep
         wait(0.16)
     eventPlayer.setStatusEffect(null, Status.PHASED_OUT, 9999)
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
