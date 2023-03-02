@@ -3,7 +3,7 @@
 settings {
     "main": {
         "description": "  ~ The Official Genji Parkour Editor ~\nCode: 54CRY\nAdapted by: nebula#11571/FishoFire#2431",
-        "modeName": "Genji Parkour v1.7.8"
+        "modeName": "Genji Parkour v1.7.9"
     },
     "lobby": {
         "allowPlayersInQueue": true,
