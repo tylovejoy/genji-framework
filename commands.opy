@@ -93,7 +93,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
             eventPlayer.AttemptCount ++
             CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.AttemptCount 
     
-
+    eventPlayer.clearStatusEffect(Status.ASLEEP)
     eventPlayer.flytoggle = null
     eventPlayer.CurrentCheckpoint = 0  
     eventPlayer.PracticeToggle = false
