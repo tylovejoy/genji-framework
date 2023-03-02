@@ -216,3 +216,7 @@ fixed:
     - ban per cp now defaults to -1. this doesnt functionally change anything other then give you an array by default instead of empty array
     - (version b) wallclimb ban changed so that the reset triggers AFTER you land on the cp instead. as requested.
     - (version c) invincible mode exploit patched
+
+1.7.9 - 2-3-2023
+    - added afk timer puting you to sleep
+    - added 0.024 delay before respawning from dieng to prevent server crash + restart
