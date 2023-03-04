@@ -420,7 +420,7 @@ rule "Match time":
     pauseMatchTime()
     wait(5)
     TimeRemaining = 265
-    hudSubheader(getAllPlayers(), "Server Restarts In {0} Min - V1.7.9".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+    hudSubheader(getAllPlayers(), "Server Restarts In {0} Min - V1.7.9b".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     
     while TimeRemaining > 0:
         wait(60)
@@ -452,7 +452,7 @@ rule "Player Initialize and game HUD":
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
     eventPlayer.preloadHero(Hero.GENJI)
-    eventPlayer.setRespawnTime(0)
+    eventPlayer.setRespawnTime(1)
     eventPlayer.SpectateToggle = false
     eventPlayer.WallclimbUsed = false #Climbing the wall prompts the HUD
     eventPlayer.JumpCount = 0
@@ -512,6 +512,8 @@ rule "Player Initialize and game HUD":
     hudText(eventPlayer, null, 
         "Practice Time {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "", 
         "Time {0}".format(prettyTime(eventPlayer.Timer)), 
+        #"Time {0}{1}{2}".format(prettyTime(eventPlayer.Timer), "\nSplit " if eventPlayer.splitson else "",eventPlayer.splitdisplay  if eventPlayer.splitson else ""), 
+        
         HudPosition.LEFT, HO.game_timer, Color.WHITE, Color.GRAY, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT)
     
     hudText(eventPlayer, null, 
@@ -521,6 +523,7 @@ rule "Player Initialize and game HUD":
             len(CheckpointPositions) - 1,
             "\n" if eventPlayer.banstring else "",
             eventPlayer.banstring if eventPlayer.banstring else ""
+            #"\nSplit {}".format(eventPlayer.splitdisplay) if eventPlayer.splitson else ""
         ),    
         HudPosition.TOP, HO.game_level_orb, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
     )
@@ -861,6 +864,8 @@ rule "Arrive | Ground reset | traces":
             eventPlayer.LockCollected = []
             eventPlayer.CurrentCheckpoint += 1
             UpdateCache()
+            if eventPlayer.isUsingUltimate() and not eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints:
+                kill(eventPlayer, null)
             if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) > 1:# teleport cps
                 eventPlayer.startForcingPosition( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ,false)
                 wait(0.1)
@@ -874,8 +879,7 @@ rule "Arrive | Ground reset | traces":
             bigMessage(eventPlayer, "Arrived at {0} / {1}{2}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1, " - Split {}".format(eventPlayer.splitdisplay) if eventPlayer.splitson else ""))
             wait()
             UpdateTitle()
-            if eventPlayer.isUsingUltimate():
-                kill(eventPlayer, null)
+           
             if eventPlayer.PracticeToggle:
                 eventPlayer.splittime = eventPlayer.practicetimer
                 goto lbl_abc
@@ -973,14 +977,38 @@ rule "Bounce Ball / Orb | Activate":
 
     eventPlayer.bouncetouchedlast = -1
 
+
+
 rule "Death Reset":
     @Event playerDied
     @Condition not eventPlayer.SpectateToggle
     @Condition not eventPlayer.CompDone
-    wait(0.24) # prevent crash on dead spaming 0.24 works
     eventPlayer.clearStatusEffect(Status.PHASED_OUT)
     eventPlayer.resurrect()
     checkpointFailReset()
+    # rest is to prevent dead spaming from crashign server
+    # but doing waits only when needed
+    waitUntil(eventPlayer.isAlive(), 1)
+    waitUntil(eventPlayer.isDead(), 1)
+    if eventPlayer.isDead() and (not eventPlayer.SpectateToggle) and (not eventPlayer.CompDone):
+        wait(0.16)
+        eventPlayer.clearStatusEffect(Status.PHASED_OUT)
+        eventPlayer.resurrect()
+        checkpointFailReset()
+        waitUntil(eventPlayer.isAlive(), 1)
+        waitUntil(eventPlayer.isDead(), 1)
+        if eventPlayer.isDead() and (not eventPlayer.SpectateToggle) and (not eventPlayer.CompDone):
+            wait(0.44)
+            eventPlayer.clearStatusEffect(Status.PHASED_OUT)
+            eventPlayer.resurrect()
+            checkpointFailReset()
+            waitUntil(eventPlayer.isAlive(), 1)
+            waitUntil(eventPlayer.isDead(), 1)
+            if eventPlayer.isDead() and (not eventPlayer.SpectateToggle) and (not eventPlayer.CompDone):
+                wait(0.64)
+                eventPlayer.clearStatusEffect(Status.PHASED_OUT)
+                eventPlayer.resurrect()
+                checkpointFailReset()
 
 rule "Player Phase":
     @Event eachPlayer
@@ -1016,7 +1044,7 @@ rule "AFK timer":
     @Condition eventPlayer.isMoving() == false
     @Condition eventPlayer.isAlive()
     @Condition not eventPlayer.EditorOn
-    wait(60, Wait.ABORT_WHEN_FALSE)
+    wait(90, Wait.ABORT_WHEN_FALSE)
     # raycast to prevent camera stuck on low wall
     eventPlayer.startCamera(
         eventPlayer.getPosition() + 

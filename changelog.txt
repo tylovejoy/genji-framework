@@ -219,3 +219,6 @@ fixed:
 1.7.9 - 2-3-2023
     - added afk timer puting you to sleep
     - added 0.024 delay before respawning from dieng to prevent server crash + restart
+    (b) - dead delay now only triggers when you are spamming
+    (b) - you dont die on pressing ult when landing if next cp has ult.
+    (b) - afk timer now 90 seconds
