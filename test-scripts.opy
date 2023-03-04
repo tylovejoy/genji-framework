@@ -20,7 +20,7 @@
     #!define testaion true
 
     ##### should do 19 max #####
-    #!define testbotnumber 19
+    #!define testbotnumber 9
     ##### wait for all bots to be created #####
     #!define waitforcreate true
     ##### delay after all bots are created - toggle #####
@@ -235,7 +235,8 @@ rule "action test ai":
     wait()
     checkpointFailReset()
     wait()
-    eventPlayer.startFacing(angleToDirection(-3.5, 35), 360, Relativity.TO_WORLD, FacingReeval.NONE)
+    #eventPlayer.startFacing(angleToDirection(-3.5, 35), 360, Relativity.TO_WORLD, FacingReeval.NONE)
+    eventPlayer.startFacing(angleToDirection(-0.32, 30), 360, Relativity.TO_WORLD, FacingReeval.NONE)
     #eventPlayer.startFacing(Vector.UP, 360, Relativity.TO_WORLD, FacingReeval.NONE)
     wait()
     # invis mode
@@ -246,9 +247,9 @@ rule "action test ai":
     eventPlayer.stopForcingButton(Button.MELEE)
     # spam repeat
     wait(1)
-    while hostPlayer.CurrentCheckpoint < 15:
-        #eventPlayer.forceButtonPress(Button.ABILITY_1)
-        eventPlayer.forceButtonPress(Button.JUMP)
+    while hostPlayer.CurrentCheckpoint < 50:
+        eventPlayer.forceButtonPress(Button.ABILITY_1)
+        #eventPlayer.forceButtonPress(Button.JUMP)
         wait(0.032)
 
 
