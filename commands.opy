@@ -93,7 +93,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
             eventPlayer.AttemptCount ++
             CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.AttemptCount 
     
-    eventPlayer.clearStatusEffect(Status.ASLEEP)
+
     eventPlayer.flytoggle = null
     eventPlayer.CurrentCheckpoint = 0  
     eventPlayer.PracticeToggle = false
@@ -163,7 +163,7 @@ rule "Toggle Invincible Mode | Melee + Reload":
     @Condition eventPlayer.isAlive()
     @Condition (not CompMode) or (not eventPlayer.CompDone)
     @Condition not eventPlayer.LockState
-    
+
     eventPlayer.LockCollected = []
     eventPlayer.flytoggle = null
 
@@ -321,6 +321,7 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition not eventPlayer.isHoldingButton(Button.MELEE)
+
     if eventPlayer.QuickRestartToggle:
         eventPlayer.LockCollected = []
         if eventPlayer.isUsingUltimate():
