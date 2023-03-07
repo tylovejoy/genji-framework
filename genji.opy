@@ -1075,6 +1075,7 @@ rule "AFK timer":
     if RULE_CONDITION:
         goto RULE_START
 
+#!include "huds.opy"
 
 #!include "commands.opy"     
 
