@@ -1,3 +1,4 @@
+#!define versionhere "1.8 work in progres"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(18) # 0 is editor, rest is numbers
@@ -361,8 +362,7 @@ rule "Match time":
     pauseMatchTime()
     wait(5)
     TimeRemaining = 265
-    #hudSubheader(getAllPlayers(), "Server Restarts In {0} Min - V1.7.9b".format(TimeRemaining), HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
-    
+
     while TimeRemaining > 0:
         wait(60)
         TimeRemaining --
@@ -390,15 +390,14 @@ rule "Player Initialize":
     eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron , 0) # Turn Editor On
     eventPlayer.GuideToggle = eventPlayer.EditorOn
     
-    /*
-    eventPlayer.isCN = (
-          any(["{0}".format(Color.ROSE) == "玫红",
-            l"No" == "不行",
-            l"Capture" ==  "夺取" or l"Capture" == "捕捉"] ): # if any title data, find last cp
-    )
-    
-    any(["白色|蓝色|灰绿色".strContains("{}".format(c)) for c in [Color.WHITE, Color.BLUE, Color.LIME_GREEN]])
-    */
+
+    eventPlayer.isCN = any([
+        "{0}".format(Color.ROSE) == "玫红", 
+        l"No" == "不行", 
+        l"Capture" ==  "夺取",    # 捕捉cn
+        l"Capture" == "捕捉"  # 捕捉 tw  check
+    ])
+     
     eventPlayer.disableGamemodeHud()
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()

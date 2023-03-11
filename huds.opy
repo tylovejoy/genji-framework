@@ -1,3 +1,5 @@
+#!mainFile "genji.opy"
+
 /*
 huds outside this file:
 - addons you need otk now where to find:
@@ -7,7 +9,7 @@ huds outside this file:
 
 */
 
-#!mainFile "genji.opy"
+
 
 #!define -CN if localplayer.isCN else 
 
@@ -18,8 +20,13 @@ rule "Huds: Global/Localplayer":
     hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
     #????????? does this work or did i create it later for a reason?
+    
     hudSubheader(getAllPlayers(),
-         "Server Restarts In {0} Min - V1.7.9b".format(TimeRemaining), 
+        
+        
+        "房间将在 {0} 分钟后重启 - V{1}".format(TimeRemaining,versionhere) if localPlayer.isCN else "Server Restarts In {0} Min - V{1}".format(TimeRemaining,versionhere)
+        
+        , 
         HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS
     )
     
