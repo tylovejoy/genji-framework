@@ -227,3 +227,4 @@ fixed:
 1.8 - ?
     - Fixed a bug that caused timer to reduce to 0.02 seconsds if you restarted on landing on the final cp.
     - fixed a bug that caused preview to display vector(0,0,0) on first cp
+    - splits now display on the hud instead of at arriving. the toggle has been removed.
