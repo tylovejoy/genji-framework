@@ -20,7 +20,7 @@
     #!define testaion true
 
     ##### should do 19 max #####
-    #!define testbotnumber 19
+    #!define testbotnumber 10
     ##### wait for all bots to be created #####
     #!define waitforcreate true
     ##### delay after all bots are created - toggle #####
@@ -235,24 +235,26 @@ rule "action test ai":
     wait(1)
     wait( ((testAI.index(eventPlayer)) * 0.1 ) )
     # 1 for map 4 - 42 for rialto
-    eventPlayer.CurrentCheckpoint = 42
+    eventPlayer.CurrentCheckpoint = 1
     wait()
     UpdateCache()
+    
     wait()
     checkpointFailReset()
-    #wait()
-    #eventPlayer.teleport(CheckpointPositions[2] + vect(0,15,0) )
+    
+    wait()
+    eventPlayer.teleport(CheckpointPositions[2] + vect(0,10,0) )
 
     #wait(eventPlayer.getSlot()*0.5)
     #wait(0.2 + ((testAI.index(eventPlayer))*0.075) ) # one bot
     #waitUntil(eventPlayer.getAltitude() <  ((testAI.index(eventPlayer))*0.01), 4) # to early
     waitUntil(eventPlayer.isInAir(), 10)
     wait(0.1)
-    eventPlayer.CurrentCheckpoint = 42
+    #eventPlayer.CurrentCheckpoint = 42
 
     waitUntil(eventPlayer.isOnGround(), 40)
     #wait( ((testAI.index(eventPlayer))*0.01)  ) # result in 1
-    wait( ((testAI.index(eventPlayer))*0.01)  ) 
+    wait( ((testAI.index(eventPlayer))*0.04)  ) 
 
     eventPlayer.startForcingButton(Button.CROUCH)
     eventPlayer.startForcingButton(Button.INTERACT)

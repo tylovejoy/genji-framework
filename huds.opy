@@ -13,21 +13,22 @@ huds outside this file:
 
 #!define -CN if localplayer.isCN else 
 
+#!define CNany if any([ \
+        "{0}".format(Color.ROSE) == "玫红", \
+        l"No" == "不行",  \
+        l"Capture" ==  "夺取",    # 捕捉cn \
+        l"Capture" == "捕捉"  # 捕捉 tw  check \
+    ]) else
+
 rule "Huds: Global/Localplayer":
-    # names/creits here
+    # names/credits here
     wait(2)
  
-    hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-
-    #????????? does this work or did i create it later for a reason?
-    
+    hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)   
     hudSubheader(getAllPlayers(),
-        
-        
-        "房间将在 {0} 分钟后重启 - V{1}".format(TimeRemaining,versionhere) if localPlayer.isCN else "Server Restarts In {0} Min - V{1}".format(TimeRemaining,versionhere)
-        
-        , 
-        HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS
+        "房间将在 {0} 分钟后重启 - V{1}".format(TimeRemaining,versionhere) CNany 
+        "Server Restarts In {0} Min - V{1}".format(TimeRemaining,versionhere)
+        , HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS
     )
     
 
@@ -143,12 +144,18 @@ rule "Huds: each player":
     @Event eachPlayer
     # ban icons in level
     hudText(eventPlayer, null, 
-        "Practice Time {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "", 
-        "Time {0}".format(prettyTime(eventPlayer.Timer)), 
+        ("练习用时{0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "")
+        CNany  
+        ("Practice Time {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "")
+        , 
+        "用时 {0}".format(prettyTime(eventPlayer.Timer))
+        CNany  
+        "Time {0}".format(prettyTime(eventPlayer.Timer)) ,
         #"Time {0}{1}{2}".format(prettyTime(eventPlayer.Timer), "\nSplit " if eventPlayer.splitson else "",eventPlayer.splitdisplay  if eventPlayer.splitson else ""), 
-        
         HudPosition.LEFT, HO.game_timer, Color.WHITE, Color.GRAY, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT)
     
+
+
     hudText(eventPlayer, null, 
         "orange orbs {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else "",
         "{3}{2}Level {0} / {1}".format(
