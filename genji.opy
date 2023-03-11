@@ -52,15 +52,17 @@ rule "------------------------------------------------------------------------ M
     @Delimiter
     @Disabled
 
-rule "Map Data <---- INSERT YOUR MAP DATA HERE":
+rule "Map Data / 数据录入 <---- INSERT HERE / 在这输入":
     @Delimiter
 
 
 editorordata
 
-rule "Credits here <---- INSERT YOUR NAME HERE": 
+rule "Credits here / 作者名字 <---- INSERT HERE / 在这输入 ": 
+    # 作者
     hudSubtext(getAllPlayers(), "made by: name", HudPosition.LEFT, HO.data_name, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText()) # appending these makes em removed in editor
+    # 代码
     hudSubtext(getAllPlayers(), "map code: XXXXX", HudPosition.LEFT, HO.data_code, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
     
@@ -383,10 +385,20 @@ rule "Match time":
         declareTeamVictory(hostPlayer.getTeam())
 
 
-rule "Player Initialize and game HUD":
+rule "Player Initialize":
     @Event eachPlayer
     eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron , 0) # Turn Editor On
     eventPlayer.GuideToggle = eventPlayer.EditorOn
+    
+    
+    eventPlayer.isCN = (
+          any(["{0}".format(Color.ROSE) == "玫红",
+            l"No" == "不行",
+            l"Capture" ==  "夺取" or l"Capture" == "捕捉"] ): # if any title data, find last cp
+    )
+    
+    any(["白色|蓝色|灰绿色".strContains("{}".format(c)) for c in [Color.WHITE, Color.BLUE, Color.LIME_GREEN]])
+
     eventPlayer.disableGamemodeHud()
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
@@ -583,14 +595,6 @@ def StartGame_Sub():
     eventPlayer.InvincibleToggle = false
     # eventPlayer.LockState = false
     UpdateCache()
-
-def UpdateTitle():
-    @Name "Tittle "
-    if TitleData == null or CompMode or eventPlayer.PracticeToggle or eventPlayer.EditorOn or (not eventPlayer.CurrentCheckpoint in TitleData[0]): 
-        return
-    destroyInWorldText(eventPlayer.TitleStore)
-    createInWorldText(getAllPlayers() if not eventPlayer.invis else null,TitleData[1][TitleData[0].index(eventPlayer.CurrentCheckpoint)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.CurrentCheckpoint)], SpecVisibility.DEFAULT)
-    eventPlayer.TitleStore = getLastCreatedText()
 
 def KILLBALL():
     @Name "SUB | Kill Orb Effects"

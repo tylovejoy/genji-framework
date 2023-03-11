@@ -3,17 +3,26 @@ huds outside this file:
 - addons you need otk now where to find:
     - custom diffiuclty
     - display world record
-- titles
 - editor
 
 */
 
+#!mainFile "genji.opy"
+
+#!define -CN if localplayer.isCN else 
 
 rule "Huds: Global/Localplayer":
     # names/creits here
     wait(2)
  
     hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+
+    #????????? does this work or did i create it later for a reason?
+    hudSubheader(getAllPlayers(),
+         "Server Restarts In {0} Min - V1.7.9b".format(TimeRemaining), 
+        HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS
+    )
+    
 
     # padding for custom hud display
     hudSubtext(getAllPlayers(), "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv", HudPosition.TOP, HO.fillermain, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
@@ -51,12 +60,7 @@ rule "Huds: Global/Localplayer":
     )  
     HudStoreEdit.append(getLastCreatedText())
 
-    #????????? does this work or did i create it later for a reason?
-    hudSubheader(getAllPlayers(),
-         "Server Restarts In {0} Min - V1.7.9b".format(TimeRemaining), 
-        HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS
-    )
-    
+ 
     CreateLeaderBoard()
 
     if CpHudText != null: # text per cp
@@ -293,3 +297,12 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
             ),HudPosition.TOP, HO.board_display4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
         )
         LeaderBoardHuds.append(getLastCreatedText())
+
+
+def UpdateTitle():
+    @Name "Tittle "
+    if TitleData == null or CompMode or eventPlayer.PracticeToggle or eventPlayer.EditorOn or (not eventPlayer.CurrentCheckpoint in TitleData[0]): 
+        return
+    destroyInWorldText(eventPlayer.TitleStore)
+    createInWorldText(getAllPlayers() if not eventPlayer.invis else null,TitleData[1][TitleData[0].index(eventPlayer.CurrentCheckpoint)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.CurrentCheckpoint)], SpecVisibility.DEFAULT)
+    eventPlayer.TitleStore = getLastCreatedText()
