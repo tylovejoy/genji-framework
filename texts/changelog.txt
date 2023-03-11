@@ -223,3 +223,6 @@ fixed:
     (b) - dead delay now only triggers when you are spamming
     (b) - you dont die on pressing ult when landing if next cp has ult.
     (b) - afk timer now 90 seconds
+
+1.8 - ?
+    - Fixed a bug that caused timer to reduce to 0.02 seconsds if you restarted on landing on the final cp.

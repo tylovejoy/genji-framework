@@ -70,8 +70,14 @@ rule "Restart Run | Crouch + Interact + Deflect":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) 
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
     #@Condition not eventPlayer.isUsingAbility1()
-    
+
     eventPlayer.LockState = true 
+    # prevent 0.02 time bug with next 2 checks
+    if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 2 and eventPlayer.getAltitude() < 3:
+        waitUntil(eventPlayer.isOnGround(), 3)
+        wait(0.64)
+    if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
+        wait(0.64)
 
     if CompMode:      
         wait()

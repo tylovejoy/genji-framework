@@ -1,13 +1,13 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
-#14 nepal 4 mini 6 busan 10 holly
+editortoggle(18) # 0 is editor, rest is numbers
+#14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
 #!define inspectoron false
 
 # disable via double ## at include, not the define because the define needs to exist
-#!define testaitoggle ##!include "test-scripts.opy"
+#!define testaitoggle #!include "test-scripts.opy"
 
 #!define compmodetoggle false
 #!define attemptcount 5
@@ -390,7 +390,7 @@ rule "Player Initialize":
     eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron , 0) # Turn Editor On
     eventPlayer.GuideToggle = eventPlayer.EditorOn
     
-    
+    /*
     eventPlayer.isCN = (
           any(["{0}".format(Color.ROSE) == "玫红",
             l"No" == "不行",
@@ -398,7 +398,7 @@ rule "Player Initialize":
     )
     
     any(["白色|蓝色|灰绿色".strContains("{}".format(c)) for c in [Color.WHITE, Color.BLUE, Color.LIME_GREEN]])
-
+    */
     eventPlayer.disableGamemodeHud()
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()

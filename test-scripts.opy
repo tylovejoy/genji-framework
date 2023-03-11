@@ -20,11 +20,11 @@
     #!define testaion true
 
     ##### should do 19 max #####
-    #!define testbotnumber 9
+    #!define testbotnumber 19
     ##### wait for all bots to be created #####
     #!define waitforcreate true
     ##### delay after all bots are created - toggle #####
-    #!define aistartdelay true
+    #!define aistartdelay false
     ##### delay after all bots are created - seconds #####
     #!define creationdelay 8 
 
@@ -35,7 +35,7 @@
 
     ##### AI #####
         #!define leaderboardai false 
-        #!define actionai false
+        #!define actionai true
 
 globalvar AvrgSecStore
 globalvar AvrgSecDisplay
@@ -67,12 +67,14 @@ rule "multi purpose hud":
         "hud count {}\n"
         "fx count: {}\n"
         "angles: {} : {}\n"
-        ""
+        "alt: {}\n"
         "".format(
         getNumberOfTextIds(),
         getNumberOfEntityIds(),
         localPlayer.getHorizontalFacingAngle(),
-        localPlayer.getVerticalFacingAngle()
+        localPlayer.getVerticalFacingAngle(),
+        localPlayer.getAltitude()
+
         ),
         HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
@@ -188,6 +190,7 @@ rule "leaderboard test bots":
         testAI.append(getLastCreatedEntity())
         wait(0.1)
         testAI[len(testAI)-1].startForcingName("bot {0}".format(len(testAI)-1))
+
         
     AIcreated = true
 
@@ -229,44 +232,32 @@ rule "action test ai":
     if aistartdelay:
         wait(aiactiondelay )
 
-    eventPlayer.CurrentCheckpoint = 13
+    wait(1)
+    wait( ((testAI.index(eventPlayer)) * 0.1 ) )
+    # 1 for map 4 - 42 for rialto
+    eventPlayer.CurrentCheckpoint = 42
     wait()
     UpdateCache()
     wait()
     checkpointFailReset()
-    wait()
-    #eventPlayer.startFacing(angleToDirection(-3.5, 35), 360, Relativity.TO_WORLD, FacingReeval.NONE)
-    eventPlayer.startFacing(angleToDirection(-0.32, 30), 360, Relativity.TO_WORLD, FacingReeval.NONE)
-    #eventPlayer.startFacing(Vector.UP, 360, Relativity.TO_WORLD, FacingReeval.NONE)
-    wait()
-    # invis mode
-    eventPlayer.startForcingButton(Button.MELEE)
-    wait()
-    eventPlayer.startForcingButton(Button.RELOAD)
-    wait()
-    eventPlayer.stopForcingButton(Button.MELEE)
-    # spam repeat
-    wait(1)
-    while hostPlayer.CurrentCheckpoint < 50:
-        eventPlayer.forceButtonPress(Button.ABILITY_1)
-        #eventPlayer.forceButtonPress(Button.JUMP)
-        wait(0.032)
+    #wait()
+    #eventPlayer.teleport(CheckpointPositions[2] + vect(0,15,0) )
 
+    #wait(eventPlayer.getSlot()*0.5)
+    #wait(0.2 + ((testAI.index(eventPlayer))*0.075) ) # one bot
+    #waitUntil(eventPlayer.getAltitude() <  ((testAI.index(eventPlayer))*0.01), 4) # to early
+    waitUntil(eventPlayer.isInAir(), 10)
+    wait(0.1)
+    eventPlayer.CurrentCheckpoint = 42
 
-        #eventPlayer.InvincibleToggle = true
+    waitUntil(eventPlayer.isOnGround(), 40)
+    #wait( ((testAI.index(eventPlayer))*0.01)  ) # result in 1
+    wait( ((testAI.index(eventPlayer))*0.01)  ) 
 
-/*
-rule "test dead":
-    @Event eachPlayer
-
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT)
-    wait(1)
-    while not eventPlayer.isHoldingButton(Button.INTERACT):
-        kill(eventPlayer,null)
-        wait()
-        eventPlayer.teleport(eventPlayer.getPosition()+vect(0,0.1,0))
-         wait()
-        eventPlayer.forceButtonPress(Button.ABILITY_1)
-        wait(0.32)
-  
-*/
+    eventPlayer.startForcingButton(Button.CROUCH)
+    eventPlayer.startForcingButton(Button.INTERACT)
+    wait()
+    eventPlayer.startForcingButton(Button.ABILITY_2)
+    wait()
+    eventPlayer.stopForcingButton(Button.CROUCH)
+    eventPlayer.stopForcingButton(Button.INTERACT)
