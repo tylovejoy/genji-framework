@@ -303,6 +303,7 @@ enum HO:
     edit_savemap,
     
     game_timer,
+    game_split_display,
     game_bhop,
     game_climb,
 

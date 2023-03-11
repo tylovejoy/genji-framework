@@ -62,12 +62,19 @@ rule "Huds: Global/Localplayer":
     )
     HudStoreEdit.append(getLastCreatedText())
 
+    /*
     hudSubtext(getAllPlayers(), 
         "Hold {0} | Splits{1}".format(buttonString(Button.ULTIMATE), " | ON " if localPlayer.splitson else ""), 
         HudPosition.RIGHT, HO.com_splits, Color.GREEN if localPlayer.splitson else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )  
     HudStoreEdit.append(getLastCreatedText())
-
+    */
+    #hudSubtext or hudSubheader
+    hudSubtext(getAllPlayers(), 
+        "Split: {}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else ""
+        ,HudPosition.LEFT, HO.game_split_display, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+    )  
+    HudStoreEdit.append(getLastCreatedText())
  
     CreateLeaderBoard()
 

@@ -38,9 +38,7 @@ rule "Preview orbs/portals | Hold Primary":
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition not eventPlayer.EditorOn
     wait(0.9, Wait.ABORT_WHEN_FALSE)
-    #waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 0.9)
-    #if not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
-    #    return
+
     eventPlayer.PreviewsArray = [] # prevent preview empty bug
     if len(CustomPortalStart) > 0:
         eventPlayer.PreviewsArray = [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint]
@@ -78,9 +76,9 @@ rule "Restart Run | Crouch + Interact + Deflect":
     # prevent 0.02 time bug with next 2 checks
     if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 2 and eventPlayer.getAltitude() < 3:
         waitUntil(eventPlayer.isOnGround(), 3)
-        wait(0.64)
+        wait(0.42) # 0.64
     if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
-        wait(0.64)
+        wait(0.42)
 
     if CompMode:      
         wait()
@@ -110,6 +108,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
     eventPlayer.InvincibleToggle = false
     stopChasingVariable(eventPlayer.practicetimer)
     eventPlayer.practicetimer = 0
+    eventPlayer.splitdisplay = 0
     if eventPlayer in SaveEnt:
         DeleteSave()
     
@@ -249,6 +248,7 @@ rule "Toggle Practice Mode | Melee + Ultimate":
         if eventPlayer.NotOnLastCp:
             StartPauseTimer()
         eventPlayer.splittime = 0
+        eventPlayer.splitdisplay = 0
         eventPlayer.practicetimer = 0
         chase(eventPlayer.practicetimer, 9999999, rate=1, ChaseReeval.NONE)
         wait(0.2)
