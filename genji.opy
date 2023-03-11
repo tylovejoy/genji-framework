@@ -1,7 +1,7 @@
-#!define versionhere "1.8 wip"
+#!define versionhere "1.8 alpa"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(4) # 0 is editor, rest is numbers
+editortoggle(1) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false

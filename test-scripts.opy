@@ -17,7 +17,7 @@
     #!define show_orbradius true
 
 #### test bots #####
-    #!define testaion true
+    #!define testaion false
 
     ##### should do 19 max #####
     #!define testbotnumber 10

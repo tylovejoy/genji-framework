@@ -37,10 +37,13 @@ rule "Preview orbs/portals | Hold Primary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition not eventPlayer.EditorOn
-    waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 0.9)
-    if not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
-        return
-    eventPlayer.PreviewsArray = [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint]
+    wait(0.9, Wait.ABORT_WHEN_FALSE)
+    #waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 0.9)
+    #if not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
+    #    return
+    eventPlayer.PreviewsArray = [] # prevent preview empty bug
+    if len(CustomPortalStart) > 0:
+        eventPlayer.PreviewsArray = [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint]
     eventPlayer.PreviewsArray.append( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true]) 
     if len(eventPlayer.PreviewsArray) < 1 or eventPlayer.PreviewsArray == null or (not eventPlayer.NotOnLastCp):
         return
