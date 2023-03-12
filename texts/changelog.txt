@@ -232,4 +232,6 @@ fixed:
 
     - editor: you can now remove a placed teleport cp by using the same button again
     - editor: its now possible to move a cp without deleting its teleport
+    - editor: after placing a teleport, the cp location itself gets marked with an orange cirkle, incase you want to move that instead of the teleport.
     - editor: you can place a teleport even if quick reset is on, but now the quick reset has a 0.1 delay if you a hostplayer in edit cp mode.
+    - editor: kill/orb/teleport selection text and fx only apear in their respective modes
