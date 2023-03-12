@@ -225,10 +225,14 @@ fixed:
     (b) - afk timer now 90 seconds
 
 1.8 - ?
-    - Fixed a bug that caused timer to reduce to 0.02 seconsds if you restarted on landing on the final cp.
-    - fixed a bug that caused preview to display vector(0,0,0) on first cp
+    x when your game client is configured, you will see chinese text. translations by 十六 and ?????
+        - and yes this means english and cn in same lobby see a different text
+    
+    
     - splits now display on the hud instead of at arriving. the toggle has been removed.
     - there is now an icon in the dash/ult ready msg
+    - fixed a bug that caused timer to reduce to 0.02 seconsds if you restarted on landing on the final cp.
+    - fixed a bug that caused preview to display vector(0,0,0) on first cp
 
     - editor: you can now remove a placed teleport cp by using the same button again
     - editor: its now possible to move a cp without deleting its teleport
