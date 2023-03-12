@@ -28,7 +28,7 @@ def CheckUlt(): # checks if ult should be turned on
     if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):
         goto lbl_a #skip msg if these
     elif eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 1.4: 
-        smallMessage(eventPlayer, "   Ultimate is ready") 
+        smallMessage(eventPlayer, "   {} Ultimate is ready".format(abilityIconString(Hero.GENJI, Button.ULTIMATE))) 
         lbl_a:
         wait()        
         eventPlayer.setUltEnabled(true)
@@ -49,7 +49,7 @@ def CheckDash(): # checks if dash should be  turned on
     if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):
         goto lbl_a #skip msg if these
     elif eventPlayer.CurrentCheckpoint in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 1.4: 
-        smallMessage(eventPlayer, "   Dash is ready") 
+        smallMessage(eventPlayer, "   {} Dash is ready".format(abilityIconString(Hero.GENJI, Button.ABILITY_1))) 
         lbl_a:
         wait()        
         eventPlayer.setAbility1Enabled(true)
