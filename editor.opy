@@ -449,7 +449,7 @@ rule "Editor | delete cp/orb":
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer == hostPlayer
     
-    if eventPlayer.EditModeSelection == 0:
+    if eventPlayer.EditModeSelection == 0 and len(CheckpointPositions) > 0:
         # Resync Kill Orbs
         eventPlayer.Temp = []
         eventPlayer.Temp = [e for e in [(i if e2 == hostPlayer.CurrentCheckpoint else -1) for e2, i in KillballCheckpoints] if  e >=0]
@@ -498,7 +498,11 @@ rule "Editor | delete cp/orb":
 
         del CheckpointPositions[hostPlayer.CurrentCheckpoint]
         del CheckpointRings_Editing[hostPlayer.CurrentCheckpoint]
-        if hostPlayer.CurrentCheckpoint <= 0:
+        
+        if hostPlayer.CurrentCheckpoint == 0 and len(CheckpointPositions) > 0:
+            hostPlayer.CurrentCheckpoint = 0
+            goto lbl_a
+        elif hostPlayer.CurrentCheckpoint <= 0:
             hostPlayer.CurrentCheckpoint = -1
             goto lbl_a
         hostPlayer.CurrentCheckpoint -= 1
