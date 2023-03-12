@@ -1,7 +1,7 @@
 #!define versionhere "1.8 alpa"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(4) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -746,7 +746,7 @@ rule "Bounce Ball / Orb | Activate":
     if eventPlayer.BounceUlt_Cache[eventPlayer.bouncetouched]:
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
-        smallMessage(eventPlayer, "   Ultimate is ready")
+         smallMessage(eventPlayer, "   {} Ultimate is ready ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE))) 
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     if eventPlayer.BounceLock_Cache[eventPlayer.bouncetouched]:
@@ -759,7 +759,7 @@ rule "Bounce Ball / Orb | Activate":
             waitUntil(not eventPlayer.isUsingAbility1(), 1)
             wait(0.032) # wait til set false by check
         eventPlayer.setAbility1Enabled(true)
-        smallMessage(eventPlayer, "   Dash is ready")
+         smallMessage(eventPlayer, "   {} Ultimate is ready ".format(abilityIconString(Hero.GENJI, Button.ABILITY_1))) 
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     wait(0.24)

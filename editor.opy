@@ -131,7 +131,7 @@ rule "Editor | Hud and Effects":
         [   
         "{0} + {1} | Create New Checkpoint\n"
         "{0} + {2} | Delete selected Checkpoint\n"
-        "{0} + {3} | Add teleport to Checkpoint\n"
+        "{0} + {3} | Remove/Add teleport\n"
         "{0} + {4} | Set Checkpoint to current position\n"
         "{0} + {5} | Toggle Checkpoint Hitbox\n"
         "{4} (hold) | Precise position changing".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1)),
@@ -580,27 +580,33 @@ rule "Editor | cp size hitbox display":
     eventPlayer.EffectSizeToggle = not eventPlayer.EffectSizeToggle
     wait()
 
-rule "Editor | cp add teleport":
+rule "Editor | cp add/remove teleport":
     @Condition hostPlayer.EditorOn
     @Condition hostPlayer.isHoldingButton(Button.INTERACT)
     @Condition hostPlayer.isHoldingButton(Button.RELOAD)
     @Condition hostPlayer.isHoldingButton(Button.MELEE) == false
     @Condition len(CheckpointPositions) > 1
     @Condition hostPlayer.EditModeSelection == 0
-    @Condition hostPlayer.CurrentCheckpoint > 0
-    
+
     waitUntil(hostPlayer.isHoldingButton(Button.MELEE) or not (hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.RELOAD)), 0.5)
     if hostPlayer.isHoldingButton(Button.MELEE) or hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.RELOAD):
       return
 
-    CheckpointPositions[hostPlayer.CurrentCheckpoint] = [
-        CheckpointPositions[hostPlayer.CurrentCheckpoint][0] 
-            if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) != 0 
-            else CheckpointPositions[hostPlayer.CurrentCheckpoint], 
-        hostPlayer.getPosition()
-    ]
+    if hostPlayer.CurrentCheckpoint == 0:
+        smallMessage(hostPlayer,"   Can't place a teleport on first checkpoint")
+        return
 
-    smallMessage(hostPlayer, "   Teleport has been added for checkpoint {0}".format(hostPlayer.CurrentCheckpoint))
+    if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) > 1: # remove
+        CheckpointPositions[hostPlayer.CurrentCheckpoint] = CheckpointPositions[hostPlayer.CurrentCheckpoint][0]
+        smallMessage(hostPlayer, "   Teleport for level {0} has been removed.".format(hostPlayer.CurrentCheckpoint))
+    else: # add
+        CheckpointPositions[hostPlayer.CurrentCheckpoint] = [
+            CheckpointPositions[hostPlayer.CurrentCheckpoint][0] 
+                if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) != 0 
+                else CheckpointPositions[hostPlayer.CurrentCheckpoint], 
+            hostPlayer.getPosition()
+        ]
+        smallMessage(hostPlayer, "   Teleport has been added for level {0}".format(hostPlayer.CurrentCheckpoint))
     wait()
 
 rule "Editor | move cp once":
@@ -610,8 +616,10 @@ rule "Editor | move cp once":
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     
-    #smallMessage(getAllPlayers(), "   Checkpoint {0} has been deleted".format(hostPlayer.CurrentCheckpoint) if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) != 0 else "")
-    CheckpointPositions[hostPlayer.CurrentCheckpoint] = eventPlayer.getPosition() - vect(0, 0, 0)
+    if CheckpointPositions[hostPlayer.CurrentCheckpoint][1]:
+        CheckpointPositions[hostPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[hostPlayer.CurrentCheckpoint][1] ]
+    else:
+        CheckpointPositions[hostPlayer.CurrentCheckpoint] = eventPlayer.getPosition() 
     smallMessage(hostPlayer, "   Checkpoint has been moved to your position")
     wait()
 
@@ -631,7 +639,11 @@ rule "Editor | move cp slowly":
     
     #while eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.EditModeSelection == 0 and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false:
     while eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.EditModeSelection == 0 and eventPlayer.isAlive():
-        CheckpointPositions[eventPlayer.CurrentCheckpoint] = eventPlayer.getPosition()
+        #CheckpointPositions[eventPlayer.CurrentCheckpoint][0] = eventPlayer.getPosition()
+        if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) :
+            CheckpointPositions[hostPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[hostPlayer.CurrentCheckpoint][1] ]
+        else:
+            CheckpointPositions[hostPlayer.CurrentCheckpoint] = eventPlayer.getPosition() 
         wait()
     eventPlayer.stopCamera()
     eventPlayer.setMoveSpeed(100)

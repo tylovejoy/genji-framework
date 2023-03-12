@@ -332,6 +332,10 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     @Condition not eventPlayer.isHoldingButton(Button.MELEE)
 
     if eventPlayer.QuickRestartToggle:
+        if eventPlayer.EditorOn:
+            if eventPlayer == hostPlayer and eventPlayer.EditModeSelection == 0 and eventPlayer.isHoldingButton(Button.INTERACT):
+                #wait(0.1, Wait.ABORT_WHEN_FALSE)
+                wait(0.2)
         eventPlayer.LockCollected = []
         if eventPlayer.isUsingUltimate():
             kill(eventPlayer, null)

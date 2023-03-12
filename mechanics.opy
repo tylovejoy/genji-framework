@@ -28,7 +28,7 @@ def CheckUlt(): # checks if ult should be turned on
     if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):
         goto lbl_a #skip msg if these
     elif eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 1.4: 
-        smallMessage(eventPlayer, "   {} Ultimate is ready".format(abilityIconString(Hero.GENJI, Button.ULTIMATE))) 
+        smallMessage(eventPlayer, "   {} Ultimate is ready ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE))) 
         lbl_a:
         wait()        
         eventPlayer.setUltEnabled(true)
