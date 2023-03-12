@@ -24,8 +24,8 @@ rule "Editor | Clear Excess Data to Save Map":
     SelectedKillball_Editing = 0
     KillBallEffects = 0
     KillBallChase = 0
-    BladeEnabledCheckpoints = 0
-    DashEnabledCheckpoints = 0
+    #BladeEnabledCheckpoints = 0
+    #DashEnabledCheckpoints = 0
     ListPlayersAtCheckpoints = 0
     CurrentBounce_Editing = 0
     TempIterator1 = 0
@@ -187,15 +187,44 @@ rule "Editor | Hud and Effects":
         null,   
         HudPosition.TOP, HO.edit_changemode, Color.SKY_BLUE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-    
-    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0     else null, 
-        "{0} + {1} | orb give ult {3} | {2}".format(
+
+    hudSubtext(hostPlayer if hostPlayer.GuideToggle and (hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null, 
+        "{0} + {1} | {4} give ult {3} | {2}".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.PRIMARY_FIRE), 
-            "on" if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off",
-            abilityIconString(Hero.GENJI, Button.ULTIMATE)
-        ), HudPosition.LEFT, HO.edit_orb_ult, Color.GREEN  if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+            ("on" if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off") if  hostPlayer.EditModeSelection == 2 else
+            ("on" if hostPlayer.CurrentCheckpoint in BladeEnabledCheckpoints else "off"),
+            abilityIconString(Hero.GENJI, Button.ULTIMATE),
+            "Level" if hostPlayer.EditModeSelection == 0
+            else "Orb"
+        )        
+        , HudPosition.LEFT, HO.edit_orb_ult, 
+        Color.GREEN if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 and hostPlayer.EditModeSelection == 2 else
+        Color.GREEN if hostPlayer.CurrentCheckpoint in BladeEnabledCheckpoints and hostPlayer.EditModeSelection == 0 else
+        Color.ORANGE
+        , HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
+
+    
+    hudSubtext(hostPlayer if hostPlayer.GuideToggle and (hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null, 
+        "{0} + {1} | {4} give dash {3} | {2}".format(
+            buttonString(Button.ULTIMATE), 
+            buttonString(Button.SECONDARY_FIRE), 
+            ("on" if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off") if  hostPlayer.EditModeSelection == 2 else
+            ("on" if hostPlayer.CurrentCheckpoint in DashEnabledCheckpoints else "off"),
+            abilityIconString(Hero.GENJI, Button.ABILITY_1),
+            "Level" if hostPlayer.EditModeSelection == 0
+            else "Orb"
+        )        
+        , HudPosition.LEFT, HO.edit_orb_dash, 
+        Color.GREEN if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 and hostPlayer.EditModeSelection == 2 else
+        Color.GREEN if hostPlayer.CurrentCheckpoint in DashEnabledCheckpoints and hostPlayer.EditModeSelection == 0 else
+        Color.ORANGE
+        , HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )
+    
+    # BladeEnabledCheckpoints
+    /*
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null, 
         "{0} + {1} | orb give dash {3} | {2}".format(
             buttonString(Button.ULTIMATE), 
@@ -204,7 +233,9 @@ rule "Editor | Hud and Effects":
             abilityIconString(Hero.GENJI, Button.ABILITY_1)
         ), HudPosition.LEFT, HO.edit_orb_dash, Color.GREEN  if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
-    
+    */
+    #DashEnabledCheckpoints
+
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null,
         "{0} + {1} | unlocks checkpoint {3} | {2}\n".format(
             buttonString(Button.ULTIMATE), 
@@ -352,6 +383,10 @@ rule "Editor | create cp/orb":
             hostPlayer.CurrentCheckpoint ++           
             KillballCheckpoints = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in KillballCheckpoints]
             BouncePadCheckpoints = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BouncePadCheckpoints]
+
+            BladeEnabledCheckpoints = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BladeEnabledCheckpoints]
+            DashEnabledCheckpoints = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in DashEnabledCheckpoints]
+
             UpdateCache()
             RebuildKillOrbs()
             RebuildBounceOrbs()
@@ -455,6 +490,11 @@ rule "Editor | delete cp/orb":
         CurrentBounce_Editing = len(hostPlayer.BounceIndex_Cache) - 1
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
 
+        BladeEnabledCheckpoints = [i for i in BladeEnabledCheckpoints if i != hostPlayer.CurrentCheckpoint ]
+        DashEnabledCheckpoints = [i for i in DashEnabledCheckpoints if i != hostPlayer.CurrentCheckpoint ]
+
+        BladeEnabledCheckpoints = [x - (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BladeEnabledCheckpoints]
+        DashEnabledCheckpoints = [x - (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in DashEnabledCheckpoints]
 
         del CheckpointPositions[hostPlayer.CurrentCheckpoint]
         del CheckpointRings_Editing[hostPlayer.CurrentCheckpoint]
@@ -657,10 +697,42 @@ rule "Editor | move cp slowly":
     #while eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.EditModeSelection == 0 and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false:
     while eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.EditModeSelection == 0 and eventPlayer.isAlive():
         #CheckpointPositions[eventPlayer.CurrentCheckpoint][0] = eventPlayer.getPosition()
-        if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) :
+        if len(CheckpointPositions[hostPlayer.CurrentCheckpoint])  :
             CheckpointPositions[hostPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[hostPlayer.CurrentCheckpoint][1] ]
         else:
             CheckpointPositions[hostPlayer.CurrentCheckpoint] = eventPlayer.getPosition() 
         wait()
     eventPlayer.stopCamera()
     eventPlayer.setMoveSpeed(100)
+
+rule "add ult/dash":
+    @Event eachPlayer
+    @Condition hostPlayer.EditorOn
+    @Condition eventPlayer == hostPlayer    
+    @Condition hostPlayer.EditModeSelection == 0
+    @Condition len(CheckpointPositions) > 0
+    # @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) or eventPlayer.isHoldingButton(Button.ABILITY_1)
+    #@Condition eventPlayer.isHoldingButton(Button.INTERACT)
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
+    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
+
+
+    if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
+        if eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints:
+            BladeEnabledCheckpoints = [i for i in BladeEnabledCheckpoints if i != eventPlayer.CurrentCheckpoint]
+        else:
+            BladeEnabledCheckpoints.append(eventPlayer.CurrentCheckpoint)
+
+    else:
+        if eventPlayer.CurrentCheckpoint in DashEnabledCheckpoints:
+            DashEnabledCheckpoints = [i for i in DashEnabledCheckpoints if i != eventPlayer.CurrentCheckpoint]
+        else:
+            DashEnabledCheckpoints.append(eventPlayer.CurrentCheckpoint)
+
+
+    # move in other rule
+    wait()
+
+     #BladeEnabledCheckpoints 
+    #DashEnabledCheckpoints 
+
