@@ -21,6 +21,25 @@ rule "changinghudrule":
 */
  #HO.add_custommsg1, 
 
+rule "Addon | Dash/Blade | depricated - instructions inside":
+    @Delimiter
+    # this rule is no longer in use
+    # you can add ult/dash via checkpoint mode in the ingame editor
+    wait()
+    # if you have old map data, do the following:
+    wait()
+    # option a) paste the blade and ult variable from the dash/ult rules into the map pasta rule.
+    wait()
+    # option b) add it to map data via editor
+    # 1) paste the old ult/dash data variable in here
+    # 2) go ingame with editor on
+    # 3) save map data
+    # 4) remove it from here
+    wait()
+    # both ways should add the data to the map data.
+    wait()
+
+/*
 rule "Addon | Add Blade to Checkpoint <---- EDIT ME":
     @Disabled
     #Change "-1" to certain Checkpoints' number. For example if you want to add Blade to Checkpoint 2 and 6 change one of "-1" to 2 and other "-1" to 6
@@ -32,7 +51,9 @@ rule "Addon | Add Dash to Checkpoint <---- EDIT ME":
     #Change "-1" to certain Checkpoints' number. For example if you want to add Dash to Checkpoint 7 and 1 change one of "-1" to 7 and other "-1" to 1
     wait(1) 
     DashEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
-    
+*/
+
+
 rule "Addon | Title Data <---- EDIT ME":
     @Disabled
     # checkpoint number
