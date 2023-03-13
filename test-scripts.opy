@@ -17,7 +17,7 @@
     #!define show_orbradius true
 
 #### test bots #####
-    #!define testaion false
+    #!define testaion true
 
     ##### should do 19 max #####
     #!define testbotnumber 10
@@ -35,7 +35,7 @@
 
     ##### AI #####
         #!define leaderboardai false 
-        #!define actionai true
+        #!define actionai false
 
 globalvar AvrgSecStore
 globalvar AvrgSecDisplay
@@ -46,6 +46,8 @@ globalvar AvrgMinStoreTemp
 globalvar AvrgMinStoreLen
 globalvar testAI
 globalvar AIcreated
+
+
 
 
 # temps ######################################################################################################################################################
@@ -85,6 +87,7 @@ rule "multi purpose hud":
 
 rule "server load hud":
     @Condition avrgon
+    #wait(11)
     hudSubheader(
         getAllPlayers(), 
         "Load: {0} / Avrg: {1} \n"
@@ -263,3 +266,180 @@ rule "action test ai":
     wait()
     eventPlayer.stopForcingButton(Button.CROUCH)
     eventPlayer.stopForcingButton(Button.INTERACT)
+
+
+/*
+
+## hud performance tests #################
+ 
+globalvar hudtestafafafg
+playervar sflkj
+
+rule "hud test":
+    wait(10)
+    destroyAllHudTexts()
+
+    hudSubheader(getAllPlayers(), 
+        "hud count {}\n"
+        "fx count: {}\n"
+        "angles: {} : {}\n"
+        "alt: {}\n"
+        "".format(
+        getNumberOfTextIds(),
+        getNumberOfEntityIds(),
+        localPlayer.getHorizontalFacingAngle(),
+        localPlayer.getVerticalFacingAngle(),
+        localPlayer.getAltitude()
+
+        ),
+        HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )
+
+    while getNumberOfTextIds() < 95:
+        hudSubtext(hostPlayer if hostPlayer.GuideToggle else null, 
+            "{0}".format(    
+            [   
+            "{0} + {1} | Create New Checkpoint\n"
+            "{0} + {2} | Delete selected Checkpoint\n"
+            "{0} + {3} | Remove/Add teleport\n"
+            "{0} + {4} | Set Checkpoint to current position\n"
+            "{0} + {5} | Toggle Checkpoint Hitbox\n"
+            "{4} (hold) | Precise position changing".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1)),
+
+            "{0} + {1} | Create new kill orb\n"
+            "{0} + {2} | Delete selected orb\n"
+            "{0} + {3} | Select previous orb\n"
+            "{0} + {4} | Select next orb\n\n"
+            "{5} + {4} | Increase orb size\n"
+            "{5} + {3} | Decrease orb size\n"
+            "{5} + {1} | Move orb forward\n"
+            "{5} + {2} | Move orb Backward".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2)),
+    
+            "{0} + {1} | Create new Bounce orb\n"
+            "{0} + {3} | Select previous orb\n"
+            "{0} + {4} | Select next orb\n"
+            "\n"
+            "{0} + {2} | Delete selected orb\n"
+            "{5} + {4} | Increase orb strength\n"
+            "{5} + {3} | Decrease orb strength\n"
+            "{5} + {1} | Move orb forward\n"
+            "{5} + {2} | Move orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
+            ][hostPlayer.EditModeSelection])
+            
+            CNany
+            
+            #if localPlayer.sflkj else
+            "{0}".format(    
+            [   
+            "{0} + {1} | Careate New Checkpoint\n"
+            "{0} + {2} | asdDelete selected Checkpoint\n"
+            "{0} + {3} | Rasmove/Add teleport\n"
+            "{0} + {4} | Set fCheckpoint to current position\n"
+            "{0} + {5} | Toggfle Checkpoint Hitbox\n"
+            "{4} (hold) | Precfafise position changing".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1)),
+
+            "{0} + {1} | Creasfate new kill orb\n"
+            "{0} + {2} | Deafslete selected orb\n"
+            "{0} + {3} | Selafsect previous orb\n"
+            "{0} + {4} | Seleafsct next orb\n\n"
+            "{5} + {4} | Incrasfease orb size\n"
+            "{5} + {3} | Decrasfease orb size\n"
+            "{5} + {1} | Move afsorb forward\n"
+            "{5} + {2} | Moveafs orb Backward".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2)),
+    
+            "{0} + {1} | Creaafste new Bounce orb\n"
+            "{0} + {3} | Seleafsct previous orb\n"
+            "{0} + {4} | Seleasfct next orb\n"
+            "\n"
+            "{0} + {2} | Delasdete selected orb\n"
+            "{5} + {4} | Incasfrease orb strength\n"
+            "{5} + {3} | Decasfrease orb strength\n"
+            "{5} + {1} | Movasfe orb forward\n"
+            "{5} + {2} | Moveafaf orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
+            ][hostPlayer.EditModeSelection])
+            
+            , 
+            HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        )
+        wait()
+
+    hudtestafafafg = true
+
+
+rule "each":
+    @Event eachPlayer
+    @Condition hudtestafafafg
+
+    eventPlayer.sflkj = 0
+
+    while eventPlayer.sflkj <= 3:
+           hudSubtext(eventPlayer if eventPlayer.GuideToggle else null, 
+            "{0}".format(    
+            [   
+            "{0} + {1} | Create New Checkpoint\n"
+            "{0} + {2} | Delete selected Checkpoint\n"
+            "{0} + {3} | Remove/Add teleport\n"
+            "{0} + {4} | Set Checkpoint to current position\n"
+            "{0} + {5} | Toggle Checkpoint Hitbox\n"
+            "{4} (hold) | Precise position changing".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1)),
+
+            "{0} + {1} | Create new kill orb\n"
+            "{0} + {2} | Delete selected orb\n"
+            "{0} + {3} | Select previous orb\n"
+            "{0} + {4} | Select next orb\n\n"
+            "{5} + {4} | Increase orb size\n"
+            "{5} + {3} | Decrease orb size\n"
+            "{5} + {1} | Move orb forward\n"
+            "{5} + {2} | Move orb Backward".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2)),
+    
+            "{0} + {1} | Create new Bounce orb\n"
+            "{0} + {3} | Select previous orb\n"
+            "{0} + {4} | Select next orb\n"
+            "\n"
+            "{0} + {2} | Delete selected orb\n"
+            "{5} + {4} | Increase orb strength\n"
+            "{5} + {3} | Decrease orb strength\n"
+            "{5} + {1} | Move orb forward\n"
+            "{5} + {2} | Move orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
+            ][hostPlayer.EditModeSelection])
+            
+            CNany
+            
+            #if localPlayer.sflkj else
+            "{0}".format(    
+            [   
+            "{0} + {1} | Careate New Checkpoint\n"
+            "{0} + {2} | asdDelete selected Checkpoint\n"
+            "{0} + {3} | Rasmove/Add teleport\n"
+            "{0} + {4} | Set fCheckpoint to current position\n"
+            "{0} + {5} | Toggfle Checkpoint Hitbox\n"
+            "{4} (hold) | Precfafise position changing".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1)),
+
+            "{0} + {1} | Creasfate new kill orb\n"
+            "{0} + {2} | Deafslete selected orb\n"
+            "{0} + {3} | Selafsect previous orb\n"
+            "{0} + {4} | Seleafsct next orb\n\n"
+            "{5} + {4} | Incrasfease orb size\n"
+            "{5} + {3} | Decrasfease orb size\n"
+            "{5} + {1} | Move afsorb forward\n"
+            "{5} + {2} | Moveafs orb Backward".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2)),
+    
+            "{0} + {1} | Creaafste new Bounce orb\n"
+            "{0} + {3} | Seleafsct previous orb\n"
+            "{0} + {4} | Seleasfct next orb\n"
+            "\n"
+            "{0} + {2} | Delasdete selected orb\n"
+            "{5} + {4} | Incasfrease orb strength\n"
+            "{5} + {3} | Decasfrease orb strength\n"
+            "{5} + {1} | Movasfe orb forward\n"
+            "{5} + {2} | Moveafaf orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
+            ][hostPlayer.EditModeSelection])
+            
+            , 
+            HudPosition.TOP, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        )
+        wait()
+        eventPlayer.sflkj ++
+
+
+        */

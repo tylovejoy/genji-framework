@@ -234,8 +234,10 @@ fixed:
     - fixed a bug that caused timer to reduce to 0.02 seconsds if you restarted on landing on the final cp.
     - fixed a bug that caused preview to display vector(0,0,0) on first cp
 
-    - editor: you can now remove a placed teleport cp by using the same button again
-    - editor: its now possible to move a cp without deleting its teleport
-    - editor: after placing a teleport, the cp location itself gets marked with an orange cirkle, incase you want to move that instead of the teleport.
-    - editor: you can place a teleport even if quick reset is on, but now the quick reset has a 0.1 delay if you a hostplayer in edit cp mode.
-    - editor: kill/orb/teleport selection text and fx only apear in their respective modes
+    editor:
+    - you can now remove a placed teleport cp by using the same button again
+    - its now possible to move a cp without deleting its teleport
+    - after placing a teleport, the cp location itself gets marked with an orange cirkle, incase you want to move that instead of the teleport.
+    - you can place a teleport even if quick reset is on, but now the quick reset has a 0.1 delay if you a hostplayer in edit cp mode.
+    - kill/orb/teleport selection text and fx only apear in their respective modes
+    - fixed a bug that casued removing cp 0 to put you on -1 even if you had more cps

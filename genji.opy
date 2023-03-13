@@ -8,7 +8,7 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!define inspectoron true
 
 # disable via double ## at include, not the define because the define needs to exist
-#!define testaitoggle ##!include "test-scripts.opy"
+#!define testaitoggle #!include "test-scripts.opy"
 
 #!define compmodetoggle false
 #!define attemptcount 5
@@ -108,22 +108,6 @@ rule "Display World Record":
     #type your entry in the textfield that says "name and time here"
     hudText(getAllPlayers(), null," \n{0} world record {0}".format(iconString(Icon.FIRE)),"name and time here", HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
-
-
-rule "Friend Title <---- DISPLAY MESSAGE HERE (ON PLAYER)":
-    @Disabled
-    @Delimiter
-    @Event eachPlayer
-    @Condition eventPlayer.hasSpawned()
-    
-    #In the field custom string your nickname
-    if "your nickname <-------" == "{0}".format(eventPlayer):
-        bigMessage(getAllPlayers(), "Message to the whole room")
-        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    #Fill in the blank with your friend's name
-    if "your nickname <-------" == "{0}".format(eventPlayer):
-        bigMessage(getAllPlayers(), "Message to the whole room")
-        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
 rule "Comp Mode instruction message":
     #Instructions that show when you start comp mode.
@@ -865,6 +849,44 @@ rule "AFK timer":
 
     if RULE_CONDITION:
         goto RULE_START
+
+
+rule "Addon | pre-set control map portal | function | toggled via workshop":
+    @Event eachPlayer
+    @Condition PortalOn
+    @Condition eventPlayer.InvincibleToggle or not eventPlayer.NotOnLastCp
+    @Condition len(PortalLoc) != null
+    @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc])
+    
+    if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] != vect(0,0,0):
+        eventPlayer.teleport(
+            PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] 
+        )
+
+rule "Addon | custom portals | function":
+    @Disabled
+    @Event eachPlayer
+    @Condition len(CustomPortalStart) > 0
+
+    @Condition (any([
+        distance(eventPlayer.getPosition() + vect(0, 0.2, 0), ent) < portaldistance and 
+        CustomPortalCP[i] in [999, eventPlayer.CurrentCheckpoint]
+        for ent, i in CustomPortalStart
+        ])) == true
+
+    eventPlayer.PortalLoop = 0
+    for eventPlayer.PortalLoop in range(len(CustomPortalStart)):
+        if (
+            distance(
+                eventPlayer.getPosition() + vect(0, 0.2, 0), 
+                CustomPortalStart[eventPlayer.PortalLoop]
+            ) < portaldistance and 
+            CustomPortalCP[eventPlayer.PortalLoop] in [999, eventPlayer.CurrentCheckpoint]
+            ):
+            eventPlayer.teleport(CustomPortalEndpoint[eventPlayer.PortalLoop])
+            return
+
+    wait(1)
 
 #!include "huds.opy"
 

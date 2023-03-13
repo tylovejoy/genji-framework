@@ -21,23 +21,36 @@ rule "changinghudrule":
 */
  #HO.add_custommsg1, 
 
-rule "Addon | Dash/Blade | depricated - instructions inside":
+rule "Addon | Dash/Blade | DEPRICATED, instructions inside":
     @Delimiter
-    # this rule is no longer in use
+    @Disabled
+    # -
+    # -
+    # >>> this rule should no longer be used <<<
+    # -
+    # -
+    wait()
+    # -
     # you can add ult/dash via checkpoint mode in the ingame editor
+    # existing map data should be updated to include this in map data
+    # You have 2 main options to add the old dash/ult to your map data
+    # -
     wait()
-    # if you have old map data, do the following:
-    wait()
+
+    # -
     # option a) paste the blade and ult variable from the dash/ult rules into the map pasta rule.
+    # -
     wait()
+    # -
     # option b) add it to map data via editor
-    # 1) paste the old ult/dash data variable in here
+    # 1) paste the old ult/dash data variable in here and enable rule
     # 2) go ingame with editor on
-    # 3) save map data
-    # 4) remove it from here
+    # 3) save map data with inspector an paste it in normally
+    # 4) disable this rule
+    # -
     wait()
-    # both ways should add the data to the map data.
-    wait()
+   
+
 
 /*
 rule "Addon | Add Blade to Checkpoint <---- EDIT ME":
@@ -108,7 +121,7 @@ rule "Addon | In world text for certain Checkpoints <---- EDIT ME":
     # color is for all, not per cp
     CpIwtColor = Color.LIME_GREEN
 
-rule "Addon | pre-set control map portal | placement | toggled via workshop":
+rule "Addon | pre-set control map portal | toggled on via workshop settings":
     @Condition PortalOn
     wait(2, Wait.ABORT_WHEN_FALSE) # overwrite pasta
     if getCurrentMap() == Map.BUSAN:
@@ -150,18 +163,6 @@ rule "Addon | pre-set control map portal | placement | toggled via workshop":
         PortalDest = null
         return
         
-rule "Addon | pre-set control map portal | function | toggled via workshop":
-    @Event eachPlayer
-    @Condition PortalOn
-    @Condition eventPlayer.InvincibleToggle or not eventPlayer.NotOnLastCp
-    @Condition len(PortalLoc) != null
-    @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc])
-    
-    if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] != vect(0,0,0):
-        eventPlayer.teleport(
-            PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] 
-        )
-
 rule "Addon | custom portals | data <---- EDIT ME":
     @Disabled
     #warning: This can cause you to exceed global orb/portal limit. 
@@ -175,33 +176,7 @@ rule "Addon | custom portals | data <---- EDIT ME":
     #999 = apply portal to entire map
     CustomPortalCP = [999]
 
-rule "Addon | custom portals | function":
-    @Disabled
-    @Event eachPlayer
-    @Condition len(CustomPortalStart) > 0
-
-    @Condition (any([
-        distance(eventPlayer.getPosition() + vect(0, 0.2, 0), ent) < portaldistance and 
-        CustomPortalCP[i] in [999, eventPlayer.CurrentCheckpoint]
-        for ent, i in CustomPortalStart
-        ])) == true
-
-    eventPlayer.PortalLoop = 0
-    for eventPlayer.PortalLoop in range(len(CustomPortalStart)):
-        if (
-            distance(
-                eventPlayer.getPosition() + vect(0, 0.2, 0), 
-                CustomPortalStart[eventPlayer.PortalLoop]
-            ) < portaldistance and 
-            CustomPortalCP[eventPlayer.PortalLoop] in [999, eventPlayer.CurrentCheckpoint]
-            ):
-            eventPlayer.teleport(CustomPortalEndpoint[eventPlayer.PortalLoop])
-            return
-
-    wait(1)
-
-
-rule "Addon | Fake Triple Jump": # method c
+rule "Addon | Fake Triple Jump - enable rule": # method c
     @Disabled
     @Event eachPlayer
     @Hero genji
@@ -247,3 +222,18 @@ rule "Addon | Fake Triple Jump": # method c
         #smallMessage(eventPlayer, "   triple jump ▲")
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
 
+
+rule "Friend Title <---- DISPLAY MESSAGE HERE (ON PLAYER)":
+    @Disabled
+    @Delimiter
+    @Event eachPlayer
+    @Condition eventPlayer.hasSpawned()
+    
+    #In the field custom string your nickname
+    if "your nickname <-------" == "{0}".format(eventPlayer):
+        bigMessage(getAllPlayers(), "Message to the whole room")
+        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+    #Fill in the blank with your friend's name
+    if "your nickname <-------" == "{0}".format(eventPlayer):
+        bigMessage(getAllPlayers(), "Message to the whole room")
+        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)

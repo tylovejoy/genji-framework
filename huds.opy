@@ -12,13 +12,15 @@ huds outside this file:
 
 
 #!define -CN if localplayer.isCN else 
-
+/*
 #!define CNany if any([ \
         "{0}".format(Color.ROSE) == "玫红", \
         l"No" == "不行",  \
         l"Capture" ==  "夺取",    # 捕捉cn \
         l"Capture" == "捕捉"  # 捕捉 tw  check \
     ]) else
+*/
+#!define CNany if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
 
 rule "Huds: Global/Localplayer":
     # names/credits here
