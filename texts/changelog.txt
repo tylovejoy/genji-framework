@@ -228,7 +228,9 @@ fixed:
     x when your game client is configured, you will see chinese text. translations by 十六 and ?????
         - and yes this means english and cn in same lobby see a different text
     
-    
+    - moved some things to and from addon section
+    - you now only have to enter your name and code ones to include it in pasta. after that you dont have to enter it again unles you want to change it.
+
     - splits now display on the hud instead of at arriving. the toggle has been removed.
     - there is now an icon in the dash/ult ready msg
     - fixed a bug that caused timer to reduce to 0.02 seconsds if you restarted on landing on the final cp.
