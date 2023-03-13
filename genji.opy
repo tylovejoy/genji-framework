@@ -635,8 +635,9 @@ rule "Arrive | Ground reset | traces":
             eventPlayer.LockCollected = []
             eventPlayer.CurrentCheckpoint += 1
             UpdateCache()
-            if eventPlayer.isUsingUltimate() and not eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints:
-                kill(eventPlayer, null)
+            # remove ult feature disabled for speedruning purposes
+            #if eventPlayer.isUsingUltimate() and not eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints:
+            #    kill(eventPlayer, null)
             if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) > 1:# teleport cps
                 eventPlayer.startForcingPosition( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ,false)
                 wait(0.1)
@@ -648,7 +649,17 @@ rule "Arrive | Ground reset | traces":
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
             playEffect(eventPlayer if CompMode or eventPlayer.invis else getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
             #bigMessage(eventPlayer, "Arrived at {0} / {1}{2}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1, " - Split {}".format(eventPlayer.splitdisplay) if eventPlayer.splitson else ""))
-            bigMessage(eventPlayer, "Arrived at level {0}".format(eventPlayer.CurrentCheckpoint))
+           
+            bigMessage(eventPlayer, 
+                #"抵达检查点 {0}".format(eventPlayer.CurrentCheckpoint)
+                #if eventPlayer.CurrentCheckpoint == 0 else
+                #CNany
+                #if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
+                #"Arrived at level {0}".format(eventPlayer.CurrentCheckpoint) 
+                "{1} {0}".format(eventPlayer.CurrentCheckpoint, "抵达检查点" CNany "Arrived at level")
+                
+            )
+            
             wait()
             UpdateTitle()
            

@@ -9,20 +9,6 @@ huds outside this file:
 
 */
 
-
-
-#!define -CN if localplayer.isCN else 
-/*
-#!define CNany if any([ \
-        "{0}".format(Color.ROSE) == "玫红", \
-        l"No" == "不行",  \
-        l"Capture" ==  "夺取",    # 捕捉cn \
-        l"Capture" == "捕捉"  # 捕捉 tw  check \
-    ]) else
-*/
-
-#!define CNany if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
-
 rule "Huds: Global/Localplayer":
     wait(2)
  
@@ -39,7 +25,7 @@ rule "Huds: Global/Localplayer":
         "作者: {}".format( Cachedcredits[0] )
         CNany
         "Made by: {}".format( Cachedcredits[0] )
-        , HudPosition.LEFT, HO.data_name, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
+        , HudPosition.LEFT, HO.data_name, Color.VIOLET, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
     hudSubtext(getAllPlayers(), 
@@ -189,7 +175,7 @@ rule "Huds: Global/Localplayer":
                 ["beginner", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell"][Difficultyhud], 
                 HudPosition.TOP, HO.data_dif,
                 [Color.GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.YELLOW,Color.YELLOW,Color.YELLOW, Color.ORANGE,Color.ORANGE,Color.ORANGE,rgb(255, 69, 0), rgb(255, 69, 0), rgb(255, 69, 0), Color.RED, Color.RED, Color.RED, rgb(150, 0, 0)][Difficultyhud], 
-                HudReeval.VISIBILITY, SpecVisibility.DEFAULT
+                HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
             )
             HudStoreEdit.append(getLastCreatedText())
 
@@ -240,7 +226,7 @@ rule "Huds: each player":
         "Climb{0}".format("" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
         , HudPosition.LEFT, HO.game_climb, Color.RED if eventPlayer.WallclimbUsed else Color.GREEN, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
-    hudHeader(eventPlayer, "小跳已用" CNany "Bhop", HudPosition.LEFT, HO.game_bhop, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.COLOR, SpecVisibility.DEFAULT)
+    hudHeader(eventPlayer, "小跳已用" CNany "Bhop", HudPosition.LEFT, HO.game_bhop, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT)
     
     if CompMode:
         hudText(
@@ -271,10 +257,10 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
     # top 5
     if LeaderBoardFull[0]:
         hudSubtext(getAllPlayers(),
-            " \n{0} 前五名 {0}".format(abilityIconString(Hero.GENJI,Button.PRIMARY_FIRE))
+            " \n{0} 排名前5 {0}".format(abilityIconString(Hero.GENJI,Button.PRIMARY_FIRE))
             CNany
             " \n{0} Top 5 {0}".format(abilityIconString(Hero.GENJI,Button.PRIMARY_FIRE))
-            , HudPosition.RIGHT, HO.board_top5, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
+            , HudPosition.RIGHT, HO.board_top5, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
         )
         LeaderBoardHuds.append(getLastCreatedText())
         hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0][2], HudPosition.RIGHT, HO.board_top5+1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)

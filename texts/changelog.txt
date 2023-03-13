@@ -230,6 +230,7 @@ fixed:
     
     - moved some things to and from addon section
     - you now only have to enter your name and code ones to include it in pasta. after that you dont have to enter it again unles you want to change it.
+    - you no longer die when landing on a cp while having ult. You get to keep the last second of your blade for next cp. This results in a much smoother experience.
 
     - splits now display on the hud instead of at arriving. the toggle has been removed.
     - there is now an icon in the dash/ult ready msg

@@ -8,6 +8,20 @@
 #!define insert(insert_array, insert_index, insert_value)  insert_array.append(insert_value) \
         insert_array = [elementhere if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for elementhere, i in insert_array]
 
+# check if cn client
+/*
+#!define CNany if any([ \
+        "{0}".format(Color.ROSE) == "玫红", \
+        l"No" == "不行",  \
+        l"Capture" ==  "夺取",    # 捕捉cn \
+        l"Capture" == "捕捉"  # 捕捉 tw  check \
+    ]) else
+*/
+
+#!define CNany if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
+
+
+
 # ----------------GLOBAL------------------
 #!define CheckpointPositions A
 #!define SelectedCheckpoint_Editing B
