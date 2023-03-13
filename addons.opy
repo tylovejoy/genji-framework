@@ -1,25 +1,49 @@
 #!mainFile "genji.opy"
 
-rule "------------------------------------------------------------------------ Addons  ------------------------------------------------------------------------":
+rule "------------------------------------------------------------------------ Addons functional only ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
 
-/*
-text per cp
-rule "changinghudrule":
-       
-    hudHeader(
-        getAllPlayers(), 
-        "Text for checkpoint 1" if localPlayer.CurrentCheckpoint == 1 else
-        "Text for checkpoint 3" if localPlayer.CurrentCheckpoint == 3 else
-        "Text for checkpoint 4" if localPlayer.CurrentCheckpoint == 4 else
-        "", 
-        HudPosition.TOP, 
-        -4,
-        Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
-    )
-*/
- #HO.add_custommsg1, 
+rule "Addon | pre-set control map portal | function | toggled via workshop":
+    @Event eachPlayer
+    @Condition PortalOn
+    @Condition eventPlayer.InvincibleToggle or not eventPlayer.NotOnLastCp
+    @Condition len(PortalLoc) != null
+    @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc])
+    
+    if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] != vect(0,0,0):
+        eventPlayer.teleport(
+            PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] 
+        )
+
+rule "Addon | custom portals | function":
+    @Disabled
+    @Event eachPlayer
+    @Condition len(CustomPortalStart) > 0
+
+    @Condition (any([
+        distance(eventPlayer.getPosition() + vect(0, 0.2, 0), ent) < portaldistance and 
+        CustomPortalCP[i] in [999, eventPlayer.CurrentCheckpoint]
+        for ent, i in CustomPortalStart
+        ])) == true
+
+    eventPlayer.PortalLoop = 0
+    for eventPlayer.PortalLoop in range(len(CustomPortalStart)):
+        if (
+            distance(
+                eventPlayer.getPosition() + vect(0, 0.2, 0), 
+                CustomPortalStart[eventPlayer.PortalLoop]
+            ) < portaldistance and 
+            CustomPortalCP[eventPlayer.PortalLoop] in [999, eventPlayer.CurrentCheckpoint]
+            ):
+            eventPlayer.teleport(CustomPortalEndpoint[eventPlayer.PortalLoop])
+            return
+
+    wait(1)
+    
+rule "------------------------------------------------------------------------ Addons fill in ------------------------------------------------------------------------":
+    @Delimiter
+    @Disabled
 
 rule "Addon | Dash/Blade | DEPRICATED, instructions inside":
     @Delimiter
@@ -49,77 +73,6 @@ rule "Addon | Dash/Blade | DEPRICATED, instructions inside":
     # 4) disable this rule
     # -
     wait()
-   
-
-
-/*
-rule "Addon | Add Blade to Checkpoint <---- EDIT ME":
-    @Disabled
-    #Change "-1" to certain Checkpoints' number. For example if you want to add Blade to Checkpoint 2 and 6 change one of "-1" to 2 and other "-1" to 6
-    wait(1)
-    BladeEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
-
-rule "Addon | Add Dash to Checkpoint <---- EDIT ME":
-    @Disabled
-    #Change "-1" to certain Checkpoints' number. For example if you want to add Dash to Checkpoint 7 and 1 change one of "-1" to 7 and other "-1" to 1
-    wait(1) 
-    DashEnabledCheckpoints = [[], -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
-*/
-
-
-rule "Addon | Title Data <---- EDIT ME":
-    @Disabled
-    # checkpoint number
-    TitleData[0] = [
-        0, 
-        10,
-        20,
-        30,
-        40,
-        50
-    ]
-
-    # title
-    TitleData[1] = [
-        "Bunny",
-        "Jumper",
-        "Ninja",
-        "Pro",
-        "Expert",
-        "Master"
-    ]
-
-    # color
-    TitleData[2] = [
-        Color.LIME_GREEN,
-        Color.WHITE,
-        Color.YELLOW,
-        Color.ORANGE,
-        Color.PURPLE,
-        Color.RED
-    ]
-
-rule "Addon | HUD text for certain Checkpoints <---- EDIT ME":
-    @Disabled
-    wait(0.5)
-    # in CpHudText fill in text
-    # in CpHudCp fill in the at wich to display
-    # the example fill shows a text for cp 1 and cp 3
-    CpHudText = ["text cp 1","text cp 3"]
-    CpHudCp = [1, 3]
-    
-rule "Addon | In world text for certain Checkpoints <---- EDIT ME":
-    @Disabled
-    wait(0.5)
-    # in CpIwtText fill in text
-    # in CpIwtCp fill in cp at wich to display
-    # in CpIwtPos fill in the vector
-    # the example fill shows a text for cp 1 and cp 3
-    CpIwtText = ["text cp 1","text cp 3"]
-    CpIwtCp = [1, 3]
-    CpIwtPos = [vect(0,0,0), vect(0,0,0)]
-    # color is for all, not per cp
-    CpIwtColor = Color.LIME_GREEN
 
 rule "Addon | pre-set control map portal | toggled on via workshop settings":
     @Condition PortalOn
@@ -223,7 +176,7 @@ rule "Addon | Fake Triple Jump - enable rule": # method c
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
 
 
-rule "Friend Title <---- DISPLAY MESSAGE HERE (ON PLAYER)":
+rule "Addon | Friend Title <---- DISPLAY MESSAGE HERE (ON PLAYER)":
     @Disabled
     @Delimiter
     @Event eachPlayer
@@ -237,3 +190,64 @@ rule "Friend Title <---- DISPLAY MESSAGE HERE (ON PLAYER)":
     if "your nickname <-------" == "{0}".format(eventPlayer):
         bigMessage(getAllPlayers(), "Message to the whole room")
         createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+
+rule "Addon | Display World Record": 
+    @Disabled
+    @Delimiter
+    #type your entry in the textfield that says "name and time here"
+    hudText(getAllPlayers(), null," \n{0} world record {0}".format(iconString(Icon.FIRE)),"name and time here", HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    HudStoreEdit.append(getLastCreatedText())
+
+rule "Addon | Title Data <---- EDIT ME":
+    @Disabled
+    # checkpoint number
+    TitleData[0] = [
+        0, 
+        10,
+        20,
+        30,
+        40,
+        50
+    ]
+
+    # title
+    TitleData[1] = [
+        "Bunny",
+        "Jumper",
+        "Ninja",
+        "Pro",
+        "Expert",
+        "Master"
+    ]
+
+    # color
+    TitleData[2] = [
+        Color.LIME_GREEN,
+        Color.WHITE,
+        Color.YELLOW,
+        Color.ORANGE,
+        Color.PURPLE,
+        Color.RED
+    ]
+
+rule "Addon | HUD text for certain Checkpoints <---- EDIT ME":
+    @Disabled
+    wait(0.5)
+    # in CpHudText fill in text
+    # in CpHudCp fill in the at wich to display
+    # the example fill shows a text for cp 1 and cp 3
+    CpHudText = ["text cp 1","text cp 3"]
+    CpHudCp = [1, 3]
+    
+rule "Addon | In world text for certain Checkpoints <---- EDIT ME":
+    @Disabled
+    wait(0.5)
+    # in CpIwtText fill in text
+    # in CpIwtCp fill in cp at wich to display
+    # in CpIwtPos fill in the vector
+    # the example fill shows a text for cp 1 and cp 3
+    CpIwtText = ["text cp 1","text cp 3"]
+    CpIwtCp = [1, 3]
+    CpIwtPos = [vect(0,0,0), vect(0,0,0)]
+    # color is for all, not per cp
+    CpIwtColor = Color.LIME_GREEN

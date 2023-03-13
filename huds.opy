@@ -23,17 +23,28 @@ huds outside this file:
 #!define CNany if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
 
 rule "Huds: Global/Localplayer":
-    # names/credits here
     wait(2)
  
+    # name/credit construction
+    if Name != "name here" or Cachedcredits[0] == null::
+        Cachedcredits[0] = Name
+    
+    if Code != "code here" or Cachedcredits[1] == null::
+        Cachedcredits[1] = Code
+    Name = null
+    Code = null
+
+    hudHeader(getAllPlayers(), "Made by: {}".format( Cachedcredits[0] ), HudPosition.LEFT, 0, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudHeader(getAllPlayers(), "Map code: {}".format( Cachedcredits[1] ), HudPosition.LEFT, 1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     hudSubtext(getAllPlayers(), "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)   
+    
+    # global huds
     hudSubheader(getAllPlayers(),
         "房间将在 {0} 分钟后重启 - V{1}".format(TimeRemaining,versionhere) CNany 
         "Server Restarts In {0} Min - V{1}".format(TimeRemaining,versionhere)
         , HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS
     )
     
-
     # padding for custom hud display
     hudSubtext(getAllPlayers(), "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv", HudPosition.TOP, HO.fillermain, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     

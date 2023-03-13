@@ -173,7 +173,9 @@ globalvar SaveElapsed 64
 globalvar SavePauseTime 65
 globalvar SavePauseEnabled 66
 
-
+globalvar Name 70
+globalvar Code 71
+globalvar Cachedcredits 73
 
 # per cp iwt or hud
 globalvar CpHudText 74

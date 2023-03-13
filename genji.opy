@@ -60,13 +60,21 @@ rule "Map Data / 数据录入 <---- INSERT HERE / 在这输入":
 editorordata
 
 rule "Credits here / 作者名字 <---- INSERT HERE / 在这输入 ": 
+    # Filling this in adds it to the inspector data pasta.
+    # You can fill in again to overwrite previous entry.
+    
     # 作者
+    Name = "name here"
+    # 代码
+    Code = "code here"
+
+    /*
     hudSubtext(getAllPlayers(), "made by: name", HudPosition.LEFT, HO.data_name, Color.VIOLET, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText()) # appending these makes em removed in editor
-    # 代码
+    
     hudSubtext(getAllPlayers(), "map code: XXXXX", HudPosition.LEFT, HO.data_code, Color.SKY_BLUE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
-    
+    */
 
 
 rule "Ban per CP <---- edit me":
@@ -75,23 +83,18 @@ rule "Ban per CP <---- edit me":
     wait(1)
     # ======================
     # ban  triple >
-    BanTriple = [-1]
+    BanTriple = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
     # ban  multi >
-    BanMulti = [-1]
+    BanMulti = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
     # ban create >
-    BanCreate = [-1]
+    BanCreate = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
     # ban dedhop >
-    BanDead = [-1]
+    BanDead = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
     # ban emote >
-    BanEmote = [-1]
+    BanEmote = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
     # ban  climb >
-    BanClimb = [-1]
-    # ======================
-    # dash exploit (via toggles don't edit)
-    DashExploitToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Dash Start", true, 2)
-    
-    # ban  bhop >
-    #BanBhop = [2,3]
+    BanClimb = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
+
 
 rule "Custom difficulty hud":
     @Disabled
@@ -100,13 +103,6 @@ rule "Custom difficulty hud":
     #2) enable this rule
     #3) type your difficulty in the hud below
     hudSubheader(getAllPlayers(), "enter custom difficulty here", HudPosition.TOP, HO.data_dif,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    HudStoreEdit.append(getLastCreatedText())
-
-rule "Display World Record": 
-    @Disabled
-    @Delimiter
-    #type your entry in the textfield that says "name and time here"
-    hudText(getAllPlayers(), null," \n{0} world record {0}".format(iconString(Icon.FIRE)),"name and time here", HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
 
 rule "Comp Mode instruction message":
@@ -305,6 +301,7 @@ rule "Setup and Variables":
     BounceToggleLock = BounceToggleLock if len(BounceToggleLock) else []
     LeaderBoardFull = []
     wait(1)
+    DashExploitToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Dash Start", true, 2)
     PortalOn = createWorkshopSetting(bool, "map settings","enable portals (control maps)",true,0)
     #SelectedCheckpoint_Editing = len(CheckpointPositions) - 1 # This probably isn't necessary
         
@@ -752,8 +749,6 @@ rule "Bounce Ball / Orb | Activate":
 
     eventPlayer.bouncetouchedlast = -1
 
-
-
 rule "Death Reset":
     @Event playerDied
     @Condition not eventPlayer.SpectateToggle
@@ -794,8 +789,6 @@ rule "Player Phase":
     eventPlayer.setStatusEffect(null, Status.PHASED_OUT, 9999)
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
 
-
-
 rule "Player Leaves":
     @Event playerLeft
     if SaveCp[SaveEnt.index(eventPlayer)] == 0: # delete if player didnt do first cp
@@ -812,7 +805,6 @@ rule "Player Leaves":
         lbl_a:
         SavePauseTime[SaveEnt.index(eventPlayer)] = 0
         SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
-
 
 rule "AFK timer":
     @Event eachPlayer
@@ -850,43 +842,6 @@ rule "AFK timer":
     if RULE_CONDITION:
         goto RULE_START
 
-
-rule "Addon | pre-set control map portal | function | toggled via workshop":
-    @Event eachPlayer
-    @Condition PortalOn
-    @Condition eventPlayer.InvincibleToggle or not eventPlayer.NotOnLastCp
-    @Condition len(PortalLoc) != null
-    @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc])
-    
-    if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] != vect(0,0,0):
-        eventPlayer.teleport(
-            PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] 
-        )
-
-rule "Addon | custom portals | function":
-    @Disabled
-    @Event eachPlayer
-    @Condition len(CustomPortalStart) > 0
-
-    @Condition (any([
-        distance(eventPlayer.getPosition() + vect(0, 0.2, 0), ent) < portaldistance and 
-        CustomPortalCP[i] in [999, eventPlayer.CurrentCheckpoint]
-        for ent, i in CustomPortalStart
-        ])) == true
-
-    eventPlayer.PortalLoop = 0
-    for eventPlayer.PortalLoop in range(len(CustomPortalStart)):
-        if (
-            distance(
-                eventPlayer.getPosition() + vect(0, 0.2, 0), 
-                CustomPortalStart[eventPlayer.PortalLoop]
-            ) < portaldistance and 
-            CustomPortalCP[eventPlayer.PortalLoop] in [999, eventPlayer.CurrentCheckpoint]
-            ):
-            eventPlayer.teleport(CustomPortalEndpoint[eventPlayer.PortalLoop])
-            return
-
-    wait(1)
 
 #!include "huds.opy"
 
