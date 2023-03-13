@@ -1,6 +1,6 @@
 #!mainFile "genji.opy"
 
-rule "------------------------------------------------------------------------ Addons functional only ------------------------------------------------------------------------":
+rule "------------------------------------------------------------------------ Addon functions ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
 
@@ -17,7 +17,6 @@ rule "Addon | pre-set control map portal | function | toggled via workshop":
         )
 
 rule "Addon | custom portals | function":
-    @Disabled
     @Event eachPlayer
     @Condition len(CustomPortalStart) > 0
 
@@ -40,8 +39,8 @@ rule "Addon | custom portals | function":
             return
 
     wait(1)
-    
-rule "------------------------------------------------------------------------ Addons fill in ------------------------------------------------------------------------":
+
+rule "------------------------------------------------------------------------ Addons Settings and data ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
 
