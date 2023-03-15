@@ -16,7 +16,7 @@ rule "Addon | pre-set control map portal | function | toggled via workshop":
             PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] 
         )
 
-rule "Addon | custom portals | function":
+rule "Addon | custom portals | functioning":
     @Event eachPlayer
     @Condition len(CustomPortalStart) > 0
 
@@ -59,7 +59,6 @@ rule "Addon | Dash/Blade | DEPRICATED, instructions inside":
     # You have 2 main options to add the old dash/ult to your map data
     # -
     wait()
-
     # -
     # option a) paste the blade and ult variable from the dash/ult rules into the map pasta rule.
     # -
@@ -113,6 +112,8 @@ rule "Addon | pre-set control map portal | toggled on via workshop settings":
 
     else:
         PortalDest = null
+        PortalLoc = null
+        PortalNames = null
         return
         
 rule "Addon | custom portals | data <---- EDIT ME":
@@ -250,3 +251,16 @@ rule "Addon | In world text for certain Checkpoints <---- EDIT ME":
     CpIwtPos = [vect(0,0,0), vect(0,0,0)]
     # color is for all, not per cp
     CpIwtColor = Color.LIME_GREEN
+
+
+/*
+
+rule "pass trough":
+    @Event eachPlayer
+    @Condition eventPlayer.CurrentCheckpoint == 1
+    @Condition distance(eventPlayer, vect(0,0,0)) < 2
+
+    eventPlayer.disableEnvironmentCollision(false)
+    waitUntil(eventPlayer.CurrentCheckpoint != 1 or distance(eventPlayer, vect(0,0,0)) > 2, 99999)
+    eventPlayer.enableEnvironmentCollision()
+*/
