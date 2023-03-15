@@ -193,7 +193,6 @@ rule "Huds: each player":
         "用时 {0}".format(prettyTime(eventPlayer.Timer))
         CNany  
         "Time {0}".format(prettyTime(eventPlayer.Timer)) ,
-        #"Time {0}{1}{2}".format(prettyTime(eventPlayer.Timer), "\nSplit " if eventPlayer.splitson else "",eventPlayer.splitdisplay  if eventPlayer.splitson else ""), 
         HudPosition.LEFT, HO.game_timer, Color.WHITE, Color.GRAY, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT)
     
 
@@ -228,6 +227,7 @@ rule "Huds: each player":
     )
     hudHeader(eventPlayer, "小跳已用" CNany "Bhop", HudPosition.LEFT, HO.game_bhop, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT)
     
+    wait(3)
     if CompMode:
         hudText(
             eventPlayer, 
