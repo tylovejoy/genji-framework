@@ -1,7 +1,7 @@
 #!define versionhere "1.8 alpa 阿尔法版本"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(6) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -51,64 +51,6 @@ rule "fisho cp cheat for overpy toggle":
     else:
         eventPlayer.CurrentCheckpoint += 1
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
-
-/*
-rule "------------------------------------------------------------------------ Map pasta ------------------------------------------------------------------------ ":
-    @Delimiter
-    @Disabled
-
-rule "Map Data / 数据录入 <---- INSERT HERE / 在这输入":
-    @Delimiter
-
-
-editorordata
-
-rule "Credits here / 作者名字 <---- INSERT HERE / 在这输入 ": 
-    # Filling this in adds it to the inspector data pasta.
-    # You can fill in again to overwrite previous entry.
-    
-    # 作者
-    Name = "name here"
-    # 代码
-    Code = "code here"
-
-rule "Ban per CP <---- edit me":
-    # Enter the checkpoint/level numbers in the lists below to apply the ban on them
-    # Remember the workshop toggle overwrites this list
-    wait(1)
-    # ======================
-    # ban  triple >
-    BanTriple = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban  multi >
-    BanMulti = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban create >
-    BanCreate = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban dedhop >
-    BanDead = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban emote >
-    BanEmote = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban  climb >
-    BanClimb = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-
-
-rule "Custom difficulty hud":
-    @Disabled
-    @Delimiter
-    #1) workshop settings > difficulty > set to "dont display"
-    #2) enable this rule
-    #3) type your difficulty in the hud below
-    hudSubheader(getAllPlayers(), "enter custom difficulty here", HudPosition.TOP, HO.data_dif,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    HudStoreEdit.append(getLastCreatedText())
-
-rule "Comp Mode instruction message":
-    #Instructions that show when you start comp mode.
-    #Due to the hud text limit, you there is 4 huds available.
-    #If you dont need a field just empty the textfield.
-    instructiontext[0] = "Change in Comp Mode instruction message hud 1"
-    instructiontext[1] = "Change in Comp Mode instruction message hud 2"
-    instructiontext[2] = "Change in Comp Mode instruction message hud 2"
-    instructiontext[3] = "Change in Comp Mode instruction message hud 2"
-*/
 
 
 FILLER
@@ -279,7 +221,7 @@ rule "Setup and Variables":
     startForcingSpawn(Team.ALL,  0)
     startForcingSpawn(Team.ALL,  1)
     startForcingSpawn(Team.ALL,  2)
-    wait(0.024)
+    wait(0.024) # wait for map data rule
     BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints != null else []
     DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints != null  else  []
     BouncePadCheckpoints = BouncePadCheckpoints if len(BouncePadCheckpoints) else []
@@ -377,14 +319,6 @@ rule "Player Initialize":
     @Event eachPlayer
     eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron , 0) # Turn Editor On
     eventPlayer.GuideToggle = eventPlayer.EditorOn
-    /*
-    eventPlayer.isCN = any([
-        "{0}".format(Color.ROSE) == "玫红", 
-        l"No" == "不行", 
-        l"Capture" ==  "夺取",    # 捕捉cn
-        l"Capture" == "捕捉"  # 捕捉 tw  check
-    ])
-    */ 
     eventPlayer.disableGamemodeHud()
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()

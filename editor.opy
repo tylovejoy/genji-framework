@@ -4,13 +4,6 @@ rule "------------------------------------------------------------------------  
     @Delimiter
     @Disabled
     
-# rule "Inspector | Update Every 10 seconds":
-#     @Condition hostPlayer.EditorOn
-#     disableInspector()
-#     wait(10)
-#     enableInspector()
-#     goto RULE_START  
-
 rule "Editor | Clear Excess Data to Save Map":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
@@ -24,8 +17,6 @@ rule "Editor | Clear Excess Data to Save Map":
     SelectedKillball_Editing = 0
     KillBallEffects = 0
     KillBallChase = 0
-    #BladeEnabledCheckpoints = 0
-    #DashEnabledCheckpoints = 0
     ListPlayersAtCheckpoints = 0
     CurrentBounce_Editing = 0
     TempIterator1 = 0
@@ -66,9 +57,6 @@ rule "Editor | Clear Excess Data to Save Map":
     BanDead = []
     BanEmote = []
     BanClimb = []
-
-    
-
 
     enableInspector()
 
