@@ -1,14 +1,14 @@
-#!define versionhere "1.8 alpa"
+#!define versionhere "1.8 alpa 阿尔法版本"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(4) # 0 is editor, rest is numbers
+editortoggle(1) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
-#!define inspectoron true
+#!define inspectoron false
 
 # disable via double ## at include, not the define because the define needs to exist
-#!define testaitoggle #!include "test-scripts.opy"
+#!define testaitoggle ##!include "test-scripts.opy"
 
 #!define compmodetoggle false
 #!define attemptcount 5
@@ -20,6 +20,10 @@ editortoggle(4) # 0 is editor, rest is numbers
 # limit on how many orbs can be made
 #!define fxlimit 193
 #!define portaldistance 1.3
+
+# 1.4 is the default cirkle radius, fx is default to 1
+#!define cpcircleradius 1.4
+#!define cpcirklefx 1
 
 # distance range for player - orb 1.4
 #!define bounceorbdistance 1.4
@@ -247,9 +251,9 @@ def UpdateCache():
 
     destroyEffect(eventPlayer.EffectSizeArray)
     eventPlayer.EffectSizeArray = []
-    createEffect(eventPlayer if eventPlayer.EffectSizeToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint], 1.4, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.EffectSizeToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.EffectSizeArray.append(getLastCreatedEntity())
-    createEffect(eventPlayer if eventPlayer.EffectSizeToggle and eventPlayer.NotOnLastCp else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.4, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.EffectSizeToggle and eventPlayer.NotOnLastCp else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.EffectSizeArray.append(getLastCreatedEntity())
 
     eventPlayer.BounceIndex_Cache = [e for e in [(i if e2 == eventPlayer.CurrentCheckpoint else -1) for e2, i in BouncePadCheckpoints] if  e >=0]
@@ -300,6 +304,15 @@ rule "Setup and Variables":
     BounceToggleDash = BounceToggleDash if len(BounceToggleDash) else []
     BounceToggleLock = BounceToggleLock if len(BounceToggleLock) else []
     LeaderBoardFull = []
+
+    TitleData = null
+    PortalNames = []
+    PortalLoc = []
+    PortalDest  = []
+    CustomPortalStart  = []
+    CustomPortalEndpoint  = []
+    CustomPortalCP  = []
+
     wait(1)
     DashExploitToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Dash Start", true, 2)
     PortalOn = createWorkshopSetting(bool, "map settings","enable portals (control maps)",true,0)
@@ -389,10 +402,10 @@ rule "Player Initialize":
     eventPlayer.bouncetouchedlast = -1
     #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
     wait(1) 
-    createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), 1, EffectReeval.POSITION_AND_RADIUS)
-    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, Color.LIME_GREEN, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), cpcirklefx, EffectReeval.POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, Color.LIME_GREEN, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     wait(0.5)
-    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
     wait(0.5)
     createInWorldText(eventPlayer if eventPlayer.NotOnLastCp else null, "{0} collect orbs first".format(iconString(Icon.WARNING)) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else "Come here", CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT)
@@ -621,7 +634,7 @@ rule "Arrive | Ground reset | traces":
             playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.4)
             wait(0.128)     
     elif eventPlayer.NotOnLastCp and eventPlayer.InvincibleToggle == false and (CompMode == false or CompTime > 0) and eventPlayer.LockState == false:
-        if distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= 1.4:
+        if distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= cpcircleradius:
             # arrived ----------------------------------------------------------------------------------------------------
             eventPlayer.MovedCheckpoint = true
             if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache: # kill player if not colleted the locks
@@ -690,7 +703,7 @@ rule "Arrive | Ground reset | traces":
             else: # update save
                 DeleteSave()
                 MakeSave()
-        elif distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) > 1.4 and not touchground:
+        elif distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) > cpcircleradius and not touchground:
             # ground reset ----------------------------------------------------------------------------------------------------
             checkpointFailReset()
 
@@ -860,6 +873,23 @@ rule "AFK timer":
 
 #!include "mechanics.opy"
 
+#!define FILLER rule "Addon settings are on next page! Click the next page button!":\
+    @Delimiter\
+    @Disabled
+
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+
 #!include "addons.opy"
 
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
@@ -891,14 +921,21 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         case Map.ANTARCTIC_PENINSULA:
             MapVectorArray = [vect(-86, -110, 59), vect(277, 132, 170), vect(283, 57, -235)]
             break
-        default:
-            # This default covers almost every map
-            MapVectorArray = [
-                vect(73, 62, -17),
-                vect(169, 62, 82),
-                vect(-23, 62, -124), 
-                vect(-23, 62, 100)
-            ]
+        default: 
+       
+            if strContains( "{}".format(getCurrentMap()) , "{}".format(Map.LIJIANG_TOWER)): # lunar new year catch
+                MapVectorArray = [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)]
+            elif strContains( "{}".format(getCurrentMap()) ,"{}".format(Map.BUSAN)): # lunar new year catch
+                MapVectorArray = [vect(51.885, 37.172, -113.654), vect(-329.934, 56.136, 149.839), vect(227.21, 43.353, 252.64)]
+            else:  # This default covers almost every map
+                MapVectorArray = [
+                    vect(73, 62, -17),
+                    vect(169, 62, 82),
+                    vect(-23, 62, -124), 
+                    vect(-23, 62, 100)
+                ]
+
+            break
 
     for DestructoIter in range(len(MapVectorArray)):
         createDummy(Hero.DVA, [player for player in getAllPlayers() if player.hasSpawned() and not player.isDummy()][0].getTeam(), 20 - evalOnce(DestructoIter), evalOnce(MapVectorArray[evalOnce(DestructoIter)]), vect(0, 0, 0))
@@ -925,9 +962,10 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         destroyDummy(MsDestructo[evalOnce(DestructoIter)].getTeam(), MsDestructo[evalOnce(DestructoIter)].getSlot())
 
     # Remove MsDestructo data when done
-    MapVectorArray = null
-    DestructoIter = null
-    MsDestructo = null
- 
+    #MapVectorArray = null
+    #DestructoIter = null
+    #MsDestructo = null
+
+
 # enable/disable the include via defines
 testaitoggle 

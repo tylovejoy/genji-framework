@@ -41,6 +41,7 @@ rule "Editor | Clear Excess Data to Save Map":
     SaveElapsed = []
 
     LeaderBoardFull = []
+    LeaderBoardHuds = []
     PortalOn = false
 
     TitleData = null
@@ -50,6 +51,24 @@ rule "Editor | Clear Excess Data to Save Map":
     CpIwtCp = null
     CpIwtPos = null
     CpIwtColor = null
+
+
+    PortalNames = []
+    PortalLoc = []
+    PortalDest  = []
+    CustomPortalStart  = []
+    CustomPortalEndpoint  = []
+    CustomPortalCP  = []
+
+    BanTriple = []
+    BanMulti = []
+    BanCreate = []
+    BanDead = []
+    BanEmote = []
+    BanClimb = []
+
+    
+
 
     enableInspector()
 
@@ -367,7 +386,7 @@ rule "Editor | create cp/orb":
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     
     if eventPlayer.EditModeSelection == 0:
-        if len(CheckpointPositions) > 1 and distance(eventPlayer, CheckpointPositions[hostPlayer.CurrentCheckpoint]) <= 1.4:
+        if len(CheckpointPositions) > 1 and distance(eventPlayer, CheckpointPositions[hostPlayer.CurrentCheckpoint]) <= cpcircleradius:
             smallMessage(eventPlayer, "   Cannot place checkpoints too close.")
             return
         if eventPlayer.CurrentCheckpoint > len(CheckpointPositions) - 1:

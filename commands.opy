@@ -303,7 +303,7 @@ rule "Skip | Crouch + Primary/Secondary Fire":
         eventPlayer.LockState = true
         if eventPlayer.CurrentCheckpoint < 1:
             eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 1
-        elif (len(CheckpointPositions[eventPlayer.CurrentCheckpoint -1]) > 1 and distance(CheckpointPositions[eventPlayer.CurrentCheckpoint ][0], CheckpointPositions[eventPlayer.CurrentCheckpoint-1][1]) < 1.4):
+        elif (len(CheckpointPositions[eventPlayer.CurrentCheckpoint -1]) > 1 and distance(CheckpointPositions[eventPlayer.CurrentCheckpoint ][0], CheckpointPositions[eventPlayer.CurrentCheckpoint-1][1]) < cpcircleradius):
             # if last cp is an instand complete teleport cp, go back further
             eventPlayer.CurrentCheckpoint -= 2 
         else:

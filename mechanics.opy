@@ -27,7 +27,7 @@ def CheckUlt(): # checks if ult should be turned on
     waitUntil(not eventPlayer.isUsingUltimate(), 2)
     if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):
         goto lbl_a #skip msg if these
-    elif eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 1.4: 
+    elif eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= cpcircleradius: 
         smallMessage(eventPlayer, "   {} Ultimate is ready ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE))) 
         lbl_a:
         wait()        
@@ -48,7 +48,7 @@ def CheckDash(): # checks if dash should be  turned on
     waitUntil(not eventPlayer.isUsingAbility1(), 2)
     if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):
         goto lbl_a #skip msg if these
-    elif eventPlayer.CurrentCheckpoint in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 1.4: 
+    elif eventPlayer.CurrentCheckpoint in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= cpcircleradius: 
         smallMessage(eventPlayer, "   {} Dash is ready".format(abilityIconString(Hero.GENJI, Button.ABILITY_1))) 
         lbl_a:
         wait()        
