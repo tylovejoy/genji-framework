@@ -11,12 +11,12 @@ huds outside this file:
 
 rule "Huds: Global/Localplayer":
     wait(2)
- 
+
     # name/credit construction
-    if Name != "name here" or Cachedcredits[0] == null::
+    if Name != "name here - 作者" or Cachedcredits[0] == null::
         Cachedcredits[0] = Name
     
-    if Code != "code here" or Cachedcredits[1] == null::
+    if Code != "ccode here - 代码" or Cachedcredits[1] == null::
         Cachedcredits[1] = Code
     Name = null
     Code = null

@@ -20,7 +20,12 @@
 
 #!define CNany if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
 
+##!define FILLER rule "Addon settings are on next page! Click the next page button!":\
 
+##!define FILLER rule "Map data and addon settings are on page 2 !!!!!!!!!!!!!!!!!!!":\
+#!define FILLER rule "Map data and addon settings are on page 2 - 地图数据和附加组件的设置在第2页":\
+    @Delimiter\
+    #@Disabled
 
 # ----------------GLOBAL------------------
 #!define CheckpointPositions A

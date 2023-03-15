@@ -40,38 +40,6 @@ rule "Addon | custom portals | functioning":
 
     wait(1)
 
-rule "------------------------------------------------------------------------ Addons Settings and data ------------------------------------------------------------------------":
-    @Delimiter
-    @Disabled
-
-rule "Addon | Dash/Blade | DEPRICATED, instructions inside":
-    @Delimiter
-    @Disabled
-    # -
-    # -
-    # >>> this rule should no longer be used <<<
-    # -
-    # -
-    wait()
-    # -
-    # you can add ult/dash via checkpoint mode in the ingame editor
-    # existing map data should be updated to include this in map data
-    # You have 2 main options to add the old dash/ult to your map data
-    # -
-    wait()
-    # -
-    # option a) paste the blade and ult variable from the dash/ult rules into the map pasta rule.
-    # -
-    wait()
-    # -
-    # option b) add it to map data via editor
-    # 1) paste the old ult/dash data variable in here and enable rule
-    # 2) go ingame with editor on
-    # 3) save map data with inspector an paste it in normally
-    # 4) disable this rule
-    # -
-    wait()
-
 rule "Addon | pre-set control map portal | toggled on via workshop settings":
     @Condition PortalOn
     wait(2, Wait.ABORT_WHEN_FALSE) # overwrite pasta
@@ -116,6 +84,117 @@ rule "Addon | pre-set control map portal | toggled on via workshop settings":
         PortalNames = null
         return
         
+
+rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
+    # Credit: nebula#11571
+    @Condition isGameInProgress()
+    
+    MsDestructo = []  # Multiple bots
+    waitUntil(any([x.hasSpawned() for x in getAllPlayers()]), 99999)
+
+    switch getCurrentMap():
+        case Map.ILIOS:
+            MapVectorArray = [vect(322.988, 40, -37.732), vect(27.711, 100, -161.298), vect(-223.895, 50, 0.89)]
+            break
+        case Map.BUSAN:
+            MapVectorArray = [vect(51.885, 37.172, -113.654), vect(-329.934, 56.136, 149.839), vect(227.21, 43.353, 252.64)]
+            break
+        case Map.LIJIANG_TOWER:
+            MapVectorArray = [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)]
+            break
+        case Map.NEPAL:
+            MapVectorArray = [vect(83.1, 178.926, 0.593), vect(-49.803, 63.29, -0.413), vect(-184.659, -38.73, -0.783)]
+            break
+        case Map.OASIS:
+            MapVectorArray = [vect(150.125, 30.619, 251.966), vect(134.888, 36.76, -240.736), vect(-195.549, 60.35, -0.098)]
+            break
+        case Map.NEW_QUEEN_STREET:
+            MapVectorArray = [vect(-13.79, 1.96, 15.92), vect(0,35,25), vect(0,8, 23.77), vect(13.28, 2, 15)]
+            break
+        case Map.ANTARCTIC_PENINSULA:
+            MapVectorArray = [vect(-86, -110, 59), vect(277, 132, 170), vect(283, 57, -235)]
+            break
+        default: 
+       
+            if strContains( "{}".format(getCurrentMap()) , "{}".format(Map.LIJIANG_TOWER)): # lunar new year catch
+                MapVectorArray = [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)]
+            elif strContains( "{}".format(getCurrentMap()) ,"{}".format(Map.BUSAN)): # lunar new year catch
+                MapVectorArray = [vect(51.885, 37.172, -113.654), vect(-329.934, 56.136, 149.839), vect(227.21, 43.353, 252.64)]
+            else:  # This default covers almost every map
+                MapVectorArray = [
+                    vect(73, 62, -17),
+                    vect(169, 62, 82),
+                    vect(-23, 62, -124), 
+                    vect(-23, 62, 100)
+                ]
+
+            break
+
+    for DestructoIter in range(len(MapVectorArray)):
+        createDummy(Hero.DVA, [player for player in getAllPlayers() if player.hasSpawned() and not player.isDummy()][0].getTeam(), 20 - evalOnce(DestructoIter), evalOnce(MapVectorArray[evalOnce(DestructoIter)]), vect(0, 0, 0))
+        MsDestructo[evalOnce(DestructoIter)] = getLastCreatedEntity()
+        MsDestructo[evalOnce(DestructoIter)].startScalingSize(20, true)
+        wait()
+        MsDestructo[evalOnce(DestructoIter)].setGravity(0)
+        MsDestructo[evalOnce(DestructoIter)].applyImpulse(Vector.UP, 1, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+        MsDestructo[evalOnce(DestructoIter)].teleport(evalOnce(MapVectorArray[evalOnce(DestructoIter)]))
+        wait(1)
+        MsDestructo[evalOnce(DestructoIter)].disableEnvironmentCollision(true)
+        wait()
+        MsDestructo[evalOnce(DestructoIter)].setUltEnabled(true)
+        wait()
+        MsDestructo[evalOnce(DestructoIter)].setUltCharge(100)
+        wait()
+
+    wait(1)
+    for DestructoIter in range(len(MapVectorArray)):
+        MsDestructo[evalOnce(DestructoIter)].startForcingButton(Button.ULTIMATE)
+
+    wait(5)
+    for DestructoIter in range(len(MapVectorArray)):
+        destroyDummy(MsDestructo[evalOnce(DestructoIter)].getTeam(), MsDestructo[evalOnce(DestructoIter)].getSlot())
+
+    # Remove MsDestructo data when done
+    MapVectorArray = null
+    DestructoIter = null
+    MsDestructo = null
+
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+
+
+
+rule "------------------------------------------------------------------------ Addons Settings and data ------------------------------------------------------------------------":
+    @Delimiter
+    @Disabled
+
+rule "Addon | Dash/Blade | DEPRICATED, instructions inside":
+    @Delimiter
+    @Disabled
+    # -
+    # >>> this rule should no longer be used <<<
+    # -
+    wait()
+    # -
+    # you can add ult/dash via checkpoint mode in the ingame editor
+    # existing map data should be updated to include this in map data
+    wait()
+    # -
+    # Paste the blade and ult variable from the dash/ult rules old into the map pasta rule.
+    # -
+    wait()
+
 rule "Addon | custom portals | data <---- EDIT ME":
     @Disabled
     #warning: This can cause you to exceed global orb/portal limit. 
