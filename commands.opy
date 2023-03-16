@@ -26,7 +26,7 @@ rule "Toggle Invisible | Hold Deflect":
     @Condition not CompMode
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.invis = not eventPlayer.invis
-    eventPlayer.setInvisibility(Invis.NONE)
+    eventPlayer.setInvisibility(Invis.NONE) 
     if eventPlayer.invis:
         eventPlayer.setInvisibility(Invis.ALL)
 
