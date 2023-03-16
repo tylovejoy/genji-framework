@@ -1,7 +1,7 @@
 #!define versionhere "1.8 alpa 阿尔法版本"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(6) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -130,7 +130,7 @@ def UpdateCache():
     
     eventPlayer.banstring = ""
     wait()
-    if createWorkshopSetting(bool, "Ban Switch", "Ban Triple Jump on all cps", false, 0):
+    if createWorkshopSetting(bool, "Ban on all checkpoints", "Triple Jump", false, 0):
         eventPlayer.ban_triple = true
     elif eventPlayer.CurrentCheckpoint in BanTriple:
         eventPlayer.banstring = "▲ {}".format(eventPlayer.banstring)
@@ -138,7 +138,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_triple = false
 
-    if createWorkshopSetting(bool, "Ban Switch", "Ban Multiclimb on all cps", false, 1):
+    if createWorkshopSetting(bool, "Ban on all checkpoints", "Multiclimb", false, 1):
         eventPlayer.ban_multi = true
     elif eventPlayer.CurrentCheckpoint in BanMulti:
         eventPlayer.banstring = "∞ {}".format(eventPlayer.banstring)
@@ -146,7 +146,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_multi = false
 
-    if createWorkshopSetting(bool, "Ban Switch", "Ban Createbhop on all cps", false, 2):
+    if createWorkshopSetting(bool, "Ban on all checkpoints", "Createbhop", false, 2):
         eventPlayer.ban_create = true
     elif eventPlayer.CurrentCheckpoint in BanCreate:
         eventPlayer.banstring = "♂ {}".format(eventPlayer.banstring)
@@ -154,7 +154,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_create = false
 
-    if createWorkshopSetting(bool, "Ban Switch", "Ban Deathbhop on all cps", false, 3):
+    if createWorkshopSetting(bool, "Ban on all checkpoints", "Deathbhop", false, 3):
         eventPlayer.ban_dedhop = true
     elif eventPlayer.CurrentCheckpoint in BanDead:
         eventPlayer.banstring = "X {}".format(eventPlayer.banstring)
@@ -162,7 +162,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_dedhop = false
 
-    if createWorkshopSetting(bool, "Ban Switch", "Ban Emote Savehop on all cps", false, 4):
+    if createWorkshopSetting(bool, "Ban on all checkpoints", "Emote Savehop", false, 4):
         eventPlayer.ban_emote = true
     elif eventPlayer.CurrentCheckpoint in BanEmote:
         eventPlayer.banstring = "♥ {}".format(eventPlayer.banstring)
@@ -170,7 +170,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_emote = false
     
-    if createWorkshopSetting(bool, "Ban Switch", "Ban Wallclimb on all cps", false, 5):
+    if createWorkshopSetting(bool, "Ban on all checkpoints", "Wallclimb", false, 5):
         eventPlayer.ban_climb = true
     elif eventPlayer.CurrentCheckpoint in BanClimb:
         eventPlayer.banstring = "↑ {}".format(eventPlayer.banstring)
@@ -250,7 +250,7 @@ rule "Setup and Variables":
     CustomPortalCP  = []
 
     wait(1)
-    DashExploitToggle = createWorkshopSetting(bool, "Ban Switch", "Ban Dash Start", true, 2)
+    DashExploitToggle = createWorkshopSetting(bool, "Ban on all checkpoints", "Dash Start", true, 2)
     PortalOn = createWorkshopSetting(bool, "map settings","enable portals (control maps)",true,0)
     #SelectedCheckpoint_Editing = len(CheckpointPositions) - 1 # This probably isn't necessary
         
@@ -337,6 +337,7 @@ rule "Player Initialize":
     createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
     wait(0.5)
+    #trans
     createInWorldText(eventPlayer if eventPlayer.NotOnLastCp else null, "{0} collect orbs first".format(iconString(Icon.WARNING)) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else "Come here", CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT)
     wait(1)  
 

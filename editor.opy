@@ -408,6 +408,7 @@ rule "Editor | Hud and Effects":
 
     # Selected kill orb text
     createInWorldText(getAllPlayers() if hostPlayer.CurrentCheckpoint != -1 and hostPlayer.KillPosition_Cache and hostPlayer.EditModeSelection == 1 else null, 
+        #trans
         "Selected Kill Orb"
         , KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]], 
         1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT
@@ -430,10 +431,12 @@ rule "Editor | Hud and Effects":
     # Teleport arrow icon
     #createIcon(getAllPlayers() if len(CheckpointPositions[hostPlayer.CurrentCheckpoint] ) > 1 else null, CheckpointPositions[hostPlayer.CurrentCheckpoint][1] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.PURPLE, true)
     # Teleport text
+    #trans
     createInWorldText(getAllPlayers() if len(CheckpointPositions[hostPlayer.CurrentCheckpoint] ) > 1 and hostPlayer.EditModeSelection == 0 else null, "teleporter location", CheckpointPositions[hostPlayer.CurrentCheckpoint][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
         
     # normal cp if teleport
     createEffect(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and hostPlayer.EditModeSelection == 0 else null, Effect.RING, Color.ORANGE, CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    # trans
     createInWorldText(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and hostPlayer.EditModeSelection == 0 else null, "level location", CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
     
 # global functions ==============================================================

@@ -85,6 +85,30 @@ rule "Addon | pre-set control map portal | toggled on via workshop settings":
         return
         
 
+rule "Addon | Autobounce enhancer - 增强系統跳的判定":
+    @Event eachPlayer
+    #原作：家里有妖怪#5202(国服)
+    @Condition eventPlayer.hasSpawned() == true
+    @Condition (eventPlayer.getVerticalSpeed() >= -0.2 and eventPlayer.getVerticalSpeed() <= 0.05) == true
+    @Condition eventPlayer.getHorizontalSpeed() <= 1.3
+    @Condition eventPlayer.isInAir() == true
+    @Condition eventPlayer.isOnWall() == false
+    @Condition eventPlayer.isOnGround() == false
+    @Condition createWorkshopSetting(bool, "map settings"," Autobounce enhancer - 增强系統跳的判定",false,3)
+    
+    wait(0.25, Wait.ABORT_WHEN_FALSE)
+    eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
+    waitUntil(eventPlayer.isMoving() == false, 10)
+    eventPlayer.stopForcingPosition()
+    eventPlayer.setMoveSpeed(0)
+    eventPlayer.setGravity(0)
+    wait(3)
+    eventPlayer.setGravity(100)
+    eventPlayer.setMoveSpeed(100)
+    eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+    if RULE_CONDITION:
+        goto RULE_START
+
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
     @Condition isGameInProgress()
@@ -171,8 +195,6 @@ FILLER
 FILLER
 FILLER
 FILLER
-FILLER
-
 
 
 rule "------------------------------------------------------------------------ Addons Settings and data ------------------------------------------------------------------------":
@@ -186,18 +208,19 @@ rule "Addon | Dash/Blade | DEPRICATED, instructions inside - 附加组件 | 刀/
     # >>> this rule should no longer be used <<<
     # >>> 这条规则本版本已弃用 <<<
     # -
-    wait()
+    printLog("----------------")
     # -
     # you can add ult/dash via checkpoint mode in the ingame editor
     # existing map data should be updated to include this in map data
     # Paste the blade and ult variable from the dash/ult rules old into the map pasta rule.
     # -
-    wait()
+    printLog("("----------------")")
     # -
     # 可通过游戏内编辑器在检查点模式下添加刀/Shift
     # 过去的地图数据需要更新，以便在地图数据包含刀/Shift数据
     # -
-    wait()
+    printLog("("----------------")")
+
 
 rule "Addon | custom portals | data <---- EDIT ME - 附加组件 | 自定义传送门 | 数据 <---- 在此处编辑":
     @Disabled
@@ -340,15 +363,3 @@ rule "Addon | In world text for certain Checkpoints <---- EDIT ME":
     # color is for all, not per cp
     CpIwtColor = Color.LIME_GREEN
 
-
-/*
-
-rule "pass trough":
-    @Event eachPlayer
-    @Condition eventPlayer.CurrentCheckpoint == 1
-    @Condition distance(eventPlayer, vect(0,0,0)) < 2
-
-    eventPlayer.disableEnvironmentCollision(false)
-    waitUntil(eventPlayer.CurrentCheckpoint != 1 or distance(eventPlayer, vect(0,0,0)) > 2, 99999)
-    eventPlayer.enableEnvironmentCollision()
-*/

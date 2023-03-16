@@ -12,6 +12,16 @@ editor toggle
     since the var is on in each player, whoever is already in the game before host already has the correct value
 
 
+translations:
+    checkCN defines for an if statment
+    every hud does the if statment to determien if its english or cn text
+    this HAS to be every single hud, you cannot store a variable based on this check
+
+    the idea is that it checks strings against their translations
+    these huds gets evaluated on client side. the local client does the check.
+    this means even if a hud is global, diferent clients see it differently.
+
+    string re-eveluation needs to be on for this to work.
 
 comp mode:
     - set true after initial loading to avoid global var problem

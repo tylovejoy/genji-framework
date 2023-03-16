@@ -198,7 +198,7 @@ rule "Huds: each player":
 
 
     hudText(eventPlayer, null, 
-        "黄弹球 {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else ""
+        ("黄弹球 {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else "")
         checkCN
         "orange orbs {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else ""
         ,
@@ -220,12 +220,21 @@ rule "Huds: each player":
     )
     # climb/bhop indicators
     hudHeader(eventPlayer,         
-        "爬墙已用{0}".format("" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
+        #"爬墙已用{0}".format("" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
+        "{1}{0}".format(
+            "" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount),
+            "爬墙已用" if  eventPlayer.WallclimbUsed else "爬墙未用"
+        )
         checkCN
         "Climb{0}".format("" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
         , HudPosition.LEFT, HO.game_climb, Color.RED if eventPlayer.WallclimbUsed else Color.GREEN, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
-    hudHeader(eventPlayer, "小跳已用" checkCN "Bhop", HudPosition.LEFT, HO.game_bhop, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    hudHeader(eventPlayer, 
+        ("小跳未用" if eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == Color.GREEN else "小跳已用")
+        checkCN 
+        "Bhop"
+        , HudPosition.LEFT, HO.game_bhop, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )
     
     wait(3)
     if CompMode:
