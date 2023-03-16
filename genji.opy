@@ -594,10 +594,10 @@ rule "Arrive | Ground reset | traces":
             bigMessage(eventPlayer, 
                 #"抵达检查点 {0}".format(eventPlayer.CurrentCheckpoint)
                 #if eventPlayer.CurrentCheckpoint == 0 else
-                #CNany
+                #checkCN
                 #if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
                 #"Arrived at level {0}".format(eventPlayer.CurrentCheckpoint) 
-                "{1} {0}".format(eventPlayer.CurrentCheckpoint, "抵达检查点" CNany "Arrived at level")
+                "{1} {0}".format(eventPlayer.CurrentCheckpoint, "抵达检查点" checkCN "Arrived at level")
                 
             )
             

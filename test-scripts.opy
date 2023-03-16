@@ -328,7 +328,7 @@ rule "hud test":
             "{5} + {2} | Move orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
             ][hostPlayer.EditModeSelection])
             
-            CNany
+            checkCN
             
             #if localPlayer.sflkj else
             "{0}".format(    
@@ -405,7 +405,7 @@ rule "each":
             "{5} + {2} | Move orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
             ][hostPlayer.EditModeSelection])
             
-            CNany
+            checkCN
             
             #if localPlayer.sflkj else
             "{0}".format(    

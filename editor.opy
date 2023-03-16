@@ -64,6 +64,22 @@ rule "Editor | Clear Excess Data to Save Map":
         " ",
         null,
         "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
+        "   0. 清除多余的数据:\n"
+        " 当前窗口开启后将会自动清除\n\n"
+        
+        "   1. 复制数剧:\n"
+        " Esc → 打开地图工坊查看器 → 右下角变量目标设置为全局\n"
+        " 点击图标 [x] 复制作图数据\n\n"
+        
+        "   2. 插入数据:\n"
+        " Esc → 打开地图工坊编辑器 → 黏贴数据到 规则 'map data' (第一条规则)\n\n"
+        
+        "   3. 地图工坊设置:\n"
+        " Esc → 显示大厅 → 设置 → 地图工坊设置 →\n"
+        " 关闭 'Editor mode' \n "
+        "Difficulty (display hud) 选择地图难度\n"
+        checkCN
+        "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
         "   0. clear excess data:\n"
         " Automatically done when opening this window\n\n"
 
@@ -78,13 +94,25 @@ rule "Editor | Clear Excess Data to Save Map":
         " ESC→SHOW LOBBY→SETTINGS→ workshop settings →\n"
         " toggle 'Editor mode' off\n"
         " Select display difficulty\n", 
-       HudPosition.TOP, HO.edit_clearec1, Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
+       HudPosition.TOP, HO.edit_clearec1, Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT
     )
     eventPlayer.savemaphud[0] = getLastCreatedText()
 
     hudText(eventPlayer,  
         " ",
         null,
+        "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
+        "   4. 创建地图代码:\n"
+        " Esc → 显示大厅 → 设置 → 分享代码→\n"
+        " 创建新的代码 → 复制代码\n\n"
+
+        "   5. 添加作者&地图信息:\n"
+        " 在地图工坊编辑器 rule 'Credits here' (第二条规则) 输入你的名字和创建的地图代码 \n\n"
+        
+        "   6. 上传作者&地图信息:\n"
+        " Esc → 显示大厅 → 设置 → 分享代码 →\n 上传至现有代码 → 黏贴步骤4 获得的地图代码\n"
+
+        checkCN
         "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
         "   4. Create initial sharecode:\n" 
         " ESC→SHOW LOBBY→SETTINGS→SHARE CODE→\n"
@@ -97,13 +125,17 @@ rule "Editor | Clear Excess Data to Save Map":
         "   6. Update for credits:\n"
         " ESC→SHOW LOBBY→SETTINGS→SHARE CODE→\n"
         " UPLOAD TO EXISTING CODE→ PASTE THE CODE YOU CREATED IN STEP 4\n",
-        HudPosition.TOP, HO.edit_clearec2, Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
+        HudPosition.TOP, HO.edit_clearec2, Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT
     )
     eventPlayer.savemaphud[1] = getLastCreatedText()
 
-    hudHeader(eventPlayer, "    > Press Interact to close this window <    ", HudPosition.TOP, HO.edit_clearec3, Color.LIME_GREEN, HudReeval.NONE)
+    hudHeader(eventPlayer, 
+        "    > 按互动键关闭当前窗口 <    "
+        checkCN
+        "    > Press Interact to close this window <    "
+        , HudPosition.TOP, HO.edit_clearec3, Color.LIME_GREEN, HudReeval.STRING
+    )
     eventPlayer.savemaphud[2] = getLastCreatedText()
-
     waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), 9999)
     waitUntil(eventPlayer.isHoldingButton(Button.INTERACT), 9999)
     destroyHudText(eventPlayer.savemaphud[0])
@@ -134,7 +166,34 @@ rule "Editor | Hud and Effects":
 
     # huds ==========================================================================================================================================================================
     hudSubtext(hostPlayer if hostPlayer.GuideToggle else null, 
-        "{0}".format(    
+        "{0}".format(   
+        [
+        "{0} + {1} | 新建检查点\n"
+	    "{0} + {2} | 删除选中的检查点\n"
+		"{0} + {3} | 移除/新建传送点\n" #移除/新建 传送门
+		"{0} + {4} | 移动检查点至当前位置\n"
+        "{0} + {5} | 检查点碰撞模型\n"
+        "{4} (长按) | 微调检查点位置".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1)),
+
+        "{0} + {1} | 新建击杀球\n"
+		"{0} + {2} | 删除选中的击杀球\n"
+        "{0} + {3} | 选择上一个击杀球\n"
+        "{0} + {4} | 选择下一个击杀球\n\n"
+        "{5} + {4} | 增大击杀球尺寸\n"
+        "{5} + {3} | 减小击杀球尺寸\n"
+        "{5} + {1} | 向前移动击杀球\n"
+        "{5} + {2} | 向后移动击杀球".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2)),
+		
+        "{0} + {1} | 新建弹球\n"
+		"{0} + {3} | 选择上一个弹球\n"
+		"{0} + {4} | 选择下一个弹球\n\n"
+		"{0} + {2} | 删除选中的弹球\n"
+		"{5} + {4} | 增加弹球弹力\n"
+		"{5} + {3} | 减少弹球弹力\n"
+		"{5} + {1} | 向前移动弹球\n"
+        "{5} + {2} | 向后移动弹球".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
+        ][hostPlayer.EditModeSelection]
+        checkCN 
         [   
         "{0} + {1} | Create New Checkpoint\n"
         "{0} + {2} | Delete selected Checkpoint\n"
@@ -154,8 +213,7 @@ rule "Editor | Hud and Effects":
  
         "{0} + {1} | Create new Bounce orb\n"
         "{0} + {3} | Select previous orb\n"
-        "{0} + {4} | Select next orb\n"
-        "\n"
+        "{0} + {4} | Select next orb\n\n"
         "{0} + {2} | Delete selected orb\n"
         "{5} + {4} | Increase orb strength\n"
         "{5} + {3} | Decrease orb strength\n"
@@ -166,36 +224,67 @@ rule "Editor | Hud and Effects":
     )
 
     hudSubtext(hostPlayer, 
+        (
+        " \n{0} + {1} | 下一个检查点\n"
+        "{0} + {2} | 上一个检查点\n"
+        "{4} | 飞行 (仅限检查点模式)\n"
+        "长按 {3} | 切换显示作图指引\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.MELEE), buttonString(Button.ABILITY_2))
+        checkCN
         " \n{0} + {1} | Next checkpoint\n"
         "{0} + {2} | Prev checkpoint\n"
         "{4} | Fly (checkpoint mode only)\n"
         "Hold {3} | toggle guide\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.MELEE), buttonString(Button.ABILITY_2))
+        )
         if hostPlayer.GuideToggle else
-        "Hold {0} | toggle guide".format(buttonString(Button.MELEE)),
-        HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        "长按 {0} | 切换显示作图指引".format(buttonString(Button.MELEE))
+        checkCN
+        "Hold {0} | toggle guide".format(buttonString(Button.MELEE))
+        ,HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
     hudSubheader(hostPlayer if hostPlayer.GuideToggle else null, 
-        "to save map hold {0} + {1} + {2} and follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
-        HudPosition.LEFT, HO.edit_savemap, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        "保存地图长按 {0} + {1} + {2} 后按弹出窗口的提示进行操作".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD))
+        checkCN
+        "to save map hold {0} + {1} + {2} and follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD))
+        ,HudPosition.LEFT, HO.edit_savemap, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     
     hudText(getAllPlayers(),  #  LEFT at -6 original position
+        (
+        " {1} {0} ".format(
+            ["检查点模式","击杀球模式","弹球模式"][hostPlayer.EditModeSelection],
+            [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON)][hostPlayer.EditModeSelection]
+         ) if localPlayer == hostPlayer else " {0} 源氏 编辑者 {0} \n 房主/编辑者: {1} ".format(iconString(Icon.BOLT),hostPlayer)
+        )
+       checkCN
         " {1} {0} ".format(
             ["Checkpoints mode" ,"Kill Orb mode","Bounce Orb mode"][hostPlayer.EditModeSelection],
             [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON)][hostPlayer.EditModeSelection]
-       ) if localPlayer == hostPlayer else " {0} Genji editor {0} \n host/editor: {1} ".format(iconString(Icon.BOLT),hostPlayer),
-       null, null,   
+        ) if localPlayer == hostPlayer else " {0} Genji editor {0} \n host/editor: {1} ".format(iconString(Icon.BOLT),hostPlayer)
+       
+       , null, null,   
        HudPosition.TOP, HO.edit_host_mode, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     hudText(hostPlayer if hostPlayer.GuideToggle else null, 
         null,  # original part of the one ontop of it
-        "Hold {0} to change mode".format(buttonString(Button.ABILITY_1)),   
-        null,   
+        "长按 {0} 切换作图模式".format(buttonString(Button.ABILITY_1))
+        checkCN
+        "Hold {0} to change mode".format(buttonString(Button.ABILITY_1))
+        , null,   
         HudPosition.TOP, HO.edit_changemode, Color.SKY_BLUE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     hudSubtext(hostPlayer if hostPlayer.GuideToggle and (hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null, 
+        "{0} + {1} | 弹球给刀 {3} | {2}".format(
+            buttonString(Button.ULTIMATE), 
+            buttonString(Button.PRIMARY_FIRE), 
+            ("启用" if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "关闭") if  hostPlayer.EditModeSelection == 2 else
+            ("启用" if hostPlayer.CurrentCheckpoint in BladeEnabledCheckpoints else "关闭"),
+            abilityIconString(Hero.GENJI, Button.ULTIMATE),
+            "检查点" if hostPlayer.EditModeSelection == 0
+            else "弹球"
+        )        
+        checkCN
         "{0} + {1} | {4} give ult {3} | {2}".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.PRIMARY_FIRE), 
@@ -214,6 +303,16 @@ rule "Editor | Hud and Effects":
 
     
     hudSubtext(hostPlayer if hostPlayer.GuideToggle and (hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null, 
+        "{0} + {1} | {4} 弹球给Shift {3} | {2}".format(
+            buttonString(Button.ULTIMATE), 
+            buttonString(Button.SECONDARY_FIRE), 
+            ("启用" if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "关闭") if  hostPlayer.EditModeSelection == 2 else
+            ("启用" if hostPlayer.CurrentCheckpoint in DashEnabledCheckpoints else "关闭"),
+            abilityIconString(Hero.GENJI, Button.ABILITY_1),
+            "检查点" if hostPlayer.EditModeSelection == 0
+            else "弹球"
+        )   
+        checkCN
         "{0} + {1} | {4} give dash {3} | {2}".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.SECONDARY_FIRE), 
@@ -229,32 +328,54 @@ rule "Editor | Hud and Effects":
         Color.ORANGE
         , HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
-    
-    # BladeEnabledCheckpoints
-    /*
-    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null, 
-        "{0} + {1} | orb give dash {3} | {2}".format(
-            buttonString(Button.ULTIMATE), 
-            buttonString(Button.SECONDARY_FIRE),
-            "on" if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off",
-            abilityIconString(Hero.GENJI, Button.ABILITY_1)
-        ), HudPosition.LEFT, HO.edit_orb_dash, Color.GREEN  if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
-    )
-    */
-    #DashEnabledCheckpoints
 
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null,
+        "{0} + {1} |  黄弹球(进点前必须收集 {3} | {2}\n".format(
+            buttonString(Button.ULTIMATE), 
+            buttonString(Button.ABILITY_2),
+            "启用" if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "关闭",
+            iconString(Icon.ASTERISK)
+        )
+        checkCN
         "{0} + {1} | unlocks checkpoint {3} | {2}\n".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.ABILITY_2),
             "on" if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off",
             iconString(Icon.ASTERISK)
-        ), HudPosition.LEFT, HO.edit_orb_lock, Color.GREEN if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        )
+        , HudPosition.LEFT, HO.edit_orb_lock, Color.GREEN if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
-    hudText(hostPlayer if hostPlayer.GuideToggle else null, " orb/portal limit: {0}/{1} ".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart), fxlimit), null, null, HudPosition.LEFT, HO.edit_orblimit, Color.BLUE, Color.SKY_BLUE,Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudText(hostPlayer if hostPlayer.GuideToggle else null,
+        "球体/传送门上限: {0}/{1} ".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart), fxlimit)
+        checkCN
+        "orb/portal limit: {0}/{1} ".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart), fxlimit),
+        null, null, HudPosition.LEFT, HO.edit_orblimit, Color.BLUE, Color.SKY_BLUE,Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+    )
     
+    # display selected cc/orb info
     hudText(hostPlayer if hostPlayer.GuideToggle else null, 
+        (
+            "\n 选中的检查点 \n 矢量: {0}{1} \n".format(
+                CheckpointPositions[hostPlayer.CurrentCheckpoint],
+                "" if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) < 2 else
+                "\n 传送点: {0}".format(CheckpointPositions[hostPlayer.CurrentCheckpoint][1])
+            ) 
+            if hostPlayer.EditModeSelection == 0 and len(CheckpointPositions) > 0 else  
+            "\n 选中的击杀球 \n 矢量: {1} \n 半径: {0} \n".format(
+                KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]],
+                KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]      
+            ) 
+            if hostPlayer.EditModeSelection == 1 and len(hostPlayer.KillIndex_Cache) > 0 else             
+            "\n 选中的弹球 \n 矢量: {1} \n 弹力: {0} \n".format(
+                BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
+                BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+            )
+            if hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0  else   
+            "\n   当前无数据选中   \n"
+        )         
+        checkCN
+        (
             "\n Selected Checkpoint \n Vector: {0}{1} \n".format(
                 CheckpointPositions[hostPlayer.CurrentCheckpoint],
                 "" if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) < 2 else
@@ -271,8 +392,9 @@ rule "Editor | Hud and Effects":
                 BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
             )
             if hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0  else   
-            "\n   No data selected   \n",              
-        null, null, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+            "\n   No data selected   \n"
+        )
+        , null, null, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     wait(2)
@@ -286,7 +408,8 @@ rule "Editor | Hud and Effects":
 
     # Selected kill orb text
     createInWorldText(getAllPlayers() if hostPlayer.CurrentCheckpoint != -1 and hostPlayer.KillPosition_Cache and hostPlayer.EditModeSelection == 1 else null, 
-        "Selected Kill Orb", KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]], 
+        "Selected Kill Orb"
+        , KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]], 
         1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT
     )
     # Red distance orb for kill orb

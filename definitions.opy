@@ -10,7 +10,7 @@
 
 # check if cn client
 /*
-#!define CNany if any([ \
+#!define checkCN if any([ \
         "{0}".format(Color.ROSE) == "玫红", \
         l"No" == "不行",  \
         l"Capture" ==  "夺取",    # 捕捉cn \
@@ -18,7 +18,7 @@
     ]) else
 */
 
-#!define CNany if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
+#!define checkCN if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
 
 ##!define FILLER rule "Addon settings are on next page! Click the next page button!":\
 
