@@ -258,9 +258,9 @@ rule "Addon | Fake Triple Jump - enable rule": # method c
 
     if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping() :
         if eventPlayer.ban_triple and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp: # handle bans and invincible
+            #trans
             smallMessage(eventPlayer, "   Triple Jump ▲ is banned!")
             return
-        #smallMessage(eventPlayer, "   triple jump ▲")
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
 
 
@@ -269,7 +269,7 @@ rule "Addon | Friend Title <---- DISPLAY MESSAGE HERE (ON PLAYER)":
     @Delimiter
     @Event eachPlayer
     @Condition eventPlayer.hasSpawned()
-    
+    #trans
     #In the field custom string your nickname
     if "your nickname <-------" == "{0}".format(eventPlayer):
         bigMessage(getAllPlayers(), "Message to the whole room")

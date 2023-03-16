@@ -475,7 +475,13 @@ rule "Editor | Toggle Guide":
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false
     wait(1, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
-    smallMessage(eventPlayer, "   Guide is open" if eventPlayer.GuideToggle else "   Guide is hidden") 
+    smallMessage(eventPlayer, #c
+        "   指引已开启" if eventPlayer.GuideToggle else "   指引已隐藏"
+        checkCN
+        "   Guide is open" if eventPlayer.GuideToggle else "   Guide is hidden"
+        ) 
+    
+    
     eventPlayer.GuideToggle = not eventPlayer.GuideToggle 
 
 rule "Editor | change mode":
@@ -485,7 +491,11 @@ rule "Editor | change mode":
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
     wait(0.84, Wait.ABORT_WHEN_FALSE)
     eventPlayer.flytoggle = null   
-    smallMessage(hostPlayer, ["   Current mode: Kill Orb","   Current mode: Bounce Orb","   Current mode: Checkpoint"][eventPlayer.EditModeSelection])
+    smallMessage(hostPlayer, #c
+        ["   弹球模式","   击杀球模式","   检查点模式"][eventPlayer.EditModeSelection]
+        checkCN
+        ["   Current mode: Kill Orb","   Current mode: Bounce Orb","   Current mode: Checkpoint"][eventPlayer.EditModeSelection]
+    )
     wait()
     eventPlayer.EditModeSelection = (eventPlayer.EditModeSelection  + 1) % 3
 
@@ -498,14 +508,13 @@ rule "Editor | create cp/orb":
     
     if eventPlayer.EditModeSelection == 0:
         if len(CheckpointPositions) > 1 and distance(eventPlayer, CheckpointPositions[hostPlayer.CurrentCheckpoint]) <= cpcircleradius:
-            smallMessage(eventPlayer, "   Cannot place checkpoints too close.")
+            smallMessage(eventPlayer, "   放置的检查点距离太近" checkCN "   Cannot place checkpoints too close.")
             return
         if eventPlayer.CurrentCheckpoint > len(CheckpointPositions) - 1:
             eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 1
 
         if hostPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
-            CheckpointPositions.append(eventPlayer.getPosition() ) # - vect(0, 0, 0)
-            #hostPlayer.CurrentCheckpoint = len(CheckpointPositions) - 1
+            CheckpointPositions.append(eventPlayer.getPosition() )
             eventPlayer.CurrentCheckpoint ++
             UpdateCache()
         else:
@@ -520,12 +529,12 @@ rule "Editor | create cp/orb":
             UpdateCache()
             RebuildKillOrbs()
             RebuildBounceOrbs()
-        smallMessage(getAllPlayers(), "   New Checkpoint has been created")
+        smallMessage(getAllPlayers(), "   新检查点已创建" checkCN "   New Checkpoint has been created")
         #UpdateCache()
 
     elif eventPlayer.EditModeSelection == 1:
         if len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart) >= fxlimit:
-            bigMessage(getAllPlayers(), "Orb/portal limit reached for this map, delete old orbs first")
+            bigMessage(eventPlayer, "当前地图弹球/传送门数量已达上限" checkCN "Orb/portal limit reached for this map")
             wait()
             return
         KillBallPositions.append(eventPlayer.getPosition())
@@ -540,10 +549,12 @@ rule "Editor | create cp/orb":
         KillBallChase = KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
         RebuildKillOrbs()
     
-        bigMessage(getAllPlayers(), "New Kill Orb has been created! \r\nIt's only valid for checkpoint {0}".format(eventPlayer.CurrentCheckpoint))
+        bigMessage(getAllPlayers(), "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新击杀球已创建! \r\n仅生效于检查点" checkCN "New Kill Orb has been created! \r\nIt's only valid for checkpoint"))
+
+       
     elif eventPlayer.EditModeSelection == 2:
         if len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart) >= fxlimit:
-            bigMessage(getAllPlayers(), "Orb/portal limit reached for this map, delete old orbs first")
+            bigMessage(eventPlayer, "当前地图弹球/传送门数量已达上限" checkCN "Orb/portal limit reached for this map")
             wait()
             return
         BouncePositions.append(eventPlayer.getPosition())
@@ -568,7 +579,7 @@ rule "Editor | create cp/orb":
         CurrentBounce_Editing = len(hostPlayer.BounceIndex_Cache) - 1
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
         RebuildBounceOrbs()
-        bigMessage(getAllPlayers(), "New Bounce Orb has been created! \r\nIt's only valid for checkpoint {0}".format(eventPlayer.CurrentCheckpoint))
+        bigMessage(getAllPlayers(), "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新弹球已创建! \r\n仅生效于检查点" checkCN "New Bounce Orb has been created! \r\nIt's only valid for checkpoint"))
     
     wait(0.64)
 
@@ -639,7 +650,7 @@ rule "Editor | delete cp/orb":
         lbl_a:
         RebuildKillOrbs()
         RebuildBounceOrbs()
-        smallMessage(getAllPlayers(), "   Checkpoint has been deleted")
+        smallMessage(getAllPlayers(), "   检查点已删除" checkCN "   Checkpoint has been deleted")
     
     elif eventPlayer.EditModeSelection == 1 and len(eventPlayer.KillIndex_Cache) != 0 and hostPlayer.KillPosition_Cache:
         del KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
@@ -784,11 +795,14 @@ rule "Editor | cp add/remove teleport":
       return
 
     if hostPlayer.CurrentCheckpoint == 0:
+        #trans
         smallMessage(hostPlayer,"   Can't place a teleport on first checkpoint")
         return
 
     if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) > 1: # remove
         CheckpointPositions[hostPlayer.CurrentCheckpoint] = CheckpointPositions[hostPlayer.CurrentCheckpoint][0]
+        #trans
+        #trans
         smallMessage(hostPlayer, "   Teleport for level {0} has been removed.".format(hostPlayer.CurrentCheckpoint))
     else: # add
         CheckpointPositions[hostPlayer.CurrentCheckpoint] = [
@@ -797,7 +811,7 @@ rule "Editor | cp add/remove teleport":
                 else CheckpointPositions[hostPlayer.CurrentCheckpoint], 
             hostPlayer.getPosition()
         ]
-        smallMessage(hostPlayer, "   Teleport has been added for level {0}".format(hostPlayer.CurrentCheckpoint))
+        smallMessage(hostPlayer, "{1} {0}".format(hostPlayer.CurrentCheckpoint,"   传送点已添加到检查点" checkCN "   Teleport has been added for level"))
     wait()
 
 rule "Editor | move cp once":
@@ -811,7 +825,8 @@ rule "Editor | move cp once":
         CheckpointPositions[hostPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[hostPlayer.CurrentCheckpoint][1] ]
     else:
         CheckpointPositions[hostPlayer.CurrentCheckpoint] = eventPlayer.getPosition() 
-    smallMessage(hostPlayer, "   Checkpoint has been moved to your position")
+    smallMessage(hostPlayer,"   检查点已移动至当前位置" checkCN "   Checkpoint has been moved to your position")
+    
     wait()
 
 rule "Editor | move cp slowly":

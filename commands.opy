@@ -30,7 +30,7 @@ rule "Toggle Invisible | Hold Deflect":
     if eventPlayer.invis:
         eventPlayer.setInvisibility(Invis.ALL)
 
-    smallMessage(eventPlayer, "   Invisible {0}".format("on" if eventPlayer.invis else "off"))    
+    smallMessage(eventPlayer, "   {1} {0}".format("on" if eventPlayer.invis else "off","#隐身模式" checkCN "Invisible"))        
     playEffect(eventPlayer, DynamicEffect.DEBUFF_IMPACT_SOUND, null, eventPlayer, 100)
     
 rule "Preview orbs/portals | Hold Primary":
@@ -83,18 +83,22 @@ rule "Restart Run | Crouch + Interact + Deflect":
     if CompMode:      
         wait()
         if CompTime < 1:
+            #trans
             smallMessage(eventPlayer, "   The competition is over")
             return
         elif eventPlayer.CompDone:
             return
         elif CompRestartLimit and eventPlayer.NotOnLastCp:
+            #trans
             smallMessage(eventPlayer,"   Restart during run is disabled for this competition")
             return
         elif CompAtmpNum > 0: 
             if eventPlayer.AttemptCount == CompAtmpNum:
+                #trans
                 smallMessage(eventPlayer, "   You are on your last attempt")
                 return
             if eventPlayer.AttemptCount == (-1):
+                #trans
                 smallMessage(eventPlayer, "   You are out of attempts")
                 return
             eventPlayer.AttemptCount ++
@@ -133,7 +137,7 @@ rule "Enter Spectate | Hold Interact":
     if eventPlayer.EditorOn: # editor has interact combos
         wait(1, Wait.ABORT_WHEN_FALSE)
 
-    smallMessage(eventPlayer, "   Hold Interact again to turn off spectate mode")
+    smallMessage(eventPlayer, "   再次长按互动键关闭观战模式" checkCN "   Hold Interact again to turn off spectate mode")
     if eventPlayer.SpectateToggle:
         eventPlayer.respawn()
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
@@ -180,10 +184,10 @@ rule "Toggle Invincible Mode | Melee + Reload":
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
         wait(0.1)
         if eventPlayer.PracticeToggle:
-            bigMessage(eventPlayer, "Practice mode")
+            bigMessage(eventPlayer, "练习模式" checkCN "Practice mode")
             chase(eventPlayer.practicetimer, 9999999, rate=1, ChaseReeval.NONE)
         else:
-            bigMessage(eventPlayer, "Normal mode")
+            bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
             chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE)
             StopPauseTimer()
         eventPlayer.stopForcingPosition()
@@ -195,7 +199,7 @@ rule "Toggle Invincible Mode | Melee + Reload":
         StartPauseTimer()
         stopChasingVariable(eventPlayer.Timer)
         stopChasingVariable(eventPlayer.practicetimer)
-        bigMessage(eventPlayer, "Invincible mode")
+        bigMessage(eventPlayer,"探点模式" checkCN "Invincible mode")
         eventPlayer.flytoggle = null
         wait(0.2)
     
@@ -214,7 +218,7 @@ rule "Toggle Practice Mode | Melee + Ultimate":
     @Condition not CompMode 
 
     if eventPlayer.InvincibleToggle:
-        smallMessage(eventPlayer, "   Cannot toggle practice mode while in invincible")
+        smallMessage(eventPlayer,"   探点模式下无法切换练习模式" checkCN "   Cannot toggle practice mode while in invincible")
         wait()
         return
 
@@ -231,7 +235,7 @@ rule "Toggle Practice Mode | Melee + Ultimate":
         UpdateCache()
         wait(0.1)
         stopChasingVariable(eventPlayer.practicetimer)
-        bigMessage(eventPlayer, "Normal mode")
+        bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
         if eventPlayer.NotOnLastCp:
             eventPlayer.splittime = eventPlayer.Timer
             chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE) #abs removed
@@ -243,7 +247,7 @@ rule "Toggle Practice Mode | Melee + Ultimate":
         eventPlayer.PracticeCheckpoint = eventPlayer.CurrentCheckpoint
         eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), true)
         stopChasingVariable(eventPlayer.Timer)
-        bigMessage(eventPlayer, "Practice mode")
+        bigMessage(eventPlayer,"练习模式" checkCN "Practice mode")
         eventPlayer.stopForcingPosition()
         if eventPlayer.NotOnLastCp:
             StartPauseTimer()
@@ -351,4 +355,10 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     wait(1, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     eventPlayer.QuickRestartToggle = not eventPlayer.QuickRestartToggle
-    bigMessage(eventPlayer, "Quick reset is enabled" if eventPlayer.QuickRestartToggle else "Quick reset is disabled")
+    bigMessage(eventPlayer, 
+        ("快速回点已启用" if eventPlayer.QuickRestartToggle else "快速回点已关闭")
+        checkCN
+        "Quick reset is enabled" if eventPlayer.QuickRestartToggle else "Quick reset is disabled"
+    )
+
+

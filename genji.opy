@@ -299,6 +299,7 @@ rule "Match time":
         if CompMode:
             CompTime --
             if CompTime == 0:
+                #trans
                 bigMessage(getAllPlayers(),"time's up")
                 getAllPlayers().CompDone = true
                 stopChasingVariable(getAllPlayers().Timer)
@@ -307,7 +308,7 @@ rule "Match time":
                 wait(0.032)
                 async(CreateLeaderBoard(), AsyncBehavior.RESTART)            
 
-    bigMessage(getAllPlayers(), "maximum lobby time expired, restarting")
+    bigMessage(getAllPlayers(), "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time expired, restarting")
     wait(5)
     if getCurrentGamemode() == Gamemode.FFA:
         declarePlayerVictory(hostPlayer)
@@ -363,6 +364,7 @@ rule "Player Initialize":
             eventPlayer.instructionhud = false
         else:
             eventPlayer.AttemptCount = CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))]
+            #trans ? or was this a test hud
             smallMessage(eventPlayer,"now {0}".format( eventPlayer.AttemptCount))
         if eventPlayer.AttemptCount == (-1) or CompTime < 1:
             eventPlayer.CompDone = true
@@ -472,7 +474,7 @@ def StartGame_Sub():
         eventPlayer.setAbility1Enabled(false)
         if eventPlayer.isUsingAbility1():
             waitUntil(not eventPlayer.isUsingAbility1(), 1.5)
-            smallMessage(eventPlayer, "   Dash Start is banned!")            
+            smallMessage(eventPlayer,"   0关卡Shift已禁用!" checkCN "   Dash Start is banned!")            
 
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
@@ -566,11 +568,11 @@ rule "Arrive | Ground reset | traces":
             # arrived ----------------------------------------------------------------------------------------------------
             eventPlayer.MovedCheckpoint = true
             if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache: # kill player if not colleted the locks
-                smallMessage(eventPlayer, "   ! collect ALL orange orbs to unlock !")
+                smallMessage(eventPlayer, "   ! 进点前需收集齐所有黄弹球 !" checkCN "   ! collect ALL orange orbs to unlock !")
                 kill(eventPlayer, null)
                 goto lbl_abc
             if eventPlayer.ban_climb and eventPlayer.WallclimbUsed:
-                smallMessage(eventPlayer, "   Climb ↑ is banned!")
+                smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
                 checkpointFailReset()
                 goto lbl_abc
             eventPlayer.LockCollected = []
@@ -589,18 +591,8 @@ rule "Arrive | Ground reset | traces":
             wait()
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
             playEffect(eventPlayer if CompMode or eventPlayer.invis else getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
-            #bigMessage(eventPlayer, "Arrived at {0} / {1}{2}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1, " - Split {}".format(eventPlayer.splitdisplay) if eventPlayer.splitson else ""))
-           
-            bigMessage(eventPlayer, 
-                #"抵达检查点 {0}".format(eventPlayer.CurrentCheckpoint)
-                #if eventPlayer.CurrentCheckpoint == 0 else
-                #checkCN
-                #if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
-                #"Arrived at level {0}".format(eventPlayer.CurrentCheckpoint) 
-                "{1} {0}".format(eventPlayer.CurrentCheckpoint, "抵达检查点" checkCN "Arrived at level")
-                
-            )
-            
+            #bigMessage(eventPlayer, "Arrived at {0} / {1}{2}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1, " - Split {}".format(eventPlayer.splitdisplay) if eventPlayer.splitson else "")) 
+            bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.CurrentCheckpoint, "抵达检查点" checkCN "Arrived at level")   )
             wait()
             UpdateTitle()
            
@@ -614,8 +606,8 @@ rule "Arrive | Ground reset | traces":
                 stopChasingVariable(eventPlayer.Timer)
                 stopChasingVariable(eventPlayer.practicetimer) 
                 wait()
-                bigMessage(getAllPlayers(), "{0} Mission complete! Time {1}".format(eventPlayer, prettyTime(eventPlayer.Timer)))
-                
+                bigMessage(getAllPlayers(), "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.Timer),"已通关! 用时 " checkCN "Mission complete! Time"))
+                   
                 DeleteSave()
                 Leaderboardupdate()
                 if CompMode and CompAtmpNum > 0:
@@ -679,12 +671,13 @@ rule "Bounce Ball / Orb | Activate":
     if eventPlayer.BounceUlt_Cache[eventPlayer.bouncetouched]:
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
-         smallMessage(eventPlayer, "   {} Ultimate is ready ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE))) 
+        smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"#终极技能已就绪" checkCN "Ultimate is ready")) 
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     if eventPlayer.BounceLock_Cache[eventPlayer.bouncetouched]:
         eventPlayer.LockCollected.append(eventPlayer.BouncePosition_Cache[eventPlayer.bouncetouched])
-        smallMessage(eventPlayer, "   orb has been collected")
+        smallMessage(eventPlayer, "   #黄球已收集" checkCN "   orb has been collected")
+        
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     if eventPlayer.BounceDash_Cache[eventPlayer.bouncetouched]:
@@ -692,7 +685,7 @@ rule "Bounce Ball / Orb | Activate":
             waitUntil(not eventPlayer.isUsingAbility1(), 1)
             wait(0.032) # wait til set false by check
         eventPlayer.setAbility1Enabled(true)
-         smallMessage(eventPlayer, "   {} Ultimate is ready ".format(abilityIconString(Hero.GENJI, Button.ABILITY_1))) 
+        smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready")) 
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     wait(0.24)
