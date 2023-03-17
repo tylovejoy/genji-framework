@@ -10,7 +10,6 @@ rule "Addon | pre-set control map portal | function | toggled via workshop":
     @Condition eventPlayer.InvincibleToggle or not eventPlayer.NotOnLastCp
     @Condition len(PortalLoc) != null
     @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc])
-    
     if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] != vect(0,0,0):
         eventPlayer.teleport(
             PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] 
@@ -85,7 +84,7 @@ rule "Addon | pre-set control map portal | toggled on via workshop settings":
         return
         
 
-rule "Addon | Autobounce enhancer - 增强系統跳的判定":
+rule "Addon | Autobounce/stall enhancer - 增强系統跳的判定":
     @Event eachPlayer
     #原作：家里有妖怪#5202(国服)
     @Condition eventPlayer.hasSpawned() == true
@@ -306,11 +305,14 @@ rule "Addon | Display World Record":
     @Disabled
     @Delimiter
     #type your entry in the textfield that says "name and time here"
+    # trans
     hudText(getAllPlayers(), null," \n{0} world record {0}".format(iconString(Icon.FIRE)),"name and time here", HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
 
 rule "Addon | Title Data <---- EDIT ME":
     @Disabled
+    wait(1)
+    # trans
     # checkpoint number
     TitleData[0] = [
         0, 
@@ -320,7 +322,7 @@ rule "Addon | Title Data <---- EDIT ME":
         40,
         50
     ]
-
+    # trans
     # title
     TitleData[1] = [
         "Bunny",
@@ -330,7 +332,7 @@ rule "Addon | Title Data <---- EDIT ME":
         "Expert",
         "Master"
     ]
-
+    # trans
     # color
     TitleData[2] = [
         Color.LIME_GREEN,
@@ -343,7 +345,8 @@ rule "Addon | Title Data <---- EDIT ME":
 
 rule "Addon | HUD text for certain Checkpoints <---- EDIT ME":
     @Disabled
-    wait(0.5)
+    # trans
+    wait(1)
     # in CpHudText fill in text
     # in CpHudCp fill in the at wich to display
     # the example fill shows a text for cp 1 and cp 3
@@ -352,7 +355,8 @@ rule "Addon | HUD text for certain Checkpoints <---- EDIT ME":
     
 rule "Addon | In world text for certain Checkpoints <---- EDIT ME":
     @Disabled
-    wait(0.5)
+    # trans
+    wait(1)
     # in CpIwtText fill in text
     # in CpIwtCp fill in cp at wich to display
     # in CpIwtPos fill in the vector

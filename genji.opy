@@ -130,6 +130,7 @@ def UpdateCache():
     
     eventPlayer.banstring = ""
     wait()
+    # trans
     if createWorkshopSetting(bool, "Ban on all checkpoints", "Triple Jump", false, 0):
         eventPlayer.ban_triple = true
     elif eventPlayer.CurrentCheckpoint in BanTriple:
@@ -253,7 +254,7 @@ rule "Setup and Variables":
     DashExploitToggle = createWorkshopSetting(bool, "Ban on all checkpoints", "Dash Start", true, 2)
     PortalOn = createWorkshopSetting(bool, "map settings","enable portals (control maps)",true,0)
     #SelectedCheckpoint_Editing = len(CheckpointPositions) - 1 # This probably isn't necessary
-        
+    # trans
     CompMode = createWorkshopSetting(bool, "Competitive mode","Turn on competitive mode" , compmodetoggle , 100)
     if CompMode:
         # -! comp minutes !- 
@@ -318,6 +319,7 @@ rule "Match time":
 
 rule "Player Initialize":
     @Event eachPlayer
+    # trans
     eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron , 0) # Turn Editor On
     eventPlayer.GuideToggle = eventPlayer.EditorOn
     eventPlayer.disableGamemodeHud()
@@ -730,7 +732,7 @@ rule "Player Phase":
     @Event eachPlayer
     @Condition eventPlayer.hasStatusEffect(Status.PHASED_OUT) == false
     @Condition eventPlayer.isAlive()
-    if eventPlayer.hasStatusEffect(Status.INVINCIBLE): # delay if its for sleep
+    if eventPlayer.hasStatusEffect(Status.INVINCIBLE): # delay if its for afk sleep
         wait(0.16)
     eventPlayer.setStatusEffect(null, Status.PHASED_OUT, 9999)
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
@@ -807,14 +809,15 @@ rule "Map Data / 数据录入 <---- INSERT HERE / 在这输入":
 editorordata
 
 rule "Credits here / 作者名字 <---- INSERT HERE / 在这输入 ": 
+    # trans
     #Filling this in adds it to the inspector data pasta.
     #You can fill in again to overwrite previous entry.
-
     Name = "name here - 作者"
     Code = "code here - 代码"
 
 
 rule "Ban per CP <---- edit me":
+    # trans
     # Enter the checkpoint/level numbers in the lists below to apply the ban on them
     # Remember the workshop toggle overwrites this list
     wait(1)
@@ -836,6 +839,7 @@ rule "Ban per CP <---- edit me":
 rule "Custom difficulty hud":
     @Disabled
     @Delimiter
+    # trans
     #1) workshop settings > difficulty > set to "dont display"
     #2) enable this rule
     #3) type your difficulty in the hud below
@@ -843,6 +847,7 @@ rule "Custom difficulty hud":
     HudStoreEdit.append(getLastCreatedText())
 
 rule "Comp Mode instruction message":
+    # trans
     #Instructions that show when you start comp mode.
     #Due to the hud text limit, you there is 4 huds available.
     #If you dont need a field just empty the textfield.

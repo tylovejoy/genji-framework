@@ -191,8 +191,7 @@ rule "Ban | Multiclimb":
     @Condition not eventPlayer.InvincibleToggle
     @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.MultiClimbCount > 0
-    #trans ??
-    smallMessage(eventPlayer, "   " checkCN "   Multiclimb ∞ is banned!")
+    smallMessage(eventPlayer, "    蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
     checkpointFailReset() 
 
 rule "Ban | Emote Savehop":
