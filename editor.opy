@@ -60,6 +60,7 @@ rule "Editor | Clear Excess Data to Save Map":
 
     enableInspector()
 
+    # trans (after remake)
     hudText(eventPlayer,  
         " ",
         null,
@@ -479,7 +480,7 @@ rule "Editor | Toggle Guide":
     wait(1, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     smallMessage(eventPlayer, #c
-        "   指引已开启" if eventPlayer.GuideToggle else "   指引已隐藏"
+        ("   指引已开启" if eventPlayer.GuideToggle else "   指引已隐藏")
         checkCN
         "   Guide is open" if eventPlayer.GuideToggle else "   Guide is hidden"
         ) 
@@ -495,7 +496,7 @@ rule "Editor | change mode":
     wait(0.84, Wait.ABORT_WHEN_FALSE)
     eventPlayer.flytoggle = null   
     smallMessage(hostPlayer, #c
-        ["   弹球模式","   击杀球模式","   检查点模式"][eventPlayer.EditModeSelection]
+        ["   击杀球模式","   弹球模式","   检查点模式"][eventPlayer.EditModeSelection]
         checkCN
         ["   Current mode: Kill Orb","   Current mode: Bounce Orb","   Current mode: Checkpoint"][eventPlayer.EditModeSelection]
     )

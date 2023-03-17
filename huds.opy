@@ -16,7 +16,7 @@ rule "Huds: Global/Localplayer":
     if Name != "name here - 作者" or Cachedcredits[0] == null::
         Cachedcredits[0] = Name
     
-    if Code != "ccode here - 代码" or Cachedcredits[1] == null::
+    if Code != "code here - 代码" or Cachedcredits[1] == null::
         Cachedcredits[1] = Code
     Name = null
     Code = null
@@ -94,7 +94,7 @@ rule "Huds: Global/Localplayer":
     */
     #hudSubtext or hudSubheader
     hudSubtext(getAllPlayers(), 
-        ("长按 {0} | 单关用".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else "")
+        ("单关用 {0}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else "")
         checkCN
         "Split: {0}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else ""
         ,HudPosition.LEFT, HO.game_split_display, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
@@ -167,6 +167,7 @@ rule "Huds: Global/Localplayer":
         HudStoreEdit.append(getLastCreatedText())
 
     if not hostPlayer.EditorOn:
+        # trans
         # find the value
         Difficultyhud = createWorkshopSetting(enum[ "beginner", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display"],"map settings","difficulty (display hud)",0, 0)
         # display
@@ -196,19 +197,18 @@ rule "Huds: each player":
         HudPosition.LEFT, HO.game_timer, Color.WHITE, Color.GRAY, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT)
     
 
-
-    hudText(eventPlayer, null, 
+    hudText(eventPlayer, null,  
         ("黄弹球 {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else "")
         checkCN
         "orange orbs {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else ""
         ,
-        "{3}{2}Level {0} / {1}".format(
-            eventPlayer.CurrentCheckpoint, 
-            len(CheckpointPositions) - 1,
-            "\n" if eventPlayer.banstring else "",
-            eventPlayer.banstring if eventPlayer.banstring else ""
-        )
-        checkCN
+        #"{3}{2}Level {0} / {1}".format(
+        #    eventPlayer.CurrentCheckpoint, 
+        #    len(CheckpointPositions) - 1,
+        #    "\n" if eventPlayer.banstring else "",
+        #    eventPlayer.banstring if eventPlayer.banstring else ""
+        #)
+        #checkCN
         "{3}{2}{4} {0} / {1}".format(
             eventPlayer.CurrentCheckpoint, 
             len(CheckpointPositions) - 1,
@@ -223,14 +223,14 @@ rule "Huds: each player":
         #"爬墙已用{0}".format("" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
         "{1}{0}".format(
             "" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount),
-            "爬墙已用" if  eventPlayer.WallclimbUsed else "爬墙未用"
+            "爬墙已用" if  eventPlayer.WallclimbUsed else "爬墙未用" # cn version text updates to say the status, unlike en
         )
         checkCN
         "Climb{0}".format("" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
         , HudPosition.LEFT, HO.game_climb, Color.RED if eventPlayer.WallclimbUsed else Color.GREEN, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     hudHeader(eventPlayer, 
-        ("小跳未用" if eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == Color.GREEN else "小跳已用")
+        ("小跳未用" if eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == Color.GREEN else "小跳已用") # cn version text updates to say the status, unlike en
         checkCN 
         "Bhop"
         , HudPosition.LEFT, HO.game_bhop, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
