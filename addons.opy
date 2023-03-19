@@ -213,25 +213,26 @@ rule "Addon | Dash/Blade | DEPRICATED, instructions inside - 附加组件 | 刀/
     # existing map data should be updated to include this in map data
     # Paste the blade and ult variable from the dash/ult rules old into the map pasta rule.
     # -
-    printLog("("----------------")")
+    printLog("----------------")
     # -
     # 可通过游戏内编辑器在检查点模式下添加刀/Shift
     # 过去的地图数据需要更新，以便在地图数据包含刀/Shift数据
     # -
-    printLog("("----------------")")
+    printLog("----------------")
 
-
+   
 rule "Addon | custom portals | data <---- EDIT ME - 附加组件 | 自定义传送门 | 数据 <---- 在此处编辑":
     @Disabled
     #warning: This can cause you to exceed global orb/portal limit. 
     #make sure portal + orbs do not go past the limit.
+    printLog("--------a--------")
     #请先确保传送门+球体总数不会超过可添加数量上限.
     wait(1)
     #Portal start position
     #传送门起点位置
     CustomPortalStart = [vect(0,0,0)]
     #Portal end position (on same number as start position)
-    #传送门终点位置 (顺序与传送门起点位置保持一致)
+  #  传送门终点位置 (顺序与传送门起点位置保持一致)
     CustomPortalEndpoint = [vect(0,10,0)]
     #Portal checkpoint (on same number as start position) 
     #999 = apply portal to entire map
@@ -280,8 +281,7 @@ rule "Addon | Fake Triple Jump - enable rule": # method c
 
     if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping() :
         if eventPlayer.ban_triple and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp: # handle bans and invincible
-            #trans
-            smallMessage(eventPlayer, "   Triple Jump ▲ is banned!")
+            smallMessage(eventPlayer,"  三段跳 ▲ 已禁用!" checkCN "   Triple Jump ▲ is banned!")
             return
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
 
@@ -311,6 +311,7 @@ rule "Addon | Display World Record":
 
 rule "Addon | Title Data <---- EDIT ME":
     @Disabled
+    # enable this rule and fill in the title data below.
     wait(1)
     # trans
     # checkpoint number
@@ -364,6 +365,8 @@ rule "Addon | In world text for certain Checkpoints <---- EDIT ME":
     CpIwtText = ["text cp 1","text cp 3"]
     CpIwtCp = [1, 3]
     CpIwtPos = [vect(0,0,0), vect(0,0,0)]
-    # color is for all, not per cp
+    # color applies to all
     CpIwtColor = Color.LIME_GREEN
+
+
 

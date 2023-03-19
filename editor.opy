@@ -276,14 +276,15 @@ rule "Editor | Hud and Effects":
     )
 
     hudSubtext(hostPlayer if hostPlayer.GuideToggle and (hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null, 
-        "{0} + {1} | 弹球给刀 {3} | {2}".format(
+        "{0} + {1} | {4} {3} | {2}".format(
+                        
             buttonString(Button.ULTIMATE), 
             buttonString(Button.PRIMARY_FIRE), 
             ("启用" if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "关闭") if  hostPlayer.EditModeSelection == 2 else
             ("启用" if hostPlayer.CurrentCheckpoint in BladeEnabledCheckpoints else "关闭"),
             abilityIconString(Hero.GENJI, Button.ULTIMATE),
-            "检查点" if hostPlayer.EditModeSelection == 0
-            else "弹球"
+            "检查点给刀"  if hostPlayer.EditModeSelection == 0 else "弹球给刀"
+            #"检查点" if hostPlayer.EditModeSelection == 0 else "弹球",
         )        
         checkCN
         "{0} + {1} | {4} give ult {3} | {2}".format(
@@ -292,8 +293,7 @@ rule "Editor | Hud and Effects":
             ("on" if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "off") if  hostPlayer.EditModeSelection == 2 else
             ("on" if hostPlayer.CurrentCheckpoint in BladeEnabledCheckpoints else "off"),
             abilityIconString(Hero.GENJI, Button.ULTIMATE),
-            "Level" if hostPlayer.EditModeSelection == 0
-            else "Orb"
+            "Level" if hostPlayer.EditModeSelection == 0  else "Orb"
         )        
         , HudPosition.LEFT, HO.edit_orb_ult, 
         Color.GREEN if BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 and hostPlayer.EditModeSelection == 2 else
@@ -304,14 +304,14 @@ rule "Editor | Hud and Effects":
 
     
     hudSubtext(hostPlayer if hostPlayer.GuideToggle and (hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null, 
-        "{0} + {1} | {4} 弹球给Shift {3} | {2}".format(
+        "{0} + {1} | {4} {3} | {2}".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.SECONDARY_FIRE), 
             ("启用" if BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "关闭") if  hostPlayer.EditModeSelection == 2 else
             ("启用" if hostPlayer.CurrentCheckpoint in DashEnabledCheckpoints else "关闭"),
             abilityIconString(Hero.GENJI, Button.ABILITY_1),
-            "检查点" if hostPlayer.EditModeSelection == 0
-            else "弹球"
+           # "检查点" if hostPlayer.EditModeSelection == 0 else "弹球"
+           "检查点给Shift" if hostPlayer.EditModeSelection == 0 else "弹球给Shift"
         )   
         checkCN
         "{0} + {1} | {4} give dash {3} | {2}".format(
@@ -331,7 +331,7 @@ rule "Editor | Hud and Effects":
     )
 
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null,
-        "{0} + {1} |  黄弹球(进点前必须收集 {3} | {2}\n".format(
+        "{0} + {1} |  黄弹球(进点前必须收集) {3} | {2}\n".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.ABILITY_2),
             "启用" if BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] != 0 else "关闭",
@@ -410,7 +410,7 @@ rule "Editor | Hud and Effects":
     # Selected kill orb text
     createInWorldText(getAllPlayers() if hostPlayer.CurrentCheckpoint != -1 and hostPlayer.KillPosition_Cache and hostPlayer.EditModeSelection == 1 else null, 
         #trans
-        "Selected Kill Orb"
+        "已选中该弹球" checkCN "Selected Kill Orb"
         , KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]], 
         1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT
     )
@@ -496,10 +496,14 @@ rule "Editor | change mode":
     wait(0.84, Wait.ABORT_WHEN_FALSE)
     eventPlayer.flytoggle = null   
     smallMessage(hostPlayer, #c
-        ["   击杀球模式","   弹球模式","   检查点模式"][eventPlayer.EditModeSelection]
+        #["   击杀球模式","   弹球模式","   检查点模式"][eventPlayer.EditModeSelection]
+        [ "当前模式: 击杀球"  "   当前模式: 弹球", "   当前模式: 检查点"][eventPlayer.EditModeSelection]
         checkCN
         ["   Current mode: Kill Orb","   Current mode: Bounce Orb","   Current mode: Checkpoint"][eventPlayer.EditModeSelection]
     )
+
+ 
+
     wait()
     eventPlayer.EditModeSelection = (eventPlayer.EditModeSelection  + 1) % 3
 

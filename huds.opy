@@ -56,7 +56,7 @@ rule "Huds: Global/Localplayer":
     )
 
     hudSubtext(getAllPlayers(), 
-        "{0} {1} |  {2}".format( "" if localPlayer.QuickRestartToggle else "长按",buttonString(Button.RELOAD),"快速回点" if localPlayer.QuickRestartToggle else "启用快速回点")
+        "{0} {1} |  {2}".format( "" if localPlayer.QuickRestartToggle else "长按",buttonString(Button.RELOAD),"快速回点 | 启用" if localPlayer.QuickRestartToggle else "启用快速回点")
         checkCN
         "{0} {1} |  {2}".format( "" if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset")
         , HudPosition.RIGHT, HO.com_quickres, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
@@ -141,7 +141,7 @@ rule "Huds: Global/Localplayer":
             , HudPosition.RIGHT, HO.com_spec, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         hudSubtext(getAllPlayers(), 
-            "长按  {0} | 隐形的{1}".format(buttonString(Button.ABILITY_2)," | 启用" if localPlayer.invis else "")
+            "长按  {0} | 隐身模式{1}".format(buttonString(Button.ABILITY_2)," | 启用" if localPlayer.invis else "")
             checkCN
             "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else "")
             , HudPosition.RIGHT, HO.com_invis, Color.GREEN if localPlayer.invis else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
@@ -187,7 +187,7 @@ rule "Huds: each player":
     @Event eachPlayer
     # ban icons in level
     hudText(eventPlayer, null, 
-        ("练习用时{0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "")
+        ("练习用时 {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "")
         checkCN  
         ("Practice Time {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "")
         , 

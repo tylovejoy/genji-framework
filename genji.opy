@@ -320,7 +320,7 @@ rule "Match time":
 rule "Player Initialize":
     @Event eachPlayer
     # trans
-    eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor","Editor mode" ,  editoron , 0) # Turn Editor On
+    eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor - 作图模式","Editor mode - 作图模式" ,  editoron , 0) # Turn Editor On
     eventPlayer.GuideToggle = eventPlayer.EditorOn
     eventPlayer.disableGamemodeHud()
     eventPlayer.enableDeathSpectateAllPlayers()
@@ -339,8 +339,14 @@ rule "Player Initialize":
     createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
     wait(0.5)
-    #trans
-    createInWorldText(eventPlayer if eventPlayer.NotOnLastCp else null, "{0} collect orbs first".format(iconString(Icon.WARNING)) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else "Come here", CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT)
+  
+    createInWorldText(eventPlayer if eventPlayer.NotOnLastCp else null, 
+        "{0} collect orbs first".format(iconString(Icon.WARNING))    #trans
+        if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
+        "到这里来" checkCN "Come here",
+        CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 
+        1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT
+    )
     wait(1)  
 
     if not eventPlayer.isDummy():
@@ -679,7 +685,7 @@ rule "Bounce Ball / Orb | Activate":
 
     if eventPlayer.BounceLock_Cache[eventPlayer.bouncetouched]:
         eventPlayer.LockCollected.append(eventPlayer.BouncePosition_Cache[eventPlayer.bouncetouched])
-        smallMessage(eventPlayer, "   #黄球已收集" checkCN "   orb has been collected")
+        smallMessage(eventPlayer, "   黄球已收集" checkCN "   orb has been collected")
         
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
@@ -810,13 +816,13 @@ editorordata
 
 rule "Credits here / 作者名字 <---- INSERT HERE / 在这输入 ": 
     # trans
-    #Filling this in adds it to the inspector data pasta.
-    #You can fill in again to overwrite previous entry.
+    # Filling this in adds it to the inspector pasta after next restart.
+    # You can fill in again to overwrite.
     Name = "name here - 作者"
     Code = "code here - 代码"
 
 
-rule "Ban per CP <---- edit me":
+rule "Ban per CP  <---- INSERT HERE / 在这输入":
     # trans
     # Enter the checkpoint/level numbers in the lists below to apply the ban on them
     # Remember the workshop toggle overwrites this list
@@ -836,7 +842,7 @@ rule "Ban per CP <---- edit me":
     BanClimb = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 
-rule "Custom difficulty hud":
+rule "Custom difficulty hud  <---- INSERT HERE / 在这输入":
     @Disabled
     @Delimiter
     # trans
@@ -846,11 +852,11 @@ rule "Custom difficulty hud":
     hudSubheader(getAllPlayers(), "enter custom difficulty here", HudPosition.TOP, HO.data_dif,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
 
-rule "Comp Mode instruction message":
+rule "Comp Mode instruction message  <---- INSERT HERE / 在这输入":
     # trans
-    #Instructions that show when you start comp mode.
-    #Due to the hud text limit, you there is 4 huds available.
-    #If you dont need a field just empty the textfield.
+    # Instructions that show when you start comp mode.
+    # Due to the hud text limit, you there is 4 huds available.
+    # If you dont need a field just empty the textfield.
     instructiontext[0] = "Change in Comp Mode instruction message hud 1"
     instructiontext[1] = "Change in Comp Mode instruction message hud 2"
     instructiontext[2] = "Change in Comp Mode instruction message hud 2"

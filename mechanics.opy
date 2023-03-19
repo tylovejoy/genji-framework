@@ -119,13 +119,11 @@ rule "Checking | Create Bhop":
     @Condition eventPlayer.isOnGround() == false
     eventPlayer.BhopUsed = false
     if eventPlayer.ban_create and eventPlayer.InvincibleToggle == false and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
-        #trans
-        #卡小 ♂ 已禁用!
-        smallMessage(eventPlayer, "   Create Bhop ♂ is banned!")
+        smallMessage(eventPlayer, "   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!")
         checkpointFailReset()
         return
     # trans
-    smallMessage(eventPlayer, "   Bhop has been created!")    
+    smallMessage(eventPlayer, "   succes!" checkCN "   Bhop has been created!")    
 
 rule "Checking | Double jump, initialized with small jump":
     @Event eachPlayer

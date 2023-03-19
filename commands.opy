@@ -30,7 +30,7 @@ rule "Toggle Invisible | Hold Deflect":
     if eventPlayer.invis:
         eventPlayer.setInvisibility(Invis.ALL)
 
-    smallMessage(eventPlayer, "   {1} {0}".format("on" if eventPlayer.invis else "off","#隐身模式" checkCN "Invisible"))        
+    smallMessage(eventPlayer, "   {1} {0}".format("on" if eventPlayer.invis else "off","隐身模式" checkCN "Invisible"))        
     playEffect(eventPlayer, DynamicEffect.DEBUFF_IMPACT_SOUND, null, eventPlayer, 100)
     
 rule "Preview orbs/portals | Hold Primary":
@@ -357,8 +357,10 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     eventPlayer.QuickRestartToggle = not eventPlayer.QuickRestartToggle
     bigMessage(eventPlayer, 
         ("快速回点已启用" if eventPlayer.QuickRestartToggle else "快速回点已关闭")
+
+        
         checkCN
         "Quick reset is enabled" if eventPlayer.QuickRestartToggle else "Quick reset is disabled"
     )
-
+    #Local Player.quick_restart ? Custom String("快速回点 | 启用") : Custom String("快速回点"))
 
