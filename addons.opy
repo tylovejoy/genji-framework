@@ -208,16 +208,12 @@ rule "Addon | Dash/Blade | DEPRICATED, instructions inside - 附加组件 | 刀/
     # >>> 这条规则本版本已弃用 <<<
     # -
     printLog("----------------")
-    # -
     # you can add ult/dash via checkpoint mode in the ingame editor
     # existing map data should be updated to include this in map data
     # Paste the blade and ult variable from the dash/ult rules old into the map pasta rule.
-    # -
     printLog("----------------")
-    # -
-    # 可通过游戏内编辑器在检查点模式下添加刀/Shift
-    # 过去的地图数据需要更新，以便在地图数据包含刀/Shift数据
-    # -
+    # 可通过游戏 内编辑器在 检查点模式 下添加刀 / Shift
+    # 过去的地图 数据需 要更新，以便在 地图 数据包含刀 / Shift 数据
     printLog("----------------")
 
    
@@ -225,19 +221,18 @@ rule "Addon | custom portals | data <---- EDIT ME - 附加组件 | 自定义传�
     @Disabled
     #warning: This can cause you to exceed global orb/portal limit. 
     #make sure portal + orbs do not go past the limit.
-    printLog("--------a--------")
-    #请先确保传送门+球体总数不会超过可添加数量上限.
+    #请先确保传 送门+球体 总数不会超 过可添加数 量上限.
     wait(1)
     #Portal start position
-    #传送门起点位置
+    #传送门起点 位置
     CustomPortalStart = [vect(0,0,0)]
     #Portal end position (on same number as start position)
-  #  传送门终点位置 (顺序与传送门起点位置保持一致)
+  #  传送门终点 位置 (顺序与传 送门起点位 置保持一致)
     CustomPortalEndpoint = [vect(0,10,0)]
     #Portal checkpoint (on same number as start position) 
     #999 = apply portal to entire map
-    #启用传送门检查点 (顺序与传送门起点位置保持一致) 
-    #999 = 传送门在全部检查点启用
+    #启用传送门 检查点 (顺序与传 送门起点位 置保持一致) 
+    #999 = 传送门在全 部检查点启用
     CustomPortalCP = [999]
 
 rule "Addon | Fake Triple Jump - enable rule": # method c
