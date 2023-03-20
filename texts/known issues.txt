@@ -6,6 +6,8 @@ bug:
 - multi climb sometimes stays green when not actually used  > maji: bind scrollwheel and spam
 
 
+multi indicator break: if you about to hit the floor as it about to give bhop and multi, you get bhop? or indicator only?
+multi break: auto climb on, flick wil say multi even if you climbing and lost it
 
 
 

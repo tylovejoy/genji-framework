@@ -290,7 +290,7 @@ playervar ban_dedhop 74
 playervar ban_dashstart 75
 playervar ban_emote 76
 playervar ban_climb 77
-#playervar ban_bhop 78
+playervar ban_bhop 78
 
 playervar splittime 79 
 playervar splitdisplay 80

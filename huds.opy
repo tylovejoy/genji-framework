@@ -78,9 +78,9 @@ rule "Huds: Global/Localplayer":
     HudStoreEdit.append(getLastCreatedText())
 
     hudSubheader(getAllPlayers() if localPlayer.PreviewsArray else null,
-        "移动键 左/右 | 预览其他\n视角移动 | 调整浏览视角"
+        "移动键 左/右 ↔| 预览其他\n视角移动 | 调整浏览视角"
         checkCN
-        "Walk left/right | preview others\nAim | change preview angle"
+        "Walk left/right ↔| preview others\nAim | change preview angle"
         ,HudPosition.RIGHT, HO.com_previewsub, Color.LIME_GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())

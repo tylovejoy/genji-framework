@@ -131,7 +131,7 @@ def UpdateCache():
     eventPlayer.banstring = ""
     wait()
     # trans
-    if createWorkshopSetting(bool, "Ban on all checkpoints", "Triple Jump", false, 0):
+    if createWorkshopSetting(bool, "Map ban and mechanics", "▲ ban Triple Jump - 三段跳", false, 0):
         eventPlayer.ban_triple = true
     elif eventPlayer.CurrentCheckpoint in BanTriple:
         eventPlayer.banstring = "▲ {}".format(eventPlayer.banstring)
@@ -139,7 +139,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_triple = false
 
-    if createWorkshopSetting(bool, "Ban on all checkpoints", "Multiclimb", false, 1):
+    if createWorkshopSetting(bool, "Map ban and mechanics", "∞ ban Multiclim - 蹭留", false, 1):
         eventPlayer.ban_multi = true
     elif eventPlayer.CurrentCheckpoint in BanMulti:
         eventPlayer.banstring = "∞ {}".format(eventPlayer.banstring)
@@ -147,7 +147,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_multi = false
 
-    if createWorkshopSetting(bool, "Ban on all checkpoints", "Createbhop", false, 2):
+    if createWorkshopSetting(bool, "Map ban and mechanics", "♂ ban Createbhop - 卡小", false, 2):
         eventPlayer.ban_create = true
     elif eventPlayer.CurrentCheckpoint in BanCreate:
         eventPlayer.banstring = "♂ {}".format(eventPlayer.banstring)
@@ -155,7 +155,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_create = false
 
-    if createWorkshopSetting(bool, "Ban on all checkpoints", "Deathbhop", false, 3):
+    if createWorkshopSetting(bool, "Map ban and mechanics", "X ban Deathbhop - 死小", false, 3):
         eventPlayer.ban_dedhop = true
     elif eventPlayer.CurrentCheckpoint in BanDead:
         eventPlayer.banstring = "X {}".format(eventPlayer.banstring)
@@ -163,7 +163,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_dedhop = false
 
-    if createWorkshopSetting(bool, "Ban on all checkpoints", "Emote Savehop", false, 4):
+    if createWorkshopSetting(bool, "Map ban and mechanics", "♥ ban Emote Savehop - 表情爬", false, 4):
         eventPlayer.ban_emote = true
     elif eventPlayer.CurrentCheckpoint in BanEmote:
         eventPlayer.banstring = "♥ {}".format(eventPlayer.banstring)
@@ -171,14 +171,21 @@ def UpdateCache():
     else:
         eventPlayer.ban_emote = false
     
-    if createWorkshopSetting(bool, "Ban on all checkpoints", "Wallclimb", false, 5):
+    if createWorkshopSetting(bool, "Map ban and mechanics", "↑ ban Wallclimb - 爬墙", false, 5):
         eventPlayer.ban_climb = true
     elif eventPlayer.CurrentCheckpoint in BanClimb:
         eventPlayer.banstring = "↑ {}".format(eventPlayer.banstring)
         eventPlayer.ban_climb = true
+    
+    if createWorkshopSetting(bool, "Map ban and mechanics", "≥ require bhop available - 留小跳进点 ", false, 5):
+    
+        eventPlayer.ban_bhop = true
+    elif eventPlayer.CurrentCheckpoint in BanBhop:
+        eventPlayer.banstring = "≥ {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓
+        eventPlayer.ban_bhop = true
     else:
-        eventPlayer.ban_climb = false
-
+        eventPlayer.ban_bhop = false
+ 
     wait()
     async(CheckUlt(), AsyncBehavior.RESTART)
     async(CheckDash(), AsyncBehavior.RESTART)
@@ -251,7 +258,7 @@ rule "Setup and Variables":
     CustomPortalCP  = []
 
     wait(1)
-    DashExploitToggle = createWorkshopSetting(bool, "Ban on all checkpoints", "Dash Start", true, 2)
+    DashExploitToggle = createWorkshopSetting(bool, "Map ban and mechanics", "ban Dash Start", true, 2)
     PortalOn = createWorkshopSetting(bool, "map settings","enable portals (control maps)",true,0)
     #SelectedCheckpoint_Editing = len(CheckpointPositions) - 1 # This probably isn't necessary
     # trans
@@ -584,6 +591,14 @@ rule "Arrive | Ground reset | traces":
                 smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
                 checkpointFailReset()
                 goto lbl_abc
+            
+            if eventPlayer.ban_bhop and not (eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == Color.GREEN):
+                # trans
+                smallMessage(eventPlayer, "   ≥ 留小跳进点!" checkCN "   ≥ You need to have a bhop to complete!")
+                # 未达成通关条件：留小跳 or   留小跳进点!    ???
+                checkpointFailReset()
+                goto lbl_abc
+
             eventPlayer.LockCollected = []
             eventPlayer.CurrentCheckpoint += 1
             UpdateCache()
@@ -838,9 +853,11 @@ rule "Ban per CP  <---- INSERT HERE / 在这输入":
     BanDead = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
     # ban emote >
     BanEmote = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban  climb >
+    # trans
+    # complete require climb green
     BanClimb = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-
+    # complete require bhop green
+    BanBhop = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 rule "Custom difficulty hud  <---- INSERT HERE / 在这输入":
     @Disabled

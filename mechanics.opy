@@ -160,7 +160,7 @@ rule "--------------------------------------------------------------------------
     @Delimiter
     @Disabled
 
-rule "Ban | Wallclimb ":
+rule "Ban | Wallclimb - indicator ":
     # Credit: TITANXPASCAL#5554
     @Event eachPlayer
     @Condition eventPlayer.ban_climb
