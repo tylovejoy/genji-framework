@@ -233,11 +233,13 @@ fixed:
     - you now only have to enter your name and code ones to include it in pasta. after that you dont have to enter it again unles you want to change it.
     - you no longer die when landing on a cp while having ult. You get to keep the last second of your blade for next cp. This results in a much smoother experience.
     - added the "require available bhop to complete cp" 
+    - you now lose collected orbs when returning to the current checkpoint, to prevent cheese
 
     - splits now display on the hud instead of at arriving. the toggle has been removed.
     - there is now an icon in the dash/ult ready msg
     - fixed a bug that caused timer to reduce to 0.02 seconsds if you restarted on landing on the final cp.
     - fixed a bug that caused preview to display vector(0,0,0) on first cp
+    - fixed a bug that caused wallclimb ban per cp to keep the ban on forever once it was turned on
 
     editor:
     - you can now remove a placed teleport cp by using the same button again

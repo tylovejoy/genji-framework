@@ -57,6 +57,7 @@ rule "Editor | Clear Excess Data to Save Map":
     BanDead = []
     BanEmote = []
     BanClimb = []
+    BanBhop = []
 
     enableInspector()
 

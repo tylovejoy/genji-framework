@@ -176,7 +176,9 @@ def UpdateCache():
     elif eventPlayer.CurrentCheckpoint in BanClimb:
         eventPlayer.banstring = "↑ {}".format(eventPlayer.banstring)
         eventPlayer.ban_climb = true
-    
+    else:
+        eventPlayer.ban_climb = false
+
     if createWorkshopSetting(bool, "Map ban and mechanics", "≥ require bhop available - 留小跳进点 ", false, 5):
     
         eventPlayer.ban_bhop = true
@@ -657,6 +659,15 @@ rule "Arrive | Ground reset | traces":
     if RULE_CONDITION:
         goto RULE_START               
    
+   
+rule "reset collected locks when landing back on cp":
+    @Event eachPlayer
+    @Condition eventPlayer.LockCollected != []
+    @Condition eventPlayer.isOnGround()
+    @Condition distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) <= cpcircleradius
+
+    eventPlayer.LockCollected = []
+
 rule "Kill Orb | Activate":
     @Event eachPlayer
     @Condition eventPlayer.KillPosition_Cache != []
