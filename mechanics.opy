@@ -122,7 +122,6 @@ rule "Checking | Create Bhop":
         smallMessage(eventPlayer, "   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!")
         checkpointFailReset()
         return
-    # trans
     smallMessage(eventPlayer, "   succes!" checkCN "   Bhop has been created!")    
 
 rule "Checking | Double jump, initialized with small jump":

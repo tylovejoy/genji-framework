@@ -1,10 +1,10 @@
 #!mainFile "genji.opy"
 
-rule "------------------------------------------------------------------------ Addon functions ------------------------------------------------------------------------":
+rule "------------------------------------------------------------------------ Addon functions  ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
 
-rule "Addon | pre-set control map portal | function | toggled via workshop":
+rule "Pre-set control map portal | function | toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
     @Condition eventPlayer.InvincibleToggle or not eventPlayer.NotOnLastCp
@@ -15,7 +15,7 @@ rule "Addon | pre-set control map portal | function | toggled via workshop":
             PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] 
         )
 
-rule "Addon | custom portals | functioning":
+rule "Custom portals | function":
     @Event eachPlayer
     @Condition len(CustomPortalStart) > 0
 
@@ -39,7 +39,7 @@ rule "Addon | custom portals | functioning":
 
     wait(1)
 
-rule "Addon | pre-set control map portal | toggled on via workshop settings":
+rule "Pre-set control map portal | toggled on via workshop settings":
     @Condition PortalOn
     wait(2, Wait.ABORT_WHEN_FALSE) # overwrite pasta
     if getCurrentMap() == Map.BUSAN:
@@ -84,7 +84,7 @@ rule "Addon | pre-set control map portal | toggled on via workshop settings":
         return
         
 
-rule "Addon | Autobounce/stall enhancer - 增强系統跳的判定":
+rule "Autobounce/stall enhancer - 增强系統跳的判定":
     @Event eachPlayer
     #原作：家里有妖怪#5202(国服)
     @Condition eventPlayer.hasSpawned() == true
@@ -93,7 +93,7 @@ rule "Addon | Autobounce/stall enhancer - 增强系統跳的判定":
     @Condition eventPlayer.isInAir() == true
     @Condition eventPlayer.isOnWall() == false
     @Condition eventPlayer.isOnGround() == false
-    @Condition createWorkshopSetting(bool, "map settings"," Autobounce enhancer - 增强系統跳的判定",false,3)
+    @Condition createWorkshopSetting(bool, "map settings -  地图设置"," Autobounce enhancer - 增强系統跳的判定",false,3)
     
     wait(0.25, Wait.ABORT_WHEN_FALSE)
     eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
@@ -195,11 +195,11 @@ FILLER
 FILLER
 
 
-rule "------------------------------------------------------------------------ Addons Settings and data ------------------------------------------------------------------------":
+rule "------------------------------------------------------------------------ Addons Settings and data - 附加组件 ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
 
-rule "Addon | Dash/Blade | DEPRICATED, instructions inside - 附加组件 | 刀/Shift | 已弃用, 内含指引":
+rule "Dash/Blade | DEPRICATED, instructions inside - 刀/Shift | 已弃用, 内含指引":
     @Delimiter
     @Disabled
     # -
@@ -215,8 +215,7 @@ rule "Addon | Dash/Blade | DEPRICATED, instructions inside - 附加组件 | 刀/
     # 过去的地图 数据需 要更新，以便在 地图 数据包含刀 / Shift 数据
     printLog("----------------")
 
-   
-rule "Addon | custom portals | data <---- EDIT ME - 附加组件 | 自定义传送门 | 数据 <---- 在此处编辑":
+rule "Custom portals data - 自定义传送门数据  <---- EDIT ME / 在此处编辑":
     @Disabled
     #warning: This can cause you to exceed global orb/portal limit. 
     #make sure portal + orbs do not go past the limit.
@@ -234,7 +233,7 @@ rule "Addon | custom portals | data <---- EDIT ME - 附加组件 | 自定义传�
     #999 = 传送门在全 部检查点启用
     CustomPortalCP = [999]
 
-rule "Addon | Fake Triple Jump - enable rule": # method c
+rule "Fake Triple Jump - enable rule - 启用此规则 - 假三级跳": # method c
     @Disabled
     @Event eachPlayer
     @Hero genji
@@ -280,35 +279,48 @@ rule "Addon | Fake Triple Jump - enable rule": # method c
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
 
 
-rule "Addon | Friend Title <---- DISPLAY MESSAGE HERE (ON PLAYER)":
+rule "Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
     @Disabled
     @Delimiter
     @Event eachPlayer
     @Condition eventPlayer.hasSpawned()
-    #trans
-    #In the field custom string your nickname
-    if "your nickname <-------" == "{0}".format(eventPlayer):
-        bigMessage(getAllPlayers(), "Message to the whole room")
-        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    #Fill in the blank with your friend's name
-    if "your nickname <-------" == "{0}".format(eventPlayer):
-        bigMessage(getAllPlayers(), "Message to the whole room")
-        createInWorldText(getAllPlayers(), "Title <---------------The inscription that will be displayed on you", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
-rule "Addon | Display World Record": 
+    # "your nickname" your friends ingame name
+    # "display title" fill in the custom title
+    # "your nickname" 填入球员 的名字 
+    # "display title" 习俗标题
+
+    if "your nickname <-------" == "{0}".format(eventPlayer):
+        bigMessage(getAllPlayers(), "Message to the whole room")
+        createInWorldText(getAllPlayers(), "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+    if "your nickname <-------" == "{0}".format(eventPlayer):
+        bigMessage(getAllPlayers(), "Message to the whole room")
+        createInWorldText(getAllPlayers(), "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+    if "your nickname <-------" == "{0}".format(eventPlayer):
+        bigMessage(getAllPlayers(), "Message to the whole room")
+        createInWorldText(getAllPlayers(), "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+
+
+
+
+
+
+
+rule "Display World Record - 展示世界纪录 <---- EDIT ME / 在此处编辑": 
     @Disabled
     @Delimiter
-    #type your entry in the textfield that says "name and time here"
-    # trans
+    # type your entry in the textfield that says "name and time here"
+    # 在文本框 中输入“名称和时间”
     hudText(getAllPlayers(), null," \n{0} world record {0}".format(iconString(Icon.FIRE)),"name and time here", HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
 
-rule "Addon | Title Data <---- EDIT ME":
+rule "Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
     @Disabled
     # enable this rule and fill in the title data below.
+    # 启用此规则 并填写下面 的标题数据
     wait(1)
-    # trans
-    # checkpoint number
+    # checkpoint number 
+    # 每关数量
     TitleData[0] = [
         0, 
         10,
@@ -317,8 +329,8 @@ rule "Addon | Title Data <---- EDIT ME":
         40,
         50
     ]
-    # trans
-    # title
+    # title 
+    # 标题文本
     TitleData[1] = [
         "Bunny",
         "Jumper",
@@ -327,8 +339,8 @@ rule "Addon | Title Data <---- EDIT ME":
         "Expert",
         "Master"
     ]
-    # trans
     # color
+    # 颜色
     TitleData[2] = [
         Color.LIME_GREEN,
         Color.WHITE,
@@ -338,28 +350,34 @@ rule "Addon | Title Data <---- EDIT ME":
         Color.RED
     ]
 
-rule "Addon | HUD text for certain Checkpoints <---- EDIT ME":
+rule "HUD text for certain Checkpoints - 某些检查点的HUD文本 <---- EDIT ME / 在此处编辑":
     @Disabled
-    # trans
+    # the example fill shows a text for cp 1 and cp 3
+    # 示例填充 显示了cp 1和cp 3的文本
     wait(1)
     # in CpHudText fill in text
-    # in CpHudCp fill in the at wich to display
-    # the example fill shows a text for cp 1 and cp 3
+    # 在 “CpHudText” 中填写文本
     CpHudText = ["text cp 1","text cp 3"]
+    # in CpHudCp fill in the at wich to display
+    # 在 “CpHudCp” 中填写要显 示的位置
     CpHudCp = [1, 3]
     
-rule "Addon | In world text for certain Checkpoints <---- EDIT ME":
+rule "Inworld text for certain Checkpoints - 在世界文本中为某些检查点 <---- EDIT ME / 在此处编辑":
     @Disabled
-    # trans
-    wait(1)
-    # in CpIwtText fill in text
-    # in CpIwtCp fill in cp at wich to display
-    # in CpIwtPos fill in the vector
     # the example fill shows a text for cp 1 and cp 3
+    # 示例填充 显示了cp 1和cp 3的文本
+    wait(1)
+    # in CpIwtText fill in text 
+    # 在 “CpIwtText” 中填写文本
     CpIwtText = ["text cp 1","text cp 3"]
+    # in CpIwtCp fill in cp at wich to display
+    # 在 “CpIwtCp” 中填写 要显示的cp
     CpIwtCp = [1, 3]
+    # in CpIwtPos fill in the vector 
+    # 在 “CpIwtPos” 中填充向量
     CpIwtPos = [vect(0,0,0), vect(0,0,0)]
-    # color applies to all
+    # color applies to all 
+    # 色彩运 用于全部
     CpIwtColor = Color.LIME_GREEN
 
 

@@ -61,25 +61,24 @@ rule "Editor | Clear Excess Data to Save Map":
 
     enableInspector()
 
-    # trans (after remake)
     hudText(eventPlayer,  
         " ",
         null,
         "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
-        "   0. 清除多余的数据:\n"
-        " 当前窗口开启后将会自动清除\n\n"
-        
-        "   1. 复制数剧:\n"
-        " Esc → 打开地图工坊查看器 → 右下角变量目标设置为全局\n"
-        " 点击图标 [x] 复制作图数据\n\n"
-        
-        "   2. 插入数据:\n"
-        " Esc → 打开地图工坊编辑器 → 黏贴数据到 规则 'map data' (第一条规则)\n\n"
-        
-        "   3. 地图工坊设置:\n"
-        " Esc → 显示大厅 → 设置 → 地图工坊设置 →\n"
-        " 关闭 'Editor mode' \n "
-        "Difficulty (display hud) 选择地图难度\n"
+        " 0. 清理多余数据:\n"
+        "打开此窗口时自动完成\n\n"
+      
+        "1. 复制数据:\n"
+        "打开工作坊检查→将可变目标设置为全局\n\n"
+        "按[x]\n"
+    
+        "2. 插入数据:\n"
+        "将数据粘贴到名为'map data'的规则中(第2页)\n\n"
+      
+        "3.车间设置:\n"
+        "ESC→展示大厅→设置→工作坊设置→\n"
+        "关闭'编辑模式'\n"
+        "选择显示难度\n"
         checkCN
         "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
         "   0. clear excess data:\n"
@@ -104,15 +103,17 @@ rule "Editor | Clear Excess Data to Save Map":
         " ",
         null,
         "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
-        "   4. 创建地图代码:\n"
-        " Esc → 显示大厅 → 设置 → 分享代码→\n"
-        " 创建新的代码 → 复制代码\n\n"
-
-        "   5. 添加作者&地图信息:\n"
-        " 在地图工坊编辑器 rule 'Credits here' (第二条规则) 输入你的名字和创建的地图代码 \n\n"
-        
-        "   6. 上传作者&地图信息:\n"
-        " Esc → 显示大厅 → 设置 → 分享代码 →\n 上传至现有代码 → 黏贴步骤4 获得的地图代码\n"
+        "4. 创建初始共享代码:\n"
+        "Esc→显示大厅→设置→共享代码→\n"
+        "创建新代码→复制代码\n\n"
+  
+        "5. 添加参与者:\n"
+        "在'Credits here'规则中输入您的姓名和地图代码\n\n"
+        "(第二页)\n"
+     
+        "6. 参与者更新:\n"
+        "Esc→显示大厅→设置→共享代码→\n"
+        "上传到现有代码→粘贴在步骤4中创建的代码\n"
 
         checkCN
         "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
@@ -410,7 +411,6 @@ rule "Editor | Hud and Effects":
 
     # Selected kill orb text
     createInWorldText(getAllPlayers() if hostPlayer.CurrentCheckpoint != -1 and hostPlayer.KillPosition_Cache and hostPlayer.EditModeSelection == 1 else null, 
-        #trans
         "已选中该弹球" checkCN "Selected Kill Orb"
         , KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]], 
         1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT
@@ -433,13 +433,11 @@ rule "Editor | Hud and Effects":
     # Teleport arrow icon
     #createIcon(getAllPlayers() if len(CheckpointPositions[hostPlayer.CurrentCheckpoint] ) > 1 else null, CheckpointPositions[hostPlayer.CurrentCheckpoint][1] + vect(0, 0.6, 0), Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.PURPLE, true)
     # Teleport text
-    #trans
-    createInWorldText(getAllPlayers() if len(CheckpointPositions[hostPlayer.CurrentCheckpoint] ) > 1 and hostPlayer.EditModeSelection == 0 else null, "teleporter location", CheckpointPositions[hostPlayer.CurrentCheckpoint][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+    createInWorldText(getAllPlayers() if len(CheckpointPositions[hostPlayer.CurrentCheckpoint] ) > 1 and hostPlayer.EditModeSelection == 0 else null, "传送点位置" checkCN "teleporter location", CheckpointPositions[hostPlayer.CurrentCheckpoint][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
         
     # normal cp if teleport
     createEffect(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and hostPlayer.EditModeSelection == 0 else null, Effect.RING, Color.ORANGE, CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    # trans
-    createInWorldText(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and hostPlayer.EditModeSelection == 0 else null, "level location", CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+    createInWorldText(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and hostPlayer.EditModeSelection == 0 else null, "检查点点的位置" checkCN "level location", CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
     
 # global functions ==============================================================
 rule "Editor |  Fly/Noclip Toggle":
@@ -804,15 +802,12 @@ rule "Editor | cp add/remove teleport":
       return
 
     if hostPlayer.CurrentCheckpoint == 0:
-        #trans
-        smallMessage(hostPlayer,"   Can't place a teleport on first checkpoint")
+        smallMessage(hostPlayer,"   不能在第一个检查点设置传送门" checkCN "   Can't place a teleport on first checkpoint")
         return
 
     if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) > 1: # remove
         CheckpointPositions[hostPlayer.CurrentCheckpoint] = CheckpointPositions[hostPlayer.CurrentCheckpoint][0]
-        #trans
-        #trans
-        smallMessage(hostPlayer, "   Teleport for level {0} has been removed.".format(hostPlayer.CurrentCheckpoint))
+        smallMessage(hostPlayer,"   等级{0}的传送被移除".format(hostPlayer.CurrentCheckpoint) checkCN "   Teleport for level {0} has been removed".format(hostPlayer.CurrentCheckpoint))
     else: # add
         CheckpointPositions[hostPlayer.CurrentCheckpoint] = [
             CheckpointPositions[hostPlayer.CurrentCheckpoint][0] 

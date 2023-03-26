@@ -83,23 +83,24 @@ rule "Restart Run | Crouch + Interact + Deflect":
     if CompMode:      
         wait()
         if CompTime < 1:
-            #trans
-            smallMessage(eventPlayer, "   The competition is over")
+            smallMessage(eventPlayer, "   比赛结束" checkCN "   The competition is over"  )
+            eventPlayer.LockState = false
             return
         elif eventPlayer.CompDone:
+            eventPlayer.LockState = false
             return
         elif CompRestartLimit and eventPlayer.NotOnLastCp:
-            #trans
-            smallMessage(eventPlayer,"   Restart during run is disabled for this competition")
+            smallMessage(eventPlayer, "   禁止在此比赛中运行期间重新启动" checkCN "   Restart during run is disabled for this competition")
+            eventPlayer.LockState = false
             return
         elif CompAtmpNum > 0: 
             if eventPlayer.AttemptCount == CompAtmpNum:
-                #trans
-                smallMessage(eventPlayer, "   You are on your last attempt")
+                smallMessage(eventPlayer, "   最后一次尝试" checkCN "   You are on your last attempt"  )
+                eventPlayer.LockState = false
                 return
             if eventPlayer.AttemptCount == (-1):
-                #trans
-                smallMessage(eventPlayer, "   You are out of attempts")
+                smallMessage(eventPlayer, "   你没有尝试过" checkCN "   You are out of attempts"  )
+                eventPlayer.LockState = false
                 return
             eventPlayer.AttemptCount ++
             CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.AttemptCount 

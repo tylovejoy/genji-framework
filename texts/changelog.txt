@@ -225,21 +225,20 @@ fixed:
     (b) - afk timer now 90 seconds
 
 1.8 - ?
-    x when your game client is configured, you will see chinese text. translations by 十六 and ?????
-        - and yes this means english and cn in same lobby see a different text
-    
+    - people with a CN client will now see chinese texts ingame. translations by 十六 and 理塘丁真
+        (this means they will see translated text even if they are in same lobby as you are)
     - map data and addon settinsg rules have been moved to page 2. everything you need to edit is now on page 2 together.
-    
     - you now only have to enter your name and code ones to include it in pasta. after that you dont have to enter it again unles you want to change it.
     - you no longer die when landing on a cp while having ult. You get to keep the last second of your blade for next cp. This results in a much smoother experience.
-    - added the "require available bhop to complete cp" 
     - you now lose collected orbs when returning to the current checkpoint, to prevent cheese
+    - added the "require available bhop to complete cp" 
 
     - splits now display on the hud instead of at arriving. the toggle has been removed.
     - there is now an icon in the dash/ult ready msg
     - fixed a bug that caused timer to reduce to 0.02 seconsds if you restarted on landing on the final cp.
     - fixed a bug that caused preview to display vector(0,0,0) on first cp
     - fixed a bug that caused wallclimb ban per cp to keep the ban on forever once it was turned on
+    - fixed a bug that caused restarting during comp mode to get you soft locked
 
     editor:
     - you can now remove a placed teleport cp by using the same button again

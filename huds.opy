@@ -167,9 +167,8 @@ rule "Huds: Global/Localplayer":
         HudStoreEdit.append(getLastCreatedText())
 
     if not hostPlayer.EditorOn:
-        # trans
         # find the value
-        Difficultyhud = createWorkshopSetting(enum[ "beginner", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display"],"map settings","difficulty (display hud)",0, 0)
+        Difficultyhud = createWorkshopSetting(enum[ "beginner", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display - 不显示"],"map settings -  地图设置","difficulty (display hud) - 难度(显示hud)",0, 0)
         # display
         if Difficultyhud < 17: # 17th entry is dont display
             hudSubheader(getAllPlayers(), 
@@ -241,15 +240,29 @@ rule "Huds: each player":
         hudText(
             eventPlayer, 
             " ",
-            "! competition is over !" if CompTime <= 0 else
-            "time left: {0} min{1}".format(
-                CompTime, 
-                "\nYou are out of attemps" if eventPlayer.AttemptCount == -1 else
-                "\nAttempt {0} / {1}".format(eventPlayer.AttemptCount, CompAtmpNum) if CompAtmpNum > 0 
-                else "" 
-            ),
-            "competitive mode" if CompTime > 0 else "competitive mode\n\n\n", 
-            HudPosition.TOP, HO.comp_info, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.STRING, SpecVisibility.DEFAULT
+            (
+                "! 比赛结束 !" if CompTime <= 0 else
+                "剩余时间: {0} 分钟{1}".format(
+                    CompTime, 
+                    "\n你没有尝试过" if eventPlayer.AttemptCount == -1 else
+                    "\n尝试 {0} / {1}".format(eventPlayer.AttemptCount, CompAtmpNum) if CompAtmpNum > 0 
+                    else "" 
+                )
+            )
+            checkCN
+            (
+                "! competition is over !" if CompTime <= 0 else
+                "time left: {0} min{1}".format(
+                    CompTime, 
+                    "\nYou are out of attemps" if eventPlayer.AttemptCount == -1 else
+                    "\nAttempt {0} / {1}".format(eventPlayer.AttemptCount, CompAtmpNum) if CompAtmpNum > 0 
+                    else "" 
+                )
+            ), 
+            ("竞赛模式" if CompTime > 0 else "竞赛模式\n\n\n")
+            checkCN
+            ("competitive mode" if CompTime > 0 else "competitive mode\n\n\n")
+            , HudPosition.TOP, HO.comp_info, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.STRING, SpecVisibility.DEFAULT
         ) 
 
   

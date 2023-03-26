@@ -1,7 +1,7 @@
-#!define versionhere "1.8 alpa 阿尔法版本"
+#!define versionhere "1.8 beta"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(4) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -130,8 +130,8 @@ def UpdateCache():
     
     eventPlayer.banstring = ""
     wait()
-    # trans
-    if createWorkshopSetting(bool, "Map ban and mechanics", "▲ ban Triple Jump - 三段跳", false, 0):
+
+    if createWorkshopSetting(bool, "Ban (applies to all levels) -  封禁(适用于所有级别)", "▲ ban Triple Jump - 三段跳", false, 0):
         eventPlayer.ban_triple = true
     elif eventPlayer.CurrentCheckpoint in BanTriple:
         eventPlayer.banstring = "▲ {}".format(eventPlayer.banstring)
@@ -139,7 +139,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_triple = false
 
-    if createWorkshopSetting(bool, "Map ban and mechanics", "∞ ban Multiclim - 蹭留", false, 1):
+    if createWorkshopSetting(bool, "Ban (applies to all levels) -  封禁(适用于所有级别)", "∞ ban Multiclim - 封禁蹭留", false, 1):
         eventPlayer.ban_multi = true
     elif eventPlayer.CurrentCheckpoint in BanMulti:
         eventPlayer.banstring = "∞ {}".format(eventPlayer.banstring)
@@ -147,7 +147,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_multi = false
 
-    if createWorkshopSetting(bool, "Map ban and mechanics", "♂ ban Createbhop - 卡小", false, 2):
+    if createWorkshopSetting(bool, "Ban (applies to all levels) -  封禁(适用于所有级别)", "♂ ban Createbhop - 封禁卡小", false, 2):
         eventPlayer.ban_create = true
     elif eventPlayer.CurrentCheckpoint in BanCreate:
         eventPlayer.banstring = "♂ {}".format(eventPlayer.banstring)
@@ -155,7 +155,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_create = false
 
-    if createWorkshopSetting(bool, "Map ban and mechanics", "X ban Deathbhop - 死小", false, 3):
+    if createWorkshopSetting(bool, "Ban (applies to all levels) -  封禁(适用于所有级别)", "X ban Deathbhop - 封禁死小", false, 3):
         eventPlayer.ban_dedhop = true
     elif eventPlayer.CurrentCheckpoint in BanDead:
         eventPlayer.banstring = "X {}".format(eventPlayer.banstring)
@@ -163,7 +163,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_dedhop = false
 
-    if createWorkshopSetting(bool, "Map ban and mechanics", "♥ ban Emote Savehop - 表情爬", false, 4):
+    if createWorkshopSetting(bool, "Ban (applies to all levels) -  封禁(适用于所有级别)", "♥ ban Emote Savehop - 封禁表情爬", false, 4):
         eventPlayer.ban_emote = true
     elif eventPlayer.CurrentCheckpoint in BanEmote:
         eventPlayer.banstring = "♥ {}".format(eventPlayer.banstring)
@@ -171,7 +171,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_emote = false
     
-    if createWorkshopSetting(bool, "Map ban and mechanics", "↑ ban Wallclimb - 爬墙", false, 5):
+    if createWorkshopSetting(bool, "Ban (applies to all levels) -  封禁(适用于所有级别)", "↑ ban Wallclimb - 封禁爬墙", false, 5):
         eventPlayer.ban_climb = true
     elif eventPlayer.CurrentCheckpoint in BanClimb:
         eventPlayer.banstring = "↑ {}".format(eventPlayer.banstring)
@@ -179,8 +179,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_climb = false
 
-    if createWorkshopSetting(bool, "Map ban and mechanics", "≥ require bhop available - 留小跳进点 ", false, 5):
-    
+    if createWorkshopSetting(bool, "Ban (applies to all levels) -  封禁(适用于所有级别)","≥ require bhop available - 留小跳进点 ", false, 5):
         eventPlayer.ban_bhop = true
     elif eventPlayer.CurrentCheckpoint in BanBhop:
         eventPlayer.banstring = "≥ {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓
@@ -260,18 +259,17 @@ rule "Setup and Variables":
     CustomPortalCP  = []
 
     wait(1)
-    DashExploitToggle = createWorkshopSetting(bool, "Map ban and mechanics", "ban Dash Start", true, 2)
-    PortalOn = createWorkshopSetting(bool, "map settings","enable portals (control maps)",true,0)
+    DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels) -  封禁(适用于所有级别)", "ban Dash Start - 0关卡Shift", true, 2)
+    PortalOn = createWorkshopSetting(bool, "map settings -  地图设置","enable portals (control maps) - 启用门户(控制映射)",true,0)
     #SelectedCheckpoint_Editing = len(CheckpointPositions) - 1 # This probably isn't necessary
-    # trans
-    CompMode = createWorkshopSetting(bool, "Competitive mode","Turn on competitive mode" , compmodetoggle , 100)
+    CompMode = createWorkshopSetting(bool, "Competitive mode - 竞赛模式","Turn on competitive mode - 开启比赛模式" , compmodetoggle , 100)
     if CompMode:
         # -! comp minutes !- 
-        CompTime = createWorkshopSetting(int[1:240], "Competitive mode", "time limit", comptimelimit, 101) # 5-240
+        CompTime = createWorkshopSetting(int[1:240], "Competitive mode - 竞赛模式", "time limit - 时间限制", comptimelimit, 101) # 5-240
         # -! comp attempt count !- 
-        CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode", "attempt count", attemptcount, 102) 
+        CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode - 竞赛模式", "attempt count - 尝试计数", attemptcount, 102) 
         # -! comp restartlimiter !-
-        CompRestartLimit = createWorkshopSetting(bool, "Competitive mode","disable restart during run" , comprestartlimit , 103)
+        CompRestartLimit = createWorkshopSetting(bool, "Competitive mode - 竞赛模式","disable restart during run - 在运行过程中禁用重新启动" , comprestartlimit , 103)
 
 
     wait(5)
@@ -309,8 +307,7 @@ rule "Match time":
         if CompMode:
             CompTime --
             if CompTime == 0:
-                #trans
-                bigMessage(getAllPlayers(),"time's up")
+                bigMessage(getAllPlayers(),"时间到了" checkCN "time's up")
                 getAllPlayers().CompDone = true
                 stopChasingVariable(getAllPlayers().Timer)
                 getAllPlayers().disableRespawn()
@@ -328,7 +325,6 @@ rule "Match time":
 
 rule "Player Initialize":
     @Event eachPlayer
-    # trans
     eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor - 作图模式","Editor mode - 作图模式" ,  editoron , 0) # Turn Editor On
     eventPlayer.GuideToggle = eventPlayer.EditorOn
     eventPlayer.disableGamemodeHud()
@@ -350,8 +346,10 @@ rule "Player Initialize":
     wait(0.5)
   
     createInWorldText(eventPlayer if eventPlayer.NotOnLastCp else null, 
-        "{0} collect orbs first".format(iconString(Icon.WARNING))    #trans
-        if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
+        "{0} {1}".format(
+            iconString(Icon.WARNING),    
+            "先收集橙球" checkCN "collect orbs first"
+        ) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
         "到这里来" checkCN "Come here",
         CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 
         1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT
@@ -383,7 +381,7 @@ rule "Player Initialize":
         else:
             eventPlayer.AttemptCount = CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))]
             #trans ? or was this a test hud
-            smallMessage(eventPlayer,"now {0}".format( eventPlayer.AttemptCount))
+            #smallMessage(eventPlayer,"now {0}".format( eventPlayer.AttemptCount))
         if eventPlayer.AttemptCount == (-1) or CompTime < 1:
             eventPlayer.CompDone = true
     
@@ -595,9 +593,7 @@ rule "Arrive | Ground reset | traces":
                 goto lbl_abc
             
             if eventPlayer.ban_bhop and not (eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == Color.GREEN):
-                # trans
                 smallMessage(eventPlayer, "   ≥ 留小跳进点!" checkCN "   ≥ You need to have a bhop to complete!")
-                # 未达成通关条件：留小跳 or   留小跳进点!    ???
                 checkpointFailReset()
                 goto lbl_abc
 
@@ -835,56 +831,64 @@ rule "------------------------------------------------------------------------ M
     @Delimiter
     @Disabled
 
-rule "Map Data / 数据录入 <---- INSERT HERE / 在这输入":
+rule "Map Data - 数据录入 <---- INSERT HERE / 在这输入":
     @Delimiter
 
 editorordata
 
-rule "Credits here / 作者名字 <---- INSERT HERE / 在这输入 ": 
-    # trans
+rule "Credits here - 作者名字 <---- INSERT HERE / 在这输入 ": 
     # Filling this in adds it to the inspector pasta after next restart.
     # You can fill in again to overwrite.
+    # 填充此字段 将其添加到 检查器数据 面中
+    # 您可以再次 填写以覆盖 之前的条目
     Name = "name here - 作者"
     Code = "code here - 代码"
 
 
-rule "Ban per CP  <---- INSERT HERE / 在这输入":
-    # trans
+rule "Ban per CP - 封禁(每级) <---- INSERT HERE / 在这输入":
     # Enter the checkpoint/level numbers in the lists below to apply the ban on them
     # Remember the workshop toggle overwrites this list
+    # 在下面的列 表中输入检 查点 / 级别编号，封禁 掉对其应用
+    # 记住，工作坊切换 将覆盖 此列表
     wait(1)
     # ======================
-    # ban  triple >
+    # ban  triple - 三段跳
     BanTriple = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban  multi >
+    # ban  multi - 蹭留 
     BanMulti = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban create >
+    # ban create - 卡小
     BanCreate = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban dedhop >
+    # ban dedhop - 死小
     BanDead = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban emote >
+    # ban emote - 表情爬
     BanEmote = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # trans
-    # complete require climb green
+    # ban climb - 爬墙
     BanClimb = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # complete require bhop green
+    # require bhop available - 留小跳进点
     BanBhop = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
-rule "Custom difficulty hud  <---- INSERT HERE / 在这输入":
+rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled
     @Delimiter
-    # trans
     #1) workshop settings > difficulty > set to "dont display"
     #2) enable this rule
     #3) type your difficulty in the hud below
+    printLog("--------")
+    #1) 设置正常 难度hud为“不显示”
+    #2) 启用此规则
+    #3) 在下面的hud中输入难度
     hudSubheader(getAllPlayers(), "enter custom difficulty here", HudPosition.TOP, HO.data_dif,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
 
-rule "Comp Mode instruction message  <---- INSERT HERE / 在这输入":
-    # trans
+rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":
     # Instructions that show when you start comp mode.
     # Due to the hud text limit, you there is 4 huds available.
     # If you dont need a field just empty the textfield.
+    printLog("--------")
+    # 竞赛模式 指引消息
+    # 指引消息将 会在竞赛模 式开始时 显示
+    # 由于 hud 文本限制，你有 4 个hud可用
+    # 如果你不需 要一个字段 只是空文 本字段
     instructiontext[0] = "Change in Comp Mode instruction message hud 1"
     instructiontext[1] = "Change in Comp Mode instruction message hud 2"
     instructiontext[2] = "Change in Comp Mode instruction message hud 2"
