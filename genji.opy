@@ -1,7 +1,7 @@
 #!define versionhere "1.8 beta"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(4) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -265,7 +265,7 @@ rule "Setup and Variables":
     CompMode = createWorkshopSetting(bool, "Competitive mode - 竞赛模式","Turn on competitive mode - 开启比赛模式" , compmodetoggle , 100)
     if CompMode:
         # -! comp minutes !- 
-        CompTime = createWorkshopSetting(int[1:240], "Competitive mode - 竞赛模式", "time limit - 时间限制", comptimelimit, 101) # 5-240
+        CompTime = createWorkshopSetting(int[1:240], "Competitive mode - 竞赛模式", "time limit (global)- 时间限制", comptimelimit, 101) # 5-240
         # -! comp attempt count !- 
         CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode - 竞赛模式", "attempt count - 尝试计数", attemptcount, 102) 
         # -! comp restartlimiter !-
