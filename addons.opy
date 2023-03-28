@@ -83,31 +83,6 @@ rule "Pre-set control map portal | toggled on via workshop settings":
         PortalNames = null
         return
         
-
-rule "Autobounce/stall enhancer - 增强系統跳的判定":
-    @Event eachPlayer
-    #原作：家里有妖怪#5202(国服)
-    @Condition eventPlayer.hasSpawned() == true
-    @Condition (eventPlayer.getVerticalSpeed() >= -0.2 and eventPlayer.getVerticalSpeed() <= 0.05) == true
-    @Condition eventPlayer.getHorizontalSpeed() <= 1.3
-    @Condition eventPlayer.isInAir() == true
-    @Condition eventPlayer.isOnWall() == false
-    @Condition eventPlayer.isOnGround() == false
-    @Condition createWorkshopSetting(bool, "map settings -  地图设置"," Autobounce enhancer - 增强系統跳的判定",false,3)
-    
-    wait(0.25, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
-    waitUntil(eventPlayer.isMoving() == false, 10)
-    eventPlayer.stopForcingPosition()
-    eventPlayer.setMoveSpeed(0)
-    eventPlayer.setGravity(0)
-    wait(3)
-    eventPlayer.setGravity(100)
-    eventPlayer.setMoveSpeed(100)
-    eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-    if RULE_CONDITION:
-        goto RULE_START
-
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
     @Condition isGameInProgress()
@@ -193,7 +168,7 @@ FILLER
 FILLER
 FILLER
 FILLER
-
+FILLER
 
 rule "------------------------------------------------------------------------ Addons Settings and data - 附加组件 ------------------------------------------------------------------------":
     @Delimiter
@@ -381,4 +356,38 @@ rule "Inworld text for certain Checkpoints - 在世界文本中为某些检查�
     CpIwtColor = Color.LIME_GREEN
 
 
-
+rule "stall enhancer - 增强系統跳的判定 - 启用此规则":
+    @Event eachPlayer
+    #原作：家里有妖怪#5202(国服)
+    @Disabled
+    @Condition eventPlayer.hasSpawned() == true
+    @Condition (eventPlayer.getVerticalSpeed() >= -0.2 and eventPlayer.getVerticalSpeed() <= 0.05) == true
+    @Condition eventPlayer.getHorizontalSpeed() <= 1.3
+    @Condition eventPlayer.isInAir() == true
+    @Condition eventPlayer.isOnWall() == false
+    @Condition eventPlayer.isOnGround() == false
+    @Condition not (eventPlayer.EditorOn and eventPlayer.flytoggle != null)
+    #@Condition createWorkshopSetting(bool, "map settings \n地图设置"," Autobounce enhancer - 增强系統跳的判定",false,3)
+    
+    wait(0.25, Wait.ABORT_WHEN_FALSE)
+    eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
+    waitUntil(eventPlayer.isMoving() == false, 1)
+    eventPlayer.stopForcingPosition()
+    eventPlayer.setMoveSpeed(0)
+    eventPlayer.setGravity(0)
+    waitUntil(
+        eventPlayer.isHoldingButton(Button.RELOAD) or
+        eventPlayer.flytoggle != null or
+        eventPlayer.isDead()
+        ,3)
+    #wait(3)
+    eventPlayer.setGravity(100)
+    eventPlayer.setMoveSpeed(100)
+    if (
+        eventPlayer.flytoggle == null and
+        eventPlayer.isAlive() and
+        not eventPlayer.isHoldingButton(Button.RELOAD)
+        ):
+        eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+        if RULE_CONDITION:
+            goto RULE_START

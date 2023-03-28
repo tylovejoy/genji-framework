@@ -168,19 +168,17 @@ rule "Huds: Global/Localplayer":
 
     if not hostPlayer.EditorOn:
         # find the value
-        Difficultyhud = createWorkshopSetting(enum[ "beginner", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display - 不显示"],"map settings -  地图设置","difficulty (display hud) - 难度(显示hud)",0, 0)
+        Difficultyhud = createWorkshopSetting(enum[ "beginner", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display - 不显示","Playtest"],"map settings \n地图设置","difficulty (display hud) - 难度(显示hud)",0, 0)
         # display
-        if Difficultyhud < 17: # 17th entry is dont display
+        if Difficultyhud != 17: # 17th entry is dont display
             hudSubheader(getAllPlayers(), 
-                ["beginner", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell"][Difficultyhud], 
+                ["beginner", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell",null,"Playtest"][Difficultyhud], 
                 HudPosition.TOP, HO.data_dif,
-                [Color.GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.YELLOW,Color.YELLOW,Color.YELLOW, Color.ORANGE,Color.ORANGE,Color.ORANGE,rgb(255, 69, 0), rgb(255, 69, 0), rgb(255, 69, 0), Color.RED, Color.RED, Color.RED, rgb(150, 0, 0)][Difficultyhud], 
+                [Color.GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.YELLOW,Color.YELLOW,Color.YELLOW, Color.ORANGE,Color.ORANGE,Color.ORANGE,rgb(255, 69, 0), rgb(255, 69, 0), rgb(255, 69, 0), Color.RED, Color.RED, Color.RED, rgb(150, 0, 0),null,Color.BLUE][Difficultyhud], 
                 HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
             )
             HudStoreEdit.append(getLastCreatedText())
 
-
-    
 
 rule "Huds: each player":
     @Event eachPlayer
