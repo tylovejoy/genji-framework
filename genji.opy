@@ -458,6 +458,7 @@ def Leaderboardupdate():
 
 def checkpointFailReset():
     @Name "SUB | Checkpoint Fail"
+    eventPlayer.splittime = eventPlayer.Timer # remove for old version of splits
     eventPlayer.LockCollected = []
     eventPlayer.cancelPrimaryAction()
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
