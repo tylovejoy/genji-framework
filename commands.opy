@@ -351,6 +351,9 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
         wait(0.1)
         eventPlayer.stopForcingPosition()
+        if eventPlayer.CurrentCheckpoint == 0 and not eventPlayer.PracticeToggle:
+            eventPlayer.Timer = 0
+            eventPlayer.splittime = 0
         eventPlayer.flytoggle = null
         wait(0.24)
     wait(1, Wait.ABORT_WHEN_FALSE)
@@ -358,10 +361,8 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     eventPlayer.QuickRestartToggle = not eventPlayer.QuickRestartToggle
     bigMessage(eventPlayer, 
         ("快速回点已启用" if eventPlayer.QuickRestartToggle else "快速回点已关闭")
-
-        
         checkCN
         "Quick reset is enabled" if eventPlayer.QuickRestartToggle else "Quick reset is disabled"
     )
-    #Local Player.quick_restart ? Custom String("快速回点 | 启用") : Custom String("快速回点"))
+
 

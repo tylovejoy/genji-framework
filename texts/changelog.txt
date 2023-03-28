@@ -231,12 +231,14 @@ fixed:
     - you no longer die when landing on a cp while having ult. You get to keep the last second of your blade for next cp. This results in a much smoother experience.
     - you now lose collected orbs when returning to the current checkpoint, to prevent cheese
     - added the "require available bhop to complete cp" 
+    - quick reset on first cp now also resets your time
 
     - fixed a bug that caused timer to reduce to 0.02 seconsds if you restarted on landing on the final cp.
     - fixed a bug that caused preview to display vector(0,0,0) on first cp
     - fixed a bug that caused wallclimb ban per cp to keep the ban on forever once it was turned on
     - fixed a bug that caused restarting during comp mode to get you soft locked
-
+    - fixed world record hud apearing betwene "top 5" and the actual top 5 players.
+    
     editor:
     - you now only have to enter your name and code ones to include it in pasta. after that you dont have to enter it again unles you want to change it.
     - map data and addon settinsg rules have been moved to page 2. everything you need to edit is now on page 2 together.

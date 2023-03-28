@@ -385,8 +385,8 @@ enum HO:
     edit_instructions_general,
     edit_instructions_edit,
 
-    board_top5,
     wr,
+    board_top5,
 
     rightend,
     # End #####################
