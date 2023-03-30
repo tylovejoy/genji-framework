@@ -113,7 +113,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
     eventPlayer.InvincibleToggle = false
     stopChasingVariable(eventPlayer.practicetimer)
     eventPlayer.practicetimer = 0
-    eventPlayer.splitdisplay = 0
+    eventPlayer.splitdisplay = -999 if eventPlayer.splitdisplay == -999 else 0
     if eventPlayer in SaveEnt:
         DeleteSave()
     
@@ -252,8 +252,10 @@ rule "Toggle Practice Mode | Melee + Ultimate":
         eventPlayer.stopForcingPosition()
         if eventPlayer.NotOnLastCp:
             StartPauseTimer()
+        
+        eventPlayer.splitdisplay = -999 if eventPlayer.splitdisplay == -999 else 0
+
         eventPlayer.splittime = 0
-        eventPlayer.splitdisplay = 0
         eventPlayer.practicetimer = 0
         chase(eventPlayer.practicetimer, 9999999, rate=1, ChaseReeval.NONE)
         wait(0.2)
@@ -367,3 +369,14 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     )
 
 
+rule "Split hide":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
+    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) 
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    
+    eventPlayer.splitdisplay = 0 if eventPlayer.splitdisplay == -999 else -999
+    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
+    wait()
+    smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay == -999 else "   split display on")

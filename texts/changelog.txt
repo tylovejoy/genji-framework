@@ -228,12 +228,14 @@ fixed:
     - people with a CN client will now see chinese texts ingame. translations by 十六 and 理塘丁真
         (this means they will see translated text even if they are in same lobby as you are)
     - splits now display on the hud instead of at arriving. the toggle has been removed.
+    - splits now reset when you press reload or fail
+    - for those who really want to still hide splits they can hold dash + primary + secondary for 1 second
     - you no longer die when landing on a cp while having ult. You get to keep the last second of your blade for next cp. This results in a much smoother experience.
     - you now lose collected orbs when returning to the current checkpoint, to prevent cheese
     - added the "require available bhop to complete cp" 
     - quick reset on first cp now also resets your time
     - added a difficulty called "playtest"
-    - added bakc stall enhance from CN version
+    - added back stall enhance from CN version
 
     - fixed a bug that caused timer to reduce to 0.02 seconsds if you restarted on landing on the final cp.
     - fixed a bug that caused preview to display vector(0,0,0) on first cp

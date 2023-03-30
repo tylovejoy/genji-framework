@@ -94,9 +94,11 @@ rule "Huds: Global/Localplayer":
     */
     #hudSubtext or hudSubheader
     hudSubtext(getAllPlayers(), 
+        "" if localPlayer.splitdisplay == -999 else
+        
         ("单关用 {0}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else "")
         checkCN
-        "Split: {0}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else ""
+        ("Split: {0}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else "")
         ,HudPosition.LEFT, HO.game_split_display, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )  
     HudStoreEdit.append(getLastCreatedText())
