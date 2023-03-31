@@ -49,7 +49,7 @@ rule "Huds: Global/Localplayer":
     hudSubtext(getAllPlayers(), "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv", HudPosition.TOP, HO.fillermain, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     
     hudSubtext(getAllPlayers(), 
-        "{0}+{1}+{2} | 重新开始\n长按{3} | 完整成绩排名".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)) 
+        "{0}+{1}+{2} | 重新开始\n长按 {3} | 完整成绩排名".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)) 
         checkCN
         "{0}+{1}+{2} | Restart\nHold {3} | leaderboard".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE))
         , HudPosition.RIGHT, HO.com_restart_n_board, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
@@ -70,7 +70,7 @@ rule "Huds: Global/Localplayer":
     )
     
     hudSubtext(getAllPlayers(),  
-        "长按 {0} |  预览弹球/传送".format(buttonString(Button.PRIMARY_FIRE))
+        "长按 {0} | 预览弹球/传送门".format(buttonString(Button.PRIMARY_FIRE))
         checkCN
         "Hold {0} | Preview orb/portal".format(buttonString(Button.PRIMARY_FIRE))
         ,HudPosition.RIGHT, HO.com_preview, Color.GREEN if localPlayer.PreviewsArray else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
@@ -96,7 +96,7 @@ rule "Huds: Global/Localplayer":
     hudSubtext(getAllPlayers(), 
         "" if localPlayer.splitdisplay == -999 else
         
-        ("单关用 {0}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else "")
+        ("单关用时 {0}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else "")
         checkCN
         ("Split: {0}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else "")
         ,HudPosition.LEFT, HO.game_split_display, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
@@ -301,7 +301,10 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
         LeaderBoardHuds.append(getLastCreatedText())
 
     hudHeader(getAllPlayers() if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle, 
-        "　　　　 {0} Leaderboard {0} 　　　".format(iconString(Icon.FLAG)), HudPosition.TOP, HO.board_header, Color.BLUE, HudReeval.VISIBILITY, SpecVisibility.NEVER
+        "　　　　 {0} {1} {0} 　　　".format(
+            iconString(Icon.FLAG),
+            "成绩排名" checkCN "Leaderboard"
+        ), HudPosition.TOP, HO.board_header, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.NEVER
     )
     LeaderBoardHuds.append(getLastCreatedText())
 

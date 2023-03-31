@@ -11,6 +11,7 @@ rule "Toggle Leaderboard | Hold Melee":
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.LeaderboardToggle = not eventPlayer.LeaderboardToggle
 
+/*
 rule "Toggle Splits | Hold Ult":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
@@ -18,7 +19,21 @@ rule "Toggle Splits | Hold Ult":
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.splitson = not eventPlayer.splitson
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
+*/
 
+
+rule "Split hide":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
+    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) 
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    
+    eventPlayer.splitdisplay = 0 if eventPlayer.splitdisplay == -999 else -999
+    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
+    wait()
+    smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay == -999 else "   split display on")
+    
 rule "Toggle Invisible | Hold Deflect":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
@@ -367,16 +382,3 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
         checkCN
         "Quick reset is enabled" if eventPlayer.QuickRestartToggle else "Quick reset is disabled"
     )
-
-
-rule "Split hide":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
-    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) 
-    wait(1, Wait.ABORT_WHEN_FALSE)
-    
-    eventPlayer.splitdisplay = 0 if eventPlayer.splitdisplay == -999 else -999
-    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
-    wait()
-    smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay == -999 else "   split display on")

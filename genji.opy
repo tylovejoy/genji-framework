@@ -1,7 +1,7 @@
 #!define versionhere "1.8 beta"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(6) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -131,7 +131,7 @@ def UpdateCache():
     eventPlayer.banstring = ""
     wait()
 
-    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(适用于所有级别)", "ban Triple Jump - 三段跳", false, 0):
+    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Triple Jump - 三段跳", false, 0):
         eventPlayer.ban_triple = true
     elif eventPlayer.CurrentCheckpoint in BanTriple:
         eventPlayer.banstring = "▲ {}".format(eventPlayer.banstring)
@@ -139,7 +139,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_triple = false
 
-    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(适用于所有级别)", "ban Multiclim - 封禁蹭留", false, 1):
+    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Multiclim - 封禁蹭留", false, 1):
         eventPlayer.ban_multi = true
     elif eventPlayer.CurrentCheckpoint in BanMulti:
         eventPlayer.banstring = "∞ {}".format(eventPlayer.banstring)
@@ -147,7 +147,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_multi = false
 
-    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(适用于所有级别)", "ban Createbhop - 封禁卡小", false, 2):
+    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Createbhop - 封禁卡小", false, 2):
         eventPlayer.ban_create = true
     elif eventPlayer.CurrentCheckpoint in BanCreate:
         eventPlayer.banstring = "♂ {}".format(eventPlayer.banstring)
@@ -155,7 +155,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_create = false
 
-    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(适用于所有级别)", "ban Deathbhop - 封禁死小", false, 3):
+    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Deathbhop - 封禁死小", false, 3):
         eventPlayer.ban_dedhop = true
     elif eventPlayer.CurrentCheckpoint in BanDead:
         eventPlayer.banstring = "X {}".format(eventPlayer.banstring)
@@ -163,7 +163,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_dedhop = false
 
-    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(适用于所有级别)", "ban Emote Savehop - 封禁表情爬", false, 4):
+    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Emote Savehop - 封禁表情爬", false, 4):
         eventPlayer.ban_emote = true
     elif eventPlayer.CurrentCheckpoint in BanEmote:
         eventPlayer.banstring = "♥ {}".format(eventPlayer.banstring)
@@ -171,7 +171,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_emote = false
     
-    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(适用于所有级别)", "ban Wallclimb - 封禁爬墙", false, 5):
+    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Wallclimb - 封禁爬墙", false, 5):
         eventPlayer.ban_climb = true
     elif eventPlayer.CurrentCheckpoint in BanClimb:
         eventPlayer.banstring = "↑ {}".format(eventPlayer.banstring)
@@ -179,7 +179,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_climb = false
 
-    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(适用于所有级别)","require bhop available - 留小跳进点 ", false, 5):
+    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require bhop available - 留小跳进点 ", false, 5):
         eventPlayer.ban_bhop = true
     elif eventPlayer.CurrentCheckpoint in BanBhop:
         eventPlayer.banstring = "≥ {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓
@@ -259,16 +259,16 @@ rule "Setup and Variables":
     CustomPortalCP  = []
 
     wait(1)
-    DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(适用于所有级别)", "ban Dash Start - 0关卡Shift", true, 2)
-    PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用门户(控制映射)",true, 10)
-    CompMode = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","Turn on competitive mode - 开启比赛模式" , compmodetoggle , 100)
+    DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
+    PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用传送门 (占点地图)",true, 10)
+    CompMode = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","Turn on competitive mode - 开启竞赛模式" , compmodetoggle , 100)
     if CompMode:
         # -! comp minutes !- 
         CompTime = createWorkshopSetting(int[1:240], "Competitive mode\n竞赛模式", "time limit (global) - 时间限制", comptimelimit, 101) # 5-240
         # -! comp attempt count !- 
-        CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode\n竞赛模式", "attempt count - 尝试计数", attemptcount, 102) 
+        CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode\n竞赛模式", "attempt count - 尝试次数", attemptcount, 102) 
         # -! comp restartlimiter !-
-        CompRestartLimit = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","disable restart during run - 在运行过程中禁用重新启动" , comprestartlimit , 103)
+        CompRestartLimit = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","disable restart during run - 竞赛中禁用重新开始" , comprestartlimit , 103)
 
 
     wait(5)
