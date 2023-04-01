@@ -1,7 +1,7 @@
 #!define versionhere "1.8"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(4) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -298,7 +298,10 @@ rule "Match time":
     setMatchTime(69)
     pauseMatchTime()
     wait(5)
-    TimeRemaining = 265
+    if getCurrentGamemode() == Gamemode.HYBRID:
+        TimeRemaining = 89
+    else:
+        TimeRemaining = 265
 
     while TimeRemaining > 0:
         wait(60)

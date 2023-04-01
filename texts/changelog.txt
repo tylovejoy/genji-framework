@@ -242,7 +242,9 @@ fixed:
     - fixed a bug that caused wallclimb ban per cp to keep the ban on forever once it was turned on
     - fixed a bug that caused restarting during comp mode to get you soft locked
     - fixed world record hud apearing betwene "top 5" and the actual top 5 players.
-    
+    - fixed a bug that lets you dash starts always. found by vikingking/Pyramide#7222
+    - fixed hybrate maps displaying full time, despite only having 90 minutes to play before blizard closes server
+
     editor:
     - you now only have to enter your name and code ones to include it in pasta. after that you dont have to enter it again unles you want to change it.
     - map data and addon settinsg rules have been moved to page 2. everything you need to edit is now on page 2 together.

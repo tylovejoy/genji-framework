@@ -194,11 +194,17 @@ rule "Toggle Invincible Mode | Melee + Reload":
 
     eventPlayer.LockCollected = []
     eventPlayer.flytoggle = null
+    
+    if eventPlayer.CurrentCheckpoint > 0 :
+        eventPlayer.disallowButton(Button.ABILITY_1)
+        if eventPlayer.isUsingAbility1():
+            waitUntil(not eventPlayer.isUsingAbility1(), 1.5)
+            wait()
 
     if eventPlayer.InvincibleToggle:
         eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), true)
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
-        wait(0.1)
+        wait(0.16)
         if eventPlayer.PracticeToggle:
             bigMessage(eventPlayer, "练习模式" checkCN "Practice mode")
             chase(eventPlayer.practicetimer, 9999999, rate=1, ChaseReeval.NONE)
@@ -219,10 +225,25 @@ rule "Toggle Invincible Mode | Melee + Reload":
         eventPlayer.flytoggle = null
         wait(0.2)
     
+    /*
+    eventPlayer.InvincibleToggle = not eventPlayer.InvincibleToggle
+    if eventPlayer.CurrentCheckpoint > 0:
+        eventPlayer.allowButton(Button.ABILITY_1)
+  
+    async( CheckUlt(), AsyncBehavior.RESTART)
+    async( CheckDash(), AsyncBehavior.RESTART)
+
+    if eventPlayer.CurrentCheckpoint > 0: # cp 0 start dash ban is via startgame sub because it has to give msg
+        wait(0.16)
+    */
+          
     eventPlayer.InvincibleToggle = not eventPlayer.InvincibleToggle
     async( CheckUlt(), AsyncBehavior.RESTART)
     async( CheckDash(), AsyncBehavior.RESTART)
-    
+
+    if eventPlayer.CurrentCheckpoint > 0: # cp 0 start dash ban is via startgame sub because it has to give msg
+        eventPlayer.allowButton(Button.ABILITY_1)
+        wait(0.16)
 
 rule "Toggle Practice Mode | Melee + Ultimate":
     @Event eachPlayer
