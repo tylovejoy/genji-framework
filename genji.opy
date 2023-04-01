@@ -298,10 +298,10 @@ rule "Match time":
     setMatchTime(69)
     pauseMatchTime()
     wait(5)
-    if getCurrentGamemode() == Gamemode.HYBRID:
-        TimeRemaining = 89
-    else:
-        TimeRemaining = 265
+    #if getCurrentGamemode() == Gamemode.HYBRID:
+    #    TimeRemaining = 89
+    #else:
+    TimeRemaining = 265
 
     while TimeRemaining > 0:
         wait(60)
