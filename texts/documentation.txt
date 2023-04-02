@@ -12,6 +12,57 @@ editor toggle
     since the var is on in each player, whoever is already in the game before host already has the correct value
 
 
+translations:
+    checkCN defines for an if statment
+    every hud does the if statment to determien if its english or cn text
+    this HAS to be every single hud, you cannot store a variable based on this check
+
+    the idea is that it checks strings against their translations
+    these huds gets evaluated on client side. the local client does the check.
+    this means even if a hud is global, diferent clients see it differently.
+
+    string re-eveluation needs to be on for this to work.
+
+
+waits in version 1.8:
+    player initialize waits for a mimum of 3 seconds, so map data loads first always
+    
+    0 seconds:
+    - map data
+    0.024
+    - set default map variables to [] if not used (initialize)
+    
+    1 second:
+    - custom portal addon
+    - title data addon
+    - iwt/hud per cp addon
+    - ban per cp
+
+    1.0024 second:
+    - porta/dash/comp toggles
+
+    2 seconds:
+    - pre set portals
+    - global huds
+    
+    5 second:
+    - server timer
+    6 second:
+    - killball
+    8 second:
+    - pinballs
+    10 second:
+    - portals  
+
+    others:
+    - players wait about 3 seconds after joining + has spawned afer before starting game
+    - 10 + hosthasspawner: rebuild kill/bounce
+    - dva: waits until any player has spawned
+    - hostplayer spawned + 1 
+        - check editoron hostplayer
+        - wait 2, 
+        - destroy stored hud
+        - make editor hud
 
 comp mode:
     - set true after initial loading to avoid global var problem
@@ -19,6 +70,13 @@ comp mode:
     - 2 seperate arrays for save names and save progres are used to save the attempt count. everytime your atempt update it also updates in the save.
     - attemps count down when someone restarts a run. if someone finish a run the save data wil be reduced by 1 while the ingame one stays even, this way if you rejoin, you still get your attempt used.
     - time limit is checked via regular match time rule
+    
+    functions:
+    - sets a timelimit via a workshop slider
+    - set maximum attempt limit, or keep on 0 for unlimited attemps
+    - forces everyone to be invisible to eachother
+    - disabled practice mode and spec mode
+    - enabled via workshop settings and inside the web aplications settings tab
 
 
 bans:

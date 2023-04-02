@@ -10,3 +10,4 @@ rule "testdata":
     killballnumber = []
     pinballnumber = []
     save = [75.551, 0, 0, "bot number: 11", 2, 21.552, null, 77.551, 0, 0]
+    Cachedcredits = ["aaaaaaa", "bbbbb"]

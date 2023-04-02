@@ -27,8 +27,8 @@ def CheckUlt(): # checks if ult should be turned on
     waitUntil(not eventPlayer.isUsingUltimate(), 2)
     if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):
         goto lbl_a #skip msg if these
-    elif eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 1.4: 
-        smallMessage(eventPlayer, "   Ultimate is ready") 
+    elif eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= cpcircleradius: 
+        smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"终极技能已就绪" checkCN "Ultimate is ready")) 
         lbl_a:
         wait()        
         eventPlayer.setUltEnabled(true)
@@ -48,8 +48,8 @@ def CheckDash(): # checks if dash should be  turned on
     waitUntil(not eventPlayer.isUsingAbility1(), 2)
     if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):
         goto lbl_a #skip msg if these
-    elif eventPlayer.CurrentCheckpoint in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 1.4: 
-        smallMessage(eventPlayer, "   Dash is ready") 
+    elif eventPlayer.CurrentCheckpoint in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= cpcircleradius: 
+        smallMessage(eventPlayer, "   {0} {1}".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready")) 
         lbl_a:
         wait()        
         eventPlayer.setAbility1Enabled(true)
@@ -105,7 +105,7 @@ rule "Checking | Bhop":
     @Condition not eventPlayer.BhopUsed
     @Condition eventPlayer.isJumping()
     eventPlayer.BhopUsed = true
-    smallMessage(eventPlayer, "   Bhop")
+    smallMessage(eventPlayer,"   小跳已用" checkCN "   Bhop")
 
 rule "Checking | Create Bhop":
     # Credit: Githuboy#5249
@@ -119,10 +119,10 @@ rule "Checking | Create Bhop":
     @Condition eventPlayer.isOnGround() == false
     eventPlayer.BhopUsed = false
     if eventPlayer.ban_create and eventPlayer.InvincibleToggle == false and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
-        smallMessage(eventPlayer, "   Create Bhop ♂ is banned!")
+        smallMessage(eventPlayer, "   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!")
         checkpointFailReset()
         return
-    smallMessage(eventPlayer, "   Bhop has been created!")    
+    smallMessage(eventPlayer, "   succes!" checkCN "   Bhop has been created!")    
 
 rule "Checking | Double jump, initialized with small jump":
     @Event eachPlayer
@@ -159,7 +159,7 @@ rule "--------------------------------------------------------------------------
     @Delimiter
     @Disabled
 
-rule "Ban | Wallclimb for specific CPs":
+rule "Ban | Wallclimb - indicator ":
     # Credit: TITANXPASCAL#5554
     @Event eachPlayer
     @Condition eventPlayer.ban_climb
@@ -168,7 +168,7 @@ rule "Ban | Wallclimb for specific CPs":
     @Condition eventPlayer.WallclimbUsed
     #checkpointFailReset()
     #eventPlayer.setStatusEffect(null,Status.BURNING, 0.1)
-    smallMessage(eventPlayer, "   Climb ↑ is banned!")
+    smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
 
 rule "Ban | Triple Jump":
     @Event eachPlayer
@@ -179,7 +179,7 @@ rule "Ban | Triple Jump":
     @Condition eventPlayer.JumpCount == 1
     @Condition eventPlayer.isUsingAbility1() == false
     @Condition not eventPlayer.isOnWall()
-    smallMessage(eventPlayer, "   Triple Jump ▲ is banned!")
+    smallMessage(eventPlayer,"   三段跳 ▲ 已禁用!" checkCN "   Triple Jump ▲ is banned!")
     checkpointFailReset()
 
 rule "Ban | Multiclimb":
@@ -188,7 +188,7 @@ rule "Ban | Multiclimb":
     @Condition not eventPlayer.InvincibleToggle
     @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.MultiClimbCount > 0
-    smallMessage(eventPlayer, "   Multiclimb ∞ is banned!")
+    smallMessage(eventPlayer, "    蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
     checkpointFailReset() 
 
 rule "Ban | Emote Savehop":
@@ -197,6 +197,6 @@ rule "Ban | Emote Savehop":
     @Condition not eventPlayer.InvincibleToggle
     @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.isCommunicatingEmote() == true
-    smallMessage(eventPlayer, "   Emote Savehop ♥ is banned!")
+    smallMessage(eventPlayer, "   表情爬 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
     checkpointFailReset()
 

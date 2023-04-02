@@ -3,10 +3,30 @@
 ##!define RestartTimer(timeInMinutes) "{0} Hours and {1} Minutes".format(floor(timeInMinutes / 60 / 60), "{0}{1}".format(floor(timeInMinutes % 60 / 10), floor(timeInMinutes % 60 - floor(timeInMinutes % 60 / 10) * 10)))
 
 ##!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format("" if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
-#!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
+##!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
+#!define prettyTime(timeInSeconds) "{0} {1}".format(timeInSeconds,"秒"  checkCN "sec")
 
 #!define insert(insert_array, insert_index, insert_value)  insert_array.append(insert_value) \
         insert_array = [elementhere if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for elementhere, i in insert_array]
+
+# check if cn client
+/*
+#!define checkCN if any([ \
+        "{0}".format(Color.ROSE) == "玫红", \
+        l"No" == "不行",  \
+        l"Capture" ==  "夺取",    # 捕捉cn \
+        l"Capture" == "捕捉"  # 捕捉 tw  check \
+    ]) else
+*/
+
+#!define checkCN if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
+
+##!define FILLER rule "Addon settings are on next page! Click the next page button!":\
+
+##!define FILLER rule "Map data and addon settings are on page 2 !!!!!!!!!!!!!!!!!!!":\
+#!define FILLER rule "Map data and addon settings are on page 2 - 地图数据和附加组件的设置在第2页":\
+    @Delimiter\
+    #@Disabled
 
 # ----------------GLOBAL------------------
 #!define CheckpointPositions A
@@ -173,7 +193,9 @@ globalvar SaveElapsed 64
 globalvar SavePauseTime 65
 globalvar SavePauseEnabled 66
 
-
+globalvar Name 70
+globalvar Code 71
+globalvar Cachedcredits 73
 
 # per cp iwt or hud
 globalvar CpHudText 74
@@ -211,6 +233,8 @@ playervar SpectateToggle 5                  # bool                       --- tur
 #playervar ArrayIterator 6                   # MsDestructo Iterator
 #playervar PortalText 7                      # In-World Text             --- Portal String inworld text
 #playervar MapVectorArray 8                  # MsDestructo Vectors
+playervar isCN 6                            # bool                      --- is the player on chinese client
+
 playervar WallclimbUsed 9                   # bool                      --- turned into bool
 playervar GuideToggle 10                    # bool                       --- turned into bool, shows/hides editor hud
 playervar LockState 11                      # bool                      --- locked means you are curently runing arrive checkpoint rule
@@ -266,7 +290,7 @@ playervar ban_dedhop 74
 playervar ban_dashstart 75
 playervar ban_emote 76
 playervar ban_climb 77
-#playervar ban_bhop 78
+playervar ban_bhop 78
 
 playervar splittime 79 
 playervar splitdisplay 80
@@ -301,6 +325,7 @@ enum HO:
     edit_savemap,
     
     game_timer,
+    game_split_display,
     game_bhop,
     game_climb,
 
@@ -360,8 +385,8 @@ enum HO:
     edit_instructions_general,
     edit_instructions_edit,
 
-    board_top5,
     wr,
+    board_top5,
 
     rightend,
     # End #####################
