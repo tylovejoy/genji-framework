@@ -254,3 +254,7 @@ fixed:
     - you can place a teleport even if quick reset is on, but now the quick reset has a 0.1 delay if you a hostplayer in edit cp mode.
     - kill/orb/teleport selection text and fx only apear in their respective modes
     - fixed a bug that casued removing cp 0 to put you on -1 even if you had more cps
+
+1.8.1 
+    - fixed an issue where split times got bugged when skiping checkpoints, failing them or pressing quick reset while in practice mode.
+    
