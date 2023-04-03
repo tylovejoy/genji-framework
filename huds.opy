@@ -95,7 +95,6 @@ rule "Huds: Global/Localplayer":
     #hudSubtext or hudSubheader
     hudSubtext(getAllPlayers(), 
         "" if localPlayer.splitdisplay == -999 else
-        
         ("单关用时 {0}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else "")
         checkCN
         ("Split: {0}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else "")

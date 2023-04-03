@@ -25,7 +25,7 @@ if (x == 0){
     }[x]
 
     selectedmap = {
-    1: "busan",
+    1: "havana",
     2: "hollywood",
     3: "route66",
     4: "workshopChamber",
