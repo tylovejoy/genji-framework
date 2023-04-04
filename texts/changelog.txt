@@ -257,6 +257,7 @@ fixed:
 
 1.8.1 
     - practice mode skiping checkpoints now also requires you to hold dash. no more accidentally skiping when trying to crouch.
-    - fixed an issue where split times got bugged when skiping checkpoints, failing them or pressing quick reset while in practice mode.
-    - fixed translations on changing editor mode in chinese
-    - fixed stallenhancers interacting wrongly with dash
+    
+    - fixed an issue where split times got bugged in practice mode when skipping, failing or quick reseting.
+    - fixed translation of switching editor modes being wrong in chinese
+    - fixed stallenhancer interacting wrongly with dash

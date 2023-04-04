@@ -461,8 +461,6 @@ def Leaderboardupdate():
 
 def checkpointFailReset():
     @Name "SUB | Checkpoint Fail"
-    #thiscouldbeit   practice mode
-    #eventPlayer.splittime = eventPlayer.Timer # remove for old version of splits
     eventPlayer.splittime = eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer
     eventPlayer.LockCollected = []
     eventPlayer.cancelPrimaryAction()
