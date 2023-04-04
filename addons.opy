@@ -378,7 +378,8 @@ rule "stall enhancer - 增强系統跳的判定 - 启用此规则":
     waitUntil(
         eventPlayer.isHoldingButton(Button.RELOAD) or
         eventPlayer.flytoggle != null or
-        eventPlayer.isDead()
+        eventPlayer.isDead() or
+        eventPlayer.isUsingAbility1()
         ,3)
     #wait(3)
     eventPlayer.setGravity(100)

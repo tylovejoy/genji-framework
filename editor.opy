@@ -496,7 +496,7 @@ rule "Editor | change mode":
     eventPlayer.flytoggle = null   
     smallMessage(hostPlayer, #c
         #["   击杀球模式","   弹球模式","   检查点模式"][eventPlayer.EditModeSelection]
-        [ "当前模式: 击杀球"  "   当前模式: 弹球", "   当前模式: 检查点"][eventPlayer.EditModeSelection]
+        [ "   当前模式: 击杀球",  "   当前模式: 弹球", "   当前模式: 检查点"][eventPlayer.EditModeSelection]
         checkCN
         ["   Current mode: Kill Orb","   Current mode: Bounce Orb","   Current mode: Checkpoint"][eventPlayer.EditModeSelection]
     )
