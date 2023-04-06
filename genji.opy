@@ -1,14 +1,14 @@
 #!define versionhere "1.8.1 beta"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(1) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
 #!define inspectoron false
 
 # disable via double ## at include, not the define because the define needs to exist
-#!define testaitoggle #!include "test-scripts.opy"
+#!define testaitoggle ##!include "test-scripts.opy"
 
 #!define compmodetoggle false
 #!define attemptcount 5
@@ -834,7 +834,24 @@ rule "AFK timer":
 
 #!include "mechanics.opy"
 
-#!include "addons.opy"
+#!include "addons-page1.opy"
+
+# padding to make rest of rules go on page 2
+rule "------------------------------------------------------------------------  filler rules ------------------------------------------------------------------------ ":
+    @Delimiter
+    @Disabled
+
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
 
 rule "------------------------------------------------------------------------ MAP DATA - 地图数据 ------------------------------------------------------------------------":
     @Delimiter
@@ -902,6 +919,9 @@ rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE
     instructiontext[1] = "Change in Comp Mode instruction message hud 2"
     instructiontext[2] = "Change in Comp Mode instruction message hud 2"
     instructiontext[3] = "Change in Comp Mode instruction message hud 2"
+
+
+#!include "addons-page2.opy"
 
 # enable/disable the include via defines
 testaitoggle 
