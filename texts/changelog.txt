@@ -259,6 +259,7 @@ fixed:
     - practice mode next/previous checkpoint command now also requires you to hold dash. This is done to prevent skipping while trying to crouch climb.
     - opening the full leaderboard now hides time and difficulty, to make space on the screen for the full board.
     - added ledge dash (超级跳) addon from CN framework
+    - moved map data to top of page 2 and addons below it. this is done because page 2 doesn't auto scroll down.
 
     - fixed a bug that caussed dash to eb disabled when using invincible after completing the map.
     - fixed an issue where split times got bugged in practice mode when skipping, failing or quick resetting.
