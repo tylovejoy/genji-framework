@@ -1,14 +1,14 @@
 #!define versionhere "1.8.1 beta"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(1) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
 #!define inspectoron false
 
 # disable via double ## at include, not the define because the define needs to exist
-#!define testaitoggle ##!include "test-scripts.opy"
+#!define testaitoggle #!include "test-scripts.opy"
 
 #!define compmodetoggle false
 #!define attemptcount 5
@@ -331,7 +331,7 @@ rule "Player Initialize":
     eventPlayer.EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
     
     
-    eventPlayer.GuideToggle = eventPlayer.EditorOn
+    eventPlayer.GuideToggle = true
     eventPlayer.disableGamemodeHud()
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
@@ -350,7 +350,9 @@ rule "Player Initialize":
     createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
     wait(0.5)
   
-    createInWorldText(eventPlayer if eventPlayer.NotOnLastCp else null, 
+    createInWorldText(
+        #eventPlayer if eventPlayer.NotOnLastCp else null, 
+        eventPlayer if eventPlayer.NotOnLastCp and eventPlayer.GuideToggle else null, 
         "{0} {1}".format(
             iconString(Icon.WARNING),    
             "先收集橙球" checkCN "collect orbs first"

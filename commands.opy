@@ -11,17 +11,6 @@ rule "Toggle Leaderboard | Hold Melee":
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.LeaderboardToggle = not eventPlayer.LeaderboardToggle
 
-/*
-rule "Toggle Splits | Hold Ult":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
-    @Condition not eventPlayer.EditorOn
-    wait(1, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.splitson = not eventPlayer.splitson
-    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
-*/
-
-
 rule "Split hide":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
@@ -195,7 +184,7 @@ rule "Toggle Invincible Mode | Melee + Reload":
     eventPlayer.LockCollected = []
     eventPlayer.flytoggle = null
     
-    if eventPlayer.CurrentCheckpoint > 0 :
+    if eventPlayer.CurrentCheckpoint > 0 and not eventPlayer.NotOnLastCp:
         eventPlayer.disallowButton(Button.ABILITY_1)
         if eventPlayer.isUsingAbility1():
             waitUntil(not eventPlayer.isUsingAbility1(), 1.5)
@@ -217,6 +206,8 @@ rule "Toggle Invincible Mode | Melee + Reload":
         
     else:
         if not eventPlayer.NotOnLastCp:
+            eventPlayer.allowButton(Button.ABILITY_1)
+            wait()
             return
         StartPauseTimer()
         stopChasingVariable(eventPlayer.Timer)
@@ -224,19 +215,7 @@ rule "Toggle Invincible Mode | Melee + Reload":
         bigMessage(eventPlayer,"探点模式" checkCN "Invincible mode")
         eventPlayer.flytoggle = null
         wait(0.2)
-    
-    /*
-    eventPlayer.InvincibleToggle = not eventPlayer.InvincibleToggle
-    if eventPlayer.CurrentCheckpoint > 0:
-        eventPlayer.allowButton(Button.ABILITY_1)
-  
-    async( CheckUlt(), AsyncBehavior.RESTART)
-    async( CheckDash(), AsyncBehavior.RESTART)
-
-    if eventPlayer.CurrentCheckpoint > 0: # cp 0 start dash ban is via startgame sub because it has to give msg
-        wait(0.16)
-    */
-          
+              
     eventPlayer.InvincibleToggle = not eventPlayer.InvincibleToggle
     async( CheckUlt(), AsyncBehavior.RESTART)
     async( CheckDash(), AsyncBehavior.RESTART)
@@ -403,3 +382,31 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
         checkCN
         "Quick reset is enabled" if eventPlayer.QuickRestartToggle else "Quick reset is disabled"
     )
+
+
+
+rule "Toggle hud/guide":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
+    @Condition not (eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.ABILITY_1))
+    @Condition eventPlayer
+
+    wait(1.5, Wait.ABORT_WHEN_FALSE)
+    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
+    smallMessage(eventPlayer, #c
+        #("   指引已开启" if eventPlayer.GuideToggle else "   指引已隐藏")
+        # checkCN
+        #"   Guide is open" if eventPlayer.GuideToggle else "   Guide is hidden"
+        "translation needed"
+        checkCN
+        "   Hud is open" if eventPlayer.GuideToggle else "   Hud is hidden"
+        ) 
+    
+    
+    eventPlayer.GuideToggle = not eventPlayer.GuideToggle 
+    /*
+    if eventPlayer.GuideToggle:
+        eventPlayer.enableHeroHud()
+    else:
+        eventPlayer.disableHeroHUD()
+    */

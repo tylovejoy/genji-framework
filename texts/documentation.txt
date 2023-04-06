@@ -101,7 +101,18 @@ dash/ult reworked:
     the using ult also disables primary fire for a while
     this is because using slash at the end of your ult makes it last longer
 
-save:
+    to prevent you from doing dash start on all checkpoints, when you are not on cp 0- or last cp, there is a cooldown on swaping invincible and the button temporary gets deactivated.
+
+split time:
+    tracks time it takes you to complete a cp
+    in modern version, this time resets when you fail or press quick reset
+    the time is decided in the arrive rule
+    it compares your new time vs the last stored time. once again taking into account practice mode
+    when you fail or reset or complete a cp, the time is stored
+    the splittime variable tracks the last stored time while the display is the variable that displays on screen unles its set to -999 wich means toggle is off
+
+
+saving:
     pausing: going into spec, practice or invis etc
         if we didnt track pause time, one could leave and the time would be reset to last complete.
         saving only time on ariving would make it reset.

@@ -1,7 +1,8 @@
 rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
+    @Disabled
+    # havana multi fest for debug skip cp split bug
+    
     #======= Checkpoint data ==========================
-
-   #======= Checkpoint data ==========================
     #		Checkpoints positions - Vector(123.456,123.456,123.456) - The order is the checkpoint number.  The first Vector here is checkpoint 0
     A = [vect(-110.42, 4, -57.84), vect(-90.82, 6.3, -44.97), vect(-90.93, 4, -80.43), vect(-76.7, 7.21, -49), vect(-35.48, 7.75, -44.66), vect(-3.97, 12, -51.46), [vect(34.12, 12.08, -58.94), vect(68.61, 10.28, -72.8)], vect(68.61, 10.28, -72.8), vect(75.35, 6.02, -103.05), vect(104.94, 2.02, -78.95), vect(112.57, 6.95, -57.67), vect(116.78, 13.19, -58.16), vect(144.91, 9.01, -57.99), vect(153.15, 9.98, -29.57), vect(146.81, 7.07, -21.48), vect(120.36, 4.99, -22.02), vect(98.43, 9.09, -18.63), [vect(77.25, 12.82, -57), vect(-2.31, 12, -36.04)], vect(-2.31, 12, -36.04), vect(25.8, 8.18, -30.19), [vect(-3.61, 12, -35.13), vect(-14.69, 12, -23.71)], vect(-14.69, 12, -23.71), vect(-12.6, 10, 8.99), [vect(-14.84, 12, -23.71), vect(31.16, 12.07, -55.03)], vect(31.16, 12.07, -55.03), vect(-3.52, 12, -51.3), vect(1.23, 6, -92.22), vect(-17.72, 9.79, -96.2), vect(-38.45, 6, -79.61), vect(-42.33, 5.99, -47.15), vect(-76.5, 4, -42.63), vect(-114.37, 4, -54.53)]
     #======= killballs ==========================
@@ -24,3 +25,47 @@ rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
     TQ6 = [false, false, false, false, false, false, false, false, false, false, false, false]
     #orb locks checkpoint - True or False
     BounceToggleLock = [true, true, true, true, true, true, true, true, true, true, true, true]
+    
+rule "Map Data     <---- INSERT YOUR MAP DATA HERE":
+    A = [vect(-4.002, 5.798, -40.912)]
+    TimeRemaining = 265
+    H = []
+    I = []
+    Dao = []
+    SHIFT = []
+    TQ = []
+    EditMode = []
+    TQ5 = []
+    TQ6 = []
+    BounceToggleLock = []
+    killballnumber = []
+    pinballnumber = []
+    LeaderBoardFull = []
+    LeaderBoardHuds = []
+    LeaderBoardRemake = true
+    DashExploitToggle = true
+    PortalNames = []
+    PortalLoc = []
+    PortalDest = []
+    PortalOn = false
+    CustomPortalStart = []
+    CustomPortalEndpoint = []
+    CustomPortalCP = []
+    CompMode = false
+    instructiontext = ["Change in Comp Mode instruction message hud 1", "Change in Comp Mode instruction message hud 2", "Change in Comp Mode instruction message hud 2", "Change in Comp Mode instruction message hud 2"]
+    HudStoreEdit = []
+    SaveName = []
+    SaveCp = []
+    SaveEnt = []
+    SaveTimer = []
+    SaveElapsed = []
+    SavePauseTime = []
+    SavePauseEnabled = []
+    Cachedcredits = ["name here - 作者", "code here - 代码"]
+    BanTriple = []
+    BanMulti = []
+    BanCreate = []
+    BanDead = []
+    BanEmote = []
+    BanClimb = []
+    BanBhop = []
