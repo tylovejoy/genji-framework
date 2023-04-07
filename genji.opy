@@ -841,6 +841,7 @@ rule "------------------------------------------------------------------------  
     @Delimiter
     @Disabled
 
+/*
 FILLER
 FILLER
 FILLER
@@ -852,9 +853,10 @@ FILLER
 FILLER
 FILLER
 FILLER
+*/
 
 rule "------------------------------------------------------------------------ MAP DATA - 地图数据 ------------------------------------------------------------------------":
-    #@NewPage "Map data and addon settings are on page 2 - 地图数据和附加组件的设置在第2页"
+    @NewPage "Map data and addon settings are on page 2 - 地图数据和附加组件的设置在第2页"
     @Delimiter
     @Disabled
 
