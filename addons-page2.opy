@@ -233,6 +233,8 @@ rule "stall enhancer - 增强系統跳的判定 - 启用此规则":
 #!define storedirection eventPlayer.LedgeDash[1]
 #!define counting eventPlayer.LedgeDash[2]
 
+# dash after ledge grab
+# stores speed and launches you after dash if you done it during climb
 rule "Ledge Dash - enable rule - 启用此规则 - 超级跳":
     @Disabled
     @Event eachPlayer
@@ -240,29 +242,25 @@ rule "Ledge Dash - enable rule - 启用此规则 - 超级跳":
     counting = 0
     waitUntil(eventPlayer.getSpeed() >= 45, 0.4)
     while eventPlayer.isUsingAbility1() and counting <= 12:
+
         storespeed = eventPlayer.getSpeed()
         storedirection = eventPlayer.getFacingDirection()
-        if eventPlayer.getSpeed() < 45:
-            #counting = -1 # dont count anymore, you dashed in an object
-            smallMessage(eventPlayer,"dashed into air or object") #disable
+        if eventPlayer.getSpeed() < 45: # dashed into air or object
             goto lbla
         else: 
             counting ++
-        if counting == 12:
+        if counting == 12: # stop storing and wait for dash to finish to execute
             waitUntil(eventPlayer.getSpeed() < 40, 0.4)
         wait()
 
-    if counting >= 5: #and counting <= 12:
-        smallMessage(eventPlayer,"ledge dash")
+    if counting >= 5: #and counting <= 12: # ledge dash execute
         eventPlayer.applyImpulse(storedirection, storespeed, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
         #eventPlayer.applyImpulse(eventPlayer.getFacingDirection(), eventPlayer.getSpeed(), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-    elif counting > 12: #disable
-        smallMessage(eventPlayer,"above 12 - climbed to long") #disable
-    elif counting < 5: #disable
-        smallMessage(eventPlayer,"below 5 - into object") #disable
+    # abpve 12 - climbed to long
+    # below 5 - dashed into object
 
     lbla:
-    eventPlayer.LedgeDash = null
-    #storespeed = null
-    #storedirection = null
-    #counting = null
+    #eventPlayer.LedgeDash = null
+    storespeed = null
+    storedirection = null
+    counting = null

@@ -385,28 +385,19 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
 
 
 
-rule "Toggle hud/guide":
+rule "Toggle Hud | hold secondary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
-    @Condition not (eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.ABILITY_1))
+    @Condition not (eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.ABILITY_1)) # don't trigger during skiping
     @Condition eventPlayer
 
     wait(1.5, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
-    smallMessage(eventPlayer, #c
-        #("   指引已开启" if eventPlayer.GuideToggle else "   指引已隐藏")
-        # checkCN
-        #"   Guide is open" if eventPlayer.GuideToggle else "   Guide is hidden"
-        "translation needed"
+    smallMessage(eventPlayer, 
+       
+        ("   HUD已开启" if eventPlayer.GuideToggle else  "HUD已隐藏")
         checkCN
-        "   Hud is open" if eventPlayer.GuideToggle else "   Hud is hidden"
+        ("   Hud is now open" if eventPlayer.GuideToggle else "   Hud is now hidden")
         ) 
     
-    
     eventPlayer.GuideToggle = not eventPlayer.GuideToggle 
-    /*
-    if eventPlayer.GuideToggle:
-        eventPlayer.enableHeroHud()
-    else:
-        eventPlayer.disableHeroHUD()
-    */

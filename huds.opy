@@ -76,7 +76,7 @@ rule "Huds: Global/Localplayer":
             abilityIconString(Hero.DVA, Button.ULTIMATE) if localPlayer.PracticeToggle else "",
             abilityIconString(Hero.SOMBRA, Button.ABILITY_1) if localPlayer.invis else ""
         ) if not localPlayer.GuideToggle else "", 
-        "translation needed"
+        "长按 {0} | 切换显示HUD".format(buttonString(Button.SECONDARY_FIRE))
         checkCN
         "Hold {0} | toggle hud".format(buttonString(Button.SECONDARY_FIRE))
         ,HudPosition.RIGHT, HO.com_displaytoggle, Color.WHITE, Color.WHITE, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
@@ -125,14 +125,13 @@ rule "Huds: Global/Localplayer":
             CpHudText[CpHudCp.index(localPlayer.CurrentCheckpoint)]
             if localPlayer.CurrentCheckpoint in CpHudCp and localPlayer.GuideToggle else "",
             
-            ("translation needed" if localPlayer.CurrentCheckpoint in CpHudCp and not localPlayer.GuideToggle else "")
+            ("(文本已隐藏)" if localPlayer.CurrentCheckpoint in CpHudCp and not localPlayer.GuideToggle else "")
             checkCN
             ("(text hidden)" if localPlayer.CurrentCheckpoint in CpHudCp and not localPlayer.GuideToggle else ""),
             null
             , HudPosition.TOP, HO.add_custommsg1, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
         )
      
-  
   
     if CpIwtText != null:
         createInWorldText(
