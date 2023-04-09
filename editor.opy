@@ -203,7 +203,7 @@ rule "Editor | Hud and Effects":
         "{0} + {3} | Remove/Add teleport\n"
         "{0} + {4} | Set Checkpoint to current position\n"
         "{0} + {5} | Toggle Checkpoint Hitbox\n"
-        "{4} (hold) | Precise position changing".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1)),
+        "{6} (hold) | Precise position changing".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1), buttonString(Button.MELEE)),
 
         "{0} + {1} | Create new kill orb\n"
         "{0} + {2} | Delete selected orb\n"
@@ -226,22 +226,21 @@ rule "Editor | Hud and Effects":
         HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(hostPlayer, 
+    hudSubtext(hostPlayer if hostPlayer.GuideToggle else null, 
         (
         " \n{0} + {1} | 下一个检查点\n"
         "{0} + {2} | 上一个检查点\n"
-        "{4} | 飞行 (仅限检查点模式)\n"
-        "长按 {3} | 切换显示作图指引\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.MELEE), buttonString(Button.ABILITY_2))
+        "{3} | 飞行 (仅限检查点模式)\n"
+        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_2))
+        
         checkCN
+        
         " \n{0} + {1} | Next checkpoint\n"
         "{0} + {2} | Prev checkpoint\n"
-        "{4} | Fly (checkpoint mode only)\n"
-        "Hold {3} | toggle guide\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.MELEE), buttonString(Button.ABILITY_2))
+        "{3} | Fly (checkpoint mode only)\n"
+        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_2))
         )
-        if hostPlayer.GuideToggle else
-        "长按 {0} | 切换显示作图指引".format(buttonString(Button.MELEE))
-        checkCN
-        "Hold {0} | toggle guide".format(buttonString(Button.MELEE))
+        
         ,HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
@@ -469,24 +468,6 @@ rule "Editor |  Fly/Noclip Toggle":
     eventPlayer.stopForcingPosition()
     wait(1)
 
-rule "Editor | Toggle Guide":
-    @Event eachPlayer
-    @Condition hostPlayer.EditorOn
-    @Condition eventPlayer.isHoldingButton(Button.MELEE)
-    @Condition eventPlayer == hostPlayer
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
-    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false
-    wait(1, Wait.ABORT_WHEN_FALSE)
-    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
-    smallMessage(eventPlayer, #c
-        ("   指引已开启" if eventPlayer.GuideToggle else "   指引已隐藏")
-        checkCN
-        "   Guide is open" if eventPlayer.GuideToggle else "   Guide is hidden"
-        ) 
-    
-    
-    eventPlayer.GuideToggle = not eventPlayer.GuideToggle 
-
 rule "Editor | change mode":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
@@ -496,7 +477,7 @@ rule "Editor | change mode":
     eventPlayer.flytoggle = null   
     smallMessage(hostPlayer, #c
         #["   击杀球模式","   弹球模式","   检查点模式"][eventPlayer.EditModeSelection]
-        [ "当前模式: 击杀球"  "   当前模式: 弹球", "   当前模式: 检查点"][eventPlayer.EditModeSelection]
+        [ "   当前模式: 击杀球",  "   当前模式: 弹球", "   当前模式: 检查点"][eventPlayer.EditModeSelection]
         checkCN
         ["   Current mode: Kill Orb","   Current mode: Bounce Orb","   Current mode: Checkpoint"][eventPlayer.EditModeSelection]
     )
@@ -833,13 +814,13 @@ rule "Editor | move cp once":
     
     wait()
 
-rule "Editor | move cp slowly":
+rule "Editor | precision moving":
     @Event eachPlayer
     @Condition eventPlayer.EditorOn
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.EditModeSelection == 0
-    #@Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
-    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
+    @Condition eventPlayer.isHoldingButton(Button.MELEE)
+    #@Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition len(CheckpointPositions) > 0
     #@Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false
     #@Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false
@@ -848,7 +829,8 @@ rule "Editor | move cp slowly":
     eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), 15)
     
     #while eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.EditModeSelection == 0 and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false:
-    while eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.EditModeSelection == 0 and eventPlayer.isAlive():
+    #while eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.EditModeSelection == 0 and eventPlayer.isAlive():
+    while eventPlayer.isHoldingButton(Button.MELEE) and eventPlayer.EditModeSelection == 0 and eventPlayer.isAlive():
         #CheckpointPositions[eventPlayer.CurrentCheckpoint][0] = eventPlayer.getPosition()
         if len(CheckpointPositions[hostPlayer.CurrentCheckpoint])  :
             CheckpointPositions[hostPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[hostPlayer.CurrentCheckpoint][1] ]

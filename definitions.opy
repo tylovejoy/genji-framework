@@ -233,7 +233,7 @@ playervar SpectateToggle 5                  # bool                       --- tur
 #playervar ArrayIterator 6                   # MsDestructo Iterator
 #playervar PortalText 7                      # In-World Text             --- Portal String inworld text
 #playervar MapVectorArray 8                  # MsDestructo Vectors
-playervar isCN 6                            # bool                      --- is the player on chinese client
+playervar LedgeDash 6
 
 playervar WallclimbUsed 9                   # bool                      --- turned into bool
 playervar GuideToggle 10                    # bool                       --- turned into bool, shows/hides editor hud
@@ -292,9 +292,9 @@ playervar ban_emote 76
 playervar ban_climb 77
 playervar ban_bhop 78
 
-playervar splittime 79 
-playervar splitdisplay 80
-playervar splitson 81
+playervar splittime 79                      # int                       --- stored time that the split compares to
+playervar splitdisplay 80                   # int                       --- displayed split value
+#playervar splitson 81                      # bool                      --- turning splits on/off is now done via seting splittime to -999
 playervar practicetimer 82
 
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
@@ -375,6 +375,7 @@ enum HO:
     com_quickres,
     com_spec,
     com_invis,
+    com_displaytoggle,
     com_splits,
 
     com_preview,

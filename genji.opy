@@ -1,4 +1,4 @@
-#!define versionhere "1.8"
+#!define versionhere "1.8.1"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -331,7 +331,7 @@ rule "Player Initialize":
     eventPlayer.EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
     
     
-    eventPlayer.GuideToggle = eventPlayer.EditorOn
+    eventPlayer.GuideToggle = true
     eventPlayer.disableGamemodeHud()
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
@@ -350,7 +350,9 @@ rule "Player Initialize":
     createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
     wait(0.5)
   
-    createInWorldText(eventPlayer if eventPlayer.NotOnLastCp else null, 
+    createInWorldText(
+        #eventPlayer if eventPlayer.NotOnLastCp else null, 
+        eventPlayer if eventPlayer.NotOnLastCp and eventPlayer.GuideToggle else null, 
         "{0} {1}".format(
             iconString(Icon.WARNING),    
             "先收集橙球" checkCN "collect orbs first"
@@ -461,7 +463,7 @@ def Leaderboardupdate():
 
 def checkpointFailReset():
     @Name "SUB | Checkpoint Fail"
-    eventPlayer.splittime = eventPlayer.Timer # remove for old version of splits
+    eventPlayer.splittime = eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer
     eventPlayer.LockCollected = []
     eventPlayer.cancelPrimaryAction()
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
@@ -832,9 +834,29 @@ rule "AFK timer":
 
 #!include "mechanics.opy"
 
-#!include "addons.opy"
+#!include "addons-page1.opy"
+
+# padding to make rest of rules go on page 2
+rule "------------------------------------------------------------------------  filler rules ------------------------------------------------------------------------ ":
+    @Delimiter
+    @Disabled
+
+/*
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+FILLER
+*/
 
 rule "------------------------------------------------------------------------ MAP DATA - 地图数据 ------------------------------------------------------------------------":
+    @NewPage "Map data and addon settings are on page 2 - 地图数据和附加组件的设置在第2页"
     @Delimiter
     @Disabled
 
@@ -877,6 +899,7 @@ rule "Ban per CP - 封禁(每级) <---- INSERT HERE / 在这输入":
 rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled
     @Delimiter
+    wait(2.5)
     #1) workshop settings > difficulty > set to "dont display"
     #2) enable this rule
     #3) type your difficulty in the hud below
@@ -884,7 +907,16 @@ rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输�
     #1) 设置正常 难度hud为“不显示”
     #2) 启用此规则
     #3) 在下面的hud中输入难度
-    hudSubheader(getAllPlayers(), "enter custom difficulty here", HudPosition.TOP, HO.data_dif,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudText(getAllPlayers(), 
+        ("游戏测试" checkCN "Playtest") if Difficultyhud[1] else "",
+        "enter custom difficulty here",    
+        null,
+        HudPosition.TOP, HO.data_dif,
+        Color.BLUE, Color.GREEN, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+    )
+
+   
+
     HudStoreEdit.append(getLastCreatedText())
 
 rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":
@@ -900,6 +932,9 @@ rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE
     instructiontext[1] = "Change in Comp Mode instruction message hud 2"
     instructiontext[2] = "Change in Comp Mode instruction message hud 2"
     instructiontext[3] = "Change in Comp Mode instruction message hud 2"
+
+
+#!include "addons-page2.opy"
 
 # enable/disable the include via defines
 testaitoggle 
