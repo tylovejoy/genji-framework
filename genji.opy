@@ -1,7 +1,7 @@
-#!define versionhere "1.8.1 beta"
+#!define versionhere "1.8.1"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(10) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -899,6 +899,7 @@ rule "Ban per CP - 封禁(每级) <---- INSERT HERE / 在这输入":
 rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled
     @Delimiter
+    wait(2.5)
     #1) workshop settings > difficulty > set to "dont display"
     #2) enable this rule
     #3) type your difficulty in the hud below
@@ -906,7 +907,16 @@ rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输�
     #1) 设置正常 难度hud为“不显示”
     #2) 启用此规则
     #3) 在下面的hud中输入难度
-    hudSubheader(getAllPlayers(), "enter custom difficulty here", HudPosition.TOP, HO.data_dif,Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudText(getAllPlayers(), 
+        ("游戏测试" checkCN "Playtest") if Difficultyhud[1] else "",
+        "enter custom difficulty here",    
+        null,
+        HudPosition.TOP, HO.data_dif,
+        Color.BLUE, Color.GREEN, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+    )
+
+   
+
     HudStoreEdit.append(getLastCreatedText())
 
 rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":

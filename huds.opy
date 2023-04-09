@@ -2,10 +2,9 @@
 
 /*
 huds outside this file:
-- addons you need otk now where to find:
-    - custom diffiuclty
-    - display world record
-- editor
+    - custom diffiuclty (map data)
+    - display world record (addons p2)
+    - editor huds ( editor)
 
 */
 
@@ -189,13 +188,20 @@ rule "Huds: Global/Localplayer":
 
     if not hostPlayer.EditorOn:
         # find the value
-        Difficultyhud = createWorkshopSetting(enum[ "beginner", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display - 不显示","Playtest"],"map settings \n地图设置","difficulty (display hud) - 难度(显示hud)",0, 0)
+        Difficultyhud = [
+            createWorkshopSetting(enum[ "beginner", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display - 不显示","Playtest - 游戏测试"],"map settings \n地图设置","difficulty (display hud) - 难度(显示hud)",0, 0)
+            , createWorkshopSetting(bool,"map settings \n地图设置","Playtest display - 游戏测试",false,0) 
+            ] 
         # display
-        if Difficultyhud != 17: # 17th entry is dont display
-            hudSubheader(localPlayer if localPlayer.GuideToggle and not localPlayer.LeaderboardToggle else null, 
-                ["beginner", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell",null,"Playtest"][Difficultyhud], 
+        if Difficultyhud[0] != 17: # 17th entry is 'dont display'
+            hudText(localPlayer if localPlayer.GuideToggle and not localPlayer.LeaderboardToggle else null, 
+                ("游戏测试" checkCN "Playtest") if Difficultyhud[1] else "",
+                ["beginner", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell",null,"playtest"][Difficultyhud[0]], 
+                null,
                 HudPosition.TOP, HO.data_dif,
-                [Color.GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.YELLOW,Color.YELLOW,Color.YELLOW, Color.ORANGE,Color.ORANGE,Color.ORANGE,rgb(255, 69, 0), rgb(255, 69, 0), rgb(255, 69, 0), Color.RED, Color.RED, Color.RED, rgb(150, 0, 0),null,Color.BLUE][Difficultyhud], 
+                Color.BLUE,
+                [Color.GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.YELLOW,Color.YELLOW,Color.YELLOW, Color.ORANGE,Color.ORANGE,Color.ORANGE,rgb(255, 69, 0), rgb(255, 69, 0), rgb(255, 69, 0), Color.RED, Color.RED, Color.RED, rgb(150, 0, 0),null,Color.BLUE][Difficultyhud[0]], 
+                Color.BLUE,
                 HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
             )
             HudStoreEdit.append(getLastCreatedText())
