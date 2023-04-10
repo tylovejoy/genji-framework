@@ -1,6 +1,8 @@
 #!mainFile "genji.opy"
 
 ##### general #####
+     #!define multipurposehud true
+
     # 100 is non
     #!define slowmotion 100
 
@@ -9,6 +11,7 @@
 
 ##### average load show #####
     #!define avrgon true
+    
 
 ##### orb visialize #####
     #!define orb_visialon false
@@ -34,7 +37,7 @@
     ##!define aiactiondelay (testAI.index(eventPlayer) * 2)
 
     ##### AI #####
-        #!define leaderboardai false 
+        #!define leaderboardai true 
         #!define actionai false
 
 globalvar AvrgSecStore
@@ -65,16 +68,20 @@ rule "3th person cam":
     eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), camspeed)
 
 rule "multi purpose hud":
+    @Condition multipurposehud
     hudSubheader(getAllPlayers(), 
         "hud count {}\n"
         "fx count: {}\n"
         "angles: {} : {}\n"
+        "spd: {}\n"
         "{} - {}\n"
         "".format(
         getNumberOfTextIds(),
         getNumberOfEntityIds(),
         localPlayer.getHorizontalFacingAngle(),
         localPlayer.getVerticalFacingAngle(),
+        localPlayer.getSpeed(),
+     
    
         strContains( "{}".format(getCurrentMap()) , "{}".format(Map.LIJIANG_TOWER)) ,
         strContains( "{}".format(getCurrentMap()) ,"{}".format(Map.BUSAN)) 
@@ -224,7 +231,7 @@ rule "leaderboard test ai":
     checkpointFailReset()
     wait(1)
     eventPlayer.LockCollected = eventPlayer.BouncePosition_Cache
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint+1]+ Vector.UP) # teleport not needed
+    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint+1]+ vect(0,3,0)) # teleport not needed
 
 
 rule "action test ai":

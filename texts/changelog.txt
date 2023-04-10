@@ -254,3 +254,16 @@ fixed:
     - you can place a teleport even if quick reset is on, but now the quick reset has a 0.1 delay if you a hostplayer in edit cp mode.
     - kill/orb/teleport selection text and fx only apear in their respective modes
     - fixed a bug that casued removing cp 0 to put you on -1 even if you had more cps
+
+1.8.1 - 9-4-2023
+    - added a toggle to display "playtest" next to the difficulty hud.
+    - practice mode next/previous checkpoint command now also requires you to hold dash. This is done to prevent skipping while trying to crouch climb.
+    - opening the full leaderboard now hides time and difficulty, to make space on the screen for the full board.
+    - added ledge dash (超级跳) addon from CN framework.
+    - moved map data to top of page 2 and addons below it. this is done because page 2 doesn't auto scroll down.
+
+    - fixed a bug that caussed dash to eb disabled when using invincible after completing the map.
+    - fixed an issue where split times got bugged in practice mode when skipping, failing or quick resetting.
+    - fixed the translation for switching editor modes being wrong.
+    - fixed stallenhancer interacting wrongly with dash.
+    - fixed stallenhancer interacting wrongly with double jump (hopefully).

@@ -11,17 +11,6 @@ rule "Toggle Leaderboard | Hold Melee":
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.LeaderboardToggle = not eventPlayer.LeaderboardToggle
 
-/*
-rule "Toggle Splits | Hold Ult":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
-    @Condition not eventPlayer.EditorOn
-    wait(1, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.splitson = not eventPlayer.splitson
-    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
-*/
-
-
 rule "Split hide":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
@@ -195,7 +184,7 @@ rule "Toggle Invincible Mode | Melee + Reload":
     eventPlayer.LockCollected = []
     eventPlayer.flytoggle = null
     
-    if eventPlayer.CurrentCheckpoint > 0 :
+    if eventPlayer.CurrentCheckpoint > 0 and not eventPlayer.NotOnLastCp:
         eventPlayer.disallowButton(Button.ABILITY_1)
         if eventPlayer.isUsingAbility1():
             waitUntil(not eventPlayer.isUsingAbility1(), 1.5)
@@ -217,6 +206,8 @@ rule "Toggle Invincible Mode | Melee + Reload":
         
     else:
         if not eventPlayer.NotOnLastCp:
+            eventPlayer.allowButton(Button.ABILITY_1)
+            wait()
             return
         StartPauseTimer()
         stopChasingVariable(eventPlayer.Timer)
@@ -224,19 +215,7 @@ rule "Toggle Invincible Mode | Melee + Reload":
         bigMessage(eventPlayer,"探点模式" checkCN "Invincible mode")
         eventPlayer.flytoggle = null
         wait(0.2)
-    
-    /*
-    eventPlayer.InvincibleToggle = not eventPlayer.InvincibleToggle
-    if eventPlayer.CurrentCheckpoint > 0:
-        eventPlayer.allowButton(Button.ABILITY_1)
-  
-    async( CheckUlt(), AsyncBehavior.RESTART)
-    async( CheckDash(), AsyncBehavior.RESTART)
-
-    if eventPlayer.CurrentCheckpoint > 0: # cp 0 start dash ban is via startgame sub because it has to give msg
-        wait(0.16)
-    */
-          
+              
     eventPlayer.InvincibleToggle = not eventPlayer.InvincibleToggle
     async( CheckUlt(), AsyncBehavior.RESTART)
     async( CheckDash(), AsyncBehavior.RESTART)
@@ -290,7 +269,6 @@ rule "Toggle Practice Mode | Melee + Ultimate":
             StartPauseTimer()
         
         eventPlayer.splitdisplay = -999 if eventPlayer.splitdisplay == -999 else 0
-
         eventPlayer.splittime = 0
         eventPlayer.practicetimer = 0
         chase(eventPlayer.practicetimer, 9999999, rate=1, ChaseReeval.NONE)
@@ -325,7 +303,7 @@ rule "Practice Restart | Interact":
         kill(eventPlayer, null)
 
     eventPlayer.practicetimer = 0
-    eventPlayer.splittime = 0
+    eventPlayer.splittime = 0 
     eventPlayer.teleport(CheckpointPositions[eventPlayer.PracticeCheckpoint])
     eventPlayer.CurrentCheckpoint = eventPlayer.PracticeCheckpoint
 
@@ -337,10 +315,11 @@ rule "Skip | Crouch + Primary/Secondary Fire":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) )
+    @Condition hostPlayer.EditorOn or ( eventPlayer.PracticeToggle and eventPlayer.isHoldingButton(Button.ABILITY_1) )
     @Condition eventPlayer.LockState == false
-    @Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle
+    #@Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle
     
-    eventPlayer.splittime = 0
+    eventPlayer.splittime = 0 
     eventPlayer.practicetimer = 0
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         eventPlayer.LockState = true
@@ -379,7 +358,7 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
             if eventPlayer == hostPlayer and eventPlayer.EditModeSelection == 0 and eventPlayer.isHoldingButton(Button.INTERACT):
                 #wait(0.1, Wait.ABORT_WHEN_FALSE)
                 wait(0.2)
-        eventPlayer.splittime = eventPlayer.Timer # remove for old version of splits
+        eventPlayer.splittime = eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer
         eventPlayer.LockCollected = []
         if eventPlayer.isUsingUltimate():
             kill(eventPlayer, null)
@@ -403,3 +382,22 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
         checkCN
         "Quick reset is enabled" if eventPlayer.QuickRestartToggle else "Quick reset is disabled"
     )
+
+
+
+rule "Toggle Hud | hold secondary":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
+    @Condition not (eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.ABILITY_1)) # don't trigger during skiping
+    @Condition eventPlayer
+
+    wait(1.5, Wait.ABORT_WHEN_FALSE)
+    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
+    smallMessage(eventPlayer, 
+       
+        ("   HUD已开启" if eventPlayer.GuideToggle else  "HUD已隐藏")
+        checkCN
+        ("   Hud is now open" if eventPlayer.GuideToggle else "   Hud is now hidden")
+        ) 
+    
+    eventPlayer.GuideToggle = not eventPlayer.GuideToggle 
