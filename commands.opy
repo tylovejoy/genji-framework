@@ -24,6 +24,7 @@ rule "Split hide":
     smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay == -999 else "   split display on")
     
 rule "Toggle Invisible | Hold Deflect":
+    @Condition false == disableInvisCommand
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition not eventPlayer.EditorOn
@@ -137,6 +138,7 @@ rule "Enter Spectate | Hold Interact":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
+    @Condition not (eventPlayer.EditorOn and eventPlayer.isHoldingButton(Button.MELEE))
     @Condition not CompMode
     wait(1, Wait.ABORT_WHEN_FALSE)
     if eventPlayer.EditorOn: # editor has interact combos

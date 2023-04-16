@@ -115,7 +115,7 @@ rule "Custom portals data - 自定义传送门数据  <---- EDIT ME / 在此处�
     #传送门起点 位置
     CustomPortalStart = [vect(0,0,0)]
     #Portal end position (on same number as start position)
-  #  传送门终点 位置 (顺序与传 送门起点位 置保持一致)
+    #传送门终点 位置 (顺序与传 送门起点位 置保持一致)
     CustomPortalEndpoint = [vect(0,10,0)]
     #Portal checkpoint (on same number as start position) 
     #999 = apply portal to entire map

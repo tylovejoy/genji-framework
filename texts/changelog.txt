@@ -267,3 +267,13 @@ fixed:
     - fixed the translation for switching editor modes being wrong.
     - fixed stallenhancer interacting wrongly with dash.
     - fixed stallenhancer interacting wrongly with double jump (hopefully).
+
+1.8.1b - 16-4-2023
+    - fixed the bug that caused spectate to remain on after using the restart command
+    - fixed the bug that caused you to be locked in sleep if you jumped during the sleep animation
+    - fixed dva having hud and thus counting extra for text count for a few moments
+
+    editor:
+    - you no longer go into spec when holding melee due to overlap with clear exces data
+    - you no longer precision move while holding interact due to overlap with clear exces data
+    - clear exces data no longer takes you to cp 0 (it was doing this without changing your cache on previous versions)
