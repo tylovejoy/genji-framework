@@ -1,14 +1,14 @@
-#!define versionhere "1.8.1"
+#!define versionhere "1.8.1b"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(10) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
 #!define inspectoron false
 
 # disable via double ## at include, not the define because the define needs to exist
-#!define testaitoggle ##!include "test-scripts.opy"
+#!define testaitoggle #!include "test-scripts.opy"
 
 #!define compmodetoggle false
 #!define attemptcount 5
@@ -31,8 +31,8 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!define bounceoffset + vect(0,0.7,0)
 
 
-#disable overpy map detection
-#!disableMapDetectionFix 
+#disable overpy map detection (command removed by zezo after fix by blizard)
+##!disableMapDetectionFix 
 
 #!include "settings.opy"
 #!include "definitions.opy"
@@ -330,6 +330,8 @@ rule "Player Initialize":
     #eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor - 作图模式","Editor mode - 作图模式" ,  editoron , 0) # Turn Editor On
     eventPlayer.EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
     
+    if eventPlayer.isDummy() and eventPlayer.getCurrentHero() == Hero.DVA:
+        return # special here for dva instead of later because 100% she doesnt play the match
     
     eventPlayer.GuideToggle = true
     eventPlayer.disableGamemodeHud()

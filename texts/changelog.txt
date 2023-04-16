@@ -267,3 +267,6 @@ fixed:
     - fixed the translation for switching editor modes being wrong.
     - fixed stallenhancer interacting wrongly with dash.
     - fixed stallenhancer interacting wrongly with double jump (hopefully).
+
+1.8.1b - 16-4-2023
+    - fixed dva having a hud, potentionally causing problems for full lobbies during restarting when there is already a high text count.
