@@ -27,7 +27,7 @@
     ##### wait for all bots to be created #####
     #!define waitforcreate true
     ##### delay after all bots are created - toggle #####
-    #!define aistartdelay true
+    #!define aistartdelay false
     ##### delay after all bots are created - seconds #####
     #!define creationdelay 8 
 
