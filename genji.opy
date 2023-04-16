@@ -1,17 +1,17 @@
 #!define versionhere "1.8.1b"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(14) # 0 is editor, rest is numbers
+editortoggle(10) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
 #!define inspectoron false
 
 # disable via double ## at include, not the define because the define needs to exist
-#!define testaitoggle #!include "test-scripts.opy"
+#!define testaitoggle ##!include "test-scripts.opy"
 
-# enable to remove invis command (this command cant be pasted in cn client) setting this condition without # makes it not included in the pasta
-#!define invisCommandIncluded #@Condition false == true
+# enable to remove invis command (this command cant be pasted in cn client die to null and none translating to same symbol) 
+#!define disableInvisCommand false
 
 #!define compmodetoggle false
 #!define attemptcount 5
