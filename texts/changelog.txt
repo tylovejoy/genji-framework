@@ -269,5 +269,6 @@ fixed:
     - fixed stallenhancer interacting wrongly with double jump (hopefully).
 
 1.8.1b - 16-4-2023
-    - fixed dva having hud (caused extra text count, wich could be problematic when you restart a full lobby of players)
-    - fixed issue that caused spectate to remain on after using restart command.
+    - fixed the bug that caused spectate to remain on after using the restart command
+    - fixed the bug that caused you to be locked in sleep if you jumped during the sleep animation
+    - fixed dva having hud and thus counting extra for text count for a few moments

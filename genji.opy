@@ -803,7 +803,14 @@ rule "AFK timer":
     @Condition eventPlayer.isAlive()
     @Condition not eventPlayer.EditorOn
     wait(90, Wait.ABORT_WHEN_FALSE)
-    # raycast to prevent camera stuck on low wall
+
+    # clear status to apply sleep, auto re-aply via normal aply rule
+    eventPlayer.clearStatusEffect(Status.PHASED_OUT)
+    wait()
+    eventPlayer.clearStatusEffect(Status.INVINCIBLE)
+    wait()
+    eventPlayer.setStatusEffect(null, Status.ASLEEP, 9999)
+      # raycast to prevent camera stuck on low wall
     eventPlayer.startCamera(
         eventPlayer.getPosition() + 
         Vector.UP * 
@@ -816,13 +823,8 @@ rule "AFK timer":
         eventPlayer.getPosition(), 
         10
     )
-    # clear status to apply sleep, auto re-aply via normal aply rule
-    eventPlayer.clearStatusEffect(Status.PHASED_OUT)
-    wait()
-    eventPlayer.clearStatusEffect(Status.INVINCIBLE)
-    wait()
-    eventPlayer.setStatusEffect(null, Status.ASLEEP, 9999)
     # cancel it after jumping or not sleep, reset cures sleep
+    wait(1)
     waitUntil(eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.hasStatusEffect(Status.ASLEEP) == false, 99999)
     eventPlayer.clearStatusEffect(Status.ASLEEP)
     eventPlayer.stopCamera()
