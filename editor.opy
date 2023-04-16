@@ -11,8 +11,10 @@ rule "Editor | Clear Excess Data to Save Map":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition eventPlayer == hostPlayer
-    wait(0.5, Wait.ABORT_WHEN_FALSE)
-    hostPlayer.CurrentCheckpoint = 0
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    #hostPlayer.CurrentCheckpoint = 0
+    #UpdateCache()
+    #wait()
     CheckpointRings_Editing = 0
     SelectedKillball_Editing = 0
     KillBallEffects = 0
@@ -778,7 +780,7 @@ rule "Editor | cp add/remove teleport":
     @Condition len(CheckpointPositions) > 1
     @Condition hostPlayer.EditModeSelection == 0
 
-    waitUntil(hostPlayer.isHoldingButton(Button.MELEE) or not (hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.RELOAD)), 0.5)
+    waitUntil(hostPlayer.isHoldingButton(Button.MELEE) or not (hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.RELOAD)), 1)
     if hostPlayer.isHoldingButton(Button.MELEE) or hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.RELOAD):
       return
 
@@ -818,17 +820,15 @@ rule "Editor | precision moving":
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.EditModeSelection == 0
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
-    #@Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition len(CheckpointPositions) > 0
-    #@Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false
-    #@Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false
-    wait(0.5, Wait.ABORT_WHEN_FALSE)
+    @Condition not eventPlayer.isHoldingButton(Button.INTERACT)
+    wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.setMoveSpeed(3)
     eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), 15)
     
     #while eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.EditModeSelection == 0 and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false:
     #while eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.EditModeSelection == 0 and eventPlayer.isAlive():
-    while eventPlayer.isHoldingButton(Button.MELEE) and eventPlayer.EditModeSelection == 0 and eventPlayer.isAlive():
+    while eventPlayer.isHoldingButton(Button.MELEE) and eventPlayer.EditModeSelection == 0 and eventPlayer.isAlive() and not eventPlayer.isHoldingButton(Button.INTERACT):
         #CheckpointPositions[eventPlayer.CurrentCheckpoint][0] = eventPlayer.getPosition()
         if len(CheckpointPositions[hostPlayer.CurrentCheckpoint])  :
             CheckpointPositions[hostPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[hostPlayer.CurrentCheckpoint][1] ]

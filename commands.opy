@@ -138,6 +138,7 @@ rule "Enter Spectate | Hold Interact":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
+    @Condition not (eventPlayer.EditorOn and eventPlayer.isHoldingButton(Button.MELEE))
     @Condition not CompMode
     wait(1, Wait.ABORT_WHEN_FALSE)
     if eventPlayer.EditorOn: # editor has interact combos
