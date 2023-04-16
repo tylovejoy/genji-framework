@@ -791,9 +791,7 @@ rule "Editor | cp add/remove teleport":
         smallMessage(hostPlayer,"   等级{0}的传送被移除".format(hostPlayer.CurrentCheckpoint) checkCN "   Teleport for level {0} has been removed".format(hostPlayer.CurrentCheckpoint))
     else: # add
         CheckpointPositions[hostPlayer.CurrentCheckpoint] = [
-            CheckpointPositions[hostPlayer.CurrentCheckpoint][0] 
-                if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) != 0 
-                else CheckpointPositions[hostPlayer.CurrentCheckpoint], 
+            CheckpointPositions[hostPlayer.CurrentCheckpoint][0] if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[hostPlayer.CurrentCheckpoint], 
             hostPlayer.getPosition()
         ]
         smallMessage(hostPlayer, "{1} {0}".format(hostPlayer.CurrentCheckpoint,"   传送点已添加到检查点" checkCN "   Teleport has been added for level"))
