@@ -25,7 +25,7 @@ if (x == 0){
     }[x]
 
     selectedmap = {
-    1: "rialto", // havana
+    1: "antarcticPeninsula", 
     2: "hollywood",
     3: "route66",
     4: "workshopChamber",

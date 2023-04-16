@@ -234,8 +234,17 @@ rule "Setup and Variables":
     startForcingSpawn(Team.ALL,  1)
     startForcingSpawn(Team.ALL,  2)
     wait(0.024) # wait for map data rule
-    BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints != null else []
-    DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints != null  else  []
+    
+    if BladeEnabledCheckpoints == null and len(BladeEnabledCheckpoints) == 1:
+        BladeEnabledCheckpoints = [0]
+    else:
+        BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints != null else []
+    
+    if DashEnabledCheckpoints == null and len(DashEnabledCheckpoints) == 1:
+        DashEnabledCheckpoints = [0]
+    else:
+        DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints != null  else  []
+
     BouncePadCheckpoints = BouncePadCheckpoints if len(BouncePadCheckpoints) else []
     CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
     CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
