@@ -1,7 +1,7 @@
 #!define versionhere "1.8.1b"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(10) # 0 is editor, rest is numbers
+editortoggle(14) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -504,6 +504,7 @@ def StartGame_Sub():
 
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
+       
     if len(CheckpointPositions) != 0:
         destroyInWorldText(eventPlayer.TitleStore) # restarting reset t itle even if non on cp 0
         if "{0}".format(eventPlayer) in SaveName: # load saved progres
@@ -541,6 +542,9 @@ def StartGame_Sub():
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
     eventPlayer.LockCollected = []
     eventPlayer.InvincibleToggle = false
+    eventPlayer.enableRespawn()
+    eventPlayer.SpectateToggle = false
+
     # eventPlayer.LockState = false
     UpdateCache()
 
