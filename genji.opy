@@ -10,6 +10,9 @@ editortoggle(14) # 0 is editor, rest is numbers
 # disable via double ## at include, not the define because the define needs to exist
 #!define testaitoggle #!include "test-scripts.opy"
 
+# enable to remove invis command (this command cant be pasted in cn client) setting this condition without # makes it not included in the pasta
+#!define invisCommandIncluded #@Condition false == true
+
 #!define compmodetoggle false
 #!define attemptcount 5
 #!define comptimelimit 120
