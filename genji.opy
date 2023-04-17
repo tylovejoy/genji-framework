@@ -634,6 +634,10 @@ rule "Arrive | Ground reset | traces":
                 wait(0.1)
                 eventPlayer.flytoggle = null
                 eventPlayer.stopForcingPosition()
+                # position wasnt ready when check cache ran
+                async(CheckUlt(), AsyncBehavior.RESTART)
+                async(CheckDash(), AsyncBehavior.RESTART)
+
             
             if eventPlayer.splitdisplay != -999:
                 eventPlayer.splitdisplay =  (eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer) - eventPlayer.splittime

@@ -273,6 +273,7 @@ fixed:
     - fixed the bug that caused you to be locked in sleep if you jumped during the sleep animation
     - fixed dva having hud and thus counting extra for text count for a few moments
     - fixed issue that caused dash/ult on cp 0 not working if it was the first and only value
+    - fixed issue that caused you to not have dash/ult after a teleport until you walked out of the circle
 
     editor:
     - you no longer go into spec when holding melee due to overlap with clear exces data

@@ -866,6 +866,4 @@ rule "add ult/dash":
     # move in other rule
     wait()
 
-     #BladeEnabledCheckpoints 
-    #DashEnabledCheckpoints 
 
