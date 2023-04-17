@@ -209,6 +209,9 @@ rule "Huds: Global/Localplayer":
 
 rule "Huds: each player":
     @Event eachPlayer
+    wait(0.5)
+    if eventPlayer.isDummy() and eventPlayer.getCurrentHero() == Hero.DVA:
+        return 
     # ban icons in level
     hudText(eventPlayer, null, 
         ("练习用时 {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "")
@@ -260,7 +263,7 @@ rule "Huds: each player":
         , HudPosition.LEFT, HO.game_bhop, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
-    wait(3)
+    wait(2.5)
     if CompMode:
         hudText(
             eventPlayer, 

@@ -20,14 +20,14 @@
     #!define show_orbradius true
 
 #### test bots #####
-    #!define testaion true
+    #!define testaion false
 
     ##### should do 19 max #####
     #!define testbotnumber 10
     ##### wait for all bots to be created #####
     #!define waitforcreate true
     ##### delay after all bots are created - toggle #####
-    #!define aistartdelay false
+    #!define aistartdelay true
     ##### delay after all bots are created - seconds #####
     #!define creationdelay 8 
 

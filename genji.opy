@@ -1,4 +1,4 @@
-#!define versionhere "1.8.1"
+#!define versionhere "1.8.1b"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -9,6 +9,9 @@ editortoggle(0) # 0 is editor, rest is numbers
 
 # disable via double ## at include, not the define because the define needs to exist
 #!define testaitoggle ##!include "test-scripts.opy"
+
+# enable to remove invis command (this command cant be pasted in cn client die to null and none translating to same symbol) 
+#!define disableInvisCommand false
 
 #!define compmodetoggle false
 #!define attemptcount 5
@@ -31,8 +34,8 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!define bounceoffset + vect(0,0.7,0)
 
 
-#disable overpy map detection
-#!disableMapDetectionFix 
+#disable overpy map detection (command removed by zezo after fix by blizard)
+##!disableMapDetectionFix 
 
 #!include "settings.opy"
 #!include "definitions.opy"
@@ -231,8 +234,17 @@ rule "Setup and Variables":
     startForcingSpawn(Team.ALL,  1)
     startForcingSpawn(Team.ALL,  2)
     wait(0.024) # wait for map data rule
-    BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints != null else []
-    DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints != null  else  []
+    
+    if BladeEnabledCheckpoints == null and len(BladeEnabledCheckpoints) == 1:
+        BladeEnabledCheckpoints = [0]
+    else:
+        BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints != null else []
+    
+    if DashEnabledCheckpoints == null and len(DashEnabledCheckpoints) == 1:
+        DashEnabledCheckpoints = [0]
+    else:
+        DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints != null  else  []
+
     BouncePadCheckpoints = BouncePadCheckpoints if len(BouncePadCheckpoints) else []
     CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
     CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
@@ -330,6 +342,8 @@ rule "Player Initialize":
     #eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor - 作图模式","Editor mode - 作图模式" ,  editoron , 0) # Turn Editor On
     eventPlayer.EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
     
+    if eventPlayer.isDummy() and eventPlayer.getCurrentHero() == Hero.DVA:
+        return # special here for dva instead of later because 100% she doesnt play the match
     
     eventPlayer.GuideToggle = true
     eventPlayer.disableGamemodeHud()
@@ -502,6 +516,7 @@ def StartGame_Sub():
 
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
+       
     if len(CheckpointPositions) != 0:
         destroyInWorldText(eventPlayer.TitleStore) # restarting reset t itle even if non on cp 0
         if "{0}".format(eventPlayer) in SaveName: # load saved progres
@@ -539,6 +554,9 @@ def StartGame_Sub():
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
     eventPlayer.LockCollected = []
     eventPlayer.InvincibleToggle = false
+    eventPlayer.enableRespawn()
+    eventPlayer.SpectateToggle = false
+
     # eventPlayer.LockState = false
     UpdateCache()
 
@@ -616,6 +634,10 @@ rule "Arrive | Ground reset | traces":
                 wait(0.1)
                 eventPlayer.flytoggle = null
                 eventPlayer.stopForcingPosition()
+                # position wasnt ready when check cache ran
+                async(CheckUlt(), AsyncBehavior.RESTART)
+                async(CheckDash(), AsyncBehavior.RESTART)
+
             
             if eventPlayer.splitdisplay != -999:
                 eventPlayer.splitdisplay =  (eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer) - eventPlayer.splittime
@@ -797,7 +819,14 @@ rule "AFK timer":
     @Condition eventPlayer.isAlive()
     @Condition not eventPlayer.EditorOn
     wait(90, Wait.ABORT_WHEN_FALSE)
-    # raycast to prevent camera stuck on low wall
+
+    # clear status to apply sleep, auto re-aply via normal aply rule
+    eventPlayer.clearStatusEffect(Status.PHASED_OUT)
+    wait()
+    eventPlayer.clearStatusEffect(Status.INVINCIBLE)
+    wait()
+    eventPlayer.setStatusEffect(null, Status.ASLEEP, 9999)
+      # raycast to prevent camera stuck on low wall
     eventPlayer.startCamera(
         eventPlayer.getPosition() + 
         Vector.UP * 
@@ -810,13 +839,8 @@ rule "AFK timer":
         eventPlayer.getPosition(), 
         10
     )
-    # clear status to apply sleep, auto re-aply via normal aply rule
-    eventPlayer.clearStatusEffect(Status.PHASED_OUT)
-    wait()
-    eventPlayer.clearStatusEffect(Status.INVINCIBLE)
-    wait()
-    eventPlayer.setStatusEffect(null, Status.ASLEEP, 9999)
     # cancel it after jumping or not sleep, reset cures sleep
+    wait(1)
     waitUntil(eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.hasStatusEffect(Status.ASLEEP) == false, 99999)
     eventPlayer.clearStatusEffect(Status.ASLEEP)
     eventPlayer.stopCamera()
