@@ -178,7 +178,7 @@ rule "Editor | Hud and Effects":
 		"{0} + {3} | 移除/新建传送点\n" #移除/新建 传送门
 		"{0} + {4} | 移动检查点至当前位置\n"
         "{0} + {5} | 检查点碰撞模型\n"
-        "{4} (长按) | 微调检查点位置".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1)),
+        "{6} (长按) | 微调检查点位置".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1), buttonString(Button.MELEE)),
 
         "{0} + {1} | 新建击杀球\n"
 		"{0} + {2} | 删除选中的击杀球\n"
