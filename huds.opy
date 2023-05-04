@@ -8,10 +8,16 @@ huds outside this file:
 
 */
 
+
+
+
 rule "Huds: Global/Localplayer":
     wait(2)
 
     # name/credit construction
+    # note on changing default name/credit
+    # if you change it, also change it in the credits rule
+    # the old credits should always remain valid here to keep old data valid
     if Name != "name here - 作者" or Cachedcredits[0] == null::
         Cachedcredits[0] = Name
     
