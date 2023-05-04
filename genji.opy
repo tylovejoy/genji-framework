@@ -889,6 +889,9 @@ rule "Map Data - 数据录入 <---- INSERT HERE / 在这输入":
 
 editorordata
 
+# note: Don't change defaults only here.
+# If you change this, also change it in the name/credit construciton in the huds
+# The old default should always be included to make old data valid
 rule "Credits here - 作者名字 <---- INSERT HERE / 在这输入 ": 
     # Filling this in adds it to the inspector pasta after next restart.
     # You can fill in again to overwrite.
