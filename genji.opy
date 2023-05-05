@@ -1,7 +1,7 @@
-#!define versionhere "1.8.1b"
+#!define versionhere "1.8.2"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(19) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -281,7 +281,8 @@ rule "Setup and Variables":
         CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode\n竞赛模式", "attempt count - 尝试次数", attemptcount, 102) 
         # -! comp restartlimiter !-
         CompRestartLimit = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","disable restart during run - 竞赛中禁用重新开始" , comprestartlimit , 103)
-
+    else:
+        instructiontext = null
 
     wait(5)
     KILLBALL()
@@ -948,6 +949,7 @@ rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输�
     HudStoreEdit.append(getLastCreatedText())
 
 rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":
+    wait(0.4)
     # Instructions that show when you start comp mode.
     # Due to the hud text limit, you there is 4 huds available.
     # If you dont need a field just empty the textfield.
@@ -958,8 +960,8 @@ rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE
     # 如果你不需 要一个字段 只是空文 本字段
     instructiontext[0] = "Change in Comp Mode instruction message hud 1"
     instructiontext[1] = "Change in Comp Mode instruction message hud 2"
-    instructiontext[2] = "Change in Comp Mode instruction message hud 2"
-    instructiontext[3] = "Change in Comp Mode instruction message hud 2"
+    instructiontext[2] = "Change in Comp Mode instruction message hud 3"
+    instructiontext[3] = "Change in Comp Mode instruction message hud 4"
 
 
 #!include "addons-page2.opy"
