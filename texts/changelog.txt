@@ -285,3 +285,4 @@ fixed:
         - orange orb clean on ground rset moved ot inside arrived merge
         - multi ban now inside multi counter
         - instructions hud empties if not in comp mode
+    - prevent create msg and ban during locks (restart, skips, etc)

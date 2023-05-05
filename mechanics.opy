@@ -118,6 +118,10 @@ rule "Checking | Create Bhop":
     @Condition eventPlayer.isJumping() == false
     @Condition eventPlayer.isOnGround() == false
     eventPlayer.BhopUsed = false
+
+    if eventPlayer.LockState: # prevent restart from giving messsage, but stil alow it to become green
+        return
+
     if eventPlayer.ban_create and eventPlayer.InvincibleToggle == false and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
         smallMessage(eventPlayer, "   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!")
         checkpointFailReset()
