@@ -184,6 +184,7 @@ rule "Ban | Triple Jump":
     @Condition eventPlayer.JumpCount == 1
     @Condition eventPlayer.isUsingAbility1() == false
     @Condition not eventPlayer.isOnWall()
+    # legacy ban, only works when blizzards enables triple again. fake triple is baned via fake triple rule
     smallMessage(eventPlayer,"   三段跳 ▲ 已禁用!" checkCN "   Triple Jump ▲ is banned!")
     checkpointFailReset()
 
