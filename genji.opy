@@ -540,7 +540,7 @@ def StartGame_Sub():
                 eventPlayer.TitleStore = getLastCreatedText()
 
         else:
-            eventPlayer.teleport(CheckpointPositions[0] + Vector.UP)
+            eventPlayer.teleport(CheckpointPositions[0] + Vector.UP) # dont remove up because now people are used to it and see it as a tech
             eventPlayer.CurrentCheckpoint = 0
             eventPlayer.Timer = 0
             stopChasingVariable(eventPlayer.PauseTimer)
