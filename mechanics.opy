@@ -142,7 +142,12 @@ rule "HUD | Multiclimb Counter":
     @Condition eventPlayer.isOnWall()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     @Condition not eventPlayer.WallclimbUsed
-    eventPlayer.MultiClimbCount += 1
+    
+    if eventPlayer.ban_multi and eventPlayer.NotOnLastCp and not eventPlayer.InvincibleToggle:
+        smallMessage(eventPlayer, "    蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
+        checkpointFailReset() 
+    else:
+        eventPlayer.MultiClimbCount += 1
 
 rule "HUD | Bhop Indicator | Unused | Green":
     @Event eachPlayer
@@ -182,6 +187,8 @@ rule "Ban | Triple Jump":
     smallMessage(eventPlayer,"   三段跳 ▲ 已禁用!" checkCN "   Triple Jump ▲ is banned!")
     checkpointFailReset()
 
+/*
+# merged into multi climb counter
 rule "Ban | Multiclimb":
     @Event eachPlayer
     @Condition eventPlayer.ban_multi
@@ -190,6 +197,7 @@ rule "Ban | Multiclimb":
     @Condition eventPlayer.MultiClimbCount > 0
     smallMessage(eventPlayer, "    蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
     checkpointFailReset() 
+*/
 
 rule "Ban | Emote Savehop":
     @Event eachPlayer
