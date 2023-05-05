@@ -1,7 +1,7 @@
 #!define versionhere "1.8.1b"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(10) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -680,13 +680,14 @@ rule "Arrive | Ground reset | traces":
             # ground reset ----------------------------------------------------------------------------------------------------
             checkpointFailReset()
 
+    eventPlayer.LockCollected = []
     lbl_abc:
     wait(0.048)
 
     if RULE_CONDITION:
         goto RULE_START               
    
-   
+   /*
 rule "reset collected locks when landing back on cp":
     @Event eachPlayer
     @Condition eventPlayer.LockCollected != []
@@ -694,7 +695,7 @@ rule "reset collected locks when landing back on cp":
     @Condition distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) <= cpcircleradius
 
     eventPlayer.LockCollected = []
-
+*/
 rule "Kill Orb | Activate":
     @Event eachPlayer
     @Condition eventPlayer.KillPosition_Cache != []
