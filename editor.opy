@@ -495,7 +495,7 @@ rule "Editor | create cp/orb":
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
-    
+
     if eventPlayer.EditModeSelection == 0:
         if len(CheckpointPositions) > 1 and distance(eventPlayer, CheckpointPositions[hostPlayer.CurrentCheckpoint]) <= cpcircleradius:
             smallMessage(eventPlayer, "   放置的检查点距离太近" checkCN "   Cannot place checkpoints too close.")
@@ -522,7 +522,7 @@ rule "Editor | create cp/orb":
         smallMessage(getAllPlayers(), "   新检查点已创建" checkCN "   New Checkpoint has been created")
         #UpdateCache()
 
-    elif eventPlayer.EditModeSelection == 1:
+    elif eventPlayer.EditModeSelection == 1 and len(CheckpointPositions) > 0:
         if len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart) >= fxlimit:
             bigMessage(eventPlayer, "当前地图弹球/传送门数量已达上限" checkCN "Orb/portal limit reached for this map")
             wait()
@@ -542,7 +542,7 @@ rule "Editor | create cp/orb":
         bigMessage(getAllPlayers(), "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新击杀球已创建! \r\n仅生效于检查点" checkCN "New Kill Orb has been created! \r\nIt's only valid for checkpoint"))
 
        
-    elif eventPlayer.EditModeSelection == 2:
+    elif eventPlayer.EditModeSelection == 2 and len(CheckpointPositions) > 0:
         if len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart) >= fxlimit:
             bigMessage(eventPlayer, "当前地图弹球/传送门数量已达上限" checkCN "Orb/portal limit reached for this map")
             wait()
@@ -630,12 +630,17 @@ rule "Editor | delete cp/orb":
         del CheckpointPositions[hostPlayer.CurrentCheckpoint]
         del CheckpointRings_Editing[hostPlayer.CurrentCheckpoint]
         
+        if hostPlayer.CurrentCheckpoint == 0 and len(CheckpointPositions) > 0 or CheckpointPositions == []:
+            hostPlayer.CurrentCheckpoint = 0
+            goto lbl_a
+        /*
         if hostPlayer.CurrentCheckpoint == 0 and len(CheckpointPositions) > 0:
             hostPlayer.CurrentCheckpoint = 0
             goto lbl_a
         elif hostPlayer.CurrentCheckpoint <= 0:
             hostPlayer.CurrentCheckpoint = -1
             goto lbl_a
+        */
         hostPlayer.CurrentCheckpoint -= 1
         lbl_a:
         RebuildKillOrbs()
