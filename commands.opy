@@ -354,8 +354,11 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition not eventPlayer.isHoldingButton(Button.MELEE)
-
     if eventPlayer.QuickRestartToggle:
+        if CheckpointPositions == []: # dont go to 0,0,0 if no cps on map
+            wait()
+            return
+        
         if eventPlayer.EditorOn:
             if eventPlayer == hostPlayer and eventPlayer.EditModeSelection == 0 and eventPlayer.isHoldingButton(Button.INTERACT):
                 #wait(0.1, Wait.ABORT_WHEN_FALSE)
