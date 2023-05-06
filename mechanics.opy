@@ -118,7 +118,6 @@ rule "Checking | Create Bhop":
     @Condition eventPlayer.isJumping() == false
     @Condition eventPlayer.isOnGround() == false
     eventPlayer.BhopUsed = false
-
     if eventPlayer.LockState: # prevent restart from giving messsage, but stil alow it to become green
         return
 
@@ -126,6 +125,8 @@ rule "Checking | Create Bhop":
         smallMessage(eventPlayer, "   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!")
         checkpointFailReset()
         return
+        
+    eventPlayer.CreateCounter ++
     smallMessage(eventPlayer, "   succes!" checkCN "   Bhop has been created!")    
 
 rule "Checking | Double jump, initialized with small jump":
@@ -135,6 +136,7 @@ rule "Checking | Double jump, initialized with small jump":
     eventPlayer.JumpCount = 0
     eventPlayer.WallclimbUsed = false
     eventPlayer.MultiClimbCount = 0
+    eventPlayer.CreateCounter = 0
     wait(0)
     if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
         goto RULE_START
