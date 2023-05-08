@@ -281,12 +281,13 @@ fixed:
     - clear exces data no longer takes you to cp 0 (it was doing this without changing your cache on previous versions)
 
 1.8.2 -
+    - create bhops now get counted on the hud just like a multi would.
+    - you no longer get the bhop created message or ban trigger during the commands for restarting, resetting and skipping. 
+    - afk sleep timer is now increased 5 minutes instead of 90 seconds
     - optimizations behind scenes:
-        - orange orb clean on ground rset moved ot inside arrived merge
+        - orange orb reset moved inside ground triggers
         - multi ban now inside multi counter
         - instructions hud empties if not in comp mode
-    - prevent create msg and ban during locks (restart, skips, etc)
-    - sleep timer is now 5 minutes
 
     editor:
     - quick reset now requires a map to have atleast 1 checkpoint. This was causing deadloops in some editor scenarios.
