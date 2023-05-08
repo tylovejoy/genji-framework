@@ -42,6 +42,7 @@ rule "Preview orbs/portals | Hold Primary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition not eventPlayer.EditorOn
+    @Condition not eventPlayer.LockState
     wait(0.9, Wait.ABORT_WHEN_FALSE)
 
     eventPlayer.PreviewsArray = [] # prevent preview empty bug
@@ -58,7 +59,7 @@ rule "Preview orbs/portals | Hold Primary":
         eventPlayer.PreviewsArray[eventPlayer.PreviewsI],
         15
     )
-    while eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isAlive():
+    while eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isAlive() and not eventPlayer.LockState:
         if eventPlayer.getThrottle().x < -0.5:
             eventPlayer.PreviewsI = 0 if eventPlayer.PreviewsI + 1 >= len(eventPlayer.PreviewsArray) else eventPlayer.PreviewsI + 1 
             waitUntil(eventPlayer.getThrottle().x > -0.5, 1)

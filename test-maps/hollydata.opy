@@ -10,3 +10,4 @@ rule "test data":
     KillballCheckpoints = [5, 15, 20]
     BouncePadCheckpoints = []
     #MsDestructo = [null]
+    DashEnabledCheckpoints = [2]
