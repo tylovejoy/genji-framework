@@ -820,7 +820,7 @@ rule "AFK timer":
     @Condition eventPlayer.isMoving() == false
     @Condition eventPlayer.isAlive()
     @Condition not eventPlayer.EditorOn
-    wait(90, Wait.ABORT_WHEN_FALSE)
+    wait(300, Wait.ABORT_WHEN_FALSE)
 
     # clear status to apply sleep, auto re-aply via normal aply rule
     eventPlayer.clearStatusEffect(Status.PHASED_OUT)
