@@ -264,11 +264,12 @@ rule "Huds: each player":
     )
     hudHeader(eventPlayer, 
         (
-            "小跳未用{0}".format(
-                "" if eventPlayer.CreateCounter < 1 else
-                " ({0})".format(eventPlayer.CreateCounter)  
-            ) if eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == Color.GREEN else
-            "小跳已用" # dont have it
+            "{0}{1}".format(
+                "小跳未用" if eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == Color.GREEN else "小跳已用",
+                "" if eventPlayer.CreateCounter < 1 else " ({0})".format(eventPlayer.CreateCounter)  
+            )
+            
+            
             
         ) # cn version text updates to say the status, unlike en
         checkCN 
