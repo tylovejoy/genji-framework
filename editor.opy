@@ -153,7 +153,9 @@ rule "Editor | Hud and Effects":
     waitUntil(hostPlayer.hasSpawned(), 90)
     wait(1)
     if not hostPlayer.EditorOn:
-        HudStoreEdit = null
+        HudStoreEdit = null 
+        KillBallEffects = null
+        BounceEffects = null
         return
     wait(2)
     

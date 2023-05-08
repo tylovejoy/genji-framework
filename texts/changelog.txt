@@ -290,6 +290,7 @@ fixed:
         - orange orb reset moved inside ground triggers
         - multi ban now inside multi counter
         - instructions hud empties if not in comp mode
+        - some fx stores now clean when not in editor
     - preview orb now stops when restarting, resetting or skipping. This fixed a camera bug.  
 
     editor:
