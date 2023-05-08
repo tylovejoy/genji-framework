@@ -248,6 +248,7 @@ playervar LeaderboardToggle 19              # bool                      --- show
 playervar NotOnLastCp 20                    # bool                      --- false if you are noton the last cp or level below 2 cps
 playervar JumpCount 26                      # int                       --- jump tracking count, 0, 1, 2
 playervar MultiClimbCountHUD 28             # HUD                       --- climb counter
+playervar CreateCounter 29
 playervar QuickRestartToggle 31             # bool                      -- enable reload to restart cp
 playervar MultiClimbCount 32                # int                       --- climb count # for HUD
 
