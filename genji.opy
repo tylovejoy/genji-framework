@@ -284,7 +284,17 @@ rule "Setup and Variables":
     else:
         instructiontext = null
 
-    wait(5)
+    wait(1) # add back to below wait if removed
+    # clean out -1's after the ban has laoded
+    BanBhop = [i for i in BanBhop if i != -1]
+    BanClimb = [i for i in BanClimb if i != -1]
+    BanEmote = [i for i in BanEmote if i != -1]
+    BanDead = [i for i in BanDead if i != -1]
+    BanCreate = [i for i in BanCreate if i != -1]
+    BanMulti = [i for i in BanMulti if i != -1]
+    BanTriple = [i for i in BanTriple if i != -1]
+
+    wait(4)
     KILLBALL()
     wait(2)
     pinball() #
