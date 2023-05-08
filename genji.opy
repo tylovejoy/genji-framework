@@ -62,7 +62,7 @@ rule "------------------------------------------------------------------------  
     @Delimiter
     @Disabled
 
-def RebuildBounceOrbs():
+def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Bounce Ball Effects" 
     @Name "SUB | Rebuild Bounce Orbs"
     destroyEffect(BounceEffects)
     BounceEffects = [] 
@@ -78,7 +78,7 @@ def RebuildBounceOrbs():
     BounceEffects.append(getLastCreatedEntity())
     wait()
 
-def RebuildKillOrbs():
+def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Kill Orb Effects" 
     @Name "SUB | Rebuild Kill Orbs"
     destroyEffect(KillBallEffects)
     KillBallEffects = []  
