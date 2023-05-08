@@ -281,6 +281,7 @@ fixed:
     - clear exces data no longer takes you to cp 0 (it was doing this without changing your cache on previous versions)
 
 1.8.2 -
+    - beginner difficulty has been replaced by "not yet selected". This difficulty will also be removed from the discord bot.
     - removed dash button from the skip checkpoint command
     - create bhops now get counted on the hud just like a multi would.
     - you no longer get the bhop created message or ban trigger during the commands for restarting, resetting and skipping. 
