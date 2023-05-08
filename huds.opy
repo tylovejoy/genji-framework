@@ -183,11 +183,11 @@ rule "Huds: Global/Localplayer":
         HudStoreEdit.append(getLastCreatedText())
 
         hudSubheader([i for i in getAllPlayers() if i.PracticeToggle and i.GuideToggle],
-            "{0} + {4} + {1} | 下一关\n{0} + {4} + {2} | 上一关\n{3} | 回到练习模式起点 "
-            "".format( buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT),buttonString(Button.ABILITY_1) )    
+            "{0} + {1} | 下一关\n{0} + {2} | 上一关\n{3} | 回到练习模式起点 "
+            "".format( buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT) )    
             checkCN
-            "{0} + {4} + {1} | Next level\n{0} + {4} + {2} | Previous level\n{3} | Start from practice cp "
-            "".format( buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT),buttonString(Button.ABILITY_1) )          
+            "{0}  + {1} | Next level\n{0} + {2} | Previous level\n{3} | Start from practice cp "
+            "".format( buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT) )          
             , HudPosition.RIGHT, HO.com_practicesub, Color.LIME_GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         HudStoreEdit.append(getLastCreatedText())
