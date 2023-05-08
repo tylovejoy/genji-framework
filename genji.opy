@@ -5,7 +5,7 @@ editortoggle(10) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
-#!define inspectoron false
+#!define inspectoron true
 
 # disable via double ## at include, not the define because the define needs to exist
 #!define testaitoggle ##!include "test-scripts.opy"
@@ -928,11 +928,10 @@ rule "Ban per CP - 封禁(每级) <---- INSERT HERE / 在这输入":
 rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled
     @Delimiter
-    wait(2.5)
     #1) workshop settings > difficulty > set to "dont display"
     #2) enable this rule
     #3) type your difficulty in the hud below
-    printLog("--------")
+    wait(2.5)
     #1) 设置正常 难度hud为“不显示”
     #2) 启用此规则
     #3) 在下面的hud中输入难度
