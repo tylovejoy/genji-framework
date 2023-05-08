@@ -280,19 +280,15 @@ fixed:
     - you no longer precision move while holding interact due to overlap with clear exces data
     - clear exces data no longer takes you to cp 0 (it was doing this without changing your cache on previous versions)
 
-1.8.2 -
-    - beginner difficulty has been replaced by "not yet selected". This difficulty will also be removed from the discord bot.
-    - removed dash button from the skip checkpoint command
-    - create bhops now get counted on the hud just like a multi would.
+1.8.2 - 8-5-2023
+    - the "beginner" difficulty has been replaced by "playtest". This difficulty will also be removed from the discord bot.
+    - removed the dash button from the skip checkpoint command 
+    - create bhops now get counted on the bhop hud
     - you no longer get the bhop created message or ban trigger during the commands for restarting, resetting and skipping. 
     - afk sleep timer is now increased 5 minutes instead of 90 seconds
-    - optimizations behind scenes:
-        - orange orb reset moved inside ground triggers
-        - multi ban now inside multi counter
-        - instructions hud empties if not in comp mode
-        - some fx stores now clean when not in editor and bans get their -1 removed ingame
     - preview orb now stops when restarting, resetting or skipping. This fixed a camera bug.  
-
+    - some data cleanup behind the scene
+     
     editor:
     - quick reset now requires a map to have atleast 1 checkpoint. This was causing deadloops in some editor scenarios.
     - you can no longer place orbs if there are no checkpoints on the map.
