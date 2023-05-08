@@ -1,11 +1,11 @@
 #!define versionhere "1.8.2"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(10) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
-#!define inspectoron true
+#!define inspectoron false
 
 # disable via double ## at include, not the define because the define needs to exist
 #!define testaitoggle ##!include "test-scripts.opy"
