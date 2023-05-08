@@ -263,15 +263,12 @@ rule "Huds: each player":
         , HudPosition.LEFT, HO.game_climb, Color.RED if eventPlayer.WallclimbUsed else Color.GREEN, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     hudHeader(eventPlayer, 
-        (
+        ( # cn version text updates to say the status, unlike en version
             "{0}{1}".format(
                 "小跳未用" if eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == Color.GREEN else "小跳已用",
                 "" if eventPlayer.CreateCounter < 1 else " ({0})".format(eventPlayer.CreateCounter)  
-            )
-            
-            
-            
-        ) # cn version text updates to say the status, unlike en
+            )  
+        ) 
         checkCN 
         "Bhop{0}".format(
             "" if eventPlayer.CreateCounter < 1 else
