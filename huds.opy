@@ -195,14 +195,14 @@ rule "Huds: Global/Localplayer":
     if not hostPlayer.EditorOn:
         # find the value
         Difficultyhud = [
-            createWorkshopSetting(enum[ "beginner", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display - 不显示","Playtest - 游戏测试"],"map settings \n地图设置","difficulty (display hud) - 难度(显示hud)",0, 0)
+            createWorkshopSetting(enum[ "not yet selected", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display - 不显示","Playtest - 游戏测试"],"map settings \n地图设置","difficulty (display hud) - 难度(显示hud)",0, 0)
             , createWorkshopSetting(bool,"map settings \n地图设置","Playtest display - 游戏测试",false,0) 
             ] 
         # display
         if Difficultyhud[0] != 17: # 17th entry is 'dont display'
             hudText(localPlayer if localPlayer.GuideToggle and not localPlayer.LeaderboardToggle else null, 
                 ("游戏测试" checkCN "Playtest") if Difficultyhud[1] else "",
-                ["beginner", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell",null,"playtest"][Difficultyhud[0]], 
+                ["difficulty not selected", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell",null,"playtest"][Difficultyhud[0]], 
                 null,
                 HudPosition.TOP, HO.data_dif,
                 Color.BLUE,
