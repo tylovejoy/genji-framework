@@ -118,10 +118,15 @@ rule "Checking | Create Bhop":
     @Condition eventPlayer.isJumping() == false
     @Condition eventPlayer.isOnGround() == false
     eventPlayer.BhopUsed = false
+    if eventPlayer.LockState: # prevent restart from giving messsage, but stil alow it to become green
+        return
+
     if eventPlayer.ban_create and eventPlayer.InvincibleToggle == false and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
         smallMessage(eventPlayer, "   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!")
         checkpointFailReset()
         return
+        
+    eventPlayer.CreateCounter ++
     smallMessage(eventPlayer, "   succes!" checkCN "   Bhop has been created!")    
 
 rule "Checking | Double jump, initialized with small jump":
@@ -131,6 +136,7 @@ rule "Checking | Double jump, initialized with small jump":
     eventPlayer.JumpCount = 0
     eventPlayer.WallclimbUsed = false
     eventPlayer.MultiClimbCount = 0
+    eventPlayer.CreateCounter = 0
     wait(0)
     if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
         goto RULE_START
@@ -142,7 +148,12 @@ rule "HUD | Multiclimb Counter":
     @Condition eventPlayer.isOnWall()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     @Condition not eventPlayer.WallclimbUsed
-    eventPlayer.MultiClimbCount += 1
+    
+    if eventPlayer.ban_multi and eventPlayer.NotOnLastCp and not eventPlayer.InvincibleToggle:
+        smallMessage(eventPlayer, "    蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
+        checkpointFailReset() 
+    else:
+        eventPlayer.MultiClimbCount += 1
 
 rule "HUD | Bhop Indicator | Unused | Green":
     @Event eachPlayer
@@ -179,17 +190,9 @@ rule "Ban | Triple Jump":
     @Condition eventPlayer.JumpCount == 1
     @Condition eventPlayer.isUsingAbility1() == false
     @Condition not eventPlayer.isOnWall()
+    # legacy ban, only works when blizzards enables triple again. fake triple is baned via fake triple rule
     smallMessage(eventPlayer,"   三段跳 ▲ 已禁用!" checkCN "   Triple Jump ▲ is banned!")
     checkpointFailReset()
-
-rule "Ban | Multiclimb":
-    @Event eachPlayer
-    @Condition eventPlayer.ban_multi
-    @Condition not eventPlayer.InvincibleToggle
-    @Condition eventPlayer.NotOnLastCp
-    @Condition eventPlayer.MultiClimbCount > 0
-    smallMessage(eventPlayer, "    蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
-    checkpointFailReset() 
 
 rule "Ban | Emote Savehop":
     @Event eachPlayer

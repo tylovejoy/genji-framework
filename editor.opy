@@ -153,7 +153,9 @@ rule "Editor | Hud and Effects":
     waitUntil(hostPlayer.hasSpawned(), 90)
     wait(1)
     if not hostPlayer.EditorOn:
-        HudStoreEdit = null
+        HudStoreEdit = null 
+        KillBallEffects = null
+        BounceEffects = null
         return
     wait(2)
     
@@ -495,7 +497,7 @@ rule "Editor | create cp/orb":
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
-    
+
     if eventPlayer.EditModeSelection == 0:
         if len(CheckpointPositions) > 1 and distance(eventPlayer, CheckpointPositions[hostPlayer.CurrentCheckpoint]) <= cpcircleradius:
             smallMessage(eventPlayer, "   放置的检查点距离太近" checkCN "   Cannot place checkpoints too close.")
@@ -523,54 +525,60 @@ rule "Editor | create cp/orb":
         #UpdateCache()
 
     elif eventPlayer.EditModeSelection == 1:
-        if len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart) >= fxlimit:
-            bigMessage(eventPlayer, "当前地图弹球/传送门数量已达上限" checkCN "Orb/portal limit reached for this map")
-            wait()
-            return
-        KillBallPositions.append(eventPlayer.getPosition())
-        KillballCheckpoints.append(eventPlayer.CurrentCheckpoint)
-        UpdateCache()
-        SelectedKillball_Editing = len(hostPlayer.KillIndex_Cache) - 1
-        KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] = 5
-        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(hostPlayer.KillIndex_Cache[SelectedKillball_Editing])]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(hostPlayer.KillIndex_Cache[SelectedKillball_Editing])], KillBallRadii[evalOnce(hostPlayer.KillIndex_Cache[SelectedKillball_Editing])], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-        KillBallEffects.append(getLastCreatedEntity())
-        UpdateCache()
-        SelectedKillball_Editing = len(hostPlayer.KillIndex_Cache) - 1
-        KillBallChase = KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
-        RebuildKillOrbs()
-    
-        bigMessage(getAllPlayers(), "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新击杀球已创建! \r\n仅生效于检查点" checkCN "New Kill Orb has been created! \r\nIt's only valid for checkpoint"))
+        if len(CheckpointPositions) < 1:
+            smallMessage(eventPlayer, "   请先放置检查点" checkCN "   You first have to make a checkpoint")
+        else:
+            if len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart) >= fxlimit:
+                bigMessage(eventPlayer, "当前地图弹球/传送门数量已达上限" checkCN "Orb/portal limit reached for this map")
+                wait()
+                return
+            KillBallPositions.append(eventPlayer.getPosition())
+            KillballCheckpoints.append(eventPlayer.CurrentCheckpoint)
+            UpdateCache()
+            SelectedKillball_Editing = len(hostPlayer.KillIndex_Cache) - 1
+            KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] = 5
+            createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(hostPlayer.KillIndex_Cache[SelectedKillball_Editing])]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(hostPlayer.KillIndex_Cache[SelectedKillball_Editing])], KillBallRadii[evalOnce(hostPlayer.KillIndex_Cache[SelectedKillball_Editing])], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+            KillBallEffects.append(getLastCreatedEntity())
+            UpdateCache()
+            SelectedKillball_Editing = len(hostPlayer.KillIndex_Cache) - 1
+            KillBallChase = KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
+            RebuildKillOrbs()
+        
+            bigMessage(getAllPlayers(), "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新击杀球已创建! \r\n仅生效于检查点" checkCN "New Kill Orb has been created! \r\nIt's only valid for checkpoint"))
 
        
     elif eventPlayer.EditModeSelection == 2:
-        if len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart) >= fxlimit:
-            bigMessage(eventPlayer, "当前地图弹球/传送门数量已达上限" checkCN "Orb/portal limit reached for this map")
-            wait()
-            return
-        BouncePositions.append(eventPlayer.getPosition())
-        BouncePadCheckpoints.append(eventPlayer.CurrentCheckpoint)
-        UpdateCache()
-        CurrentBounce_Editing = len(hostPlayer.BounceIndex_Cache) - 1
-        BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = 10
-        BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = false
-        BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = false
-        BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = false
-        createEffect(
-            #[x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], 
-            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(hostPlayer.BounceIndex_Cache[CurrentBounce_Editing])] and not evalOnce(BouncePositions[evalOnce(hostPlayer.BounceIndex_Cache[CurrentBounce_Editing])]) in x.LockCollected], 
-            Effect.ORB, 
-            Color.ORANGE if BounceToggleLock[evalOnce(hostPlayer.BounceIndex_Cache[CurrentBounce_Editing])] else Color.GREEN, 
-            BouncePositions[evalOnce(hostPlayer.BounceIndex_Cache[CurrentBounce_Editing])], 
-            1, 
-            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
-        )
-        BounceEffects.append(getLastCreatedEntity())
-        UpdateCache()
-        CurrentBounce_Editing = len(hostPlayer.BounceIndex_Cache) - 1
-        CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
-        RebuildBounceOrbs()
-        bigMessage(getAllPlayers(), "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新弹球已创建! \r\n仅生效于检查点" checkCN "New Bounce Orb has been created! \r\nIt's only valid for checkpoint"))
-    
+        if len(CheckpointPositions) < 1:
+            smallMessage(eventPlayer, "   请先放置检查点" checkCN "   You first have to make a checkpoint")
+        else:
+            if len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart) >= fxlimit:
+                bigMessage(eventPlayer, "当前地图弹球/传送门数量已达上限" checkCN "Orb/portal limit reached for this map")
+                wait()
+                return
+            BouncePositions.append(eventPlayer.getPosition())
+            BouncePadCheckpoints.append(eventPlayer.CurrentCheckpoint)
+            UpdateCache()
+            CurrentBounce_Editing = len(hostPlayer.BounceIndex_Cache) - 1
+            BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = 10
+            BounceToggleUlt[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = false
+            BounceToggleDash[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = false
+            BounceToggleLock[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = false
+            createEffect(
+                #[x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], 
+                [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(hostPlayer.BounceIndex_Cache[CurrentBounce_Editing])] and not evalOnce(BouncePositions[evalOnce(hostPlayer.BounceIndex_Cache[CurrentBounce_Editing])]) in x.LockCollected], 
+                Effect.ORB, 
+                Color.ORANGE if BounceToggleLock[evalOnce(hostPlayer.BounceIndex_Cache[CurrentBounce_Editing])] else Color.GREEN, 
+                BouncePositions[evalOnce(hostPlayer.BounceIndex_Cache[CurrentBounce_Editing])], 
+                1, 
+                EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+            )
+            BounceEffects.append(getLastCreatedEntity())
+            UpdateCache()
+            CurrentBounce_Editing = len(hostPlayer.BounceIndex_Cache) - 1
+            CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+            RebuildBounceOrbs()
+            bigMessage(getAllPlayers(), "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新弹球已创建! \r\n仅生效于检查点" checkCN "New Bounce Orb has been created! \r\nIt's only valid for checkpoint"))
+        
     wait(0.64)
 
 rule "Editor | delete cp/orb":
@@ -630,12 +638,17 @@ rule "Editor | delete cp/orb":
         del CheckpointPositions[hostPlayer.CurrentCheckpoint]
         del CheckpointRings_Editing[hostPlayer.CurrentCheckpoint]
         
+        if hostPlayer.CurrentCheckpoint == 0 and len(CheckpointPositions) > 0 or CheckpointPositions == []:
+            hostPlayer.CurrentCheckpoint = 0
+            goto lbl_a
+        /*
         if hostPlayer.CurrentCheckpoint == 0 and len(CheckpointPositions) > 0:
             hostPlayer.CurrentCheckpoint = 0
             goto lbl_a
         elif hostPlayer.CurrentCheckpoint <= 0:
             hostPlayer.CurrentCheckpoint = -1
             goto lbl_a
+        */
         hostPlayer.CurrentCheckpoint -= 1
         lbl_a:
         RebuildKillOrbs()

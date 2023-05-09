@@ -42,6 +42,7 @@ rule "Preview orbs/portals | Hold Primary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition not eventPlayer.EditorOn
+    @Condition not eventPlayer.LockState
     wait(0.9, Wait.ABORT_WHEN_FALSE)
 
     eventPlayer.PreviewsArray = [] # prevent preview empty bug
@@ -58,7 +59,7 @@ rule "Preview orbs/portals | Hold Primary":
         eventPlayer.PreviewsArray[eventPlayer.PreviewsI],
         15
     )
-    while eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isAlive():
+    while eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isAlive() and not eventPlayer.LockState:
         if eventPlayer.getThrottle().x < -0.5:
             eventPlayer.PreviewsI = 0 if eventPlayer.PreviewsI + 1 >= len(eventPlayer.PreviewsArray) else eventPlayer.PreviewsI + 1 
             waitUntil(eventPlayer.getThrottle().x > -0.5, 1)
@@ -317,7 +318,7 @@ rule "Skip | Crouch + Primary/Secondary Fire":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) )
-    @Condition hostPlayer.EditorOn or ( eventPlayer.PracticeToggle and eventPlayer.isHoldingButton(Button.ABILITY_1) )
+    #@Condition hostPlayer.EditorOn or ( eventPlayer.PracticeToggle and eventPlayer.isHoldingButton(Button.ABILITY_1) )
     @Condition eventPlayer.LockState == false
     #@Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle
     
@@ -354,8 +355,11 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition not eventPlayer.isHoldingButton(Button.MELEE)
-
     if eventPlayer.QuickRestartToggle:
+        if CheckpointPositions == []: # dont go to 0,0,0 if no cps on map
+            wait()
+            return
+        
         if eventPlayer.EditorOn:
             if eventPlayer == hostPlayer and eventPlayer.EditModeSelection == 0 and eventPlayer.isHoldingButton(Button.INTERACT):
                 #wait(0.1, Wait.ABORT_WHEN_FALSE)

@@ -8,10 +8,16 @@ huds outside this file:
 
 */
 
+
+
+
 rule "Huds: Global/Localplayer":
     wait(2)
 
     # name/credit construction
+    # note on changing default name/credit
+    # if you change it, also change it in the credits rule
+    # the old credits should always remain valid here to keep old data valid
     if Name != "name here - 作者" or Cachedcredits[0] == null::
         Cachedcredits[0] = Name
     
@@ -177,11 +183,11 @@ rule "Huds: Global/Localplayer":
         HudStoreEdit.append(getLastCreatedText())
 
         hudSubheader([i for i in getAllPlayers() if i.PracticeToggle and i.GuideToggle],
-            "{0} + {4} + {1} | 下一关\n{0} + {4} + {2} | 上一关\n{3} | 回到练习模式起点 "
-            "".format( buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT),buttonString(Button.ABILITY_1) )    
+            "{0} + {1} | 下一关\n{0} + {2} | 上一关\n{3} | 回到练习模式起点 "
+            "".format( buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT) )    
             checkCN
-            "{0} + {4} + {1} | Next level\n{0} + {4} + {2} | Previous level\n{3} | Start from practice cp "
-            "".format( buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT),buttonString(Button.ABILITY_1) )          
+            "{0}  + {1} | Next level\n{0} + {2} | Previous level\n{3} | Start from practice cp "
+            "".format( buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT) )          
             , HudPosition.RIGHT, HO.com_practicesub, Color.LIME_GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         HudStoreEdit.append(getLastCreatedText())
@@ -189,18 +195,18 @@ rule "Huds: Global/Localplayer":
     if not hostPlayer.EditorOn:
         # find the value
         Difficultyhud = [
-            createWorkshopSetting(enum[ "beginner", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display - 不显示","Playtest - 游戏测试"],"map settings \n地图设置","difficulty (display hud) - 难度(显示hud)",0, 0)
+            createWorkshopSetting(enum[ "playtest - 游戏测试", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display - 不显示"],"map settings \n地图设置","difficulty (display hud) - 难度(显示hud)",0, 0)
             , createWorkshopSetting(bool,"map settings \n地图设置","Playtest display - 游戏测试",false,0) 
             ] 
         # display
         if Difficultyhud[0] != 17: # 17th entry is 'dont display'
             hudText(localPlayer if localPlayer.GuideToggle and not localPlayer.LeaderboardToggle else null, 
                 ("游戏测试" checkCN "Playtest") if Difficultyhud[1] else "",
-                ["beginner", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell",null,"playtest"][Difficultyhud[0]], 
+                ["playtest", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell",null][Difficultyhud[0]], 
                 null,
                 HudPosition.TOP, HO.data_dif,
                 Color.BLUE,
-                [Color.GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.YELLOW,Color.YELLOW,Color.YELLOW, Color.ORANGE,Color.ORANGE,Color.ORANGE,rgb(255, 69, 0), rgb(255, 69, 0), rgb(255, 69, 0), Color.RED, Color.RED, Color.RED, rgb(150, 0, 0),null,Color.BLUE][Difficultyhud[0]], 
+                [Color.BLUE,Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.YELLOW,Color.YELLOW,Color.YELLOW, Color.ORANGE,Color.ORANGE,Color.ORANGE,rgb(255, 69, 0), rgb(255, 69, 0), rgb(255, 69, 0), Color.RED, Color.RED, Color.RED, rgb(150, 0, 0),null][Difficultyhud[0]], 
                 Color.BLUE,
                 HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
             )
@@ -257,9 +263,17 @@ rule "Huds: each player":
         , HudPosition.LEFT, HO.game_climb, Color.RED if eventPlayer.WallclimbUsed else Color.GREEN, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     hudHeader(eventPlayer, 
-        ("小跳未用" if eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == Color.GREEN else "小跳已用") # cn version text updates to say the status, unlike en
+        ( # cn version text updates to say the status, unlike en version
+            "{0}{1}".format(
+                "小跳未用" if eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == Color.GREEN else "小跳已用",
+                "" if eventPlayer.CreateCounter < 1 else " ({0})".format(eventPlayer.CreateCounter)  
+            )  
+        ) 
         checkCN 
-        "Bhop"
+        "Bhop{0}".format(
+            "" if eventPlayer.CreateCounter < 1 else
+            " ({0})".format(eventPlayer.CreateCounter) 
+        )
         , HudPosition.LEFT, HO.game_bhop, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     

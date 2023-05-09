@@ -1,4 +1,4 @@
-#!define versionhere "1.8.1b"
+#!define versionhere "1.8.2"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -62,7 +62,7 @@ rule "------------------------------------------------------------------------  
     @Delimiter
     @Disabled
 
-def RebuildBounceOrbs():
+def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Bounce Ball Effects" 
     @Name "SUB | Rebuild Bounce Orbs"
     destroyEffect(BounceEffects)
     BounceEffects = [] 
@@ -78,7 +78,7 @@ def RebuildBounceOrbs():
     BounceEffects.append(getLastCreatedEntity())
     wait()
 
-def RebuildKillOrbs():
+def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Kill Orb Effects" 
     @Name "SUB | Rebuild Kill Orbs"
     destroyEffect(KillBallEffects)
     KillBallEffects = []  
@@ -281,9 +281,20 @@ rule "Setup and Variables":
         CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode\n竞赛模式", "attempt count - 尝试次数", attemptcount, 102) 
         # -! comp restartlimiter !-
         CompRestartLimit = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","disable restart during run - 竞赛中禁用重新开始" , comprestartlimit , 103)
+    else:
+        instructiontext = null
 
+    wait(1) # add back to below wait if removed
+    # clean out -1's after the ban has laoded
+    BanBhop = [i for i in BanBhop if i != -1]
+    BanClimb = [i for i in BanClimb if i != -1]
+    BanEmote = [i for i in BanEmote if i != -1]
+    BanDead = [i for i in BanDead if i != -1]
+    BanCreate = [i for i in BanCreate if i != -1]
+    BanMulti = [i for i in BanMulti if i != -1]
+    BanTriple = [i for i in BanTriple if i != -1]
 
-    wait(5)
+    wait(4)
     KILLBALL()
     wait(2)
     pinball() #
@@ -540,7 +551,7 @@ def StartGame_Sub():
                 eventPlayer.TitleStore = getLastCreatedText()
 
         else:
-            eventPlayer.teleport(CheckpointPositions[0] + Vector.UP)
+            eventPlayer.teleport(CheckpointPositions[0] + Vector.UP) # dont remove up because now people are used to it and see it as a tech
             eventPlayer.CurrentCheckpoint = 0
             eventPlayer.Timer = 0
             stopChasingVariable(eventPlayer.PauseTimer)
@@ -680,21 +691,13 @@ rule "Arrive | Ground reset | traces":
             # ground reset ----------------------------------------------------------------------------------------------------
             checkpointFailReset()
 
+    eventPlayer.LockCollected = []
     lbl_abc:
     wait(0.048)
 
     if RULE_CONDITION:
         goto RULE_START               
    
-   
-rule "reset collected locks when landing back on cp":
-    @Event eachPlayer
-    @Condition eventPlayer.LockCollected != []
-    @Condition eventPlayer.isOnGround()
-    @Condition distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) <= cpcircleradius
-
-    eventPlayer.LockCollected = []
-
 rule "Kill Orb | Activate":
     @Event eachPlayer
     @Condition eventPlayer.KillPosition_Cache != []
@@ -818,7 +821,7 @@ rule "AFK timer":
     @Condition eventPlayer.isMoving() == false
     @Condition eventPlayer.isAlive()
     @Condition not eventPlayer.EditorOn
-    wait(90, Wait.ABORT_WHEN_FALSE)
+    wait(300, Wait.ABORT_WHEN_FALSE)
 
     # clear status to apply sleep, auto re-aply via normal aply rule
     eventPlayer.clearStatusEffect(Status.PHASED_OUT)
@@ -889,6 +892,9 @@ rule "Map Data - 数据录入 <---- INSERT HERE / 在这输入":
 
 editorordata
 
+# note: Don't change defaults only here.
+# If you change this, also change it in the name/credit construciton in the huds
+# The old default should always be included to make old data valid
 rule "Credits here - 作者名字 <---- INSERT HERE / 在这输入 ": 
     # Filling this in adds it to the inspector pasta after next restart.
     # You can fill in again to overwrite.
@@ -923,11 +929,10 @@ rule "Ban per CP - 封禁(每级) <---- INSERT HERE / 在这输入":
 rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled
     @Delimiter
-    wait(2.5)
     #1) workshop settings > difficulty > set to "dont display"
     #2) enable this rule
     #3) type your difficulty in the hud below
-    printLog("--------")
+    wait(2.5)
     #1) 设置正常 难度hud为“不显示”
     #2) 启用此规则
     #3) 在下面的hud中输入难度
@@ -938,12 +943,10 @@ rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输�
         HudPosition.TOP, HO.data_dif,
         Color.BLUE, Color.GREEN, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-
-   
-
     HudStoreEdit.append(getLastCreatedText())
 
 rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":
+    wait(0.4)
     # Instructions that show when you start comp mode.
     # Due to the hud text limit, you there is 4 huds available.
     # If you dont need a field just empty the textfield.
@@ -954,8 +957,8 @@ rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE
     # 如果你不需 要一个字段 只是空文 本字段
     instructiontext[0] = "Change in Comp Mode instruction message hud 1"
     instructiontext[1] = "Change in Comp Mode instruction message hud 2"
-    instructiontext[2] = "Change in Comp Mode instruction message hud 2"
-    instructiontext[3] = "Change in Comp Mode instruction message hud 2"
+    instructiontext[2] = "Change in Comp Mode instruction message hud 3"
+    instructiontext[3] = "Change in Comp Mode instruction message hud 4"
 
 
 #!include "addons-page2.opy"
