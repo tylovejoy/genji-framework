@@ -698,15 +698,6 @@ rule "Arrive | Ground reset | traces":
     if RULE_CONDITION:
         goto RULE_START               
    
-   /*
-rule "reset collected locks when landing back on cp":
-    @Event eachPlayer
-    @Condition eventPlayer.LockCollected != []
-    @Condition eventPlayer.isOnGround()
-    @Condition distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) <= cpcircleradius
-
-    eventPlayer.LockCollected = []
-*/
 rule "Kill Orb | Activate":
     @Event eachPlayer
     @Condition eventPlayer.KillPosition_Cache != []
@@ -952,9 +943,6 @@ rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输�
         HudPosition.TOP, HO.data_dif,
         Color.BLUE, Color.GREEN, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-
-   
-
     HudStoreEdit.append(getLastCreatedText())
 
 rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":

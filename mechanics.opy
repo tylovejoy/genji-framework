@@ -194,18 +194,6 @@ rule "Ban | Triple Jump":
     smallMessage(eventPlayer,"   三段跳 ▲ 已禁用!" checkCN "   Triple Jump ▲ is banned!")
     checkpointFailReset()
 
-/*
-# merged into multi climb counter
-rule "Ban | Multiclimb":
-    @Event eachPlayer
-    @Condition eventPlayer.ban_multi
-    @Condition not eventPlayer.InvincibleToggle
-    @Condition eventPlayer.NotOnLastCp
-    @Condition eventPlayer.MultiClimbCount > 0
-    smallMessage(eventPlayer, "    蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
-    checkpointFailReset() 
-*/
-
 rule "Ban | Emote Savehop":
     @Event eachPlayer
     @Condition eventPlayer.ban_emote

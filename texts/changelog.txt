@@ -291,5 +291,5 @@ fixed:
      
     editor:
     - quick reset now requires a map to have atleast 1 checkpoint. This was causing deadloops in some editor scenarios.
-    - you can no longer place orbs if there are no checkpoints on the map.
+    - you can no longer place orbs if there are no checkpoints on the map. It will also give you an message if you try.
     - deleting the last checkpoint now places you on 0 instead of -1
