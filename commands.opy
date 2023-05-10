@@ -320,7 +320,8 @@ rule "Skip | Crouch + Primary/Secondary Fire":
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) )
     #@Condition hostPlayer.EditorOn or ( eventPlayer.PracticeToggle and eventPlayer.isHoldingButton(Button.ABILITY_1) )
     @Condition eventPlayer.LockState == false
-    #@Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle
+    @Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle
+    
     
     eventPlayer.splittime = 0 
     eventPlayer.practicetimer = 0
