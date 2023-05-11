@@ -520,7 +520,7 @@ rule "Editor | create cp/orb":
 
             UpdateCache()
             RebuildKillOrbs()
-            RebuildBounceOrbs()
+            #RebuildBounceOrbs()
         smallMessage(getAllPlayers(), "   新检查点已创建" checkCN "   New Checkpoint has been created")
         #UpdateCache()
 
@@ -576,7 +576,7 @@ rule "Editor | create cp/orb":
             UpdateCache()
             CurrentBounce_Editing = len(hostPlayer.BounceIndex_Cache) - 1
             CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
-            RebuildBounceOrbs()
+            #RebuildBounceOrbs()
             bigMessage(getAllPlayers(), "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新弹球已创建! \r\n仅生效于检查点" checkCN "New Bounce Orb has been created! \r\nIt's only valid for checkpoint"))
         
     wait(0.64)
@@ -652,7 +652,7 @@ rule "Editor | delete cp/orb":
         hostPlayer.CurrentCheckpoint -= 1
         lbl_a:
         RebuildKillOrbs()
-        RebuildBounceOrbs()
+        #RebuildBounceOrbs()
         smallMessage(getAllPlayers(), "   检查点已删除" checkCN "   Checkpoint has been deleted")
     
     elif eventPlayer.EditModeSelection == 1 and len(eventPlayer.KillIndex_Cache) != 0 and hostPlayer.KillPosition_Cache:
@@ -682,7 +682,7 @@ rule "Editor | delete cp/orb":
         CurrentBounce_Editing -= 1
         lbl_c:
         UpdateCache()
-        RebuildBounceOrbs()
+        #RebuildBounceOrbs()
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
     UpdateCache()
     wait()

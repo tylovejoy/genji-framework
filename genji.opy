@@ -1,7 +1,7 @@
 #!define versionhere "1.8.2b"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(10) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -75,8 +75,8 @@ def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place 
             1, 
             EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
-    BounceEffects.append(getLastCreatedEntity())
-    wait()
+        BounceEffects.append(getLastCreatedEntity())
+        wait()
 
 def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Kill Orb Effects" 
     @Name "SUB | Rebuild Kill Orbs"
