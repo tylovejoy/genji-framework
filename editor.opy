@@ -269,24 +269,31 @@ rule "Editor | Hud and Effects":
         " {1} {0} ".format(
             ["检查点模式","击杀球模式","弹球模式"][hostPlayer.EditModeSelection],
             [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON)][hostPlayer.EditModeSelection]
-         ) if localPlayer == hostPlayer else " {0} 源氏 编辑者 {0} \n 房主/编辑者: {1} ".format(iconString(Icon.BOLT),hostPlayer)
+        ) if localPlayer == hostPlayer else 
+        " {0} 源氏 编辑者 {0} ".format( iconString(Icon.BOLT) )
         )
-       checkCN
+        checkCN
         " {1} {0} ".format(
             ["Checkpoints mode" ,"Kill Orb mode","Bounce Orb mode"][hostPlayer.EditModeSelection],
             [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON)][hostPlayer.EditModeSelection]
-        ) if localPlayer == hostPlayer else " {0} Genji editor {0} \n host/editor: {1} ".format(iconString(Icon.BOLT),hostPlayer)
-       
+        ) if localPlayer == hostPlayer else 
+        " {0} Genji editor {0} ".format( iconString(Icon.BOLT) )
        , null, null,   
        HudPosition.TOP, HO.edit_host_mode, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-    hudText(hostPlayer if hostPlayer.GuideToggle else null, 
+    hudText(
+        getAllPlayers(),
         null,  # original part of the one ontop of it
-        "长按 {0} 切换作图模式".format(buttonString(Button.ABILITY_1))
+        (
+        "长按 {0} 切换作图模式".format(buttonString(Button.ABILITY_1)) if localPlayer == hostPlayer else 
+        "房主/编辑者 {0}".format(hostPlayer) 
+        )
         checkCN
-        "Hold {0} to change mode".format(buttonString(Button.ABILITY_1))
-        , null,   
-        HudPosition.TOP, HO.edit_changemode, Color.SKY_BLUE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        (
+        "Hold {0} to change mode".format(buttonString(Button.ABILITY_1)) if localPlayer == hostPlayer else 
+        "Current host/editor: {0}".format(hostPlayer)
+        )
+        , null, HudPosition.TOP, HO.edit_changemode, Color.SKY_BLUE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     hudSubtext(hostPlayer if hostPlayer.GuideToggle and (hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null, 
