@@ -296,3 +296,10 @@ fixed:
 
 1.8.2b
     - fixed a bug that allowed you to skip without practice mode on
+
+
+1.8.3
+
+    editor
+    - fixed a bug that caused editing orbs on map data that already had orbs to exponentionally add up on fx count, resulting into hidden orbs
+    - fixed mistake that caused leaderboard to apear as a hud command in editor, despite not being an editor feature
