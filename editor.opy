@@ -427,6 +427,7 @@ rule "Editor | Hud and Effects":
         Effect.GOOD_AURA, Color.PURPLE, CurrentBouncePosition_Editing, 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS
     )    
     
+    # 
 
     # Selected kill orb text
     createInWorldText(getAllPlayers() if hostPlayer.CurrentCheckpoint != -1 and hostPlayer.KillPosition_Cache and hostPlayer.EditModeSelection == 1 else null, 
