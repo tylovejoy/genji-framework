@@ -157,8 +157,8 @@ rule "Editor | Hud and Effects":
         destroyHudText(HudStoreEdit[0])
         destroyInWorldText(HudStoreEdit[0])
         del HudStoreEdit[0]
-    
     wait()
+
     if CompMode: # infinite time and atemps
         CompAtmpNum = 0 
         CompTime = 99999
@@ -178,76 +178,78 @@ rule "Editor | Hud and Effects":
     hudSubtext(hostPlayer if hostPlayer.GuideToggle else null, 
         "{0}".format(   
         [
-        "{0} + {1} | 新建检查点\n"
-	    "{0} + {2} | 删除选中的检查点\n"
-		"{0} + {3} | 移除/新建传送点\n" #移除/新建 传送门
-		"{0} + {4} | 移动检查点至当前位置\n"
-        "{0} + {5} | 检查点碰撞模型\n"
-        "{4} (长按) | 微调检查点位置".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1)),
-
-        "{0} + {1} | 新建击杀球\n"
-		"{0} + {2} | 删除选中的击杀球\n"
-        "{0} + {3} | 选择上一个击杀球\n"
-        "{0} + {4} | 选择下一个击杀球\n\n"
-        "{5} + {4} | 增大击杀球尺寸\n"
-        "{5} + {3} | 减小击杀球尺寸\n"
-        "{5} + {1} | 向前移动击杀球\n"
-        "{5} + {2} | 向后移动击杀球".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2)),
-		
-        "{0} + {1} | 新建弹球\n"
-		"{0} + {3} | 选择上一个弹球\n"
-		"{0} + {4} | 选择下一个弹球\n\n"
-		"{0} + {2} | 删除选中的弹球\n"
-		"{5} + {4} | 增加弹球弹力\n"
-		"{5} + {3} | 减少弹球弹力\n"
-		"{5} + {1} | 向前移动弹球\n"
-        "{5} + {2} | 向后移动弹球".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
+            "{0} + {1} | 新建检查点\n"
+            "{0} + {2} | 删除选中的检查点\n"
+            "{0} + {3} | 移除/新建传送点\n" #移除/新建 传送门
+            "{0} + {4} | 移动检查点至当前位置\n"
+            "{0} + {5} | 检查点碰撞模型\n"
+            "{4} (长按) | 微调检查点位置"
+            "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1))
+            ,
+            "{0} + {1} | 新建击杀球\n"
+            "{0} + {2} | 删除选中的击杀球\n"
+            "{0} + {3} | 选择上一个击杀球\n"
+            "{0} + {4} | 选择下一个击杀球\n\n"
+            "{5} + {4} | 增大击杀球尺寸\n"
+            "{5} + {3} | 减小击杀球尺寸\n"
+            "{5} + {1} | 向前移动击杀球\n"
+            "{5} + {2} | 向后移动击杀球"
+            "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
+            , 
+            "{0} + {1} | 新建弹球\n"
+            "{0} + {3} | 选择上一个弹球\n"
+            "{0} + {4} | 选择下一个弹球\n\n"
+            "{0} + {2} | 删除选中的弹球\n"
+            "{5} + {4} | 增加弹球弹力\n"
+            "{5} + {3} | 减少弹球弹力\n"
+            "{5} + {1} | 向前移动弹球\n"
+            "{5} + {2} | 向后移动弹球"
+            "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
         ][hostPlayer.EditModeSelection]
         checkCN 
         [   
-        "{0} + {1} | Create New Checkpoint\n"
-        "{0} + {2} | Delete selected Checkpoint\n"
-        "{0} + {3} | Remove/Add teleport\n"
-        "{0} + {4} | Set Checkpoint to current position\n"
-        "{0} + {5} | Toggle Checkpoint Hitbox\n"
-        "{6} (hold) | Precise position changing".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1), buttonString(Button.MELEE)),
-
-        "{0} + {1} | Create new kill orb\n"
-        "{0} + {2} | Delete selected orb\n"
-        "{0} + {3} | Select previous orb\n"
-        "{0} + {4} | Select next orb\n\n"
-        "{5} + {4} | Increase orb size\n"
-        "{5} + {3} | Decrease orb size\n"
-        "{5} + {1} | Move orb forward\n"
-        "{5} + {2} | Move orb Backward".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2)),
- 
-        "{0} + {1} | Create new Bounce orb\n"
-        "{0} + {3} | Select previous orb\n"
-        "{0} + {4} | Select next orb\n\n"
-        "{0} + {2} | Delete selected orb\n"
-        "{5} + {4} | Increase orb strength\n"
-        "{5} + {3} | Decrease orb strength\n"
-        "{5} + {1} | Move orb forward\n"
-        "{5} + {2} | Move orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
+            "{0} + {1} | Create New Checkpoint\n"
+            "{0} + {2} | Delete selected Checkpoint\n"
+            "{0} + {3} | Remove/Add teleport\n"
+            "{0} + {4} | Set Checkpoint to current position\n"
+            "{0} + {5} | Toggle Checkpoint Hitbox\n"
+            "{6} (hold) | Precise position changing"
+            "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1), buttonString(Button.MELEE))
+            ,
+            "{0} + {1} | Create new kill orb\n"
+            "{0} + {2} | Delete selected orb\n"
+            "{0} + {3} | Select previous orb\n"
+            "{0} + {4} | Select next orb\n\n"
+            "{5} + {4} | Increase orb size\n"
+            "{5} + {3} | Decrease orb size\n"
+            "{5} + {1} | Move orb forward\n"
+            "{5} + {2} | Move orb Backward"
+            "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
+            ,
+            "{0} + {1} | Create new Bounce orb\n"
+            "{0} + {3} | Select previous orb\n"
+            "{0} + {4} | Select next orb\n\n"
+            "{0} + {2} | Delete selected orb\n"
+            "{5} + {4} | Increase orb strength\n"
+            "{5} + {3} | Decrease orb strength\n"
+            "{5} + {1} | Move orb forward\n"
+            "{5} + {2} | Move orb back"
+            "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
         ][hostPlayer.EditModeSelection]), 
         HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(hostPlayer if hostPlayer.GuideToggle else null, 
-        (
+    hudSubtext(
+        hostPlayer if hostPlayer.GuideToggle else null, 
         " \n{0} + {1} | 下一个检查点\n"
         "{0} + {2} | 上一个检查点\n"
         "{3} | 飞行 (仅限检查点模式)\n"
         "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_2))
-        
         checkCN
-        
         " \n{0} + {1} | Next checkpoint\n"
         "{0} + {2} | Prev checkpoint\n"
         "{3} | Fly (checkpoint mode only)\n"
         "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_2))
-        )
-        
         ,HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
@@ -829,7 +831,7 @@ rule "Editor | precision moving":
     @Condition len(CheckpointPositions) > 0
     @Condition not eventPlayer.isHoldingButton(Button.INTERACT)
     wait(1, Wait.ABORT_WHEN_FALSE)
-    
+
     eventPlayer.setMoveSpeed(3)
     eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), 15)
 
