@@ -845,6 +845,40 @@ rule "Editor | precision moving":
     eventPlayer.stopCamera()
     eventPlayer.setMoveSpeed(100)
 
+
+/*
+# merged move cp and precise placement
+rule "Editor | cp moving":
+    @Event eachPlayer
+    @Condition eventPlayer.EditorOn
+    @Condition eventPlayer == hostPlayer
+    @Condition eventPlayer.EditModeSelection == 0
+    @Condition eventPlayer.isHoldingButton(Button.MELEE)
+    #@Condition eventPlayer.isHoldingButton(Button.INTERACT)
+    @Condition len(CheckpointPositions) > 0
+    wait(0.2, Wait.ABORT_WHEN_FALSE)
+    if CheckpointPositions[hostPlayer.CurrentCheckpoint][1]:
+        CheckpointPositions[hostPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[hostPlayer.CurrentCheckpoint][1] ]
+    else:
+        CheckpointPositions[hostPlayer.CurrentCheckpoint] = eventPlayer.getPosition() 
+    
+    smallMessage(hostPlayer,"   检查点已移动至当前位置" checkCN "   Checkpoint has been moved to your position")
+    wait(0.6, Wait.ABORT_WHEN_FALSE)
+
+    eventPlayer.setMoveSpeed(3)
+    eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), 15)
+
+    while eventPlayer.isHoldingButton(Button.MELEE) and eventPlayer.EditModeSelection == 0 and eventPlayer.isAlive():
+        if len(CheckpointPositions[hostPlayer.CurrentCheckpoint])  :
+            CheckpointPositions[hostPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[hostPlayer.CurrentCheckpoint][1] ]
+        else:
+            CheckpointPositions[hostPlayer.CurrentCheckpoint] = eventPlayer.getPosition() 
+        wait()
+    eventPlayer.stopCamera()
+    eventPlayer.setMoveSpeed(100)
+*/
+
+
 rule "add ult/dash":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
