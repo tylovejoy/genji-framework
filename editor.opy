@@ -775,9 +775,9 @@ rule "Editor | cp size hitbox display":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer
+    @Condition hostPlayer.EditModeSelection == 0
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
-    
     eventPlayer.EffectSizeToggle = not eventPlayer.EffectSizeToggle
     wait()
 
@@ -811,6 +811,7 @@ rule "Editor | move cp once":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer    
+    @Condition hostPlayer.EditModeSelection == 0
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     
