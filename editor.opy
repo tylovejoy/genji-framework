@@ -197,8 +197,8 @@ rule "Editor | Hud and Effects":
             , 
             "{0} + {1} | 新建弹球\n"
             "{0} + {3} | 选择上一个弹球\n"
-            "{0} + {4} | 选择下一个弹球\n\n"
-            "{0} + {2} | 删除选中的弹球\n"
+            "{0} + {4} | 选择下一个弹球\n"
+            "{0} + {2} | 删除选中的弹球\n\n"
             "{5} + {4} | 增加弹球弹力\n"
             "{5} + {3} | 减少弹球弹力\n"
             "{5} + {1} | 向前移动弹球\n"
@@ -226,8 +226,8 @@ rule "Editor | Hud and Effects":
             ,
             "{0} + {1} | Create new Bounce orb\n"
             "{0} + {3} | Select previous orb\n"
-            "{0} + {4} | Select next orb\n\n"
-            "{0} + {2} | Delete selected orb\n"
+            "{0} + {4} | Select next orb\n"
+            "{0} + {2} | Delete selected orb\n\n"
             "{5} + {4} | Increase orb strength\n"
             "{5} + {3} | Decrease orb strength\n"
             "{5} + {1} | Move orb forward\n"
