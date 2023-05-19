@@ -307,3 +307,4 @@ fixed:
 
     - spectate in editor no longer triggers if you press primary/secondary fire during interact. this was colliding with some other commands
     - move cp and hitbox toggle are now exclusive to the checkpoint mode
+    - precise positoning triggers faster

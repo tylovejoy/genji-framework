@@ -831,7 +831,7 @@ rule "Editor | precision moving":
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition len(CheckpointPositions) > 0
     @Condition not eventPlayer.isHoldingButton(Button.INTERACT)
-    wait(1, Wait.ABORT_WHEN_FALSE)
+    wait(0.5, Wait.ABORT_WHEN_FALSE)
 
     eventPlayer.setMoveSpeed(3)
     eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), 15)
