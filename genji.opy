@@ -1,14 +1,14 @@
 #!define versionhere "1.8.3"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(10) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
 #!define inspectoron false
 
 # disable via double ## at include, not the define because the define needs to exist
-#!define testaitoggle #!include "test-scripts.opy"
+#!define testaitoggle ##!include "test-scripts.opy"
 
 # enable to remove invis command (this command cant be pasted in cn client die to null and none translating to same symbol) 
 #!define disableInvisCommand false
@@ -214,7 +214,7 @@ def UpdateCache():
         KillBallChase = KillBallPositions[eventPlayer.KillIndex_Cache[SelectedKillball_Editing]] if len(eventPlayer.KillIndex_Cache) else vect(0,0,0)
         CurrentBounce_Editing = 0 if eventPlayer.BounceIndex_Cache else 99999
         CurrentBouncePosition_Editing = BouncePositions[eventPlayer.BounceIndex_Cache[CurrentBounce_Editing]] if len(eventPlayer.BounceIndex_Cache) else vect(0,0,0)
-        eventPlayer.MovedCheckpoint = false
+        eventPlayer.MovedCheckpoint = false     
 
 #!include "editor.opy"
 
@@ -570,6 +570,7 @@ def StartGame_Sub():
     eventPlayer.SpectateToggle = false
 
     # eventPlayer.LockState = false
+    eventPlayer.MovedCheckpoint = true
     UpdateCache()
 
 def KILLBALL():

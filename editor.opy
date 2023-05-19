@@ -181,10 +181,9 @@ rule "Editor | Hud and Effects":
             "{0} + {1} | 新建检查点\n"
             "{0} + {2} | 删除选中的检查点\n"
             "{0} + {3} | 移除/新建传送点\n" #移除/新建 传送门
-            "{0} + {4} | 移动检查点至当前位置\n"
             "{0} + {5} | 检查点碰撞模型\n"
-            "{4} (长按) | 微调检查点位置"
-            "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1))
+            "{4} (长按) | 移动检查点"
+            "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ABILITY_2), buttonString(Button.ABILITY_1))
             ,
             "{0} + {1} | 新建击杀球\n"
             "{0} + {2} | 删除选中的击杀球\n"
@@ -211,10 +210,9 @@ rule "Editor | Hud and Effects":
             "{0} + {1} | Create New Checkpoint\n"
             "{0} + {2} | Delete selected Checkpoint\n"
             "{0} + {3} | Remove/Add teleport\n"
-            "{0} + {4} | Set Checkpoint to current position\n"
             "{0} + {5} | Toggle Checkpoint Hitbox\n"
-            "{6} (hold) | Precise position changing"
-            "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ULTIMATE), buttonString(Button.ABILITY_1), buttonString(Button.MELEE))
+            "{4} (hold) | Move checkpoint"
+            "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ABILITY_2), buttonString(Button.ABILITY_1))
             ,
             "{0} + {1} | Create new kill orb\n"
             "{0} + {2} | Delete selected orb\n"
@@ -243,13 +241,13 @@ rule "Editor | Hud and Effects":
         hostPlayer if hostPlayer.GuideToggle else null, 
         " \n{0} + {1} | 下一个检查点\n"
         "{0} + {2} | 上一个检查点\n"
-        "{3} | 飞行 (仅限检查点模式)\n"
-        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_2))
+        "{3} | 飞行\n"
+        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.MELEE))
         checkCN
         " \n{0} + {1} | Next checkpoint\n"
         "{0} + {2} | Prev checkpoint\n"
-        "{3} | Fly (checkpoint mode only)\n"
-        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_2))
+        "{3} | Fly\n"
+        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.MELEE))
         ,HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
@@ -451,19 +449,17 @@ rule "Editor | Hud and Effects":
 rule "Editor |  Fly/Noclip Toggle":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
-    @Condition eventPlayer.EditModeSelection == 0
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) 
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == false
+    @Condition eventPlayer.isHoldingButton(Button.MELEE) 
     @Condition eventPlayer.flytoggle == null
-    waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_2) or (eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.INTERACT)), 1)
-    if eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.INTERACT):
+    waitUntil(eventPlayer.isHoldingButton(Button.RELOAD) or not eventPlayer.isHoldingButton(Button.MELEE), 1)
+    if eventPlayer.isHoldingButton(Button.RELOAD):
         wait()
-        return
+        return 
 
     eventPlayer.flytoggle = eventPlayer.getPosition() + Vector.UP
     eventPlayer.startForcingPosition(eventPlayer.flytoggle, true)
     eventPlayer.disableEnvironmentCollision(true)
-    while eventPlayer.isAlive() and eventPlayer.flytoggle != null and not eventPlayer.isHoldingButton(Button.ABILITY_2):
+    while eventPlayer.isAlive() and eventPlayer.flytoggle != null and not eventPlayer.isHoldingButton(Button.MELEE):
         eventPlayer.flytoggle += eventPlayer.getFacingDirection() * (
             0.25 + eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z > 0 else 
             -0.25 - eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z < 0 else 
@@ -483,8 +479,7 @@ rule "Editor | change mode":
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
     wait(0.84, Wait.ABORT_WHEN_FALSE)
-
-    eventPlayer.flytoggle = null   
+      
     smallMessage(hostPlayer,
         [ "   当前模式: 击杀球",  "   当前模式: 弹球", "   当前模式: 检查点"][eventPlayer.EditModeSelection]
         checkCN
@@ -638,7 +633,7 @@ rule "Editor | delete cp/orb":
         del CheckpointPositions[hostPlayer.CurrentCheckpoint]
         del CheckpointRings_Editing[hostPlayer.CurrentCheckpoint]
         
-        if hostPlayer.CurrentCheckpoint == 0 and len(CheckpointPositions) > 0 or CheckpointPositions == []:
+        if hostPlayer.CurrentCheckpoint < 1 and len(CheckpointPositions) > 0 or CheckpointPositions == []:
             hostPlayer.CurrentCheckpoint = 0
             goto lbl_a
 
@@ -788,7 +783,7 @@ rule "Editor | cp add/remove teleport":
     @Condition hostPlayer.isHoldingButton(Button.MELEE) == false
     @Condition len(CheckpointPositions) > 1
     @Condition hostPlayer.EditModeSelection == 0
-    waitUntil(hostPlayer.isHoldingButton(Button.MELEE) or not (hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.RELOAD)), 1) # prevent overlap
+    waitUntil(hostPlayer.isHoldingButton(Button.MELEE) or not (hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.RELOAD)), 1) # prevent overlap with save map
     if hostPlayer.isHoldingButton(Button.MELEE) or hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.RELOAD):
       return
 
@@ -807,76 +802,26 @@ rule "Editor | cp add/remove teleport":
         smallMessage(hostPlayer, "{1} {0}".format(hostPlayer.CurrentCheckpoint,"   传送点已添加到检查点" checkCN "   Teleport has been added for level"))
     wait()
 
-rule "Editor | move cp once":
-    @Event eachPlayer
-    @Condition hostPlayer.EditorOn
-    @Condition eventPlayer == hostPlayer    
-    @Condition hostPlayer.EditModeSelection == 0
-    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT)
-    
-    if CheckpointPositions[hostPlayer.CurrentCheckpoint][1]:
-        CheckpointPositions[hostPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[hostPlayer.CurrentCheckpoint][1] ]
-    else:
-        CheckpointPositions[hostPlayer.CurrentCheckpoint] = eventPlayer.getPosition() 
-    
-    smallMessage(hostPlayer,"   检查点已移动至当前位置" checkCN "   Checkpoint has been moved to your position")
-    wait()
-
 rule "Editor | precision moving":
     @Event eachPlayer
     @Condition eventPlayer.EditorOn
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.EditModeSelection == 0
-    @Condition eventPlayer.isHoldingButton(Button.MELEE)
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition len(CheckpointPositions) > 0
-    @Condition not eventPlayer.isHoldingButton(Button.INTERACT)
-    wait(0.5, Wait.ABORT_WHEN_FALSE)
+    wait(0.3, Wait.ABORT_WHEN_FALSE)
 
     eventPlayer.setMoveSpeed(3)
     eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), 15)
 
-    while eventPlayer.isHoldingButton(Button.MELEE) and eventPlayer.EditModeSelection == 0 and eventPlayer.isAlive() and not eventPlayer.isHoldingButton(Button.INTERACT):
-        if len(CheckpointPositions[hostPlayer.CurrentCheckpoint])  :
+    while eventPlayer.isHoldingButton(Button.ABILITY_2) and eventPlayer.EditModeSelection == 0 and eventPlayer.isAlive() and not eventPlayer.isHoldingButton(Button.INTERACT):
+        if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]):
             CheckpointPositions[hostPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[hostPlayer.CurrentCheckpoint][1] ]
         else:
             CheckpointPositions[hostPlayer.CurrentCheckpoint] = eventPlayer.getPosition() 
         wait()
     eventPlayer.stopCamera()
     eventPlayer.setMoveSpeed(100)
-
-
-/*
-# merged move cp and precise placement
-rule "Editor | cp moving":
-    @Event eachPlayer
-    @Condition eventPlayer.EditorOn
-    @Condition eventPlayer == hostPlayer
-    @Condition eventPlayer.EditModeSelection == 0
-    @Condition eventPlayer.isHoldingButton(Button.MELEE)
-    #@Condition eventPlayer.isHoldingButton(Button.INTERACT)
-    @Condition len(CheckpointPositions) > 0
-    wait(0.2, Wait.ABORT_WHEN_FALSE)
-    if CheckpointPositions[hostPlayer.CurrentCheckpoint][1]:
-        CheckpointPositions[hostPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[hostPlayer.CurrentCheckpoint][1] ]
-    else:
-        CheckpointPositions[hostPlayer.CurrentCheckpoint] = eventPlayer.getPosition() 
-    
-    smallMessage(hostPlayer,"   检查点已移动至当前位置" checkCN "   Checkpoint has been moved to your position")
-    wait(0.6, Wait.ABORT_WHEN_FALSE)
-
-    eventPlayer.setMoveSpeed(3)
-    eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), 15)
-
-    while eventPlayer.isHoldingButton(Button.MELEE) and eventPlayer.EditModeSelection == 0 and eventPlayer.isAlive():
-        if len(CheckpointPositions[hostPlayer.CurrentCheckpoint])  :
-            CheckpointPositions[hostPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[hostPlayer.CurrentCheckpoint][1] ]
-        else:
-            CheckpointPositions[hostPlayer.CurrentCheckpoint] = eventPlayer.getPosition() 
-        wait()
-    eventPlayer.stopCamera()
-    eventPlayer.setMoveSpeed(100)
-*/
 
 
 rule "add ult/dash":

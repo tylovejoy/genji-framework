@@ -307,4 +307,6 @@ fixed:
 
     - spectate in editor no longer triggers if you press primary/secondary fire during interact. this was colliding with some other commands
     - move cp and hitbox toggle are now exclusive to the checkpoint mode
-    - precise positoning triggers faster
+    - precise positoning triggers faster, move cp has been removed in favour of precise positioning
+    - fixed a bug that caused selected orb/kill indicators to be in the wrong place on using the restart command
+    

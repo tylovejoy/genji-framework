@@ -9,6 +9,7 @@ rule "Toggle Leaderboard | Hold Melee":
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition not eventPlayer.EditorOn
     wait(1, Wait.ABORT_WHEN_FALSE)
+
     eventPlayer.LeaderboardToggle = not eventPlayer.LeaderboardToggle
 
 rule "Split hide":
@@ -30,6 +31,7 @@ rule "Toggle Invisible | Hold Deflect":
     @Condition not eventPlayer.EditorOn
     @Condition not CompMode
     wait(1, Wait.ABORT_WHEN_FALSE)
+
     eventPlayer.invis = not eventPlayer.invis
     eventPlayer.setInvisibility(Invis.NONE) 
     if eventPlayer.invis:
@@ -141,7 +143,7 @@ rule "Enter Spectate | Hold Interact":
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
     @Condition not (eventPlayer.EditorOn and eventPlayer.isHoldingButton(Button.MELEE))
     @Condition eventPlayer.EditorOn == false or not(eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE))
-    @Condition not editoron
+    #@Condition not editoron
     wait(1, Wait.ABORT_WHEN_FALSE)
     if eventPlayer.EditorOn: # editor has interact combos
         wait(1, Wait.ABORT_WHEN_FALSE)
@@ -322,6 +324,7 @@ rule "Skip | Crouch + Primary/Secondary Fire":
     #@Condition hostPlayer.EditorOn or ( eventPlayer.PracticeToggle and eventPlayer.isHoldingButton(Button.ABILITY_1) )
     @Condition eventPlayer.LockState == false
     @Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle
+    @Condition len(CheckpointPositions) > 1
     
     
     eventPlayer.splittime = 0 
