@@ -449,17 +449,19 @@ rule "Editor | Hud and Effects":
 rule "Editor |  Fly/Noclip Toggle":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
-    @Condition eventPlayer.isHoldingButton(Button.MELEE) 
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_1) 
     @Condition eventPlayer.flytoggle == null
-    waitUntil(eventPlayer.isHoldingButton(Button.RELOAD) or not eventPlayer.isHoldingButton(Button.MELEE), 1)
-    if eventPlayer.isHoldingButton(Button.RELOAD):
+    waitUntil(eventPlayer.isHoldingButton(Button.RELOAD) or not eventPlayer.isHoldingButton(Button.ABILITY_1), 0.5)
+    if eventPlayer.isHoldingButton(Button.RELOAD) or not eventPlayer.isHoldingButton(Button.ABILITY_1):
         wait()
         return 
 
     eventPlayer.flytoggle = eventPlayer.getPosition() + Vector.UP
     eventPlayer.startForcingPosition(eventPlayer.flytoggle, true)
     eventPlayer.disableEnvironmentCollision(true)
-    while eventPlayer.isAlive() and eventPlayer.flytoggle != null and not eventPlayer.isHoldingButton(Button.MELEE):
+    waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_1), 1)
+
+    while eventPlayer.isAlive() and eventPlayer.flytoggle != null and not eventPlayer.isHoldingButton(Button.ABILITY_1):
         eventPlayer.flytoggle += eventPlayer.getFacingDirection() * (
             0.25 + eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z > 0 else 
             -0.25 - eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z < 0 else 
