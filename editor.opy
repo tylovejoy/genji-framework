@@ -242,12 +242,12 @@ rule "Editor | Hud and Effects":
         " \n{0} + {1} | 下一个检查点\n"
         "{0} + {2} | 上一个检查点\n"
         "{3} | 飞行\n"
-        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.MELEE))
+        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1))
         checkCN
         " \n{0} + {1} | Next checkpoint\n"
         "{0} + {2} | Prev checkpoint\n"
         "{3} | Fly\n"
-        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.MELEE))
+        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1))
         ,HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
@@ -257,7 +257,7 @@ rule "Editor | Hud and Effects":
         "to save map hold {0} + {1} + {2} and follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD))
         ,HudPosition.LEFT, HO.edit_savemap, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-    
+    /*
     hudText(getAllPlayers(),  #  LEFT at -6 original position
         (
         " {1} {0} ".format(
@@ -275,16 +275,43 @@ rule "Editor | Hud and Effects":
        , null, null,   
        HudPosition.TOP, HO.edit_host_mode, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
+    */
+
+    hudText(getAllPlayers(),
+        "{0} Checkpoints \n" 
+        "{1} Kills orbs \n"
+        "{2} Bounce Orb \n"
+        "{3} teleport and portals \n"
+        "{4} checkpoint bans"
+        "".format(
+        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 0 else "     ",
+        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 1 else "     ",
+        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 2 else "     ",
+        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 3 else "     ",
+        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 4 else "     "
+        )
+        if hostPlayer.isHoldingButton(Button.MELEE) else
+        " {1} {0} ".format(
+            ["Checkpoints" ,"Kill orbs","Function Orb","teleport and portals","checkpoint bans"][ hostPlayer.EditModeSelection],
+            [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.SPIRAL),iconString(Icon.STOP)][ hostPlayer.EditModeSelection]
+       )  if localPlayer == hostPlayer else 
+        " {0} Genji editor {0} ".format( iconString(Icon.BOLT) ),
+
+        null,
+        null,   
+       HudPosition.TOP, HO.edit_host_mode, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+    )
+
     hudText(
         getAllPlayers(),
         null,  # original part of the one ontop of it
         (
-        "长按 {0} 切换作图模式".format(buttonString(Button.ABILITY_1)) if localPlayer == hostPlayer else 
+        "{0} + 射击 | 切换作图模式".format(buttonString(Button.MELEE)) if localPlayer == hostPlayer else 
         "房主/编辑者 {0}".format(hostPlayer) 
         )
         checkCN
         (
-        "Hold {0} to change mode".format(buttonString(Button.ABILITY_1)) if localPlayer == hostPlayer else 
+        "{0} + shoot | change mode".format(buttonString(Button.MELEE)) if localPlayer == hostPlayer else 
         "Current host/editor: {0}".format(hostPlayer)
         )
         , null, HudPosition.TOP, HO.edit_changemode, Color.SKY_BLUE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
@@ -479,16 +506,32 @@ rule "Editor | change mode":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
-    wait(0.84, Wait.ABORT_WHEN_FALSE)
-      
+    @Condition eventPlayer.isHoldingButton(Button.MELEE)
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
+    #wait(0.84, Wait.ABORT_WHEN_FALSE)
+    /*
     smallMessage(hostPlayer,
         [ "   当前模式: 击杀球",  "   当前模式: 弹球", "   当前模式: 检查点"][eventPlayer.EditModeSelection]
         checkCN
         ["   Current mode: Kill Orb","   Current mode: Bounce Orb","   Current mode: Checkpoint"][eventPlayer.EditModeSelection]
     )
+    */
     wait()
-    eventPlayer.EditModeSelection = (eventPlayer.EditModeSelection  + 1) % 3
+    if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
+        eventPlayer.EditModeSelection = eventPlayer.EditModeSelection - 1 if eventPlayer.EditModeSelection > 0 else 4
+        
+        #currentmode = currentmode + 1 if currentmode < 6 else 0
+        waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 0.2)
+        if RULE_CONDITION:
+            goto RULE_START
+    else:
+        eventPlayer.EditModeSelection = (eventPlayer.EditModeSelection  + 1) % 5
+        #eventPlayer.EditModeSelection = (eventPlayer.EditModeSelection  - 1) % 5
+       
+        waitUntil(not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.2)
+        if RULE_CONDITION:
+            goto RULE_START
+  
 
 rule "Editor | create cp/orb":
     @Event eachPlayer
@@ -675,6 +718,10 @@ rule "Editor | delete cp/orb":
         UpdateCache()
         #RebuildBounceOrbs()
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+    else:
+        wait()
+        return
+    
     UpdateCache()
     wait()
 
@@ -703,7 +750,7 @@ rule "Editor | orb radi/strength":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer 
-    @Condition eventPlayer.EditModeSelection > 0
+    @Condition eventPlayer.EditModeSelection in [1,2]
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) 
     @Condition eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isHoldingButton(Button.CROUCH) 
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
@@ -721,7 +768,7 @@ rule "Editor | move orbs":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer
-    @Condition eventPlayer.EditModeSelection > 0
+    @Condition eventPlayer.EditModeSelection in [1,2]
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) 
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) 
     
@@ -744,7 +791,7 @@ rule "Editor | select orb":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer
-    @Condition eventPlayer.EditModeSelection > 0
+    @Condition eventPlayer.EditModeSelection in [1,2]
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) or eventPlayer.isHoldingButton(Button.JUMP)
     

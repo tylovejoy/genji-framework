@@ -1,4 +1,4 @@
-#!define versionhere "1.8.3"
+#!define versionhere "alpa alternate modes"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
