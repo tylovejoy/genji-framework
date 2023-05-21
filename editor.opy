@@ -233,6 +233,17 @@ rule "Editor | Hud and Effects":
             "{5} + {1} | Move orb forward\n"
             "{5} + {2} | Move orb back"
             "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
+            ,
+            "{0} + {1} | multiclimb\n"
+            "{0} + {2} | createbhop\n"
+            "{0} + {3} | wallclimb\n\n"
+            "{5} + {1} | deadhop\n"
+            "{5} + {2} | emote\n"
+            "{5} + {3} | triple\n"
+            "{5} + {4} | require bhop\n"
+            "".format(buttonString(Button.INTERACT),buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE),buttonString(Button.JUMP),buttonString(Button.CROUCH),buttonString(Button.ABILITY_2))
+        
+        
         ][hostPlayer.EditModeSelection]), 
         HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
@@ -246,7 +257,7 @@ rule "Editor | Hud and Effects":
         checkCN
         " \n{0} + {1} | Next checkpoint\n"
         "{0} + {2} | Prev checkpoint\n"
-        "{3} | Fly\n"
+        "{3} (hold)| Fly\n"
         "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1))
         ,HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
@@ -281,8 +292,8 @@ rule "Editor | Hud and Effects":
         "{0} Checkpoints \n" 
         "{1} Kills orbs \n"
         "{2} Bounce Orb \n"
-        "{3} teleport and portals \n"
-        "{4} checkpoint bans"
+        "{3} checkpoint bans\n"
+        "{4} teleport and portals "
         "".format(
         iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 0 else "     ",
         iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 1 else "     ",
@@ -292,8 +303,8 @@ rule "Editor | Hud and Effects":
         )
         if hostPlayer.isHoldingButton(Button.MELEE) else
         " {1} {0} ".format(
-            ["Checkpoints" ,"Kill orbs","Function Orb","teleport and portals","checkpoint bans"][ hostPlayer.EditModeSelection],
-            [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.SPIRAL),iconString(Icon.STOP)][ hostPlayer.EditModeSelection]
+            ["Checkpoints" ,"Kill orbs","Function Orb","checkpoint bans","teleport and portals"][ hostPlayer.EditModeSelection],
+            [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][ hostPlayer.EditModeSelection]
        )  if localPlayer == hostPlayer else 
         " {0} Genji editor {0} ".format( iconString(Icon.BOLT) ),
 
@@ -431,7 +442,28 @@ rule "Editor | Hud and Effects":
                 BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
             )
             if hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0  else   
+            "bans\n"
+            "========================\n"
+            " {} multi\n"
+            " {} create\n"
+            " {} climb\n"
+            " {} dead\n"
+            " {} emote\n"
+            " {} triple\n"
+            "=====\n"
+            " {} require bhop\n"
+            "".format(
+            iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanMulti else " ",
+            iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanCreate else " ",
+            iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanClimb else " ",
+            iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanDead else " ",
+            iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanEmote else " ",
+            iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanTriple else " ",
+            iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanBhop else " "
+            ) if hostPlayer.EditModeSelection == 3 else
             "\n   No data selected   \n"
+            
+
         )
         , null, null, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
@@ -478,7 +510,7 @@ rule "Editor |  Fly/Noclip Toggle":
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1) 
     @Condition eventPlayer.flytoggle == null
-    waitUntil(eventPlayer.isHoldingButton(Button.RELOAD) or not eventPlayer.isHoldingButton(Button.ABILITY_1), 0.5)
+    waitUntil(eventPlayer.isHoldingButton(Button.RELOAD) or not eventPlayer.isHoldingButton(Button.ABILITY_1), 0.7)
     if eventPlayer.isHoldingButton(Button.RELOAD) or not eventPlayer.isHoldingButton(Button.ABILITY_1):
         wait()
         return 
@@ -516,22 +548,27 @@ rule "Editor | change mode":
         ["   Current mode: Kill Orb","   Current mode: Bounce Orb","   Current mode: Checkpoint"][eventPlayer.EditModeSelection]
     )
     */
+    
     wait()
     if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
         eventPlayer.EditModeSelection = eventPlayer.EditModeSelection - 1 if eventPlayer.EditModeSelection > 0 else 4
-        
-        #currentmode = currentmode + 1 if currentmode < 6 else 0
         waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 0.2)
         if RULE_CONDITION:
             goto RULE_START
     else:
         eventPlayer.EditModeSelection = (eventPlayer.EditModeSelection  + 1) % 5
-        #eventPlayer.EditModeSelection = (eventPlayer.EditModeSelection  - 1) % 5
-       
+               
         waitUntil(not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.2)
         if RULE_CONDITION:
             goto RULE_START
-  
+    /*
+    wait()
+    eventPlayer.EditModeSelection = (eventPlayer.EditModeSelection  + 1) % 5   
+    waitUntil(not eventPlayer.isHoldingButton(Button.MELEE), 0.2)
+    if RULE_CONDITION:
+        goto RULE_START
+    */
+
 
 rule "Editor | create cp/orb":
     @Event eachPlayer
@@ -897,3 +934,79 @@ rule "add ult/dash":
     wait()
 
 
+#!define bantoggle(baninput)\
+if eventPlayer.CurrentCheckpoint in baninput:\
+    baninput = [i for i in baninput if i != eventPlayer.CurrentCheckpoint]\
+else:\
+    baninput.append(eventPlayer.CurrentCheckpoint)
+
+rule "toggle bans":
+    @Event eachPlayer
+    @Condition hostPlayer.EditorOn
+    @Condition eventPlayer == hostPlayer    
+    @Condition hostPlayer.EditModeSelection == 3
+    @Condition len(CheckpointPositions) > 0
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) or eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isHoldingButton(Button.CROUCH)
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT) or eventPlayer.isHoldingButton(Button.ABILITY_2)
+
+    if eventPlayer.isHoldingButton(Button.INTERACT):
+        if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
+            if eventPlayer.CurrentCheckpoint in BanMulti:
+                BanMulti = [i for i in BanMulti if i != eventPlayer.CurrentCheckpoint]
+            else:
+                BanMulti.append(eventPlayer.CurrentCheckpoint)
+
+        elif eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
+            if eventPlayer.CurrentCheckpoint in BanCreate:
+                BanCreate = [i for i in BanCreate if i != eventPlayer.CurrentCheckpoint]
+            else:
+                BanCreate.append(eventPlayer.CurrentCheckpoint)
+
+        elif eventPlayer.isHoldingButton(Button.JUMP):
+            if eventPlayer.CurrentCheckpoint in BanClimb:
+                BanClimb = [i for i in BanClimb if i != eventPlayer.CurrentCheckpoint]
+            else:
+                BanClimb.append(eventPlayer.CurrentCheckpoint)        
+        else:
+            wait()
+            return
+
+    elif eventPlayer.isHoldingButton(Button.ABILITY_2):
+        if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
+            if eventPlayer.CurrentCheckpoint in BanDead:
+                BanDead = [i for i in BanDead if i != eventPlayer.CurrentCheckpoint]
+            else:
+                BanDead.append(eventPlayer.CurrentCheckpoint)
+
+        elif eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
+            if eventPlayer.CurrentCheckpoint in BanEmote:
+                BanEmote = [i for i in BanEmote if i != eventPlayer.CurrentCheckpoint]
+            else:
+                BanEmote.append(eventPlayer.CurrentCheckpoint)
+                
+        elif eventPlayer.isHoldingButton(Button.JUMP):
+            if eventPlayer.CurrentCheckpoint in BanTriple:
+                BanTriple = [i for i in BanTriple if i != eventPlayer.CurrentCheckpoint]
+            else:
+                BanTriple.append(eventPlayer.CurrentCheckpoint)   
+
+        elif eventPlayer.isHoldingButton(Button.CROUCH):
+            if eventPlayer.CurrentCheckpoint in BanBhop:
+                BanBhop = [i for i in BanBhop if i != eventPlayer.CurrentCheckpoint]
+            else:
+                BanBhop.append(eventPlayer.CurrentCheckpoint)   
+    wait()
+    UpdateCache()
+
+    /*
+    BanMulti = []
+    BanCreate = []
+    BanTriple = []
+
+    BanDead = []
+    BanEmote = []
+    BanClimb = []
+    BanBhop = []
+
+
+    */
