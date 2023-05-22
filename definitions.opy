@@ -138,6 +138,8 @@ globalvar ListPlayersAtCheckpoints 15       # list[list[player]]        --- play
 #globalvar ActivePlayers 16                  # list[player]              --- Active players, Non-saved, non-spectating active players
 #globalvar EditorOn 17                       # bool                      --- editor rules enabled?
 
+globalvar Temp2 16                          # num                       --- used for selecting a custom portal in editor
+
 #Bounce Pad editing stuff
 globalvar BouncePositions 18                # list[vect]                --- list of bouncepad positions
 globalvar CurrentBounce_Editing 19          # int                       --- count of 0-indexed bouncepad pos currently

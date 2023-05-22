@@ -281,9 +281,9 @@ rule "Setup and Variables":
     PortalNames = []
     PortalLoc = []
     PortalDest  = []
-    CustomPortalStart  = []
-    CustomPortalEndpoint  = []
-    CustomPortalCP  = []
+    #CustomPortalStart  = []
+    #CustomPortalEndpoint  = []
+    #CustomPortalCP  = []
 
     wait(1)
     DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
@@ -323,7 +323,7 @@ rule "Setup and Variables":
     
     RebuildKillOrbs()
     RebuildBounceOrbs()
-    
+    RebuildPortals()
 rule "Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
         wait(0.25)

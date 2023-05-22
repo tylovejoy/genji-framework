@@ -455,14 +455,25 @@ rule "Editor | Hud and Effects":
             "=====\n"
             " {} require bhop\n"
             "".format(
-            iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanMulti else " ",
-            iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanCreate else " ",
-            iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanClimb else " ",
-            iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanDead else " ",
-            iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanEmote else " ",
-            iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanTriple else " ",
-            iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanBhop else " "
-            ) if hostPlayer.EditModeSelection == 3 else
+                iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanMulti else " ",
+                iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanCreate else " ",
+                iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanClimb else " ",
+                iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanDead else " ",
+                iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanEmote else " ",
+                iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanTriple else " ",
+                iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanBhop else " " 
+            ) 
+            if hostPlayer.EditModeSelection == 3 and CustomPortalCP[CurrentPortalEditing] in [hostPlayer.CurrentCheckpoint,999] else
+                "\n Start: {} \n"
+                " End: {} \n"
+                " CP: {} \n"
+                "".format(
+                CustomPortalStart[CurrentPortalEditing],
+                CustomPortalEndpoint[CurrentPortalEditing],
+                "All" if CustomPortalCP[CurrentPortalEditing] == 999 else hostPlayer.CurrentCheckpoint
+                )
+            if hostPlayer.EditModeSelection == 4 else
+
             "\n   No data selected   \n"
             
 
@@ -506,6 +517,11 @@ rule "Editor | Hud and Effects":
     createEffect(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and hostPlayer.EditModeSelection == 0 else null, Effect.RING, Color.ORANGE, CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createInWorldText(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and hostPlayer.EditModeSelection == 0 else null, "检查点点的位置" checkCN "level location", CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
     
+    # custom portal end
+    # iwt
+    # fx or icon
+    createInWorldText(hostPlayer if hostPlayer.EditModeSelection == 4 and CustomPortalCP[CurrentPortalEditing] in [hostPlayer.CurrentCheckpoint,999] else null, iconString(Icon.SPIRAL), CustomPortalEndpoint[CurrentPortalEditing], 3, Clip.NONE, WorldTextReeval.VISIBILITY_AND_POSITION, Color.ORANGE, SpecVisibility.DEFAULT)
+
 # global functions ==============================================================
 rule "Editor |  Fly/Noclip Toggle":
     @Event eachPlayer
@@ -523,12 +539,13 @@ rule "Editor |  Fly/Noclip Toggle":
     waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_1), 1)
 
     while eventPlayer.isAlive() and eventPlayer.flytoggle != null and not eventPlayer.isHoldingButton(Button.ABILITY_1):
-        eventPlayer.flytoggle += eventPlayer.getFacingDirection() * (
-            0.25 + eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z > 0 else 
-            -0.25 - eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z < 0 else 
-            0
-            )
-        eventPlayer.flytoggle += worldVector(vect(eventPlayer.getThrottle().x*0.3,0,0), eventPlayer, Transform.ROTATION) 
+        if eventPlayer.Temp != "placing":
+            eventPlayer.flytoggle += eventPlayer.getFacingDirection() * (
+                0.25 + eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z > 0 else 
+                -0.25 - eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z < 0 else 
+                0
+                )
+            eventPlayer.flytoggle += worldVector(vect(eventPlayer.getThrottle().x*0.3,0,0), eventPlayer, Transform.ROTATION) 
         wait()
     
     eventPlayer.enableEnvironmentCollision()
@@ -658,7 +675,7 @@ rule "Editor | create cp/orb":
             #RebuildBounceOrbs()
             bigMessage(getAllPlayers(), "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新弹球已创建! \r\n仅生效于检查点" checkCN "New Bounce Orb has been created! \r\nIt's only valid for checkpoint"))
     
-    elif eventPlayer.EditModeSelection == 4:
+    elif eventPlayer.EditModeSelection == 4 and eventPlayer.Temp != "placing":
         if len(CheckpointPositions) < 1:
             smallMessage(eventPlayer, "   请先放置检查点" checkCN "   You first have to make a checkpoint")
             
@@ -848,7 +865,6 @@ rule "Editor | move orbs":
     UpdateCache()
     wait()
 
-globalvar Temp2
 
 rule "Editor | select orb":
     @Event eachPlayer
@@ -876,15 +892,10 @@ rule "Editor | select orb":
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
 
     elif eventPlayer.EditModeSelection == 4:
-        if not(eventPlayer.CurrentCheckpoint in CustomPortalCP or 999 in CustomPortalCP):
+        if eventPlayer.Temp == "placing" or not(eventPlayer.CurrentCheckpoint in CustomPortalCP or 999 in CustomPortalCP):
             wait()
             return
-        #if eventPlayer.isHoldingButton(Button.CROUCH):
-        #    CurrentPortalEditing = (CurrentPortalEditing - 1) % len(CustomPortalStart)
-        #    CurrentPortalEditing = CurrentPortalEditing if CurrentPortalEditing >= 0 else len(CustomPortalStart) - 1
-        #else:
-        #    CurrentPortalEditing = (CurrentPortalEditing + 1) % len(CustomPortalStart)
-        
+ 
         Temp2 = CurrentPortalEditing
         if eventPlayer.isHoldingButton(Button.CROUCH):
             while true:
@@ -910,21 +921,6 @@ rule "Editor | select orb":
                     return
                 if len(CustomPortalStart) > 10:
                     wait()
-
-
-        /*
-        else:
-           
-            for Temp2 in len(CustomPortalCP):
-                if Temp2 > CurrentPortalEditing:
-                    if Temp2 == eventPlayer.CurrentCheckpoint in CustomPortalCP or 999 in CustomPortalCP:
-                        CurrentPortalEditing = Temp2
-                        break
-            for Temp2 in len(CustomPortalCP): # second loop for past last cp
-                if Temp2 == eventPlayer.CurrentCheckpoint in CustomPortalCP or 999 in CustomPortalCP:
-                    CurrentPortalEditing = Temp2
-                    break
-                */
 
     wait()
 
@@ -1090,17 +1086,78 @@ rule "toggle bans":
     */
 
 
-rule "portal":
+rule "portal move":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer    
     @Condition hostPlayer.EditModeSelection == 4
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) 
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
+    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) 
+    @Condition CustomPortalCP[CurrentPortalEditing] in [eventPlayer.CurrentCheckpoint,999]
+    #@Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
+    eventPlayer.Temp = "placing"
+    if eventPlayer.flytoggle == null:
+        eventPlayer.startForcingPosition(eventPlayer.getPosition(),false)    
+        #eventPlayer.disableEnvironmentCollision(true)
 
-    # eventplayer.Temp
+    # move first
+    eventPlayer.startCamera(
+        CustomPortalStart[CurrentPortalEditing] + eventPlayer.getFacingDirection() * -3,
+        CustomPortalStart[CurrentPortalEditing],
+        15
+    )
+    while eventPlayer.Temp == "placing" and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false and eventPlayer.EditModeSelection == 4:
+        # move
+        CustomPortalStart[CurrentPortalEditing] += eventPlayer.getFacingDirection() * (
+                0.25 + eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z > 0 else 
+                -0.25 - eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z < 0 else 
+                0
+                )
+        CustomPortalStart[CurrentPortalEditing] += worldVector(vect(eventPlayer.getThrottle().x*0.2,0,0), eventPlayer, Transform.ROTATION) 
+        wait()
+    if eventPlayer.Temp != "placing" or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) or eventPlayer.EditModeSelection != 4:
+        wait()
+        eventPlayer.stopCamera()
+        return
+    # move second
+    eventPlayer.startCamera(
+        CustomPortalEndpoint[CurrentPortalEditing] + eventPlayer.getFacingDirection() * -3,
+        CustomPortalEndpoint[CurrentPortalEditing],
+        15
+    )
+    waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 1)
+    while eventPlayer.Temp == "placing" and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false and eventPlayer.EditModeSelection == 4:
+        # move
+        CustomPortalEndpoint[CurrentPortalEditing] += eventPlayer.getFacingDirection() * (
+            0.25 + eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z > 0 else 
+            -0.25 - eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z < 0 else 
+            0
+        )
+        CustomPortalEndpoint[CurrentPortalEditing] += worldVector(vect(eventPlayer.getThrottle().x*0.2,0,0), eventPlayer, Transform.ROTATION) 
+        wait()
+    if eventPlayer.Temp != "placing" or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) or eventPlayer.EditModeSelection != 4:
+        wait()
+        eventPlayer.stopCamera()
+        return
 
-    # while first
-    # break and delete first while if canceled
+    eventPlayer.stopCamera()
+    eventPlayer.Temp = null
+    if eventPlayer.flytoggle == null:
+        #eventPlayer.enableEnvironmentCollision()
+        eventPlayer.stopForcingPosition()
 
-    # while second
+rule "portal cp change":
+    @Event eachPlayer
+    @Condition hostPlayer.EditorOn
+    @Condition eventPlayer == hostPlayer    
+    @Condition hostPlayer.EditModeSelection == 4
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) 
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT) 
+    @Condition CustomPortalCP[CurrentPortalEditing] in [eventPlayer.CurrentCheckpoint,999]
+    @Condition eventPlayer.Temp != "placing"
+
+    if CustomPortalCP[CurrentPortalEditing] == 999:
+        CustomPortalCP[CurrentPortalEditing]  = eventPlayer.CurrentCheckpoint
+    else:
+        CustomPortalCP[CurrentPortalEditing]  = 999
+    wait(0.5)
