@@ -8,7 +8,7 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!define inspectoron false
 
 # disable via double ## at include, not the define because the define needs to exist
-#!define testaitoggle ##!include "test-scripts.opy"
+#!define testaitoggle #!include "test-scripts.opy"
 
 # enable to remove invis command (this command cant be pasted in cn client die to null and none translating to same symbol) 
 #!define disableInvisCommand false
@@ -87,6 +87,19 @@ def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place on
         KillBallEffects.append(getLastCreatedEntity())
         wait()
 
+def RebuildPortals():
+    destroyEffect(PortalEffects)
+    PortalEffects = [] 
+    createEffect(
+        [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
+        Effect.GOOD_AURA, 
+        Color.ORANGE if CurrentPortalEditing == evalOnce(TempIterator1) else Color.WHITE,
+        CustomPortalStart[evalOnce(TempIterator1)], 
+        0.6,
+        EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+    )
+    PortalEffects.append(getLastCreatedEntity())
+
 def BuildPortals():
     @Name "SUB | Rebuild Portals"
     # custom portals
@@ -99,6 +112,7 @@ def BuildPortals():
                 0.6,
                 EffectReeval.VISIBILITY
             )
+            PortalEffects.append(getLastCreatedEntity())
             wait(0.16)
     # pre-set portals
     if PortalDest:
@@ -905,7 +919,7 @@ rule "Credits here - 作者名字 <---- INSERT HERE / 在这输入 ":
     Name = "name here - 作者"
     Code = "code here - 代码"
 
-
+/*
 rule "Ban per CP - 封禁(每级) <---- INSERT HERE / 在这输入":
     # Enter the checkpoint/level numbers in the lists below to apply the ban on them
     # Remember the workshop toggle overwrites this list
@@ -927,6 +941,7 @@ rule "Ban per CP - 封禁(每级) <---- INSERT HERE / 在这输入":
     BanClimb = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
     # require bhop available - 留小跳进点
     BanBhop = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
+*/
 
 rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled

@@ -44,10 +44,11 @@ rule "Editor | Clear Excess Data to Save Map":
     PortalNames = []
     PortalLoc = []
     PortalDest  = []
-    CustomPortalStart  = []
-    CustomPortalEndpoint  = []
-    CustomPortalCP  = []
-
+    PortalEffects = 0
+    #CustomPortalStart  = []
+    #CustomPortalEndpoint  = []
+    #CustomPortalCP  = []
+    /*
     BanTriple = []
     BanMulti = []
     BanCreate = []
@@ -55,7 +56,7 @@ rule "Editor | Clear Excess Data to Save Map":
     BanEmote = []
     BanClimb = []
     BanBhop = []
-
+    */
     hudText(eventPlayer,  
         " ",
         null,
@@ -150,6 +151,7 @@ rule "Editor | Hud and Effects":
         HudStoreEdit = null 
         KillBallEffects = null
         BounceEffects = null
+        PortalEffects = null
         return
     wait(2)
     
@@ -655,7 +657,29 @@ rule "Editor | create cp/orb":
             CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
             #RebuildBounceOrbs()
             bigMessage(getAllPlayers(), "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新弹球已创建! \r\n仅生效于检查点" checkCN "New Bounce Orb has been created! \r\nIt's only valid for checkpoint"))
-        
+    
+    elif eventPlayer.EditModeSelection == 4:
+        if len(CheckpointPositions) < 1:
+            smallMessage(eventPlayer, "   请先放置检查点" checkCN "   You first have to make a checkpoint")
+            
+        CustomPortalStart.append(eventPlayer.getPosition())
+        CustomPortalEndpoint.append(eventPlayer.getPosition()+vect(0,10,0))
+        CustomPortalCP.append(eventPlayer.CurrentCheckpoint)
+        CurrentPortalEditing = len(CustomPortalStart) - 1
+
+        createEffect(
+            [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(CurrentPortalEditing)] or CustomPortalCP[evalOnce(CurrentPortalEditing)] == 999],
+            Effect.GOOD_AURA, 
+            #Color.WHITE,
+            Color.ORANGE if CurrentPortalEditing == evalOnce(CurrentPortalEditing) else Color.WHITE,
+            CustomPortalStart[evalOnce(CurrentPortalEditing)], 
+            0.6,
+            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+        )
+        PortalEffects.append(getLastCreatedEntity())
+        CurrentPortalEditing = len(CustomPortalStart) - 1
+
+        bigMessage(getAllPlayers(), "Portal created")
     wait(0.64)
 
 rule "Editor | delete cp/orb":
@@ -824,11 +848,13 @@ rule "Editor | move orbs":
     UpdateCache()
     wait()
 
+globalvar Temp2
+
 rule "Editor | select orb":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer
-    @Condition eventPlayer.EditModeSelection in [1,2]
+    @Condition eventPlayer.EditModeSelection in [1,2,4]
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) or eventPlayer.isHoldingButton(Button.JUMP)
     
@@ -848,6 +874,58 @@ rule "Editor | select orb":
             CurrentBounce_Editing = (CurrentBounce_Editing + 1) % len(eventPlayer.BounceIndex_Cache)
         
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
+
+    elif eventPlayer.EditModeSelection == 4:
+        if not(eventPlayer.CurrentCheckpoint in CustomPortalCP or 999 in CustomPortalCP):
+            wait()
+            return
+        #if eventPlayer.isHoldingButton(Button.CROUCH):
+        #    CurrentPortalEditing = (CurrentPortalEditing - 1) % len(CustomPortalStart)
+        #    CurrentPortalEditing = CurrentPortalEditing if CurrentPortalEditing >= 0 else len(CustomPortalStart) - 1
+        #else:
+        #    CurrentPortalEditing = (CurrentPortalEditing + 1) % len(CustomPortalStart)
+        
+        Temp2 = CurrentPortalEditing
+        if eventPlayer.isHoldingButton(Button.CROUCH):
+            while true:
+                Temp2 --
+                if CustomPortalCP[Temp2] in [eventPlayer.CurrentCheckpoint,999]:
+                    CurrentPortalEditing = Temp2
+                    #smallMessage(eventPlayer,"aaaaa")
+                    return
+                if Temp2 < 1:
+                    Temp2 = len(CustomPortalStart) 
+                if len(CustomPortalStart) > 10:
+                    wait()
+                #wait()
+    
+        else:
+            while true:
+                Temp2 ++
+                if Temp2 > len(CustomPortalStart):
+                    Temp2 = 0
+                if CustomPortalCP[Temp2] in [eventPlayer.CurrentCheckpoint,999]:
+                    CurrentPortalEditing = Temp2
+                    #smallMessage(eventPlayer,"bbbbb")
+                    return
+                if len(CustomPortalStart) > 10:
+                    wait()
+
+
+        /*
+        else:
+           
+            for Temp2 in len(CustomPortalCP):
+                if Temp2 > CurrentPortalEditing:
+                    if Temp2 == eventPlayer.CurrentCheckpoint in CustomPortalCP or 999 in CustomPortalCP:
+                        CurrentPortalEditing = Temp2
+                        break
+            for Temp2 in len(CustomPortalCP): # second loop for past last cp
+                if Temp2 == eventPlayer.CurrentCheckpoint in CustomPortalCP or 999 in CustomPortalCP:
+                    CurrentPortalEditing = Temp2
+                    break
+                */
+
     wait()
 
 # checkpoint functions ==============================================================
@@ -1010,3 +1088,19 @@ rule "toggle bans":
 
 
     */
+
+
+rule "portal":
+    @Event eachPlayer
+    @Condition hostPlayer.EditorOn
+    @Condition eventPlayer == hostPlayer    
+    @Condition hostPlayer.EditModeSelection == 4
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT) 
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
+
+    # eventplayer.Temp
+
+    # while first
+    # break and delete first while if canceled
+
+    # while second

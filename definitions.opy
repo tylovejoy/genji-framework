@@ -123,6 +123,8 @@ globalvar SelectedCheckpoint_Editing 1 # legacy      # int                      
 globalvar CheckpointRings_Editing 2         # list[effect]              --- Holds checkpoint effects in editing context
 globalvar MsDestructo 3                     # MsDestructo Player
 globalvar TimeRemaining 4
+globalvar PortalEffects 5                   # list[effect]              --- Array holding custom portal effects
+globalvar CurrentPortalEditing 6
 #globalvar Portal1PlayerList 5               # list[player]              --- players who can see portal 1
 #globalvar Portal2PlayerList 6               # list[player]              --- players who can see portal 2
 globalvar KillBallPositions 7               # list[vect]                --- KillBall position

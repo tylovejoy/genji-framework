@@ -104,7 +104,7 @@ rule "Inworld text for certain Checkpoints - 在世界文本中为某些检查�
     # color applies to all 
     # 色彩运 用于全部
     CpIwtColor = Color.LIME_GREEN
-
+/*
 rule "Custom portals data - 自定义传送门数据  <---- EDIT ME / 在此处编辑":
     @Disabled
     #warning: This can cause you to exceed global orb/portal limit. 
@@ -122,7 +122,7 @@ rule "Custom portals data - 自定义传送门数据  <---- EDIT ME / 在此处�
     #启用传送门 检查点 (顺序与传 送门起点位 置保持一致) 
     #999 = 传送门在全 部检查点启用
     CustomPortalCP = [999]
-
+*/
 rule "------------------------------------------------------------------------ Addons skills - 附加组件技能 ------------------------------------------------------------------------":
     @Delimiter
     @Disabled

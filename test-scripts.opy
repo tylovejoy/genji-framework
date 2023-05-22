@@ -73,10 +73,14 @@ rule "multi purpose hud":
         "hud count {}\n"
         "fx count: {}\n"
         "{}\n"
+        "{}\n"
+        "{}\n"
         "".format(
         getNumberOfTextIds(),
         getNumberOfEntityIds(),
-        localPlayer.NotOnLastCp            
+        localPlayer.NotOnLastCp,
+        CurrentPortalEditing,
+        Temp2            
         )        
         , HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
