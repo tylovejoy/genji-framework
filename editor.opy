@@ -520,7 +520,9 @@ rule "Editor | Hud and Effects":
     # custom portal end
     # iwt
     # fx or icon
-    createInWorldText(hostPlayer if hostPlayer.EditModeSelection == 4 and CustomPortalCP[CurrentPortalEditing] in [hostPlayer.CurrentCheckpoint,999] else null, iconString(Icon.SPIRAL), CustomPortalEndpoint[CurrentPortalEditing], 3, Clip.NONE, WorldTextReeval.VISIBILITY_AND_POSITION, Color.ORANGE, SpecVisibility.DEFAULT)
+    #createInWorldText(hostPlayer if hostPlayer.EditModeSelection == 4 and CustomPortalCP[CurrentPortalEditing] in [hostPlayer.CurrentCheckpoint,999] else null, iconString(Icon.SPIRAL), CustomPortalEndpoint[CurrentPortalEditing], 3, Clip.NONE, WorldTextReeval.VISIBILITY_AND_POSITION, Color.ORANGE, SpecVisibility.DEFAULT)
+    #createIcon(hostPlayer if hostPlayer.EditModeSelection == 4 and CustomPortalCP[CurrentPortalEditing] in [hostPlayer.CurrentCheckpoint,999] else null, CustomPortalEndpoint[CurrentPortalEditing], Icon.SPIRAL, IconReeval.VISIBILITY_AND_POSITION, Color.WHITE, true)
+    createEffect(hostPlayer if hostPlayer.EditModeSelection == 4 and CustomPortalCP[CurrentPortalEditing] in [hostPlayer.CurrentCheckpoint,999] else null, Effect.SPARKLES, Color.PURPLE, CustomPortalEndpoint[CurrentPortalEditing], 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
 
 # global functions ==============================================================
 rule "Editor |  Fly/Noclip Toggle":
@@ -1108,17 +1110,24 @@ rule "portal move":
     )
     while eventPlayer.Temp == "placing" and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false and eventPlayer.EditModeSelection == 4:
         # move
+        /*
         CustomPortalStart[CurrentPortalEditing] += eventPlayer.getFacingDirection() * (
                 0.25 + eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z > 0 else 
                 -0.25 - eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z < 0 else 
                 0
                 )
         CustomPortalStart[CurrentPortalEditing] += worldVector(vect(eventPlayer.getThrottle().x*0.2,0,0), eventPlayer, Transform.ROTATION) 
+        */
+        CustomPortalStart[CurrentPortalEditing] += vect(
+            0,
+            0.1 if eventPlayer.isHoldingButton(Button.JUMP) else  -0.1 if eventPlayer.isHoldingButton(Button.CROUCH) else 0,
+            0
+            ) #* (1 + eventPlayer.isHoldingButton(Button.
+        CustomPortalStart[CurrentPortalEditing] += worldVector(eventPlayer.getThrottle()*0.15, eventPlayer, Transform.ROTATION) 
+        
         wait()
     if eventPlayer.Temp != "placing" or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) or eventPlayer.EditModeSelection != 4:
-        wait()
-        eventPlayer.stopCamera()
-        return
+        goto lbla
     # move second
     eventPlayer.startCamera(
         CustomPortalEndpoint[CurrentPortalEditing] + eventPlayer.getFacingDirection() * -3,
@@ -1128,18 +1137,25 @@ rule "portal move":
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 1)
     while eventPlayer.Temp == "placing" and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false and eventPlayer.EditModeSelection == 4:
         # move
+        CustomPortalEndpoint[CurrentPortalEditing] += vect(
+            0,
+            0.1 if eventPlayer.isHoldingButton(Button.JUMP) else  -0.1 if eventPlayer.isHoldingButton(Button.CROUCH) else 0,
+            0
+            ) #* (1 + eventPlayer.isHoldingButton(Button.
+        CustomPortalEndpoint[CurrentPortalEditing] += worldVector(eventPlayer.getThrottle()*0.15, eventPlayer, Transform.ROTATION) 
+        /*
         CustomPortalEndpoint[CurrentPortalEditing] += eventPlayer.getFacingDirection() * (
             0.25 + eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z > 0 else 
             -0.25 - eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z < 0 else 
             0
         )
         CustomPortalEndpoint[CurrentPortalEditing] += worldVector(vect(eventPlayer.getThrottle().x*0.2,0,0), eventPlayer, Transform.ROTATION) 
+        */
         wait()
     if eventPlayer.Temp != "placing" or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) or eventPlayer.EditModeSelection != 4:
-        wait()
-        eventPlayer.stopCamera()
-        return
+        goto lbla
 
+    lbla:
     eventPlayer.stopCamera()
     eventPlayer.Temp = null
     if eventPlayer.flytoggle == null:
