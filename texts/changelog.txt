@@ -310,3 +310,9 @@ fixed:
     - precise positoning triggers faster, move cp has been removed in favour of precise positioning
     - fixed a bug that caused selected orb/kill indicators to be in the wrong place on using the restart command
     
+
+    - by holding the placement button, you can now place orbs/kils infront of you based on line of sight
+    - you can now place custom portals with the ingame editor
+    - you can now do ban per cp ingame. updating map old data will work same as back with dashes and ults. copy the old variables into the map data pasta.
+    - changed bindings on fly and precise positioning, fly now works on every mode
+    - 
