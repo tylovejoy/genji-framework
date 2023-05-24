@@ -80,7 +80,7 @@ rule "multi purpose hud":
         getNumberOfEntityIds(),
         localPlayer.NotOnLastCp,
         CurrentPortalEditing,
-        Temp2            
+        PortalTemp
         )        
         , HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )

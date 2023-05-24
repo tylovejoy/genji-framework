@@ -325,7 +325,7 @@ rule "Skip | Crouch + Primary/Secondary Fire":
     @Condition eventPlayer.LockState == false
     @Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle
     @Condition len(CheckpointPositions) > 1
-    
+    @Condition PortalTemp != "placing"
     
     eventPlayer.splittime = 0 
     eventPlayer.practicetimer = 0
@@ -400,7 +400,8 @@ rule "Toggle Hud | hold secondary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition not (eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.ABILITY_1)) # don't trigger during skiping
-    @Condition eventPlayer
+    #@Condition eventPlayer
+    @Condition PortalTemp != "placing"
 
     wait(1.5, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)

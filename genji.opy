@@ -1,4 +1,4 @@
-#!define versionhere "alpa alternate modes"
+#!define versionhere "_alt_modes"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -88,17 +88,22 @@ def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place on
         wait()
 
 def RebuildPortals():
+    if len(CustomPortalCP) < 1:
+        return
     destroyEffect(PortalEffects)
     PortalEffects = [] 
-    createEffect(
-        [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
-        Effect.GOOD_AURA, 
-        Color.ORANGE if CurrentPortalEditing == evalOnce(TempIterator1) else Color.WHITE,
-        CustomPortalStart[evalOnce(TempIterator1)], 
-        0.6,
-        EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
-    )
-    PortalEffects.append(getLastCreatedEntity())
+    
+    for TempIterator1 in range(0, len(CustomPortalCP)):
+        createEffect(
+            [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
+            Effect.GOOD_AURA, 
+            Color.ORANGE if CurrentPortalEditing == evalOnce(TempIterator1) else Color.WHITE,
+            CustomPortalStart[evalOnce(TempIterator1)], 
+            0.6,
+            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+        )
+        PortalEffects.append(getLastCreatedEntity())
+        wait()
 
 def BuildPortals():
     @Name "SUB | Rebuild Portals"
@@ -301,6 +306,17 @@ rule "Setup and Variables":
 
     wait(1) # add back to below wait if removed
     # clean out -1's after the ban has laoded
+
+    BanBhop = [i for i in BanBhop if i != -1] if len(BanBhop) > 0 else []
+    BanClimb = [i for i in BanClimb if i != -1] if len(BanClimb) > 0 else []
+    BanEmote = [i for i in BanEmote if i != -1] if len(BanEmote) > 0 else []
+    BanDead = [i for i in BanDead if i != -1] if len(BanDead) > 0 else []
+    BanCreate = [i for i in BanCreate if i != -1] if len(BanCreate) > 0 else []
+    BanMulti = [i for i in BanMulti if i != -1] if len(BanMulti) > 0 else []
+    BanTriple = [i for i in BanTriple if i != -1] if len(BanTriple) > 0 else []
+
+
+    /*
     BanBhop = [i for i in BanBhop if i != -1]
     BanClimb = [i for i in BanClimb if i != -1]
     BanEmote = [i for i in BanEmote if i != -1]
@@ -308,6 +324,8 @@ rule "Setup and Variables":
     BanCreate = [i for i in BanCreate if i != -1]
     BanMulti = [i for i in BanMulti if i != -1]
     BanTriple = [i for i in BanTriple if i != -1]
+    */
+
 
     wait(4)
     KILLBALL()
@@ -324,6 +342,7 @@ rule "Setup and Variables":
     RebuildKillOrbs()
     RebuildBounceOrbs()
     RebuildPortals()
+
 rule "Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
         wait(0.25)

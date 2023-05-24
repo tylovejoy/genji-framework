@@ -138,7 +138,7 @@ globalvar ListPlayersAtCheckpoints 15       # list[list[player]]        --- play
 #globalvar ActivePlayers 16                  # list[player]              --- Active players, Non-saved, non-spectating active players
 #globalvar EditorOn 17                       # bool                      --- editor rules enabled?
 
-globalvar Temp2 16                          # num                       --- used for selecting a custom portal in editor
+globalvar PortalTemp 16                          # num                       --- used for selecting a custom portal in editor
 
 #Bounce Pad editing stuff
 globalvar BouncePositions 18                # list[vect]                --- list of bouncepad positions
@@ -243,7 +243,7 @@ playervar WallclimbUsed 9                   # bool                      --- turn
 playervar GuideToggle 10                    # bool                       --- turned into bool, shows/hides editor hud
 playervar LockState 11                      # bool                      --- locked means you are curently runing arrive checkpoint rule
 playervar PauseTimer 12                     # float                     --- time in spectate/invincible, chased
-playervar Temp 13
+playervar Temp 13                           
 playervar BhopUsed 14                       # bool                      --- turned into bool
 playervar MovedCheckpoint 15
 playervar PracticeCheckpoint 16             # int                       --- Saved practice checkpoint
