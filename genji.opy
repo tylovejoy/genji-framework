@@ -5,7 +5,7 @@ editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
-#!define inspectoron false
+#!define inspectoron true
 
 # disable via double ## at include, not the define because the define needs to exist
 #!define testaitoggle #!include "test-scripts.opy"
@@ -88,10 +88,10 @@ def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place on
         wait()
 
 def RebuildPortals():
-    if len(CustomPortalCP) < 1:
-        return
     destroyEffect(PortalEffects)
     PortalEffects = [] 
+    if len(CustomPortalCP) < 1:
+        return
     
     for TempIterator1 in range(0, len(CustomPortalCP)):
         createEffect(

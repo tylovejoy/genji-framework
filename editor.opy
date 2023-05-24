@@ -541,7 +541,7 @@ rule "Editor | Hud and Effects":
     # fx or icon
     #createInWorldText(hostPlayer if hostPlayer.EditModeSelection == 4 and CustomPortalCP[CurrentPortalEditing] in [hostPlayer.CurrentCheckpoint,999] else null, iconString(Icon.SPIRAL), CustomPortalEndpoint[CurrentPortalEditing], 3, Clip.NONE, WorldTextReeval.VISIBILITY_AND_POSITION, Color.ORANGE, SpecVisibility.DEFAULT)
     #createIcon(hostPlayer if hostPlayer.EditModeSelection == 4 and CustomPortalCP[CurrentPortalEditing] in [hostPlayer.CurrentCheckpoint,999] else null, CustomPortalEndpoint[CurrentPortalEditing], Icon.SPIRAL, IconReeval.VISIBILITY_AND_POSITION, Color.WHITE, true)
-    createEffect(hostPlayer if hostPlayer.EditModeSelection == 4 and CustomPortalCP[CurrentPortalEditing] in [hostPlayer.CurrentCheckpoint,999] else null, Effect.SPARKLES, Color.PURPLE, CustomPortalEndpoint[CurrentPortalEditing], 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(hostPlayer if hostPlayer.EditModeSelection == 4 and len(CustomPortalCP) > 0 and CustomPortalCP[CurrentPortalEditing] in [hostPlayer.CurrentCheckpoint,999] else null, Effect.SPARKLES, Color.PURPLE, CustomPortalEndpoint[CurrentPortalEditing], 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
 
 # global functions ==============================================================
 rule "Editor |  Fly/Noclip Toggle":
@@ -659,12 +659,17 @@ rule "Editor | create cp/orb":
             KillBallRadii[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] = 5
             createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(hostPlayer.KillIndex_Cache[SelectedKillball_Editing])]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(hostPlayer.KillIndex_Cache[SelectedKillball_Editing])], KillBallRadii[evalOnce(hostPlayer.KillIndex_Cache[SelectedKillball_Editing])], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
             KillBallEffects.append(getLastCreatedEntity())
-            UpdateCache()
+            #UpdateCache()
             SelectedKillball_Editing = len(hostPlayer.KillIndex_Cache) - 1
             KillBallChase = KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]]
             #RebuildKillOrbs()
             bigMessage(getAllPlayers(), "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新击杀球已创建! \r\n仅生效于检查点" checkCN "New Kill Orb has been created! \r\nIt's only valid for checkpoint"))
-       
+            waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.EditModeSelection == 1), 1)
+            while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.EditModeSelection == 1:
+                KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 7, null, null, false).getHitPosition()
+                KillBallChase =  raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 7, null, null, false).getHitPosition()
+                wait()
+            UpdateCache()
     elif eventPlayer.EditModeSelection == 2:
         if len(CheckpointPositions) < 1:
             smallMessage(eventPlayer, "   请先放置检查点" checkCN "   You first have to make a checkpoint")
@@ -691,12 +696,17 @@ rule "Editor | create cp/orb":
                 EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
             )
             BounceEffects.append(getLastCreatedEntity())
-            UpdateCache()
+            #UpdateCache()
             CurrentBounce_Editing = len(hostPlayer.BounceIndex_Cache) - 1
             CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
             #RebuildBounceOrbs()
             bigMessage(getAllPlayers(), "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新弹球已创建! \r\n仅生效于检查点" checkCN "New Bounce Orb has been created! \r\nIt's only valid for checkpoint"))
-    
+            waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.EditModeSelection == 2), 1)
+            while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.EditModeSelection == 2:
+                BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 15, null, null, false).getHitPosition()
+                CurrentBouncePosition_Editing  = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 15, null, null, false).getHitPosition()
+                wait()
+            UpdateCache()
     elif eventPlayer.EditModeSelection == 4 and PortalTemp != "placing":
         if len(CheckpointPositions) < 1:
             smallMessage(eventPlayer, "   请先放置检查点" checkCN "   You first have to make a checkpoint")
@@ -714,10 +724,15 @@ rule "Editor | create cp/orb":
             0.6,
             EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
-        PortalTemp = "placing"
         PortalEffects.append(getLastCreatedEntity())
         CurrentPortalEditing = len(CustomPortalStart) - 1
+        waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.EditModeSelection == 4), 1)
+        while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.EditModeSelection == 4:
+            CustomPortalStart[CurrentPortalEditing] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 6, null, null, false).getHitPosition()
+            wait()
         bigMessage(getAllPlayers(), "Portal created")
+        if eventPlayer.EditModeSelection == 4:
+            PortalTemp = "placing"
     wait(0.64)
 
 rule "Editor | delete cp/orb/portal":
@@ -819,14 +834,17 @@ rule "Editor | delete cp/orb/portal":
         #RebuildBounceOrbs()
         CurrentBouncePosition_Editing = BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
 
-    elif eventPlayer.EditModeSelection == 4 and len(CustomPortalStart) != 0: 
+    elif eventPlayer.EditModeSelection == 4 and len(CustomPortalCP) != 0: 
         if not CustomPortalCP[CurrentPortalEditing] in [eventPlayer.CurrentCheckpoint,999]:
             wait()
             return
+        destroyEffect(PortalEffects[CurrentPortalEditing])
+        wait()
         del CustomPortalStart[CurrentPortalEditing]
         del CustomPortalEndpoint[CurrentPortalEditing]
         del CustomPortalCP[CurrentPortalEditing]
-        
+        del PortalEffects[CurrentPortalEditing]
+        wait()
         # find next select
         if eventPlayer.CurrentCheckpoint in CustomPortalCP :
             CurrentPortalEditing = CustomPortalCP.index(eventPlayer.CurrentCheckpoint)
