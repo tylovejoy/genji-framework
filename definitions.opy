@@ -1,13 +1,19 @@
 #!mainFile "genji.opy"
 
 ##!define RestartTimer(timeInMinutes) "{0} Hours and {1} Minutes".format(floor(timeInMinutes / 60 / 60), "{0}{1}".format(floor(timeInMinutes % 60 / 10), floor(timeInMinutes % 60 - floor(timeInMinutes % 60 / 10) * 10)))
-
 ##!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format("" if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
 ##!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
+
 #!define prettyTime(timeInSeconds) "{0} {1}".format(timeInSeconds,"秒"  checkCN "sec")
 
 #!define insert(insert_array, insert_index, insert_value)  insert_array.append(insert_value) \
         insert_array = [elementhere if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for elementhere, i in insert_array]
+
+#!define togglecpinarray(baninput)\
+if eventPlayer.CurrentCheckpoint in baninput:\
+    baninput = [i for i in baninput if i != eventPlayer.CurrentCheckpoint]\
+else:\
+    baninput.append(eventPlayer.CurrentCheckpoint)
 
 # check if cn client
 /*
@@ -22,7 +28,6 @@
 #!define checkCN if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
 
 ##!define FILLER rule "Addon settings are on next page! Click the next page button!":\
-
 ##!define FILLER rule "Map data and addon settings are on page 2 !!!!!!!!!!!!!!!!!!!":\
 #!define FILLER rule "Map data and addon settings are on page 2 - 地图数据和附加组件的设置在第2页":\
     @Delimiter\
@@ -238,6 +243,7 @@ playervar SpectateToggle 5                  # bool                       --- tur
 #playervar PortalText 7                      # In-World Text             --- Portal String inworld text
 #playervar MapVectorArray 8                  # MsDestructo Vectors
 playervar LedgeDash 6
+playervar LockEditor 7                      # bool                      --- ensure only 1 editor command can go of at the time
 
 playervar WallclimbUsed 9                   # bool                      --- turned into bool
 playervar GuideToggle 10                    # bool                       --- turned into bool, shows/hides editor hud

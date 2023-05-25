@@ -78,6 +78,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) 
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
+    @Condition eventPlayer.LockEditor == false and eventPlayer == hostPlayer
     #@Condition not eventPlayer.isUsingAbility1()
 
     eventPlayer.LockState = true 
@@ -326,6 +327,7 @@ rule "Skip | Crouch + Primary/Secondary Fire":
     @Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle
     @Condition len(CheckpointPositions) > 1
     @Condition PortalTemp != "placing"
+    @Condition eventPlayer.LockEditor == false and eventPlayer == hostPlayer
     
     eventPlayer.splittime = 0 
     eventPlayer.practicetimer = 0
@@ -360,6 +362,7 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition not eventPlayer.isHoldingButton(Button.MELEE)
+    @Condition eventPlayer.LockEditor == false and eventPlayer == hostPlayer
     if eventPlayer.QuickRestartToggle:
         if CheckpointPositions == []: # dont go to 0,0,0 if no cps on map
             wait()
@@ -401,6 +404,7 @@ rule "Toggle Hud | hold secondary":
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition not (eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.ABILITY_1)) # don't trigger during skiping
     #@Condition eventPlayer
+    @Condition not (eventPlayer.EditorOn and eventPlayer == hostPlayer and eventPlayer.isHoldingButton(Button.MELEE))
     @Condition PortalTemp != "placing"
 
     wait(1.5, Wait.ABORT_WHEN_FALSE)

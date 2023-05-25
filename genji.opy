@@ -5,10 +5,10 @@ editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
-#!define inspectoron true
+#!define inspectoron false
 
 # disable via double ## at include, not the define because the define needs to exist
-#!define testaitoggle #!include "test-scripts.opy"
+#!define testaitoggle ##!include "test-scripts.opy"
 
 # enable to remove invis command (this command cant be pasted in cn client die to null and none translating to same symbol) 
 #!define disableInvisCommand false
@@ -386,7 +386,7 @@ rule "Player Initialize":
     @Event eachPlayer
     #eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor - 作图模式","Editor mode - 作图模式" ,  editoron , 0) # Turn Editor On
     eventPlayer.EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
-    
+    eventPlayer.LockEditor = true
     if eventPlayer.isDummy() and eventPlayer.getCurrentHero() == Hero.DVA:
         return # special here for dva instead of later because 100% she doesnt play the match
     
@@ -427,6 +427,7 @@ rule "Player Initialize":
     elif eventPlayer.getCurrentHero() != Hero.GENJI: # only do the things on genji test bots
         return
 
+    eventPlayer.LockEditor = false
     waitUntil(eventPlayer.hasSpawned(), 9999)
 
     if CompMode:

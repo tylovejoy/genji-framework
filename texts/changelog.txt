@@ -315,4 +315,6 @@ fixed:
     - you can now place custom portals with the ingame editor
     - you can now do ban per cp ingame. updating map old data will work same as back with dashes and ults. copy the old variables into the map data pasta.
     - changed bindings on fly and precise positioning, fly now works on every mode
-    - 
+    
+    - most editor functions and skips now lock so you can only d-
+    - now preventing data corruption by lockign your actions to only 1 editor command at a time with the exception of data save and some instand commands. thel ock also prevents cp skiping and reseting.

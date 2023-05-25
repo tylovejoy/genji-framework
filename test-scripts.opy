@@ -75,12 +75,14 @@ rule "multi purpose hud":
         "{}\n"
         "{}\n"
         "{}\n"
+        "lock:{}\n"
         "".format(
         getNumberOfTextIds(),
         getNumberOfEntityIds(),
         localPlayer.NotOnLastCp,
         CurrentPortalEditing,
-        PortalTemp
+        PortalTemp,
+        localPlayer.LockEditor
         )        
         , HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
