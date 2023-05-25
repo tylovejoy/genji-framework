@@ -1,4 +1,4 @@
-#!define versionhere "_alt_modes"
+#!define versionhere "_alt_modes_1"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -962,6 +962,23 @@ rule "Ban per CP - 封禁(每级) <---- INSERT HERE / 在这输入":
     # require bhop available - 留小跳进点
     BanBhop = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
 */
+rule "instructions depricated rules (ban / portal / dash /ult)":
+    @Delimiter
+    printLog("----------------")
+    # The following rules should now be handled with the ingame editor
+    #- Ban per checkpoint
+    #- Dash/Ult per checkpoint
+    #- Custom portals
+    printLog("----------------")
+    # When updating old maps, these things should be added to your map data.
+    # This is done with the instructions below
+    printLog("----------------")
+    #step 1) Open the old rule
+    #step 2) Select the variables and press copy
+    #      (do not select waits or workshop toggles, only select variables)
+    #step 3) Go to map data rule and paste this the variables
+    printLog("----------------")
+    
 
 rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled

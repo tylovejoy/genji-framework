@@ -126,7 +126,7 @@ rule "Custom portals data - 自定义传送门数据  <---- EDIT ME / 在此处�
 rule "------------------------------------------------------------------------ Addons skills - 附加组件技能 ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
-
+/*
 rule "Dash/Blade | DEPRICATED, instructions inside - 刀/Shift | 已弃用, 内含指引":
     @Delimiter
     @Disabled
@@ -142,7 +142,7 @@ rule "Dash/Blade | DEPRICATED, instructions inside - 刀/Shift | 已弃用, 内�
     # 可通过游戏 内编辑器在 检查点模式 下添加刀 / Shift
     # 过去的地图 数据需 要更新，以便在 地图 数据包含刀 / Shift 数据
     printLog("----------------")
-
+*/
 rule "Fake Triple Jump - enable rule - 启用此规则 - 假三级跳": # method c
     @Disabled
     @Event eachPlayer
