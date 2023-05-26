@@ -215,6 +215,21 @@ rule "Editor | Hud and Effects":
             "{5} + {1} | 向前移动弹球\n"
             "{5} + {2} | 向后移动弹球"
             "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
+            ,
+            "{0} + {1} | 蹭留 n"
+            "{0} + {2} | 卡小\n"
+            "{0} + {3} | 爬墙\n\n"
+            "{5} + {1} | 死小\n"
+            "{5} + {2} | 表情爬\n"
+            "{5} + {3} | 三段跳\n"
+            "{5} + {4} |  留小跳进点\n"
+            "".format(buttonString(Button.INTERACT),buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE),buttonString(Button.JUMP),buttonString(Button.CROUCH),buttonString(Button.ABILITY_2))
+            ,
+            #portal translations here
+            #else
+            #portal translations move
+
+       
         ][hostPlayer.EditModeSelection]
         checkCN 
         [   
@@ -226,6 +241,7 @@ rule "Editor | Hud and Effects":
             "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ABILITY_2), buttonString(Button.ABILITY_1))
             ,
             "{0} + {1} | Create new kill orb\n"
+            "{0} + {1} (hold)| raycast placement\n"
             "{0} + {2} | Delete selected orb\n"
             "{0} + {3} | Select previous orb\n"
             "{0} + {4} | Select next orb\n\n"
@@ -236,6 +252,7 @@ rule "Editor | Hud and Effects":
             "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
             ,
             "{0} + {1} | Create new Bounce orb\n"
+            "{0} + {1} (hold)| raycast placement\n"
             "{0} + {3} | Select previous orb\n"
             "{0} + {4} | Select next orb\n"
             "{0} + {2} | Delete selected orb\n\n"
@@ -255,11 +272,12 @@ rule "Editor | Hud and Effects":
             "".format(buttonString(Button.INTERACT),buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE),buttonString(Button.JUMP),buttonString(Button.CROUCH),buttonString(Button.ABILITY_2))
             ,
             "{0} + {1} | create portal\n"
+            "{0} + {1} (hold)| raycast placement\n"
             "{0} + {2} | delete portal\n"
             "{0} + {3} | select next portal\n"
             "{0} + {4} | select previous portal\n\n"
             "{5} + {1} | move portal\n"
-            "{5} + {2} | toggle cp/map\n"
+            "{5} + {3} | cp/map (toggle)\n"
             "".format(buttonString(Button.INTERACT),buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE),
             buttonString(Button.JUMP),buttonString(Button.CROUCH),buttonString(Button.ABILITY_2))
             if PortalTemp != "placing" else
@@ -315,11 +333,12 @@ rule "Editor | Hud and Effects":
     */
 
     hudText(getAllPlayers(),
-        "{0} Checkpoints \n" 
-        "{1} Kills orbs \n"
-        "{2} Bounce Orb \n"
-        "{3} checkpoint bans\n"
-        "{4} teleport and portals "
+        (
+        "{0} 检查点模式 \n"  
+        "{1} 击杀球模式 \n" 
+        "{2} 弹球模式 \n" 
+        "{3} 封禁(每级)\n"
+        "{4} 传送门"
         "".format(
         iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 0 else "     ",
         iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 1 else "     ",
@@ -329,7 +348,27 @@ rule "Editor | Hud and Effects":
         )
         if hostPlayer.isHoldingButton(Button.MELEE) else
         " {1} {0} ".format(
-            ["Checkpoints" ,"Kill orbs","Function Orb","checkpoint bans","teleport and portals"][ hostPlayer.EditModeSelection],
+            ["检查点模式" ,"击杀球模式","弹球模式","封禁(每级)","传送门"][ hostPlayer.EditModeSelection],
+            [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][ hostPlayer.EditModeSelection]
+        )  if localPlayer == hostPlayer else 
+        " {0} 源氏 编辑者 {0} ".format( iconString(Icon.BOLT) )
+        )
+        checkCN
+        "{0} Checkpoints \n" 
+        "{1} Kills orbs \n"
+        "{2} Bounce Orb \n"
+        "{3} checkpoint bans\n"
+        "{4} portals "
+        "".format(
+        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 0 else "     ",
+        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 1 else "     ",
+        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 2 else "     ",
+        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 3 else "     ",
+        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 4 else "     "
+        )
+        if hostPlayer.isHoldingButton(Button.MELEE) else
+        " {1} {0} ".format(
+            ["Checkpoints" ,"Kill orbs","Function Orb","checkpoint bans","portals"][ hostPlayer.EditModeSelection],
             [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][ hostPlayer.EditModeSelection]
        )  if localPlayer == hostPlayer else 
         " {0} Genji editor {0} ".format( iconString(Icon.BOLT) ),
@@ -351,7 +390,11 @@ rule "Editor | Hud and Effects":
         "{0} + shoot | change mode".format(buttonString(Button.MELEE)) if localPlayer == hostPlayer else 
         "Current host/editor: {0}".format(hostPlayer)
         )
-        , null, HudPosition.TOP, HO.edit_changemode, Color.SKY_BLUE, Color.SKY_BLUE, Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        , null, HudPosition.TOP, HO.edit_changemode, 
+            Color.SKY_BLUE, 
+            Color.GRAY if localPlayer.LockEditor else Color.WHITE, 
+            Color.WHITE, 
+            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
     hudSubtext(hostPlayer if hostPlayer.GuideToggle and (hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null, 
@@ -447,7 +490,36 @@ rule "Editor | Hud and Effects":
                 BounceStrength[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]],
                 BouncePositions[hostPlayer.BounceIndex_Cache[CurrentBounce_Editing]]
             )
-            if hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0  else   
+            if hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0  else  
+            "封禁(每级)\n"
+            "========================\n"
+            " {} 蹭留\n"
+            " {} 卡小\n"
+            " {} 爬墙\n"
+            " {} 死小\n"
+            " {} 表情爬\n"
+            " {} 三段跳\n"
+            "========================\n"
+            " {} 留小跳进点\n"
+            "".format(
+                iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanMulti else " ",
+                iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanCreate else " ",
+                iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanClimb else " ",
+                iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanDead else " ",
+                iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanEmote else " ",
+                iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanTriple else " ",
+                iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanBhop else " " 
+            ) 
+            if hostPlayer.EditModeSelection == 3 else
+                "\n 传送门起点: {} \n"
+                " 传送门终点位: {} \n"
+                " 传送门 检查点 : {} \n"
+                "".format(
+                CustomPortalStart[CurrentPortalEditing],
+                CustomPortalEndpoint[CurrentPortalEditing],
+                "所有" if CustomPortalCP[CurrentPortalEditing] == 999 else hostPlayer.CurrentCheckpoint
+                )
+            if hostPlayer.EditModeSelection == 4 and CustomPortalCP[CurrentPortalEditing] in [hostPlayer.CurrentCheckpoint,999] and len(CustomPortalCP) > 0 else
             "\n   当前无数据选中   \n"
         )         
         checkCN
@@ -476,7 +548,7 @@ rule "Editor | Hud and Effects":
             " {} dead\n"
             " {} emote\n"
             " {} triple\n"
-            "=====\n"
+            "========================\n"
             " {} require bhop\n"
             "".format(
                 iconString(Icon.CHECKMARK) if hostPlayer.CurrentCheckpoint in BanMulti else " ",
@@ -593,13 +665,13 @@ rule "Editor | change mode":
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         while eventPlayer.isHoldingButton(Button.MELEE) and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
             eventPlayer.EditModeSelection = eventPlayer.EditModeSelection - 1 if eventPlayer.EditModeSelection > 0 else 4
-            waitUntil(not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.2)
-            wait()
+            waitUntil(not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.1)
+            wait(0.1)
     else:
         while eventPlayer.isHoldingButton(Button.MELEE) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             eventPlayer.EditModeSelection = (eventPlayer.EditModeSelection  + 1) % 5  
-            waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 0.2)
-            wait()
+            waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 0.1)
+            wait(0.1)
 
     wait()
     eventPlayer.LockEditor = false
@@ -664,8 +736,8 @@ rule "Editor | create cp/orb":
             bigMessage(getAllPlayers(), "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新击杀球已创建! \r\n仅生效于检查点" checkCN "New Kill Orb has been created! \r\nIt's only valid for checkpoint"))
             waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.EditModeSelection == 1), 1)
             while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.EditModeSelection == 1:
-                KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 7, null, null, false).getHitPosition()
-                KillBallChase = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 7, null, null, false).getHitPosition()
+                KillBallPositions[hostPlayer.KillIndex_Cache[SelectedKillball_Editing]] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 8, null, null, false).getHitPosition()
+                KillBallChase = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 8, null, null, false).getHitPosition()
                 wait()
             UpdateCache()
 
@@ -1119,7 +1191,7 @@ rule "portal move":
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer    
     @Condition hostPlayer.EditModeSelection == 4
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or PortalTemp == "placing" # placing set via create
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isHoldingButton(Button.ABILITY_2) or PortalTemp == "placing" # placing set via create
     @Condition CustomPortalCP[CurrentPortalEditing] in [eventPlayer.CurrentCheckpoint,999] and len(CustomPortalCP) > 0
     @Condition eventPlayer.LockEditor == false
     eventPlayer.LockEditor = true
@@ -1169,7 +1241,8 @@ rule "portal move":
     PortalTemp = null
     if eventPlayer.flytoggle == null:
         eventPlayer.stopForcingPosition()
-    
+
+    waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE),1)
     eventPlayer.LockEditor = false
 
 rule "portal cp change":
@@ -1177,7 +1250,7 @@ rule "portal cp change":
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer    
     @Condition hostPlayer.EditModeSelection == 4
-    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) 
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) 
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) 
     @Condition CustomPortalCP[CurrentPortalEditing] in [eventPlayer.CurrentCheckpoint,999] and len(CustomPortalCP) > 0
     @Condition PortalTemp != "placing"

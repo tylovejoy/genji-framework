@@ -362,8 +362,9 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition not eventPlayer.isHoldingButton(Button.MELEE)
-    @Condition eventPlayer.LockEditor == false and eventPlayer == hostPlayer
     if eventPlayer.QuickRestartToggle:
+        if eventPlayer.LockEditor and eventPlayer == hostPlayer:
+            return
         if CheckpointPositions == []: # dont go to 0,0,0 if no cps on map
             wait()
             return
