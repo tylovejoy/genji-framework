@@ -15,6 +15,10 @@ if eventPlayer.CurrentCheckpoint in baninput:\
 else:\
     baninput.append(eventPlayer.CurrentCheckpoint)
 
+#!define RemoveCPandLower(arrayname)  arrayname = [i for i in arrayname if i != hostPlayer.CurrentCheckpoint ]\
+arrayname = [x - (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in arrayname]
+
+
 # check if cn client
 /*
 #!define checkCN if any([ \

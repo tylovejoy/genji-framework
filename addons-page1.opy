@@ -41,8 +41,31 @@ rule "Custom portals | function":
             ):
             eventPlayer.teleport(CustomPortalEndpoint[eventPlayer.PortalLoop])
             return
+    wait(1)
+
+    /*
+rule "Custom portals | function":
+    @Event eachPlayer
+    @Condition len(eventPlayer.PortalStart_Cache) > 0
+    #@Condition [i for i in eventPlayer.PortalStart_Cache if distance(i, eventPlayer.getPosition() + vect(0,0.2,0)) < portaldistance]
+    @Condition any([
+        distance(eventPlayer.getPosition() + vect(0, 0.2, 0), ent) < portaldistance 
+        for ent in eventPlayer.PortalStart_Cache
+    ]) == true
+
+    eventPlayer.teleport(
+        eventPlayer.PortalEnd_Cache[
+            eventPlayer.PortalStart_Cache.index(
+                sorted(
+                    [i for i in eventPlayer.PortalStart_Cache],
+                    lambda x: distance(eventPlayer,x)
+                )[0]
+            )
+        ]
+    )
 
     wait(1)
+    */
 
 rule "Pre-set control map portal | toggled on via workshop settings":
     @Condition PortalOn

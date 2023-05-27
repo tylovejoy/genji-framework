@@ -1,4 +1,4 @@
-#!define versionhere "_alt_modes_1"
+#!define versionhere "1_9 beta"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -97,7 +97,8 @@ def RebuildPortals():
         createEffect(
             [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
             Effect.GOOD_AURA, 
-            Color.ORANGE if CurrentPortalEditing == evalOnce(TempIterator1) else Color.WHITE,
+            Color.WHITE,
+            #Color.ORANGE if CurrentPortalEditing == evalOnce(TempIterator1) else Color.WHITE,
             CustomPortalStart[evalOnce(TempIterator1)], 
             0.6,
             EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
@@ -554,7 +555,7 @@ def StartGame_Sub():
         kill(eventPlayer,null)
         return
     
-    if DashExploitToggle:
+    if DashExploitToggle and len(CheckpointPositions)>0:
         eventPlayer.setAbility1Enabled(false)
         if eventPlayer.isUsingAbility1():
             waitUntil(not eventPlayer.isUsingAbility1(), 1.5)
