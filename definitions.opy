@@ -128,7 +128,7 @@ arrayname = [x - (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in arrayn
 
 #Global variables
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
-globalvar SelectedCheckpoint_Editing 1 # legacy      # int                       --- selected checkpoint
+#globalvar SelectedCheckpoint_Editing 1 # legacy      # int                       --- selected checkpoint
 globalvar CheckpointRings_Editing 2         # list[effect]              --- Holds checkpoint effects in editing context
 globalvar MsDestructo 3                     # MsDestructo Player
 globalvar TimeRemaining 4
@@ -138,22 +138,26 @@ globalvar CurrentPortalEditing 6
 #globalvar Portal2PlayerList 6               # list[player]              --- players who can see portal 2
 globalvar KillBallPositions 7               # list[vect]                --- KillBall position
 globalvar KillBallRadii 8                   # list[float]               --- KillBall radius, default 5
-globalvar SelectedKillball_Editing 9        # int                       --- Current killball in editing context
+#globalvar SelectedKillball_Editing 9        # int                       --- Current killball in editing context
 globalvar KillBallEffects 10                # list[effect]              --- Array holding killball effects
-globalvar KillBallChase 11                  # vect                      --- Location of killball while editing, chased.
+#globalvar KillBallChase 11                  # vect                      --- Location of killball while editing, chased.
 globalvar BladeEnabledCheckpoints 12        # int                       --- blade enabled, should be bool.
 globalvar DashEnabledCheckpoints 13         # int                       --- dash enabled, should be bool.
-globalvar ListPlayersAtCheckpoints 15       # list[list[player]]        --- players at a specific checkpoint
+#globalvar ListPlayersAtCheckpoints 15       # list[list[player]]        --- players at a specific checkpoint
 #globalvar ActivePlayers 16                  # list[player]              --- Active players, Non-saved, non-spectating active players
 #globalvar EditorOn 17                       # bool                      --- editor rules enabled?
+globalvar EditSelected 14
+globalvar EditSelectIdArray 15
 
-globalvar PortalTemp 16                          # num                       --- used for selecting a custom portal in editor
+#globalvar EditorMoveItem 16                          # num                       --- used for moving a portal
 
 #Bounce Pad editing stuff
 globalvar BouncePositions 18                # list[vect]                --- list of bouncepad positions
-globalvar CurrentBounce_Editing 19          # int                       --- count of 0-indexed bouncepad pos currently
+#globalvar CurrentBounce_Editing 19          # int                       --- count of 0-indexed bouncepad pos currently
 globalvar BounceEffects 20                  # list[effects]             --- list of bounce pad effect entities
-globalvar CurrentBouncePosition_Editing 21  # vect                      --- the position we just added to bouncepad positions
+#globalvar CurrentBouncePosition_Editing 21  # vect                      --- the position we just added to bouncepad positions
+globalvar EditorMoveItem 21                          # num                       --- used for moving a portal
+
 globalvar BounceStrength 22                 # list[float]               --- bouncepad strength
 globalvar BounceToggleUlt 23                # list[bool]                --- toggle ult on bounce
 globalvar BounceToggleDash 24               # list[bool]                --- toggle dash on bounce
@@ -173,6 +177,8 @@ globalvar LeaderBoardFull 32                # [[name,second,prettytime]]--- sort
 globalvar LeaderBoardHuds 33
 globalvar LeaderBoardRemake 34              # bool                      --- indicate board needs remaking
 globalvar BhopBanToggle 35                  # bool                      --- Enabled if Bhop is banned
+
+
 globalvar TempIterator1 38                  # int                       --- temp iterator
 
 globalvar DashExploitToggle 39
@@ -331,6 +337,7 @@ subroutine DeleteSave
 subroutine MakeSave
 subroutine StartPauseTimer
 subroutine StopPauseTimer
+subroutine editupdateselectedids
 
 enum HO:
     # Left #####################

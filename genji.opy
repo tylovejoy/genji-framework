@@ -8,7 +8,7 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!define inspectoron false
 
 # disable via double ## at include, not the define because the define needs to exist
-#!define testaitoggle #!include "test-scripts.opy"
+#!define testaitoggle ##!include "test-scripts.opy"
 
 # enable to remove invis command (this command cant be pasted in cn client die to null and none translating to same symbol) 
 #!define disableInvisCommand false
@@ -76,7 +76,9 @@ def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place 
             EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
         BounceEffects.append(getLastCreatedEntity())
-        wait()
+        #wait()
+        if TempIterator1 % 5 == 0:
+            wait()
 
 def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Kill Orb Effects" 
     @Name "SUB | Rebuild Kill Orbs"
@@ -85,7 +87,8 @@ def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place on
     for TempIterator1 in range(0, len(KillballCheckpoints)):
         createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
         KillBallEffects.append(getLastCreatedEntity())
-        wait()
+        if TempIterator1 % 5 == 0:
+            wait()
 
 def RebuildPortals():
     destroyEffect(PortalEffects)
@@ -104,7 +107,8 @@ def RebuildPortals():
             EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
         PortalEffects.append(getLastCreatedEntity())
-        wait()
+        if TempIterator1 % 5 == 0:
+            wait()
 
 def BuildPortals():
     @Name "SUB | Rebuild Portals"
@@ -214,9 +218,12 @@ def UpdateCache():
     wait()
     async(CheckUlt(), AsyncBehavior.RESTART)
     async(CheckDash(), AsyncBehavior.RESTART)
+    
 
     if not eventPlayer.EditorOn:
         return
+
+    editupdateselectedids()
 
     destroyEffect(eventPlayer.EffectSizeArray)
     eventPlayer.EffectSizeArray = []
@@ -229,11 +236,6 @@ def UpdateCache():
     eventPlayer.KillIndex_Cache = [e for e in [(i if e2 == eventPlayer.CurrentCheckpoint else -1) for e2, i in KillballCheckpoints] if  e >=0]
 
     if eventPlayer.MovedCheckpoint and eventPlayer == hostPlayer:
-        #SelectedCheckpoint_Editing = eventPlayer.CurrentCheckpoint
-        SelectedKillball_Editing = 0 if eventPlayer.KillIndex_Cache else 99999
-        KillBallChase = KillBallPositions[eventPlayer.KillIndex_Cache[SelectedKillball_Editing]] if len(eventPlayer.KillIndex_Cache) else vect(0,0,0)
-        CurrentBounce_Editing = 0 if eventPlayer.BounceIndex_Cache else 99999
-        CurrentBouncePosition_Editing = BouncePositions[eventPlayer.BounceIndex_Cache[CurrentBounce_Editing]] if len(eventPlayer.BounceIndex_Cache) else vect(0,0,0)
         eventPlayer.MovedCheckpoint = false     
 
 #!include "editor.opy"
@@ -273,11 +275,9 @@ rule "Setup and Variables":
     KillBallPositions = KillBallPositions if len(KillBallPositions) else []
     KillBallRadii = KillBallRadii if len(KillBallRadii) else []
     KillBallEffects = KillBallEffects if len(KillBallEffects) else []
-    SelectedKillball_Editing = 0
     BouncePositions = BouncePositions if len(BouncePositions) else []
     BounceEffects = BounceEffects if len(BounceEffects) else []
     BounceStrength = BounceStrength if len(BounceStrength) else []
-    CurrentBounce_Editing = 0
     BounceToggleUlt = BounceToggleUlt if len(BounceToggleUlt) else []
     BounceToggleDash = BounceToggleDash if len(BounceToggleDash) else []
     BounceToggleLock = BounceToggleLock if len(BounceToggleLock) else []
@@ -287,10 +287,7 @@ rule "Setup and Variables":
     PortalNames = []
     PortalLoc = []
     PortalDest  = []
-    #CustomPortalStart  = []
-    #CustomPortalEndpoint  = []
-    #CustomPortalCP  = []
-
+    
     wait(1)
     DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
     PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用传送门 (占点地图)",true, 10)
@@ -315,18 +312,6 @@ rule "Setup and Variables":
     BanCreate = [i for i in BanCreate if i != -1] if len(BanCreate) > 0 else []
     BanMulti = [i for i in BanMulti if i != -1] if len(BanMulti) > 0 else []
     BanTriple = [i for i in BanTriple if i != -1] if len(BanTriple) > 0 else []
-
-
-    /*
-    BanBhop = [i for i in BanBhop if i != -1]
-    BanClimb = [i for i in BanClimb if i != -1]
-    BanEmote = [i for i in BanEmote if i != -1]
-    BanDead = [i for i in BanDead if i != -1]
-    BanCreate = [i for i in BanCreate if i != -1]
-    BanMulti = [i for i in BanMulti if i != -1]
-    BanTriple = [i for i in BanTriple if i != -1]
-    */
-
 
     wait(4)
     KILLBALL()
