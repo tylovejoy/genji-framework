@@ -787,6 +787,9 @@ rule "Bounce Ball / Orb | Activate":
         smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready")) 
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
+    #if eventPlayer.bouncetouched == 2:
+    #    eventPlayer.cancelPrimaryAction()
+    #    smallMessage(eventPlayer,"you got double jump back")
     wait(0.24)
     if RULE_CONDITION:
         goto RULE_START

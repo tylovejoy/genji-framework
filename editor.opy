@@ -3,7 +3,7 @@
 rule "------------------------------------------------------------------------  Editor ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
-    
+
 rule "Editor | Clear Excess Data to Save Map":
     @Event eachPlayer
     @Condition hostPlayer.EditorOn
@@ -305,7 +305,7 @@ rule "Editor | Hud and Effects":
         "{1} 击杀球模式 \n" 
         "{2} 弹球模式 \n" 
         "{3} 封禁(每级)\n"
-        "{4} 传送门"
+        "{4} 自定义传送门"
         "".format(
         iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 0 else "     ",
         iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 1 else "     ",
@@ -315,7 +315,7 @@ rule "Editor | Hud and Effects":
         )
         if hostPlayer.isHoldingButton(Button.MELEE) else
         " {1} {0} ".format(
-            ["检查点模式" ,"击杀球模式","弹球模式","封禁(每级)","传送门"][ hostPlayer.EditModeSelection],
+            ["检查点模式" ,"击杀球模式","弹球模式","封禁(每级)","自定义传送门"][ hostPlayer.EditModeSelection],
             [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][ hostPlayer.EditModeSelection]
         )  if localPlayer == hostPlayer else 
         " {0} 源氏 编辑者 {0} ".format( iconString(Icon.BOLT) )
@@ -953,32 +953,6 @@ rule "Editor | orb radi/strength":
         wait(0.1)
     UpdateCache()
     eventPlayer.LockEditor = false
-/*
-rule "Editor | move orbs":
-    @Event eachPlayer
-    @Condition hostPlayer.EditorOn
-    @Condition eventPlayer == hostPlayer
-    @Condition eventPlayer.EditModeSelection in [1,2]
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) 
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) 
-    @Condition len(EditSelectIdArray) > 0
-    @Condition eventPlayer.LockEditor == false
-
-    eventPlayer.LockEditor = true
-    if eventPlayer.EditModeSelection == 1 and len(eventPlayer.KillIndex_Cache) > 0:
-        while eventPlayer.isHoldingButton(Button.ABILITY_2) and (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
-            KillBallPositions[EditSelected] += eventPlayer.getFacingDirection() * (0.0625 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.0625)
-            wait()
-
-    elif eventPlayer.EditModeSelection == 2 and len(eventPlayer.BounceIndex_Cache) > 0:
-        while eventPlayer.isHoldingButton(Button.ABILITY_2) and (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
-            BouncePositions[EditSelected]  += eventPlayer.getFacingDirection() * (0.0625 if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) else -0.0625)
-            wait()  
-
-    UpdateCache()
-    eventPlayer.LockEditor = false
-    wait()
-*/
 
 rule "Editor | select orb/portal":
     @Event eachPlayer
