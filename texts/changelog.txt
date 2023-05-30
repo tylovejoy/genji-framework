@@ -298,24 +298,27 @@ fixed:
     - fixed a bug that allowed you to skip without practice mode on
 
 
-1.8.3
+1.9
+    editor only update
+    - 2 new modes added: ban per cp and custom portals
+    - addedd instruciton rule that explains updating old map data with these modes 
+    - raycast placement lets you place things at x distance towards your cursor. this sticks to walls
 
-    editor
-    - adjusted the hud non-editor players got, making it look less obnoxious
-    - fixed a bug that caused editing orbs on map data that already had orbs to exponentionally add up on fx count, resulting into hidden orbs
-    - fixed mistake that caused leaderboard to apear as a hud command in editor, despite not being an editor feature
+    - mode change has swaped bindings to its instand. you can hold it or press it to swap faster.
+    - moving orbs now works much differently
+    - the currently selected effect/text is now the same for all modes
+    - fly is now on dash to deal with the changed keybindings
+    - behind the scenes a lot of editor things have been reworked
+    - precise positoning triggers faster, move cp has been removed in favour of precise positioning
 
     - spectate in editor no longer triggers if you press primary/secondary fire during interact. this was colliding with some other commands
+    - adjusted the hud non-editor players got, making it look less obnoxious
     - move cp and hitbox toggle are now exclusive to the checkpoint mode
-    - precise positoning triggers faster, move cp has been removed in favour of precise positioning
-    - fixed a bug that caused selected orb/kill indicators to be in the wrong place on using the restart command
+    - now preventing data corruption by lockign your actions to only 1 editor command at a time with the exception of data save and some instand commands. thel ock also prevents cp skiping and reseting.
     
+    - fixed a bug that caused editing orbs on map data that already had orbs to exponentionally add up on fx count, resulting into hidden orbs
+    - fixed mistake that caused leaderboard to apear as a hud command in editor, despite not being an editor feature
     - fixed a bug that caused removing cps to often not remove the ult/blade properly
 
-    - by holding the placement button, you can now place orbs/kils infront of you based on line of sight
-    - you can now place custom portals with the ingame editor
-    - you can now do ban per cp ingame. updating map old data will work same as back with dashes and ults. copy the old variables into the map data pasta.
-    - changed bindings on fly and precise positioning, fly now works on every mode
+
     
-    - most editor functions and skips now lock so you can only d-
-    - now preventing data corruption by lockign your actions to only 1 editor command at a time with the exception of data save and some instand commands. thel ock also prevents cp skiping and reseting.

@@ -45,6 +45,7 @@ rule "Editor | Clear Excess Data to Save Map":
     hudText(eventPlayer,  
         " ",
         null,
+        /*
         "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
         " 0. 清理多余数据:\n"
         "打开此窗口时自动完成\n\n"
@@ -60,6 +61,22 @@ rule "Editor | Clear Excess Data to Save Map":
         "ESC→展示大厅→设置→工作坊设置→\n"
         "关闭'编辑模式'\n"
         "选择显示难度\n"
+        */
+        "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
+        "0. 清理多余数据:\n"
+        "打开此窗口时自动完成\n\n"
+        
+        "1. 复制数据:\n"
+        "Esc→打开地图工坊查看器→右下角变量目标设置为全局\n\n"
+        "点击下方图标 [x] 复制作图数据\n"
+
+        "2. 插入数据:\n"
+        "Esc→打开地图工坊编辑器→规则第2页→将数据粘贴到规则\n"
+        "'Map data - 数据录入中的'动作'一栏\n\n"
+        
+        "3.地图工坊设置:\n"
+        "ESC→显示大厅→设置→地图工坊设置→\n"
+        "关闭'作图模式'\n选择地图难度\n"
         checkCN
         "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
         "   0. clear excess data:\n"
@@ -79,7 +96,7 @@ rule "Editor | Clear Excess Data to Save Map":
        HudPosition.TOP, HO.edit_clearec1, Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT
     )
     eventPlayer.savemaphud[0] = getLastCreatedText()
-
+        
     hudText(eventPlayer,  
         " ",
         null,
@@ -174,50 +191,67 @@ rule "Editor | Hud and Effects":
     
     hudSubtext(hostPlayer if hostPlayer.GuideToggle else null, 
         "{0}".format(   
-        [
-            "{0} + {1} | 新建检查点\n"
-            "{0} + {2} | 删除选中的检查点\n"
-            "{0} + {3} | 移除/新建传送点\n" #移除/新建 传送门
-            "{0} + {5} | 检查点碰撞模型\n"
-            "{4} (长按) | 移动检查点"
-            "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ABILITY_2), buttonString(Button.ABILITY_1))
-            ,
-            "{0} + {1} | 新建击杀球\n"
-            "{0} + {2} | 删除选中的击杀球\n"
-            "{0} + {3} | 选择上一个击杀球\n"
-            "{0} + {4} | 选择下一个击杀球\n\n"
-            "{5} + {4} | 增大击杀球尺寸\n"
-            "{5} + {3} | 减小击杀球尺寸\n"
-            "{5} + {1} | 向前移动击杀球\n"
-            "{5} + {2} | 向后移动击杀球"
-            "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
-            , 
-            "{0} + {1} | 新建弹球\n"
-            "{0} + {3} | 选择上一个弹球\n"
-            "{0} + {4} | 选择下一个弹球\n"
-            "{0} + {2} | 删除选中的弹球\n\n"
-            "{5} + {4} | 增加弹球弹力\n"
-            "{5} + {3} | 减少弹球弹力\n"
-            "{5} + {1} | 向前移动弹球\n"
-            "{5} + {2} | 向后移动弹球"
-            "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
-            ,
-            "{0} + {1} | 蹭留 n"
-            "{0} + {2} | 卡小\n"
-            "{0} + {3} | 爬墙\n\n"
-            "{5} + {1} | 死小\n"
-            "{5} + {2} | 表情爬\n"
-            "{5} + {3} | 三段跳\n"
-            "{5} + {4} |  留小跳进点\n"
-            "".format(buttonString(Button.INTERACT),buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE),buttonString(Button.JUMP),buttonString(Button.CROUCH),buttonString(Button.ABILITY_2))
-            ,
-            #portal translations here
-            #else
-            #portal translations move
-
-       
-        ][hostPlayer.EditModeSelection]
+        (
+            [
+                "{0} + {1} | 新建检查点\n"
+                "{0} + {2} | 删除选中的检查点\n"
+                "{0} + {3} | 移除/新建传送点\n" #移除/新建 传送门
+                "{0} + {5} | 检查点碰撞模型\n"
+                "{4} (长按) | 移动检查点"
+                "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE),  buttonString(Button.RELOAD), buttonString(Button.ABILITY_2), buttonString(Button.ABILITY_1))
+                ,
+                "{0} + {1} | 新建击杀球\n"
+                "{0} + {1} (长按) | 在准心位置新建\n"
+                "{0} + {2} | 删除选中的击杀球\n"
+                "{0} + {3} | 选择上一个击杀球\n"
+                "{0} + {4} | 选择下一个击杀球\n\n"
+                "{5} + {4} | 增大击杀球尺寸\n"
+                "{5} + {3} | 减小击杀球尺寸\n"
+                "{5} + {1} | 移动选中的实体"
+                #"{5} + {1} | 向前移动击杀球\n"
+                #"{5} + {2} | 向后移动击杀球"
+                "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
+                , 
+                "{0} + {1} | 新建弹球\n"
+                "{0} + {1} (长按) | 在准心位置新建\n"
+                "{0} + {3} | 选择上一个弹球\n"
+                "{0} + {4} | 选择下一个弹球\n"
+                "{0} + {2} | 删除选中的弹球\n\n"
+                "{5} + {4} | 增加弹球弹力\n"
+                "{5} + {3} | 减少弹球弹力\n"
+                "{5} + {1} | 移动选中的实体"
+                #"{5} + {1} | 向前移动弹球\n"
+                #"{5} + {2} | 向后移动弹球"
+                "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
+                ,
+                "{0} + {1} | 蹭留\n"
+                "{0} + {2} | 卡小\n"
+                "{0} + {3} | 爬墙\n\n"
+                "{5} + {1} | 死小\n"
+                "{5} + {2} | 表情留小\n"
+                "{5} + {3} | 三段跳\n"
+                "{5} + {4} |  留小跳进点"
+                "".format(buttonString(Button.INTERACT),buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE),buttonString(Button.JUMP),buttonString(Button.CROUCH),buttonString(Button.ABILITY_2))
+                ,
+                "{0} + {1} | 新建传送门\n"
+                "{0} + {1} (长按) | 在准心位置新建\n"
+                "{0} + {2} | 删除选中的传送门\n"
+                "{0} + {3} | 选择下一个传送门\n"
+                "{0} + {4} | 选择上一个传送门\n\n"
+                "{5} + {1} | 移动选中的实体\n"
+                "{5} + {3} | 应用到当前/全部检查点(开关)"
+                "".format(buttonString(Button.INTERACT),buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE),
+                buttonString(Button.JUMP),buttonString(Button.CROUCH),buttonString(Button.ABILITY_2))
+            ][hostPlayer.EditModeSelection]  if EditorMoveItem == false else
+                "方向键 | 移动实体 \n"
+                "{0} | 向上移动 \n"
+                "{1} | 向下移动 \n"
+                "{2} | 放置实体 \n"
+                "{3} (长按) | 移动更快"
+                "".format(buttonString(Button.JUMP),buttonString(Button.CROUCH),buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
+        )
         checkCN 
+        (
         [   
             "{0} + {1} | Create New\n"
             "{0} + {2} | Delete selected\n"
@@ -266,14 +300,14 @@ rule "Editor | Hud and Effects":
             "{5} + {3} | cp/map (toggle)\n"
             "".format(buttonString(Button.INTERACT),buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE),
             buttonString(Button.JUMP),buttonString(Button.CROUCH),buttonString(Button.ABILITY_2))
-        ][hostPlayer.EditModeSelection])
-        if EditorMoveItem == false else
+        ][hostPlayer.EditModeSelection]) if EditorMoveItem == false else
             "walk | move selected \n"  
             "{0} | move up\n" 
             "{1} | move down\n" 
             "{3} (hold) | move faster\n" 
             "{2} | confirm placement" 
             "".format(buttonString(Button.JUMP),buttonString(Button.CROUCH),buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
+        )
         , 
         HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
@@ -304,8 +338,8 @@ rule "Editor | Hud and Effects":
         "{0} 检查点模式 \n"  
         "{1} 击杀球模式 \n" 
         "{2} 弹球模式 \n" 
-        "{3} 封禁(每级)\n"
-        "{4} 自定义传送门"
+        "{3} 封禁(单关) \n" 
+        "{4} 自定义传送门 "
         "".format(
         iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 0 else "     ",
         iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 1 else "     ",
@@ -315,7 +349,7 @@ rule "Editor | Hud and Effects":
         )
         if hostPlayer.isHoldingButton(Button.MELEE) else
         " {1} {0} ".format(
-            ["检查点模式" ,"击杀球模式","弹球模式","封禁(每级)","自定义传送门"][ hostPlayer.EditModeSelection],
+            ["检查点模式" ,"击杀球模式","弹球模式","封禁(单关)","自定义传送门"][ hostPlayer.EditModeSelection],
             [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][ hostPlayer.EditModeSelection]
         )  if localPlayer == hostPlayer else 
         " {0} 源氏 编辑者 {0} ".format( iconString(Icon.BOLT) )
@@ -458,13 +492,13 @@ rule "Editor | Hud and Effects":
                 BouncePositions[EditSelected]
             )
             if hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0  else  
-            "封禁(每级)\n"
+            "封禁(单关)\n"
             "――――――――――――\n"
             " {} 蹭留\n"
             " {} 卡小\n"
             " {} 爬墙\n"
             " {} 死小\n"
-            " {} 表情爬\n"
+            " {} 表情留小\n"
             " {} 三段跳\n"
             "――――――――――――\n"
             " {} 留小跳进点\n"
@@ -548,7 +582,7 @@ rule "Editor | Hud and Effects":
     # effects ==========================================================================================================================================================================   
     createInWorldText(
         getAllPlayers() if len(EditSelectIdArray) > 0 else null,     
-        "目前选择" checkCN "selected"
+        "选中的实体" checkCN "selected"
         , 
         KillBallPositions[EditSelected] if hostPlayer.EditModeSelection == 1 else
         BouncePositions[EditSelected] if hostPlayer.EditModeSelection == 2 else
@@ -770,7 +804,7 @@ rule "Editor | create cp/orb":
             CustomPortalStart[EditSelected] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 6, null, null, false).getHitPosition()
             wait()
 
-        bigMessage(getAllPlayers(), "Portal created")
+        bigMessage(getAllPlayers(), "新传送门已创建!\n生效于当前检查点" checkCN "Portal created \r\nIt's only valid for checkpoint")  
         EditorMoveItem = true
         return
     else:

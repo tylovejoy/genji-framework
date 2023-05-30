@@ -1,4 +1,4 @@
-#!define versionhere "1_9 beta 1"
+#!define versionhere "1_9 beta 2"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -789,7 +789,7 @@ rule "Bounce Ball / Orb | Activate":
 
     #if eventPlayer.bouncetouched == 2:
     #    eventPlayer.cancelPrimaryAction()
-    #    smallMessage(eventPlayer,"you got double jump back")
+    #    smallMessage(eventPlayer,"刷新二段" checkCN "you got double jump back")
     wait(0.24)
     if RULE_CONDITION:
         goto RULE_START
@@ -966,7 +966,8 @@ rule "Ban per CP - 封禁(每级) <---- INSERT HERE / 在这输入":
     # require bhop available - 留小跳进点
     BanBhop = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
 */
-rule "instructions depricated rules (ban / portal / dash /ult)":
+
+rule "instructions depricated rules (ban / portal / dash /ult) - 旧版编辑器中已弃用规则指引 (单关封禁 / 传送门 / 给刀给S)":
     @Delimiter
     printLog("----------------")
     # The following rules should now be handled with the ingame editor
@@ -983,6 +984,20 @@ rule "instructions depricated rules (ban / portal / dash /ult)":
     #step 3) Go to map data rule and paste this the variables
     printLog("----------------")
     
+
+    #以下规则现在 要用游戏内置 编辑器编辑
+	#	- 单关 封禁(卡小、蹭留等)
+	#	- 检查点给 刀给S
+	#	- 自定义 传送门
+    printLog("----------------")
+	#	当更新旧 图数据 时，以上 这些东西 应该放 到地图 数据里
+    #	以下是一 些更新旧 图数据 指引: 
+    printLog("----------------")
+	#	步骤 1) 找到旧图 数据的 规则
+	#	步骤 2) 选中旧图 数据的 全局变 量并复制
+	#		  (不要复制含 等待 地图工坊设置 的指令, 只要 全局变量 的数据)
+	#	步骤 3) 将全局变 量数据粘 贴到新版 编辑器的 地图数 据规则
+    printLog("----------------")
 
 rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled

@@ -264,3 +264,63 @@ rule "Fake Ledge Dash - enable rule - 超级跳 - 启用此规则":
     eventPlayer.LedgeDash[0] = null
     eventPlayer.LedgeDash[1] = null
     eventPlayer.LedgeDash[2] = null
+
+
+
+rule "addon | grup up text/effect":
+    @Disabled
+    # replace 777 with checkpoint number
+    # replace vector 0,0,0 with orb position
+    createInWorldText(
+        [i for i in getAllPlayers() if i.CurrentCheckpoint == 777],
+        "{0} grup up {0}".format(abilityIconString(Hero.GENJI, Button.ULTIMATE)), 
+        vect(0,0,0), 
+        1.5, 
+        Clip.NONE, WorldTextReeval.VISIBILITY, Color.ORANGE, SpecVisibility.DEFAULT
+    )
+    # replace 777 with checkpoint number
+    # replace vector 0,0,0 with orb position
+    # 3.5 is the radius
+    createEffect(
+        [i for i in getAllPlayers() if i.A == 777], 
+        Effect.SPHERE, Color.ORANGE, vect(0,0,0),  3.5, EffectReeval.VISIBILITY
+    )
+
+rule "addon | grup up": 
+    @Disabled
+    @Event eachPlayer
+    # replace 777 with checkpoint number
+    @Condition eventPlayer.CurrentCheckpoint == 777
+    @Condition eventPlayer.isAlive()
+    @Condition not eventPlayer.isOnGround()
+    @Condition eventPlayer.InvincibleToggle == false
+    # replace vector 0,0,0 with orb position
+    # 3.5 is the radius
+    @Condition distance(eventPlayer,  vect(0,0,0)) < 3.5 
+    
+    smallMessage(eventPlayer, "   stay in the bubble")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   9")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   8")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   7")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   6")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   5")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   4")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   3")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   2")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   1")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+
+    eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint +1] + vect(0,0.1,0), true)
+    eventPlayer.cancelPrimaryAction()
+    eventPlayer.setStatusEffect(null, Status.ROOTED, 0.3)
+    wait(0.16)
+    eventPlayer.stopForcingPosition()
