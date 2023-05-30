@@ -282,8 +282,8 @@ playervar savemaphud 42                     # array                     --- arra
 playervar EditorOn 45                       # bool                      --- on all players, but only gets checked from host player
 playervar LockCollected 46                  # number                    --- amount collected lock this cp
 playervar bouncetouched 47                  # int                       --- cache of the bouncepad id you are currently touching
-playervar PortalLoop 48                     # int                       --- loop to select portal
-
+#playervar PortalLoop 48                     # int                       --- loop to select portal
+playervar PortalStart_Cache 48
 playervar BounceLockMax_Cache 49
 playervar KillPosition_Cache 50
 playervar KillRadii_Cache 51
@@ -302,6 +302,8 @@ playervar CompDone 65                       # bool                      --- out 
 playervar AttemptCount 66                   # int                       --- amound of attemps remaining
 playervar instructionhud 67
 playervar TitleStore 68                     # textid                    --- store curent  title textid
+
+playervar PortalEnd_cache 69
 
 playervar banstring 70                      # str                       --- displayed bans
 playervar ban_triple 71
@@ -338,6 +340,7 @@ subroutine MakeSave
 subroutine StartPauseTimer
 subroutine StopPauseTimer
 subroutine editupdateselectedids
+subroutine EditorSelectLast
 
 enum HO:
     # Left #####################

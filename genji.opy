@@ -37,8 +37,13 @@ editortoggle(0) # 0 is editor, rest is numbers
 #disable overpy map detection (command removed by zezo after fix by blizard)
 ##!disableMapDetectionFix 
 
+# supress warning for emote
+#!suppressWarnings w_ow2_communicate_bug
+
 #!include "settings.opy"
 #!include "definitions.opy"
+
+
 
 rule "fisho cp cheat for overpy toggle":
     @Event eachPlayer
@@ -156,6 +161,9 @@ def UpdateCache():
     eventPlayer.KillPosition_Cache = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     
+    eventPlayer.PortalStart_Cache = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == 999]
+    eventPlayer.PortalEnd_cache = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == 999]
+
     eventPlayer.banstring = ""
     wait()
 
@@ -236,6 +244,7 @@ def UpdateCache():
     eventPlayer.KillIndex_Cache = [e for e in [(i if e2 == eventPlayer.CurrentCheckpoint else -1) for e2, i in KillballCheckpoints] if  e >=0]
 
     if eventPlayer.MovedCheckpoint and eventPlayer == hostPlayer:
+        EditorSelectLast()
         eventPlayer.MovedCheckpoint = false     
 
 #!include "editor.opy"
@@ -514,7 +523,10 @@ def checkpointFailReset():
     eventPlayer.cancelPrimaryAction()
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
-    eventPlayer.teleport( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() )
+    #eventPlayer.teleport( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() )
+    if len(CheckpointPositions) > 0:
+        eventPlayer.teleport( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() )
+
     if eventPlayer.ban_dedhop and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp:
         # if eventPlayer.isOnWall():
         #smallMessage(eventPlayer, "Deathbhop is banned!")
@@ -786,7 +798,10 @@ rule "Death Reset":
     @Condition not eventPlayer.SpectateToggle
     @Condition not eventPlayer.CompDone
     eventPlayer.clearStatusEffect(Status.PHASED_OUT)
-    eventPlayer.resurrect()
+    if len(CheckpointPositions) > 0:
+        eventPlayer.resurrect()
+    else:
+        eventPlayer.respawn()
     checkpointFailReset()
     # rest is to prevent dead spaming from crashign server
     # but doing waits only when needed
