@@ -1,4 +1,4 @@
-#!define versionhere "1_9 beta 2"
+#!define versionhere "1_9 beta 4"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -73,7 +73,7 @@ def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place 
     BounceEffects = [] 
     for TempIterator1 in range(0, len(BouncePadCheckpoints)):
         createEffect(
-            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not evalOnce(BouncePositions[evalOnce(TempIterator1)]) in x.LockCollected], 
+            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected], 
             Effect.ORB, 
             Color.ORANGE if BounceToggleLock[evalOnce(TempIterator1)] else Color.GREEN, 
             BouncePositions[evalOnce(TempIterator1)], 
@@ -106,7 +106,6 @@ def RebuildPortals():
             [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
             Effect.GOOD_AURA, 
             Color.WHITE,
-            #Color.ORANGE if CurrentPortalEditing == evalOnce(TempIterator1) else Color.WHITE,
             CustomPortalStart[evalOnce(TempIterator1)], 
             0.6,
             EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR

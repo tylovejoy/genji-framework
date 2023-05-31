@@ -133,7 +133,7 @@ globalvar CheckpointRings_Editing 2         # list[effect]              --- Hold
 globalvar MsDestructo 3                     # MsDestructo Player
 globalvar TimeRemaining 4
 globalvar PortalEffects 5                   # list[effect]              --- Array holding custom portal effects
-globalvar CurrentPortalEditing 6
+#globalvar CurrentPortalEditing 6
 #globalvar Portal1PlayerList 5               # list[player]              --- players who can see portal 1
 #globalvar Portal2PlayerList 6               # list[player]              --- players who can see portal 2
 globalvar KillBallPositions 7               # list[vect]                --- KillBall position
@@ -273,6 +273,7 @@ playervar QuickRestartToggle 31             # bool                      -- enabl
 playervar MultiClimbCount 32                # int                       --- climb count # for HUD
 
 playervar finishfxcache  33                   # color                     --- color of fx after finish the map
+playervar PreviewsArray2 37
 playervar PreviewsArray 38                  # array                     --- store preview positions
 playervar PreviewsI 39                      # int                       --- preview itterator
 playervar invis 40                          # bool                      --- invis toggle added by fisho

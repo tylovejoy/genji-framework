@@ -47,12 +47,19 @@ rule "Preview orbs/portals | Hold Primary":
     @Condition not eventPlayer.LockState
     wait(0.9, Wait.ABORT_WHEN_FALSE)
 
-    eventPlayer.PreviewsArray = [] # prevent preview empty bug
+    #eventPlayer.PreviewsArray = [] # prevent preview empty bug
+    #eventPlayer.PreviewsArray2 = []
+
+    eventPlayer.PreviewsArray = ( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint] ) 
+    eventPlayer.PreviewsArray2 = [i for _, i in BouncePadCheckpoints]
+    eventPlayer.PreviewsArray2 = [ i for i in eventPlayer.PreviewsArray2 if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint ]
+
     if len(CustomPortalStart) > 0:
-        eventPlayer.PreviewsArray = [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.PreviewsArray.append( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true]) 
+        eventPlayer.PreviewsArray.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint] )
+
     if len(eventPlayer.PreviewsArray) < 1 or eventPlayer.PreviewsArray == null or (not eventPlayer.NotOnLastCp):
         return
+
     wait(0.1)  
     eventPlayer.setMoveSpeed(0)
     eventPlayer.PreviewsI = 0

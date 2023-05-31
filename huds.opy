@@ -237,18 +237,26 @@ rule "Huds: each player":
         HudPosition.LEFT, HO.game_timer, Color.WHITE, Color.GRAY, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT)
     
 
-    hudText(eventPlayer if not eventPlayer.LeaderboardToggle else null, null,  
+    hudText(eventPlayer if not eventPlayer.LeaderboardToggle else null, 
+        (   
+            " 弹球弹力: {} \n 弹球技能: {} {} ".format(
+                BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]],
+                abilityIconString(Hero.GENJI, Button.ULTIMATE) if BounceToggleUlt[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else "",
+                abilityIconString(Hero.GENJI, Button.ABILITY_1) if BounceToggleDash[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else ""
+            ) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) and len(eventPlayer.PreviewsArray) > 0 else ""
+        )
+        checkCN
+        " orb strength: {} \n orb abilities: {} {} ".format(
+            BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]],
+            abilityIconString(Hero.GENJI, Button.ULTIMATE) if BounceToggleUlt[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else "",
+            abilityIconString(Hero.GENJI, Button.ABILITY_1) if BounceToggleDash[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else ""
+        ) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) and len(eventPlayer.PreviewsArray) > 0 else "",
+        
+
         ("黄弹球 {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else "")
         checkCN
         "orange orbs {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else ""
         ,
-        #"{3}{2}Level {0} / {1}".format(
-        #    eventPlayer.CurrentCheckpoint, 
-        #    len(CheckpointPositions) - 1,
-        #    "\n" if eventPlayer.banstring else "",
-        #    eventPlayer.banstring if eventPlayer.banstring else ""
-        #)
-        #checkCN
         "{3}{2}{4} {0} / {1}".format(
             eventPlayer.CurrentCheckpoint, 
             len(CheckpointPositions) - 1,

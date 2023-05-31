@@ -30,7 +30,7 @@ rule "Custom portals | function":
         eventPlayer.PortalEnd_cache[eventPlayer.PortalStart_Cache.index(sorted([i for i in eventPlayer.PortalStart_Cache],lambda x: distance(eventPlayer,x))[0])
         ]
     )
-    wait(1)
+    wait(0.4)
     
 rule "Pre-set control map portal | toggled on via workshop settings":
     @Condition PortalOn

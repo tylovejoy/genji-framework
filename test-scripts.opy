@@ -74,22 +74,15 @@ rule "multi purpose hud":
         "fx count: {}\n"
         "{}\n"
         "{}\n"
-        "{}\n"
-        "lock:{}\n"
-        "{} - {} - {} - {}\n"
-        "sel {}"
+        "{}, {}, {}"
         "".format(
         getNumberOfTextIds(),
         getNumberOfEntityIds(),
         localPlayer.NotOnLastCp,
-        CurrentPortalEditing,
         EditorMoveItem,
-        localPlayer.LockEditor,
-        EditSelectIdArray[0],
-        EditSelectIdArray[1],
-        EditSelectIdArray[2],
-        EditSelectIdArray[3],
-        EditSelected 
+        localPlayer.PreviewsArray2[localPlayer.PreviewsI],
+        localPlayer.PreviewsArray2,
+        localPlayer.PreviewsI
         )        
         , HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )

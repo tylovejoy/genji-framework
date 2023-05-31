@@ -565,11 +565,11 @@ rule "Editor | Hud and Effects":
                 " End: {} \n"
                 " CP: {} \n"
                 "".format(
-                CustomPortalStart[CurrentPortalEditing],
-                CustomPortalEndpoint[CurrentPortalEditing],
-                "All" if CustomPortalCP[CurrentPortalEditing] == 999 else hostPlayer.CurrentCheckpoint
+                CustomPortalStart[EditSelected],
+                CustomPortalEndpoint[EditSelected],
+                "All" if CustomPortalCP[EditSelected] == 999 else hostPlayer.CurrentCheckpoint
                 )
-            if hostPlayer.EditModeSelection == 4 and CustomPortalCP[CurrentPortalEditing] in [hostPlayer.CurrentCheckpoint,999] and len(CustomPortalCP) > 0 else
+            if hostPlayer.EditModeSelection == 4 and CustomPortalCP[EditSelected] in [hostPlayer.CurrentCheckpoint,999] and len(CustomPortalCP) > 0 else
 
             "\n   No data selected   \n"
             
@@ -632,7 +632,7 @@ rule "Editor |  Fly/Noclip Toggle":
     waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_1), 1)
 
     while eventPlayer.isAlive() and eventPlayer.flytoggle != null and not eventPlayer.isHoldingButton(Button.ABILITY_1):
-        if EditorMoveItem == false:
+        if EditorMoveItem == false or eventPlayer != hostPlayer:
             eventPlayer.flytoggle += eventPlayer.getFacingDirection() * (
                 0.25 + eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z > 0 else 
                 -0.25 - eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z < 0 else 
@@ -669,6 +669,8 @@ rule "Editor | change mode":
 
     wait()
     editupdateselectedids() 
+    EditorSelectLast()
+    wait()
     eventPlayer.LockEditor = false
   
 def editupdateselectedids():
@@ -823,6 +825,7 @@ rule "Editor | delete cp/orb/portal":
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer == hostPlayer
     @Condition EditorMoveItem == false
+    #@Condition len(EditSelectIdArray) > 0
     @Condition eventPlayer.LockEditor == false
 
     eventPlayer.LockEditor = true
@@ -874,7 +877,6 @@ rule "Editor | delete cp/orb/portal":
         # Remove Radii at Checkpoint indexes (temp)
         CustomPortalStart = [x for x, i in CustomPortalStart if i not in eventPlayer.Temp]
         CustomPortalEndpoint = [x for x, i in CustomPortalEndpoint if i not in eventPlayer.Temp]
-        #CurrentPortalEditing = len(CustomPortalStart) - 1
         eventPlayer.Temp = []
 
         # ult/dash/ban remove and lower the cp number of rest
@@ -923,12 +925,12 @@ rule "Editor | delete cp/orb/portal":
         ###UpdateCache()
         RebuildBounceOrbs()
     elif eventPlayer.EditModeSelection == 4 and len(EditSelectIdArray) > 0: 
-        destroyEffect(PortalEffects[CurrentPortalEditing])
+        destroyEffect(PortalEffects[EditSelected])
         wait()
-        del CustomPortalStart[CurrentPortalEditing]
-        del CustomPortalEndpoint[CurrentPortalEditing]
-        del CustomPortalCP[CurrentPortalEditing]
-        del PortalEffects[CurrentPortalEditing]
+        del CustomPortalStart[EditSelected]
+        del CustomPortalEndpoint[EditSelected]
+        del CustomPortalCP[EditSelected]
+        del PortalEffects[EditSelected]
         ###wait()
         ###editupdateselectedids() 
         RebuildPortals()
@@ -1005,8 +1007,9 @@ rule "Editor | select orb/portal":
     else:
         EditSelected = EditSelectIdArray[0] if EditSelectIdArray.index(EditSelected) == len(EditSelectIdArray) - 1 else EditSelectIdArray[EditSelectIdArray.index(EditSelected) + 1]
     
+    wait()
     eventPlayer.LockEditor = false
-    waitUntil(not eventPlayer.isHoldingButton(Button.CROUCH) or eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isHoldingButton(Button.INTERACT), 0.3)
+    waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT) or not (eventPlayer.isHoldingButton(Button.CROUCH) or eventPlayer.isHoldingButton(Button.JUMP)), 0.24)
 
 # checkpoint functions ==============================================================
 
@@ -1051,7 +1054,7 @@ rule "Editor | cp add/remove teleport":
     hostPlayer.LockEditor = false
     wait()
 
-rule "Editor | precision moving":
+rule "Editor | moving checkpoint":
     @Event eachPlayer
     @Condition eventPlayer.EditorOn
     @Condition eventPlayer == hostPlayer
@@ -1084,6 +1087,7 @@ rule "Editor | add ult/dash":
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition eventPlayer.LockEditor == false
+    
     if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
         togglecpinarray(BladeEnabledCheckpoints)
     else:
@@ -1134,8 +1138,8 @@ rule "Editor | portal cp change":
     @Condition EditorMoveItem == false
     @Condition eventPlayer.LockEditor == false
 
-    CustomPortalCP[CurrentPortalEditing] = eventPlayer.CurrentCheckpoint if CustomPortalCP[CurrentPortalEditing] == 999 else 999
-    editupdateselectedids()
+    CustomPortalCP[EditSelected] = eventPlayer.CurrentCheckpoint if CustomPortalCP[EditSelected] == 999 else 999
+    #editupdateselectedids()
     wait(0.3)
 
 
