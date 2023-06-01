@@ -487,9 +487,10 @@ rule "Editor | Hud and Effects":
                 KillBallPositions[EditSelected]      
             ) 
             if hostPlayer.EditModeSelection == 1 and len(hostPlayer.KillIndex_Cache) > 0 else             
-            "\n 选中的弹球 \n 矢量: {1} \n 弹力: {0} \n".format(
+            "\n 选中的弹球 \n 矢量: {1} \n 弹力: {0} \n ID: {2}".format(
                 BounceStrength[EditSelected],
-                BouncePositions[EditSelected]
+                BouncePositions[EditSelected],
+                EditSelected
             )
             if hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0  else  
             "封禁(单关)\n"
@@ -536,9 +537,10 @@ rule "Editor | Hud and Effects":
                 KillBallPositions[EditSelected]      
             ) 
             if hostPlayer.EditModeSelection == 1 and len(hostPlayer.KillIndex_Cache) > 0 else             
-            "\n Selected Bounce Orb \n Vector: {1} \n strength: {0} \n".format(
+            "\n Selected Bounce Orb \n Vector: {1} \n strength: {0} \n ID: {2}".format(
                 BounceStrength[EditSelected],
-                BouncePositions[EditSelected]
+                BouncePositions[EditSelected],
+                EditSelected
             )
             if hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0  else   
             " bans\n"

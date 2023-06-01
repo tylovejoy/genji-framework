@@ -74,15 +74,14 @@ rule "multi purpose hud":
         "fx count: {}\n"
         "{}\n"
         "{}\n"
-        "{}, {}, {}"
+        "bounce {}, last {}"
         "".format(
         getNumberOfTextIds(),
         getNumberOfEntityIds(),
         localPlayer.NotOnLastCp,
         EditorMoveItem,
-        localPlayer.PreviewsArray2[localPlayer.PreviewsI],
-        localPlayer.PreviewsArray2,
-        localPlayer.PreviewsI
+        localPlayer.bouncetouched,
+        localPlayer.bouncetouchedlast
         )        
         , HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )

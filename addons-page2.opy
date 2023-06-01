@@ -324,3 +324,45 @@ rule "addon | grup up":
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.3)
     wait(0.16)
     eventPlayer.stopForcingPosition()
+
+
+
+def TriggerOnFailSuccesReset():
+    @Name "Custom script on fail, succes, reset"
+    @Disabled
+    # This subroutine triggers on failing, arriving, reseting, skipping etc
+    printLog("------------")
+    # example: reset gravity and movespeed after being changed by custom orbs
+    eventPlayer.setGravity(100)
+    eventPlayer.setMoveSpeed(100)
+
+playervar BounceTrueId
+rule "Custom Orb Script":
+    @Disabled
+    @Event eachPlayer
+    #don't edit this condition !!!!!!!!!!!!!!!!!
+    @Condition eventPlayer.bouncetouched > -1
+    #Enable this rule and find the ID number of the bounce orbs via the editor display.
+    #Note that the ID can change if you place or delete orbs infront of that orb.
+    #Do NOT edit the next 2 actions.
+    eventPlayer.BounceTrueId   = [i for _, i in BouncePadCheckpoints]
+    eventPlayer.BounceTrueId  = [ i for i in eventPlayer.BounceTrueId if BouncePadCheckpoints[i] == hostPlayer.CurrentCheckpoint and  BouncePositions[i] == eventPlayer.BouncePosition_Cache[eventPlayer.bouncetouched]][0]
+    #Add the desired ID numbers for the bounces in the array
+    #add the script after it
+    #you can use the trigger sub above this rule to reset the effects
+    if eventPlayer.BounceTrueId in [2]:
+        # example gravity (should be reset to 100 in trigger on fail)
+        eventPlayer.setGravity(25)
+        smallMessage(eventPlayer," you feel light")
+        wait(2)
+        eventPlayer.setGravity(100)
+                   
+    if eventPlayer.BounceTrueId in [2,3]:
+       # example canceling primary makes double jump recover
+       eventPlayer.cancelPrimaryAction()
+       smallMessage(eventPlayer," double jump recovered")
+                
+    if eventPlayer.BounceTrueId in [4]:
+        # example move speed
+        eventPlayer.setMoveSpeed(250)
+        smallMessage(eventPlayer," zooom")

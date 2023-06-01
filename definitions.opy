@@ -254,7 +254,7 @@ playervar SpectateToggle 5                  # bool                       --- tur
 #playervar MapVectorArray 8                  # MsDestructo Vectors
 playervar LedgeDash 6
 playervar LockEditor 7                      # bool                      --- ensure only 1 editor command can go of at the time
-
+playervar DontPlay
 playervar WallclimbUsed 9                   # bool                      --- turned into bool
 playervar GuideToggle 10                    # bool                       --- turned into bool, shows/hides editor hud
 playervar LockState 11                      # bool                      --- locked means you are curently runing arrive checkpoint rule
@@ -342,6 +342,8 @@ subroutine StartPauseTimer
 subroutine StopPauseTimer
 subroutine editupdateselectedids
 subroutine EditorSelectLast
+
+subroutine TriggerOnFailSuccesReset
 
 enum HO:
     # Left #####################

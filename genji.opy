@@ -1,4 +1,4 @@
-#!define versionhere "1_9 beta 4"
+#!define versionhere "1_9 beta 5"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -383,7 +383,6 @@ rule "Player Initialize":
     eventPlayer.LockEditor = true
     if eventPlayer.isDummy() and eventPlayer.getCurrentHero() == Hero.DVA:
         return # special here for dva instead of later because 100% she doesnt play the match
-    
     eventPlayer.GuideToggle = true
     eventPlayer.disableGamemodeHud()
     eventPlayer.enableDeathSpectateAllPlayers()
@@ -394,6 +393,7 @@ rule "Player Initialize":
     eventPlayer.WallclimbUsed = false #Climbing the wall prompts the HUD
     eventPlayer.JumpCount = 0
     eventPlayer.bouncetouchedlast = -1
+    eventPlayer.bouncetouched = -1
     #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
     wait(1) 
     createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), cpcirklefx, EffectReeval.POSITION_AND_RADIUS)
@@ -419,6 +419,7 @@ rule "Player Initialize":
     if not eventPlayer.isDummy():
         eventPlayer.startForcingHero(Hero.GENJI)
     elif eventPlayer.getCurrentHero() != Hero.GENJI: # only do the things on genji test bots
+        eventPlayer.DontPlay = true
         return
 
     eventPlayer.LockEditor = false
@@ -541,6 +542,7 @@ def checkpointFailReset():
    
     async(CheckUlt(), AsyncBehavior.RESTART)
     async(CheckDash(), AsyncBehavior.RESTART)
+    TriggerOnFailSuccesReset()
 
 def StartGame_Sub():
     @Name "SUB | Start Game"
@@ -603,6 +605,7 @@ def StartGame_Sub():
     # eventPlayer.LockState = false
     eventPlayer.MovedCheckpoint = true
     UpdateCache()
+    TriggerOnFailSuccesReset()
 
 def KILLBALL():
     @Name "SUB | Kill Orb Effects"
@@ -631,9 +634,10 @@ def pinball():
 
 rule "Arrive | Ground reset | traces":
     @Event eachPlayer
-    @Hero genji
+    #@Hero genji
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isAlive()
+    @Condition not eventPlayer.DontPlay
     if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
         
         if (eventPlayer.isMoving() and eventPlayer.PracticeToggle == false and eventPlayer.invis == false and eventPlayer.EditorOn == false and CompMode == false):
@@ -698,7 +702,7 @@ rule "Arrive | Ground reset | traces":
                 goto lbl_abc
             
             eventPlayer.splittime = eventPlayer.Timer
-                
+            TriggerOnFailSuccesReset()
             if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1 and (not eventPlayer.EditorOn) and (not eventPlayer.PracticeToggle): # complete lvl
                 stopChasingVariable(eventPlayer.Timer)
                 stopChasingVariable(eventPlayer.practicetimer) 
@@ -789,6 +793,8 @@ rule "Bounce Ball / Orb | Activate":
     #if eventPlayer.bouncetouched == 2:
     #    eventPlayer.cancelPrimaryAction()
     #    smallMessage(eventPlayer,"刷新二段" checkCN "you got double jump back")
+    wait()
+    eventPlayer.bouncetouched = -1
     wait(0.24)
     if RULE_CONDITION:
         goto RULE_START

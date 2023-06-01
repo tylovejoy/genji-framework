@@ -171,6 +171,7 @@ rule "Enter Spectate | Hold Interact":
         eventPlayer.enableRespawn()
         eventPlayer.InvincibleToggle = false
         eventPlayer.LockCollected = []
+        TriggerOnFailSuccesReset()
         if eventPlayer.NotOnLastCp:
             StopPauseTimer()
     else:
@@ -217,7 +218,7 @@ rule "Toggle Invincible Mode | Melee + Reload":
             StopPauseTimer()
         eventPlayer.stopForcingPosition()
         eventPlayer.flytoggle = null
-        
+        TriggerOnFailSuccesReset()
     else:
         if not eventPlayer.NotOnLastCp:
             eventPlayer.allowButton(Button.ABILITY_1)
@@ -273,6 +274,7 @@ rule "Toggle Practice Mode | Melee + Ultimate":
         async(CheckUlt(), AsyncBehavior.RESTART)
         async(CheckDash(), AsyncBehavior.RESTART)
         eventPlayer.stopForcingPosition()
+        TriggerOnFailSuccesReset()
     else:
         eventPlayer.PracticeCheckpoint = eventPlayer.CurrentCheckpoint
         eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), true)
@@ -324,6 +326,7 @@ rule "Practice Restart | Interact":
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.2)
     eventPlayer.LockCollected = []
     UpdateCache()
+    TriggerOnFailSuccesReset()
 
 rule "Skip | Crouch + Primary/Secondary Fire":
     @Event eachPlayer
@@ -395,6 +398,7 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
             eventPlayer.Timer = 0
             eventPlayer.splittime = 0
         eventPlayer.flytoggle = null
+        TriggerOnFailSuccesReset()
         wait(0.24)
     wait(1, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
