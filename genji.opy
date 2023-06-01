@@ -913,20 +913,6 @@ rule "------------------------------------------------------------------------  
     @Delimiter
     @Disabled
 
-/*
-FILLER
-FILLER
-FILLER
-FILLER
-FILLER
-FILLER
-FILLER
-FILLER
-FILLER
-FILLER
-FILLER
-*/
-
 rule "------------------------------------------------------------------------ MAP DATA - 地图数据 ------------------------------------------------------------------------":
     @NewPage "Map data and addon settings are on page 2 - 地图数据和附加组件的设置在第2页"
     @Delimiter
@@ -948,29 +934,6 @@ rule "Credits here - 作者名字 <---- INSERT HERE / 在这输入 ":
     Name = "name here - 作者"
     Code = "code here - 代码"
 
-/*
-rule "Ban per CP - 封禁(每级) <---- INSERT HERE / 在这输入":
-    # Enter the checkpoint/level numbers in the lists below to apply the ban on them
-    # Remember the workshop toggle overwrites this list
-    # 在下面的列 表中输入检 查点 / 级别编号，封禁 掉对其应用
-    # 记住，工作坊切换 将覆盖 此列表
-    wait(1)
-    # ======================
-    # ban  triple - 三段跳
-    BanTriple = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban  multi - 蹭留 
-    BanMulti = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban create - 卡小
-    BanCreate = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban dedhop - 死小
-    BanDead = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban emote - 表情爬
-    BanEmote = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban climb - 爬墙
-    BanClimb = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # require bhop available - 留小跳进点
-    BanBhop = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-*/
 
 rule "instructions depricated rules (ban / portal / dash /ult) - 旧版编辑器中已弃用规则指引 (单关封禁 / 传送门 / 给刀给S)":
     @Delimiter
@@ -988,8 +951,6 @@ rule "instructions depricated rules (ban / portal / dash /ult) - 旧版编辑器
     #      (do not select waits or workshop toggles, only select variables)
     #step 3) Go to map data rule and paste this the variables
     printLog("----------------")
-    
-
     #以下规则现在 要用游戏内置 编辑器编辑
 	#	- 单关 封禁(卡小、蹭留等)
 	#	- 检查点给 刀给S

@@ -104,45 +104,11 @@ rule "Inworld text for certain Checkpoints - 在世界文本中为某些检查�
     # color applies to all 
     # 色彩运 用于全部
     CpIwtColor = Color.LIME_GREEN
-/*
-rule "Custom portals data - 自定义传送门数据  <---- EDIT ME / 在此处编辑":
-    @Disabled
-    #warning: This can cause you to exceed global orb/portal limit. 
-    #make sure portal + orbs do not go past the limit.
-    #请先确保传 送门+球体 总数不会超 过可添加数 量上限.
-    wait(1)
-    #Portal start position
-    #传送门起点 位置
-    CustomPortalStart = [vect(0,0,0)]
-    #Portal end position (on same number as start position)
-    #传送门终点 位置 (顺序与传 送门起点位 置保持一致)
-    CustomPortalEndpoint = [vect(0,10,0)]
-    #Portal checkpoint (on same number as start position) 
-    #999 = apply portal to entire map
-    #启用传送门 检查点 (顺序与传 送门起点位 置保持一致) 
-    #999 = 传送门在全 部检查点启用
-    CustomPortalCP = [999]
-*/
+
 rule "------------------------------------------------------------------------ Addons skills - 附加组件技能 ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
-/*
-rule "Dash/Blade | DEPRICATED, instructions inside - 刀/Shift | 已弃用, 内含指引":
-    @Delimiter
-    @Disabled
-    # -
-    # >>> this rule should no longer be used <<<
-    # >>> 这条规则本版本已弃用 <<<
-    # -
-    printLog("----------------")
-    # you can add ult/dash via checkpoint mode in the ingame editor
-    # existing map data should be updated to include this in map data
-    # Paste the blade and ult variable from the dash/ult rules old into the map pasta rule.
-    printLog("----------------")
-    # 可通过游戏 内编辑器在 检查点模式 下添加刀 / Shift
-    # 过去的地图 数据需 要更新，以便在 地图 数据包含刀 / Shift 数据
-    printLog("----------------")
-*/
+
 rule "Fake Triple Jump - enable rule - 启用此规则 - 假三级跳": # method c
     @Disabled
     @Event eachPlayer
