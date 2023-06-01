@@ -323,5 +323,7 @@ editor only update
 - fixed mistake that caused leaderboard to apear as a hud command in editor, despite not being an editor feature
 - fixed a bug that caused removing cps to often not remove the ult/blade properly
 
-
+- added 2 addon rules
+    - a subroutine that triggers when arriving, failing, reseting or skipping etc
+    - a rule that can be used to trigger custom scripts when touching orbs
 
