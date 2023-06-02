@@ -1,4 +1,4 @@
-#!define versionhere "1.8.2b"
+#!define versionhere "1_9"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -37,8 +37,13 @@ editortoggle(0) # 0 is editor, rest is numbers
 #disable overpy map detection (command removed by zezo after fix by blizard)
 ##!disableMapDetectionFix 
 
+# supress warning for emote
+#!suppressWarnings w_ow2_communicate_bug
+
 #!include "settings.opy"
 #!include "definitions.opy"
+
+
 
 rule "fisho cp cheat for overpy toggle":
     @Event eachPlayer
@@ -68,15 +73,17 @@ def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place 
     BounceEffects = [] 
     for TempIterator1 in range(0, len(BouncePadCheckpoints)):
         createEffect(
-            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not evalOnce(BouncePositions[evalOnce(TempIterator1)]) in x.LockCollected], 
+            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected], 
             Effect.ORB, 
             Color.ORANGE if BounceToggleLock[evalOnce(TempIterator1)] else Color.GREEN, 
             BouncePositions[evalOnce(TempIterator1)], 
             1, 
             EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
-    BounceEffects.append(getLastCreatedEntity())
-    wait()
+        BounceEffects.append(getLastCreatedEntity())
+        #wait()
+        if TempIterator1 % 5 == 0:
+            wait()
 
 def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Kill Orb Effects" 
     @Name "SUB | Rebuild Kill Orbs"
@@ -85,9 +92,29 @@ def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place on
     for TempIterator1 in range(0, len(KillballCheckpoints)):
         createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
         KillBallEffects.append(getLastCreatedEntity())
-        wait()
+        if TempIterator1 % 5 == 0:
+            wait()
 
-def BuildPortals():
+def RebuildPortals():
+    destroyEffect(PortalEffects)
+    PortalEffects = [] 
+    if len(CustomPortalCP) < 1:
+        return
+    
+    for TempIterator1 in range(0, len(CustomPortalCP)):
+        createEffect(
+            [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
+            Effect.GOOD_AURA, 
+            Color.WHITE,
+            CustomPortalStart[evalOnce(TempIterator1)], 
+            0.6,
+            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+        )
+        PortalEffects.append(getLastCreatedEntity())
+        if TempIterator1 % 5 == 0:
+            wait()
+
+def PortalCreate():
     @Name "SUB | Rebuild Portals"
     # custom portals
     if CustomPortalStart:
@@ -99,6 +126,7 @@ def BuildPortals():
                 0.6,
                 EffectReeval.VISIBILITY
             )
+            PortalEffects.append(getLastCreatedEntity())
             wait(0.16)
     # pre-set portals
     if PortalDest:
@@ -120,6 +148,7 @@ def BuildPortals():
 
 def UpdateCache():
     @Name "SUB | Update Effect Cache"
+    # note: if adding cp pos to cache, make sure to also adjsut editor things like move and teleport
     eventPlayer.NotOnLastCp = (eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 and len(CheckpointPositions)  > 1)
     
     eventPlayer.BouncePosition_Cache = [_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
@@ -127,20 +156,15 @@ def UpdateCache():
     eventPlayer.BounceUlt_Cache = [_ for _, i in BounceToggleUlt if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.BounceDash_Cache = [_ for _, i in BounceToggleDash if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.BounceLock_Cache = [_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
+    eventPlayer.BounceLockMax_Cache = len([i for i in eventPlayer.BounceLock_Cache if i])    
     eventPlayer.KillPosition_Cache = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.BounceLockMax_Cache = len([i for i in eventPlayer.BounceLock_Cache if i])    
     
+    eventPlayer.PortalStart_Cache = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == 999]
+    eventPlayer.PortalEnd_cache = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == 999]
+
     eventPlayer.banstring = ""
     wait()
-
-    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Triple Jump - 三段跳", false, 0):
-        eventPlayer.ban_triple = true
-    elif eventPlayer.CurrentCheckpoint in BanTriple:
-        eventPlayer.banstring = "▲ {}".format(eventPlayer.banstring)
-        eventPlayer.ban_triple = true
-    else:
-        eventPlayer.ban_triple = false
 
     if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Multiclim - 封禁蹭留", false, 1):
         eventPlayer.ban_multi = true
@@ -193,9 +217,12 @@ def UpdateCache():
     wait()
     async(CheckUlt(), AsyncBehavior.RESTART)
     async(CheckDash(), AsyncBehavior.RESTART)
+    
 
     if not eventPlayer.EditorOn:
         return
+
+    editupdateselectedids()
 
     destroyEffect(eventPlayer.EffectSizeArray)
     eventPlayer.EffectSizeArray = []
@@ -208,12 +235,8 @@ def UpdateCache():
     eventPlayer.KillIndex_Cache = [e for e in [(i if e2 == eventPlayer.CurrentCheckpoint else -1) for e2, i in KillballCheckpoints] if  e >=0]
 
     if eventPlayer.MovedCheckpoint and eventPlayer == hostPlayer:
-        #SelectedCheckpoint_Editing = eventPlayer.CurrentCheckpoint
-        SelectedKillball_Editing = 0 if eventPlayer.KillIndex_Cache else 99999
-        KillBallChase = KillBallPositions[eventPlayer.KillIndex_Cache[SelectedKillball_Editing]] if len(eventPlayer.KillIndex_Cache) else vect(0,0,0)
-        CurrentBounce_Editing = 0 if eventPlayer.BounceIndex_Cache else 99999
-        CurrentBouncePosition_Editing = BouncePositions[eventPlayer.BounceIndex_Cache[CurrentBounce_Editing]] if len(eventPlayer.BounceIndex_Cache) else vect(0,0,0)
-        eventPlayer.MovedCheckpoint = false
+        EditorSelectLast()
+        eventPlayer.MovedCheckpoint = false     
 
 #!include "editor.opy"
 
@@ -252,11 +275,9 @@ rule "Setup and Variables":
     KillBallPositions = KillBallPositions if len(KillBallPositions) else []
     KillBallRadii = KillBallRadii if len(KillBallRadii) else []
     KillBallEffects = KillBallEffects if len(KillBallEffects) else []
-    SelectedKillball_Editing = 0
     BouncePositions = BouncePositions if len(BouncePositions) else []
     BounceEffects = BounceEffects if len(BounceEffects) else []
     BounceStrength = BounceStrength if len(BounceStrength) else []
-    CurrentBounce_Editing = 0
     BounceToggleUlt = BounceToggleUlt if len(BounceToggleUlt) else []
     BounceToggleDash = BounceToggleDash if len(BounceToggleDash) else []
     BounceToggleLock = BounceToggleLock if len(BounceToggleLock) else []
@@ -266,10 +287,7 @@ rule "Setup and Variables":
     PortalNames = []
     PortalLoc = []
     PortalDest  = []
-    CustomPortalStart  = []
-    CustomPortalEndpoint  = []
-    CustomPortalCP  = []
-
+    
     wait(1)
     DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
     PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用传送门 (占点地图)",true, 10)
@@ -286,20 +304,21 @@ rule "Setup and Variables":
 
     wait(1) # add back to below wait if removed
     # clean out -1's after the ban has laoded
-    BanBhop = [i for i in BanBhop if i != -1]
-    BanClimb = [i for i in BanClimb if i != -1]
-    BanEmote = [i for i in BanEmote if i != -1]
-    BanDead = [i for i in BanDead if i != -1]
-    BanCreate = [i for i in BanCreate if i != -1]
-    BanMulti = [i for i in BanMulti if i != -1]
-    BanTriple = [i for i in BanTriple if i != -1]
+
+    BanBhop = [i for i in BanBhop if i != -1] if len(BanBhop) > 0 else []
+    BanClimb = [i for i in BanClimb if i != -1] if len(BanClimb) > 0 else []
+    BanEmote = [i for i in BanEmote if i != -1] if len(BanEmote) > 0 else []
+    BanDead = [i for i in BanDead if i != -1] if len(BanDead) > 0 else []
+    BanCreate = [i for i in BanCreate if i != -1] if len(BanCreate) > 0 else []
+    BanMulti = [i for i in BanMulti if i != -1] if len(BanMulti) > 0 else []
+    BanTriple = null #[i for i in BanTriple if i != -1] if len(BanTriple) > 0 else [] # legacy code, now auto sets it to null to save space
 
     wait(4)
     KILLBALL()
     wait(2)
     pinball() #
     wait(2)
-    BuildPortals()
+    PortalCreate()
     # Check for editor/host spawn to redo effect reeval
     waitUntil(hostPlayer.hasSpawned(), 99999)
     wait()
@@ -308,7 +327,8 @@ rule "Setup and Variables":
     
     RebuildKillOrbs()
     RebuildBounceOrbs()
-    
+    RebuildPortals()
+
 rule "Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
         wait(0.25)
@@ -352,10 +372,9 @@ rule "Player Initialize":
     @Event eachPlayer
     #eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor - 作图模式","Editor mode - 作图模式" ,  editoron , 0) # Turn Editor On
     eventPlayer.EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
-    
+    eventPlayer.LockEditor = true
     if eventPlayer.isDummy() and eventPlayer.getCurrentHero() == Hero.DVA:
         return # special here for dva instead of later because 100% she doesnt play the match
-    
     eventPlayer.GuideToggle = true
     eventPlayer.disableGamemodeHud()
     eventPlayer.enableDeathSpectateAllPlayers()
@@ -366,6 +385,7 @@ rule "Player Initialize":
     eventPlayer.WallclimbUsed = false #Climbing the wall prompts the HUD
     eventPlayer.JumpCount = 0
     eventPlayer.bouncetouchedlast = -1
+    eventPlayer.bouncetouched = -1
     #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
     wait(1) 
     createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), cpcirklefx, EffectReeval.POSITION_AND_RADIUS)
@@ -391,8 +411,10 @@ rule "Player Initialize":
     if not eventPlayer.isDummy():
         eventPlayer.startForcingHero(Hero.GENJI)
     elif eventPlayer.getCurrentHero() != Hero.GENJI: # only do the things on genji test bots
+        eventPlayer.DontPlay = true
         return
 
+    eventPlayer.LockEditor = false
     waitUntil(eventPlayer.hasSpawned(), 9999)
 
     if CompMode:
@@ -493,7 +515,10 @@ def checkpointFailReset():
     eventPlayer.cancelPrimaryAction()
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
-    eventPlayer.teleport( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() )
+    #eventPlayer.teleport( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() )
+    if len(CheckpointPositions) > 0:
+        eventPlayer.teleport( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() )
+
     if eventPlayer.ban_dedhop and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp:
         # if eventPlayer.isOnWall():
         #smallMessage(eventPlayer, "Deathbhop is banned!")
@@ -509,6 +534,7 @@ def checkpointFailReset():
    
     async(CheckUlt(), AsyncBehavior.RESTART)
     async(CheckDash(), AsyncBehavior.RESTART)
+    TriggerOnFailSuccesReset()
 
 def StartGame_Sub():
     @Name "SUB | Start Game"
@@ -519,7 +545,7 @@ def StartGame_Sub():
         kill(eventPlayer,null)
         return
     
-    if DashExploitToggle:
+    if DashExploitToggle and len(CheckpointPositions)>0:
         eventPlayer.setAbility1Enabled(false)
         if eventPlayer.isUsingAbility1():
             waitUntil(not eventPlayer.isUsingAbility1(), 1.5)
@@ -569,7 +595,9 @@ def StartGame_Sub():
     eventPlayer.SpectateToggle = false
 
     # eventPlayer.LockState = false
+    eventPlayer.MovedCheckpoint = true
     UpdateCache()
+    TriggerOnFailSuccesReset()
 
 def KILLBALL():
     @Name "SUB | Kill Orb Effects"
@@ -598,9 +626,10 @@ def pinball():
 
 rule "Arrive | Ground reset | traces":
     @Event eachPlayer
-    @Hero genji
+    #@Hero genji
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isAlive()
+    @Condition not eventPlayer.DontPlay
     if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
         
         if (eventPlayer.isMoving() and eventPlayer.PracticeToggle == false and eventPlayer.invis == false and eventPlayer.EditorOn == false and CompMode == false):
@@ -665,7 +694,7 @@ rule "Arrive | Ground reset | traces":
                 goto lbl_abc
             
             eventPlayer.splittime = eventPlayer.Timer
-                
+            TriggerOnFailSuccesReset()
             if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1 and (not eventPlayer.EditorOn) and (not eventPlayer.PracticeToggle): # complete lvl
                 stopChasingVariable(eventPlayer.Timer)
                 stopChasingVariable(eventPlayer.practicetimer) 
@@ -753,6 +782,8 @@ rule "Bounce Ball / Orb | Activate":
         smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready")) 
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
+    wait()
+    eventPlayer.bouncetouched = -1
     wait(0.24)
     if RULE_CONDITION:
         goto RULE_START
@@ -764,7 +795,10 @@ rule "Death Reset":
     @Condition not eventPlayer.SpectateToggle
     @Condition not eventPlayer.CompDone
     eventPlayer.clearStatusEffect(Status.PHASED_OUT)
-    eventPlayer.resurrect()
+    if len(CheckpointPositions) > 0:
+        eventPlayer.resurrect()
+    else:
+        eventPlayer.respawn()
     checkpointFailReset()
     # rest is to prevent dead spaming from crashign server
     # but doing waits only when needed
@@ -868,20 +902,6 @@ rule "------------------------------------------------------------------------  
     @Delimiter
     @Disabled
 
-/*
-FILLER
-FILLER
-FILLER
-FILLER
-FILLER
-FILLER
-FILLER
-FILLER
-FILLER
-FILLER
-FILLER
-*/
-
 rule "------------------------------------------------------------------------ MAP DATA - 地图数据 ------------------------------------------------------------------------":
     @NewPage "Map data and addon settings are on page 2 - 地图数据和附加组件的设置在第2页"
     @Delimiter
@@ -904,27 +924,35 @@ rule "Credits here - 作者名字 <---- INSERT HERE / 在这输入 ":
     Code = "code here - 代码"
 
 
-rule "Ban per CP - 封禁(每级) <---- INSERT HERE / 在这输入":
-    # Enter the checkpoint/level numbers in the lists below to apply the ban on them
-    # Remember the workshop toggle overwrites this list
-    # 在下面的列 表中输入检 查点 / 级别编号，封禁 掉对其应用
-    # 记住，工作坊切换 将覆盖 此列表
-    wait(1)
-    # ======================
-    # ban  triple - 三段跳
-    BanTriple = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban  multi - 蹭留 
-    BanMulti = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban create - 卡小
-    BanCreate = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban dedhop - 死小
-    BanDead = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban emote - 表情爬
-    BanEmote = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # ban climb - 爬墙
-    BanClimb = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    # require bhop available - 留小跳进点
-    BanBhop = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
+rule "instructions depricated rules (ban / portal / dash /ult) - 旧版编辑器中已弃用规则指引 (单关封禁 / 传送门 / 给刀给S)":
+    @Delimiter
+    printLog("----------------")
+    # The following rules should now be handled with the ingame editor
+    #- Ban per checkpoint
+    #- Dash/Ult per checkpoint
+    #- Custom portals
+    printLog("----------------")
+    # When updating old maps, these things should be added to your map data.
+    # This is done with the instructions below
+    printLog("----------------")
+    #step 1) Open the old rule
+    #step 2) Select the variables and press copy
+    #      (do not select waits or workshop toggles, only select variables)
+    #step 3) Go to map data rule and paste this the variables
+    printLog("----------------")
+    #以下规则现在 要用游戏内置 编辑器编辑
+	#	- 单关 封禁(卡小、蹭留等)
+	#	- 检查点给 刀给S
+	#	- 自定义 传送门
+    printLog("----------------")
+	#	当更新旧 图数据 时，以上 这些东西 应该放 到地图 数据里
+    #	以下是一 些更新旧 图数据 指引: 
+    printLog("----------------")
+	#	步骤 1) 找到旧图 数据的 规则
+	#	步骤 2) 选中旧图 数据的 全局变 量并复制
+	#		  (不要复制含 等待 地图工坊设置 的指令, 只要 全局变量 的数据)
+	#	步骤 3) 将全局变 量数据粘 贴到新版 编辑器的 地图数 据规则
+    printLog("----------------")
 
 rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled

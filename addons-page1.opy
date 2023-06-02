@@ -19,31 +19,19 @@ rule "Pre-set control map portal | function | toggled via workshop":
         eventPlayer.teleport(
             PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] 
         )
-
+   
 rule "Custom portals | function":
     @Event eachPlayer
-    @Condition len(CustomPortalStart) > 0
+    @Condition len(eventPlayer.PortalStart_Cache) > 0
+    @Condition [i for i in eventPlayer.PortalStart_Cache if distance(i, eventPlayer.getPosition() + vect(0,0.2,0)) < portaldistance]
+    #@Condition any([distance(eventPlayer.getPosition() + vect(0, 0.2, 0), ent) < portaldistance for ent in eventPlayer.PortalStart_Cache]) == true
 
-    @Condition (any([
-        distance(eventPlayer.getPosition() + vect(0, 0.2, 0), ent) < portaldistance and 
-        CustomPortalCP[i] in [999, eventPlayer.CurrentCheckpoint]
-        for ent, i in CustomPortalStart
-        ])) == true
-
-    eventPlayer.PortalLoop = 0
-    for eventPlayer.PortalLoop in range(len(CustomPortalStart)):
-        if (
-            distance(
-                eventPlayer.getPosition() + vect(0, 0.2, 0), 
-                CustomPortalStart[eventPlayer.PortalLoop]
-            ) < portaldistance and 
-            CustomPortalCP[eventPlayer.PortalLoop] in [999, eventPlayer.CurrentCheckpoint]
-            ):
-            eventPlayer.teleport(CustomPortalEndpoint[eventPlayer.PortalLoop])
-            return
-
-    wait(1)
-
+    eventPlayer.teleport(
+        eventPlayer.PortalEnd_cache[eventPlayer.PortalStart_Cache.index(sorted([i for i in eventPlayer.PortalStart_Cache],lambda x: distance(eventPlayer,x))[0])
+        ]
+    )
+    wait(0.4)
+    
 rule "Pre-set control map portal | toggled on via workshop settings":
     @Condition PortalOn
     wait(2, Wait.ABORT_WHEN_FALSE) # overwrite pasta

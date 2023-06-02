@@ -105,49 +105,14 @@ rule "Inworld text for certain Checkpoints - 在世界文本中为某些检查�
     # 色彩运 用于全部
     CpIwtColor = Color.LIME_GREEN
 
-rule "Custom portals data - 自定义传送门数据  <---- EDIT ME / 在此处编辑":
-    @Disabled
-    #warning: This can cause you to exceed global orb/portal limit. 
-    #make sure portal + orbs do not go past the limit.
-    #请先确保传 送门+球体 总数不会超 过可添加数 量上限.
-    wait(1)
-    #Portal start position
-    #传送门起点 位置
-    CustomPortalStart = [vect(0,0,0)]
-    #Portal end position (on same number as start position)
-    #传送门终点 位置 (顺序与传 送门起点位 置保持一致)
-    CustomPortalEndpoint = [vect(0,10,0)]
-    #Portal checkpoint (on same number as start position) 
-    #999 = apply portal to entire map
-    #启用传送门 检查点 (顺序与传 送门起点位 置保持一致) 
-    #999 = 传送门在全 部检查点启用
-    CustomPortalCP = [999]
-
 rule "------------------------------------------------------------------------ Addons skills - 附加组件技能 ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
-
-rule "Dash/Blade | DEPRICATED, instructions inside - 刀/Shift | 已弃用, 内含指引":
-    @Delimiter
-    @Disabled
-    # -
-    # >>> this rule should no longer be used <<<
-    # >>> 这条规则本版本已弃用 <<<
-    # -
-    printLog("----------------")
-    # you can add ult/dash via checkpoint mode in the ingame editor
-    # existing map data should be updated to include this in map data
-    # Paste the blade and ult variable from the dash/ult rules old into the map pasta rule.
-    printLog("----------------")
-    # 可通过游戏 内编辑器在 检查点模式 下添加刀 / Shift
-    # 过去的地图 数据需 要更新，以便在 地图 数据包含刀 / Shift 数据
-    printLog("----------------")
 
 rule "Fake Triple Jump - enable rule - 启用此规则 - 假三级跳": # method c
     @Disabled
     @Event eachPlayer
     @Hero genji
-
     # check starts in air when not double jumping, this is to detect double jumping
     @Condition eventPlayer.isOnGround() == false 
     @Condition eventPlayer.isJumping() # false when double jumping
@@ -183,14 +148,12 @@ rule "Fake Triple Jump - enable rule - 启用此规则 - 假三级跳": # method
         return
 
     if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping() :
-        if eventPlayer.ban_triple and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp: # handle bans and invincible
-            smallMessage(eventPlayer,"  三段跳 ▲ 已禁用!" checkCN "   Triple Jump ▲ is banned!")
-            return
+        # ban goes here if it was on
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
 
 # keeps you still shortly after getting in a stall
 # makes it much easier to get in one
-rule "stall enhancer - 增强系統跳的判定 - 启用此规则":
+rule "Stall enhancer - 增强系統跳的判定 - 启用此规则":
     @Event eachPlayer
     #原作：家里有妖怪#5202(国服)
     @Disabled
@@ -264,3 +227,105 @@ rule "Fake Ledge Dash - enable rule - 超级跳 - 启用此规则":
     eventPlayer.LedgeDash[0] = null
     eventPlayer.LedgeDash[1] = null
     eventPlayer.LedgeDash[2] = null
+
+
+
+rule "Grup up | text/effect -":
+    @Disabled
+    # replace 777 with checkpoint number
+    # replace vector 0,0,0 with orb position
+    createInWorldText(
+        [i for i in getAllPlayers() if i.CurrentCheckpoint == 777],
+        "{0} grup up {0}".format(abilityIconString(Hero.GENJI, Button.ULTIMATE)), 
+        vect(0,0,0), 
+        1.5, 
+        Clip.NONE, WorldTextReeval.VISIBILITY, Color.ORANGE, SpecVisibility.DEFAULT
+    )
+    # replace 777 with checkpoint number
+    # replace vector 0,0,0 with orb position
+    # 3.5 is the radius
+    createEffect(
+        [i for i in getAllPlayers() if i.A == 777], 
+        Effect.SPHERE, Color.ORANGE, vect(0,0,0),  3.5, EffectReeval.VISIBILITY
+    )
+
+rule "Grup up | function": 
+    @Disabled
+    @Event eachPlayer
+    # replace 777 with checkpoint number
+    @Condition eventPlayer.CurrentCheckpoint == 777
+    @Condition eventPlayer.isAlive()
+    @Condition not eventPlayer.isOnGround()
+    @Condition eventPlayer.InvincibleToggle == false
+    # replace vector 0,0,0 with orb position
+    # 3.5 is the radius
+    @Condition distance(eventPlayer,  vect(0,0,0)) < 3.5 
+    
+    smallMessage(eventPlayer, "   stay in the bubble")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   9")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   8")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   7")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   6")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   5")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   4")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   3")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   2")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   1")
+    wait(1, Wait.ABORT_WHEN_FALSE)
+
+    eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint +1] + vect(0,0.1,0), true)
+    eventPlayer.cancelPrimaryAction()
+    eventPlayer.setStatusEffect(null, Status.ROOTED, 0.3)
+    wait(0.16)
+    eventPlayer.stopForcingPosition()
+
+
+
+def TriggerOnFailSuccesReset():
+    @Name "Custom script on fail, succes, reset, skip"
+    @Disabled
+    # This subroutine triggers on failing, arriving, reseting, skipping etc
+    printLog("------------")
+    # example: reset gravity and movespeed after being changed by custom orbs
+    eventPlayer.setGravity(100)
+    eventPlayer.setMoveSpeed(100)
+
+playervar BounceTrueId
+rule "Custom Orb Script":
+    @Disabled
+    @Event eachPlayer
+    #don't edit this condition !!!!!!!!!!!!!!!!!
+    @Condition eventPlayer.bouncetouched > -1
+    #Enable this rule and find the ID number of the bounce orbs via the editor display.
+    #Note that the ID can change if you place or delete orbs infront of that orb.
+    #Do NOT edit the next 2 actions.
+    eventPlayer.BounceTrueId   = [i for _, i in BouncePadCheckpoints]
+    eventPlayer.BounceTrueId  = [ i for i in eventPlayer.BounceTrueId if BouncePadCheckpoints[i] == hostPlayer.CurrentCheckpoint and  BouncePositions[i] == eventPlayer.BouncePosition_Cache[eventPlayer.bouncetouched]][0]
+    #Add the desired ID numbers for the bounces in the array
+    #add the script after it
+    #you can use the trigger sub above this rule to reset the effects
+    if eventPlayer.BounceTrueId in [2]:
+        # example gravity (should be reset to 100 in trigger on fail)
+        eventPlayer.setGravity(25)
+        smallMessage(eventPlayer," you feel light")
+        wait(2)
+        eventPlayer.setGravity(100)
+                   
+    if eventPlayer.BounceTrueId in [2,3]:
+       # example canceling primary makes double jump recover
+       eventPlayer.cancelPrimaryAction()
+       smallMessage(eventPlayer," double jump recovered")
+                
+    if eventPlayer.BounceTrueId in [4]:
+        # example move speed
+        eventPlayer.setMoveSpeed(250)
+        smallMessage(eventPlayer," zooom")

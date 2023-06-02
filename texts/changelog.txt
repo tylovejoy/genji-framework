@@ -296,3 +296,36 @@ fixed:
 
 1.8.2b
     - fixed a bug that allowed you to skip without practice mode on
+
+
+1.9 - 2-6-2023
+- preview now mentions ult,dash and bounce strength
+- you can now preview green orbs
+- triple jump ban has been removed. If you want the tripple jump addon to only work on specific checkpoints, you have to add a cp check to the addon.
+
+editor:
+- mode change is now on melee + shoot, the swap is instant, you can go back and forth or you can hold to cycle through.
+- 2 new modes added: Ban per cp and Custom portals
+- fly is now on dash to deal with the changed keybindings
+- added instruction rule that explains updating old map data with these new modes ingame
+
+- raycast placement lets you place things at x distance towards your cursor. this sticks to walls
+- moving orbs now works much differently
+- move checkpoint has been replaced by precise positining and has been adjusted to trigger much faster
+
+- the currently selected effect/text is now the same for all modes
+- now preventing data corruption by lockign your actions to only 1 editor command at a time with the exception of data save and some instand commands. thel ock also prevents cp skiping and reseting.
+- spectate in editor no longer triggers if you press primary/secondary fire during interact. this was colliding with some other commands
+- adjusted the hud non-editor players got, making it look less obnoxious
+- move cp and hitbox toggle are now exclusive to the checkpoint mode
+
+- fixed a bug that caused editing orbs on map data that already had orbs to exponentionally add up on fx count, resulting into hidden orbs
+- fixed mistake that caused leaderboard to apear as a hud command in editor, despite not being an editor feature
+- fixed a bug that caused removing cps to often not remove the ult/blade properly
+
+- added 3 addons
+    - a rule that can be used to trigger custom scripts when touching orbs
+    - a subroutine that triggers when arriving, failing, reseting or skipping etc
+    - the stall orb addon
+
+- behind the scenes a lot of editor logistics have been reworked. for example selectinon now uses a global system instead of another system per mode.

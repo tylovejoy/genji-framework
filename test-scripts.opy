@@ -72,20 +72,16 @@ rule "multi purpose hud":
     hudSubheader(getAllPlayers(), 
         "hud count {}\n"
         "fx count: {}\n"
-        "angles: {} : {}\n"
-        "spd: {}\n"
-        "{} - {}\n"
+        "{}\n"
+        "{}\n"
+        "bounce {}, last {}"
         "".format(
         getNumberOfTextIds(),
         getNumberOfEntityIds(),
-        localPlayer.getHorizontalFacingAngle(),
-        localPlayer.getVerticalFacingAngle(),
-        localPlayer.getSpeed(),
-     
-   
-        strContains( "{}".format(getCurrentMap()) , "{}".format(Map.LIJIANG_TOWER)) ,
-        strContains( "{}".format(getCurrentMap()) ,"{}".format(Map.BUSAN)) 
-        
+        localPlayer.NotOnLastCp,
+        EditorMoveItem,
+        localPlayer.bouncetouched,
+        localPlayer.bouncetouchedlast
         )        
         , HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )

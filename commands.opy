@@ -9,6 +9,7 @@ rule "Toggle Leaderboard | Hold Melee":
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition not eventPlayer.EditorOn
     wait(1, Wait.ABORT_WHEN_FALSE)
+
     eventPlayer.LeaderboardToggle = not eventPlayer.LeaderboardToggle
 
 rule "Split hide":
@@ -30,6 +31,7 @@ rule "Toggle Invisible | Hold Deflect":
     @Condition not eventPlayer.EditorOn
     @Condition not CompMode
     wait(1, Wait.ABORT_WHEN_FALSE)
+
     eventPlayer.invis = not eventPlayer.invis
     eventPlayer.setInvisibility(Invis.NONE) 
     if eventPlayer.invis:
@@ -45,12 +47,19 @@ rule "Preview orbs/portals | Hold Primary":
     @Condition not eventPlayer.LockState
     wait(0.9, Wait.ABORT_WHEN_FALSE)
 
-    eventPlayer.PreviewsArray = [] # prevent preview empty bug
+    #eventPlayer.PreviewsArray = [] # prevent preview empty bug
+    #eventPlayer.PreviewsArray2 = []
+
+    eventPlayer.PreviewsArray = ( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint] ) 
+    eventPlayer.PreviewsArray2 = [i for _, i in BouncePadCheckpoints]
+    eventPlayer.PreviewsArray2 = [ i for i in eventPlayer.PreviewsArray2 if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint ]
+
     if len(CustomPortalStart) > 0:
-        eventPlayer.PreviewsArray = [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.PreviewsArray.append( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint and BounceToggleLock[BouncePositions.index(i)] == true]) 
+        eventPlayer.PreviewsArray.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint] )
+
     if len(eventPlayer.PreviewsArray) < 1 or eventPlayer.PreviewsArray == null or (not eventPlayer.NotOnLastCp):
         return
+
     wait(0.1)  
     eventPlayer.setMoveSpeed(0)
     eventPlayer.PreviewsI = 0
@@ -76,6 +85,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) 
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
+    @Condition eventPlayer.LockEditor == false or eventPlayer != hostPlayer
     #@Condition not eventPlayer.isUsingAbility1()
 
     eventPlayer.LockState = true 
@@ -140,7 +150,8 @@ rule "Enter Spectate | Hold Interact":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
     @Condition not (eventPlayer.EditorOn and eventPlayer.isHoldingButton(Button.MELEE))
-    @Condition not CompMode
+    @Condition eventPlayer.EditorOn == false or not(eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE))
+    #@Condition not editoron
     wait(1, Wait.ABORT_WHEN_FALSE)
     if eventPlayer.EditorOn: # editor has interact combos
         wait(1, Wait.ABORT_WHEN_FALSE)
@@ -160,6 +171,7 @@ rule "Enter Spectate | Hold Interact":
         eventPlayer.enableRespawn()
         eventPlayer.InvincibleToggle = false
         eventPlayer.LockCollected = []
+        TriggerOnFailSuccesReset()
         if eventPlayer.NotOnLastCp:
             StopPauseTimer()
     else:
@@ -206,7 +218,7 @@ rule "Toggle Invincible Mode | Melee + Reload":
             StopPauseTimer()
         eventPlayer.stopForcingPosition()
         eventPlayer.flytoggle = null
-        
+        TriggerOnFailSuccesReset()
     else:
         if not eventPlayer.NotOnLastCp:
             eventPlayer.allowButton(Button.ABILITY_1)
@@ -262,6 +274,7 @@ rule "Toggle Practice Mode | Melee + Ultimate":
         async(CheckUlt(), AsyncBehavior.RESTART)
         async(CheckDash(), AsyncBehavior.RESTART)
         eventPlayer.stopForcingPosition()
+        TriggerOnFailSuccesReset()
     else:
         eventPlayer.PracticeCheckpoint = eventPlayer.CurrentCheckpoint
         eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), true)
@@ -313,6 +326,7 @@ rule "Practice Restart | Interact":
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.2)
     eventPlayer.LockCollected = []
     UpdateCache()
+    TriggerOnFailSuccesReset()
 
 rule "Skip | Crouch + Primary/Secondary Fire":
     @Event eachPlayer
@@ -321,7 +335,9 @@ rule "Skip | Crouch + Primary/Secondary Fire":
     #@Condition hostPlayer.EditorOn or ( eventPlayer.PracticeToggle and eventPlayer.isHoldingButton(Button.ABILITY_1) )
     @Condition eventPlayer.LockState == false
     @Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle
-    
+    @Condition len(CheckpointPositions) > 1
+    @Condition EditorMoveItem == false
+    @Condition eventPlayer.LockEditor == false or eventPlayer != hostPlayer
     
     eventPlayer.splittime = 0 
     eventPlayer.practicetimer = 0
@@ -357,6 +373,8 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition not eventPlayer.isHoldingButton(Button.MELEE)
     if eventPlayer.QuickRestartToggle:
+        if eventPlayer.LockEditor and eventPlayer == hostPlayer:
+            return
         if CheckpointPositions == []: # dont go to 0,0,0 if no cps on map
             wait()
             return
@@ -380,6 +398,7 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
             eventPlayer.Timer = 0
             eventPlayer.splittime = 0
         eventPlayer.flytoggle = null
+        TriggerOnFailSuccesReset()
         wait(0.24)
     wait(1, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
@@ -396,7 +415,9 @@ rule "Toggle Hud | hold secondary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition not (eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.ABILITY_1)) # don't trigger during skiping
-    @Condition eventPlayer
+    #@Condition eventPlayer
+    @Condition not (eventPlayer.EditorOn and eventPlayer == hostPlayer and eventPlayer.isHoldingButton(Button.MELEE))
+    @Condition EditorMoveItem == false
 
     wait(1.5, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)

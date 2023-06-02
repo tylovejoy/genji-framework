@@ -38,7 +38,6 @@ rule "test data":
     Cachedcredits = ["name here - 作者", "code here - 代码"]
     
     wait(3)
-    BanTriple = []
     BanMulti = [2]
     BanCreate = []
     BanDead = []
