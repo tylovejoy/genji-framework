@@ -224,7 +224,7 @@ globalvar CpIwtCp 77
 globalvar CpIwtPos 78
 globalvar CpIwtColor 79
 
-globalvar BanTriple 80
+globalvar BanTriple 80 # legacy
 globalvar BanMulti 81
 globalvar BanCreate 82
 globalvar BanDead 83
@@ -328,7 +328,7 @@ playervar BhopHUDColor 85                   # Color                     --- Colo
 subroutine StartGame_Sub 1
 subroutine KILLBALL 3
 subroutine pinball 4
-subroutine BuildPortals 5
+subroutine PortalCreate 5
 subroutine Leaderboardupdate # fishos
 subroutine CreateLeaderBoard
 subroutine UpdateTitle

@@ -181,19 +181,6 @@ rule "Ban | Wallclimb - indicator ":
     #eventPlayer.setStatusEffect(null,Status.BURNING, 0.1)
     smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
 
-rule "Ban | Triple Jump":
-    @Event eachPlayer
-    @Condition eventPlayer.ban_triple
-    @Condition not eventPlayer.InvincibleToggle
-    @Condition eventPlayer.NotOnLastCp
-    @Condition eventPlayer.getVerticalSpeed() >= 5.8
-    @Condition eventPlayer.JumpCount == 1
-    @Condition eventPlayer.isUsingAbility1() == false
-    @Condition not eventPlayer.isOnWall()
-    # legacy ban, only works when blizzards enables triple again. fake triple is baned via fake triple rule
-    smallMessage(eventPlayer,"   三段跳 ▲ 已禁用!" checkCN "   Triple Jump ▲ is banned!")
-    checkpointFailReset()
-
 rule "Ban | Emote Savehop":
     @Event eachPlayer
     @Condition eventPlayer.ban_emote

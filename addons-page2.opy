@@ -113,7 +113,6 @@ rule "Fake Triple Jump - enable rule - 启用此规则 - 假三级跳": # method
     @Disabled
     @Event eachPlayer
     @Hero genji
-
     # check starts in air when not double jumping, this is to detect double jumping
     @Condition eventPlayer.isOnGround() == false 
     @Condition eventPlayer.isJumping() # false when double jumping
@@ -149,14 +148,12 @@ rule "Fake Triple Jump - enable rule - 启用此规则 - 假三级跳": # method
         return
 
     if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping() :
-        if eventPlayer.ban_triple and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp: # handle bans and invincible
-            smallMessage(eventPlayer,"  三段跳 ▲ 已禁用!" checkCN "   Triple Jump ▲ is banned!")
-            return
+        # ban goes here if it was on
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
 
 # keeps you still shortly after getting in a stall
 # makes it much easier to get in one
-rule "stall enhancer - 增强系統跳的判定 - 启用此规则":
+rule "Stall enhancer - 增强系統跳的判定 - 启用此规则":
     @Event eachPlayer
     #原作：家里有妖怪#5202(国服)
     @Disabled
@@ -233,7 +230,7 @@ rule "Fake Ledge Dash - enable rule - 超级跳 - 启用此规则":
 
 
 
-rule "addon | grup up text/effect":
+rule "Grup up | text/effect -":
     @Disabled
     # replace 777 with checkpoint number
     # replace vector 0,0,0 with orb position
@@ -252,7 +249,7 @@ rule "addon | grup up text/effect":
         Effect.SPHERE, Color.ORANGE, vect(0,0,0),  3.5, EffectReeval.VISIBILITY
     )
 
-rule "addon | grup up": 
+rule "Grup up | function": 
     @Disabled
     @Event eachPlayer
     # replace 777 with checkpoint number
@@ -294,7 +291,7 @@ rule "addon | grup up":
 
 
 def TriggerOnFailSuccesReset():
-    @Name "Custom script on fail, succes, reset"
+    @Name "Custom script on fail, succes, reset, skip"
     @Disabled
     # This subroutine triggers on failing, arriving, reseting, skipping etc
     printLog("------------")

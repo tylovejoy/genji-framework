@@ -36,7 +36,6 @@ rule "quicktest data":
     SavePauseTime = []
     SavePauseEnabled = []
     Cachedcredits = ["name here - 作者", "code here - 代码"]
-    BanTriple = []
     BanMulti = []
     BanCreate = []
     BanDead = []

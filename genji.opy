@@ -1,4 +1,4 @@
-#!define versionhere "1_9 beta 5"
+#!define versionhere "1_9 beta 6"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -114,7 +114,7 @@ def RebuildPortals():
         if TempIterator1 % 5 == 0:
             wait()
 
-def BuildPortals():
+def PortalCreate():
     @Name "SUB | Rebuild Portals"
     # custom portals
     if CustomPortalStart:
@@ -165,14 +165,6 @@ def UpdateCache():
 
     eventPlayer.banstring = ""
     wait()
-
-    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Triple Jump - 三段跳", false, 0):
-        eventPlayer.ban_triple = true
-    elif eventPlayer.CurrentCheckpoint in BanTriple:
-        eventPlayer.banstring = "▲ {}".format(eventPlayer.banstring)
-        eventPlayer.ban_triple = true
-    else:
-        eventPlayer.ban_triple = false
 
     if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Multiclim - 封禁蹭留", false, 1):
         eventPlayer.ban_multi = true
@@ -319,14 +311,14 @@ rule "Setup and Variables":
     BanDead = [i for i in BanDead if i != -1] if len(BanDead) > 0 else []
     BanCreate = [i for i in BanCreate if i != -1] if len(BanCreate) > 0 else []
     BanMulti = [i for i in BanMulti if i != -1] if len(BanMulti) > 0 else []
-    BanTriple = [i for i in BanTriple if i != -1] if len(BanTriple) > 0 else []
+    BanTriple = null #[i for i in BanTriple if i != -1] if len(BanTriple) > 0 else [] # legacy code, now auto sets it to null to save space
 
     wait(4)
     KILLBALL()
     wait(2)
     pinball() #
     wait(2)
-    BuildPortals()
+    PortalCreate()
     # Check for editor/host spawn to redo effect reeval
     waitUntil(hostPlayer.hasSpawned(), 99999)
     wait()
@@ -790,9 +782,6 @@ rule "Bounce Ball / Orb | Activate":
         smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready")) 
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
-    #if eventPlayer.bouncetouched == 2:
-    #    eventPlayer.cancelPrimaryAction()
-    #    smallMessage(eventPlayer,"刷新二段" checkCN "you got double jump back")
     wait()
     eventPlayer.bouncetouched = -1
     wait(0.24)
