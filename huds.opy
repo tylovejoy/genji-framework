@@ -18,10 +18,10 @@ rule "Huds: Global/Localplayer":
     # note on changing default name/credit
     # if you change it, also change it in the credits rule
     # the old credits should always remain valid here to keep old data valid
-    if Name != "name here - 作者" or Cachedcredits[0] == null::
+    if Name != "name here - 作者" and Cachedcredits[0] != null:
         Cachedcredits[0] = Name
     
-    if Code != "code here - 代码" or Cachedcredits[1] == null::
+    if Code != "code here - 代码" and Cachedcredits[1] != null:
         Cachedcredits[1] = Code
     Name = null
     Code = null
