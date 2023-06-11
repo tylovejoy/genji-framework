@@ -321,7 +321,7 @@ rule "Setup and Variables":
     PortalCreate()
     # Check for editor/host spawn to redo effect reeval
     waitUntil(hostPlayer.hasSpawned(), 99999)
-    wait()
+    wait(0.032)
     if not hostPlayer.EditorOn:
         return
     
