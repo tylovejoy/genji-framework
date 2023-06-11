@@ -1,7 +1,7 @@
-#!define versionhere "1_9"
+#!define versionhere "1.9.1"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(10) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -547,6 +547,7 @@ def StartGame_Sub():
     
     if DashExploitToggle and len(CheckpointPositions)>0:
         eventPlayer.setAbility1Enabled(false)
+        wait()
         if eventPlayer.isUsingAbility1():
             waitUntil(not eventPlayer.isUsingAbility1(), 1.5)
             smallMessage(eventPlayer,"   0关卡Shift已禁用!" checkCN "   Dash Start is banned!")            

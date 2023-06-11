@@ -86,6 +86,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) 
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition eventPlayer.LockEditor == false or eventPlayer != hostPlayer
+    @Condition not eventPlayer.LockState
     #@Condition not eventPlayer.isUsingAbility1()
 
     eventPlayer.LockState = true 
@@ -139,6 +140,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
     StartGame_Sub()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     wait()
+    eventPlayer.allowButton(Button.ABILITY_1)
     eventPlayer.LockState = false
     if CompMode:
         wait(1)
@@ -196,11 +198,13 @@ rule "Toggle Invincible Mode | Melee + Reload":
     @Condition (not CompMode) or (not eventPlayer.CompDone)
     @Condition not eventPlayer.LockState
 
+    eventPlayer.LockState = true
     eventPlayer.LockCollected = []
     eventPlayer.flytoggle = null
     
-    if eventPlayer.CurrentCheckpoint > 0 and not eventPlayer.NotOnLastCp:
+    if eventPlayer.CurrentCheckpoint > 0 and eventPlayer.NotOnLastCp:
         eventPlayer.disallowButton(Button.ABILITY_1)
+        wait(0.16)
         if eventPlayer.isUsingAbility1():
             waitUntil(not eventPlayer.isUsingAbility1(), 1.5)
             wait()
@@ -221,8 +225,9 @@ rule "Toggle Invincible Mode | Melee + Reload":
         TriggerOnFailSuccesReset()
     else:
         if not eventPlayer.NotOnLastCp:
-            eventPlayer.allowButton(Button.ABILITY_1)
             wait()
+            eventPlayer.allowButton(Button.ABILITY_1)
+            eventPlayer.LockState = false
             return
         StartPauseTimer()
         stopChasingVariable(eventPlayer.Timer)
@@ -236,8 +241,10 @@ rule "Toggle Invincible Mode | Melee + Reload":
     async( CheckDash(), AsyncBehavior.RESTART)
 
     if eventPlayer.CurrentCheckpoint > 0: # cp 0 start dash ban is via startgame sub because it has to give msg
-        eventPlayer.allowButton(Button.ABILITY_1)
         wait(0.16)
+        eventPlayer.allowButton(Button.ABILITY_1)
+
+    eventPlayer.LockState = false
 
 rule "Toggle Practice Mode | Melee + Ultimate":
     @Event eachPlayer
@@ -247,6 +254,7 @@ rule "Toggle Practice Mode | Melee + Ultimate":
     @Condition eventPlayer.isAlive()
     @Condition not eventPlayer.EditorOn
     @Condition not CompMode 
+    @Condition eventPlayer.LockState == false
 
     if eventPlayer.InvincibleToggle:
         smallMessage(eventPlayer,"   探点模式下无法切换练习模式" checkCN "   Cannot toggle practice mode while in invincible")
@@ -254,6 +262,8 @@ rule "Toggle Practice Mode | Melee + Ultimate":
         return
 
     eventPlayer.LockState = true
+    eventPlayer.disallowButton(Button.ABILITY_1)
+
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
       
@@ -292,8 +302,10 @@ rule "Toggle Practice Mode | Melee + Ultimate":
         
    
     eventPlayer.PracticeToggle = not eventPlayer.PracticeToggle 
-    wait(0.3)
+    wait(0.2)
+    eventPlayer.allowButton(Button.ABILITY_1)
     eventPlayer.LockState = false
+    wait(0.1)
 
 rule "Practice Restart | Interact":
     @Event eachPlayer
@@ -305,6 +317,7 @@ rule "Practice Restart | Interact":
     @Condition eventPlayer.isAlive() or eventPlayer.SpectateToggle
     @Condition not eventPlayer.EditorOn
     @Condition eventPlayer.PracticeToggle
+    @Condition not eventPlayer.LockState
    
     #  first 2 ifs prevent collide with spec
     if eventPlayer.SpectateToggle: 
@@ -338,11 +351,11 @@ rule "Skip | Crouch + Primary/Secondary Fire":
     @Condition len(CheckpointPositions) > 1
     @Condition EditorMoveItem == false
     @Condition eventPlayer.LockEditor == false or eventPlayer != hostPlayer
-    
+    eventPlayer.LockState = true
     eventPlayer.splittime = 0 
     eventPlayer.practicetimer = 0
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-        eventPlayer.LockState = true
+        #eventPlayer.LockState = true
         if eventPlayer.CurrentCheckpoint < 1:
             eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 1
         elif (len(CheckpointPositions[eventPlayer.CurrentCheckpoint -1]) > 1 and distance(CheckpointPositions[eventPlayer.CurrentCheckpoint ][0], CheckpointPositions[eventPlayer.CurrentCheckpoint-1][1]) < cpcircleradius):
@@ -351,7 +364,7 @@ rule "Skip | Crouch + Primary/Secondary Fire":
         else:
             eventPlayer.CurrentCheckpoint -= 1
     else:
-        eventPlayer.LockState = true
+        #eventPlayer.LockState = true
         
         if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
             eventPlayer.CurrentCheckpoint = 0
@@ -361,9 +374,10 @@ rule "Skip | Crouch + Primary/Secondary Fire":
     wait()
     checkpointFailReset()
     wait(0.064)
-    eventPlayer.LockState = false
     eventPlayer.MovedCheckpoint = true
     UpdateCache() 
+    eventPlayer.LockState = false
+    wait()
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.28) # faster if you spam button
     if RULE_CONDITION:
         goto RULE_START
