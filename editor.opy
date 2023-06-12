@@ -132,7 +132,55 @@ rule "Editor | Clear Excess Data to Save Map":
     destroyHudText(eventPlayer.savemaphud[2])
     eventPlayer.savemaphud = null
     eventPlayer.LockEditor = false
+
+
+def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Bounce Ball Effects" 
+    @Name "SUB | Rebuild Bounce Orbs"
+    destroyEffect(BounceEffects)
+    BounceEffects = [] 
+    for TempIterator1 in range(0, len(BouncePadCheckpoints)):
+        createEffect(
+            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected], 
+            Effect.ORB, 
+            Color.ORANGE if BounceToggleLock[evalOnce(TempIterator1)] else Color.GREEN, 
+            BouncePositions[evalOnce(TempIterator1)], 
+            1, 
+            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+        )
+        BounceEffects.append(getLastCreatedEntity())
+        #wait()
+        if TempIterator1 % 5 == 0:
+            wait()
+
+def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Kill Orb Effects" 
+    @Name "SUB | Rebuild Kill Orbs"
+    destroyEffect(KillBallEffects)
+    KillBallEffects = []  
+    for TempIterator1 in range(0, len(KillballCheckpoints)):
+        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        KillBallEffects.append(getLastCreatedEntity())
+        if TempIterator1 % 5 == 0:
+            wait()
+
+def RebuildPortals():
+    destroyEffect(PortalEffects)
+    PortalEffects = [] 
+    if len(CustomPortalCP) < 1:
+        return
     
+    for TempIterator1 in range(0, len(CustomPortalCP)):
+        createEffect(
+            [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
+            Effect.GOOD_AURA, 
+            Color.WHITE,
+            CustomPortalStart[evalOnce(TempIterator1)], 
+            0.6,
+            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+        )
+        PortalEffects.append(getLastCreatedEntity())
+        if TempIterator1 % 5 == 0:
+            wait()
+              
 rule "Editor | Hud and Effects":
     waitUntil(hostPlayer.hasSpawned(), 90)  # cant be condition because host player can leaves, removing the rule fx
     EditorMoveItem = false
