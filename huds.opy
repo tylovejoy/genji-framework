@@ -143,7 +143,7 @@ rule "Huds: Global/Localplayer":
             localPlayer if localPlayer.GuideToggle else null,
             null, 
             "{0} ―― hint available ―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.CurrentCheckpoint in HintCp and localPlayer.HintsOn == false else #iconString(Icon.HAPPY) # heroIcon(Hero.MERCY)
-            " ―――――――――――― \n {} \n ―――――――――――― ".format(HintText[HintCp.index(localPlayer.CurrentCheckpoint)]) if localPlayer.CurrentCheckpoint in HintCp else   # and true is implied from last if
+            " ― ― ― ― ― ― ― \n {} \n ― ― ― ― ― ― ― ".format(HintText[HintCp.index(localPlayer.CurrentCheckpoint)]) if localPlayer.CurrentCheckpoint in HintCp else   # and true is implied from last if
             "(no hint on this level)",
             "{} + {} | hide hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE)) if localPlayer.HintsOn else 
             "{} + {} | show hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE))
@@ -157,6 +157,7 @@ rule "Huds: Global/Localplayer":
             Color.WHITE if localPlayer.CurrentCheckpoint in HintCp else Color.GRAY, 
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
+        HudStoreEdit.append(getLastCreatedText())
 
     if CompMode:
         hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                                                                                                           ", HudPosition.TOP, HO.comp_instructtop, Color.WHITE, HudReeval.VISIBILITY,SpecVisibility.DEFAULT)
