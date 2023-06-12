@@ -337,3 +337,6 @@ editor:
 
 - fixed some big issues
 - optimized some code
+
+
+C = l"{0} sec".format(eventPlayer.A)
