@@ -180,7 +180,7 @@ def RebuildPortals():
         PortalEffects.append(getLastCreatedEntity())
         if TempIterator1 % 5 == 0:
             wait()
-              
+
 rule "Editor | Hud and Effects":
     waitUntil(hostPlayer.hasSpawned(), 90)  # cant be condition because host player can leaves, removing the rule fx
     EditorMoveItem = false
@@ -694,7 +694,7 @@ rule "Editor | change mode":
     eventPlayer.LockEditor = false
   
 def editupdateselectedids():
-    @Name "edit update selected id"
+    @Name "Editor | update selected id"
     
     if hostPlayer.EditModeSelection == 1:
         EditSelectIdArray  = [i for _, i in KillballCheckpoints]
@@ -709,7 +709,7 @@ def editupdateselectedids():
         EditSelectIdArray  = []
 
 def EditorSelectLast():
-    @Name "editor select last"
+    @Name "Editor | select last"
     EditSelected = EditSelectIdArray.last()
 
 rule "Editor | create cp/orb":
@@ -838,7 +838,7 @@ rule "Editor | delete cp/orb/portal":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) 
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer == hostPlayer
-    @Condition EditorMoveItem == false
+    #@Condition EditorMoveItem == false
     #@Condition len(EditSelectIdArray) > 0
     @Condition eventPlayer.LockEditor == false
 
@@ -1006,7 +1006,7 @@ rule "Editor | select orb/portal":
     @Condition len(EditSelectIdArray) > 0
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) or eventPlayer.isHoldingButton(Button.JUMP)
-    @Condition EditorMoveItem == false
+    #@Condition EditorMoveItem == false
     @Condition eventPlayer.LockEditor == false
 
     eventPlayer.LockEditor = true
@@ -1144,7 +1144,7 @@ rule "Editor | portal cp change":
     @Condition eventPlayer.isHoldingButton(Button.JUMP) 
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) 
     @Condition len(EditSelectIdArray) > 0
-    @Condition EditorMoveItem == false
+    #@Condition EditorMoveItem == false
     @Condition eventPlayer.LockEditor == false
 
     CustomPortalCP[EditSelected] = eventPlayer.CurrentCheckpoint if CustomPortalCP[EditSelected] == 999 else 999
