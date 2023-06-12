@@ -113,39 +113,7 @@ def RebuildPortals():
         PortalEffects.append(getLastCreatedEntity())
         if TempIterator1 % 5 == 0:
             wait()
-/*
-def PortalCreate():
-    @Name "SUB | Rebuild Portals"
-    # custom portals
-    if CustomPortalStart:
-        for TempIterator1 in range(len(CustomPortalStart)):
-            createEffect(
-                [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
-                Effect.GOOD_AURA, Color.WHITE,
-                CustomPortalStart[evalOnce(TempIterator1)], 
-                0.6,
-                EffectReeval.VISIBILITY
-            )
-            PortalEffects.append(getLastCreatedEntity())
-            wait(0.16)
-    # pre-set portals
-    if PortalDest:
-        for TempIterator1 in range(len(PortalLoc)):
-            createEffect(
-                [i for i in getAllPlayers() if i.InvincibleToggle or not i.NotOnLastCp],
-                Effect.BAD_AURA, 
-                Color.AQUA if evalOnce(TempIterator1) % 2 == 1 else Color.ORANGE,
-                PortalLoc[evalOnce(TempIterator1)], 
-                0.6,
-                EffectReeval.VISIBILITY
-            )
-            createInWorldText(
-                [i for i in getAllPlayers() if i.InvincibleToggle or not i.NotOnLastCp], 
-                "{0}".format(PortalNames[evalOnce(TempIterator1)]), 
-                PortalLoc[evalOnce(TempIterator1)] + vect(0,1,0), 
-                1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
-            )
-*/
+
 def UpdateCache():
     @Name "SUB | Update Effect Cache"
     # note: if adding cp pos to cache, make sure to also adjsut editor things like move and teleport
@@ -359,9 +327,6 @@ rule "Match time":
     setMatchTime(69)
     pauseMatchTime()
     wait(5)
-    #if getCurrentGamemode() == Gamemode.HYBRID:
-    #    TimeRemaining = 89
-    #else:
     TimeRemaining = 265
 
     while TimeRemaining > 0:
@@ -420,7 +385,6 @@ def EffectsCreate():
 
 rule "Player Initialize":
     @Event eachPlayer
-    #eventPlayer.EditorOn = createWorkshopSetting(bool, "Editor - 作图模式","Editor mode - 作图模式" ,  editoron , 0) # Turn Editor On
     eventPlayer.EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
     eventPlayer.LockEditor = true
     if eventPlayer.isDummy() and eventPlayer.getCurrentHero() == Hero.DVA:
@@ -649,32 +613,7 @@ def StartGame_Sub():
     eventPlayer.MovedCheckpoint = true
     UpdateCache()
     TriggerOnFailSuccesReset()
-/*
-def KILLBALL():
-    @Name "SUB | Kill Orb Effects"
-    if KillBallPositions == [] or hostPlayer.EditorOn:
-        return
-    for TempIterator1 in range(0, len(KillBallPositions)):
-        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
-        KillBallEffects.append(getLastCreatedEntity())
-        wait()
 
-def pinball():
-    @Name "SUB | Bounce Ball Effects"
-    if BouncePositions == [] or hostPlayer.EditorOn:
-        return
-    for TempIterator1 in range(0, len(BouncePositions)):
-        createEffect(
-            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected], 
-            Effect.ORB, 
-            Color.ORANGE if BounceToggleLock[TempIterator1] else Color.GREEN, 
-            BouncePositions[evalOnce(TempIterator1)], 
-            1, 
-            EffectReeval.VISIBILITY
-        )
-        BounceEffects.append(getLastCreatedEntity())
-        wait()
-*/
 rule "Arrive | Ground reset | traces":
     @Event eachPlayer
     #@Hero genji
