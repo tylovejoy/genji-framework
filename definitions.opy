@@ -212,6 +212,9 @@ globalvar SaveElapsed 64
 globalvar SavePauseTime 65
 globalvar SavePauseEnabled 66
 
+globalvar HintCp 67
+globalvar HintText 68
+
 globalvar Name 70
 globalvar Code 71
 globalvar Cachedcredits 73
@@ -271,8 +274,8 @@ playervar MultiClimbCountHUD 28             # HUD                       --- clim
 playervar CreateCounter 29
 playervar QuickRestartToggle 31             # bool                      -- enable reload to restart cp
 playervar MultiClimbCount 32                # int                       --- climb count # for HUD
-
 playervar finishfxcache  33                   # color                     --- color of fx after finish the map
+playervar HintsOn 34
 playervar PreviewsArray2 37
 playervar PreviewsArray 38                  # array                     --- store preview positions
 playervar PreviewsI 39                      # int                       --- preview itterator
@@ -410,6 +413,7 @@ enum HO:
     com_previewsub,
     com_practice,
     com_practicesub,
+    com_hints,
 
     edit_instructions_general,
     edit_instructions_edit,

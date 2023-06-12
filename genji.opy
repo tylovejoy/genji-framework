@@ -1,7 +1,7 @@
 #!define versionhere "1.9.1"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(10) # 0 is editor, rest is numbers
+editortoggle(4) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -288,6 +288,9 @@ rule "Setup and Variables":
     PortalLoc = []
     PortalDest  = []
     
+    HintCp = []
+    HintText = []
+
     wait(1)
     DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
     PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用传送门 (占点地图)",true, 10)
@@ -666,6 +669,7 @@ rule "Arrive | Ground reset | traces":
 
             eventPlayer.LockCollected = []
             eventPlayer.CurrentCheckpoint += 1
+            eventPlayer.HintsOn = false
             UpdateCache()
             # remove ult feature disabled for speedruning purposes
             #if eventPlayer.isUsingUltimate() and not eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints:

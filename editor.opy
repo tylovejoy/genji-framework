@@ -33,6 +33,8 @@ rule "Editor | Clear Excess Data to Save Map":
     TitleData = null
     CpHudText = null
     CpHudCp = null
+    HintText = null
+    HintCp = null
     CpIwtText = null
     CpIwtCp = null
     CpIwtPos = null

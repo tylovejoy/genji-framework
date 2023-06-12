@@ -128,6 +128,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
     eventPlayer.PracticeToggle = false
     eventPlayer.PracticeCheckpoint = 0
     eventPlayer.InvincibleToggle = false
+    eventPlayer.HintsOn = false
     stopChasingVariable(eventPlayer.practicetimer)
     eventPlayer.practicetimer = 0
     eventPlayer.splitdisplay = -999 if eventPlayer.splitdisplay == -999 else 0
@@ -300,7 +301,7 @@ rule "Toggle Practice Mode | Melee + Ultimate":
         chase(eventPlayer.practicetimer, 9999999, rate=1, ChaseReeval.NONE)
         wait(0.2)
         
-   
+    eventPlayer.HintsOn = false
     eventPlayer.PracticeToggle = not eventPlayer.PracticeToggle 
     wait(0.2)
     eventPlayer.allowButton(Button.ABILITY_1)
@@ -333,6 +334,7 @@ rule "Practice Restart | Interact":
 
     eventPlayer.practicetimer = 0
     eventPlayer.splittime = 0 
+    eventPlayer.HintsOn = false
     eventPlayer.teleport(CheckpointPositions[eventPlayer.PracticeCheckpoint])
     eventPlayer.CurrentCheckpoint = eventPlayer.PracticeCheckpoint
 
@@ -374,6 +376,7 @@ rule "Skip | Crouch + Primary/Secondary Fire":
     wait()
     checkpointFailReset()
     wait(0.064)
+    eventPlayer.HintsOn = false
     eventPlayer.MovedCheckpoint = true
     UpdateCache() 
     eventPlayer.LockState = false
@@ -443,3 +446,13 @@ rule "Toggle Hud | hold secondary":
         ) 
     
     eventPlayer.GuideToggle = not eventPlayer.GuideToggle 
+
+
+rule "Toggle hints":
+    @Event eachPlayer
+    @Condition HintText != null
+    @Condition eventPlayer.isHoldingButton(Button.MELEE)
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
+    @Condition eventPlayer.HintsOn or eventPlayer.CurrentCheckpoint in HintCp
+
+    eventPlayer.HintsOn = not eventPlayer.HintsOn

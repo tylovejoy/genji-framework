@@ -18,13 +18,22 @@ rule "Huds: Global/Localplayer":
     # note on changing default name/credit
     # if you change it, also change it in the credits rule
     # the old credits should always remain valid here to keep old data valid
-    if Name != "name here - 作者" and Cachedcredits[0] != null:
-        Cachedcredits[0] = Name
     
-    if Code != "code here - 代码" and Cachedcredits[1] != null:
+    if Name != "name here - 作者" and Name != null:
+        Cachedcredits[0] = Name
+    elif Cachedcredits[0] == null:
+        Cachedcredits[0] = "name here - 作者" 
+    
+    if Code != "code here - 代码" and Code != null:
         Cachedcredits[1] = Code
+    elif Cachedcredits[1] == null:
+        Cachedcredits[1] = "code here - 代码" 
+
     Name = null
     Code = null
+
+    #  if Code != "code here - 代码" or Cachedcredits[1] == null::
+
 
     hudSubtext(getAllPlayers(), 
         "作者: {}".format( Cachedcredits[0] )
@@ -109,20 +118,9 @@ rule "Huds: Global/Localplayer":
     CreateLeaderBoard()
 
     if CpHudText != null: # text per checkpoint  text per cp each
-        #hudSubtext(getAllPlayers(), "                                                   \r\n  \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n", HudPosition.TOP, HO.filler_custommsg, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        /*
-        hudHeader(
-            getAllPlayers(),    
-            CpHudText[CpHudCp.index(localPlayer.CurrentCheckpoint)]
-            if localPlayer.CurrentCheckpoint in CpHudCp else "" 
-           , HudPosition.TOP, HO.add_custommsg1, 
-            Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
-        )
-        */
         hudText(getAllPlayers(),
             CpHudText[CpHudCp.index(localPlayer.CurrentCheckpoint)]
             if localPlayer.CurrentCheckpoint in CpHudCp and localPlayer.GuideToggle else "",
-            
             ("(文本已隐藏)" if localPlayer.CurrentCheckpoint in CpHudCp and not localPlayer.GuideToggle else "")
             checkCN
             ("(text hidden)" if localPlayer.CurrentCheckpoint in CpHudCp and not localPlayer.GuideToggle else ""),
@@ -139,6 +137,26 @@ rule "Huds: Global/Localplayer":
             CpIwtPos[CpIwtCp.index(localPlayer.CurrentCheckpoint)], 
             2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, CpIwtColor, SpecVisibility.DEFAULT)
 
+    
+    if HintText != null:
+        hudText(
+            localPlayer if localPlayer.GuideToggle else null,
+            null, 
+            "{0} ―― hint available ―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.CurrentCheckpoint in HintCp and localPlayer.HintsOn == false else #iconString(Icon.HAPPY) # heroIcon(Hero.MERCY)
+            " ―――――――――――― \n {} \n ―――――――――――― ".format(HintText[HintCp.index(localPlayer.CurrentCheckpoint)]) if localPlayer.CurrentCheckpoint in HintCp else   # and true is implied from last if
+            "(no hint on this level)",
+            "{} + {} | hide hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE)) if localPlayer.HintsOn else 
+            "{} + {} | show hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE))
+
+            , 
+            HudPosition.RIGHT, HO.com_hints, 
+            Color.BLUE, 
+            Color.ORANGE if localPlayer.CurrentCheckpoint in HintCp and localPlayer.HintsOn == false else 
+            Color.GREEN if localPlayer.CurrentCheckpoint in HintCp else 
+            Color.GRAY, 
+            Color.WHITE if localPlayer.CurrentCheckpoint in HintCp else Color.GRAY, 
+            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        )
 
     if CompMode:
         hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                                                                                                           ", HudPosition.TOP, HO.comp_instructtop, Color.WHITE, HudReeval.VISIBILITY,SpecVisibility.DEFAULT)
@@ -184,7 +202,6 @@ rule "Huds: Global/Localplayer":
             , HudPosition.RIGHT, HO.com_practicesub, Color.LIME_GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         HudStoreEdit.append(getLastCreatedText())
-
 
     #if not hostPlayer.EditorOn:
         # find the value
