@@ -333,10 +333,8 @@ editor:
 
 1.9.1 - x-6-2023
 - new addon: Hint per cp
-- effects now load much sooner
+- effects now load much sooner when you start a lobby
 
 - fixed some big issues
 - optimized some code
 
-
-C = l"{0} sec".format(eventPlayer.A)
