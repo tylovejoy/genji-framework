@@ -329,9 +329,10 @@ playervar BhopHUDColor 85                   # Color                     --- Colo
 
 #Subroutine names
 subroutine StartGame_Sub 1
-subroutine KILLBALL 3
-subroutine pinball 4
-subroutine PortalCreate 5
+#subroutine KILLBALL 3
+#subroutine pinball 4
+#subroutine PortalCreate 5
+subroutine EffectsCreate 2
 subroutine Leaderboardupdate # fishos
 subroutine CreateLeaderBoard
 subroutine UpdateTitle

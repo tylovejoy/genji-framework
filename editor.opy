@@ -140,9 +140,6 @@ rule "Editor | Hud and Effects":
     if not hostPlayer.EditorOn:
         # clear variables if not in editor mode
         HudStoreEdit = null 
-        KillBallEffects = null
-        BounceEffects = null
-        PortalEffects = null
         return
     wait(2)
     #hostPlayer.LockEditor = true
@@ -158,9 +155,9 @@ rule "Editor | Hud and Effects":
         getAllPlayers().AttemptCount = null
         getAllPlayers().CompDone = false
 
-    CustomPortalStart = CustomPortalStart if len(CustomPortalStart) > 0 else [] 
-    CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) > 0 else [] 
-    CustomPortalCP = CustomPortalCP if len(CustomPortalCP) > 0 else [] 
+    #CustomPortalStart = CustomPortalStart if len(CustomPortalStart) > 0 else [] 
+    #CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) > 0 else [] 
+    #CustomPortalCP = CustomPortalCP if len(CustomPortalCP) > 0 else [] 
 
     # huds ==========================================================================================================================================================================
     

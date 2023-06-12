@@ -137,8 +137,7 @@ rule "Huds: Global/Localplayer":
             CpIwtPos[CpIwtCp.index(localPlayer.CurrentCheckpoint)], 
             2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, CpIwtColor, SpecVisibility.DEFAULT)
 
-    
-    if HintText != null:
+    if len(HintText) > 0:
         hudText(
             localPlayer if localPlayer.GuideToggle else null,
             null, 
@@ -147,7 +146,6 @@ rule "Huds: Global/Localplayer":
             "(no hint on this level)",
             "{} + {} | hide hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE)) if localPlayer.HintsOn else 
             "{} + {} | show hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE))
-
             , 
             HudPosition.RIGHT, HO.com_hints, 
             Color.BLUE, 

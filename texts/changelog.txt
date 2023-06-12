@@ -329,3 +329,11 @@ editor:
     - the stall orb addon
 
 - behind the scenes a lot of editor logistics have been reworked. for example selectinon now uses a global system instead of another system per mode.
+
+
+1.9.1 - x-6-2023
+- new addon: Hint per cp
+- effects now load much sooner
+
+- fixed some big issues
+- optimized some code

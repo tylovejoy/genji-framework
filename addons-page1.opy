@@ -34,7 +34,7 @@ rule "Custom portals | function":
     
 rule "Pre-set control map portal | toggled on via workshop settings":
     @Condition PortalOn
-    wait(2, Wait.ABORT_WHEN_FALSE) # overwrite pasta
+    wait(0.5, Wait.ABORT_WHEN_FALSE) # overwrite pasta
     if getCurrentMap() == Map.BUSAN:
         #"down > sanc","down > meka","sanc > down","sanc > meka","meka > sanc","meka > down"
         PortalNames = ["Sanctuary","MEKA base","Downtown","MEKA base","Sanctuary","Downtown"]
@@ -75,7 +75,8 @@ rule "Pre-set control map portal | toggled on via workshop settings":
         PortalLoc = null
         PortalNames = null
         return
-        
+    
+    
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
     @Condition isGameInProgress()

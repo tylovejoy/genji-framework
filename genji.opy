@@ -1,7 +1,7 @@
 #!define versionhere "1.9.1"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(4) # 0 is editor, rest is numbers
+editortoggle(1) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -113,7 +113,7 @@ def RebuildPortals():
         PortalEffects.append(getLastCreatedEntity())
         if TempIterator1 % 5 == 0:
             wait()
-
+/*
 def PortalCreate():
     @Name "SUB | Rebuild Portals"
     # custom portals
@@ -145,7 +145,7 @@ def PortalCreate():
                 PortalLoc[evalOnce(TempIterator1)] + vect(0,1,0), 
                 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
             )
-
+*/
 def UpdateCache():
     @Name "SUB | Update Effect Cache"
     # note: if adding cp pos to cache, make sure to also adjsut editor things like move and teleport
@@ -281,6 +281,11 @@ rule "Setup and Variables":
     BounceToggleUlt = BounceToggleUlt if len(BounceToggleUlt) else []
     BounceToggleDash = BounceToggleDash if len(BounceToggleDash) else []
     BounceToggleLock = BounceToggleLock if len(BounceToggleLock) else []
+
+    CustomPortalStart = CustomPortalStart if len(CustomPortalStart) > 0 else [] 
+    CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) > 0 else [] 
+    CustomPortalCP = CustomPortalCP if len(CustomPortalCP) > 0 else [] 
+
     LeaderBoardFull = []
 
     TitleData = null
@@ -316,18 +321,28 @@ rule "Setup and Variables":
     BanMulti = [i for i in BanMulti if i != -1] if len(BanMulti) > 0 else []
     BanTriple = null #[i for i in BanTriple if i != -1] if len(BanTriple) > 0 else [] # legacy code, now auto sets it to null to save space
 
-    wait(4)
-    KILLBALL()
-    wait(2)
-    pinball() #
-    wait(2)
-    PortalCreate()
-    # Check for editor/host spawn to redo effect reeval
-    waitUntil(hostPlayer.hasSpawned(), 99999)
-    wait(0.032)
-    if not hostPlayer.EditorOn:
+    if len(PortalDest) > 0: # pre set control map portals. not in portal rule because shared I variable
+        for TempIterator1 in range(len(PortalLoc)):
+            createEffect(
+                [i for i in getAllPlayers() if i.InvincibleToggle or not i.NotOnLastCp],
+                Effect.BAD_AURA, 
+                Color.AQUA if evalOnce(TempIterator1) % 2 == 1 else Color.ORANGE,
+                PortalLoc[evalOnce(TempIterator1)], 
+                0.6,
+                EffectReeval.VISIBILITY
+            )
+            createInWorldText(
+                [i for i in getAllPlayers() if i.InvincibleToggle or not i.NotOnLastCp], 
+                "{0}".format(PortalNames[evalOnce(TempIterator1)]), 
+                PortalLoc[evalOnce(TempIterator1)] + vect(0,1,0), 
+                1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
+            )
+    waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]),9999)
+    wait(1)
+    if not [i for i in getAllPlayers() if not i.isDummy()][0].EditorOn:
+        EffectsCreate()
         return
-    
+
     RebuildKillOrbs()
     RebuildBounceOrbs()
     RebuildPortals()
@@ -370,6 +385,38 @@ rule "Match time":
     else:
         declareTeamVictory(hostPlayer.getTeam())
 
+def EffectsCreate():
+    @Name "effects create"
+    if CustomPortalStart:
+        for TempIterator1 in range(len(CustomPortalStart)):
+            createEffect(
+                [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
+                Effect.GOOD_AURA, Color.WHITE,
+                CustomPortalStart[evalOnce(TempIterator1)], 
+                0.6,
+                EffectReeval.VISIBILITY
+            )
+            wait()
+
+        wait(1)
+        
+    if KillBallPositions != []:
+        for TempIterator1 in range(0, len(KillBallPositions)):
+            createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
+            wait()
+        wait(1)
+
+    if BouncePositions != []:
+        for TempIterator1 in range(0, len(BouncePositions)):
+            createEffect(
+                [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected], 
+                Effect.ORB, 
+                Color.ORANGE if BounceToggleLock[TempIterator1] else Color.GREEN, 
+                BouncePositions[evalOnce(TempIterator1)], 
+                1, 
+                EffectReeval.VISIBILITY
+            )
+            wait()
 
 rule "Player Initialize":
     @Event eachPlayer
@@ -602,7 +649,7 @@ def StartGame_Sub():
     eventPlayer.MovedCheckpoint = true
     UpdateCache()
     TriggerOnFailSuccesReset()
-
+/*
 def KILLBALL():
     @Name "SUB | Kill Orb Effects"
     if KillBallPositions == [] or hostPlayer.EditorOn:
@@ -627,7 +674,7 @@ def pinball():
         )
         BounceEffects.append(getLastCreatedEntity())
         wait()
-
+*/
 rule "Arrive | Ground reset | traces":
     @Event eachPlayer
     #@Hero genji
