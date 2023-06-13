@@ -19,9 +19,10 @@ rule "Split hide":
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) 
     wait(1, Wait.ABORT_WHEN_FALSE)
     
+    #smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay != -999 else "   split display on")
     eventPlayer.splitdisplay = 0 if eventPlayer.splitdisplay == -999 else -999
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
-    wait()
+    wait(0.32)
     smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay == -999 else "   split display on")
     
 rule "Toggle Invisible | Hold Deflect":
@@ -39,16 +40,18 @@ rule "Toggle Invisible | Hold Deflect":
 
     smallMessage(eventPlayer, "   {1} {0}".format("on" if eventPlayer.invis else "off","隐身模式" checkCN "Invisible"))        
     playEffect(eventPlayer, DynamicEffect.DEBUFF_IMPACT_SOUND, null, eventPlayer, 100)
-    
+
+/*
+previewarray = list of all vectors to be displayed
+previewarray2 = stored item ID to be used to preview abilities etc
+
+*/
 rule "Preview orbs/portals | Hold Primary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition not eventPlayer.EditorOn
     @Condition not eventPlayer.LockState
     wait(0.9, Wait.ABORT_WHEN_FALSE)
-
-    #eventPlayer.PreviewsArray = [] # prevent preview empty bug
-    #eventPlayer.PreviewsArray2 = []
 
     eventPlayer.PreviewsArray = ( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint] ) 
     eventPlayer.PreviewsArray2 = [i for _, i in BouncePadCheckpoints]
@@ -390,15 +393,13 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition not eventPlayer.isHoldingButton(Button.MELEE)
     if eventPlayer.QuickRestartToggle:
-        if eventPlayer.LockEditor and eventPlayer == hostPlayer:
+        # lock check
+        # dont go 0,0,0 when no cps
+        if CheckpointPositions == [] or (eventPlayer.LockEditor and eventPlayer == hostPlayer):
             return
-        if CheckpointPositions == []: # dont go to 0,0,0 if no cps on map
-            wait()
-            return
-        
+
         if eventPlayer.EditorOn:
             if eventPlayer == hostPlayer and eventPlayer.EditModeSelection == 0 and eventPlayer.isHoldingButton(Button.INTERACT):
-                #wait(0.1, Wait.ABORT_WHEN_FALSE)
                 wait(0.2)
         eventPlayer.splittime = eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer
         eventPlayer.LockCollected = []
@@ -439,11 +440,10 @@ rule "Toggle Hud | hold secondary":
     wait(1.5, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     smallMessage(eventPlayer, 
-       
         ("   HUD已开启" if eventPlayer.GuideToggle else  "HUD已隐藏")
         checkCN
         ("   Hud is now open" if eventPlayer.GuideToggle else "   Hud is now hidden")
-        ) 
+    ) 
     
     eventPlayer.GuideToggle = not eventPlayer.GuideToggle 
 

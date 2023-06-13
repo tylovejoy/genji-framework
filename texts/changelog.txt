@@ -334,6 +334,7 @@ editor:
 1.9.1 - x-6-2023
 - new addon: Hint per cp
 - effects now load much sooner when you start a lobby
+- if you fail to collect locks, you will now reset without being killed. It does wait until any ongoing dash is over.
 
 - fixed some big issues
 - optimized some code

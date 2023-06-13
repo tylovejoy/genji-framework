@@ -1,7 +1,7 @@
 #!define versionhere "1.9.1"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(1) # 0 is editor, rest is numbers
+editortoggle(10) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -304,7 +304,7 @@ rule "Match time":
         declareTeamVictory(hostPlayer.getTeam())
 
 def EffectsCreate():
-    @Name "effects create"
+    @Name "Effects Create"
     if CustomPortalStart:
         for TempIterator1 in range(len(CustomPortalStart)):
             createEffect(
@@ -315,14 +315,13 @@ def EffectsCreate():
                 EffectReeval.VISIBILITY
             )
             wait()
-
-        wait(1)
+        wait(0.5)
         
     if KillBallPositions != []:
         for TempIterator1 in range(0, len(KillBallPositions)):
             createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
             wait()
-        wait(1)
+        wait(0.5)
 
     if BouncePositions != []:
         for TempIterator1 in range(0, len(BouncePositions)):
@@ -342,12 +341,11 @@ rule "Player Initialize":
     eventPlayer.LockEditor = true
     if eventPlayer.isDummy() and eventPlayer.getCurrentHero() == Hero.DVA:
         return # special here for dva instead of later because 100% she doesnt play the match
+    eventPlayer.preloadHero(Hero.GENJI)
     eventPlayer.GuideToggle = true
     eventPlayer.disableGamemodeHud()
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
-    eventPlayer.preloadHero(Hero.GENJI)
-    eventPlayer.setRespawnTime(1)
     eventPlayer.SpectateToggle = false
     eventPlayer.WallclimbUsed = false #Climbing the wall prompts the HUD
     eventPlayer.JumpCount = 0
@@ -355,38 +353,23 @@ rule "Player Initialize":
     eventPlayer.bouncetouched = -1
     #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
     wait(1) 
+    eventPlayer.setRespawnTime(1)
     createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), cpcirklefx, EffectReeval.POSITION_AND_RADIUS)
     createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, Color.LIME_GREEN, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    wait(0.5)
     createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
-    wait(0.5)
-  
-    createInWorldText(
-        #eventPlayer if eventPlayer.NotOnLastCp else null, 
-        eventPlayer if eventPlayer.NotOnLastCp and eventPlayer.GuideToggle else null, 
-        "{0} {1}".format(
-            iconString(Icon.WARNING),    
-            "先收集橙球" checkCN "collect orbs first"
-        ) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
-        "到这里来" checkCN "Come here",
-        CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 
-        1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT
-    )
     wait(1)  
-
-    if not eventPlayer.isDummy():
+    if not eventPlayer.isDummy(): # players turn to genji
         eventPlayer.startForcingHero(Hero.GENJI)
-    elif eventPlayer.getCurrentHero() != Hero.GENJI: # only do the things on genji test bots
+    elif eventPlayer.getCurrentHero() != Hero.GENJI: # bots other then genji arent playing
         eventPlayer.DontPlay = true
         return
 
-    eventPlayer.LockEditor = false
     waitUntil(eventPlayer.hasSpawned(), 9999)
+    eventPlayer.LockEditor = false
 
     if CompMode:
         eventPlayer.setInvisibility(Invis.ALL)
-       
         if not "{0}".format(eventPlayer) in CompAtmpSaveNames: # instructions and settings for comp start
             eventPlayer.instructionhud = true
             CompAtmpSaveNames.append("{0}".format(eventPlayer))
@@ -401,7 +384,6 @@ rule "Player Initialize":
             eventPlayer.instructionhud = false
         else:
             eventPlayer.AttemptCount = CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))]
-            #trans ? or was this a test hud
             #smallMessage(eventPlayer,"now {0}".format( eventPlayer.AttemptCount))
         if eventPlayer.AttemptCount == (-1) or CompTime < 1:
             eventPlayer.CompDone = true
@@ -482,13 +464,11 @@ def checkpointFailReset():
     eventPlayer.cancelPrimaryAction()
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
-    #eventPlayer.teleport( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() )
+
     if len(CheckpointPositions) > 0:
         eventPlayer.teleport( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() )
 
     if eventPlayer.ban_dedhop and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp:
-        # if eventPlayer.isOnWall():
-        #smallMessage(eventPlayer, "Deathbhop is banned!")
         eventPlayer.disallowButton(Button.JUMP)
         wait(0.1)
         eventPlayer.allowButton(Button.JUMP)        
@@ -593,8 +573,11 @@ rule "Arrive | Ground reset | traces":
             # arrived ----------------------------------------------------------------------------------------------------
             eventPlayer.MovedCheckpoint = true
             if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache: # kill player if not colleted the locks
+                if eventPlayer.isUsingAbility1():
+                    waitUntil(not eventPlayer.isUsingAbility1(), 1)    
                 smallMessage(eventPlayer, "   ! 进点前需收集齐所有黄弹球 !" checkCN "   ! collect ALL orange orbs to unlock !")
-                kill(eventPlayer, null)
+                #kill(eventPlayer, null)
+                checkpointFailReset()
                 goto lbl_abc
             if eventPlayer.ban_climb and eventPlayer.WallclimbUsed:
                 smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
@@ -606,7 +589,7 @@ rule "Arrive | Ground reset | traces":
                 checkpointFailReset()
                 goto lbl_abc
 
-            eventPlayer.LockCollected = []
+            #eventPlayer.LockCollected = []
             eventPlayer.CurrentCheckpoint += 1
             eventPlayer.HintsOn = false
             UpdateCache()
@@ -615,8 +598,8 @@ rule "Arrive | Ground reset | traces":
             #    kill(eventPlayer, null)
             if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) > 1:# teleport cps
                 eventPlayer.startForcingPosition( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ,false)
-                wait(0.1)
                 eventPlayer.flytoggle = null
+                wait(0.1)
                 eventPlayer.stopForcingPosition()
                 # position wasnt ready when check cache ran
                 async(CheckUlt(), AsyncBehavior.RESTART)
@@ -628,17 +611,16 @@ rule "Arrive | Ground reset | traces":
             wait()
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
             playEffect(eventPlayer if CompMode or eventPlayer.invis else getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
-            #bigMessage(eventPlayer, "Arrived at {0} / {1}{2}".format(eventPlayer.CurrentCheckpoint, len(CheckpointPositions) - 1, " - Split {}".format(eventPlayer.splitdisplay) if eventPlayer.splitson else "")) 
             bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.CurrentCheckpoint, "抵达检查点" checkCN "Arrived at level")   )
             wait()
             UpdateTitle()
+            TriggerOnFailSuccesReset()
            
             if eventPlayer.PracticeToggle:
                 eventPlayer.splittime = eventPlayer.practicetimer
                 goto lbl_abc
             
             eventPlayer.splittime = eventPlayer.Timer
-            TriggerOnFailSuccesReset()
             if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1 and (not eventPlayer.EditorOn) and (not eventPlayer.PracticeToggle): # complete lvl
                 stopChasingVariable(eventPlayer.Timer)
                 stopChasingVariable(eventPlayer.practicetimer) 
@@ -664,8 +646,8 @@ rule "Arrive | Ground reset | traces":
             # ground reset ----------------------------------------------------------------------------------------------------
             checkpointFailReset()
 
-    eventPlayer.LockCollected = []
     lbl_abc:
+    eventPlayer.LockCollected = []
     wait(0.048)
 
     if RULE_CONDITION:
@@ -734,6 +716,13 @@ rule "Bounce Ball / Orb | Activate":
 
     eventPlayer.bouncetouchedlast = -1
 
+
+/*
+death rule notes ( not death note)
+without wait it can crash server
+with wait it feels bad
+this waituntil contrusction gives higher delay without relying on a variable count
+*/
 rule "Death Reset":
     @Event playerDied
     @Condition not eventPlayer.SpectateToggle
@@ -770,7 +759,7 @@ rule "Death Reset":
 
 rule "Player Phase":
     @Event eachPlayer
-    @Condition eventPlayer.hasStatusEffect(Status.PHASED_OUT) == false
+    @Condition not eventPlayer.hasStatusEffect(Status.PHASED_OUT)
     @Condition eventPlayer.isAlive()
     if eventPlayer.hasStatusEffect(Status.INVINCIBLE): # delay if its for afk sleep
         wait(0.16)

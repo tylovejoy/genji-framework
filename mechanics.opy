@@ -77,7 +77,6 @@ rule "Checking | In the air":
     @Hero genji
     @Condition eventPlayer.JumpCount == 0
     @Condition eventPlayer.isInAir() 
-    
     eventPlayer.JumpCount = 1
 
 rule "Checking | Triple jump":

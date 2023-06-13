@@ -308,6 +308,18 @@ rule "Huds: each player":
         , HudPosition.LEFT, HO.game_bhop, Color.GREEN if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
+    createInWorldText(
+        #eventPlayer if eventPlayer.NotOnLastCp else null, 
+        eventPlayer if eventPlayer.NotOnLastCp and eventPlayer.GuideToggle else null, 
+        "{0} {1}".format(
+            iconString(Icon.WARNING),    
+            "先收集橙球" checkCN "collect orbs first"
+        ) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
+        "到这里来" checkCN "Come here",
+        CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 
+        1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT
+    )
+    
     wait(2.5)
     if CompMode:
         hudText(
