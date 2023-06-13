@@ -98,8 +98,14 @@ rule "Checking | Using Emote":
     @Event eachPlayer
     @Condition eventPlayer.isCommunicatingEmote() == true
     eventPlayer.BhopUsed = false
+    waitUntil(not eventPlayer.isCommunicatingEmote() == true, 9999)
+    if eventPlayer.ban_emote:
+        waitUntil(eventPlayer.isOnWall(), 1)
+        if eventPlayer.isOnWall():
+            eventPlayer.cancelPrimaryAction() 
 
 rule "Checking | Bhop":
+
     @Event eachPlayer
     @Condition not eventPlayer.BhopUsed
     @Condition eventPlayer.isJumping()

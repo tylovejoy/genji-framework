@@ -105,7 +105,7 @@ rule "Inworld text for certain Checkpoints - 在世界文本中为某些检查�
     # 色彩运 用于全部
     CpIwtColor = Color.LIME_GREEN
 
-rule "Hint text for certain Checkpoints -":
+rule "Hint text for certain Checkpoints - 某些检查点的提示文本 <---- EDIT ME / 在此处编辑":
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
     # 示例填充 显示了cp 1和cp 3的文本

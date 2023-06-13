@@ -53,9 +53,15 @@ rule "Huds: Global/Localplayer":
    
     # global huds
     hudSubheader(getAllPlayers(),
-        "房间将在 {0} 分钟后重启 - V{1}".format(TimeRemaining,versionhere) 
+        "房间将在 {0} 分钟后重启 - V{1}{2}".format(
+            TimeRemaining, versionhere,
+            "\n错误: 已达到最大HUD数量上限" if getNumberOfTextIds() >= 128 else ""  
+        ) 
         checkCN 
-        "Server Restarts In {0} Min - V{1}".format(TimeRemaining,versionhere)
+        "Server Restarts In {0} Min - V{1}{2}".format(
+            TimeRemaining,versionhere,
+            "\nerror: max hud count reached" if getNumberOfTextIds() >= 128 else ""       
+        )
         , HudPosition.RIGHT, HO.data_remaingtime, Color.RED, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS
     )
     
@@ -90,9 +96,9 @@ rule "Huds: Global/Localplayer":
     )
 
     hudSubtext(localPlayer if localPlayer.GuideToggle else null,  
-        "长按 {0} | 预览弹球/传送门".format(buttonString(Button.PRIMARY_FIRE))
+        "长按 {0} | 预览检查点".format(buttonString(Button.PRIMARY_FIRE))
         checkCN
-        "Hold {0} | Preview orb/portal".format(buttonString(Button.PRIMARY_FIRE))
+        "Hold {0} | Preview checkpoint".format(buttonString(Button.PRIMARY_FIRE))
         ,HudPosition.RIGHT, HO.com_preview, Color.GREEN if localPlayer.PreviewsArray else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
@@ -141,12 +147,27 @@ rule "Huds: Global/Localplayer":
         hudText(
             localPlayer if localPlayer.GuideToggle else null,
             null, 
+            (
+            "{0} ――  有可用提示―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.CurrentCheckpoint in HintCp and localPlayer.HintsOn == false else 
+            "― ― ― ― ― 提示 ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.CurrentCheckpoint)]) if localPlayer.CurrentCheckpoint in HintCp else   
+            "(当前关卡无可用提示)"
+            ) checkCN
             "{0} ―― hint available ―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.CurrentCheckpoint in HintCp and localPlayer.HintsOn == false else 
             #" ――――――― \n {} \n ――――――― ".format(HintText[HintCp.index(localPlayer.CurrentCheckpoint)]) if localPlayer.CurrentCheckpoint in HintCp else   # and true is implied from last if
             "― ― ― ― ― Hint ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.CurrentCheckpoint)]) if localPlayer.CurrentCheckpoint in HintCp else   # and true is implied from last if
-            "(no hint on this level)",
-            "{} + {} | hide hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE)) if localPlayer.HintsOn else 
-            "{} + {} | show hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE))
+            "(no hint on this level)"
+            ,
+            
+            "{} + {} | {}".format(
+                buttonString(Button.ABILITY_2), 
+                buttonString(Button.MELEE),
+                ("隐藏提示" if localPlayer.HintsOn else "获取提示") checkCN
+                "hide hint" if localPlayer.HintsOn else "show hint"
+                
+            )
+            
+            #"{} + {} | hide hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE)) if localPlayer.HintsOn else 
+            #"{} + {} | show hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE))
             , 
             HudPosition.RIGHT, HO.com_hints, 
             Color.BLUE, 
