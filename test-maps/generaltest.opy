@@ -1,4 +1,4 @@
-rule "quicktest data":
+rule "general test data":
      
     A = [vect(7.758, 0, -19.314), vect(0.613, 0, -17.643), vect(-5.895, 0, -17.51), vect(-10.665, 0, -15.097), vect(-3.395, 0, 1.023), vect(8.499, 0, -15.718), vect(-2.204, 0, -15.138), [vect(-19.495, 0, -14.991), vect(-19.398, 0, -9.136)], vect(-19.495, 0, -4.925)]
     TimeRemaining = 262
@@ -29,14 +29,7 @@ rule "quicktest data":
     CustomPortalCP = [3, 1, 4, 4, 4, 5]
     CompMode = false
     HudStoreEdit = []
-    SaveName = []
-    SaveCp = []
-    SaveEnt = []
-    SaveTimer = [52.238]
-    SaveElapsed = [229.215]
-    SavePauseTime = [0.704]
-    SavePauseEnabled = [false]
-    Cachedcredits = ["name here - 作者", "code here - 代码"]
+    Cachedcredits = ["FishoFire", "The pirates code"]
     BanMulti = [0]
     BanCreate = []
     BanDead = []
@@ -44,4 +37,12 @@ rule "quicktest data":
     BanClimb = [2]
     BanBhop = []
 
+    wait(1)
+    HintCp = [1,3]
+    HintText = [
+        "This is not, the longest hint in the world. \n"
+        "This is just a tribute.",
+        "Just don't touch the floor dummy.\n"
+        "Close your eyes and pretend the floor is homework."
 
+    ]

@@ -141,8 +141,9 @@ rule "Huds: Global/Localplayer":
         hudText(
             localPlayer if localPlayer.GuideToggle else null,
             null, 
-            "{0} ―― hint available ―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.CurrentCheckpoint in HintCp and localPlayer.HintsOn == false else #iconString(Icon.HAPPY) # heroIcon(Hero.MERCY)
-            " ― ― ― ― ― ― ― \n {} \n ― ― ― ― ― ― ― ".format(HintText[HintCp.index(localPlayer.CurrentCheckpoint)]) if localPlayer.CurrentCheckpoint in HintCp else   # and true is implied from last if
+            "{0} ―― hint available ―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.CurrentCheckpoint in HintCp and localPlayer.HintsOn == false else 
+            #" ――――――― \n {} \n ――――――― ".format(HintText[HintCp.index(localPlayer.CurrentCheckpoint)]) if localPlayer.CurrentCheckpoint in HintCp else   # and true is implied from last if
+            "― ― ― ― ― Hint ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.CurrentCheckpoint)]) if localPlayer.CurrentCheckpoint in HintCp else   # and true is implied from last if
             "(no hint on this level)",
             "{} + {} | hide hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE)) if localPlayer.HintsOn else 
             "{} + {} | show hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE))
