@@ -333,11 +333,11 @@ editor:
 
 1.9.1 - x-6-2023
 - new addon: Hint per cp
+A player could asign hint text like "use saveclimb first" to a checkpoint. 
+if a player is stuck on a checkpoint they can press the hint button to see that hint text. 
 - preview rework: Preview now previews checkpoints and has its hud updated. You also stop firing shurikens during the preview.
 - effects now load much sooner when you start a lobby
 - if you fail to collect locks, you will now reset without being killed. It does wait until any ongoing dash is over.
-
-
 
 - fixed some big issues
 - optimized some code
