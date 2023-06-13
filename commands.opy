@@ -19,9 +19,10 @@ rule "Split hide":
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) 
     wait(1, Wait.ABORT_WHEN_FALSE)
     
+    #smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay != -999 else "   split display on")
     eventPlayer.splitdisplay = 0 if eventPlayer.splitdisplay == -999 else -999
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
-    wait()
+    wait(0.32)
     smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay == -999 else "   split display on")
     
 rule "Toggle Invisible | Hold Deflect":
@@ -39,26 +40,31 @@ rule "Toggle Invisible | Hold Deflect":
 
     smallMessage(eventPlayer, "   {1} {0}".format("on" if eventPlayer.invis else "off","隐身模式" checkCN "Invisible"))        
     playEffect(eventPlayer, DynamicEffect.DEBUFF_IMPACT_SOUND, null, eventPlayer, 100)
-    
+
+/*
+previewarray = list of all vectors to be displayed
+previewarray2 = stored item ID to be used to preview abilities etc
+a few huds show/hides when reviewarray is not null !!!!!!!!!!!!!!!!!
+*/
 rule "Preview orbs/portals | Hold Primary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition not eventPlayer.EditorOn
     @Condition not eventPlayer.LockState
+    @Condition eventPlayer.NotOnLastCp
     wait(0.9, Wait.ABORT_WHEN_FALSE)
 
-    #eventPlayer.PreviewsArray = [] # prevent preview empty bug
-    #eventPlayer.PreviewsArray2 = []
-
-    eventPlayer.PreviewsArray = ( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint] ) 
-    eventPlayer.PreviewsArray2 = [i for _, i in BouncePadCheckpoints]
-    eventPlayer.PreviewsArray2 = [ i for i in eventPlayer.PreviewsArray2 if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint ]
+    eventPlayer.PreviewsArray = [CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]]
+    
+    if len(BouncePadCheckpoints) > 0:
+        eventPlayer.PreviewsArray.append( ( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint] ) )
+        eventPlayer.PreviewsArray2 = [-2] # first entry is checkpoint itself, -1 would overlap with -1 in some orbs
+        eventPlayer.PreviewsArray2.append( [i for _, i in BouncePadCheckpoints] )
+        eventPlayer.PreviewsArray2 = [ i for i in eventPlayer.PreviewsArray2 if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint or i == -2 ] 
 
     if len(CustomPortalStart) > 0:
         eventPlayer.PreviewsArray.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint] )
 
-    if len(eventPlayer.PreviewsArray) < 1 or eventPlayer.PreviewsArray == null or (not eventPlayer.NotOnLastCp):
-        return
 
     wait(0.1)  
     eventPlayer.setMoveSpeed(0)
@@ -68,6 +74,7 @@ rule "Preview orbs/portals | Hold Primary":
         eventPlayer.PreviewsArray[eventPlayer.PreviewsI],
         15
     )
+    eventPlayer.setPrimaryFireEnabled(false)
     while eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isAlive() and not eventPlayer.LockState:
         if eventPlayer.getThrottle().x < -0.5:
             eventPlayer.PreviewsI = 0 if eventPlayer.PreviewsI + 1 >= len(eventPlayer.PreviewsArray) else eventPlayer.PreviewsI + 1 
@@ -76,9 +83,12 @@ rule "Preview orbs/portals | Hold Primary":
             eventPlayer.PreviewsI = len(eventPlayer.PreviewsArray) -1  if eventPlayer.PreviewsI == 0 else  eventPlayer.PreviewsI - 1
             waitUntil(eventPlayer.getThrottle().x < 0.5, 1)
         wait()
+    eventPlayer.setPrimaryFireEnabled(true)
     eventPlayer.stopCamera()
     eventPlayer.setMoveSpeed(100)
+    eventPlayer.PreviewsI = null
     eventPlayer.PreviewsArray = null
+    eventPlayer.PreviewsArray2 = null
 
 rule "Restart Run | Crouch + Interact + Deflect":
     @Event eachPlayer
@@ -86,6 +96,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) 
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition eventPlayer.LockEditor == false or eventPlayer != hostPlayer
+    @Condition not eventPlayer.LockState
     #@Condition not eventPlayer.isUsingAbility1()
 
     eventPlayer.LockState = true 
@@ -127,6 +138,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
     eventPlayer.PracticeToggle = false
     eventPlayer.PracticeCheckpoint = 0
     eventPlayer.InvincibleToggle = false
+    eventPlayer.HintsOn = false
     stopChasingVariable(eventPlayer.practicetimer)
     eventPlayer.practicetimer = 0
     eventPlayer.splitdisplay = -999 if eventPlayer.splitdisplay == -999 else 0
@@ -139,6 +151,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
     StartGame_Sub()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     wait()
+    eventPlayer.allowButton(Button.ABILITY_1)
     eventPlayer.LockState = false
     if CompMode:
         wait(1)
@@ -196,11 +209,13 @@ rule "Toggle Invincible Mode | Melee + Reload":
     @Condition (not CompMode) or (not eventPlayer.CompDone)
     @Condition not eventPlayer.LockState
 
+    eventPlayer.LockState = true
     eventPlayer.LockCollected = []
     eventPlayer.flytoggle = null
     
-    if eventPlayer.CurrentCheckpoint > 0 and not eventPlayer.NotOnLastCp:
+    if eventPlayer.CurrentCheckpoint > 0 and eventPlayer.NotOnLastCp:
         eventPlayer.disallowButton(Button.ABILITY_1)
+        wait(0.16)
         if eventPlayer.isUsingAbility1():
             waitUntil(not eventPlayer.isUsingAbility1(), 1.5)
             wait()
@@ -221,8 +236,9 @@ rule "Toggle Invincible Mode | Melee + Reload":
         TriggerOnFailSuccesReset()
     else:
         if not eventPlayer.NotOnLastCp:
-            eventPlayer.allowButton(Button.ABILITY_1)
             wait()
+            eventPlayer.allowButton(Button.ABILITY_1)
+            eventPlayer.LockState = false
             return
         StartPauseTimer()
         stopChasingVariable(eventPlayer.Timer)
@@ -236,8 +252,10 @@ rule "Toggle Invincible Mode | Melee + Reload":
     async( CheckDash(), AsyncBehavior.RESTART)
 
     if eventPlayer.CurrentCheckpoint > 0: # cp 0 start dash ban is via startgame sub because it has to give msg
-        eventPlayer.allowButton(Button.ABILITY_1)
         wait(0.16)
+        eventPlayer.allowButton(Button.ABILITY_1)
+
+    eventPlayer.LockState = false
 
 rule "Toggle Practice Mode | Melee + Ultimate":
     @Event eachPlayer
@@ -247,6 +265,7 @@ rule "Toggle Practice Mode | Melee + Ultimate":
     @Condition eventPlayer.isAlive()
     @Condition not eventPlayer.EditorOn
     @Condition not CompMode 
+    @Condition eventPlayer.LockState == false
 
     if eventPlayer.InvincibleToggle:
         smallMessage(eventPlayer,"   探点模式下无法切换练习模式" checkCN "   Cannot toggle practice mode while in invincible")
@@ -254,6 +273,8 @@ rule "Toggle Practice Mode | Melee + Ultimate":
         return
 
     eventPlayer.LockState = true
+    eventPlayer.disallowButton(Button.ABILITY_1)
+
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
       
@@ -290,10 +311,12 @@ rule "Toggle Practice Mode | Melee + Ultimate":
         chase(eventPlayer.practicetimer, 9999999, rate=1, ChaseReeval.NONE)
         wait(0.2)
         
-   
+    eventPlayer.HintsOn = false
     eventPlayer.PracticeToggle = not eventPlayer.PracticeToggle 
-    wait(0.3)
+    wait(0.2)
+    eventPlayer.allowButton(Button.ABILITY_1)
     eventPlayer.LockState = false
+    wait(0.1)
 
 rule "Practice Restart | Interact":
     @Event eachPlayer
@@ -305,6 +328,7 @@ rule "Practice Restart | Interact":
     @Condition eventPlayer.isAlive() or eventPlayer.SpectateToggle
     @Condition not eventPlayer.EditorOn
     @Condition eventPlayer.PracticeToggle
+    @Condition not eventPlayer.LockState
    
     #  first 2 ifs prevent collide with spec
     if eventPlayer.SpectateToggle: 
@@ -320,6 +344,7 @@ rule "Practice Restart | Interact":
 
     eventPlayer.practicetimer = 0
     eventPlayer.splittime = 0 
+    eventPlayer.HintsOn = false
     eventPlayer.teleport(CheckpointPositions[eventPlayer.PracticeCheckpoint])
     eventPlayer.CurrentCheckpoint = eventPlayer.PracticeCheckpoint
 
@@ -338,11 +363,11 @@ rule "Skip | Crouch + Primary/Secondary Fire":
     @Condition len(CheckpointPositions) > 1
     @Condition EditorMoveItem == false
     @Condition eventPlayer.LockEditor == false or eventPlayer != hostPlayer
-    
+    eventPlayer.LockState = true
     eventPlayer.splittime = 0 
     eventPlayer.practicetimer = 0
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-        eventPlayer.LockState = true
+        #eventPlayer.LockState = true
         if eventPlayer.CurrentCheckpoint < 1:
             eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 1
         elif (len(CheckpointPositions[eventPlayer.CurrentCheckpoint -1]) > 1 and distance(CheckpointPositions[eventPlayer.CurrentCheckpoint ][0], CheckpointPositions[eventPlayer.CurrentCheckpoint-1][1]) < cpcircleradius):
@@ -351,7 +376,7 @@ rule "Skip | Crouch + Primary/Secondary Fire":
         else:
             eventPlayer.CurrentCheckpoint -= 1
     else:
-        eventPlayer.LockState = true
+        #eventPlayer.LockState = true
         
         if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
             eventPlayer.CurrentCheckpoint = 0
@@ -361,9 +386,11 @@ rule "Skip | Crouch + Primary/Secondary Fire":
     wait()
     checkpointFailReset()
     wait(0.064)
-    eventPlayer.LockState = false
+    eventPlayer.HintsOn = false
     eventPlayer.MovedCheckpoint = true
     UpdateCache() 
+    eventPlayer.LockState = false
+    wait()
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.28) # faster if you spam button
     if RULE_CONDITION:
         goto RULE_START
@@ -373,15 +400,13 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition not eventPlayer.isHoldingButton(Button.MELEE)
     if eventPlayer.QuickRestartToggle:
-        if eventPlayer.LockEditor and eventPlayer == hostPlayer:
+        # lock check
+        # dont go 0,0,0 when no cps
+        if CheckpointPositions == [] or (eventPlayer.LockEditor and eventPlayer == hostPlayer):
             return
-        if CheckpointPositions == []: # dont go to 0,0,0 if no cps on map
-            wait()
-            return
-        
+
         if eventPlayer.EditorOn:
             if eventPlayer == hostPlayer and eventPlayer.EditModeSelection == 0 and eventPlayer.isHoldingButton(Button.INTERACT):
-                #wait(0.1, Wait.ABORT_WHEN_FALSE)
                 wait(0.2)
         eventPlayer.splittime = eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer
         eventPlayer.LockCollected = []
@@ -422,10 +447,19 @@ rule "Toggle Hud | hold secondary":
     wait(1.5, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     smallMessage(eventPlayer, 
-       
         ("   HUD已开启" if eventPlayer.GuideToggle else  "HUD已隐藏")
         checkCN
         ("   Hud is now open" if eventPlayer.GuideToggle else "   Hud is now hidden")
-        ) 
+    ) 
     
     eventPlayer.GuideToggle = not eventPlayer.GuideToggle 
+
+
+rule "Toggle hints":
+    @Event eachPlayer
+    @Condition HintText != null
+    @Condition eventPlayer.isHoldingButton(Button.MELEE)
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
+    @Condition eventPlayer.HintsOn or eventPlayer.CurrentCheckpoint in HintCp
+
+    eventPlayer.HintsOn = not eventPlayer.HintsOn

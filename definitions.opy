@@ -4,7 +4,9 @@
 ##!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format("" if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
 ##!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
 
-#!define prettyTime(timeInSeconds) "{0} {1}".format(timeInSeconds,"秒"  checkCN "sec")
+##!define prettyTime(timeInSeconds) "{0} {1}".format(timeInSeconds,"秒"  checkCN "sec")
+#!define prettyTime(timeInSeconds) l"{0} sec".format(timeInSeconds)
+
 
 #!define insert(insert_array, insert_index, insert_value)  insert_array.append(insert_value) \
         insert_array = [elementhere if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for elementhere, i in insert_array]
@@ -212,6 +214,9 @@ globalvar SaveElapsed 64
 globalvar SavePauseTime 65
 globalvar SavePauseEnabled 66
 
+globalvar HintCp 67
+globalvar HintText 68
+
 globalvar Name 70
 globalvar Code 71
 globalvar Cachedcredits 73
@@ -271,8 +276,8 @@ playervar MultiClimbCountHUD 28             # HUD                       --- clim
 playervar CreateCounter 29
 playervar QuickRestartToggle 31             # bool                      -- enable reload to restart cp
 playervar MultiClimbCount 32                # int                       --- climb count # for HUD
-
 playervar finishfxcache  33                   # color                     --- color of fx after finish the map
+playervar HintsOn 34
 playervar PreviewsArray2 37
 playervar PreviewsArray 38                  # array                     --- store preview positions
 playervar PreviewsI 39                      # int                       --- preview itterator
@@ -326,9 +331,10 @@ playervar BhopHUDColor 85                   # Color                     --- Colo
 
 #Subroutine names
 subroutine StartGame_Sub 1
-subroutine KILLBALL 3
-subroutine pinball 4
-subroutine PortalCreate 5
+#subroutine KILLBALL 3
+#subroutine pinball 4
+#subroutine PortalCreate 5
+subroutine EffectsCreate 2
 subroutine Leaderboardupdate # fishos
 subroutine CreateLeaderBoard
 subroutine UpdateTitle
@@ -381,7 +387,8 @@ enum HO:
     edit_host_mode,
     data_dif,
     game_level_orb,
-
+    com_previewsub,
+    
     filler_custommsg,
     add_custommsg1,
     add_custommsg2,
@@ -407,9 +414,10 @@ enum HO:
     com_splits,
 
     com_preview,
-    com_previewsub,
+    #com_previewsub,
     com_practice,
     com_practicesub,
+    com_hints,
 
     edit_instructions_general,
     edit_instructions_edit,

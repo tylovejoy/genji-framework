@@ -33,6 +33,8 @@ rule "Editor | Clear Excess Data to Save Map":
     TitleData = null
     CpHudText = null
     CpHudCp = null
+    HintText = null
+    HintCp = null
     CpIwtText = null
     CpIwtCp = null
     CpIwtPos = null
@@ -130,7 +132,55 @@ rule "Editor | Clear Excess Data to Save Map":
     destroyHudText(eventPlayer.savemaphud[2])
     eventPlayer.savemaphud = null
     eventPlayer.LockEditor = false
+
+
+def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Bounce Ball Effects" 
+    @Name "SUB | Rebuild Bounce Orbs"
+    destroyEffect(BounceEffects)
+    BounceEffects = [] 
+    for TempIterator1 in range(0, len(BouncePadCheckpoints)):
+        createEffect(
+            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected], 
+            Effect.ORB, 
+            Color.ORANGE if BounceToggleLock[evalOnce(TempIterator1)] else Color.GREEN, 
+            BouncePositions[evalOnce(TempIterator1)], 
+            1, 
+            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+        )
+        BounceEffects.append(getLastCreatedEntity())
+        #wait()
+        if TempIterator1 % 5 == 0:
+            wait()
+
+def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Kill Orb Effects" 
+    @Name "SUB | Rebuild Kill Orbs"
+    destroyEffect(KillBallEffects)
+    KillBallEffects = []  
+    for TempIterator1 in range(0, len(KillballCheckpoints)):
+        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        KillBallEffects.append(getLastCreatedEntity())
+        if TempIterator1 % 5 == 0:
+            wait()
+
+def RebuildPortals():
+    destroyEffect(PortalEffects)
+    PortalEffects = [] 
+    if len(CustomPortalCP) < 1:
+        return
     
+    for TempIterator1 in range(0, len(CustomPortalCP)):
+        createEffect(
+            [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
+            Effect.GOOD_AURA, 
+            Color.WHITE,
+            CustomPortalStart[evalOnce(TempIterator1)], 
+            0.6,
+            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+        )
+        PortalEffects.append(getLastCreatedEntity())
+        if TempIterator1 % 5 == 0:
+            wait()
+
 rule "Editor | Hud and Effects":
     waitUntil(hostPlayer.hasSpawned(), 90)  # cant be condition because host player can leaves, removing the rule fx
     EditorMoveItem = false
@@ -138,9 +188,6 @@ rule "Editor | Hud and Effects":
     if not hostPlayer.EditorOn:
         # clear variables if not in editor mode
         HudStoreEdit = null 
-        KillBallEffects = null
-        BounceEffects = null
-        PortalEffects = null
         return
     wait(2)
     #hostPlayer.LockEditor = true
@@ -156,9 +203,9 @@ rule "Editor | Hud and Effects":
         getAllPlayers().AttemptCount = null
         getAllPlayers().CompDone = false
 
-    CustomPortalStart = CustomPortalStart if len(CustomPortalStart) > 0 else [] 
-    CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) > 0 else [] 
-    CustomPortalCP = CustomPortalCP if len(CustomPortalCP) > 0 else [] 
+    #CustomPortalStart = CustomPortalStart if len(CustomPortalStart) > 0 else [] 
+    #CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) > 0 else [] 
+    #CustomPortalCP = CustomPortalCP if len(CustomPortalCP) > 0 else [] 
 
     # huds ==========================================================================================================================================================================
     
@@ -647,7 +694,7 @@ rule "Editor | change mode":
     eventPlayer.LockEditor = false
   
 def editupdateselectedids():
-    @Name "edit update selected id"
+    @Name "Editor | update selected id"
     
     if hostPlayer.EditModeSelection == 1:
         EditSelectIdArray  = [i for _, i in KillballCheckpoints]
@@ -662,7 +709,7 @@ def editupdateselectedids():
         EditSelectIdArray  = []
 
 def EditorSelectLast():
-    @Name "editor select last"
+    @Name "Editor | select last"
     EditSelected = EditSelectIdArray.last()
 
 rule "Editor | create cp/orb":
@@ -791,7 +838,7 @@ rule "Editor | delete cp/orb/portal":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) 
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer == hostPlayer
-    @Condition EditorMoveItem == false
+    #@Condition EditorMoveItem == false
     #@Condition len(EditSelectIdArray) > 0
     @Condition eventPlayer.LockEditor == false
 
@@ -959,7 +1006,7 @@ rule "Editor | select orb/portal":
     @Condition len(EditSelectIdArray) > 0
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) or eventPlayer.isHoldingButton(Button.JUMP)
-    @Condition EditorMoveItem == false
+    #@Condition EditorMoveItem == false
     @Condition eventPlayer.LockEditor == false
 
     eventPlayer.LockEditor = true
@@ -1097,7 +1144,7 @@ rule "Editor | portal cp change":
     @Condition eventPlayer.isHoldingButton(Button.JUMP) 
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) 
     @Condition len(EditSelectIdArray) > 0
-    @Condition EditorMoveItem == false
+    #@Condition EditorMoveItem == false
     @Condition eventPlayer.LockEditor == false
 
     CustomPortalCP[EditSelected] = eventPlayer.CurrentCheckpoint if CustomPortalCP[EditSelected] == 999 else 999

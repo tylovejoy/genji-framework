@@ -2,12 +2,19 @@ rule "testdata":
     A = [vect(10.025, 0, -7.273), vect(3.51, 0, -6.919), vect(-3.654, 0, -7.654)]
     H = []
     I = []
-    P = [0, [0], [0, null, null, null, null]]
     TQ = []
     EditMode = []
     TQ5 = []
     TQ6 = []
     killballnumber = []
     pinballnumber = []
-    save = [75.551, 0, 0, "bot number: 11", 2, 21.552, null, 77.551, 0, 0]
     Cachedcredits = ["aaaaaaa", "bbbbb"]
+    wait(1)
+    
+    HintCp = [1,2]
+    HintText = [
+        "Simply get to the next checkpoint by usings your abilities.\n"
+        " Also don't touch the ground.",
+        "Do a 360 or it won't be cool enough to count"
+
+    ]
