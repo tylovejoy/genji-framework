@@ -44,24 +44,27 @@ rule "Toggle Invisible | Hold Deflect":
 /*
 previewarray = list of all vectors to be displayed
 previewarray2 = stored item ID to be used to preview abilities etc
-
+a few huds show/hides when reviewarray is not null !!!!!!!!!!!!!!!!!
 */
 rule "Preview orbs/portals | Hold Primary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition not eventPlayer.EditorOn
     @Condition not eventPlayer.LockState
+    @Condition eventPlayer.NotOnLastCp
     wait(0.9, Wait.ABORT_WHEN_FALSE)
 
-    eventPlayer.PreviewsArray = ( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint] ) 
-    eventPlayer.PreviewsArray2 = [i for _, i in BouncePadCheckpoints]
-    eventPlayer.PreviewsArray2 = [ i for i in eventPlayer.PreviewsArray2 if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint ]
+    eventPlayer.PreviewsArray = [CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]]
+    
+    if len(BouncePadCheckpoints) > 0:
+        eventPlayer.PreviewsArray.append( ( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint] ) )
+        eventPlayer.PreviewsArray2 = [-2] # first entry is checkpoint itself, -1 would overlap with -1 in some orbs
+        eventPlayer.PreviewsArray2.append( [i for _, i in BouncePadCheckpoints] )
+        eventPlayer.PreviewsArray2 = [ i for i in eventPlayer.PreviewsArray2 if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint or i == -2 ] 
 
     if len(CustomPortalStart) > 0:
         eventPlayer.PreviewsArray.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint] )
 
-    if len(eventPlayer.PreviewsArray) < 1 or eventPlayer.PreviewsArray == null or (not eventPlayer.NotOnLastCp):
-        return
 
     wait(0.1)  
     eventPlayer.setMoveSpeed(0)
@@ -71,6 +74,7 @@ rule "Preview orbs/portals | Hold Primary":
         eventPlayer.PreviewsArray[eventPlayer.PreviewsI],
         15
     )
+    eventPlayer.setPrimaryFireEnabled(false)
     while eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isAlive() and not eventPlayer.LockState:
         if eventPlayer.getThrottle().x < -0.5:
             eventPlayer.PreviewsI = 0 if eventPlayer.PreviewsI + 1 >= len(eventPlayer.PreviewsArray) else eventPlayer.PreviewsI + 1 
@@ -79,9 +83,12 @@ rule "Preview orbs/portals | Hold Primary":
             eventPlayer.PreviewsI = len(eventPlayer.PreviewsArray) -1  if eventPlayer.PreviewsI == 0 else  eventPlayer.PreviewsI - 1
             waitUntil(eventPlayer.getThrottle().x < 0.5, 1)
         wait()
+    eventPlayer.setPrimaryFireEnabled(true)
     eventPlayer.stopCamera()
     eventPlayer.setMoveSpeed(100)
+    eventPlayer.PreviewsI = null
     eventPlayer.PreviewsArray = null
+    eventPlayer.PreviewsArray2 = null
 
 rule "Restart Run | Crouch + Interact + Deflect":
     @Event eachPlayer

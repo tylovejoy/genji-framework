@@ -101,7 +101,7 @@ rule "Huds: Global/Localplayer":
         "移动键 左/右 ↔| 预览其他\n视角移动 | 调整浏览视角"
         checkCN
         "Walk left/right ↔| preview others\nAim | change preview angle"
-        ,HudPosition.RIGHT, HO.com_previewsub, Color.LIME_GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        ,HudPosition.TOP, HO.com_previewsub, Color.LIME_GREEN, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
 
@@ -243,35 +243,45 @@ rule "Huds: each player":
         return 
     # ban icons in level
     hudText(eventPlayer, null, 
+        /*
         ("练习用时 {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "")
         checkCN  
         ("Practice Time {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "")
-        , 
-        "用时 {0}".format(prettyTime(eventPlayer.Timer))
-        checkCN  
-        "Time {0}".format(prettyTime(eventPlayer.Timer)) ,
-        HudPosition.LEFT, HO.game_timer, Color.WHITE, Color.GRAY, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT)
+        */
+        "{} {}".format("练习用时" checkCN "Practice Time",prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "",
+        # 19191
+        "{} {}".format("用时" checkCN "Time",prettyTime(eventPlayer.Timer)),
+        #checkCN  
+        #"Time {0}".format(prettyTime(eventPlayer.Timer)) ,
+        #"用时 {0}".format(prettyTime(eventPlayer.Timer))
+        #checkCN  
+        #"Time {0}".format(prettyTime(eventPlayer.Timer)) ,
+        HudPosition.LEFT, HO.game_timer, Color.WHITE, Color.GRAY, Color.WHITE, HudReeval.STRING, SpecVisibility.DEFAULT
+    )
     
 
-    hudText(eventPlayer if not eventPlayer.LeaderboardToggle else null, 
-        (   
-            " 弹球弹力: {} \n 弹球技能: {} {} ".format(
-                BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]],
+    hudText(
+        eventPlayer if not eventPlayer.LeaderboardToggle else null,  
+        " {0} ({2}/{3})\n―――――――――――\n {1}\n"
+        "".format(
+            ("检查点" if eventPlayer.PreviewsI == 0 else "弹球" if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1  else "自定义传送门") checkCN
+            "checkpoint" if eventPlayer.PreviewsI == 0 else "orb" if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1  else "portal",
+            "{} {} {} {}".format(
                 abilityIconString(Hero.GENJI, Button.ULTIMATE) if BounceToggleUlt[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else "",
-                abilityIconString(Hero.GENJI, Button.ABILITY_1) if BounceToggleDash[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else ""
-            ) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) and len(eventPlayer.PreviewsArray) > 0 else ""
-        )
-        checkCN
-        " orb strength: {} \n orb abilities: {} {} ".format(
-            BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]],
-            abilityIconString(Hero.GENJI, Button.ULTIMATE) if BounceToggleUlt[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else "",
-            abilityIconString(Hero.GENJI, Button.ABILITY_1) if BounceToggleDash[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else ""
-        ) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) and len(eventPlayer.PreviewsArray) > 0 else "",
-        
-
-        ("黄弹球 {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else "")
-        checkCN
-        "orange orbs {0} / {1}".format(len(eventPlayer.LockCollected), eventPlayer.BounceLockMax_Cache) if eventPlayer.BounceLockMax_Cache else ""
+                abilityIconString(Hero.GENJI, Button.ABILITY_1) if BounceToggleDash[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else "",
+                iconString(Icon.WARNING) if BounceToggleLock[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else "",
+                iconString(Icon.ARROW_UP) if BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] > 0 else
+                iconString(Icon.ARROW_DOWN) if BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] < 0 else ""
+            ) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else "", # [0:cp, 1-x:bounce, x-y:portal]
+            eventPlayer.PreviewsI + 1,
+            len(eventPlayer.PreviewsArray)
+        ) if eventPlayer.PreviewsArray != null else ""
+        ,    
+        "{2} {0} / {1}".format(
+            len(eventPlayer.LockCollected), 
+            eventPlayer.BounceLockMax_Cache,
+            "黄弹球" checkCN "orange orbs"
+        ) if eventPlayer.BounceLockMax_Cache and eventPlayer.PreviewsArray == null else ""
         ,
         "{3}{2}{4} {0} / {1}".format(
             eventPlayer.CurrentCheckpoint, 
@@ -279,7 +289,8 @@ rule "Huds: each player":
             "\n" if eventPlayer.banstring else "",
             eventPlayer.banstring if eventPlayer.banstring else "",
             "检查点" checkCN "Level"
-        ),    
+        ) if eventPlayer.PreviewsArray == null else ""
+        ,   
         HudPosition.TOP, HO.game_level_orb, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     # climb/bhop indicators

@@ -1,7 +1,7 @@
 #!define versionhere "1.9.1"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(10) # 0 is editor, rest is numbers
+editortoggle(1) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -351,6 +351,7 @@ rule "Player Initialize":
     eventPlayer.JumpCount = 0
     eventPlayer.bouncetouchedlast = -1
     eventPlayer.bouncetouched = -1
+    eventPlayer.PreviewsI = null
     #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
     wait(1) 
     eventPlayer.setRespawnTime(1)

@@ -387,7 +387,8 @@ enum HO:
     edit_host_mode,
     data_dif,
     game_level_orb,
-
+    com_previewsub,
+    
     filler_custommsg,
     add_custommsg1,
     add_custommsg2,
@@ -413,7 +414,7 @@ enum HO:
     com_splits,
 
     com_preview,
-    com_previewsub,
+    #com_previewsub,
     com_practice,
     com_practicesub,
     com_hints,
