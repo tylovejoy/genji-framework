@@ -1,4 +1,4 @@
-#!define versionhere "1.9.1"
+#!define versionhere "1.9.1a"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -788,6 +788,7 @@ rule "AFK timer":
     @Event eachPlayer
     @Condition eventPlayer.isMoving() == false
     @Condition eventPlayer.isAlive()
+    @Condition not eventPlayer.isCommunicatingEmote()   
     @Condition not eventPlayer.EditorOn
     wait(300, Wait.ABORT_WHEN_FALSE)
 
