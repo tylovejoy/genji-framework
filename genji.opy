@@ -788,6 +788,7 @@ rule "AFK timer":
     @Event eachPlayer
     @Condition eventPlayer.isMoving() == false
     @Condition eventPlayer.isAlive()
+    @Condition not eventPlayer.isCommunicatingEmote()   
     @Condition not eventPlayer.EditorOn
     wait(300, Wait.ABORT_WHEN_FALSE)
 
