@@ -322,7 +322,7 @@ rule "Custom Orb Script":
     #Note that the ID can change if you place or delete orbs infront of that orb.
     #Do NOT edit the next 2 actions.
     eventPlayer.BounceTrueId   = [i for _, i in BouncePadCheckpoints]
-    eventPlayer.BounceTrueId  = [ i for i in eventPlayer.BounceTrueId if BouncePadCheckpoints[i] == hostPlayer.CurrentCheckpoint and  BouncePositions[i] == eventPlayer.BouncePosition_Cache[eventPlayer.bouncetouched]][0]
+    eventPlayer.BounceTrueId  = [ i for i in eventPlayer.BounceTrueId if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint and  BouncePositions[i] == eventPlayer.BouncePosition_Cache[eventPlayer.bouncetouched]][0]
     #Add the desired ID numbers for the bounces in the array
     #add the script after it
     #you can use the trigger sub above this rule to reset the effects
