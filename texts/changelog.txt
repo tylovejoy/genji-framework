@@ -350,3 +350,6 @@ if a player is stuck on a checkpoint they can press the hint button to see that 
 1.9.1a - 22-7-2023
 - AFK timer now doesn't trigger when you are emoting. (and emote resets the timer)
 - fixed the mistake that caused the custom orb addon to only work for the host player
+
+1.9.1b - 29-7-2023
+- enabled antartica map in dva and control portals since it has been added back ingame
