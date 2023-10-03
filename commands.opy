@@ -218,7 +218,7 @@ rule "Toggle Invincible Mode | Melee + Reload":
     eventPlayer.LockCollected = []
     eventPlayer.flytoggle = null
     
-    if eventPlayer.CurrentCheckpoint > 0 and eventPlayer.NotOnLastCp:
+    if eventPlayer.NotOnLastCp and (eventPlayer.CurrentCheckpoint > 0 or DashExploitToggle):
         eventPlayer.disallowButton(Button.ABILITY_1)
         wait(0.16)
         if eventPlayer.isUsingAbility1():
@@ -256,7 +256,7 @@ rule "Toggle Invincible Mode | Melee + Reload":
     async( CheckUlt(), AsyncBehavior.RESTART)
     async( CheckDash(), AsyncBehavior.RESTART)
 
-    if eventPlayer.CurrentCheckpoint > 0: # cp 0 start dash ban is via startgame sub because it has to give msg
+    if eventPlayer.CurrentCheckpoint > 0 or DashExploitToggle: # cp 0 start dash ban is via startgame sub because it has to give msg
         wait(0.16)
         eventPlayer.allowButton(Button.ABILITY_1)
     wait()
