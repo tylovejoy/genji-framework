@@ -204,10 +204,15 @@ rule "Toggle Invincible Mode | Melee + Reload":
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition eventPlayer.isUsingAbility1() == false
-    @Condition eventPlayer.isUsingUltimate() == false
+    #@Condition eventPlayer.isUsingUltimate() == false
     @Condition eventPlayer.isAlive()
     @Condition (not CompMode) or (not eventPlayer.CompDone)
     @Condition not eventPlayer.LockState
+
+    if eventPlayer.isUsingUltimate():
+        smallMessage(eventPlayer, "" checkCN "   Cannot toggle invincible while using ultimate")
+        wait()
+        return
 
     eventPlayer.LockState = true
     eventPlayer.LockCollected = []
@@ -254,11 +259,16 @@ rule "Toggle Invincible Mode | Melee + Reload":
     if eventPlayer.CurrentCheckpoint > 0: # cp 0 start dash ban is via startgame sub because it has to give msg
         wait(0.16)
         eventPlayer.allowButton(Button.ABILITY_1)
-
+    wait()
+    if eventPlayer.isUsingUltimate():
+        kill(eventPlayer, null)
     eventPlayer.LockState = false
+    wait(0.16)
+    #waitUntil(not eventPlayer.isHoldingButton(Button.RELOAD), 2)
 
 rule "Toggle Practice Mode | Melee + Ultimate":
     @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false 
     @Condition eventPlayer.isHoldingButton(Button.MELEE) 
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition eventPlayer.isUsingAbility1() == false
