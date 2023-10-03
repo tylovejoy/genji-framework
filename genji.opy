@@ -1,7 +1,7 @@
 #!define versionhere "1.9.2 beta"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(14) # 0 is editor, rest is numbers
+editortoggle(1) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -179,6 +179,14 @@ rule "Setup and Variables":
     startForcingSpawn(Team.ALL,  2)
     wait(0.024) # wait for map data rule
     
+    SaveName = []
+    SaveCp = []
+    SaveTimer = []
+    SaveEnt = []
+    SavePauseTime = []
+    SavePauseEnabled = []
+    SaveElapsed = []
+
     if BladeEnabledCheckpoints == null and len(BladeEnabledCheckpoints) == 1:
         BladeEnabledCheckpoints = [0]
     else:
