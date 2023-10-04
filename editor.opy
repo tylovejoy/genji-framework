@@ -1,5 +1,5 @@
 #!mainFile "genji.opy"
-
+# translated
 rule "------------------------------------------------------------------------  Editor ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
@@ -48,20 +48,20 @@ rule "Editor | Clear Excess Data to Save Map":
         " ",
         null,
         "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
-        "0. 清理多余数据:\n"
-        "打开此窗口时自动完成\n\n"
+        "   0. 清理无用数据:\n"
+        " (此窗口打开时将自动完成)\n\n"
         
-        "1. 复制数据:\n"
-        "Esc→打开地图工坊查看器→右下角变量目标设置为全局\n\n"
-        "点击下方图标 [x] 复制作图数据\n"
+        "   1. 复制数据:\n"
+        " Esc → 打开地图工坊查看器 → 右下角'变量目标'改为全局\n"
+        " 点击窗口下方图标 (X) 复制作图数据\n\n"
 
-        "2. 插入数据:\n"
-        "Esc→打开地图工坊编辑器→规则第2页→将数据粘贴到规则\n"
-        "'Map data - 数据录入中的'动作'一栏\n\n"
+        "   2. 录入数据:\n"
+        " Esc → 打开地图工坊编辑器 → 规则第(2/2)页 → 展开规则'Map data - 数据录入'\n"
+        " 点击'动作'一栏右侧橙色粘贴图标 录入数据\n\n"
         
-        "3.地图工坊设置:\n"
-        "ESC→显示大厅→设置→地图工坊设置→\n"
-        "关闭'作图模式'\n选择地图难度\n"
+        "   3. 地图工坊设置:\n"
+        " ESC → 显示大厅 → 设置 → 地图工坊设置→\n"
+        " 拉至底部 关闭'作图模式'\n 选择地图难度\n"
         checkCN
         "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
         "   0. clear excess data:\n"
@@ -86,17 +86,17 @@ rule "Editor | Clear Excess Data to Save Map":
         " ",
         null,
         "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
-        "4. 创建初始共享代码:\n"
-        "Esc→显示大厅→设置→共享代码→\n"
-        "创建新代码→复制代码\n\n"
+        "   4. 创建初始地图代码:\n"
+        " Esc → 显示大厅 → 设置 → 分享代码 →\n"
+        " 创建新的代码 → 复制并记下代码\n\n"
   
-        "5. 添加参与者:\n"
-        "在'Credits here'规则中输入您的姓名和地图代码\n\n"
-        "(第二页)\n"
+        "   5. 添加作者信息:\n"
+        " Esc → 打开地图工坊编辑器 → 规则第(2/2)页 → 展开规则'Credits here - 作者名字'\n"
+        " 修改自定义字符串文本框中的内容\n\n"
      
-        "6. 参与者更新:\n"
-        "Esc→显示大厅→设置→共享代码→\n"
-        "上传到现有代码→粘贴在步骤4中创建的代码\n"
+        "   6. 更新地图及作者信息:\n"
+        " Esc → 显示大厅 → 设置 → 共享代码 →\n"
+        " 上传至现有代码 → 粘贴步骤4中获得的代码\n"
 
         checkCN
         "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
@@ -233,8 +233,8 @@ rule "Editor | Hud and Effects":
                 "{0} + {2} | 删除选中的击杀球\n"
                 "{0} + {3} | 选择上一个击杀球\n"
                 "{0} + {4} | 选择下一个击杀球\n\n"
-                "{5} + {4} | 增大击杀球尺寸\n"
-                "{5} + {3} | 减小击杀球尺寸\n"
+                "{5} + {4} | 增大击杀球\n"
+                "{5} + {3} | 缩小击杀球\n"
                 "{5} + {1} | 移动选中的实体"
                 "".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
                 , 
@@ -262,7 +262,7 @@ rule "Editor | Hud and Effects":
                 "{0} + {3} | 选择下一个传送门\n"
                 "{0} + {4} | 选择上一个传送门\n\n"
                 "{5} + {1} | 移动选中的实体\n"
-                "{5} + {3} | 应用到当前/全部检查点(开关)"
+                "{5} + {3} | 应用到当前/所有关卡(开关)"
                 "".format(buttonString(Button.INTERACT),buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE),
                 buttonString(Button.JUMP),buttonString(Button.CROUCH),buttonString(Button.ABILITY_2))
             ][hostPlayer.EditModeSelection]  if EditorMoveItem == false else
@@ -270,7 +270,7 @@ rule "Editor | Hud and Effects":
                 "{0} | 向上移动 \n"
                 "{1} | 向下移动 \n"
                 "{2} | 放置实体 \n"
-                "{3} (长按) | 移动更快"
+                "{3} (长按) | 快速移动"
                 "".format(buttonString(Button.JUMP),buttonString(Button.CROUCH),buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
         )
         checkCN 
@@ -336,9 +336,9 @@ rule "Editor | Hud and Effects":
 
     hudSubtext(
         hostPlayer if hostPlayer.GuideToggle else null, 
-        " \n{0} + {1} | 下一个检查点\n"
-        "{0} + {2} | 上一个检查点\n"
-        "{3} 长按 | 飞行\n"
+        " \n{0} + {1} | 下一关\n"
+        "{0} + {2} | 上一关\n"
+        "{3} (长按) | 飞行\n"
         "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1))
         checkCN
         " \n{0} + {1} | Next checkpoint\n"
@@ -509,13 +509,13 @@ rule "Editor | Hud and Effects":
                 KillBallPositions[EditSelected]      
             ) 
             if hostPlayer.EditModeSelection == 1 and len(hostPlayer.KillIndex_Cache) > 0 else             
-            "\n 选中的弹球 \n 矢量: {1} \n 弹力: {0} \n ID: {2}".format(
+            "\n 选中的弹球 \n 矢量: {1} \n 弹力: {0} \n 序号: {2} \n".format(
                 BounceStrength[EditSelected],
                 BouncePositions[EditSelected],
                 EditSelected
             )
             if hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0  else  
-            "封禁(单关)\n"
+            "\n 封禁(单关)\n"
             "――――――――――――\n"
             " {} 蹭留\n"
             " {} 卡小\n"
@@ -533,9 +533,9 @@ rule "Editor | Hud and Effects":
                 "√" if hostPlayer.CurrentCheckpoint in BanBhop else " " 
             ) 
             if hostPlayer.EditModeSelection == 3 else
-                "\n 传送门起点: {} \n"
-                " 传送门终点位: {} \n"
-                " 传送门 检查点 : {} \n"
+                "\n 入口矢量: {} \n"
+                " 出口矢量: {} \n"
+                " 应用关卡: {} \n"
                 "".format(
                 CustomPortalStart[EditSelected],
                 CustomPortalEndpoint[EditSelected],
@@ -557,13 +557,13 @@ rule "Editor | Hud and Effects":
                 KillBallPositions[EditSelected]      
             ) 
             if hostPlayer.EditModeSelection == 1 and len(hostPlayer.KillIndex_Cache) > 0 else             
-            "\n Selected Bounce Orb \n Vector: {1} \n strength: {0} \n ID: {2}".format(
+            "\n Selected Bounce Orb \n Vector: {1} \n strength: {0} \n ID: {2} \n".format(
                 BounceStrength[EditSelected],
                 BouncePositions[EditSelected],
                 EditSelected
             )
             if hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0  else   
-            " bans\n"
+            "\n bans\n"
             "――――――――――――\n"
             " {} multi\n"
             " {} create\n"
@@ -629,7 +629,7 @@ rule "Editor | Hud and Effects":
         
     # normal cp if teleport
     createEffect(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and hostPlayer.EditModeSelection == 0 else null, Effect.RING, Color.ORANGE, CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createInWorldText(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and hostPlayer.EditModeSelection == 0 else null, "检查点点的位置" checkCN "level location", CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+    createInWorldText(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and hostPlayer.EditModeSelection == 0 else null, "检查点位置" checkCN "level location", CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
     
     # portal fx
     createEffect(hostPlayer if len(EditSelectIdArray) > 0 and hostPlayer.EditModeSelection == 4 else null, Effect.SPARKLES, Color.PURPLE, CustomPortalEndpoint[EditSelected], 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
@@ -1051,13 +1051,13 @@ rule "Editor | cp add/remove teleport":
 
     if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) > 1: # remove
         CheckpointPositions[hostPlayer.CurrentCheckpoint] = CheckpointPositions[hostPlayer.CurrentCheckpoint][0]
-        smallMessage(hostPlayer,"   等级{0}的传送被移除".format(hostPlayer.CurrentCheckpoint) checkCN "   Teleport for level {0} has been removed".format(hostPlayer.CurrentCheckpoint))
+        smallMessage(hostPlayer,"   关卡{0}的传送点已移除".format(hostPlayer.CurrentCheckpoint) checkCN "   Teleport for level {0} has been removed".format(hostPlayer.CurrentCheckpoint))
     else: # add
         CheckpointPositions[hostPlayer.CurrentCheckpoint] = [
             CheckpointPositions[hostPlayer.CurrentCheckpoint][0] if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[hostPlayer.CurrentCheckpoint], 
             hostPlayer.getPosition()
         ]
-        smallMessage(hostPlayer, "{1} {0}".format(hostPlayer.CurrentCheckpoint,"   传送点已添加到检查点" checkCN "   Teleport has been added for level"))
+        smallMessage(hostPlayer, "{1} {0}".format(hostPlayer.CurrentCheckpoint,"   传送点已添加到当前关卡" checkCN "   Teleport has been added for level"))
     
     hostPlayer.LockEditor = false
     wait()
