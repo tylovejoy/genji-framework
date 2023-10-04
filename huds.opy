@@ -294,7 +294,23 @@ rule "Huds: each player":
                 iconString(Icon.WARNING) if BounceToggleLock[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else "",
                 iconString(Icon.ARROW_UP) if BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] > 0 else
                 iconString(Icon.ARROW_DOWN) if BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] < 0 else ""
-            ) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else "", # [0:cp, 1-x:bounce, x-y:portal]
+            #) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else "", # [0:cp, 1-x:bounce, x-y:portal]
+            ) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else
+
+            (
+                ("传送门 {} 入口 ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
+                if eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][0] == 0 else  
+                "传送门 {} 出口 ".format( eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
+                ) checkCN
+
+                "portal {} start ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
+                if eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][0] == 0 else 
+                "portal {} destination ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
+            
+            )
+            if eventPlayer.PreviewsI >= len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else "",
+
+
             eventPlayer.PreviewsI + 1,
             len(eventPlayer.PreviewsArray)
         ) if eventPlayer.PreviewsArray != null else ""

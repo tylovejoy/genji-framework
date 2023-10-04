@@ -1,7 +1,7 @@
 #!define versionhere "1.9.2 beta"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(1) # 0 is editor, rest is numbers
+editortoggle(20) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -276,6 +276,7 @@ rule "Setup and Variables":
     RebuildBounceOrbs()
     RebuildPortals()
 
+
 rule "Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
         wait(0.25)
@@ -342,7 +343,20 @@ def EffectsCreate():
                 EffectReeval.VISIBILITY
             )
             wait()
-
+    
+    createEffect( # portal preview
+        localPlayer
+            if 
+            localPlayer.PreviewsI >= len(localPlayer.BouncePosition_Cache) + 1 and 
+            localPlayer.PreviewsI > 0 and
+            localPlayer.PreviewsArray2[localPlayer.PreviewsI][0] == 1 
+        else null
+        , 
+        Effect.SPARKLES,
+        Color.PURPLE,
+        localPlayer.PreviewsArray[localPlayer.PreviewsI], 
+        0.5, EffectReeval.VISIBILITY_POSITION_AND_RADIUS
+    )
 rule "Player Initialize":
     @Event eachPlayer
     eventPlayer.EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On

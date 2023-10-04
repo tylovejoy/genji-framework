@@ -63,8 +63,11 @@ rule "Preview orbs/portals | Hold Primary":
         eventPlayer.PreviewsArray2 = [ i for i in eventPlayer.PreviewsArray2 if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint or i == -2 ] 
 
     if len(CustomPortalStart) > 0:
-        eventPlayer.PreviewsArray.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint] )
-
+        #eventPlayer.PreviewsArray.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint] )
+        for eventPlayer.PreviewsI in range(len(eventPlayer.PortalStart_Cache)):
+            eventPlayer.PreviewsArray.append([eventPlayer.PortalStart_Cache[eventPlayer.PreviewsI ],eventPlayer.PortalEnd_cache[eventPlayer.PreviewsI ]])
+            eventPlayer.PreviewsArray2.append([[0,eventPlayer.PreviewsI],[1,eventPlayer.PreviewsI]])
+            wait()
 
     wait(0.1)  
     eventPlayer.setMoveSpeed(0)
@@ -210,7 +213,7 @@ rule "Toggle Invincible Mode | Melee + Reload":
     @Condition not eventPlayer.LockState
 
     if eventPlayer.isUsingUltimate():
-        smallMessage(eventPlayer, "" checkCN "   Cannot toggle invincible while using ultimate")
+        smallMessage(eventPlayer, "    终极技能开启时无法切换探点模式" checkCN "   Cannot toggle invincible while using ultimate")
         wait()
         return
 

@@ -353,3 +353,14 @@ if a player is stuck on a checkpoint they can press the hint button to see that 
 
 1.9.1b - 29-7-2023
 - enabled antartica map in dva and control portals since it has been added back ingame
+
+
+1.9.2 - x - 10 - 2023
+- You can now preview portal end points (they get added in the list of preview items)
+- trying to leave invincible mode now gives an error msg instead of just not working at all
+- invincible toggle now has a slightly longer delay to prevent some issues
+- added and corrected more chinese translations
+
+fixes
+- a bug with ultimates
+- a bug with savedata
