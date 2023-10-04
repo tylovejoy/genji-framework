@@ -250,10 +250,13 @@ rule "Grup up | text/effect -":
     # replace vector 0,0,0 with orb position
     createInWorldText(
         [i for i in getAllPlayers() if i.CurrentCheckpoint == 777],
-        "{0} grup up {0}".format(abilityIconString(Hero.GENJI, Button.ULTIMATE)), 
+        "{0} {1} {0}".format(
+            abilityIconString(Hero.GENJI, Button.ULTIMATE),
+            "待在这里" checkCN "grup up"
+            ), 
         vect(0,0,0), 
         1.5, 
-        Clip.NONE, WorldTextReeval.VISIBILITY, Color.ORANGE, SpecVisibility.DEFAULT
+        Clip.NONE, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT
     )
     # replace 777 with checkpoint number
     # replace vector 0,0,0 with orb position

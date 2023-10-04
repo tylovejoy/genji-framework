@@ -5,7 +5,7 @@
 ##!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
 
 ##!define prettyTime(timeInSeconds) "{0} {1}".format(timeInSeconds,"秒"  checkCN "sec")
-#!define prettyTime(timeInSeconds) l"{0} sec".format(timeInSeconds)
+#!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
 
 
 #!define insert(insert_array, insert_index, insert_value)  insert_array.append(insert_value) \
