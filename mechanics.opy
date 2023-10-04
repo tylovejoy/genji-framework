@@ -192,6 +192,7 @@ rule "Ban | Emote Savehop":
     @Condition not eventPlayer.InvincibleToggle
     @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.isCommunicatingEmote() == true
-    smallMessage(eventPlayer, "   表情爬 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
+    smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
     checkpointFailReset()
+
 
