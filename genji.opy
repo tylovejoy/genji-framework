@@ -111,7 +111,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_dedhop = false
 
-    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Emote Savehop - 封禁表情爬", false, 4):
+    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Emote Savehop - 封禁表情留小", false, 4):
         eventPlayer.ban_emote = true
     elif eventPlayer.CurrentCheckpoint in BanEmote:
         eventPlayer.banstring = "♥ {}".format(eventPlayer.banstring)
@@ -648,7 +648,7 @@ rule "Arrive | Ground reset | traces":
                 stopChasingVariable(eventPlayer.Timer)
                 stopChasingVariable(eventPlayer.practicetimer) 
                 wait()
-                bigMessage(getAllPlayers(), "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.Timer),"已通关! 用时 " checkCN "Mission complete! Time"))
+                bigMessage(getAllPlayers(), "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.Timer),"已通关! 用时" checkCN "Mission complete! Time"))
                    
                 DeleteSave()
                 Leaderboardupdate()
@@ -875,8 +875,8 @@ editorordata
 rule "Credits here - 作者名字 <---- INSERT HERE / 在这输入 ": 
     # Filling this in adds it to the inspector pasta after next restart.
     # You can fill in again to overwrite.
-    # 填充此字段 将其添加到 检查器数据 面中
-    # 您可以再次 填写以覆盖 之前的条目
+    # 修改的内容 在重新开始 比赛后生效
+    # 您可以反复 修改字符串 中的内容
     Name = "name here - 作者"
     Code = "code here - 代码"
 
@@ -918,9 +918,9 @@ rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输�
     #2) enable this rule
     #3) type your difficulty in the hud below
     wait(2.5)
-    #1) 设置正常 难度hud为“不显示”
-    #2) 启用此规则
-    #3) 在下面的hud中输入难度
+    #1) 地图工坊设 置难度改为 “不显示”
+    #2) 勾选此规则 点击上方的 开启/关闭 开启此规则
+    #3) 修改下面的 创建hud文本 中的“enter custom difficulty here”
     hudText(getAllPlayers(), 
         ("游戏测试" checkCN "Playtest") if Difficultyhud[1] else "",
         "enter custom difficulty here",    
