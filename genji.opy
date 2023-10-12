@@ -1,7 +1,7 @@
 #!define versionhere "1.9.2 beta"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(20) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -788,6 +788,9 @@ rule "Player Phase":
         wait(0.16)
     eventPlayer.setStatusEffect(null, Status.PHASED_OUT, 9999)
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
+    wait(1)
+    if RULE_CONDITION:
+        goto RULE_START
 
 rule "Player Leaves":
     @Event playerLeft

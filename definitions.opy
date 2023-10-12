@@ -32,6 +32,9 @@ arrayname = [x - (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in arrayn
 */
 
 #!define checkCN if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
+# debug turn on cn
+##!define checkCN if true  else
+
 
 ##!define FILLER rule "Addon settings are on next page! Click the next page button!":\
 ##!define FILLER rule "Map data and addon settings are on page 2 !!!!!!!!!!!!!!!!!!!":\
@@ -421,6 +424,10 @@ enum HO:
 
     edit_instructions_general,
     edit_instructions_edit,
+    edit_instructions_edit1,
+    edit_instructions_edit2,
+    edit_instructions_edit3,
+    edit_instructions_edit4,
 
     wr,
     board_top5,
