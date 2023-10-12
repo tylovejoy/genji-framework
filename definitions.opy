@@ -423,11 +423,13 @@ enum HO:
     com_hints,
 
     edit_instructions_general,
+    edit_instructions_general1,
     edit_instructions_edit,
     edit_instructions_edit1,
     edit_instructions_edit2,
     edit_instructions_edit3,
     edit_instructions_edit4,
+    edit_instructions_edit5,
 
     wr,
     board_top5,
