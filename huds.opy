@@ -69,19 +69,18 @@ rule "Huds: Global/Localplayer":
     hudSubtext(getAllPlayers(), "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv", HudPosition.TOP, HO.fillermain, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     
     hudSubtext(localPlayer if localPlayer.GuideToggle else null, 
-        "{0} {1} |  {2}".format( "" if localPlayer.QuickRestartToggle else "长按",buttonString(Button.RELOAD),"快速回点 | 启用" if localPlayer.QuickRestartToggle else "启用快速回点")
+        "{0} {1} | {2}".format( "" if localPlayer.QuickRestartToggle else "长按",buttonString(Button.RELOAD),"快速回点 | 启用" if localPlayer.QuickRestartToggle else "启用快速回点")
         checkCN
-        "{0} {1} |  {2}".format( "" if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset")
+        "{0} {1} | {2}".format( "" if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset")
         , HudPosition.RIGHT, HO.com_quickres, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     hudSubtext(localPlayer if localPlayer.GuideToggle else null, 
-        "{0}+{1} | 探点模式{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | 启用" if localPlayer.InvincibleToggle else "") 
+        "{0} + {1} | 探点模式{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | 启用" if localPlayer.InvincibleToggle else "") 
         checkCN
-        "{0}+{1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.InvincibleToggle else "") 
+        "{0} + {1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.InvincibleToggle else "") 
         ,HudPosition.RIGHT, HO.com_invincible, Color.GREEN if localPlayer.InvincibleToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
-    
     hudText(getAllPlayers(),
         null,
         "{0}{1}{2}".format(
@@ -96,7 +95,7 @@ rule "Huds: Global/Localplayer":
     )
 
     hudSubtext(localPlayer if localPlayer.GuideToggle else null,  
-        "长按 {0} | 预览检查点".format(buttonString(Button.PRIMARY_FIRE))
+        "长按 {0} | 预览关卡".format(buttonString(Button.PRIMARY_FIRE))
         checkCN
         "Hold {0} | Preview checkpoint".format(buttonString(Button.PRIMARY_FIRE))
         ,HudPosition.RIGHT, HO.com_preview, Color.GREEN if localPlayer.PreviewsArray else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
@@ -199,7 +198,7 @@ rule "Huds: Global/Localplayer":
             , HudPosition.RIGHT, HO.com_spec, Color.GREEN if localPlayer.SpectateToggle else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         hudSubtext(localPlayer if localPlayer.GuideToggle else null, 
-            "长按  {0} | 隐身模式{1}".format(buttonString(Button.ABILITY_2)," | 启用" if localPlayer.invis else "")
+            "长按 {0} | 隐身模式{1}".format(buttonString(Button.ABILITY_2)," | 启用" if localPlayer.invis else "")
             checkCN
             "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else "")
             , HudPosition.RIGHT, HO.com_invis, Color.GREEN if localPlayer.invis else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
@@ -218,7 +217,7 @@ rule "Huds: Global/Localplayer":
             "{0} + {1} | 下一关\n{0} + {2} | 上一关\n{3} | 回到练习模式起点 "
             "".format( buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT) )    
             checkCN
-            "{0}  + {1} | Next level\n{0} + {2} | Previous level\n{3} | Start from practice cp "
+            "{0} + {1} | Next level\n{0} + {2} | Previous level\n{3} | Start from practice cp "
             "".format( buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT) )          
             , HudPosition.RIGHT, HO.com_practicesub, Color.LIME_GREEN, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
@@ -227,7 +226,7 @@ rule "Huds: Global/Localplayer":
     #if not hostPlayer.EditorOn:
         # find the value
     Difficultyhud = [
-        createWorkshopSetting(enum[ "playtest - 游戏测试", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display - 不显示"],"map settings \n地图设置","difficulty (display hud) - 难度(显示hud)",0, 0)
+        createWorkshopSetting(enum[ "playtest - 游戏测试", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display - 不显示"],"map settings \n地图设置","difficulty (display hud) - 难度 (顶部hud)",0, 0)
         , createWorkshopSetting(bool,"map settings \n地图设置","Playtest display - 游戏测试",false,0) 
         ] 
     # display
@@ -247,9 +246,9 @@ rule "Huds: Global/Localplayer":
     # restart + leaderboard
     # this is remade in editor to not include leaderboard
     hudSubtext(localPlayer if localPlayer.GuideToggle else null, 
-        "{0}+{1}+{2} | 重新开始\n长按 {3} | 完整成绩排名".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)) 
+        "{0} + {1} + {2} | 重新开始\n长按 {3} | 完整成绩排名".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)) 
         checkCN
-        "{0}+{1}+{2} | Restart\nHold {3} | leaderboard".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE))
+        "{0} + {1} + {2} | Restart\nHold {3} | leaderboard".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE))
         , HudPosition.RIGHT, HO.com_restart_n_board, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
@@ -294,7 +293,23 @@ rule "Huds: each player":
                 iconString(Icon.WARNING) if BounceToggleLock[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else "",
                 iconString(Icon.ARROW_UP) if BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] > 0 else
                 iconString(Icon.ARROW_DOWN) if BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] < 0 else ""
-            ) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else "", # [0:cp, 1-x:bounce, x-y:portal]
+            #) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else "", # [0:cp, 1-x:bounce, x-y:portal]
+            ) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else
+
+            (
+                ("传送门 {} 入口 ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
+                if eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][0] == 0 else  
+                "传送门 {} 出口 ".format( eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
+                ) checkCN
+
+                "portal {} start ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
+                if eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][0] == 0 else 
+                "portal {} destination ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
+            
+            )
+            if eventPlayer.PreviewsI >= len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else "",
+
+
             eventPlayer.PreviewsI + 1,
             len(eventPlayer.PreviewsArray)
         ) if eventPlayer.PreviewsArray != null else ""
@@ -310,7 +325,7 @@ rule "Huds: each player":
             len(CheckpointPositions) - 1,
             "\n" if eventPlayer.banstring else "",
             eventPlayer.banstring if eventPlayer.banstring else "",
-            "检查点" checkCN "Level"
+            "关卡" checkCN "Level"
         ) if eventPlayer.PreviewsArray == null else ""
         ,   
         HudPosition.TOP, HO.game_level_orb, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT

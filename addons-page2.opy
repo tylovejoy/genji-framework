@@ -1,6 +1,7 @@
 #!mainFile "genji.opy"
 
 /*
+translated file
 this gets put on page 2
 this should be parts of addons that get toggled by turning on rules
 */
@@ -17,7 +18,7 @@ rule "Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
     # checkpoint number 
     # 每关数量
     TitleData[0] = [
-        0, 
+        0,  
         10,
         20,
         30,
@@ -53,8 +54,8 @@ rule "Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
 
     # "your nickname" your friends ingame name
     # "display title" fill in the custom title
-    # "your nickname" 填入球员 的名字 
-    # "display title" 习俗标题
+    # 修改字符串 "your nickname <-------" 为好友名字 区分大小写
+    # 修改字符串 "display title" 为好友头顶 显示的称号
 
     if "your nickname <-------" == "{0}".format(eventPlayer):
         bigMessage(getAllPlayers(), "Message to the whole room")
@@ -75,46 +76,46 @@ rule "Display World Record - 展示世界纪录 <---- EDIT ME / 在此处编辑"
     hudText(getAllPlayers(), null," \n{0} world record {0}".format(iconString(Icon.FIRE)),"name and time here", HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
 
-rule "HUD text for certain Checkpoints - 某些检查点的HUD文本 <---- EDIT ME / 在此处编辑":
+rule "HUD text for certain Checkpoints - 特定关卡显示的HUD文本 <---- EDIT ME / 在此处编辑":
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
-    # 示例填充 显示了cp 1和cp 3的文本
+    # 示例已填写 关卡1和3 的hud文本
     wait(1)
     # in CpHudText fill in text
-    # 在 “CpHudText” 中填写文本
+    # 修改字符串 “CpHudText” 为顶部显示 的hud文本
     CpHudText = ["text cp 1","text cp 3"]
     # in CpHudCp fill in the at wich to display
-    # 在 “CpHudCp” 中填写要显 示的位置
+    # 修改数组 “CpHudCp” 为hud文本 显示的关卡
     CpHudCp = [1, 3]
     
-rule "Inworld text for certain Checkpoints - 在世界文本中为某些检查点 <---- EDIT ME / 在此处编辑":
+rule "Inworld text for certain Checkpoints - 特定关卡显示的地图文本 <---- EDIT ME / 在此处编辑":
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
-    # 示例填充 显示了cp 1和cp 3的文本
+    # 示例已填写 关卡1和3 的地图文本
     wait(1)
     # in CpIwtText fill in text 
-    # 在 “CpIwtText” 中填写文本
+    # 修改字符串 “CpIwtText” 为关卡显示 的地图文本
     CpIwtText = ["text cp 1","text cp 3"]
     # in CpIwtCp fill in cp at wich to display
-    # 在 “CpIwtCp” 中填写 要显示的cp
+    # 修改数组 “CpIwtCp” 为显示地图 文本的关卡
     CpIwtCp = [1, 3]
     # in CpIwtPos fill in the vector 
-    # 在 “CpIwtPos” 中填充向量
+    # 修改数组 “CpIwtPos” 为地图文本 的矢量位置
     CpIwtPos = [vect(0,0,0), vect(0,0,0)]
     # color applies to all 
-    # 色彩运 用于全部
+    # 选择应用到 所有地图文 本的颜色
     CpIwtColor = Color.LIME_GREEN
 
-rule "Hint text for certain Checkpoints - 某些检查点的提示文本 <---- EDIT ME / 在此处编辑":
+rule "Hint text for certain Checkpoints - 特定关卡的提示文本 <---- EDIT ME / 在此处编辑":
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
-    # 示例填充 显示了cp 1和cp 3的文本
+    # 示例已填写 关卡1和3 的提示文本
     wait(1)
     # in HintText fill in text
-    # 在 HintText 中填写文本
+    # 修改字符串 “HintText” 为关卡显示 的提示文本
     HintText = ["text cp 1","text cp 3"]
     # in HintCp fill in the at wich to display
-    # 在 HintCp 中填写要显 示的位置
+    # 修改数组 “HintCp” 为提示文本 显示的关卡
     HintCp = [1, 3]
 
 
@@ -122,7 +123,7 @@ rule "------------------------------------------------------------------------ A
     @Delimiter
     @Disabled
 
-rule "Fake Triple Jump - enable rule - 启用此规则 - 假三级跳": # method c
+rule "Fake Triple Jump - enable rule - 启用此规则 - 假三段跳": # method c
     @Disabled
     @Event eachPlayer
     @Hero genji
@@ -249,10 +250,13 @@ rule "Grup up | text/effect -":
     # replace vector 0,0,0 with orb position
     createInWorldText(
         [i for i in getAllPlayers() if i.CurrentCheckpoint == 777],
-        "{0} grup up {0}".format(abilityIconString(Hero.GENJI, Button.ULTIMATE)), 
+        "{0} {1} {0}".format(
+            abilityIconString(Hero.GENJI, Button.ULTIMATE),
+            "待在这里" checkCN "grup up"
+            ), 
         vect(0,0,0), 
         1.5, 
-        Clip.NONE, WorldTextReeval.VISIBILITY, Color.ORANGE, SpecVisibility.DEFAULT
+        Clip.NONE, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT
     )
     # replace 777 with checkpoint number
     # replace vector 0,0,0 with orb position

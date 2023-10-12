@@ -5,7 +5,7 @@
 ##!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
 
 ##!define prettyTime(timeInSeconds) "{0} {1}".format(timeInSeconds,"秒"  checkCN "sec")
-#!define prettyTime(timeInSeconds) l"{0} sec".format(timeInSeconds)
+#!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
 
 
 #!define insert(insert_array, insert_index, insert_value)  insert_array.append(insert_value) \
@@ -32,6 +32,9 @@ arrayname = [x - (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in arrayn
 */
 
 #!define checkCN if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
+# debug turn on cn
+##!define checkCN if true  else
+
 
 ##!define FILLER rule "Addon settings are on next page! Click the next page button!":\
 ##!define FILLER rule "Map data and addon settings are on page 2 !!!!!!!!!!!!!!!!!!!":\
@@ -420,7 +423,13 @@ enum HO:
     com_hints,
 
     edit_instructions_general,
+    edit_instructions_general1,
     edit_instructions_edit,
+    edit_instructions_edit1,
+    edit_instructions_edit2,
+    edit_instructions_edit3,
+    edit_instructions_edit4,
+    edit_instructions_edit5,
 
     wr,
     board_top5,

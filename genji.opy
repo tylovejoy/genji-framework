@@ -1,4 +1,4 @@
-#!define versionhere "1.9.1b"
+#!define versionhere "1.9.2"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -111,7 +111,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_dedhop = false
 
-    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Emote Savehop - 封禁表情爬", false, 4):
+    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Emote Savehop - 封禁表情留小", false, 4):
         eventPlayer.ban_emote = true
     elif eventPlayer.CurrentCheckpoint in BanEmote:
         eventPlayer.banstring = "♥ {}".format(eventPlayer.banstring)
@@ -179,6 +179,14 @@ rule "Setup and Variables":
     startForcingSpawn(Team.ALL,  2)
     wait(0.024) # wait for map data rule
     
+    SaveName = []
+    SaveCp = []
+    SaveTimer = []
+    SaveEnt = []
+    SavePauseTime = []
+    SavePauseEnabled = []
+    SaveElapsed = []
+
     if BladeEnabledCheckpoints == null and len(BladeEnabledCheckpoints) == 1:
         BladeEnabledCheckpoints = [0]
     else:
@@ -268,6 +276,7 @@ rule "Setup and Variables":
     RebuildBounceOrbs()
     RebuildPortals()
 
+
 rule "Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
         wait(0.25)
@@ -334,7 +343,20 @@ def EffectsCreate():
                 EffectReeval.VISIBILITY
             )
             wait()
-
+    
+    createEffect( # portal preview
+        localPlayer
+            if 
+            localPlayer.PreviewsI >= len(localPlayer.BouncePosition_Cache) + 1 and 
+            localPlayer.PreviewsI > 0 and
+            localPlayer.PreviewsArray2[localPlayer.PreviewsI][0] == 1 
+        else null
+        , 
+        Effect.SPARKLES,
+        Color.PURPLE,
+        localPlayer.PreviewsArray[localPlayer.PreviewsI], 
+        0.5, EffectReeval.VISIBILITY_POSITION_AND_RADIUS
+    )
 rule "Player Initialize":
     @Event eachPlayer
     eventPlayer.EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
@@ -612,7 +634,8 @@ rule "Arrive | Ground reset | traces":
             wait()
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
             playEffect(eventPlayer if CompMode or eventPlayer.invis else getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
-            bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.CurrentCheckpoint, "抵达检查点" checkCN "Arrived at level")   )
+            # msg disabled due to annoying new sound
+            #bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.CurrentCheckpoint, "抵达检查点" checkCN "Arrived at level")   )
             wait()
             UpdateTitle()
             TriggerOnFailSuccesReset()
@@ -626,7 +649,7 @@ rule "Arrive | Ground reset | traces":
                 stopChasingVariable(eventPlayer.Timer)
                 stopChasingVariable(eventPlayer.practicetimer) 
                 wait()
-                bigMessage(getAllPlayers(), "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.Timer),"已通关! 用时 " checkCN "Mission complete! Time"))
+                bigMessage(getAllPlayers(), "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.Timer),"已通关! 用时" checkCN "Mission complete! Time"))
                    
                 DeleteSave()
                 Leaderboardupdate()
@@ -766,6 +789,9 @@ rule "Player Phase":
         wait(0.16)
     eventPlayer.setStatusEffect(null, Status.PHASED_OUT, 9999)
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
+    wait(1)
+    if RULE_CONDITION:
+        goto RULE_START
 
 rule "Player Leaves":
     @Event playerLeft
@@ -853,8 +879,8 @@ editorordata
 rule "Credits here - 作者名字 <---- INSERT HERE / 在这输入 ": 
     # Filling this in adds it to the inspector pasta after next restart.
     # You can fill in again to overwrite.
-    # 填充此字段 将其添加到 检查器数据 面中
-    # 您可以再次 填写以覆盖 之前的条目
+    # 修改的内容 在重新开始 比赛后生效
+    # 您可以反复 修改字符串 中的内容
     Name = "name here - 作者"
     Code = "code here - 代码"
 
@@ -896,9 +922,9 @@ rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输�
     #2) enable this rule
     #3) type your difficulty in the hud below
     wait(2.5)
-    #1) 设置正常 难度hud为“不显示”
-    #2) 启用此规则
-    #3) 在下面的hud中输入难度
+    #1) 地图工坊设 置难度改为 “不显示”
+    #2) 勾选此规则 点击上方的 开启/关闭 开启此规则
+    #3) 修改下面的 创建hud文本 中的“enter custom difficulty here”
     hudText(getAllPlayers(), 
         ("游戏测试" checkCN "Playtest") if Difficultyhud[1] else "",
         "enter custom difficulty here",    

@@ -353,3 +353,20 @@ if a player is stuck on a checkpoint they can press the hint button to see that 
 
 1.9.1b - 29-7-2023
 - enabled antartica map in dva and control portals since it has been added back ingame
+
+
+1.9.2 - 12 - 10 - 2023
+additions
+- The editor hud now shows while using a controller. But now having a full lobby while in editor mode might lead to missing huds
+- You can now preview portal end points (they get added in the list of preview items)
+- Added dva to Samoa
+
+adjustments
+- The big message on completing checkpoints has been removed due to the annoying sound blizzard added
+- Invincible toggle now has a slightly longer delay to prevent some issues
+- Trying to leave invincible mode now gives an error msg instead of just not working at all
+- Adjusted chinese translations
+
+fixes
+- a bug with ultimates
+- a bug with savedata

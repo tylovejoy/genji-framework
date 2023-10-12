@@ -25,7 +25,7 @@ rule "Add Dash to Checkpoint <---- EDIT ME":
     #Change "-1" to certain Checkpoints' number. For example if you want to add Dash to Checkpoint 7 and 1 change one of "-1" to 7 and other "-1" to 1
     wait(2)
     SHIFT = [[], 1, 19, 23, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
-
+    BladeEnabledCheckpoints = [3]
 
 rule "In world text for certain Checkpoints <---- EDIT ME":
     createInWorldText([player for player in getAllPlayers() if player.A == 30], "hint: look up", vect(71.368, 131.21, 0.036), 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.AQUA, SpecVisibility.DEFAULT)
@@ -40,7 +40,7 @@ rule "custom portals - data <---- EDIT ME":
     #999 = apply portal to entire map
     CustomPortalCP = [30, 30, 30]
 
-
+/*
 rule "custom portals - function":
     @Event eachPlayer
     @Condition len(CustomPortalStart) > 0
@@ -54,3 +54,4 @@ rule "custom portals - function":
     wait(1)
 
 
+*/

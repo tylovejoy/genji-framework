@@ -63,8 +63,11 @@ rule "Preview orbs/portals | Hold Primary":
         eventPlayer.PreviewsArray2 = [ i for i in eventPlayer.PreviewsArray2 if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint or i == -2 ] 
 
     if len(CustomPortalStart) > 0:
-        eventPlayer.PreviewsArray.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint] )
-
+        #eventPlayer.PreviewsArray.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint] )
+        for eventPlayer.PreviewsI in range(len(eventPlayer.PortalStart_Cache)):
+            eventPlayer.PreviewsArray.append([eventPlayer.PortalStart_Cache[eventPlayer.PreviewsI ],eventPlayer.PortalEnd_cache[eventPlayer.PreviewsI ]])
+            eventPlayer.PreviewsArray2.append([[0,eventPlayer.PreviewsI],[1,eventPlayer.PreviewsI]])
+            wait()
 
     wait(0.1)  
     eventPlayer.setMoveSpeed(0)
@@ -204,16 +207,21 @@ rule "Toggle Invincible Mode | Melee + Reload":
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition eventPlayer.isUsingAbility1() == false
-    @Condition eventPlayer.isUsingUltimate() == false
+    #@Condition eventPlayer.isUsingUltimate() == false
     @Condition eventPlayer.isAlive()
     @Condition (not CompMode) or (not eventPlayer.CompDone)
     @Condition not eventPlayer.LockState
+
+    if eventPlayer.isUsingUltimate():
+        smallMessage(eventPlayer, "    终极技能开启时无法切换探点模式" checkCN "   Cannot toggle invincible while using ultimate")
+        wait()
+        return
 
     eventPlayer.LockState = true
     eventPlayer.LockCollected = []
     eventPlayer.flytoggle = null
     
-    if eventPlayer.CurrentCheckpoint > 0 and eventPlayer.NotOnLastCp:
+    if eventPlayer.NotOnLastCp and (eventPlayer.CurrentCheckpoint > 0 or DashExploitToggle):
         eventPlayer.disallowButton(Button.ABILITY_1)
         wait(0.16)
         if eventPlayer.isUsingAbility1():
@@ -251,14 +259,19 @@ rule "Toggle Invincible Mode | Melee + Reload":
     async( CheckUlt(), AsyncBehavior.RESTART)
     async( CheckDash(), AsyncBehavior.RESTART)
 
-    if eventPlayer.CurrentCheckpoint > 0: # cp 0 start dash ban is via startgame sub because it has to give msg
+    if eventPlayer.CurrentCheckpoint > 0 or DashExploitToggle: # cp 0 start dash ban is via startgame sub because it has to give msg
         wait(0.16)
         eventPlayer.allowButton(Button.ABILITY_1)
-
+    wait()
+    if eventPlayer.isUsingUltimate():
+        kill(eventPlayer, null)
     eventPlayer.LockState = false
+    wait(0.16)
+    #waitUntil(not eventPlayer.isHoldingButton(Button.RELOAD), 2)
 
 rule "Toggle Practice Mode | Melee + Ultimate":
     @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false 
     @Condition eventPlayer.isHoldingButton(Button.MELEE) 
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition eventPlayer.isUsingAbility1() == false

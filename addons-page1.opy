@@ -106,6 +106,10 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         case Map.ANTARCTIC_PENINSULA:
             MapVectorArray = [vect(-86, -110, 59), vect(277, 132, 170), vect(283, 57, -235)]
             break
+        case Map.SAMOA:
+            MapVectorArray = [vect(-328.19, 90.5, -103.11), vect(233.75, 71.95, -258.42), vect(26.93, 428.04, 336.34)]
+            break
+
         default: 
        
             if strContains( "{}".format(getCurrentMap()) , "{}".format(Map.LIJIANG_TOWER)): # lunar new year catch
