@@ -479,23 +479,26 @@ rule "Editor | Hud and Effects":
     */
     hudSubtext(
         hostPlayer if hostPlayer.GuideToggle else null, 
-        " \n{0} + {1} | 下一关\n"
-        "{0} + {2} | 上一关"
-        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE))
+        " \n{0} + {1} | 下一关"
+        #"{0} + {2} | 上一关"
+        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE))
         checkCN
-        " \n{0} + {1} | Next checkpoint\n"
-        "{0} + {2} | Prev checkpoint"
-        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE))
+        " \n{0} + {1} | Next checkpoint"
+        #"{0} + {2} | Prev checkpoint"
+        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE))
         ,HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
     hudSubtext(
         hostPlayer if hostPlayer.GuideToggle else null, 
+        "{1} + {2} | 上一关\n"
         "{0} (长按) | 飞行\n"
-        "".format( buttonString(Button.ABILITY_1))
+        "".format( buttonString(Button.ABILITY_1), buttonString(Button.CROUCH),buttonString(Button.SECONDARY_FIRE))
         checkCN
+        "{1} + {2} | Prev checkpoint\n"
         "{0} (hold)| Fly\n"
-        "".format(buttonString(Button.ABILITY_1))
+
+        "".format(buttonString(Button.ABILITY_1), buttonString(Button.CROUCH),buttonString(Button.SECONDARY_FIRE))
         ,HudPosition.RIGHT, HO.edit_instructions_general1, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     
