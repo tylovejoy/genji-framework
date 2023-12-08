@@ -36,7 +36,7 @@ def CheckUlt(): # checks if ult should be turned on
     if eventPlayer.isUsingUltimate():
         waitUntil(not eventPlayer.isUsingUltimate(), 2)
         wait()
-    if eventPlayer.isHoldingButton(Button.ULTIMATE):
+    if eventPlayer.isHoldingButton(Button.ULTIMATE): # incase spaming the button
         wait()
 
     if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):
