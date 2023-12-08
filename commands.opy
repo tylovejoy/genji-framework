@@ -437,7 +437,7 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
             eventPlayer.splittime = 0
         eventPlayer.flytoggle = null
         TriggerOnFailSuccesReset()
-        wait(0.24)
+        wait(0.32)
     wait(1, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     eventPlayer.QuickRestartToggle = not eventPlayer.QuickRestartToggle

@@ -49,7 +49,7 @@ settings {
             "genji": {
                 "enableAbility2": false,
                 "enableInfiniteAmmo": true,
-                "enableSpawningWithUlt": true,
+                #"enableSpawningWithUlt": true,
                 "ability1Cooldown%": 0,
                 "ultDuration%": 25,
                 "passiveUltGen%": 0,
