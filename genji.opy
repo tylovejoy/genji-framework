@@ -1,4 +1,4 @@
-#!define versionhere "1.9.2"
+#!define versionhere "1.9.2b"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -501,7 +501,7 @@ def checkpointFailReset():
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
         wait()
-   
+
     async(CheckUlt(), AsyncBehavior.RESTART)
     async(CheckDash(), AsyncBehavior.RESTART)
     TriggerOnFailSuccesReset()

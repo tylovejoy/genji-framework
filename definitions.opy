@@ -328,7 +328,7 @@ playervar splittime 79                      # int                       --- stor
 playervar splitdisplay 80                   # int                       --- displayed split value
 #playervar splitson 81                      # bool                      --- turning splits on/off is now done via seting splittime to -999
 playervar practicetimer 82
-
+playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
 
 
