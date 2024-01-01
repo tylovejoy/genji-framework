@@ -1,4 +1,4 @@
-#!define versionhere "1.9.2b"
+#!define versionhere "1.9.3"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
