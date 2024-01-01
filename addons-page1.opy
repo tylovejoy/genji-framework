@@ -69,6 +69,11 @@ rule "Pre-set control map portal | toggled on via workshop settings":
         PortalNames = ["labs", "icebreaker", "Sublevel", "icebreaker", "labs", "Sublevel"]
         PortalLoc = [vect(280.66, -12.15, -223.65), vect(273.27, 42.74, 198.15), vect(266.58, 42.74, 198.17), vect(-58.29, -154, 63.03), vect(-58.36, -154, 56.47), vect(287.08, -12.15, -223.59)]
         PortalDest = [vect(270, 42.7, 190.44), vect(284.07, -12.75, -216.15), vect(-53.51, -154.5, 60.08), vect(284.07, -12.75, -216.15), vect(270, 42.7, 190.44), vect(-53.51, -154.5, 60.08)]
+    
+    elif getCurrentMap() == Map.SAMOA:
+        PortalNames = ["beach","volcano", "downtown", "volcano", "beach","downtown"  ]
+        PortalLoc = [vect(231.98, 7.23, -262.84), vect(236.78, 7.23, -262.75), vect(-327.59, 3.6, -108.69), vect(-332.71, 3.6, -108.59), vect(25.4, 341, 354.38), vect( 30, 341, 354.34)     ]
+        PortalDest = [vect(-329.86, 3.05, -103.4), vect(27.59, 339.76, 348.77), vect( 234.07, 6.12, -266.88), vect(27.59, 339.76, 348.77), vect(-329.86, 3.05, -103.4), vect( 234.07, 6.12, -266.88)   ]
 
     else:
         PortalDest = null

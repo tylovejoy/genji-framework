@@ -370,3 +370,7 @@ adjustments
 fixes
 - a bug with ultimates
 - a bug with savedata
+
+
+1.9.3 - x-1-2024
+- added portals to samoa
