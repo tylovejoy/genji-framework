@@ -1,4 +1,4 @@
-#!define versionhere "1.9.3"
+#!define versionhere "1.9.3test"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -492,9 +492,13 @@ def checkpointFailReset():
         eventPlayer.teleport( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() )
 
     if eventPlayer.ban_dedhop and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp:
-        eventPlayer.disallowButton(Button.JUMP)
-        wait(0.1)
-        eventPlayer.allowButton(Button.JUMP)        
+        # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
+        wait(0.1) # finish teleport first     
+        if eventPlayer.isHoldingButton(Button.JUMP):
+            eventPlayer.forceButtonPress(Button.JUMP)
+            eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed() + 0.1, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+        # end new
+
     if eventPlayer.CurrentCheckpoint == 0 and not eventPlayer.PracticeToggle:
         eventPlayer.Timer = 0
         eventPlayer.splittime = 0

@@ -371,6 +371,13 @@ fixes
 - a bug with ultimates
 - a bug with savedata
 
+1.9.3
+- debug version that acidentally got out, not officially supported
+- it had stand ban, but intergrated in normal create ban, no other 1.9.3a features
 
-1.9.3 - x-1-2024
+1.9.3a - x-1-2024
+aditions:
 - added portals to samoa
+
+fixed:
+- fixed a bug that caused Deathbhop ban to stop working
