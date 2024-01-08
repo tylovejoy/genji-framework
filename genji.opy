@@ -134,6 +134,14 @@ def UpdateCache():
         eventPlayer.ban_bhop = true
     else:
         eventPlayer.ban_bhop = false
+
+    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","ban standcreate -  ", false, 5):
+        eventPlayer.ban_standcreate = true
+    elif eventPlayer.CurrentCheckpoint in BanStand:
+        eventPlayer.banstring = "STAND {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓
+        eventPlayer.ban_standcreate = true
+    else:
+        eventPlayer.ban_standcreate = false
  
     wait()
     async(CheckUlt(), AsyncBehavior.RESTART)
