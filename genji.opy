@@ -1,7 +1,7 @@
-#!define versionhere "1.9.3test"
+#!define versionhere "1.9.3a"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(1) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -103,6 +103,14 @@ def UpdateCache():
     else:
         eventPlayer.ban_create = false
 
+    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","ban standcreate - 封禁站卡", false, 5):
+        eventPlayer.ban_standcreate = true
+    elif eventPlayer.CurrentCheckpoint in BanStand:
+        eventPlayer.banstring = "♠ {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓
+        eventPlayer.ban_standcreate = true
+    else:
+        eventPlayer.ban_standcreate = false
+
     if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Deathbhop - 封禁死小", false, 3):
         eventPlayer.ban_dedhop = true
     elif eventPlayer.CurrentCheckpoint in BanDead:
@@ -135,13 +143,7 @@ def UpdateCache():
     else:
         eventPlayer.ban_bhop = false
 
-    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","ban standcreate -  ", false, 5):
-        eventPlayer.ban_standcreate = true
-    elif eventPlayer.CurrentCheckpoint in BanStand:
-        eventPlayer.banstring = "STAND {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓
-        eventPlayer.ban_standcreate = true
-    else:
-        eventPlayer.ban_standcreate = false
+
  
     wait()
     async(CheckUlt(), AsyncBehavior.RESTART)
@@ -257,6 +259,7 @@ rule "Setup and Variables":
     BanCreate = [i for i in BanCreate if i != -1] if len(BanCreate) > 0 else []
     BanMulti = [i for i in BanMulti if i != -1] if len(BanMulti) > 0 else []
     BanTriple = null #[i for i in BanTriple if i != -1] if len(BanTriple) > 0 else [] # legacy code, now auto sets it to null to save space
+    BanStand = [i for i in BanStand if i != -1] if len(BanStand) > 0 else []
 
     if len(PortalDest) > 0: # pre set control map portals. not in portal rule because shared I variable
         for TempIterator1 in range(len(PortalLoc)):

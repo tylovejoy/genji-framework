@@ -129,10 +129,10 @@ rule "Checking | Bhop":
 rule "Checking | Bhop count for stand ban":
     @Event eachPlayer
     @Condition eventPlayer.isJumping()
-    @Condition eventPlayer.ban_create
+    @Condition eventPlayer.ban_standcreate
     eventPlayer.Bhopcount ++
     if eventPlayer.Bhopcount > 1 and eventPlayer.InvincibleToggle == false and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:   
-        smallMessage(eventPlayer, "   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!")
+        smallMessage(eventPlayer, "   站卡 ♠ 已禁用!" checkCN "   Stand createBhop ♠ is banned!")
         checkpointFailReset()
         return
 
@@ -154,7 +154,10 @@ rule "Checking | Create Bhop":
         smallMessage(eventPlayer, "   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!")
         checkpointFailReset()
         return
-        
+    
+    if eventPlayer.ban_standcreate and eventPlayer.Bhopcount > 0:
+        eventPlayer.Bhopcount --
+
     eventPlayer.CreateCounter ++
     smallMessage(eventPlayer, "   succes!" checkCN "   Bhop has been created!")    
 

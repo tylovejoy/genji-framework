@@ -1,10 +1,9 @@
 rule "quicktest data":
-     
-   A = [vect(14.347, -5.1, -86.552), vect(-5.866, -0.925, -85.349), [vect(-16.172, -0.925, -87.196), vect(7.743, 0.476, -11.502)], vect(-7.03, 1, -16.739), vect(-15.281, -1.058, -11.763), vect(-15.915, 0.998, -0.069)]
-    TimeRemaining = 262
+    A = [vect(13.014, -5.1, -83.818), [vect(-5.611, -0.925, -85.361), vect(13.176, -5.1, -83.874)], [vect(-1.505, -0.925, -81.399), vect(12.641, -5.099, -83.175)], [vect(-2.087, -0.925, -89.582), vect(-15.396, -1.014, -9.257)], [vect(-16.754, -1.229, -18.653), vect(-15.04, -1.05, -7.494)], [vect(-5.954, 1, -18.138), vect(-15.063, -1.038, -8.098)], vect(-17.294, -1.189, -13.771)]
+    TimeRemaining = 261
     H = []
     I = []
-    Dao = []
+    Dao = [0, 1, 2, 3]
     SHIFT = []
     EditSelectIdArray = []
     TQ = []
@@ -38,8 +37,9 @@ rule "quicktest data":
     SavePauseEnabled = []
     Cachedcredits = ["FishoFire", "The pirates code"]
     BanMulti = []
-    BanCreate = []
-    BanDead = []
+    BanCreate = [0,2,3,5]
+    BanDead = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
     BanEmote = []
     BanClimb = []
     BanBhop = []
+    BanStand = [1,2,4,5]
