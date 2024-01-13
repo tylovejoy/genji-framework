@@ -275,6 +275,7 @@ playervar PracticeCheckpoint 16             # int                       --- Save
 playervar PracticeToggle 17                 # int                       --- turned into bool
 playervar LeaderboardToggle 19              # bool                      --- show/hide leaderboard
 playervar NotOnLastCp 20                    # bool                      --- false if you are noton the last cp or level below 2 cps
+playervar Bhopcount                         # int                       --- counts bhops used for stand create ban
 playervar JumpCount 26                      # int                       --- jump tracking count, 0, 1, 2
 playervar MultiClimbCountHUD 28             # HUD                       --- climb counter
 playervar CreateCounter 29

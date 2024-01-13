@@ -1,10 +1,10 @@
 rule "quicktest data":
      
-    A = [vect(19.495, 0, -14.659), vect(19.495, 0, -7.893), vect(19.495, 0, 0.229), vect(19.344, 0, 10.715), vect(14.402, 0, 19.495), vect(3.46, 0, 19.495)]
-    TimeRemaining = 265
+   A = [vect(14.347, -5.1, -86.552), vect(-5.866, -0.925, -85.349), [vect(-16.172, -0.925, -87.196), vect(7.743, 0.476, -11.502)], vect(-7.03, 1, -16.739), vect(-15.281, -1.058, -11.763), vect(-15.915, 0.998, -0.069)]
+    TimeRemaining = 262
     H = []
     I = []
-    Dao = [0, 1, 2, 3]
+    Dao = []
     SHIFT = []
     EditSelectIdArray = []
     TQ = []
@@ -36,7 +36,7 @@ rule "quicktest data":
     SaveElapsed = []
     SavePauseTime = []
     SavePauseEnabled = []
-    Cachedcredits = ["name here - 作者", "code here - 代码"]
+    Cachedcredits = ["FishoFire", "The pirates code"]
     BanMulti = []
     BanCreate = []
     BanDead = []

@@ -120,12 +120,21 @@ rule "Checking | Using Emote":
             eventPlayer.cancelPrimaryAction() 
 
 rule "Checking | Bhop":
-
     @Event eachPlayer
     @Condition not eventPlayer.BhopUsed
     @Condition eventPlayer.isJumping()
     eventPlayer.BhopUsed = true
     smallMessage(eventPlayer,"   小跳已用" checkCN "   Bhop")
+
+rule "Checking | Bhop count for stand ban":
+    @Event eachPlayer
+    @Condition eventPlayer.isJumping()
+    @Condition eventPlayer.ban_create
+    eventPlayer.Bhopcount ++
+    if eventPlayer.Bhopcount > 1 and eventPlayer.InvincibleToggle == false and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:   
+        smallMessage(eventPlayer, "   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!")
+        checkpointFailReset()
+        return
 
 rule "Checking | Create Bhop":
     # Credit: Githuboy#5249
@@ -149,7 +158,7 @@ rule "Checking | Create Bhop":
     eventPlayer.CreateCounter ++
     smallMessage(eventPlayer, "   succes!" checkCN "   Bhop has been created!")    
 
-rule "Checking | Double jump, initialized with small jump":
+rule "Checking | standing resets variables":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.isOnGround()
@@ -157,12 +166,12 @@ rule "Checking | Double jump, initialized with small jump":
     eventPlayer.WallclimbUsed = false
     eventPlayer.MultiClimbCount = 0
     eventPlayer.CreateCounter = 0
+    eventPlayer.Bhopcount = 0
     wait(0)
     if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
         goto RULE_START
     eventPlayer.BhopUsed = true
-    #if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
-
+  
 rule "HUD | Multiclimb Counter":
     @Event eachPlayer
     @Condition eventPlayer.isOnWall()
