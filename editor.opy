@@ -441,8 +441,9 @@ rule "Editor | Hud and Effects":
             "".format( buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)  ),
             "{0} + {1} | 移动选中的实体"
             "".format( buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE) ),
-            "{0} + {1} |  留小跳进点"
-            "".format( buttonString(Button.ABILITY_2) , buttonString(Button.JUMP)),
+            "{0} + {1} |  留小跳进点\n"
+            "{0} + {2} | 站卡"
+            "".format( buttonString(Button.ABILITY_2) , buttonString(Button.JUMP), buttonString(Button.CROUCH)),
             ""
             ][hostPlayer.EditModeSelection] if EditorMoveItem == false else ""
         ) checkCN
@@ -453,8 +454,9 @@ rule "Editor | Hud and Effects":
         "".format( buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)  ),
         "{0} + {1} | Move"
         "".format( buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE) ),
-        "{0} + {1} | require bhop"
-        "".format( buttonString(Button.ABILITY_2) , buttonString(Button.JUMP)),
+        "{0} + {1} | require bhop\n"
+        "{0} + {2} | stand create"
+        "".format( buttonString(Button.ABILITY_2) , buttonString(Button.JUMP), buttonString(Button.CROUCH)),
         ""
         ][hostPlayer.EditModeSelection] if EditorMoveItem == false else ""
         )
@@ -673,6 +675,7 @@ rule "Editor | Hud and Effects":
             "――――――――――――\n"
             " {} 蹭留\n"
             " {} 卡小\n"
+            " {} 站卡\n"
             " {} 爬墙\n"
             " {} 死小\n"
             " {} 表情留小\n"
@@ -681,6 +684,7 @@ rule "Editor | Hud and Effects":
             "".format(
                 "√" if hostPlayer.CurrentCheckpoint in BanMulti else " ",
                 "√" if hostPlayer.CurrentCheckpoint in BanCreate else " ",
+                "√" if hostPlayer.CurrentCheckpoint in BanStand else " ",
                 "√" if hostPlayer.CurrentCheckpoint in BanClimb else " ",
                 "√" if hostPlayer.CurrentCheckpoint in BanDead else " ",
                 "√" if hostPlayer.CurrentCheckpoint in BanEmote else " ",
@@ -721,6 +725,7 @@ rule "Editor | Hud and Effects":
             "――――――――――――\n"
             " {} multi\n"
             " {} create\n"
+            " {} Stand\n"
             " {} climb\n"
             " {} dead\n"
             " {} emote\n"
@@ -729,6 +734,7 @@ rule "Editor | Hud and Effects":
             "".format(
                 "√" if hostPlayer.CurrentCheckpoint in BanMulti else " ",
                 "√" if hostPlayer.CurrentCheckpoint in BanCreate else " ",
+                "√" if hostPlayer.CurrentCheckpoint in BanStand else " ",
                 "√" if hostPlayer.CurrentCheckpoint in BanClimb else " ",
                 "√" if hostPlayer.CurrentCheckpoint in BanDead else " ",
                 "√" if hostPlayer.CurrentCheckpoint in BanEmote else " ",
@@ -900,11 +906,12 @@ rule "Editor | create cp/orb":
 
             BanMulti = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanMulti]
             BanCreate = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanCreate]
+            BanStand = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanStand]
             BanDead = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanDead]
             BanEmote = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanEmote]
             BanClimb = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanClimb]
             BanBhop = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanBhop]
-      
+
         smallMessage(getAllPlayers(), "   新检查点已创建" checkCN "   New Checkpoint has been created")
     
     elif len(CheckpointPositions) < 1:
@@ -1052,6 +1059,7 @@ rule "Editor | delete cp/orb/portal":
         RemoveCPandLower(DashEnabledCheckpoints)
         RemoveCPandLower(BanMulti)
         RemoveCPandLower(BanCreate)
+        RemoveCPandLower(BanStand)
         RemoveCPandLower(BanDead)
         RemoveCPandLower(BanEmote)
         RemoveCPandLower(BanClimb)
@@ -1263,7 +1271,7 @@ rule "Editor | toggle bans":
     @Condition eventPlayer == hostPlayer    
     @Condition hostPlayer.EditModeSelection == 3
     @Condition len(CheckpointPositions) > 0
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) or eventPlayer.isHoldingButton(Button.JUMP)
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) or eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) or eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition eventPlayer.LockEditor == false
     
@@ -1281,9 +1289,12 @@ rule "Editor | toggle bans":
             togglecpinarray(BanDead)
         elif eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
             togglecpinarray(BanEmote)     
+        elif eventPlayer.isHoldingButton(Button.CROUCH):
+            togglecpinarray(BanStand) 
         else:
             togglecpinarray(BanBhop)
 
+    # BanStand
 
     wait(0.3)
     UpdateCache()

@@ -239,6 +239,7 @@ globalvar BanDead 83
 globalvar BanEmote 84
 globalvar BanClimb 85
 globalvar BanBhop 86
+globalvar BanStand 87 # bans on second hop
 
 globalvar DestructoIter 90
 globalvar MapVectorArray 91
@@ -274,6 +275,7 @@ playervar PracticeCheckpoint 16             # int                       --- Save
 playervar PracticeToggle 17                 # int                       --- turned into bool
 playervar LeaderboardToggle 19              # bool                      --- show/hide leaderboard
 playervar NotOnLastCp 20                    # bool                      --- false if you are noton the last cp or level below 2 cps
+playervar Bhopcount                         # int                       --- counts bhops used for stand create ban
 playervar JumpCount 26                      # int                       --- jump tracking count, 0, 1, 2
 playervar MultiClimbCountHUD 28             # HUD                       --- climb counter
 playervar CreateCounter 29
@@ -323,7 +325,7 @@ playervar ban_dashstart 75
 playervar ban_emote 76
 playervar ban_climb 77
 playervar ban_bhop 78
-
+playervar ban_standcreate 81 # bans on second hop
 playervar splittime 79                      # int                       --- stored time that the split compares to
 playervar splitdisplay 80                   # int                       --- displayed split value
 #playervar splitson 81                      # bool                      --- turning splits on/off is now done via seting splittime to -999

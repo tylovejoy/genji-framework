@@ -1,4 +1,4 @@
-#!define versionhere "1.9.2b"
+#!define versionhere "1.9.3a"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -103,6 +103,14 @@ def UpdateCache():
     else:
         eventPlayer.ban_create = false
 
+    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","ban standcreate - 封禁站卡", false, 5):
+        eventPlayer.ban_standcreate = true
+    elif eventPlayer.CurrentCheckpoint in BanStand:
+        eventPlayer.banstring = "♠ {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓
+        eventPlayer.ban_standcreate = true
+    else:
+        eventPlayer.ban_standcreate = false
+
     if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Deathbhop - 封禁死小", false, 3):
         eventPlayer.ban_dedhop = true
     elif eventPlayer.CurrentCheckpoint in BanDead:
@@ -134,6 +142,8 @@ def UpdateCache():
         eventPlayer.ban_bhop = true
     else:
         eventPlayer.ban_bhop = false
+
+
  
     wait()
     async(CheckUlt(), AsyncBehavior.RESTART)
@@ -249,6 +259,7 @@ rule "Setup and Variables":
     BanCreate = [i for i in BanCreate if i != -1] if len(BanCreate) > 0 else []
     BanMulti = [i for i in BanMulti if i != -1] if len(BanMulti) > 0 else []
     BanTriple = null #[i for i in BanTriple if i != -1] if len(BanTriple) > 0 else [] # legacy code, now auto sets it to null to save space
+    BanStand = [i for i in BanStand if i != -1] if len(BanStand) > 0 else []
 
     if len(PortalDest) > 0: # pre set control map portals. not in portal rule because shared I variable
         for TempIterator1 in range(len(PortalLoc)):
@@ -492,9 +503,13 @@ def checkpointFailReset():
         eventPlayer.teleport( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() )
 
     if eventPlayer.ban_dedhop and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp:
-        eventPlayer.disallowButton(Button.JUMP)
-        wait(0.1)
-        eventPlayer.allowButton(Button.JUMP)        
+        # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
+        wait(0.1) # finish teleport first     
+        if eventPlayer.isHoldingButton(Button.JUMP):
+            eventPlayer.forceButtonPress(Button.JUMP)
+            eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed() + 0.1, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+        # end new
+
     if eventPlayer.CurrentCheckpoint == 0 and not eventPlayer.PracticeToggle:
         eventPlayer.Timer = 0
         eventPlayer.splittime = 0
