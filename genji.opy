@@ -1,7 +1,7 @@
 #!define versionhere "1.9.3a"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(1) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -42,7 +42,6 @@ editortoggle(0) # 0 is editor, rest is numbers
 
 #!include "settings.opy"
 #!include "definitions.opy"
-
 
 
 rule "fisho cp cheat for overpy toggle":
@@ -425,7 +424,9 @@ rule "Player Initialize":
 
     wait()
     StartGame_Sub()  # initialization of the game
-   
+    
+    
+
 def DeleteSave():
     @Name "delete save" 
     del SaveName[SaveEnt.index(eventPlayer)]
