@@ -262,6 +262,7 @@ rule "Huds: each player":
     wait(0.5)
     if eventPlayer.isDummy() and eventPlayer.getCurrentHero() == Hero.DVA:
         return 
+    
     # ban icons in level
     hudText(eventPlayer, null, 
         /*
@@ -317,7 +318,7 @@ rule "Huds: each player":
         "{2} {0} / {1}".format(
             len(eventPlayer.LockCollected), 
             eventPlayer.BounceLockMax_Cache,
-            "黄弹球" checkCN "orange orbs"
+            "黄弹球" checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
         ) if eventPlayer.BounceLockMax_Cache and eventPlayer.PreviewsArray == null else ""
         ,
         "{3}{2}{4} {0} / {1}".format(
@@ -328,7 +329,7 @@ rule "Huds: each player":
             "关卡" checkCN "Level"
         ) if eventPlayer.PreviewsArray == null else ""
         ,   
-        HudPosition.TOP, HO.game_level_orb, Color.WHITE, Color.ORANGE, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        HudPosition.TOP, HO.game_level_orb, Color.WHITE, ColorConfig[customize.orb_lock], Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     # climb/bhop indicators
     hudHeader(eventPlayer,         
@@ -365,7 +366,7 @@ rule "Huds: each player":
         ) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
         "到这里来" checkCN "Come here",
         CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 
-        1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.WHITE, SpecVisibility.DEFAULT
+        1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING,  ColorConfig[customize.cometext], SpecVisibility.DEFAULT
     )
     
     wait(2.5)

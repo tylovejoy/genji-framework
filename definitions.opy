@@ -220,6 +220,8 @@ globalvar SavePauseEnabled 66
 globalvar HintCp 67
 globalvar HintText 68
 
+globalvar ColorConfig 69                    # [colors]                  --- configured colors
+
 globalvar Name 70
 globalvar Code 71
 globalvar Cachedcredits 73
@@ -438,3 +440,14 @@ enum HO:
 
     rightend,
     # End #####################
+
+enum customize:
+    ring_current,
+    ring_next,
+    shaft,
+    nexticon_color,
+    cometext,
+    killorb,
+    orb_normal,
+    orb_lock,
+    portal,

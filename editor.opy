@@ -141,7 +141,7 @@ def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place 
         createEffect(
             [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected], 
             Effect.ORB, 
-            Color.ORANGE if BounceToggleLock[evalOnce(TempIterator1)] else Color.GREEN, 
+            ColorConfig[customize.orb_lock] if BounceToggleLock[evalOnce(TempIterator1)] else ColorConfig[customize.orb_normal], 
             BouncePositions[evalOnce(TempIterator1)], 
             1, 
             EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
@@ -156,7 +156,7 @@ def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place on
     destroyEffect(KillBallEffects)
     KillBallEffects = []  
     for TempIterator1 in range(0, len(KillballCheckpoints)):
-        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, ColorConfig[customize.killorb], KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
         KillBallEffects.append(getLastCreatedEntity())
         if TempIterator1 % 5 == 0:
             wait()
@@ -171,10 +171,10 @@ def RebuildPortals():
         createEffect(
             [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
             Effect.GOOD_AURA, 
-            Color.WHITE,
+            ColorConfig[customize.portal],
             CustomPortalStart[evalOnce(TempIterator1)], 
             0.6,
-            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+            EffectReeval.VISIBILITY_POSITION_AND_RADIUS
         )
         PortalEffects.append(getLastCreatedEntity())
         if TempIterator1 % 5 == 0:
@@ -929,7 +929,7 @@ rule "Editor | create cp/orb":
         EditorSelectLast()
         createEffect(
             [i for i in getAllPlayers() if i.CurrentCheckpoint == KillballCheckpoints[evalOnce(EditSelected)]],
-            Effect.SPHERE, Color.BLUE, 
+            Effect.SPHERE, ColorConfig[customize.killorb], 
             KillBallPositions[evalOnce(EditSelected)], 
             KillBallRadii[evalOnce(EditSelected)], 
             EffectReeval.VISIBILITY_POSITION_AND_RADIUS
@@ -953,7 +953,7 @@ rule "Editor | create cp/orb":
         EditorSelectLast()
         createEffect(
             [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(EditSelected)] and not BouncePositions[evalOnce(EditSelected)]  in x.LockCollected], 
-            Effect.ORB, Color.ORANGE if BounceToggleLock[evalOnce(EditSelected)] else Color.GREEN, 
+            Effect.ORB, ColorConfig[customize.orb_lock] if BounceToggleLock[evalOnce(EditSelected)] else ColorConfig[customize.orb_normal], 
             BouncePositions[evalOnce(EditSelected)], 1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
         BounceEffects.append(getLastCreatedEntity())
@@ -971,7 +971,7 @@ rule "Editor | create cp/orb":
         EditorSelectLast()
         createEffect(
             [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(EditSelected)] or CustomPortalCP[evalOnce(EditSelected)] == 999],
-            Effect.GOOD_AURA, Color.WHITE, CustomPortalStart[evalOnce(EditSelected)], 0.6,  EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+            Effect.GOOD_AURA, ColorConfig[customize.portal], CustomPortalStart[evalOnce(EditSelected)], 0.6,  EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
         PortalEffects.append(getLastCreatedEntity())
         EditSelected = len(CustomPortalStart) - 1

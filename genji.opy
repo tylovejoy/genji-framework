@@ -1,7 +1,7 @@
-#!define versionhere "1.9.3a"
+#!define versionhere "1.9.4_alpha"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(1) # 0 is editor, rest is numbers
+editortoggle(20) # 0 is editor, rest is numbers
 #14 nepal 4 mini 6 busan 10 holly 18 rialto
 #!define touchground false
 #!define cpcheat false
@@ -188,6 +188,14 @@ rule "Setup and Variables":
     startForcingSpawn(Team.ALL,  2)
     wait(0.024) # wait for map data rule
     
+    if ColorConfig[customize.orb_lock] == Color.TEAM_1: # fix team because of naming
+        ColorConfig[customize.orb_lock] = Color.BLUE 
+    elif ColorConfig[customize.orb_lock] == Color.TEAM_2:
+        ColorConfig[customize.orb_lock] = Color.RED
+    # prevent same color lock orbs
+    if ColorConfig[customize.orb_normal] == ColorConfig[customize.orb_lock]:
+        ColorConfig[customize.orb_lock] = Color.GREEN  if ColorConfig[customize.orb_normal] == Color.ORANGE else Color.ORANGE
+
     SaveName = []
     SaveCp = []
     SaveTimer = []
@@ -328,7 +336,7 @@ def EffectsCreate():
         for TempIterator1 in range(len(CustomPortalStart)):
             createEffect(
                 [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
-                Effect.GOOD_AURA, Color.WHITE,
+                Effect.GOOD_AURA, ColorConfig[customize.portal],
                 CustomPortalStart[evalOnce(TempIterator1)], 
                 0.6,
                 EffectReeval.VISIBILITY
@@ -338,7 +346,7 @@ def EffectsCreate():
         
     if KillBallPositions != []:
         for TempIterator1 in range(0, len(KillBallPositions)):
-            createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
+            createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, ColorConfig[customize.killorb] , KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
             wait()
         wait(0.5)
 
@@ -347,7 +355,7 @@ def EffectsCreate():
             createEffect(
                 [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected], 
                 Effect.ORB, 
-                Color.ORANGE if BounceToggleLock[TempIterator1] else Color.GREEN, 
+                ColorConfig[customize.orb_lock] if BounceToggleLock[TempIterator1] else ColorConfig[customize.orb_normal] , 
                 BouncePositions[evalOnce(TempIterator1)], 
                 1, 
                 EffectReeval.VISIBILITY
@@ -387,10 +395,10 @@ rule "Player Initialize":
     #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
     wait(1) 
     eventPlayer.setRespawnTime(1)
-    createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), cpcirklefx, EffectReeval.POSITION_AND_RADIUS)
-    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, Color.LIME_GREEN, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
+    createEffect(eventPlayer, Effect.RING, ColorConfig[customize.ring_current], CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), cpcirklefx, EffectReeval.POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, ColorConfig[customize.ring_next] , CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, ColorConfig[customize.shaft], CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, ColorConfig[customize.nexticon_color], true)
     wait(1)  
     if not eventPlayer.isDummy(): # players turn to genji
         eventPlayer.startForcingHero(Hero.GENJI)
@@ -892,13 +900,36 @@ editorordata
 # note: Don't change defaults only here.
 # If you change this, also change it in the name/credit construciton in the huds
 # The old default should always be included to make old data valid
-rule "Credits here - 作者名字 <---- INSERT HERE / 在这输入 ": 
-    # Filling this in adds it to the inspector pasta after next restart.
-    # You can fill in again to overwrite.
-    # 修改的内容 在重新开始 比赛后生效
-    # 您可以反复 修改字符串 中的内容
+rule "Credits and Colors here - 作者名字 <---- INSERT HERE / 在这输入 ": 
+    #Filling this in adds it to the inspector pasta after next restart.
+    #You can fill in again to overwrite.
+    #修改的内容 在重新开始 比赛后生效
+    #您可以反复 修改字符串 中的内容
     Name = "name here - 作者"
     Code = "code here - 代码"
+    # --
+    # color customization below
+    # --
+    # current checkpoint ring
+    ColorConfig[customize.ring_current] =  Color.SKY_BLUE
+    # next checkpoint ring
+    ColorConfig[customize.ring_next] = Color.LIME_GREEN
+    # next checkpoint light shaft 
+    ColorConfig[customize.shaft] = Color.WHITE
+    # next checkpoint icon 
+    ColorConfig[customize.nexticon_color] = Color.SKY_BLUE
+    # "come here" text 
+    ColorConfig[customize.cometext] = Color.WHITE
+    # kill orbs 
+    ColorConfig[customize.killorb] = Color.BLUE
+    # normal orbs
+    ColorConfig[customize.orb_normal] = Color.GREEN
+    # lock orbs (overwritten if its same as normal)
+    ColorConfig[customize.orb_lock] = Color.ORANGE
+    # portals
+    ColorConfig[customize.portal] = Color.WHITE
+
+
 
 
 rule "instructions depricated rules (ban / portal / dash /ult) - 旧版编辑器中已弃用规则指引 (单关封禁 / 传送门 / 给刀给S)":
