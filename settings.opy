@@ -65,7 +65,9 @@ settings {
 # extensions
 
 #!extension playMoreEffects
-#!extension spawnMoreDummyBots
+
+# no longer need dva
+##!extension spawnMoreDummyBots
 
 
 
