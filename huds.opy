@@ -95,9 +95,9 @@ rule "Huds: Global/Localplayer":
     )
 
     hudSubtext(localPlayer if localPlayer.GuideToggle else null,  
-        "长按 {0} | 预览关卡".format(buttonString(Button.PRIMARY_FIRE))
+        "长按 {0} + {1} | 预览关卡".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
         checkCN
-        "Hold {0} | Preview checkpoint".format(buttonString(Button.PRIMARY_FIRE))
+        "Hold {0} + {1} | Preview cp".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
         ,HudPosition.RIGHT, HO.com_preview, Color.GREEN if localPlayer.PreviewsArray else Color.WHITE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
