@@ -220,6 +220,8 @@ globalvar SavePauseEnabled 66
 globalvar HintCp 67
 globalvar HintText 68
 
+globalvar ColorConfig 69                    # [colors]                  --- configured colors
+
 globalvar Name 70
 globalvar Code 71
 globalvar Cachedcredits 73
@@ -438,3 +440,25 @@ enum HO:
 
     rightend,
     # End #####################
+
+enum customize: # always add new options on end so previously configured colors dont mess up
+    credit_name,
+    credit_code,
+    servertime,
+    time,
+    level,
+    command_normal,
+    command_highlight,
+    bhopclimb_available,
+    bhopclimb_used,
+
+    ring_current,
+    ring_next,
+    shaft,
+    nexticon_color,
+    cometext,
+    killorb,
+    orb_normal,
+    orb_lock,
+    portal,
+    

@@ -49,11 +49,12 @@ a few huds show/hides when reviewarray is not null !!!!!!!!!!!!!!!!!
 rule "Preview orbs/portals | Hold Primary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
+    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition not eventPlayer.EditorOn
     @Condition not eventPlayer.LockState
     @Condition eventPlayer.NotOnLastCp
-    wait(0.9, Wait.ABORT_WHEN_FALSE)
-
+    #wait(0.9, Wait.ABORT_WHEN_FALSE)
+    wait(0.45, Wait.ABORT_WHEN_FALSE)
     eventPlayer.PreviewsArray = [CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]]
     
     if len(BouncePadCheckpoints) > 0:
@@ -78,7 +79,10 @@ rule "Preview orbs/portals | Hold Primary":
         15
     )
     eventPlayer.setPrimaryFireEnabled(false)
-    while eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isAlive() and not eventPlayer.LockState:
+    eventPlayer.setSecondaryFireEnabled(false)
+    eventPlayer.disallowButton(Button.ABILITY_1)
+    eventPlayer.disallowButton(Button.JUMP)
+    while eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.isAlive() and not eventPlayer.LockState:
         if eventPlayer.getThrottle().x < -0.5:
             eventPlayer.PreviewsI = 0 if eventPlayer.PreviewsI + 1 >= len(eventPlayer.PreviewsArray) else eventPlayer.PreviewsI + 1 
             waitUntil(eventPlayer.getThrottle().x > -0.5, 1)
@@ -87,6 +91,9 @@ rule "Preview orbs/portals | Hold Primary":
             waitUntil(eventPlayer.getThrottle().x < 0.5, 1)
         wait()
     eventPlayer.setPrimaryFireEnabled(true)
+    eventPlayer.setSecondaryFireEnabled(true)
+    eventPlayer.allowButton(Button.ABILITY_1)
+    eventPlayer.allowButton(Button.JUMP)
     eventPlayer.stopCamera()
     eventPlayer.setMoveSpeed(100)
     eventPlayer.PreviewsI = null
@@ -452,6 +459,7 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
 rule "Toggle Hud | hold secondary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
+    @Condition not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition not (eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.ABILITY_1)) # don't trigger during skiping
     #@Condition eventPlayer
     @Condition not (eventPlayer.EditorOn and eventPlayer == hostPlayer and eventPlayer.isHoldingButton(Button.MELEE))

@@ -1,4 +1,4 @@
-#!define versionhere "1.9.3a"
+#!define versionhere "1.9.4"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -42,7 +42,6 @@ editortoggle(0) # 0 is editor, rest is numbers
 
 #!include "settings.opy"
 #!include "definitions.opy"
-
 
 
 rule "fisho cp cheat for overpy toggle":
@@ -189,6 +188,20 @@ rule "Setup and Variables":
     startForcingSpawn(Team.ALL,  2)
     wait(0.024) # wait for map data rule
     
+    # fix team because of naming
+    if ColorConfig[customize.orb_lock] == Color.TEAM_1: 
+        ColorConfig[customize.orb_lock] = Color.BLUE 
+    elif ColorConfig[customize.orb_lock] == Color.TEAM_2:
+        ColorConfig[customize.orb_lock] = Color.RED
+
+    # prevent same color lock orbs
+    if ColorConfig[customize.orb_normal] == ColorConfig[customize.orb_lock]:
+        ColorConfig[customize.orb_lock] = Color.GREEN  if ColorConfig[customize.orb_normal] == Color.ORANGE else Color.ORANGE
+
+    # prevent same color bhop/climb used/unused
+    if ColorConfig[customize.bhopclimb_available] == ColorConfig[customize.bhopclimb_used]:
+        ColorConfig[customize.bhopclimb_used] = Color.ORANGE if ColorConfig[customize.bhopclimb_available] == Color.RED else Color.RED
+
     SaveName = []
     SaveCp = []
     SaveTimer = []
@@ -329,7 +342,7 @@ def EffectsCreate():
         for TempIterator1 in range(len(CustomPortalStart)):
             createEffect(
                 [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
-                Effect.GOOD_AURA, Color.WHITE,
+                Effect.GOOD_AURA, ColorConfig[customize.portal],
                 CustomPortalStart[evalOnce(TempIterator1)], 
                 0.6,
                 EffectReeval.VISIBILITY
@@ -339,7 +352,7 @@ def EffectsCreate():
         
     if KillBallPositions != []:
         for TempIterator1 in range(0, len(KillBallPositions)):
-            createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, Color.BLUE, KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
+            createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, ColorConfig[customize.killorb] , KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
             wait()
         wait(0.5)
 
@@ -348,7 +361,7 @@ def EffectsCreate():
             createEffect(
                 [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected], 
                 Effect.ORB, 
-                Color.ORANGE if BounceToggleLock[TempIterator1] else Color.GREEN, 
+                ColorConfig[customize.orb_lock] if BounceToggleLock[TempIterator1] else ColorConfig[customize.orb_normal] , 
                 BouncePositions[evalOnce(TempIterator1)], 
                 1, 
                 EffectReeval.VISIBILITY
@@ -379,6 +392,7 @@ rule "Player Initialize":
     eventPlayer.disableGamemodeHud()
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
+    eventPlayer.disablePlayerCollision()
     eventPlayer.SpectateToggle = false
     eventPlayer.WallclimbUsed = false #Climbing the wall prompts the HUD
     eventPlayer.JumpCount = 0
@@ -388,10 +402,10 @@ rule "Player Initialize":
     #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
     wait(1) 
     eventPlayer.setRespawnTime(1)
-    createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), cpcirklefx, EffectReeval.POSITION_AND_RADIUS)
-    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, Color.LIME_GREEN, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, Color.WHITE, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, Color.SKY_BLUE, true)
+    createEffect(eventPlayer, Effect.RING, ColorConfig[customize.ring_current], CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), cpcirklefx, EffectReeval.POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, ColorConfig[customize.ring_next] , CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, ColorConfig[customize.shaft], CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, ColorConfig[customize.nexticon_color], true)
     wait(1)  
     if not eventPlayer.isDummy(): # players turn to genji
         eventPlayer.startForcingHero(Hero.GENJI)
@@ -425,7 +439,9 @@ rule "Player Initialize":
 
     wait()
     StartGame_Sub()  # initialization of the game
-   
+    
+    
+
 def DeleteSave():
     @Name "delete save" 
     del SaveName[SaveEnt.index(eventPlayer)]
@@ -613,7 +629,7 @@ rule "Arrive | Ground reset | traces":
             if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache: # kill player if not colleted the locks
                 if eventPlayer.isUsingAbility1():
                     waitUntil(not eventPlayer.isUsingAbility1(), 1)    
-                smallMessage(eventPlayer, "   ! 进点前需收集齐所有黄弹球 !" checkCN "   ! collect ALL orange orbs to unlock !")
+                smallMessage(eventPlayer, "   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[customize.orb_lock]))
                 #kill(eventPlayer, null)
                 checkpointFailReset()
                 goto lbl_abc
@@ -735,7 +751,7 @@ rule "Bounce Ball / Orb | Activate":
 
     if eventPlayer.BounceLock_Cache[eventPlayer.bouncetouched]:
         eventPlayer.LockCollected.append(eventPlayer.BouncePosition_Cache[eventPlayer.bouncetouched])
-        smallMessage(eventPlayer, "   黄球已收集" checkCN "   orb has been collected")
+        smallMessage(eventPlayer, "   弹球已收集" checkCN "   orb has been collected")
         
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
@@ -891,13 +907,57 @@ editorordata
 # note: Don't change defaults only here.
 # If you change this, also change it in the name/credit construciton in the huds
 # The old default should always be included to make old data valid
-rule "Credits here - 作者名字 <---- INSERT HERE / 在这输入 ": 
-    # Filling this in adds it to the inspector pasta after next restart.
-    # You can fill in again to overwrite.
-    # 修改的内容 在重新开始 比赛后生效
-    # 您可以反复 修改字符串 中的内容
+rule "Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这输入 ": 
+    #Filling this in adds it to the inspector pasta after next restart.
+    #You can fill in again to overwrite.
+    #修改的内容 在重新开始 比赛后生效
+    #您可以反复 修改字符串 中的内容
     Name = "name here - 作者"
     Code = "code here - 代码"
+    #
+    #+++++  +++++  +++++  +++++  +++++  +++++  
+    #color customization below / 自定义 颜色(实体、HUD)
+    #+++++  +++++  +++++  +++++  +++++  +++++  
+    # 
+    #credit hud name   -   作者HUD
+    ColorConfig[customize.credit_name] = Color.VIOLET
+    #credit hud code   -   代码HUD
+    ColorConfig[customize.credit_code] = Color.SKY_BLUE
+    #server time hud   -   房间倒计时
+    ColorConfig[customize.servertime] = Color.RED
+    #time  hud   -   单关用时HUD
+    ColorConfig[customize.time] = Color.WHITE
+    #level hud   -   关卡HUD
+    ColorConfig[customize.level] = Color.WHITE
+    #command hud   -   指令HUD
+    ColorConfig[customize.command_normal] = Color.WHITE
+    #command hud highlight   -   指令HUD高亮
+    ColorConfig[customize.command_highlight] = Color.GREEN
+    #bhop/climb available   -   小跳/爬墙未用HUD
+    ColorConfig[customize.bhopclimb_available] = Color.GREEN
+    #bhop/climb used (cant be same as available)   -   小跳/爬墙已用HUD
+    ColorConfig[customize.bhopclimb_used] = Color.RED
+    
+    #current checkpoint ring   -   当前检查点光圈
+    ColorConfig[customize.ring_current] =  Color.SKY_BLUE
+    #next checkpoint ring   -   下一关检查点光圈
+    ColorConfig[customize.ring_next] = Color.LIME_GREEN
+    #next checkpoint light shaft   -   下一关检查点光柱
+    ColorConfig[customize.shaft] = Color.WHITE
+    #next checkpoint icon   -   下一关检查点图标
+    ColorConfig[customize.nexticon_color] = Color.SKY_BLUE
+    #"come here" text   -   到这里来" 文本
+    ColorConfig[customize.cometext] = Color.WHITE
+    #kill orbs   -   击杀球
+    ColorConfig[customize.killorb] = Color.BLUE
+    #normal orbs   -   弹球
+    ColorConfig[customize.orb_normal] = Color.GREEN
+    #lock orbs (overwritten if its same as normal)   
+    #收集球 (与普通弹 球相同时将 自动覆写)
+    ColorConfig[customize.orb_lock] = Color.ORANGE
+    #portals   -   自定义 传送门
+    ColorConfig[customize.portal] = Color.WHITE
+
 
 
 rule "instructions depricated rules (ban / portal / dash /ult) - 旧版编辑器中已弃用规则指引 (单关封禁 / 传送门 / 给刀给S)":
