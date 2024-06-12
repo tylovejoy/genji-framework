@@ -1,4 +1,4 @@
-#!define versionhere "1.9.4_alpha"
+#!define versionhere "1.9.4"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -188,13 +188,20 @@ rule "Setup and Variables":
     startForcingSpawn(Team.ALL,  2)
     wait(0.024) # wait for map data rule
     
-    if ColorConfig[customize.orb_lock] == Color.TEAM_1: # fix team because of naming
+    # fix team because of naming
+    if ColorConfig[customize.orb_lock] == Color.TEAM_1: 
         ColorConfig[customize.orb_lock] = Color.BLUE 
     elif ColorConfig[customize.orb_lock] == Color.TEAM_2:
         ColorConfig[customize.orb_lock] = Color.RED
     # prevent same color lock orbs
     if ColorConfig[customize.orb_normal] == ColorConfig[customize.orb_lock]:
         ColorConfig[customize.orb_lock] = Color.GREEN  if ColorConfig[customize.orb_normal] == Color.ORANGE else Color.ORANGE
+
+    # prevent same color bhop/climb used/unused
+    if ColorConfig[customize.bhopclimb_available] == ColorConfig[customize.bhopclimb_used]:
+        ColorConfig[customize.bhopclimb_used] = Color.ORANGE if ColorConfig[customize.bhopclimb_available] == Color.RED else Color.RED
+
+   
 
     SaveName = []
     SaveCp = []
@@ -623,7 +630,7 @@ rule "Arrive | Ground reset | traces":
             if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache: # kill player if not colleted the locks
                 if eventPlayer.isUsingAbility1():
                     waitUntil(not eventPlayer.isUsingAbility1(), 1)    
-                smallMessage(eventPlayer, "   ! 进点前需收集齐所有黄弹球 !" checkCN "   ! collect ALL orange orbs to unlock !")
+                smallMessage(eventPlayer, "   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[customize.orb_lock]))
                 #kill(eventPlayer, null)
                 checkpointFailReset()
                 goto lbl_abc
@@ -745,7 +752,7 @@ rule "Bounce Ball / Orb | Activate":
 
     if eventPlayer.BounceLock_Cache[eventPlayer.bouncetouched]:
         eventPlayer.LockCollected.append(eventPlayer.BouncePosition_Cache[eventPlayer.bouncetouched])
-        smallMessage(eventPlayer, "   黄球已收集" checkCN "   orb has been collected")
+        smallMessage(eventPlayer, "   弹球已收集" checkCN "   orb has been collected")
         
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
@@ -901,35 +908,56 @@ editorordata
 # note: Don't change defaults only here.
 # If you change this, also change it in the name/credit construciton in the huds
 # The old default should always be included to make old data valid
-rule "Credits and Colors here - 作者名字 <---- INSERT HERE / 在这输入 ": 
+rule "Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这输入 ": 
     #Filling this in adds it to the inspector pasta after next restart.
     #You can fill in again to overwrite.
     #修改的内容 在重新开始 比赛后生效
     #您可以反复 修改字符串 中的内容
     Name = "name here - 作者"
     Code = "code here - 代码"
-    # --
-    # color customization below
-    # --
-    # current checkpoint ring
+    #
+    #+++
+    #color customization below / 自定义 颜色(实体、HUD)
+    #+++
+    # 
+    # credit hud name   -   作者HUD
+    ColorConfig[customize.credit_name] = Color.VIOLET
+    # credit hud code   -   代码HUD
+    ColorConfig[customize.credit_code] = Color.SKY_BLUE
+    # server time hud   -   房间倒计时
+    ColorConfig[customize.servertime] = Color.RED
+    # time  hud   -   单关用时HUD
+    ColorConfig[customize.time] = Color.WHITE
+    # level hud   -   关卡HUD
+    ColorConfig[customize.level] = Color.WHITE
+    # command hud   -   指令HUD
+    ColorConfig[customize.command_normal] = Color.WHITE
+    # command hud highlight   -   指令HUD高亮
+    ColorConfig[customize.command_highlight] = Color.GREEN
+    # bhop/climb available   -   小跳/爬墙未用HUD
+    ColorConfig[customize.bhopclimb_available] = Color.GREEN
+    # bhop/climb used (cant be same as available)   -   小跳/爬墙已用HUD
+    ColorConfig[customize.bhopclimb_used] = Color.RED
+    
+    # current checkpoint ring   -   当前检查点光圈
     ColorConfig[customize.ring_current] =  Color.SKY_BLUE
-    # next checkpoint ring
+    # next checkpoint ring   -   下一关检查点光圈
     ColorConfig[customize.ring_next] = Color.LIME_GREEN
-    # next checkpoint light shaft 
+    # next checkpoint light shaft   -   下一关检查点光柱
     ColorConfig[customize.shaft] = Color.WHITE
-    # next checkpoint icon 
+    # next checkpoint icon   -   下一关检查点图标
     ColorConfig[customize.nexticon_color] = Color.SKY_BLUE
-    # "come here" text 
+    # "come here" text   -   到这里来" 文本
     ColorConfig[customize.cometext] = Color.WHITE
-    # kill orbs 
+    # kill orbs   -   击杀球
     ColorConfig[customize.killorb] = Color.BLUE
-    # normal orbs
+    # normal orbs   -   弹球
     ColorConfig[customize.orb_normal] = Color.GREEN
-    # lock orbs (overwritten if its same as normal)
+    #lock orbs (overwritten if its same as normal)   
+    #收集球 (与普通弹 球相同时将 自动覆写)
     ColorConfig[customize.orb_lock] = Color.ORANGE
-    # portals
+    # portals   -   自定义 传送门
     ColorConfig[customize.portal] = Color.WHITE
-
 
 
 

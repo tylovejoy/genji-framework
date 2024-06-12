@@ -191,12 +191,12 @@ rule "HUD | Bhop Indicator | Unused | Green":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
-    eventPlayer.BhopHUDColor = Color.GREEN
+    eventPlayer.BhopHUDColor = ColorConfig[customize.bhopclimb_available]
 
 rule "HUD | Bhop Indicator | Used | Red":
     @Event eachPlayer
     @Condition eventPlayer.isJumping()
-    eventPlayer.BhopHUDColor = Color.RED
+    eventPlayer.BhopHUDColor = ColorConfig[customize.bhopclimb_used]
 
 rule "-------------------------------------------------------------------------- Bans --------------------------------------------------------------------------":
     @Delimiter

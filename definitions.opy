@@ -442,6 +442,16 @@ enum HO:
     # End #####################
 
 enum customize:
+    credit_name,
+    credit_code,
+    servertime,
+    time,
+    level,
+    command_normal,
+    command_highlight,
+    bhopclimb_available,
+    bhopclimb_used,
+
     ring_current,
     ring_next,
     shaft,
@@ -451,3 +461,4 @@ enum customize:
     orb_normal,
     orb_lock,
     portal,
+

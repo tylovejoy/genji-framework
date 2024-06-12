@@ -628,7 +628,7 @@ rule "Editor | Hud and Effects":
     )
 
     hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null,
-        "{0} + {1} |  黄弹球(进点前必须收集) {3} | {2}\n".format(
+        "{0} + {1} |  收集球(进点前必须集齐) {3} | {2}\n".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.ABILITY_2),
             "启用" if BounceToggleLock[EditSelected] != 0 else "关闭",
