@@ -441,7 +441,7 @@ enum HO:
     rightend,
     # End #####################
 
-enum customize:
+enum customize: # always add new options on end so previously configured colors dont mess up
     credit_name,
     credit_code,
     servertime,
@@ -461,4 +461,4 @@ enum customize:
     orb_normal,
     orb_lock,
     portal,
-
+    
