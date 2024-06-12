@@ -193,6 +193,7 @@ rule "Setup and Variables":
         ColorConfig[customize.orb_lock] = Color.BLUE 
     elif ColorConfig[customize.orb_lock] == Color.TEAM_2:
         ColorConfig[customize.orb_lock] = Color.RED
+
     # prevent same color lock orbs
     if ColorConfig[customize.orb_normal] == ColorConfig[customize.orb_lock]:
         ColorConfig[customize.orb_lock] = Color.GREEN  if ColorConfig[customize.orb_normal] == Color.ORANGE else Color.ORANGE
@@ -200,8 +201,6 @@ rule "Setup and Variables":
     # prevent same color bhop/climb used/unused
     if ColorConfig[customize.bhopclimb_available] == ColorConfig[customize.bhopclimb_used]:
         ColorConfig[customize.bhopclimb_used] = Color.ORANGE if ColorConfig[customize.bhopclimb_available] == Color.RED else Color.RED
-
-   
 
     SaveName = []
     SaveCp = []
@@ -916,47 +915,47 @@ rule "Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这
     Name = "name here - 作者"
     Code = "code here - 代码"
     #
-    #+++
+    #+++++  +++++  +++++  +++++  +++++  +++++  
     #color customization below / 自定义 颜色(实体、HUD)
-    #+++
+    #+++++  +++++  +++++  +++++  +++++  +++++  
     # 
-    # credit hud name   -   作者HUD
+    #credit hud name   -   作者HUD
     ColorConfig[customize.credit_name] = Color.VIOLET
-    # credit hud code   -   代码HUD
+    #credit hud code   -   代码HUD
     ColorConfig[customize.credit_code] = Color.SKY_BLUE
-    # server time hud   -   房间倒计时
+    #server time hud   -   房间倒计时
     ColorConfig[customize.servertime] = Color.RED
-    # time  hud   -   单关用时HUD
+    #time  hud   -   单关用时HUD
     ColorConfig[customize.time] = Color.WHITE
-    # level hud   -   关卡HUD
+    #level hud   -   关卡HUD
     ColorConfig[customize.level] = Color.WHITE
-    # command hud   -   指令HUD
+    #command hud   -   指令HUD
     ColorConfig[customize.command_normal] = Color.WHITE
-    # command hud highlight   -   指令HUD高亮
+    #command hud highlight   -   指令HUD高亮
     ColorConfig[customize.command_highlight] = Color.GREEN
-    # bhop/climb available   -   小跳/爬墙未用HUD
+    #bhop/climb available   -   小跳/爬墙未用HUD
     ColorConfig[customize.bhopclimb_available] = Color.GREEN
-    # bhop/climb used (cant be same as available)   -   小跳/爬墙已用HUD
+    #bhop/climb used (cant be same as available)   -   小跳/爬墙已用HUD
     ColorConfig[customize.bhopclimb_used] = Color.RED
     
-    # current checkpoint ring   -   当前检查点光圈
+    #current checkpoint ring   -   当前检查点光圈
     ColorConfig[customize.ring_current] =  Color.SKY_BLUE
-    # next checkpoint ring   -   下一关检查点光圈
+    #next checkpoint ring   -   下一关检查点光圈
     ColorConfig[customize.ring_next] = Color.LIME_GREEN
-    # next checkpoint light shaft   -   下一关检查点光柱
+    #next checkpoint light shaft   -   下一关检查点光柱
     ColorConfig[customize.shaft] = Color.WHITE
-    # next checkpoint icon   -   下一关检查点图标
+    #next checkpoint icon   -   下一关检查点图标
     ColorConfig[customize.nexticon_color] = Color.SKY_BLUE
-    # "come here" text   -   到这里来" 文本
+    #"come here" text   -   到这里来" 文本
     ColorConfig[customize.cometext] = Color.WHITE
-    # kill orbs   -   击杀球
+    #kill orbs   -   击杀球
     ColorConfig[customize.killorb] = Color.BLUE
-    # normal orbs   -   弹球
+    #normal orbs   -   弹球
     ColorConfig[customize.orb_normal] = Color.GREEN
     #lock orbs (overwritten if its same as normal)   
     #收集球 (与普通弹 球相同时将 自动覆写)
     ColorConfig[customize.orb_lock] = Color.ORANGE
-    # portals   -   自定义 传送门
+    #portals   -   自定义 传送门
     ColorConfig[customize.portal] = Color.WHITE
 
 
