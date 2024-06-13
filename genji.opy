@@ -923,6 +923,8 @@ rule "Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这
     ColorConfig[customize.credit_name] = Color.VIOLET
     #credit hud code   -   代码HUD
     ColorConfig[customize.credit_code] = Color.SKY_BLUE
+    #dsc.gg/genjiparkour
+    ColorConfig[customize.dsc] = Color.AQUA
     #server time hud   -   房间倒计时
     ColorConfig[customize.servertime] = Color.RED
     #time  hud   -   单关用时HUD
@@ -937,7 +939,7 @@ rule "Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这
     ColorConfig[customize.bhopclimb_available] = Color.GREEN
     #bhop/climb used (cant be same as available)   -   小跳/爬墙已用HUD
     ColorConfig[customize.bhopclimb_used] = Color.RED
-    
+        
     #current checkpoint ring   -   当前检查点光圈
     ColorConfig[customize.ring_current] =  Color.SKY_BLUE
     #next checkpoint ring   -   下一关检查点光圈

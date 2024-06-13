@@ -461,4 +461,5 @@ enum customize: # always add new options on end so previously configured colors 
     orb_normal,
     orb_lock,
     portal,
+    dsc,
     
