@@ -46,7 +46,7 @@ rule "Huds: Global/Localplayer":
         , HudPosition.LEFT, HO.data_code, ColorConfig[customize.credit_code] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
-    hudSubtext(localPlayer if localPlayer.GuideToggle else null, "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, Color.AQUA, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)   
+    hudSubtext(localPlayer if localPlayer.GuideToggle else null, "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, ColorConfig[customize.dsc], HudReeval.VISIBILITY, SpecVisibility.DEFAULT)   
    
     # global huds
     hudSubheader(getAllPlayers(),
