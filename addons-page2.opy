@@ -376,6 +376,4 @@ rule "Ledge Grab Patch 1.3":
             eventPlayer.stopForcingButton(Button.JUMP)
         waitUntil(eventPlayer.isOnGround() or eventPlayer.isHoldingButton(Button.JUMP), 9999)
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
-        #Create Bhop fixed? TODO Narrow Timing
-        #Helpful Debuggers Dark Moisty LostJe Amwaj Iloveto M4rtian
-        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.096)
+        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)
