@@ -352,8 +352,7 @@ rule "Custom Orb Script":
 rule "Ledge Grab Patch 1.3":
     @Disabled
     @Event eachPlayer
-    #Script by LulledLion
-    #08/28/24
+    #Script by LulledLion 08/28/24
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.DoubleUsed == (eventPlayer.getCurrentHero() == Hero.GENJI)
@@ -368,12 +367,15 @@ rule "Ledge Grab Patch 1.3":
     eventPlayer.startForcingButton(Button.JUMP)
     waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
     eventPlayer.stopForcingButton(Button.JUMP)
-    #Ledge Grab Loop
+    #Ledge Grab loop
     while not eventPlayer.isOnGround():
-        #Multi-Climb | Refresh Bhop
+        #Multi-Climb | Create Bhop
         if not eventPlayer.isOnWall():
             eventPlayer.startForcingButton(Button.JUMP)
             wait(false)
             eventPlayer.stopForcingButton(Button.JUMP)
         waitUntil(eventPlayer.isOnGround() or eventPlayer.isHoldingButton(Button.JUMP), 9999)
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        #Create Bhop fixed? TODO Narrow Timing
+        #Helpful Debuggers Dark Moisty LostJe Amwaj Iloveto M4rtian
+        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.096)
