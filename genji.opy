@@ -512,6 +512,7 @@ def checkpointFailReset():
     eventPlayer.splittime = eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer
     eventPlayer.LockCollected = []
     eventPlayer.cancelPrimaryAction()
+    eventPlayer.DoubleUsed = null
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
 
@@ -876,6 +877,7 @@ rule "AFK timer":
     waitUntil(eventPlayer.isOnWall(), 2)
     if eventPlayer.isOnWall(): # prevent save bhop climb
         eventPlayer.cancelPrimaryAction() 
+        eventPlayer.DoubleUsed = null
 
     if RULE_CONDITION:
         goto RULE_START

@@ -1,6 +1,6 @@
 
 bug: 
-- walclimb baned can stil allow climb in some scenario, that one corner in ws chamber. maybe it was my latency?
+- wallclimb baned can stil allow climb in some scenario, that one corner in ws chamber. maybe it was my latency?
 - "if i bhop save and i use my double jump very close to the floor, and bhop is still green top left, and i hold space as im landing, my bhop just doesnt work" - arcane and confirmed by jack as all fw versions both old fw and our fw
 - spanvagyteso/jack: add custom restart point while in invinc mode and  reset to that instead, remove it when leaving invinc
 - multi climb sometimes stays green when not actually used  > maji: bind scrollwheel and spam

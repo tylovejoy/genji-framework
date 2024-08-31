@@ -113,11 +113,12 @@ rule "Checking | Using Emote":
     @Event eachPlayer
     @Condition eventPlayer.isCommunicatingEmote() == true
     eventPlayer.BhopUsed = false
-    waitUntil(not eventPlayer.isCommunicatingEmote() == true, 9999)
     if eventPlayer.ban_emote:
+        waitUntil(not eventPlayer.isCommunicatingEmote() == true, 9999)
         waitUntil(eventPlayer.isOnWall(), 1)
         if eventPlayer.isOnWall():
-            eventPlayer.cancelPrimaryAction() 
+            eventPlayer.cancelPrimaryAction()
+            eventPlayer.DoubleUsed = null
 
 rule "Checking | Bhop":
     @Event eachPlayer
@@ -174,7 +175,39 @@ rule "Checking | standing resets variables":
     if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
         goto RULE_START
     eventPlayer.BhopUsed = true
-  
+
+rule "Checking | Double Jump":
+    @Event eachPlayer
+    @Hero genji
+    #Script by LulledLion
+    #08/28/24
+    @Condition eventPlayer.isAlive() == true
+    #TODO:
+    #CC refreshing Double Jump
+    @Condition eventPlayer.isOnGround() == true
+    
+    eventPlayer.DoubleUsed = null
+    #On Ground
+    waitUntil(not eventPlayer.isOnGround(), 9999)
+    #Prehold Jump
+    if eventPlayer.isHoldingButton(Button.JUMP):
+        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        if RULE_CONDITION:
+            goto RULE_START
+    #Saved Double Jump
+    waitUntil(eventPlayer.isOnGround() or eventPlayer.isJumping() or eventPlayer.isHoldingButton(Button.JUMP), 0.096)
+    if RULE_CONDITION:
+        goto RULE_START
+    if not eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP):
+        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+    #Double Jumped
+    waitUntil(eventPlayer.isOnGround() or eventPlayer.isHoldingButton(Button.JUMP), 9999)
+    if RULE_CONDITION:
+        goto RULE_START
+    eventPlayer.DoubleUsed = true
+    #CC refreshing Double Jump
+    #eventPlayer.DoubleUsed = false
+
 rule "HUD | Multiclimb Counter":
     @Event eachPlayer
     @Condition eventPlayer.isOnWall()

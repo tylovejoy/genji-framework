@@ -300,8 +300,9 @@ rule "Grup up | function":
     wait(1, Wait.ABORT_WHEN_FALSE)
 
     eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint +1] + vect(0,0.1,0), true)
-    eventPlayer.cancelPrimaryAction()
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.3)
+    eventPlayer.cancelPrimaryAction()
+    eventPlayer.DoubleUsed = null
     wait(0.16)
     eventPlayer.stopForcingPosition()
 
@@ -340,9 +341,39 @@ rule "Custom Orb Script":
     if eventPlayer.BounceTrueId in [2,3]:
        # example canceling primary makes double jump recover
        eventPlayer.cancelPrimaryAction()
+       eventPlayer.DoubleUsed = null
        smallMessage(eventPlayer," double jump recovered")
                 
     if eventPlayer.BounceTrueId in [4]:
         # example move speed
         eventPlayer.setMoveSpeed(250)
         smallMessage(eventPlayer," zooom")
+
+rule "Ledge Grab Patch 1.3":
+    @Disabled
+    @Event eachPlayer
+    #Script by LulledLion
+    #08/28/24
+    @Condition eventPlayer.isAlive() == true
+    @Condition eventPlayer.isOnGround() == false
+    @Condition eventPlayer.DoubleUsed == (eventPlayer.getCurrentHero() == Hero.GENJI)
+    
+    #Directly after Double Jumping
+    eventPlayer.stopForcingButton(Button.JUMP)
+    wait(false)
+    eventPlayer.startForcingButton(Button.JUMP)
+    wait(false)
+    eventPlayer.stopForcingButton(Button.JUMP)
+    wait(false)
+    eventPlayer.startForcingButton(Button.JUMP)
+    waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+    eventPlayer.stopForcingButton(Button.JUMP)
+    #Ledge Grab Loop
+    while not eventPlayer.isOnGround():
+        #Multi-Climb | Refresh Bhop
+        if not eventPlayer.isOnWall():
+            eventPlayer.startForcingButton(Button.JUMP)
+            wait(false)
+            eventPlayer.stopForcingButton(Button.JUMP)
+        waitUntil(eventPlayer.isOnGround() or eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
