@@ -370,13 +370,12 @@ rule "Ledge Grab Patch 1.4":
     #Ledge Grab loop
     while not eventPlayer.isOnGround():
         #Multi-Climb
-        if not eventPlayer.isOnWall():
+        if eventPlayer.isOnWall():
+            wait(false)
+        else:
             eventPlayer.startForcingButton(Button.JUMP)
             wait(false)
             eventPlayer.stopForcingButton(Button.JUMP)
-        else:
-            #Quick Regrab
-            wait(false)
         waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or eventPlayer.isHoldingButton(Button.JUMP), 9999)
         waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
         #Create cBhop
