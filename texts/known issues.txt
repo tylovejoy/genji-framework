@@ -1,16 +1,23 @@
+############################################################################################################
+multiple ledge grabs bug | introduced v2.12 8-23-24
+------------------------------------------------------------------------------------------------------------
+bug: After each successful ledge grab, ledge grab will snap player down.
+work arounds:
+- After each ledge grab, press & release jump before attempting another ledge grab
+- Addon "Ledge Grab Patch 1.4"
 
+Current known issues for "Ledge Grab Patch 1.4"
+-Requires slower input timings for heli/vertical multi-climb
+
+############################################################################################################
 bug: 
-- wallclimb baned can stil allow climb in some scenario, that one corner in ws chamber. maybe it was my latency?
+- wallclimb banned can stil allow climb in some scenario, that one corner in ws chamber. maybe it was my latency?
 - "if i bhop save and i use my double jump very close to the floor, and bhop is still green top left, and i hold space as im landing, my bhop just doesnt work" - arcane and confirmed by jack as all fw versions both old fw and our fw
 - spanvagyteso/jack: add custom restart point while in invinc mode and  reset to that instead, remove it when leaving invinc
 - multi climb sometimes stays green when not actually used  > maji: bind scrollwheel and spam
 
-
 multi indicator break: if you about to hit the floor as it about to give bhop and multi, you get bhop? or indicator only?
 multi break: auto climb on, flick wil say multi even if you climbing and lost it
-
-
-
 
 ############################################################################################################
 reload + cp position bug
@@ -45,7 +52,7 @@ triple jump ban doesnt work on workshop maps anymore
 
     - specific problem: jump count is not properly tracked. on ws maps jumpcount doesnt reset back to 1
         - on ws maps, the jumpcount doesnt go to 1 for a split second when triple jumping, unlike normal maps
-        - the rules for jupcount shouldnt be affected but they are
+        - the rules for jumpcount shouldnt be affected but they are
         - jumpcount tracks +- if a player has been in the air for a moment
 
 ############################################################################################################
