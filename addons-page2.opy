@@ -349,10 +349,10 @@ rule "Custom Orb Script":
         eventPlayer.setMoveSpeed(250)
         smallMessage(eventPlayer," zooom")
 
-rule "Ledge Grab Patch 1.3":
+rule "Ledge Grab Patch 1.4":
     @Disabled
     @Event eachPlayer
-    #Script by LulledLion 08/28/24
+    #Script by LulledLion 9/1/24
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.DoubleUsed == (eventPlayer.getCurrentHero() == Hero.GENJI)
@@ -369,11 +369,15 @@ rule "Ledge Grab Patch 1.3":
     eventPlayer.stopForcingButton(Button.JUMP)
     #Ledge Grab loop
     while not eventPlayer.isOnGround():
-        #Multi-Climb | Create Bhop
+        #Multi-Climb
         if not eventPlayer.isOnWall():
             eventPlayer.startForcingButton(Button.JUMP)
             wait(false)
             eventPlayer.stopForcingButton(Button.JUMP)
-        waitUntil(eventPlayer.isOnGround() or eventPlayer.isHoldingButton(Button.JUMP), 9999)
-        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        else:
+            #Quick Regrab
+            wait(false)
+        waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        #Create cBhop
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)
