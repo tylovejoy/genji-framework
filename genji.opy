@@ -34,7 +34,7 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!define bounceoffset + vect(0,0.7,0)
 
 
-#disable overpy map detection (command removed by zezo after fix by blizard)
+#disable overpy map detection (command removed by zezo after fix by blizzard)
 ##!disableMapDetectionFix 
 
 # supress warning for emote

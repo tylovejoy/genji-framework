@@ -200,13 +200,16 @@ rule "Checking | Double Jump":
         goto RULE_START
     if not eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP):
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
-    #Double Jumped
-    waitUntil(eventPlayer.isOnGround() or eventPlayer.isHoldingButton(Button.JUMP), 9999)
-    if RULE_CONDITION:
-        goto RULE_START
-    eventPlayer.DoubleUsed = true
-    #CC refreshing Double Jump
-    #eventPlayer.DoubleUsed = false
+    while true:
+        #Double Jumped
+        waitUntil(eventPlayer.isOnGround() or eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        if RULE_CONDITION:
+            goto RULE_START
+        eventPlayer.DoubleUsed = true
+        waitUntil(eventPlayer.isOnGround() or not eventPlayer.DoubleUsed, 9999)
+        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        if RULE_CONDITION:
+            goto RULE_START
 
 rule "HUD | Multiclimb Counter":
     @Event eachPlayer
