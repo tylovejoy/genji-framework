@@ -180,10 +180,8 @@ rule "Checking | Double Jump":
     @Event eachPlayer
     @Hero genji
     #Script by LulledLion
-    #08/28/24
+    #9/1/24
     @Condition eventPlayer.isAlive() == true
-    #TODO:
-    #CC refreshing Double Jump
     @Condition eventPlayer.isOnGround() == true
     
     eventPlayer.DoubleUsed = null
@@ -206,6 +204,7 @@ rule "Checking | Double Jump":
         if RULE_CONDITION:
             goto RULE_START
         eventPlayer.DoubleUsed = true
+        #Double Reset
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.DoubleUsed, 9999)
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
         if RULE_CONDITION:
