@@ -377,4 +377,13 @@ fixed:
 
 1.9.4a
 - added a check for double jump
-- added a new addon to fix update 8-23-24 ledge grabs
+ └ added new variable "DoubleUsed"
+ └ after each use of"CancelPrimaryAction()", reset "DoubleUsed" value
+- added a new addon to fix update 8-23-24 ledge grabs (default disabled)
+ └ Has support for Hanzo & Kiriko (In-case someone needs it later)
+ └ Known Issues: Heli/Vertical Multi-climb input timing is slower
+- Optimize ban emote
+- Fix some comment typos and make line spacing more consistent
+- Append to the "ChangeLog" & "Known Issues"
+- Updated "Fake Triple Jump - enable rule - 启用此规则 - 假三段跳"
+ └ Uses the new "DoubleUsed" for more accurate recreation of the original
