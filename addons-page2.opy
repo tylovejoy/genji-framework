@@ -349,13 +349,15 @@ rule "Custom Orb Script":
         eventPlayer.setMoveSpeed(250)
         smallMessage(eventPlayer," zooom")
 
-rule "Ledge Grab Patch 1.4":
+rule "Ledge Grab Patch 1.5":
     @Disabled
     @Event eachPlayer
-    #Script by LulledLion 9/1/24
+    #Script by LulledLion 9-1-24
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isOnGround() == false
-    @Condition eventPlayer.DoubleUsed == (eventPlayer.getCurrentHero() == Hero.GENJI)
+    @Condition eventPlayer.getCurrentHero() == Hero.GENJI == eventPlayer.DoubleUsed
+    @Condition eventPlayer.getCurrentHero() == Hero.HANZO == eventPlayer.getAbilityCooldown(Button.JUMP)
+    @Condition (eventPlayer.getCurrentHero() == Hero.KIRIKO and eventPlayer.isHoldingButton(Button.JUMP)) == (eventPlayer.getCurrentHero() == Hero.KIRIKO)
     
     #Directly after Double Jumping
     eventPlayer.stopForcingButton(Button.JUMP)
@@ -369,6 +371,9 @@ rule "Ledge Grab Patch 1.4":
     eventPlayer.stopForcingButton(Button.JUMP)
     #Ledge Grab loop
     while not eventPlayer.isOnGround():
+        #Hero Swap
+        if not RULE_CONDITION:
+            return
         #Multi-Climb
         if eventPlayer.isOnWall():
             wait(false)
