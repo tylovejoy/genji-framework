@@ -379,7 +379,7 @@ fixed:
 - added a check for double jump
  └ added new variable "DoubleUsed"
  └ after each use of"CancelPrimaryAction()", reset "DoubleUsed" value
-- added a new addon to fix update 8-23-24 ledge grabs (default disabled)
+- added a new addon to fix ow update 2.12 on 8-23-24 for ledge grabs (default disabled)
  └ Has support for Hanzo & Kiriko (In-case someone needs it later)
  └ Known Issues: Heli/Vertical Multi-climb input timing is slower
 - Optimize ban emote

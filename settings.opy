@@ -68,8 +68,3 @@ settings {
 
 # no longer need dva
 ##!extension spawnMoreDummyBots
-
-
-
-
-
