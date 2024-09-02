@@ -371,9 +371,6 @@ rule "Ledge Grab Patch 1.5":
     eventPlayer.stopForcingButton(Button.JUMP)
     #Ledge Grab loop
     while not eventPlayer.isOnGround():
-        #Hero Swap
-        if not RULE_CONDITION:
-            return
         #Multi-Climb
         if eventPlayer.isOnWall():
             wait(false)
