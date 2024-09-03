@@ -376,12 +376,13 @@ fixed:
 - fixed a bug that caused Deathbhop ban to stop working
 
 1.9.4a
-- added a check for double jump
+- Added a check for double jump
  └ added new variable "DoubleUsed"
  └ after each use of"CancelPrimaryAction()", reset "DoubleUsed" value
-- added a new addon to fix ow update 2.12 on 8-23-24 for ledge grabs (default disabled)
- └ Has support for Hanzo & Kiriko (In-case someone needs it later)
- └ Known Issues: Heli/Vertical Multi-climb input timing is slower
+X Added a new addon to fix ow update 2.12 for ledge grabs (default disabled)
+X└ Has support for Hanzo & Kiriko (In-case someone needs it later)
+X└ Known Issues: Heli/Vertical Multi-climb input timing is slower
+ └ Commented out for safe keeping, but do not compile
 - Optimize ban emote
 - Fix some comment typos and make line spacing more consistent
 - Append to the "ChangeLog" & "Known Issues"
