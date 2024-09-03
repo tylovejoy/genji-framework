@@ -1,10 +1,15 @@
 ############################################################################################################
-multiple ledge grabs bug | introduced v2.12 8-23-24
+Ledge Grab OW 2.12.*
 ------------------------------------------------------------------------------------------------------------
-bug: After each successful ledge grab, ledge grab will snap player down.
-work arounds:
+Delayed Mantle | OW 2.12.0.1
+Description: Client-side prediction renders genji's position & animation delayed when performing a mantle
+Work around: Touch grass
+
+(Patched) Multiple mantles snap down | OW 2.12.0.0
+Description: After each successful ledge grab, ledge grab will snap player down.
+Work arounds:
 - After each ledge grab, press & release jump before attempting another ledge grab
-- Addon "Ledge Grab Patch 1.4"
+- Addon "Ledge Grab Patch 1.5"
 
 Current known issues for "Ledge Grab Patch 1.4"
 -Requires slower input timings for heli/vertical multi-climb
