@@ -180,31 +180,28 @@ rule "Checking | Double Jump":
     @Event eachPlayer
     @Hero genji
     #Script by LulledLion
-    #9/1/24
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isOnGround() == true
     
     eventPlayer.DoubleUsed = null
     #On Ground
     waitUntil(not eventPlayer.isOnGround(), 9999)
-    #Prehold Jump
-    if eventPlayer.isHoldingButton(Button.JUMP):
-        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
-        if RULE_CONDITION:
-            goto RULE_START
     #Saved Double Jump
     waitUntil(eventPlayer.isOnGround() or eventPlayer.isJumping() or eventPlayer.isHoldingButton(Button.JUMP), 0.096)
     if RULE_CONDITION:
         goto RULE_START
     if not eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP):
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+
+    waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+    if RULE_CONDITION:
+        goto RULE_START
     while true:
         #Double Jumped
         waitUntil(eventPlayer.isOnGround() or eventPlayer.isHoldingButton(Button.JUMP), 9999)
         if RULE_CONDITION:
             goto RULE_START
         eventPlayer.DoubleUsed = true
-        #Double Reset
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.DoubleUsed, 9999)
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
         if RULE_CONDITION:
