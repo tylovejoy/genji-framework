@@ -556,7 +556,7 @@ def StartGame_Sub():
         kill(eventPlayer, null)
        
     if len(CheckpointPositions):
-        destroyInWorldText(eventPlayer.TitleStore) # restarting reset t itle even if non on cp 0
+        destroyInWorldText(eventPlayer.TitleStore) # restarting reset title even if non on cp 0
         if "{0}".format(eventPlayer) in SaveName: # load saved progres
             SaveEnt[SaveName.index("{}".format(eventPlayer))] = eventPlayer
             eventPlayer.CurrentCheckpoint = SaveCp[SaveEnt.index(eventPlayer)]

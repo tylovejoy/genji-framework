@@ -94,6 +94,7 @@ rule "Checking | In the air":
     @Condition eventPlayer.isInAir() 
     eventPlayer.JumpCount = 1
 
+/* Remove this rule? */
 rule "Checking | Triple jump":
     @Event eachPlayer
     @Condition eventPlayer.JumpCount == 1
