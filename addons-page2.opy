@@ -118,52 +118,9 @@ rule "Hint text for certain Checkpoints - 特定关卡的提示文本 <---- EDIT
     # 修改数组 “HintCp” 为提示文本 显示的关卡
     HintCp = [1, 3]
 
-
 rule "------------------------------------------------------------------------ Addons skills - 附加组件技能 ------------------------------------------------------------------------":
     @Delimiter
     @Disabled
-
-rule "Fake Triple Jump - enable rule - 启用此规则 - 假三段跳": # method c
-    @Disabled
-    @Event eachPlayer
-    @Hero genji
-    # check starts in air when not double jumping, this is to detect double jumping
-    @Condition eventPlayer.isOnGround() == false 
-    @Condition eventPlayer.isJumping() # false when double jumping
-
-    @Condition eventPlayer.getAltitude() < 0.5 # prevent rest of code from runing if you are not gona be close to ground
-    @Condition eventPlayer.getVerticalSpeed() < 0 # avoid trigering on start of jump, only when u go downwards
-    
-    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false # don't triger on reset
-    @Condition eventPlayer.isUsingAbility1() == false
-    @Condition eventPlayer.isOnWall() == false
-
-    waitUntil(
-        eventPlayer.isOnGround() or 
-        eventPlayer.isJumping() == false or 
-        eventPlayer.isOnWall() or  
-        eventPlayer.isUsingAbility1() or 
-        eventPlayer.isHoldingButton(Button.RELOAD)
-        , 999
-    ) # if you double jump or climb etc before touching ground, reset
-    
-    if eventPlayer.isOnGround() == false and eventPlayer.isJumping() == false or eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD) : # 
-        return
-    
-    waitUntil(
-        (eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP)) or
-        eventPlayer.isOnWall() or  
-        eventPlayer.isUsingAbility1() or 
-        eventPlayer.isHoldingButton(Button.RELOAD),
-        0.048
-    ) # window on the ground were you can press jump
-
-    if eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD) or eventPlayer.hasStatusEffect(Status.ROOTED):
-        return
-
-    if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping() :
-        # ban goes here if it was on
-        eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
 
 # keeps you still shortly after getting in a stall
 # makes it much easier to get in one
@@ -206,7 +163,6 @@ rule "Stall enhancer - 增强系統跳的判定 - 启用此规则":
         if RULE_CONDITION:
             goto RULE_START
 
-
 # dash after ledge grab
 # stores speed and launches you after dash if you done it during climb
 # LedgeDash var 0 count - 1 eventPlayer.LedgeDash[1] 1 stored speed
@@ -241,8 +197,6 @@ rule "Fake Ledge Dash - enable rule - 超级跳 - 启用此规则":
     eventPlayer.LedgeDash[0] = null
     eventPlayer.LedgeDash[1] = null
     eventPlayer.LedgeDash[2] = null
-
-
 
 rule "Grup up | text/effect -":
     @Disabled
@@ -300,12 +254,11 @@ rule "Grup up | function":
     wait(1, Wait.ABORT_WHEN_FALSE)
 
     eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint +1] + vect(0,0.1,0), true)
-    eventPlayer.cancelPrimaryAction()
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.3)
+    eventPlayer.cancelPrimaryAction()
+    eventPlayer.DoubleUsed = null
     wait(0.16)
     eventPlayer.stopForcingPosition()
-
-
 
 def TriggerOnFailSuccesReset():
     @Name "Custom script on fail, succes, reset, skip"
@@ -340,9 +293,70 @@ rule "Custom Orb Script":
     if eventPlayer.BounceTrueId in [2,3]:
        # example canceling primary makes double jump recover
        eventPlayer.cancelPrimaryAction()
+       eventPlayer.DoubleUsed = null
        smallMessage(eventPlayer," double jump recovered")
                 
     if eventPlayer.BounceTrueId in [4]:
         # example move speed
         eventPlayer.setMoveSpeed(250)
         smallMessage(eventPlayer," zooom")
+
+rule "Fake Triple Jump - enable rule - 启用此规则 - 假三段跳":
+    @Disabled
+    @Event eachPlayer
+    @Hero genji
+    #Method D
+    #Updated Script by LulledLion 9-1-24
+    @Condition BanTriple == false
+    @Condition eventPlayer.isOnGround() == false
+    @Condition eventPlayer.DoubleUsed == false
+    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false #Don't trigger on reset
+
+    #Double cannot be used already
+    wait(false)
+    if RULE_CONDITION:
+        goto RULE_START
+    if eventPlayer.DoubleUsed:
+        return
+    #Input window to Triple
+    waitUntil(eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD), 0.048)
+    #Cancel Triple
+    if eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD) or eventPlayer.hasStatusEffect(Status.ROOTED):
+        return
+    #Apply fake triple jump
+    if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping():
+        eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+
+rule "Ledge Grab Patch v1.5":
+    @Disabled
+    @Event eachPlayer
+    #For OW v2.12
+    @Condition eventPlayer.isAlive() == true
+    @Condition eventPlayer.isOnGround() == false
+    @Condition eventPlayer.getCurrentHero() == Hero.GENJI == eventPlayer.DoubleUsed
+    @Condition eventPlayer.getCurrentHero() == Hero.HANZO == eventPlayer.getAbilityCooldown(Button.JUMP)
+    @Condition (eventPlayer.getCurrentHero() == Hero.KIRIKO and eventPlayer.isHoldingButton(Button.JUMP)) == (eventPlayer.getCurrentHero() == Hero.KIRIKO)
+    
+    #Directly after Double Jumping
+    eventPlayer.stopForcingButton(Button.JUMP)
+    wait(false)
+    eventPlayer.startForcingButton(Button.JUMP)
+    wait(false)
+    eventPlayer.stopForcingButton(Button.JUMP)
+    wait(false)
+    eventPlayer.startForcingButton(Button.JUMP)
+    waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+    eventPlayer.stopForcingButton(Button.JUMP)
+    #Ledge Grab loop
+    while not eventPlayer.isOnGround():
+        #Multi-Climb
+        if eventPlayer.isOnWall():
+            wait(false)
+        else:
+            eventPlayer.startForcingButton(Button.JUMP)
+            wait(false)
+            eventPlayer.stopForcingButton(Button.JUMP)
+        waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        #Create cBhop
+        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)

@@ -1,4 +1,4 @@
-#!define versionhere "1.9.4"
+#!define versionhere "1.9.4a"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -34,7 +34,7 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!define bounceoffset + vect(0,0.7,0)
 
 
-#disable overpy map detection (command removed by zezo after fix by blizard)
+#disable overpy map detection (command removed by zezo after fix by blizzard)
 ##!disableMapDetectionFix 
 
 # supress warning for emote
@@ -234,9 +234,9 @@ rule "Setup and Variables":
     BounceToggleDash = BounceToggleDash if len(BounceToggleDash) else []
     BounceToggleLock = BounceToggleLock if len(BounceToggleLock) else []
 
-    CustomPortalStart = CustomPortalStart if len(CustomPortalStart) > 0 else [] 
-    CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) > 0 else [] 
-    CustomPortalCP = CustomPortalCP if len(CustomPortalCP) > 0 else [] 
+    CustomPortalStart = CustomPortalStart if len(CustomPortalStart) else [] 
+    CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) else [] 
+    CustomPortalCP = CustomPortalCP if len(CustomPortalCP) else [] 
 
     LeaderBoardFull = []
 
@@ -265,16 +265,16 @@ rule "Setup and Variables":
     wait(1) # add back to below wait if removed
     # clean out -1's after the ban has laoded
 
-    BanBhop = [i for i in BanBhop if i != -1] if len(BanBhop) > 0 else []
-    BanClimb = [i for i in BanClimb if i != -1] if len(BanClimb) > 0 else []
-    BanEmote = [i for i in BanEmote if i != -1] if len(BanEmote) > 0 else []
-    BanDead = [i for i in BanDead if i != -1] if len(BanDead) > 0 else []
-    BanCreate = [i for i in BanCreate if i != -1] if len(BanCreate) > 0 else []
-    BanMulti = [i for i in BanMulti if i != -1] if len(BanMulti) > 0 else []
-    BanTriple = null #[i for i in BanTriple if i != -1] if len(BanTriple) > 0 else [] # legacy code, now auto sets it to null to save space
-    BanStand = [i for i in BanStand if i != -1] if len(BanStand) > 0 else []
+    BanBhop = [i for i in BanBhop if i != -1] if len(BanBhop) else []
+    BanClimb = [i for i in BanClimb if i != -1] if len(BanClimb) else []
+    BanEmote = [i for i in BanEmote if i != -1] if len(BanEmote) else []
+    BanDead = [i for i in BanDead if i != -1] if len(BanDead) else []
+    BanCreate = [i for i in BanCreate if i != -1] if len(BanCreate) else []
+    BanMulti = [i for i in BanMulti if i != -1] if len(BanMulti) else []
+    BanTriple = null #[i for i in BanTriple if i != -1] if len(BanTriple) else [] # legacy code, now auto sets it to null to save space
+    BanStand = [i for i in BanStand if i != -1] if len(BanStand) else []
 
-    if len(PortalDest) > 0: # pre set control map portals. not in portal rule because shared I variable
+    if len(PortalDest): # pre set control map portals. not in portal rule because shared I variable
         for TempIterator1 in range(len(PortalLoc)):
             createEffect(
                 [i for i in getAllPlayers() if i.InvincibleToggle or not i.NotOnLastCp],
@@ -440,8 +440,6 @@ rule "Player Initialize":
     wait()
     StartGame_Sub()  # initialization of the game
     
-    
-
 def DeleteSave():
     @Name "delete save" 
     del SaveName[SaveEnt.index(eventPlayer)]
@@ -512,10 +510,11 @@ def checkpointFailReset():
     eventPlayer.splittime = eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer
     eventPlayer.LockCollected = []
     eventPlayer.cancelPrimaryAction()
+    eventPlayer.DoubleUsed = null
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
 
-    if len(CheckpointPositions) > 0:
+    if len(CheckpointPositions):
         eventPlayer.teleport( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() )
 
     if eventPlayer.ban_dedhop and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp:
@@ -546,7 +545,7 @@ def StartGame_Sub():
         kill(eventPlayer,null)
         return
     
-    if DashExploitToggle and len(CheckpointPositions)>0:
+    if DashExploitToggle and len(CheckpointPositions):
         eventPlayer.setAbility1Enabled(false)
         wait()
         if eventPlayer.isUsingAbility1():
@@ -556,8 +555,8 @@ def StartGame_Sub():
     if eventPlayer.isUsingUltimate():
         kill(eventPlayer, null)
        
-    if len(CheckpointPositions) != 0:
-        destroyInWorldText(eventPlayer.TitleStore) # restarting reset t itle even if non on cp 0
+    if len(CheckpointPositions):
+        destroyInWorldText(eventPlayer.TitleStore) # restarting reset title even if non on cp 0
         if "{0}".format(eventPlayer) in SaveName: # load saved progres
             SaveEnt[SaveName.index("{}".format(eventPlayer))] = eventPlayer
             eventPlayer.CurrentCheckpoint = SaveCp[SaveEnt.index(eventPlayer)]
@@ -716,8 +715,6 @@ rule "Kill Orb | Activate":
     @Condition (any([distance(i, eventPlayer) <= eventPlayer.KillRadii_Cache[eventPlayer.KillPosition_Cache.index(i)] for i in eventPlayer.KillPosition_Cache]))
     checkpointFailReset()
 
-
-
 rule "Bounce Ball / Orb | Activate":
     @Event eachPlayer
     @Condition eventPlayer.BouncePosition_Cache != []
@@ -771,7 +768,6 @@ rule "Bounce Ball / Orb | Activate":
 
     eventPlayer.bouncetouchedlast = -1
 
-
 /*
 death rule notes ( not death note)
 without wait it can crash server
@@ -783,7 +779,7 @@ rule "Death Reset":
     @Condition not eventPlayer.SpectateToggle
     @Condition not eventPlayer.CompDone
     eventPlayer.clearStatusEffect(Status.PHASED_OUT)
-    if len(CheckpointPositions) > 0:
+    if len(CheckpointPositions):
         eventPlayer.resurrect()
     else:
         eventPlayer.respawn()
@@ -876,10 +872,10 @@ rule "AFK timer":
     waitUntil(eventPlayer.isOnWall(), 2)
     if eventPlayer.isOnWall(): # prevent save bhop climb
         eventPlayer.cancelPrimaryAction() 
+        eventPlayer.DoubleUsed = null
 
     if RULE_CONDITION:
         goto RULE_START
-
 
 #!include "huds.opy"
 
@@ -960,8 +956,6 @@ rule "Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这
     #portals   -   自定义 传送门
     ColorConfig[customize.portal] = Color.WHITE
 
-
-
 rule "instructions depricated rules (ban / portal / dash /ult) - 旧版编辑器中已弃用规则指引 (单关封禁 / 传送门 / 给刀给S)":
     @Delimiter
     printLog("----------------")
@@ -1030,4 +1024,4 @@ rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE
 #!include "addons-page2.opy"
 
 # enable/disable the include via defines
-testaitoggle 
+testaitoggle

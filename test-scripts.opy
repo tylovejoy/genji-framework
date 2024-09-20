@@ -12,7 +12,6 @@
 ##### average load show #####
     #!define avrgon true
     
-
 ##### orb visialize #####
     #!define orb_visialon false
 
@@ -50,16 +49,12 @@ globalvar AvrgMinStoreLen
 globalvar testAI
 globalvar AIcreated
 
-
-
-
 # temps ######################################################################################################################################################
 
 # general ######################################################################################################################################################
 
 rule "slowmo":
     setSlowMotion(slowmotion)
-
 
 rule "3th person cam":
     @Condition 3thpersoncam
@@ -86,8 +81,6 @@ rule "multi purpose hud":
         , HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
-
-  
 # Load Calc ######################################################################################################################################################
 
 rule "server load hud":
@@ -124,7 +117,7 @@ rule "Avrg Seconds":
 
     AvrgSecDisplay = 0
     LastTimePeak = 0
-    while len(AvrgSecStore) > 0:
+    while len(AvrgSecStore):
         LastTimePeak = max(LastTimePeak,AvrgSecStore[0] )
         AvrgSecDisplay += AvrgSecStore[0]
         del AvrgSecStore[0]
@@ -175,7 +168,6 @@ rule "orbradiustest": # show radius on all bounce orbs
             EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
 
-
 rule "orbradiustest": # show player orb hit detection
     @Condition orb_visialon
     @Event eachPlayer
@@ -199,7 +191,6 @@ rule "leaderboard test bots":
         wait(0.1)
         testAI[len(testAI)-1].startForcingName("bot {0}".format(len(testAI)-1))
 
-        
     AIcreated = true
 
 rule "leaderboard test ai":
@@ -211,7 +202,6 @@ rule "leaderboard test ai":
     @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) #- 1
     @Condition (waitforcreate and AIcreated) or not waitforcreate
     
-
     if aistartdelay:
         wait(aiactiondelay )
 
@@ -271,7 +261,6 @@ rule "action test ai":
     wait()
     eventPlayer.stopForcingButton(Button.CROUCH)
     eventPlayer.stopForcingButton(Button.INTERACT)
-
 
 /*
 
@@ -370,7 +359,6 @@ rule "hud test":
 
     hudtestafafafg = true
 
-
 rule "each":
     @Event eachPlayer
     @Condition hudtestafafafg
@@ -445,6 +433,4 @@ rule "each":
         )
         wait()
         eventPlayer.sflkj ++
-
-
         */
