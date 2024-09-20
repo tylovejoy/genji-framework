@@ -327,7 +327,6 @@ rule "Fake Triple Jump - enable rule - 启用此规则 - 假三段跳":
     if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping():
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
-/* Blizzard Fixed | For safe keeping but do not compile
 rule "Ledge Grab Patch v1.5":
     @Disabled
     @Event eachPlayer
@@ -361,4 +360,3 @@ rule "Ledge Grab Patch v1.5":
         waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
         #Create cBhop
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)
-*/
