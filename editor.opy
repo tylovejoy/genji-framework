@@ -164,7 +164,7 @@ def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place on
 def RebuildPortals():
     destroyEffect(PortalEffects)
     PortalEffects = [] 
-    if CustomPortalCP == []:
+    if len(CustomPortalCP) < 1:
         return
     
     for TempIterator1 in range(0, len(CustomPortalCP)):
@@ -202,9 +202,9 @@ rule "Editor | Hud and Effects":
         getAllPlayers().AttemptCount = null
         getAllPlayers().CompDone = false
 
-    #CustomPortalStart = CustomPortalStart if len(CustomPortalStart) else [] 
+    #CustomPortalStart = CustomPortalStart if len(CustomPortalStart) > 0 else [] 
     #CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) > 0 else [] 
-    #CustomPortalCP = CustomPortalCP if len(CustomPortalCP) else [] 
+    #CustomPortalCP = CustomPortalCP if len(CustomPortalCP) > 0 else [] 
 
     # huds ==========================================================================================================================================================================
     
@@ -519,7 +519,7 @@ rule "Editor | Hud and Effects":
         "{3} 封禁(单关) \n" 
         "{4} 自定义传送门 "
         "".format(
-        iconString(Icon.ARROW_RIGHT) if not hostPlayer.EditModeSelection else "     ",
+        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 0 else "     ",
         iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 1 else "     ",
         iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 2 else "     ",
         iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 3 else "     ",
@@ -539,7 +539,7 @@ rule "Editor | Hud and Effects":
         "{3} checkpoint bans\n"
         "{4} portals "
         "".format(
-        iconString(Icon.ARROW_RIGHT) if not hostPlayer.EditModeSelection else "     ",
+        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 0 else "     ",
         iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 1 else "     ",
         iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 2 else "     ",
         iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 3 else "     ",
@@ -576,14 +576,14 @@ rule "Editor | Hud and Effects":
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(hostPlayer if hostPlayer.GuideToggle and (not hostPlayer.EditModeSelection or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache)) else null, #if not hostPlayer.EditModeSelection or hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) else null, 
+    hudSubtext(hostPlayer if hostPlayer.GuideToggle and (hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null, 
         "{0} + {1} | {4} {3} | {2}".format(              
             buttonString(Button.ULTIMATE), 
             buttonString(Button.PRIMARY_FIRE), 
             ("启用" if BounceToggleUlt[EditSelected] != 0 else "关闭") if  hostPlayer.EditModeSelection == 2 else
             ("启用" if hostPlayer.CurrentCheckpoint in BladeEnabledCheckpoints else "关闭"),
             abilityIconString(Hero.GENJI, Button.ULTIMATE),
-            "检查点给刀"  if not hostPlayer.EditModeSelection else "弹球给刀"
+            "检查点给刀"  if hostPlayer.EditModeSelection == 0 else "弹球给刀"
         )        
         checkCN
         "{0} + {1} | {4} give ult {3} | {2}".format(
@@ -592,23 +592,23 @@ rule "Editor | Hud and Effects":
             ("on" if BounceToggleUlt[EditSelected] != 0 else "off") if  hostPlayer.EditModeSelection == 2 else
             ("on" if hostPlayer.CurrentCheckpoint in BladeEnabledCheckpoints else "off"),
             abilityIconString(Hero.GENJI, Button.ULTIMATE),
-            "Level" if not hostPlayer.EditModeSelection  else "Orb"
+            "Level" if hostPlayer.EditModeSelection == 0  else "Orb"
         )        
         , HudPosition.LEFT, HO.edit_orb_ult, 
         Color.GREEN if BounceToggleUlt[EditSelected] != 0 and hostPlayer.EditModeSelection == 2 else
-        Color.GREEN if hostPlayer.CurrentCheckpoint in BladeEnabledCheckpoints and not hostPlayer.EditModeSelection else
+        Color.GREEN if hostPlayer.CurrentCheckpoint in BladeEnabledCheckpoints and hostPlayer.EditModeSelection == 0 else
         Color.ORANGE
         , HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(hostPlayer if hostPlayer.GuideToggle and (not hostPlayer.EditModeSelection or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache)) else null, #if not hostPlayer.EditModeSelection or hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) else null, 
+    hudSubtext(hostPlayer if hostPlayer.GuideToggle and (hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null, 
         "{0} + {1} | {4} {3} | {2}".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.SECONDARY_FIRE), 
             ("启用" if BounceToggleDash[EditSelected] != 0 else "关闭") if  hostPlayer.EditModeSelection == 2 else
             ("启用" if hostPlayer.CurrentCheckpoint in DashEnabledCheckpoints else "关闭"),
             abilityIconString(Hero.GENJI, Button.ABILITY_1),
-           "检查点给Shift" if not hostPlayer.EditModeSelection else "弹球给Shift"
+           "检查点给Shift" if hostPlayer.EditModeSelection == 0 else "弹球给Shift"
         )   
         checkCN
         "{0} + {1} | {4} give dash {3} | {2}".format(
@@ -617,17 +617,17 @@ rule "Editor | Hud and Effects":
             ("on" if BounceToggleDash[EditSelected] != 0 else "off") if  hostPlayer.EditModeSelection == 2 else
             ("on" if hostPlayer.CurrentCheckpoint in DashEnabledCheckpoints else "off"),
             abilityIconString(Hero.GENJI, Button.ABILITY_1),
-            "Level" if not hostPlayer.EditModeSelection
+            "Level" if hostPlayer.EditModeSelection == 0
             else "Orb"
         )        
         , HudPosition.LEFT, HO.edit_orb_dash, 
         Color.GREEN if BounceToggleDash[EditSelected] != 0 and hostPlayer.EditModeSelection == 2 else
-        Color.GREEN if hostPlayer.CurrentCheckpoint in DashEnabledCheckpoints and not hostPlayer.EditModeSelection else
+        Color.GREEN if hostPlayer.CurrentCheckpoint in DashEnabledCheckpoints and hostPlayer.EditModeSelection == 0 else
         Color.ORANGE
         , HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) else null,
+    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null,
         "{0} + {1} |  收集球(进点前必须集齐) {3} | {2}\n".format(
             buttonString(Button.ULTIMATE), 
             buttonString(Button.ABILITY_2),
@@ -659,18 +659,18 @@ rule "Editor | Hud and Effects":
                 "" if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) < 2 else
                 "\n 传送点: {0}".format(CheckpointPositions[hostPlayer.CurrentCheckpoint][1])
             ) 
-            if not hostPlayer.EditModeSelection and len(CheckpointPositions) else  
+            if hostPlayer.EditModeSelection == 0 and len(CheckpointPositions) > 0 else  
             "\n 选中的击杀球 \n 矢量: {1} \n 半径: {0} \n".format(
                 KillBallRadii[EditSelected],
                 KillBallPositions[EditSelected]      
             ) 
-            if hostPlayer.EditModeSelection == 1 and len(hostPlayer.KillIndex_Cache) else             
+            if hostPlayer.EditModeSelection == 1 and len(hostPlayer.KillIndex_Cache) > 0 else             
             "\n 选中的弹球 \n 矢量: {1} \n 弹力: {0} \n 序号: {2} \n".format(
                 BounceStrength[EditSelected],
                 BouncePositions[EditSelected],
                 EditSelected
             )
-            if hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache)  else  
+            if hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0  else  
             "\n 封禁(单关)\n"
             "――――――――――――\n"
             " {} 蹭留\n"
@@ -709,18 +709,18 @@ rule "Editor | Hud and Effects":
                 "" if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) < 2 else
                 "\n Teleport: {0}".format(CheckpointPositions[hostPlayer.CurrentCheckpoint][1])
             ) 
-            if not hostPlayer.EditModeSelection and len(CheckpointPositions) else  
+            if hostPlayer.EditModeSelection == 0 and len(CheckpointPositions) > 0 else  
             "\n Selected Kill Orb \n Vector: {1} \n radius: {0} \n".format(
                 KillBallRadii[EditSelected],
                 KillBallPositions[EditSelected]      
             ) 
-            if hostPlayer.EditModeSelection == 1 and len(hostPlayer.KillIndex_Cache) else             
+            if hostPlayer.EditModeSelection == 1 and len(hostPlayer.KillIndex_Cache) > 0 else             
             "\n Selected Bounce Orb \n Vector: {1} \n strength: {0} \n ID: {2} \n".format(
                 BounceStrength[EditSelected],
                 BouncePositions[EditSelected],
                 EditSelected
             )
-            if hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache)  else   
+            if hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0  else   
             "\n bans\n"
             "――――――――――――\n"
             " {} multi\n"
@@ -749,7 +749,7 @@ rule "Editor | Hud and Effects":
                 CustomPortalEndpoint[EditSelected],
                 "All" if CustomPortalCP[EditSelected] == 999 else hostPlayer.CurrentCheckpoint
                 )
-            if hostPlayer.EditModeSelection == 4 and CustomPortalCP[EditSelected] in [hostPlayer.CurrentCheckpoint,999] and len(CustomPortalCP) else
+            if hostPlayer.EditModeSelection == 4 and CustomPortalCP[EditSelected] in [hostPlayer.CurrentCheckpoint,999] and len(CustomPortalCP) > 0 else
 
             "\n   No data selected   \n"
             
@@ -761,7 +761,7 @@ rule "Editor | Hud and Effects":
     wait(1)
     # effects ==========================================================================================================================================================================   
     createInWorldText(
-        getAllPlayers() if len(EditSelectIdArray) else null,     
+        getAllPlayers() if len(EditSelectIdArray) > 0 else null,     
         "选中的实体" checkCN "selected"
         , 
         KillBallPositions[EditSelected] if hostPlayer.EditModeSelection == 1 else
@@ -772,7 +772,7 @@ rule "Editor | Hud and Effects":
     )
 
     createIcon(
-        getAllPlayers() if len(EditSelectIdArray) else null,     
+        getAllPlayers() if len(EditSelectIdArray) > 0 else null,     
         KillBallPositions[EditSelected] if hostPlayer.EditModeSelection == 1 else
         BouncePositions[EditSelected] if hostPlayer.EditModeSelection == 2 else
         CustomPortalStart[EditSelected] if hostPlayer.EditModeSelection == 4 else
@@ -782,17 +782,17 @@ rule "Editor | Hud and Effects":
     )
 
     # Purple sphere for teleport location
-    createEffect(getAllPlayers() if len(CheckpointPositions[hostPlayer.CurrentCheckpoint] ) > 1 and not hostPlayer.EditModeSelection else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[hostPlayer.CurrentCheckpoint][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(getAllPlayers() if len(CheckpointPositions[hostPlayer.CurrentCheckpoint] ) > 1 and hostPlayer.EditModeSelection == 0 else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[hostPlayer.CurrentCheckpoint][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
   
     # Teleport text
-    createInWorldText(getAllPlayers() if len(CheckpointPositions[hostPlayer.CurrentCheckpoint] ) > 1 and not hostPlayer.EditModeSelection else null, "传送点位置" checkCN "teleporter location", CheckpointPositions[hostPlayer.CurrentCheckpoint][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+    createInWorldText(getAllPlayers() if len(CheckpointPositions[hostPlayer.CurrentCheckpoint] ) > 1 and hostPlayer.EditModeSelection == 0 else null, "传送点位置" checkCN "teleporter location", CheckpointPositions[hostPlayer.CurrentCheckpoint][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
         
     # normal cp if teleport
-    createEffect(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and not hostPlayer.EditModeSelection else null, Effect.RING, Color.ORANGE, CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createInWorldText(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and not hostPlayer.EditModeSelection else null, "检查点位置" checkCN "level location", CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+    createEffect(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and hostPlayer.EditModeSelection == 0 else null, Effect.RING, Color.ORANGE, CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createInWorldText(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and hostPlayer.EditModeSelection == 0 else null, "检查点位置" checkCN "level location", CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
     
     # portal fx
-    createEffect(hostPlayer if len(EditSelectIdArray) and hostPlayer.EditModeSelection == 4 else null, Effect.SPARKLES, Color.PURPLE, CustomPortalEndpoint[EditSelected], 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(hostPlayer if len(EditSelectIdArray) > 0 and hostPlayer.EditModeSelection == 4 else null, Effect.SPARKLES, Color.PURPLE, CustomPortalEndpoint[EditSelected], 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
 
 # global functions ==============================================================
 rule "Editor |  Fly/Noclip Toggle":
@@ -914,7 +914,7 @@ rule "Editor | create cp/orb":
 
         smallMessage(getAllPlayers(), "   新检查点已创建" checkCN "   New Checkpoint has been created")
     
-    elif CheckpointPositions == []:
+    elif len(CheckpointPositions) < 1:
         smallMessage(eventPlayer, "   请先放置检查点" checkCN "   You first have to make a checkpoint")
         goto endlbl
     elif len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart) >= fxlimit:
@@ -1000,11 +1000,11 @@ rule "Editor | delete cp/orb/portal":
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer == hostPlayer
     #@Condition EditorMoveItem == false
-    #@Condition EditSelectIdArray != []
+    #@Condition len(EditSelectIdArray) > 0
     @Condition eventPlayer.LockEditor == false
 
     eventPlayer.LockEditor = true
-    if not eventPlayer.EditModeSelection and len(CheckpointPositions):
+    if eventPlayer.EditModeSelection == 0 and len(CheckpointPositions) > 0:
         # Resync Kill Orbs ==================
         eventPlayer.Temp = []
         eventPlayer.Temp = [e for e in [(i if e2 == hostPlayer.CurrentCheckpoint else -1) for e2, i in KillballCheckpoints] if  e >=0]
@@ -1069,7 +1069,7 @@ rule "Editor | delete cp/orb/portal":
         del CheckpointPositions[hostPlayer.CurrentCheckpoint]
         del CheckpointRings_Editing[hostPlayer.CurrentCheckpoint]
         
-        if hostPlayer.CurrentCheckpoint < 1 and len(CheckpointPositions) or CheckpointPositions == []:
+        if hostPlayer.CurrentCheckpoint < 1 and len(CheckpointPositions) > 0 or CheckpointPositions == []:
             hostPlayer.CurrentCheckpoint = 0
             goto lbl_a
 
@@ -1079,14 +1079,14 @@ rule "Editor | delete cp/orb/portal":
         RebuildBounceOrbs()
         RebuildPortals()
         smallMessage(getAllPlayers(), "   检查点已删除" checkCN "   Checkpoint has been deleted")
-    elif eventPlayer.EditModeSelection == 1 and len(EditSelectIdArray):
+    elif eventPlayer.EditModeSelection == 1 and len(EditSelectIdArray) > 0:
         del KillBallPositions[EditSelected]
         del KillBallRadii[EditSelected]
         del KillballCheckpoints[EditSelected]
         destroyEffect(KillBallEffects[EditSelected])
         del KillBallEffects[EditSelected]
         RebuildKillOrbs()
-    elif eventPlayer.EditModeSelection == 2 and len(EditSelectIdArray):
+    elif eventPlayer.EditModeSelection == 2 and len(EditSelectIdArray) > 0:
         del BouncePositions[EditSelected]
         del BounceStrength[EditSelected]
         del BounceToggleUlt[EditSelected]
@@ -1096,7 +1096,7 @@ rule "Editor | delete cp/orb/portal":
         del BounceEffects[EditSelected]
         del BouncePadCheckpoints[EditSelected]
         RebuildBounceOrbs()
-    elif eventPlayer.EditModeSelection == 4 and len(EditSelectIdArray): 
+    elif eventPlayer.EditModeSelection == 4 and len(EditSelectIdArray) > 0: 
         destroyEffect(PortalEffects[EditSelected])
         wait()
         del CustomPortalStart[EditSelected]
@@ -1123,7 +1123,7 @@ rule "Editor | toggle orb functions":
     @Condition eventPlayer.EditModeSelection == 2
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) or eventPlayer.isHoldingButton(Button.ABILITY_2) 
-    @Condition EditSelectIdArray != []
+    @Condition len(EditSelectIdArray) > 0
     @Condition eventPlayer.LockEditor == false
 
     eventPlayer.LockEditor = true
@@ -1144,7 +1144,7 @@ rule "Editor | orb radi/strength":
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer 
     @Condition eventPlayer.EditModeSelection in [1,2]
-    @Condition EditSelectIdArray != []
+    @Condition len(EditSelectIdArray) > 0
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) 
     @Condition eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isHoldingButton(Button.CROUCH) 
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
@@ -1152,9 +1152,9 @@ rule "Editor | orb radi/strength":
     
     eventPlayer.LockEditor = true
     while eventPlayer.isHoldingButton(Button.ABILITY_2) and (eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isHoldingButton(Button.CROUCH)) :
-        if eventPlayer.EditModeSelection == 2 and len(eventPlayer.BounceIndex_Cache):
+        if eventPlayer.EditModeSelection == 2 and len(eventPlayer.BounceIndex_Cache) > 0:
             BounceStrength[EditSelected] += 0.1 if eventPlayer.isHoldingButton(Button.JUMP) else -0.1    
-        elif eventPlayer.EditModeSelection == 1 and len(eventPlayer.KillIndex_Cache):
+        elif eventPlayer.EditModeSelection == 1 and len(eventPlayer.KillIndex_Cache) > 0:
             KillBallRadii[EditSelected] +=  0.1 if eventPlayer.isHoldingButton(Button.JUMP) else -0.1
         wait(0.1)
     UpdateCache()
@@ -1165,7 +1165,7 @@ rule "Editor | select orb/portal":
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.EditModeSelection in [1,2,4]
-    @Condition EditSelectIdArray != []
+    @Condition len(EditSelectIdArray) > 0
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) or eventPlayer.isHoldingButton(Button.JUMP)
     #@Condition EditorMoveItem == false
@@ -1216,7 +1216,7 @@ rule "Editor | cp add/remove teleport":
         smallMessage(hostPlayer,"   关卡{0}的传送点已移除".format(hostPlayer.CurrentCheckpoint) checkCN "   Teleport for level {0} has been removed".format(hostPlayer.CurrentCheckpoint))
     else: # add
         CheckpointPositions[hostPlayer.CurrentCheckpoint] = [
-            CheckpointPositions[hostPlayer.CurrentCheckpoint][0] if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) else CheckpointPositions[hostPlayer.CurrentCheckpoint], 
+            CheckpointPositions[hostPlayer.CurrentCheckpoint][0] if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[hostPlayer.CurrentCheckpoint], 
             hostPlayer.getPosition()
         ]
         smallMessage(hostPlayer, "{1} {0}".format(hostPlayer.CurrentCheckpoint,"   传送点已添加到当前关卡" checkCN "   Teleport has been added for level"))
@@ -1230,7 +1230,7 @@ rule "Editor | moving checkpoint":
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.EditModeSelection == 0
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
-    @Condition CheckpointPositions != []
+    @Condition len(CheckpointPositions) > 0
     @Condition eventPlayer.LockEditor == false
     wait(0.3, Wait.ABORT_WHEN_FALSE)
     
@@ -1253,7 +1253,7 @@ rule "Editor | add ult/dash":
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer    
     @Condition hostPlayer.EditModeSelection == 0
-    @Condition CheckpointPositions != []
+    @Condition len(CheckpointPositions) > 0
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition eventPlayer.LockEditor == false
@@ -1270,7 +1270,7 @@ rule "Editor | toggle bans":
     @Condition hostPlayer.EditorOn
     @Condition eventPlayer == hostPlayer    
     @Condition hostPlayer.EditModeSelection == 3
-    @Condition CheckpointPositions != []
+    @Condition len(CheckpointPositions) > 0
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) or eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) or eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition eventPlayer.LockEditor == false
@@ -1308,7 +1308,7 @@ rule "Editor | portal cp change":
     @Condition hostPlayer.EditModeSelection == 4
     @Condition eventPlayer.isHoldingButton(Button.JUMP) 
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) 
-    @Condition EditSelectIdArray != []
+    @Condition len(EditSelectIdArray) > 0
     #@Condition EditorMoveItem == false
     @Condition eventPlayer.LockEditor == false
 
@@ -1322,7 +1322,7 @@ rule "Editor | move object":
     @Condition eventPlayer == hostPlayer    
     @Condition eventPlayer.EditModeSelection in [1,2,4]
     @Condition EditorMoveItem or (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isHoldingButton(Button.ABILITY_2) and eventPlayer.LockEditor == false)
-    @Condition EditSelectIdArray != []
+    @Condition len(EditSelectIdArray) > 0
     eventPlayer.LockEditor = true
     EditorMoveItem = true
     if eventPlayer.flytoggle == null:

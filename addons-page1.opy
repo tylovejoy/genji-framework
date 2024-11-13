@@ -13,7 +13,7 @@ rule "Pre-set control map portal | function | toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
     @Condition eventPlayer.InvincibleToggle or not eventPlayer.NotOnLastCp
-    @Condition PortalLoc != []
+    @Condition len(PortalLoc) != null
     @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc])
     if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] != vect(0,0,0):
         eventPlayer.teleport(
@@ -22,7 +22,7 @@ rule "Pre-set control map portal | function | toggled via workshop":
    
 rule "Custom portals | function":
     @Event eachPlayer
-    @Condition eventPlayer.PortalStart_Cache != []
+    @Condition len(eventPlayer.PortalStart_Cache) > 0
     @Condition [i for i in eventPlayer.PortalStart_Cache if distance(i, eventPlayer.getPosition() + vect(0,0.2,0)) < portaldistance]
     #@Condition any([distance(eventPlayer.getPosition() + vect(0, 0.2, 0), ent) < portaldistance for ent in eventPlayer.PortalStart_Cache]) == true
 
@@ -213,7 +213,7 @@ rule "Little destructo - fence breaker":
   
     # handle exceptions (looking at you new queen street)
     MapVectorArray = [vect(8.276, 4.113, 15.261), vect(-8.319, 2.624, 14.245), vect(0.006, 4.821, 18.513)]
-    while len(MapVectorArray): 
+    while len(MapVectorArray) > 0: 
         # same as other projectile before
         createProjectile(
             Projectile.ORB,  

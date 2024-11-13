@@ -57,13 +57,13 @@ rule "Preview orbs/portals | Hold Primary":
     wait(0.45, Wait.ABORT_WHEN_FALSE)
     eventPlayer.PreviewsArray = [CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]]
     
-    if len(BouncePadCheckpoints):
+    if len(BouncePadCheckpoints) > 0:
         eventPlayer.PreviewsArray.append( ( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint] ) )
         eventPlayer.PreviewsArray2 = [-2] # first entry is checkpoint itself, -1 would overlap with -1 in some orbs
         eventPlayer.PreviewsArray2.append( [i for _, i in BouncePadCheckpoints] )
         eventPlayer.PreviewsArray2 = [ i for i in eventPlayer.PreviewsArray2 if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint or i == -2 ] 
 
-    if len(CustomPortalStart):
+    if len(CustomPortalStart) > 0:
         #eventPlayer.PreviewsArray.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint] )
         for eventPlayer.PreviewsI in range(len(eventPlayer.PortalStart_Cache)):
             eventPlayer.PreviewsArray.append([eventPlayer.PortalStart_Cache[eventPlayer.PreviewsI ],eventPlayer.PortalEnd_cache[eventPlayer.PreviewsI ]])
@@ -454,6 +454,8 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
         "Quick reset is enabled" if eventPlayer.QuickRestartToggle else "Quick reset is disabled"
     )
 
+
+
 rule "Toggle Hud | hold secondary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
@@ -472,6 +474,7 @@ rule "Toggle Hud | hold secondary":
     ) 
     
     eventPlayer.GuideToggle = not eventPlayer.GuideToggle 
+
 
 rule "Toggle hints":
     @Event eachPlayer

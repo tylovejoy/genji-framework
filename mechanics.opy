@@ -178,9 +178,9 @@ rule "Checking | standing resets variables":
     eventPlayer.BhopUsed = true
 
 rule "Checking | Double Jump":
+    @Disabled
     @Event eachPlayer
     @Hero genji
-    #Script by LulledLion
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isOnGround() == true
     
