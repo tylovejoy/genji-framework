@@ -7,6 +7,7 @@ huds outside this file:
     - editor huds ( editor)
 
 */
+
 rule "Huds: Global/Localplayer":
     wait(2)
 
@@ -29,6 +30,7 @@ rule "Huds: Global/Localplayer":
     Code = null
 
     #  if Code != "code here - 代码" or Cachedcredits[1] == null::
+
 
     hudSubtext(getAllPlayers(), 
         "作者: {}".format( Cachedcredits[0] )
@@ -128,6 +130,7 @@ rule "Huds: Global/Localplayer":
             , HudPosition.TOP, HO.add_custommsg1, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
         )
      
+  
     if CpIwtText != null:
         createInWorldText(
             getAllPlayers(), 
@@ -136,7 +139,7 @@ rule "Huds: Global/Localplayer":
             CpIwtPos[CpIwtCp.index(localPlayer.CurrentCheckpoint)], 
             2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, CpIwtColor, SpecVisibility.DEFAULT)
 
-    if HintText != []:
+    if len(HintText) > 0:
         hudText(
             localPlayer if localPlayer.GuideToggle else null,
             null, 
@@ -249,6 +252,8 @@ rule "Huds: Global/Localplayer":
     #else:
         # restart without leaderboard if editor on
  
+
+
 rule "Huds: each player":
     @Event eachPlayer
     wait(0.5)
@@ -273,6 +278,7 @@ rule "Huds: each player":
         HudPosition.LEFT, HO.game_timer, ColorConfig[customize.time], Color.GRAY, ColorConfig[customize.time], HudReeval.STRING, SpecVisibility.DEFAULT
     )
     
+
     hudText(
         eventPlayer if not eventPlayer.LeaderboardToggle else null,  
         " {0} ({2}/{3})\n―――――――――――\n {1}\n"
@@ -395,6 +401,8 @@ rule "Huds: each player":
             , HudPosition.TOP, HO.comp_info, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.STRING, SpecVisibility.DEFAULT
         ) 
 
+  
+  
 rule "Huds: remake leaderboard": # for global isntead of tied to player
     @Condition LeaderBoardRemake   
     wait() # account for delay in completion
@@ -526,6 +534,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
             ),HudPosition.TOP, HO.board_display4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
         )
         LeaderBoardHuds.append(getLastCreatedText())
+
 
 def UpdateTitle():
     @Name "Tittle "
