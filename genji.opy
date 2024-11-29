@@ -1,4 +1,4 @@
-#!define versionhere "1.9.4a"
+#!define versionhere "1.9.4D"
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
@@ -86,7 +86,7 @@ def UpdateCache():
     eventPlayer.banstring = ""
     wait()
 
-    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Multiclim - 封禁蹭留", false, 1):
+    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Multiclimb - 封禁蹭留", false, 1):
         eventPlayer.ban_multi = true
     elif eventPlayer.CurrentCheckpoint in BanMulti:
         eventPlayer.banstring = "∞ {}".format(eventPlayer.banstring)
@@ -142,7 +142,13 @@ def UpdateCache():
     else:
         eventPlayer.ban_bhop = false
 
-
+    if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require djump available - 留二段跳 ", false, 5):
+        eventPlayer.ban_djump = true
+    elif eventPlayer.CurrentCheckpoint in BanDjump:
+        eventPlayer.banstring = "» {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓ ︽
+        eventPlayer.ban_djump = true
+    else:
+        eventPlayer.ban_djump = false
  
     wait()
     async(CheckUlt(), AsyncBehavior.RESTART)
@@ -640,7 +646,12 @@ rule "Arrive | Ground reset | traces":
                 goto lbl_abc
             
             if eventPlayer.ban_bhop and not (eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == Color.GREEN):
-                smallMessage(eventPlayer, "   ≥ 留小跳进点!" checkCN "   ≥ You need to have a bhop to complete!")
+                smallMessage(eventPlayer, "   ≥ 留小跳进点!" checkCN "   ≥ Must have a bhop to complete!")
+                checkpointFailReset()
+                goto lbl_abc
+
+            if eventPlayer.ban_djump and not (eventPlayer.DoubleUsed == 0):
+                smallMessage(eventPlayer, "   » 留二段跳!" checkCN "   » Must have a double jump to complete!")
                 checkpointFailReset()
                 goto lbl_abc
 
