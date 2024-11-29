@@ -224,22 +224,33 @@ rule "Setup and Variables":
 
     wait(1)
 
+    # clean out -1's after the ban has loaded
+    BanBhop = [i for i in BanBhop if i != -1] if len(BanBhop) else []
+    BanClimb = [i for i in BanClimb if i != -1] if len(BanClimb) else []
+    BanEmote = [i for i in BanEmote if i != -1] if len(BanEmote) else []
+    BanDead = [i for i in BanDead if i != -1] if len(BanDead) else []
+    BanCreate = [i for i in BanCreate if i != -1] if len(BanCreate) else []
+    BanMulti = [i for i in BanMulti if i != -1] if len(BanMulti) else []
+    BanTriple = null #[i for i in BanTriple if i != -1] if len(BanTriple) > 0 else [] # legacy code, now auto sets it to null to save space
+    BanStand = [i for i in BanStand if i != -1] if len(BanStand) else []
+    BanDjump = BanDjump if len(BanDjump) else []
+
     if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Multiclimb - 封禁蹭留", false, 1):
-        BanMulti = [0, true]
+        BanMulti = [true, null].concat(BanMulti)
     if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Createbhop - 封禁卡小", false, 2):
-        BanCreate = [0, true]
+        BanCreate = [true, null].concat(BanCreate)
     if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","ban standcreate - 封禁站卡", false, 5):
-        BanStand = [0, true]
+        BanStand = [true, null].concat(BanStand)
     if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Deathbhop - 封禁死小", false, 3):
-        BanDead = [0, true]
+        BanDead = [true, null].concat(BanDead)
     if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Emote Savehop - 封禁表情留小", false, 4):
-        BanEmote = [0, true]
+        BanEmote = [true, null].concat(BanEmote)
     if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Wallclimb - 封禁爬墙", false, 5):
-        BanClimb = [0, true]
+        BanClimb = [true, null].concat(BanClimb)
     if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require bhop available - 留小跳进点 ", false, 5):
-        BanBhop = [0, true]
+        BanBhop = [true, null].concat(BanBhop)
     if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require djump available - 留二段跳 ", false, 5):
-        BanDjump = [0, true]
+        BanDjump = [true, null].concat(BanDjump)
 
     DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
     PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用传送门 (占点地图)",true, 10)
@@ -255,17 +266,6 @@ rule "Setup and Variables":
         instructiontext = null
 
     wait(1) # add back to below wait if removed
-    # clean out -1's after the ban has laoded
-
-    BanBhop = BanBhop if len(BanBhop) else []
-    BanClimb = BanClimb if len(BanClimb) else []
-    BanEmote = BanEmote if len(BanEmote) else []
-    BanDead = BanDead if len(BanDead) else []
-    BanCreate = BanCreate if len(BanCreate) else []
-    BanMulti = BanMulti if len(BanMulti) else []
-    BanTriple = null #BanTriple if len(BanTriple) else [] # legacy code, now auto sets it to null to save space
-    BanStand = BanStand if len(BanStand) else []
-    BanDjump = BanDjump if len(BanDjump) else []
 
     if len(PortalDest) > 0: # pre set control map portals. not in portal rule because shared I variable
         for TempIterator1 in range(len(PortalLoc)):
