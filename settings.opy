@@ -23,7 +23,9 @@ settings {
             ]
         },
         "tdm": {
-            "enabledMaps": [],
+            "enabledMaps": [
+                selectedmap
+            ],
             "gameLengthInMn": 15,
             "enableMercyRezKillCancel": false,
             "enableSelfInitiatedRespawn": false
