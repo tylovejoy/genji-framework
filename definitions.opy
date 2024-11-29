@@ -242,6 +242,7 @@ globalvar BanEmote 84
 globalvar BanClimb 85
 globalvar BanBhop 86
 globalvar BanStand 87 # bans on second hop
+globalvar BanDjump 88
 
 globalvar DestructoIter 90
 globalvar MapVectorArray 91
@@ -328,13 +329,14 @@ playervar ban_emote 76
 playervar ban_climb 77
 playervar ban_bhop 78
 playervar ban_standcreate 81 # bans on second hop
+playervar ban_djump 86
 playervar splittime 79                      # int                       --- stored time that the split compares to
 playervar splitdisplay 80                   # int                       --- displayed split value
 #playervar splitson 81                      # bool                      --- turning splits on/off is now done via seting splittime to -999
 playervar practicetimer 82
 playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
 playervar BhopHUDColor 85                   # Color                     --- Color for Bhop HUD
-playervar DoubleUsed 86                     # bool
+playervar DoubleUsed 87                     # bool
 
 #Subroutine names
 subroutine StartGame_Sub 1
