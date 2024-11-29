@@ -172,41 +172,31 @@ rule "Checking | standing resets variables":
     eventPlayer.MultiClimbCount = 0
     eventPlayer.CreateCounter = 0
     eventPlayer.Bhopcount = 0
+    eventPlayer.DoubleUsed = null
     wait(0)
     if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
         goto RULE_START
     eventPlayer.BhopUsed = true
 
 rule "Checking | Double Jump":
-    @Disabled
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.isAlive() == true
-    @Condition eventPlayer.isOnGround() == true
-    
-    eventPlayer.DoubleUsed = null
-    #On Ground
-    waitUntil(not eventPlayer.isOnGround(), 9999)
+    @Condition eventPlayer.isOnGround() == false
     #Saved Double Jump
     waitUntil(eventPlayer.isOnGround() or eventPlayer.isJumping() or eventPlayer.isHoldingButton(Button.JUMP), 0.096)
-    if RULE_CONDITION:
-        goto RULE_START
-    if not eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP):
-        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
-
-    waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
-    if RULE_CONDITION:
-        goto RULE_START
+    if not RULE_CONDITION: return
     while true:
+        #Released Jump
+        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        if not RULE_CONDITION: return
         #Double Jumped
         waitUntil(eventPlayer.isOnGround() or eventPlayer.isHoldingButton(Button.JUMP), 9999)
-        if RULE_CONDITION:
-            goto RULE_START
+        if not RULE_CONDITION: return
         eventPlayer.DoubleUsed = true
+        #Reset
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.DoubleUsed, 9999)
-        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
-        if RULE_CONDITION:
-            goto RULE_START
+        if not RULE_CONDITION: return
 
 rule "HUD | Multiclimb Counter":
     @Event eachPlayer
