@@ -255,10 +255,9 @@ rule "Huds: Global/Localplayer":
 
 
 rule "Huds: each player":
-    @Event eachPlayer
+    @Event playerJoined
+    @Condition eventPlayer.isDummy() == false
     wait(0.5)
-    if eventPlayer.isDummy() and eventPlayer.getCurrentHero() == Hero.DVA:
-        return 
     
     # ban icons in level
     hudText(eventPlayer, null, 
@@ -329,6 +328,13 @@ rule "Huds: each player":
         ,   
         HudPosition.TOP, HO.game_level_orb, ColorConfig[customize.level], ColorConfig[customize.orb_lock], ColorConfig[customize.level], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
+
+    hudSubheader(eventPlayer,"{0}{1}{2}\n{3}{4}{5}".format(
+        "■" if eventPlayer.isHoldingButton(Button.JUMP) else "□", "▲" if eventPlayer.getThrottle().z > null else "△",
+        "●" if eventPlayer.isHoldingButton(Button.CROUCH) else "○", "◀" if eventPlayer.getThrottle().x > null else "◁",
+        "▼" if eventPlayer.getThrottle().z < null else "∇", "▶" if eventPlayer.getThrottle().x < null else "▷"),
+        HudPosition.LEFT, HO.game_input, evalOnce(ColorConfig[customize.time]),HudReeval.STRING, SpecVisibility.DEFAULT)
+
     # climb/bhop indicators
     hudHeader(eventPlayer,         
         #"爬墙已用{0}".format("" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
@@ -537,7 +543,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
 
 
 def UpdateTitle():
-    @Name "Tittle "
+    @Name "Title"
     if TitleData == null or CompMode or eventPlayer.PracticeToggle or eventPlayer.EditorOn or (not eventPlayer.CurrentCheckpoint in TitleData[0]): 
         return
     destroyInWorldText(eventPlayer.TitleStore)
