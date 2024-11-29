@@ -371,6 +371,7 @@ enum HO:
     game_split_display,
     game_bhop,
     game_climb,
+    game_input,
 
     edit_orblimit,
     edit_selecteddata,
