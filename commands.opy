@@ -204,7 +204,9 @@ rule "Enter Spectate | Hold Interact":
         stopChasingVariable(eventPlayer.Timer)
         eventPlayer.disableRespawn()
         wait(0.2)
+        eventPlayer.setDamageReceived(100)
         kill(eventPlayer, null)
+        eventPlayer.setDamageReceived(0)
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
  
     eventPlayer.SpectateToggle = not eventPlayer.SpectateToggle
@@ -271,7 +273,9 @@ rule "Toggle Invincible Mode | Melee + Reload":
         eventPlayer.allowButton(Button.ABILITY_1)
     wait()
     if eventPlayer.isUsingUltimate():
+        eventPlayer.setDamageReceived(100)
         kill(eventPlayer, null)
+        eventPlayer.setDamageReceived(0)
     eventPlayer.LockState = false
     wait(0.16)
     #waitUntil(not eventPlayer.isHoldingButton(Button.RELOAD), 2)
@@ -296,7 +300,9 @@ rule "Toggle Practice Mode | Melee + Ultimate":
     eventPlayer.disallowButton(Button.ABILITY_1)
 
     if eventPlayer.isUsingUltimate():
+        eventPlayer.setDamageReceived(100)
         kill(eventPlayer, null)
+        eventPlayer.setDamageReceived(0)
       
     wait(0.16)
     if eventPlayer.PracticeToggle:
@@ -360,7 +366,9 @@ rule "Practice Restart | Interact":
         return
     
     if eventPlayer.isUsingUltimate():
+        eventPlayer.setDamageReceived(100)
         kill(eventPlayer, null)
+        eventPlayer.setDamageReceived(0)
 
     eventPlayer.practicetimer = 0
     eventPlayer.splittime = 0 
@@ -431,7 +439,9 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
         eventPlayer.splittime = eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer
         eventPlayer.LockCollected = []
         if eventPlayer.isUsingUltimate():
+            eventPlayer.setDamageReceived(100)
             kill(eventPlayer, null)
+            eventPlayer.setDamageReceived(0)
         eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), true)
         eventPlayer.flytoggle = null
         async(CheckUlt(), AsyncBehavior.RESTART)
