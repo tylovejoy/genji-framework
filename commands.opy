@@ -424,32 +424,10 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     @Condition not eventPlayer.isHoldingButton(Button.MELEE)
     @Condition not eventPlayer.isHoldingButton(Button.INTERACT)
     if eventPlayer.QuickRestartToggle:
-        # lock check
-        # dont go 0,0,0 when no cps
-        if CheckpointPositions == [] or (eventPlayer.LockEditor and eventPlayer == hostPlayer):
-            return
-
-        if eventPlayer.EditorOn:
-            if eventPlayer == hostPlayer and eventPlayer.EditModeSelection == 0 and eventPlayer.isHoldingButton(Button.INTERACT):
-                wait(0.2)
-        eventPlayer.splittime = eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer
-        eventPlayer.LockCollected = []
-        if eventPlayer.isUsingUltimate():
-            eventPlayer.setDamageReceived(100)
-            kill(eventPlayer, null)
-            eventPlayer.setDamageReceived(0)
-        eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), true)
         eventPlayer.flytoggle = null
-        async(CheckUlt(), AsyncBehavior.RESTART)
-        async(CheckDash(), AsyncBehavior.RESTART)
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
-        wait(0.1)
         eventPlayer.stopForcingPosition()
-        if eventPlayer.CurrentCheckpoint == 0 and not eventPlayer.PracticeToggle:
-            eventPlayer.Timer = 0
-            eventPlayer.splittime = 0
-        eventPlayer.flytoggle = null
-        TriggerOnFailSuccesReset()
+        checkpointFailReset()
+
         wait(0.32)
     wait(1, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
