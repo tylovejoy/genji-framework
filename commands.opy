@@ -252,11 +252,6 @@ rule "Toggle Invincible Mode | Melee + Reload":
         eventPlayer.flytoggle = null
         TriggerOnFailSuccesReset()
     else:
-        if not eventPlayer.NotOnLastCp:
-            wait()
-            eventPlayer.allowButton(Button.ABILITY_1)
-            eventPlayer.LockState = false
-            return
         StartPauseTimer()
         stopChasingVariable(eventPlayer.Timer)
         stopChasingVariable(eventPlayer.practicetimer)
@@ -427,6 +422,7 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition not eventPlayer.isHoldingButton(Button.MELEE)
+    @Condition not eventPlayer.isHoldingButton(Button.INTERACT)
     if eventPlayer.QuickRestartToggle:
         # lock check
         # dont go 0,0,0 when no cps
