@@ -68,7 +68,7 @@ rule "------------------------------------------------------------------------  
 
 def UpdateCache():
     @Name "SUB | Update Effect Cache"
-    # note: if adding cp pos to cache, make sure to also adjsut editor things like move and teleport
+    # note: if adding cp pos to cache, make sure to also adjust editor things like move and teleport
     eventPlayer.NotOnLastCp = (eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 and len(CheckpointPositions)  > 1)
     
     eventPlayer.BouncePosition_Cache = [_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
@@ -746,8 +746,12 @@ rule "Bounce Ball / Orb | Activate":
 
     eventPlayer.bouncetouchedlast = eventPlayer.bouncetouched 
 
-    if eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched] != 0:
+    if eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched] > 0:
         eventPlayer.applyImpulse(Vector.UP, eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+    elif eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched] < 0:
+        eventPlayer.cancelPrimaryAction()
+        eventPlayer.DoubleUsed = null
+        playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     if eventPlayer.BounceUlt_Cache[eventPlayer.bouncetouched]:
         eventPlayer.setUltEnabled(true)
