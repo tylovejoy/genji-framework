@@ -620,92 +620,93 @@ rule "Arrive | Ground reset | traces":
             playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.8)
             playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.6)
             playEffect(getAllPlayers(), DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.4)
-            wait(0.128)     
-    elif eventPlayer.NotOnLastCp and eventPlayer.InvincibleToggle == false and (CompMode == false or CompTime > 0) and eventPlayer.LockState == false:
-        if distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= cpcircleradius:
-            # arrived ----------------------------------------------------------------------------------------------------
-            eventPlayer.MovedCheckpoint = true
-            if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache: # kill player if not colleted the locks
-                if eventPlayer.isUsingAbility1():
-                    waitUntil(not eventPlayer.isUsingAbility1(), 1)    
-                smallMessage(eventPlayer, "   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[customize.orb_lock]))
-                #kill(eventPlayer, null)
-                checkpointFailReset()
-                goto lbl_abc
-            if eventPlayer.ban_climb and eventPlayer.WallclimbUsed:
-                smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
-                checkpointFailReset()
-                goto lbl_abc
-            
-            if eventPlayer.ban_bhop and not (eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == Color.GREEN):
-                smallMessage(eventPlayer, "   ≥ 留小跳进点!" checkCN "   ≥ Must have a bhop to complete!")
-                checkpointFailReset()
-                goto lbl_abc
-
-            if eventPlayer.ban_djump and not (eventPlayer.DoubleUsed == 0):
-                smallMessage(eventPlayer, "   » 留二段跳!" checkCN "   » Must have a double jump to complete!")
-                checkpointFailReset()
-                goto lbl_abc
-
-            #eventPlayer.LockCollected = []
-            eventPlayer.CurrentCheckpoint += 1
-            eventPlayer.HintsOn = false
-            UpdateCache()
-            # remove ult feature disabled for speedruning purposes
-            #if eventPlayer.isUsingUltimate() and not eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints:
-            #    kill(eventPlayer, null)
-            if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) > 1:# teleport cps
-                eventPlayer.startForcingPosition( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ,false)
-                eventPlayer.flytoggle = null
-                wait(0.1)
-                eventPlayer.stopForcingPosition()
-                # position wasnt ready when check cache ran
-                async(CheckUlt(), AsyncBehavior.RESTART)
-                async(CheckDash(), AsyncBehavior.RESTART)
-
-            
-            if eventPlayer.splitdisplay != -999:
-                eventPlayer.splitdisplay =  (eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer) - eventPlayer.splittime
-            wait()
-            playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
-            playEffect(eventPlayer if CompMode or eventPlayer.invis else getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
-            # msg disabled due to annoying new sound
-            #bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.CurrentCheckpoint, "抵达检查点" checkCN "Arrived at level")   )
-            wait()
-            UpdateTitle()
-            TriggerOnFailSuccesReset()
-           
-            if eventPlayer.PracticeToggle:
-                eventPlayer.splittime = eventPlayer.practicetimer
-                goto lbl_abc
-            
-            eventPlayer.splittime = eventPlayer.Timer
-            if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1 and (not eventPlayer.EditorOn) and (not eventPlayer.PracticeToggle): # complete lvl
-                stopChasingVariable(eventPlayer.Timer)
-                stopChasingVariable(eventPlayer.practicetimer) 
-                wait()
-                bigMessage(getAllPlayers(), "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.Timer),"已通关! 用时" checkCN "Mission complete! Time"))
-                   
-                DeleteSave()
-                Leaderboardupdate()
-                if CompMode and CompAtmpNum > 0:
-                    if eventPlayer.AttemptCount == CompAtmpNum: 
-                        CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = -1 
-                        eventPlayer.AttemptCount = -1                     
-                        eventPlayer.CompDone = true
-                        eventPlayer.LeaderboardToggle = true
-                        eventPlayer.disableRespawn()
-                        eventPlayer.setDamageReceived(100)
-                        kill(eventPlayer,null)
-                        eventPlayer.setDamageReceived(0)
-                    else:
-                        CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.AttemptCount + 1
-            else: # update save
-                DeleteSave()
-                MakeSave()
-        elif distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) > cpcircleradius and not touchground:
-            # ground reset ----------------------------------------------------------------------------------------------------
+            wait(0.128)
+    elif eventPlayer.InvincibleToggle or (CompMode and CompTime == 0) or eventPlayer.LockState:
+        # Do nothing
+    elif distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= cpcircleradius:
+        # arrived ----------------------------------------------------------------------------------------------------
+        eventPlayer.MovedCheckpoint = true
+        if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache: # kill player if not colleted the locks
+            if eventPlayer.isUsingAbility1():
+                waitUntil(not eventPlayer.isUsingAbility1(), 1)    
+            smallMessage(eventPlayer, "   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[customize.orb_lock]))
+            #kill(eventPlayer, null)
             checkpointFailReset()
+            goto lbl_abc
+        if eventPlayer.ban_climb and eventPlayer.WallclimbUsed:
+            smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
+            checkpointFailReset()
+            goto lbl_abc
+        
+        if eventPlayer.ban_bhop and not (eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == Color.GREEN):
+            smallMessage(eventPlayer, "   ≥ 留小跳进点!" checkCN "   ≥ Must have a bhop to complete!")
+            checkpointFailReset()
+            goto lbl_abc
+
+        if eventPlayer.ban_djump and not (eventPlayer.DoubleUsed == 0):
+            smallMessage(eventPlayer, "   » 留二段跳!" checkCN "   » Must have a double jump to complete!")
+            checkpointFailReset()
+            goto lbl_abc
+
+        #eventPlayer.LockCollected = []
+        eventPlayer.CurrentCheckpoint += 1
+        eventPlayer.HintsOn = false
+        UpdateCache()
+        # remove ult feature disabled for speedruning purposes
+        #if eventPlayer.isUsingUltimate() and not eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints:
+        #    kill(eventPlayer, null)
+        if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) > 1:# teleport cps
+            eventPlayer.startForcingPosition( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ,false)
+            eventPlayer.flytoggle = null
+            wait(0.1)
+            eventPlayer.stopForcingPosition()
+            # position wasnt ready when check cache ran
+            async(CheckUlt(), AsyncBehavior.RESTART)
+            async(CheckDash(), AsyncBehavior.RESTART)
+
+        
+        if eventPlayer.splitdisplay != -999:
+            eventPlayer.splitdisplay =  (eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer) - eventPlayer.splittime
+        wait()
+        playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
+        playEffect(eventPlayer if CompMode or eventPlayer.invis else getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
+        # msg disabled due to annoying new sound
+        #bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.CurrentCheckpoint, "抵达检查点" checkCN "Arrived at level")   )
+        wait()
+        UpdateTitle()
+        TriggerOnFailSuccesReset()
+        
+        if eventPlayer.PracticeToggle:
+            eventPlayer.splittime = eventPlayer.practicetimer
+            goto lbl_abc
+        
+        eventPlayer.splittime = eventPlayer.Timer
+        if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1 and (not eventPlayer.EditorOn) and (not eventPlayer.PracticeToggle): # complete lvl
+            stopChasingVariable(eventPlayer.Timer)
+            stopChasingVariable(eventPlayer.practicetimer) 
+            wait()
+            bigMessage(getAllPlayers(), "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.Timer),"已通关! 用时" checkCN "Mission complete! Time"))
+                
+            DeleteSave()
+            Leaderboardupdate()
+            if CompMode and CompAtmpNum > 0:
+                if eventPlayer.AttemptCount == CompAtmpNum: 
+                    CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = -1 
+                    eventPlayer.AttemptCount = -1                     
+                    eventPlayer.CompDone = true
+                    eventPlayer.LeaderboardToggle = true
+                    eventPlayer.disableRespawn()
+                    eventPlayer.setDamageReceived(100)
+                    kill(eventPlayer,null)
+                    eventPlayer.setDamageReceived(0)
+                else:
+                    CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.AttemptCount + 1
+        else: # update save
+            DeleteSave()
+            MakeSave()
+    elif distance(eventPlayer,CheckpointPositions[eventPlayer.CurrentCheckpoint].last()) > cpcircleradius:
+        # ground reset ----------------------------------------------------------------------------------------------------
+        checkpointFailReset()
 
     lbl_abc:
     eventPlayer.LockCollected = []
