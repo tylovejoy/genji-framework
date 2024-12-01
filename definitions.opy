@@ -273,6 +273,7 @@ playervar LockState                         # bool                      --- lock
 playervar PauseTimer                        # float                     --- time in spectate/invincible, chased
 playervar Temp
 playervar BhopUsed                          # bool                      --- turned into bool
+playervar DoubleUsed                        # bool
 playervar MovedCheckpoint
 playervar PracticeCheckpoint                # int                       --- Saved practice checkpoint
 playervar PracticeToggle                    # int                       --- turned into bool
@@ -336,7 +337,6 @@ playervar splitdisplay                      # int                       --- disp
 playervar practicetimer
 playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
 playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
-playervar DoubleUsed                        # bool
 
 #Subroutine names
 subroutine StartGame_Sub

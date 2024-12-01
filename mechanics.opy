@@ -181,6 +181,7 @@ rule "Checking | standing resets variables":
 rule "Checking | Double Jump":
     @Event eachPlayer
     @Hero genji
+    @Condition evalOnce(len(BanDjump)) > null
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isOnGround() == false
     #Saved Double Jump
