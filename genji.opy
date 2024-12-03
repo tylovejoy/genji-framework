@@ -8,16 +8,16 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!define inspectoron false
 
 # disable via double ## at include, not the define because the define needs to exist
-#!define testaitoggle ##!include "test-scripts.opy"
+#!define testToggle ##!include "test-scripts.opy"
 
 # enable to remove invis command (this command cant be pasted in cn client die to null and none translating to same symbol) 
-#!define disableInvisCommand false
+#!define enableInvisCommand true
 
+# defaults: off, attempt:5, 120 min, restart:false
 #!define compmodetoggle false
 #!define attemptcount 5
 #!define comptimelimit 120
 #!define comprestartlimit false
-# defaults: off, attempt:5, 120 min, restart:false
 
 # settings ##############################
 # limit on how many orbs can be made
@@ -31,7 +31,7 @@ editortoggle(0) # 0 is editor, rest is numbers
 # distance range for player - orb 1.4
 #!define bounceorbdistance 1.4
 # height added to player for orb detection. inludes the + 
-#!define bounceoffset + vect(0,0.7,0)
+#!define bounceoffset + Vector.UP * 0.7
 
 
 #disable overpy map detection (command removed by zezo after fix by blizzard)
@@ -79,7 +79,6 @@ def UpdateCache():
     eventPlayer.BounceLockMax_Cache = len([i for i in eventPlayer.BounceLock_Cache if i])    
     eventPlayer.KillPosition_Cache = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
-
     eventPlayer.PortalStart_Cache = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == 999]
     eventPlayer.PortalEnd_cache = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == 999]
 
@@ -213,7 +212,6 @@ rule "Setup and Variables":
     CustomPortalCP = CustomPortalCP if len(CustomPortalCP) > 0 else [] 
 
     LeaderBoardFull = []
-
     TitleData = null
     PortalNames = []
     PortalLoc = []
@@ -1011,4 +1009,4 @@ rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE
 #!include "addons-page2.opy"
 
 # enable/disable the include via defines
-testaitoggle 
+testToggle 

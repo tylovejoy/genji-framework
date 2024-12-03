@@ -26,7 +26,7 @@ rule "Split hide":
     smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay == -999 else "   split display on")
     
 rule "Toggle Invisible | Hold Deflect":
-    @Condition false == disableInvisCommand
+    @Condition enableInvisCommand
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition not eventPlayer.EditorOn
