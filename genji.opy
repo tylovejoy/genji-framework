@@ -380,8 +380,6 @@ rule "Player Initialize":
     eventPlayer.setDamageReceived(0)
     eventPlayer.EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
     eventPlayer.LockEditor = true
-    if eventPlayer.isDummy(): # and eventPlayer.getCurrentHero() == Hero.DVA:
-        return # special here for dva instead of later because 100% she doesnt play the match
     eventPlayer.preloadHero(Hero.GENJI)
     eventPlayer.GuideToggle = true
     eventPlayer.disableGamemodeHud()
@@ -401,14 +399,7 @@ rule "Player Initialize":
     createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, ColorConfig[customize.ring_next] , CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, ColorConfig[customize.shaft], CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, ColorConfig[customize.nexticon_color], true)
-    /*
-    wait(1)  
-    if not eventPlayer.isDummy(): # players turn to genji
-        eventPlayer.startForcingHero(Hero.GENJI)
-    elif eventPlayer.getCurrentHero() != Hero.GENJI: # bots other then genji arent playing
-        eventPlayer.DontPlay = true
-        return
-    */
+
     waitUntil(eventPlayer.hasSpawned(), 9999)
     eventPlayer.LockEditor = false
 
@@ -605,7 +596,6 @@ rule "Arrive | Ground reset | traces":
     #@Hero genji
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isAlive()
-    @Condition not eventPlayer.DontPlay
     if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
         
         if (eventPlayer.isMoving() and eventPlayer.PracticeToggle == false and eventPlayer.invis == false and eventPlayer.EditorOn == false and CompMode == false):

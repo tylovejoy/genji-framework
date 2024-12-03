@@ -266,7 +266,6 @@ playervar SpectateToggle                    # bool                       --- tur
 #playervar MapVectorArray                   # MsDestructo Vectors
 playervar LedgeDash
 playervar LockEditor                        # bool                      --- ensure only 1 editor command can go of at the time
-playervar DontPlay
 playervar WallclimbUsed                     # bool                      --- turned into bool
 playervar GuideToggle                       # bool                       --- turned into bool, shows/hides editor hud
 playervar LockState                         # bool                      --- locked means you are curently runing arrive checkpoint rule

@@ -256,7 +256,6 @@ rule "Huds: Global/Localplayer":
 
 rule "Huds: each player":
     @Event playerJoined
-    @Condition eventPlayer.isDummy() == false
     wait(0.5)
     
     # ban icons in level
