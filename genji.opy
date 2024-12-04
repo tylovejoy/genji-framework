@@ -611,7 +611,7 @@ rule "Arrive | Ground reset | traces":
             wait(0.128)
     elif eventPlayer.InvincibleToggle or (CompMode and CompTime == 0) or eventPlayer.LockState:
         # Do nothing
-    elif distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= cpcircleradius:
+    elif eventPlayer.NotOnLastCp and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]) <= cpcircleradius:
         # arrived ----------------------------------------------------------------------------------------------------
         eventPlayer.MovedCheckpoint = true
         if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache: # kill player if not colleted the locks
