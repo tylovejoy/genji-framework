@@ -122,132 +122,132 @@ arrayname = [x - (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in arrayn
 #!define BhopHUDColor CH           
 
 
-# ----------------SUBS------------------
+#----------------SUBS------------------
 #!define StartGame_Sub Sub1
 ##!define KILLBALL KILLBALL
 ##!define pinball pinball
 
+#----------------Global Variables------------------
+# Warning do not change global variable indices.
+# Will result in variable mismatch upon exporting mapdata to newer versions
+# Current Unused Variables: 1,6,9,11,16,17,19,28,29,31,36,37,48,49,59,72,89,92+
 
-
-
-
-#Global variables
-globalvar CheckpointPositions               # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
+globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 #globalvar SelectedCheckpoint_Editing       # legacy      # int                       --- selected checkpoint
-globalvar CheckpointRings_Editing           # list[effect]              --- Holds checkpoint effects in editing context
-globalvar MsDestructo                       # MsDestructo Player
-globalvar TimeRemaining
-globalvar PortalEffects                     # list[effect]              --- Array holding custom portal effects
+globalvar CheckpointRings_Editing 2         # list[effect]              --- Holds checkpoint effects in editing context
+globalvar MsDestructo 3                     # MsDestructo Player
+globalvar TimeRemaining 4
+globalvar PortalEffects 5                   # list[effect]              --- Array holding custom portal effects
 #globalvar CurrentPortalEditing
 #globalvar Portal1PlayerList                # list[player]              --- players who can see portal 1
 #globalvar Portal2PlayerList                # list[player]              --- players who can see portal 2
-globalvar KillBallPositions                 # list[vect]                --- KillBall position
-globalvar KillBallRadii                     # list[float]               --- KillBall radius, default 5
+globalvar KillBallPositions 7               # list[vect]                --- KillBall position
+globalvar KillBallRadii 8                   # list[float]               --- KillBall radius, default 5
 #globalvar SelectedKillball_Editing         # int                       --- Current killball in editing context
-globalvar KillBallEffects                   # list[effect]              --- Array holding killball effects
+globalvar KillBallEffects 10                # list[effect]              --- Array holding killball effects
 #globalvar KillBallChase                    # vect                      --- Location of killball while editing, chased.
-globalvar BladeEnabledCheckpoints           # int                       --- blade enabled, should be bool.
-globalvar DashEnabledCheckpoints            # int                       --- dash enabled, should be bool.
+globalvar BladeEnabledCheckpoints 12        # int                       --- blade enabled, should be bool.
+globalvar DashEnabledCheckpoints 13         # int                       --- dash enabled, should be bool.
 #globalvar ListPlayersAtCheckpoints         # list[list[player]]        --- players at a specific checkpoint
 #globalvar ActivePlayers                    # list[player]              --- Active players, Non-saved, non-spectating active players
 #globalvar EditorOn                         # bool                      --- editor rules enabled?
-globalvar EditSelected
-globalvar EditSelectIdArray
+globalvar EditSelected 14
+globalvar EditSelectIdArray 15
 
 #globalvar EditorMoveItem                   # num                       --- used for moving a portal
 
 #Bounce Pad editing stuff
-globalvar BouncePositions                   # list[vect]                --- list of bouncepad positions
+globalvar BouncePositions 18                # list[vect]                --- list of bouncepad positions
 #globalvar CurrentBounce_Editing            # int                       --- count of 0-indexed bouncepad pos currently
-globalvar BounceEffects                     # list[effects]             --- list of bounce pad effect entities
+globalvar BounceEffects 20                  # list[effects]             --- list of bounce pad effect entities
 #globalvar CurrentBouncePosition_Editing    # vect                      --- the position we just added to bouncepad positions
-globalvar EditorMoveItem                    # num                       --- used for moving a portal
+globalvar EditorMoveItem 21                 # num                       --- used for moving a portal
 
-globalvar BounceStrength                    # list[float]               --- bouncepad strength
-globalvar BounceToggleUlt                   # list[bool]                --- toggle ult on bounce
-globalvar BounceToggleDash                  # list[bool]                --- toggle dash on bounce
-globalvar BounceToggleLock                  # list[bool]                --- lock cp if not collected bounce
+globalvar BounceStrength 22                 # list[float]               --- bouncepad strength
+globalvar BounceToggleUlt 23                # list[bool]                --- toggle ult on bounce
+globalvar BounceToggleDash 24               # list[bool]                --- toggle dash on bounce
+globalvar BounceToggleLock 25               # list[bool]                --- lock cp if not collected bounce
 
-globalvar KillballCheckpoints               # list[list[int]]           --- 2d list of checkpoints that havea kill ball [[0], [3]]
-globalvar BouncePadCheckpoints              # list[list[int]]           --- 2d list like killballnumber
+globalvar KillballCheckpoints 26            # list[list[int]]           --- 2d list of checkpoints that havea kill ball [[0], [3]]
+globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d list like killballnumber
 
 # old save progresion, removed but kept in here for legacy pasta purposes
-globalvar SavedProgress                     # list[Any]                 --- saves player data in array for rejoining, sequential data
+globalvar SavedProgress 30                  # list[Any]                 --- saves player data in array for rejoining, sequential data
 
 # Leaderboard stuff
 #globalvar toplistPlayers
 #globalvar toplistTimes
 #globalvar toplistSortedTimes
-globalvar LeaderBoardFull                   # [[name,second,prettytime]]--- sorted list of 0-19 leaderboard entries
-globalvar LeaderBoardHuds
-globalvar LeaderBoardRemake                 # bool                      --- indicate board needs remaking
-globalvar BhopBanToggle                     # bool                      --- Enabled if Bhop is banned
+globalvar LeaderBoardFull 32                # [[name,second,prettytime]]--- sorted list of 0-19 leaderboard entries
+globalvar LeaderBoardHuds 33
+globalvar LeaderBoardRemake 34              # bool                      --- indicate board needs remaking
+globalvar BhopBanToggle 35                  # bool                      --- Enabled if Bhop is banned
 
 
-globalvar TempIterator1                     # int                       --- temp iterator
+globalvar TempIterator1 38                  # int                       --- temp iterator
 
-globalvar DashExploitToggle
+globalvar DashExploitToggle 39
 
 
-globalvar PortalNames                       # [str]                     --- display name of portals
-globalvar PortalLoc                         # [vect]                    --- portal position
-globalvar PortalDest                        # [vect]                    --- portal destination
-globalvar PortalOn                          # bool                      --- portals enabled
-globalvar Difficultyhud                     # number                    --- workshop toggle to display difficulty hud
+globalvar PortalNames 40                    # [str]                     --- display name of portals
+globalvar PortalLoc 41                      # [vect]                    --- portal position
+globalvar PortalDest 42                     # [vect]                    --- portal destination
+globalvar PortalOn 43                       # bool                      --- portals enabled
+globalvar Difficultyhud 44                  # number                    --- workshop toggle to display difficulty hud
 
-globalvar CustomPortalStart                 # [vect]                    --- custom portal start 
-globalvar CustomPortalEndpoint              # [vect]                    --- custom portal end points
-globalvar CustomPortalCP                    # [int]                     --- custom portal checkpoints
+globalvar CustomPortalStart 45              # [vect]                    --- custom portal start 
+globalvar CustomPortalEndpoint 46           # [vect]                    --- custom portal end points
+globalvar CustomPortalCP 47                 # [int]                     --- custom portal checkpoints
 
-globalvar CompMode                          # bool                      --- competitive mode toggle
-globalvar CompTime                          # int                       --- compt mode time limit
-globalvar CompAtmpNum                       # int                       --- compt mode attempt limit
-globalvar CompAtmpSaveNames                 # [strings]                 --- comp name list
-globalvar CompAtmpSaveCount                 # [int]                      --- compt attempt list
-globalvar CompRestartLimit                  # bool                      --- resest limiter
-globalvar instructiontext                   # [text]                    --- array of instructions
-globalvar TitleData                         # [[cp ,[title],[color]]    --- title addon 
-globalvar HudStoreEdit                      # [textid]                  --- list of huds to delete if editormode is on
+globalvar CompMode 50                       # bool                      --- competitive mode toggle
+globalvar CompTime 51                       # int                       --- compt mode time limit
+globalvar CompAtmpNum 52                    # int                       --- compt mode attempt limit
+globalvar CompAtmpSaveNames 53              # [strings]                 --- comp name list
+globalvar CompAtmpSaveCount 54              # [int]                      --- compt attempt list
+globalvar CompRestartLimit 55               # bool                      --- resest limiter
+globalvar instructiontext 56                # [text]                    --- array of instructions
+globalvar TitleData 57                      # [[cp ,[title],[color]]    --- title addon 
+globalvar HudStoreEdit 58                   # [textid]                  --- list of huds to delete if editormode is on
 
-globalvar SaveName
-globalvar SaveCp
-globalvar SaveEnt
-globalvar SaveTimer
-globalvar SaveElapsed
-globalvar SavePauseTime
-globalvar SavePauseEnabled
+globalvar SaveName 60
+globalvar SaveCp 61
+globalvar SaveEnt 62
+globalvar SaveTimer 63
+globalvar SaveElapsed 64
+globalvar SavePauseTime 65
+globalvar SavePauseEnabled 66
 
-globalvar HintCp
-globalvar HintText
+globalvar HintCp 67
+globalvar HintText 68
 
-globalvar ColorConfig                       # [colors]                  --- configured colors
+globalvar ColorConfig 69                    # [colors]                  --- configured colors
 
-globalvar Name
-globalvar Code
-globalvar Cachedcredits
+globalvar Name 70
+globalvar Code 71
+globalvar Cachedcredits 73
 
 # per cp iwt or hud
-globalvar CpHudText
-globalvar CpHudCp
-globalvar CpIwtText
-globalvar CpIwtCp
-globalvar CpIwtPos
-globalvar CpIwtColor
+globalvar CpHudText 74
+globalvar CpHudCp 75
+globalvar CpIwtText 76
+globalvar CpIwtCp 77
+globalvar CpIwtPos 78
+globalvar CpIwtColor 79
 
-globalvar BanTriple                         # legacy
-globalvar BanMulti
-globalvar BanCreate
-globalvar BanDead
-globalvar BanEmote
-globalvar BanClimb
-globalvar BanBhop
-globalvar BanStand                          # bans on second hop
-globalvar BanDjump
+globalvar BanTriple 80                      # legacy
+globalvar BanMulti 81
+globalvar BanCreate 82
+globalvar BanDead 83
+globalvar BanEmote 84
+globalvar BanClimb 85
+globalvar BanBhop 86
+globalvar BanStand 87                       # bans on second hop
+globalvar BanDjump 88
 
-globalvar DestructoIter
-globalvar MapVectorArray
+globalvar DestructoIter 90
+globalvar MapVectorArray 91
 
-#Player variables
+#----------------Player Variables------------------
 playervar CurrentCheckpoint                 # int                       --- Current Checkpoint
 
 #PlayerEffects data
