@@ -310,51 +310,6 @@ rule "Match time":
     else:
         declareTeamVictory(hostPlayer.getTeam())
 
-def EffectsCreate():
-    @Name "Effects Create"
-    if CustomPortalStart:
-        for TempIterator1 in range(len(CustomPortalStart)):
-            createEffect(
-                [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
-                Effect.GOOD_AURA, ColorConfig[customize.portal],
-                CustomPortalStart[evalOnce(TempIterator1)], 
-                0.6,
-                EffectReeval.VISIBILITY
-            )
-            wait()
-        wait(0.5)
-        
-    if KillBallPositions != []:
-        for TempIterator1 in range(0, len(KillBallPositions)):
-            createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, ColorConfig[customize.killorb] , KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
-            wait()
-        wait(0.5)
-
-    if BouncePositions != []:
-        for TempIterator1 in range(0, len(BouncePositions)):
-            createEffect(
-                [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected], 
-                Effect.ORB, 
-                ColorConfig[customize.orb_lock] if BounceToggleLock[TempIterator1] else ColorConfig[customize.orb_normal] , 
-                BouncePositions[evalOnce(TempIterator1)], 
-                1, 
-                EffectReeval.VISIBILITY
-            )
-            wait()
-    
-    createEffect( # portal preview
-        localPlayer
-            if 
-            localPlayer.PreviewsI >= len(localPlayer.BouncePosition_Cache) + 1 and 
-            localPlayer.PreviewsI > 0 and
-            localPlayer.PreviewsArray2[localPlayer.PreviewsI][0] == 1 
-        else null
-        , 
-        Effect.SPARKLES,
-        Color.PURPLE,
-        localPlayer.PreviewsArray[localPlayer.PreviewsI], 
-        0.5, EffectReeval.VISIBILITY_POSITION_AND_RADIUS
-    )
 rule "Player Initialize":
     @Event playerJoined
     eventPlayer.setDamageReceived(0)
