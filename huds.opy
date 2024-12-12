@@ -505,7 +505,7 @@ rule "Huds: each player":
         HudPosition.TOP, HO.game_level_orb, ColorConfig[customize.level], ColorConfig[customize.orb_lock], ColorConfig[customize.level], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
-    hudSubheader(eventPlayer,"{0}{1}{2}\n{3}{4}{5}".format(
+    hudSubtext(eventPlayer,"{0}{1}{2}\n{3}{4}{5}".format(
         "■" if eventPlayer.isHoldingButton(Button.JUMP) else "□", "▲" if eventPlayer.getThrottle().z > null else "△",
         "●" if eventPlayer.isHoldingButton(Button.CROUCH) else "○", "◀" if eventPlayer.getThrottle().x > null else "◁",
         "▼" if eventPlayer.getThrottle().z < null else "∇", "▶" if eventPlayer.getThrottle().x < null else "▷"),
