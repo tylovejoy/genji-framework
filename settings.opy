@@ -8,7 +8,7 @@ settings {
     },
     "lobby": {
         "allowPlayersInQueue": true,
-        "enableMatchVoiceChat": true,
+        "enableMatchVoiceChat": false,
         "spectatorSlots": 3,
         "team1Slots": 11,
         "team2Slots": 0,
@@ -23,7 +23,9 @@ settings {
             ]
         },
         "tdm": {
-            "enabledMaps": [],
+            "enabledMaps": [
+                selectedmap
+            ],
             "gameLengthInMn": 15,
             "enableMercyRezKillCancel": false,
             "enableSelfInitiatedRespawn": false
@@ -65,11 +67,3 @@ settings {
 # extensions
 
 #!extension playMoreEffects
-
-# no longer need dva
-##!extension spawnMoreDummyBots
-
-
-
-
-
