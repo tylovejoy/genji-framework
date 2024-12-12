@@ -8,7 +8,7 @@ settings {
     },
     "lobby": {
         "allowPlayersInQueue": true,
-        "enableMatchVoiceChat": true,
+        "enableMatchVoiceChat": false,
         "spectatorSlots": 3,
         "team1Slots": 11,
         "team2Slots": 0,
