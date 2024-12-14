@@ -158,7 +158,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
     if eventPlayer.isDead():
         eventPlayer.respawn()
 
-    StartGame_Sub()
+    StartGame()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     wait()
     eventPlayer.allowButton(Button.ABILITY_1)

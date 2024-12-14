@@ -360,7 +360,7 @@ rule "Player Initialize":
     
 
     wait()
-    StartGame_Sub()  # initialization of the game
+    StartGame()  # initialization of the game
     
 def DeleteSave():
     @Name "delete save" 
@@ -460,7 +460,7 @@ def checkpointFailReset():
     async(CheckDash(), AsyncBehavior.RESTART)
     TriggerOnFailSuccesReset()
 
-def StartGame_Sub():
+def StartGame():
     @Name "SUB | Start Game"
     if CompMode and (CompTime < 1 or eventPlayer.CompDone):
         eventPlayer.LeaderboardToggle = true
