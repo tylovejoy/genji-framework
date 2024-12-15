@@ -50,7 +50,8 @@ globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- some
 #globalvar SelectedCheckpoint_Editing       # legacy      # int                       --- selected checkpoint
 #!define CheckpointRings_Editing C
 globalvar CheckpointRings_Editing 2         # list[effect]              --- Holds checkpoint effects in editing context
-globalvar MsDestructo 3                     # MsDestructo Player
+#!define MapChecker MsDestructo
+globalvar MsDestructo 3                     # Player
 globalvar TimeRemaining 4
 globalvar PortalEffects 5                   # list[effect]              --- Array holding custom portal effects
 #globalvar CurrentPortalEditing
@@ -179,7 +180,7 @@ globalvar BanClimb 85
 globalvar BanBhop 86
 globalvar BanStand 87                       # bans on second hop
 globalvar BanDjump 88
-
+#!define MapCheckerIter DestructoIter
 globalvar DestructoIter 90
 globalvar MapVectorArray 91
 

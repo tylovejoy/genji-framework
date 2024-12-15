@@ -303,7 +303,7 @@ rule "Match time":
                 wait(0.032)
                 async(CreateLeaderBoard(), AsyncBehavior.RESTART)            
 
-    bigMessage(getAllPlayers(), "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time expired, restarting")
+    bigMessage(localPlayer, "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time expired, restarting")
     wait(5)
     if getCurrentGamemode() == Gamemode.FFA:
         declarePlayerVictory(hostPlayer)
@@ -312,6 +312,7 @@ rule "Match time":
 
 rule "Player Initialize":
     @Event playerJoined
+    @Condition eventPlayer.isDummy() == false
     eventPlayer.setDamageReceived(0)
     eventPlayer.EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
     eventPlayer.LockEditor = true
@@ -528,7 +529,7 @@ def StartGame():
 
 rule "Arrive | Ground reset | traces":
     @Event eachPlayer
-    #@Hero genji
+    @Condition eventPlayer.isDummy() == false
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isAlive()
     if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
@@ -716,8 +717,9 @@ this waituntil contrusction gives higher delay without relying on a variable cou
 */
 rule "Death Reset":
     @Event playerDied
-    @Condition not eventPlayer.SpectateToggle
-    @Condition not eventPlayer.CompDone
+    @Condition eventPlayer.isDummy() == false
+    @Condition eventPlayer.SpectateToggle == false
+    @Condition eventPlayer.CompDone == false
     if len(CheckpointPositions) > 0:
         eventPlayer.resurrect()
     else:

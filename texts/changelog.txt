@@ -397,16 +397,17 @@ Features
 - Global mechanics bans are visible in-game to player
 - Huds, improve FPS
  └ Local Player for commands
- └ Simplify chinese
+ └ Simplify Chinese
+- Basic Map Validator
 Optimizations
 - Double Jump
  └ checks only if there is a checkpoint restriction
- └ removed an uneccessary check that caused server load issues
+ └ removed an unnecessary check that caused server load issues
 - Removed phased out & invincible status and related rules
 - Quick Reset, remove duplicate code.
-- Removed vestige of dva dummy destruct code
+- Removed vestige of Dva dummy destruct code
 - Disable Match Voice (we are all on the same team)
 - refactor effects to huds.opy
 Editor
- └ Remove teleport doesn't reset to checkpoint while in invincibilty mode
- └ Inspector is redisabled after exporting map data
+ └ Remove teleport doesn't reset to checkpoint while in invincibility mode
+ └ Inspector is re-disabled after exporting map data
