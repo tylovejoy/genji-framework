@@ -389,7 +389,7 @@ X└ Known Issues: Heli/Vertical Multi-climb input timing is slower
 - Updated "Fake Triple Jump - enable rule - 启用此规则 - 假三段跳"
  └ Uses the new "DoubleUsed" for more accurate recreation of the original
 
-1.9.5b
+1.10.0
 Features
 - Input UI
 - Checkpoint can have Double Jump Required
@@ -398,7 +398,6 @@ Features
 - Huds, improve FPS
  └ Local Player for commands
  └ Simplify Chinese
-- Basic Map Validator
 Optimizations
 - Double Jump
  └ checks only if there is a checkpoint restriction
