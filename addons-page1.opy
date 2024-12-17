@@ -228,3 +228,42 @@ rule "Little destructo - fence breaker":
         wait()
 
     MapVectorArray = null
+
+rule "Basic Map Checker":
+    @Condition createWorkshopSetting(bool,"map settings \n地图设置","Basic Validator - CN TRANSLATE",true,0)
+    @Condition isGameInProgress()
+    @Condition len(CheckpointPositions) > 1
+    createDummy(Hero.ANA, Team.1 if getNumberOfSlots(Team.1) < getNumberOfSlots(Team.2) else Team.2, -1, CheckpointPositions[0], null)
+    MapChecker = getLastCreatedEntity()
+    MapChecker.disableEnvironmentCollision(false)
+    MapChecker.disablePlayerCollision()
+    MapChecker.setStatusEffect(null, Status.PHASED_OUT, Math.INFINITY)
+    #MapChecker.setInvisibility(Invis.ALL)
+    MapChecker.startScalingSize(cpcircleradius / 0.45, false)
+    #MapChecker.startForcingButton(Button.CROUCH)
+    MapChecker.CurrentCheckpoint = []
+    waitUntil(MapChecker.hasSpawned(), Math.INFINITY)
+    for MapCheckerIter in range(1, len(CheckpointPositions)):
+        #for MapCheckerIter in range(34, 35):
+        MapChecker.Temp = 0
+        goto lbl_0
+        while MapChecker.y > CheckpointPositions[MapCheckerIter].y - cpcircleradius:
+            lbl_0:
+            MapChecker.setGravity(false)
+            MapChecker.startForcingPosition(CheckpointPositions[MapCheckerIter] + (cpcircleradius - MapChecker.Temp * cpcircleradius) * Vector.UP,false)
+            wait(0.128)
+            MapChecker.stopForcingPosition()
+            MapChecker.setGravity(100)
+            waitUntil(MapChecker.isOnGround(), true)
+            if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapCheckerIter]) <= cpcircleradius:
+                break
+            MapChecker.Temp += 0.1
+        #Debug
+        if not(MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapCheckerIter]) <= cpcircleradius):
+            smallMessage(hostPlayer, "Fail All")
+            enableInspector()
+            MapChecker.CurrentCheckpoint.append(MapCheckerIter)
+            printLog("Fail {0}: {1}".format(MapCheckerIter, distance(MapChecker, CheckpointPositions[MapCheckerIter])))
+            disableInspector()
+    destroyDummy(MapChecker.getTeam(), MapChecker.getSlot())
+    MapChecker = null
