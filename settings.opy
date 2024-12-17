@@ -65,5 +65,5 @@ settings {
 }
 
 # extensions
-
+#!extension spawnMoreDummyBots
 #!extension playMoreEffects
