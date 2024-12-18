@@ -123,7 +123,7 @@ rule "Editor | Clear Excess Data to Save Map":
     eventPlayer.savemaphud[2] = getLastCreatedText()
 
     enableInspector()
-
+    disableInspector()
     waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), 9999)
     waitUntil(eventPlayer.isHoldingButton(Button.INTERACT), 9999)
     destroyHudText(eventPlayer.savemaphud[0])

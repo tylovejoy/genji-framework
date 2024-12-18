@@ -216,7 +216,7 @@ rule "Grup up | text/effect -":
     # replace vector 0,0,0 with orb position
     # 3.5 is the radius
     createEffect(
-        [i for i in getAllPlayers() if i.A == 777], 
+        [i for i in getAllPlayers() if i.CurrentCheckpoint == 777], 
         Effect.SPHERE, Color.ORANGE, vect(0,0,0),  3.5, EffectReeval.VISIBILITY
     )
 

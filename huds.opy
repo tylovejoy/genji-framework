@@ -32,7 +32,7 @@ rule "Huds: Global/Localplayer":
     #  if Code != "code here - 代码" or Cachedcredits[1] == null::
 
 
-    hudSubtext(getAllPlayers(), 
+    hudSubtext(localPlayer, 
         "作者: {}".format( Cachedcredits[0] )
         checkCN
         "Made by: {}".format( Cachedcredits[0] )
@@ -46,10 +46,10 @@ rule "Huds: Global/Localplayer":
         , HudPosition.LEFT, HO.data_code, ColorConfig[customize.credit_code] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
-    hudSubtext(localPlayer if localPlayer.GuideToggle else null, "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, ColorConfig[customize.dsc], HudReeval.VISIBILITY, SpecVisibility.DEFAULT)   
+    hudSubtext(localPlayer.GuideToggle, "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, ColorConfig[customize.dsc], HudReeval.VISIBILITY, SpecVisibility.DEFAULT)   
    
     # global huds
-    hudSubheader(getAllPlayers(),
+    hudSubheader(localPlayer,
         "房间将在 {0} 分钟后重启 - V{1}{2}".format(
             TimeRemaining, versionhere,
             "\n错误: 已达到最大HUD数量上限" if getNumberOfTextIds() >= 128 else ""  
@@ -63,22 +63,22 @@ rule "Huds: Global/Localplayer":
     )
     
     # padding for custom hud display
-    hudSubtext(getAllPlayers(), "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv", HudPosition.TOP, HO.fillermain, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(localPlayer, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv", HudPosition.TOP, HO.fillermain, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     
-    hudSubtext(localPlayer if localPlayer.GuideToggle else null, 
+    hudSubtext(localPlayer.GuideToggle, 
         "{0} {1} | {2}".format( "" if localPlayer.QuickRestartToggle else "长按",buttonString(Button.RELOAD),"快速回点 | 启用" if localPlayer.QuickRestartToggle else "启用快速回点")
         checkCN
         "{0} {1} | {2}".format( "" if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset")
         , HudPosition.RIGHT, HO.com_quickres, ColorConfig[customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(localPlayer if localPlayer.GuideToggle else null, 
+    hudSubtext(localPlayer.GuideToggle, 
         "{0} + {1} | 探点模式{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | 启用" if localPlayer.InvincibleToggle else "") 
         checkCN
         "{0} + {1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.InvincibleToggle else "") 
         ,HudPosition.RIGHT, HO.com_invincible, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.InvincibleToggle else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
-    hudText(getAllPlayers(),
+    hudText(localPlayer,
         null,
         "{0}{1}{2}".format(
             abilityIconString(Hero.BAPTISTE, Button.ABILITY_2) if localPlayer.InvincibleToggle else "",
@@ -91,7 +91,7 @@ rule "Huds: Global/Localplayer":
         ,HudPosition.RIGHT, HO.com_displaytoggle, ColorConfig[customize.command_normal], ColorConfig[customize.command_normal], ColorConfig[customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(localPlayer if localPlayer.GuideToggle else null,  
+    hudSubtext(localPlayer.GuideToggle,  
         "长按 {0} + {1} | 预览关卡".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
         checkCN
         "Hold {0} + {1} | Preview cp".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
@@ -108,7 +108,7 @@ rule "Huds: Global/Localplayer":
     HudStoreEdit.append(getLastCreatedText())
 
 
-    hudSubtext(getAllPlayers(), 
+    hudSubtext(localPlayer, 
         "" if localPlayer.splitdisplay == -999 else
         ("单关用时 {0}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else "")
         checkCN
@@ -120,7 +120,7 @@ rule "Huds: Global/Localplayer":
     CreateLeaderBoard()
 
     if CpHudText != null: # text per checkpoint  text per cp each
-        hudText(getAllPlayers(),
+        hudText(localPlayer,
             CpHudText[CpHudCp.index(localPlayer.CurrentCheckpoint)]
             if localPlayer.CurrentCheckpoint in CpHudCp and localPlayer.GuideToggle else "",
             ("(文本已隐藏)" if localPlayer.CurrentCheckpoint in CpHudCp and not localPlayer.GuideToggle else "")
@@ -133,15 +133,14 @@ rule "Huds: Global/Localplayer":
   
     if CpIwtText != null:
         createInWorldText(
-            getAllPlayers(), 
+            localPlayer, 
             CpIwtText[CpIwtCp.index(localPlayer.CurrentCheckpoint)]
             if localPlayer.CurrentCheckpoint in CpIwtCp else "",
             CpIwtPos[CpIwtCp.index(localPlayer.CurrentCheckpoint)], 
             2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, CpIwtColor, SpecVisibility.DEFAULT)
 
     if len(HintText) > 0:
-        hudText(
-            localPlayer if localPlayer.GuideToggle else null,
+        hudText(localPlayer.GuideToggle,
             null, 
             (
             "{0} ――  有可用提示―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.CurrentCheckpoint in HintCp and localPlayer.HintsOn == false else 
@@ -188,13 +187,13 @@ rule "Huds: Global/Localplayer":
         hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                   Press {0} to start                                ".format(buttonString(Button.INTERACT)), HudPosition.TOP, HO.comp_instructbottom, Color.WHITE, HudReeval.VISIBILITY_AND_STRING,SpecVisibility.DEFAULT)
                 
     elif not CompMode:
-        hudSubtext(localPlayer if localPlayer.GuideToggle else null, 
+        hudSubtext(localPlayer.GuideToggle, 
             "长按 {0} | 观战模式{1}".format(buttonString(Button.INTERACT)," | 启用" if localPlayer.SpectateToggle else "")
             checkCN
             "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else "")
             , HudPosition.RIGHT, HO.com_spec, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.SpectateToggle else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
-        hudSubtext(localPlayer if localPlayer.GuideToggle else null, 
+        hudSubtext(localPlayer.GuideToggle, 
             "长按 {0} | 隐身模式{1}".format(buttonString(Button.ABILITY_2)," | 启用" if localPlayer.invis else "")
             checkCN
             "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else "")
@@ -202,7 +201,7 @@ rule "Huds: Global/Localplayer":
         )
         HudStoreEdit.append(getLastCreatedText())
 
-        hudSubtext(localPlayer if localPlayer.GuideToggle else null,
+        hudSubtext(localPlayer.GuideToggle,
             "{0} + {1} | 练习模式{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else "")
             checkCN
             "{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else "")
@@ -242,7 +241,7 @@ rule "Huds: Global/Localplayer":
 
     # restart + leaderboard
     # this is remade in editor to not include leaderboard
-    hudSubtext(localPlayer if localPlayer.GuideToggle else null, 
+    hudSubtext(localPlayer.GuideToggle, 
         "{0} + {1} + {2} | 重新开始\n长按 {3} | 完整成绩排名".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)) 
         checkCN
         "{0} + {1} + {2} | Restart\nHold {3} | leaderboard".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE))
@@ -252,157 +251,6 @@ rule "Huds: Global/Localplayer":
     #else:
         # restart without leaderboard if editor on
  
-
-
-rule "Huds: each player":
-    @Event eachPlayer
-    wait(0.5)
-    if eventPlayer.isDummy() and eventPlayer.getCurrentHero() == Hero.DVA:
-        return 
-    
-    # ban icons in level
-    hudText(eventPlayer, null, 
-        /*
-        ("练习用时 {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "")
-        checkCN  
-        ("Practice Time {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "")
-        */
-        "{} {}".format("练习用时" checkCN "Practice Time",prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "",
-        # 19191
-        "{} {}".format("用时" checkCN "Time",prettyTime(eventPlayer.Timer)),
-        #checkCN  
-        #"Time {0}".format(prettyTime(eventPlayer.Timer)) ,
-        #"用时 {0}".format(prettyTime(eventPlayer.Timer))
-        #checkCN  
-        #"Time {0}".format(prettyTime(eventPlayer.Timer)) ,
-        HudPosition.LEFT, HO.game_timer, ColorConfig[customize.time], Color.GRAY, ColorConfig[customize.time], HudReeval.STRING, SpecVisibility.DEFAULT
-    )
-    
-
-    hudText(
-        eventPlayer if not eventPlayer.LeaderboardToggle else null,  
-        " {0} ({2}/{3})\n―――――――――――\n {1}\n"
-        "".format(
-            ("检查点" if eventPlayer.PreviewsI == 0 else "弹球" if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1  else "自定义传送门") checkCN
-            "checkpoint" if eventPlayer.PreviewsI == 0 else "orb" if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1  else "portal",
-            "{} {} {} {}".format(
-                abilityIconString(Hero.GENJI, Button.ULTIMATE) if BounceToggleUlt[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else "",
-                abilityIconString(Hero.GENJI, Button.ABILITY_1) if BounceToggleDash[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else "",
-                iconString(Icon.WARNING) if BounceToggleLock[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else "",
-                iconString(Icon.ARROW_UP) if BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] > 0 else
-                iconString(Icon.ARROW_DOWN) if BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] < 0 else ""
-            #) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else "", # [0:cp, 1-x:bounce, x-y:portal]
-            ) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else
-
-            (
-                ("传送门 {} 入口 ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
-                if eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][0] == 0 else  
-                "传送门 {} 出口 ".format( eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
-                ) checkCN
-
-                "portal {} start ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
-                if eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][0] == 0 else 
-                "portal {} destination ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
-            
-            )
-            if eventPlayer.PreviewsI >= len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else "",
-
-
-            eventPlayer.PreviewsI + 1,
-            len(eventPlayer.PreviewsArray)
-        ) if eventPlayer.PreviewsArray != null else ""
-        ,    
-        "{2} {0} / {1}".format(
-            len(eventPlayer.LockCollected), 
-            eventPlayer.BounceLockMax_Cache,
-            "{0}球".format(ColorConfig[customize.orb_lock]) checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
-            #"收集球" checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
-        ) if eventPlayer.BounceLockMax_Cache and eventPlayer.PreviewsArray == null else ""
-        ,
-        "{3}{2}{4} {0} / {1}".format(
-            eventPlayer.CurrentCheckpoint, 
-            len(CheckpointPositions) - 1,
-            "\n" if eventPlayer.banstring else "",
-            eventPlayer.banstring if eventPlayer.banstring else "",
-            "关卡" checkCN "Level"
-        ) if eventPlayer.PreviewsArray == null else ""
-        ,   
-        HudPosition.TOP, HO.game_level_orb, ColorConfig[customize.level], ColorConfig[customize.orb_lock], ColorConfig[customize.level], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
-    )
-    # climb/bhop indicators
-    hudHeader(eventPlayer,         
-        #"爬墙已用{0}".format("" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
-        "{1}{0}".format(
-            "" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount),
-            "爬墙已用" if  eventPlayer.WallclimbUsed else "爬墙未用" # cn version text updates to say the status, unlike en
-        )
-        checkCN
-        "Climb{0}".format("" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
-        , HudPosition.LEFT, HO.game_climb, 
-        evalOnce(ColorConfig[customize.bhopclimb_used]) if eventPlayer.WallclimbUsed else evalOnce(ColorConfig[customize.bhopclimb_available]), 
-        HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
-    )
-    hudHeader(eventPlayer, 
-        ( # cn version text updates to say the status, unlike en version
-            "{0}{1}".format(
-                "小跳未用" if eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == evalOnce(ColorConfig[customize.bhopclimb_available]) else "小跳已用",
-                "" if eventPlayer.CreateCounter < 1 else " ({0})".format(eventPlayer.CreateCounter)  
-            )  
-        ) 
-        checkCN 
-        "Bhop{0}".format(
-            "" if eventPlayer.CreateCounter < 1 else
-            " ({0})".format(eventPlayer.CreateCounter) 
-        )
-        , HudPosition.LEFT, HO.game_bhop, 
-        evalOnce(ColorConfig[customize.bhopclimb_available]) if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, 
-        HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
-    )
-    
-    createInWorldText(
-        #eventPlayer if eventPlayer.NotOnLastCp else null, 
-        eventPlayer if eventPlayer.NotOnLastCp and eventPlayer.GuideToggle else null, 
-        "{0} {1}".format(
-            iconString(Icon.WARNING),    
-            "先收集橙球" checkCN "collect orbs first"
-        ) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
-        "到这里来" checkCN "Come here",
-        CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 
-        1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING,  ColorConfig[customize.cometext], SpecVisibility.DEFAULT
-    )
-    
-    wait(2.5)
-    if CompMode:
-        hudText(
-            eventPlayer, 
-            " ",
-            (
-                "! 比赛结束 !" if CompTime <= 0 else
-                "剩余时间: {0} 分钟{1}".format(
-                    CompTime, 
-                    "\n你没有尝试过" if eventPlayer.AttemptCount == -1 else
-                    "\n尝试 {0} / {1}".format(eventPlayer.AttemptCount, CompAtmpNum) if CompAtmpNum > 0 
-                    else "" 
-                )
-            )
-            checkCN
-            (
-                "! competition is over !" if CompTime <= 0 else
-                "time left: {0} min{1}".format(
-                    CompTime, 
-                    "\nYou are out of attemps" if eventPlayer.AttemptCount == -1 else
-                    "\nAttempt {0} / {1}".format(eventPlayer.AttemptCount, CompAtmpNum) if CompAtmpNum > 0 
-                    else "" 
-                )
-            ), 
-            ("竞赛模式" if CompTime > 0 else "竞赛模式\n\n\n")
-            checkCN
-            ("competitive mode" if CompTime > 0 else "competitive mode\n\n\n")
-            , HudPosition.TOP, HO.comp_info, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.STRING, SpecVisibility.DEFAULT
-        ) 
-
-  
-  
 rule "Huds: remake leaderboard": # for global isntead of tied to player
     @Condition LeaderBoardRemake   
     wait() # account for delay in completion
@@ -414,7 +262,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
     
     # top 5
     if LeaderBoardFull[0]:
-        hudSubtext(getAllPlayers(),
+        hudSubtext(localPlayer,
             " \n{0} 排名前5 {0}".format(abilityIconString(Hero.GENJI,Button.PRIMARY_FIRE))
             checkCN
             " \n{0} Top 5 {0}".format(abilityIconString(Hero.GENJI,Button.PRIMARY_FIRE))
@@ -535,9 +383,208 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
         )
         LeaderBoardHuds.append(getLastCreatedText())
 
+def EffectsCreate():
+    @Name "Effects Create"
+    if CustomPortalStart:
+        for TempIterator1 in range(len(CustomPortalStart)):
+            createEffect(
+                [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
+                Effect.GOOD_AURA, ColorConfig[customize.portal],
+                CustomPortalStart[evalOnce(TempIterator1)], 
+                0.6,
+                EffectReeval.VISIBILITY
+            )
+            wait()
+        wait(0.5)
+        
+    if KillBallPositions != []:
+        for TempIterator1 in range(0, len(KillBallPositions)):
+            createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, ColorConfig[customize.killorb] , KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
+            wait()
+        wait(0.5)
+
+    if BouncePositions != []:
+        for TempIterator1 in range(0, len(BouncePositions)):
+            createEffect(
+                [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected], 
+                Effect.ORB, 
+                ColorConfig[customize.orb_lock] if BounceToggleLock[TempIterator1] else ColorConfig[customize.orb_normal] , 
+                BouncePositions[evalOnce(TempIterator1)], 
+                1, 
+                EffectReeval.VISIBILITY
+            )
+            wait()
+
+    createEffect( # portal preview
+        localPlayer
+            if 
+            localPlayer.PreviewsI >= len(localPlayer.BouncePosition_Cache) + 1 and 
+            localPlayer.PreviewsI > 0 and
+            localPlayer.PreviewsArray2[localPlayer.PreviewsI][0] == 1 
+        else null
+        , 
+        Effect.SPARKLES,
+        Color.PURPLE,
+        localPlayer.PreviewsArray[localPlayer.PreviewsI], 
+        0.5, EffectReeval.VISIBILITY_POSITION_AND_RADIUS
+    )
+
+##############################################################################
+
+rule "Huds: each player":
+    @Event playerJoined
+    wait(0.5)
+    
+    # ban icons in level
+    hudText(eventPlayer, null, 
+        /*
+        ("练习用时 {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "")
+        checkCN  
+        ("Practice Time {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "")
+        */
+        "{} {}".format("练习用时" checkCN "Practice Time",prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else "",
+        # 19191
+        "{} {}".format("用时" checkCN "Time",prettyTime(eventPlayer.Timer)),
+        #checkCN  
+        #"Time {0}".format(prettyTime(eventPlayer.Timer)) ,
+        #"用时 {0}".format(prettyTime(eventPlayer.Timer))
+        #checkCN  
+        #"Time {0}".format(prettyTime(eventPlayer.Timer)) ,
+        HudPosition.LEFT, HO.game_timer, ColorConfig[customize.time], Color.GRAY, ColorConfig[customize.time], HudReeval.STRING, SpecVisibility.DEFAULT
+    )
+    
+
+    hudText(
+        eventPlayer if not eventPlayer.LeaderboardToggle else null,  
+        " {0} ({2}/{3})\n―――――――――――\n {1}\n"
+        "".format(
+            ("检查点" if eventPlayer.PreviewsI == 0 else "弹球" if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1  else "自定义传送门") checkCN
+            "checkpoint" if eventPlayer.PreviewsI == 0 else "orb" if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1  else "portal",
+            "{} {} {} {}".format(
+                abilityIconString(Hero.GENJI, Button.ULTIMATE) if BounceToggleUlt[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else "",
+                abilityIconString(Hero.GENJI, Button.ABILITY_1) if BounceToggleDash[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else "",
+                iconString(Icon.WARNING) if BounceToggleLock[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else "",
+                iconString(Icon.ARROW_UP) if BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] > 0 else
+                iconString(Icon.ARROW_DOWN) if BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] < 0 else ""
+            #) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else "", # [0:cp, 1-x:bounce, x-y:portal]
+            ) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else
+
+            (
+                ("传送门 {} 入口 ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
+                if eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][0] == 0 else  
+                "传送门 {} 出口 ".format( eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
+                ) checkCN
+
+                "portal {} start ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
+                if eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][0] == 0 else 
+                "portal {} destination ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
+            
+            )
+            if eventPlayer.PreviewsI >= len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else "",
+
+
+            eventPlayer.PreviewsI + 1,
+            len(eventPlayer.PreviewsArray)
+        ) if eventPlayer.PreviewsArray != null else ""
+        ,    
+        "{2} {0} / {1}".format(
+            len(eventPlayer.LockCollected), 
+            eventPlayer.BounceLockMax_Cache,
+            "{0}球".format(ColorConfig[customize.orb_lock]) checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
+            #"收集球" checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
+        ) if eventPlayer.BounceLockMax_Cache and eventPlayer.PreviewsArray == null else ""
+        ,
+        "{3}{2}{4} {0} / {1}".format(
+            eventPlayer.CurrentCheckpoint, 
+            len(CheckpointPositions) - 1,
+            "\n" if eventPlayer.banstring else "",
+            eventPlayer.banstring if eventPlayer.banstring else "",
+            "关卡" checkCN "Level"
+        ) if eventPlayer.PreviewsArray == null else ""
+        ,   
+        HudPosition.TOP, HO.game_level_orb, ColorConfig[customize.level], ColorConfig[customize.orb_lock], ColorConfig[customize.level], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+    )
+
+    hudSubtext(eventPlayer,"{0}{1}{2}\n{3}{4}{5}".format(
+        "■" if eventPlayer.isHoldingButton(Button.JUMP) else "□", "▲" if eventPlayer.getThrottle().z > null else "△",
+        "●" if eventPlayer.isHoldingButton(Button.CROUCH) else "○", "◀" if eventPlayer.getThrottle().x > null else "◁",
+        "▼" if eventPlayer.getThrottle().z < null else "∇", "▶" if eventPlayer.getThrottle().x < null else "▷"),
+        HudPosition.LEFT, HO.game_input, evalOnce(ColorConfig[customize.time]),HudReeval.STRING, SpecVisibility.DEFAULT)
+
+    # climb/bhop indicators
+    hudHeader(eventPlayer,         
+        #"爬墙已用{0}".format("" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
+        "{1}{0}".format(
+            "" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount),
+            "爬墙已用" if  eventPlayer.WallclimbUsed else "爬墙未用" # cn version text updates to say the status, unlike en
+        )
+        checkCN
+        "Climb{0}".format("" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
+        , HudPosition.LEFT, HO.game_climb, 
+        evalOnce(ColorConfig[customize.bhopclimb_used]) if eventPlayer.WallclimbUsed else evalOnce(ColorConfig[customize.bhopclimb_available]), 
+        HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )
+    hudHeader(eventPlayer, 
+        ( # cn version text updates to say the status, unlike en version
+            "{0}{1}".format(
+                "小跳未用" if eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == evalOnce(ColorConfig[customize.bhopclimb_available]) else "小跳已用",
+                "" if eventPlayer.CreateCounter < 1 else " ({0})".format(eventPlayer.CreateCounter)  
+            )  
+        ) 
+        checkCN 
+        "Bhop{0}".format(
+            "" if eventPlayer.CreateCounter < 1 else
+            " ({0})".format(eventPlayer.CreateCounter) 
+        )
+        , HudPosition.LEFT, HO.game_bhop, 
+        evalOnce(ColorConfig[customize.bhopclimb_available]) if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor, 
+        HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
+    )
+    
+    createInWorldText(
+        #eventPlayer if eventPlayer.NotOnLastCp else null, 
+        eventPlayer if eventPlayer.NotOnLastCp and eventPlayer.GuideToggle else null, 
+        "{0} {1}".format(
+            iconString(Icon.WARNING),    
+            "先收集橙球" checkCN "collect orbs first"
+        ) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
+        "到这里来" checkCN "Come here",
+        CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], 
+        1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING,  ColorConfig[customize.cometext], SpecVisibility.DEFAULT
+    )
+    
+    wait(2.5)
+    if CompMode:
+        hudText(
+            eventPlayer, 
+            " ",
+            (
+                "! 比赛结束 !" if CompTime <= 0 else
+                "剩余时间: {0} 分钟{1}".format(
+                    CompTime, 
+                    "\n你没有尝试过" if eventPlayer.AttemptCount == -1 else
+                    "\n尝试 {0} / {1}".format(eventPlayer.AttemptCount, CompAtmpNum) if CompAtmpNum > 0 
+                    else "" 
+                )
+            )
+            checkCN
+            (
+                "! competition is over !" if CompTime <= 0 else
+                "time left: {0} min{1}".format(
+                    CompTime, 
+                    "\nYou are out of attemps" if eventPlayer.AttemptCount == -1 else
+                    "\nAttempt {0} / {1}".format(eventPlayer.AttemptCount, CompAtmpNum) if CompAtmpNum > 0 
+                    else "" 
+                )
+            ), 
+            ("竞赛模式" if CompTime > 0 else "竞赛模式\n\n\n")
+            checkCN
+            ("competitive mode" if CompTime > 0 else "competitive mode\n\n\n")
+            , HudPosition.TOP, HO.comp_info, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.STRING, SpecVisibility.DEFAULT
+        ) 
 
 def UpdateTitle():
-    @Name "Tittle "
+    @Name "Title"
     if TitleData == null or CompMode or eventPlayer.PracticeToggle or eventPlayer.EditorOn or (not eventPlayer.CurrentCheckpoint in TitleData[0]): 
         return
     destroyInWorldText(eventPlayer.TitleStore)
