@@ -2,8 +2,8 @@
 # code 代码
 settings {
     "main": {
-        "description": "  ~ The Official Genji Parkour Editor ~\nCode: 54CRY\nAdapted by: nebula#11571/FishoFire#2431",
-        #"description": "  ~ The Official Genji Parkour Editor ~\nCode: 54CRY\nAdapted by: nebula#11571/FishoFire#2431",
+        "description": "  ~ The Official Genji Parkour Editor ~\nCode: 54CRY\nAdapted by: LulledLion, FishoFire, Nebula",
+        #"description": "  ~ The Official Genji Parkour Editor ~\nCode: 54CRY\nAdapted by: LulledLion#1133 FishoFire#2431 nebula#11571",
         "modeName": "Genji Parkour - 源氏跑酷 - v" + versionhere
     },
     "lobby": {
