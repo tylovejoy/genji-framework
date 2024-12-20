@@ -360,3 +360,17 @@ rule "Ledge Grab Patch v1.5":
         waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
         #Create cBhop
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)
+
+rule "Save Double - enable rule - 二段跳":
+    @Event eachPlayer
+    @Disabled
+    @Condition eventPlayer.isOnGround() == false
+    @Condition eventPlayer.DoubleUsed == false
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
+
+    waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or eventPlayer.DoubleUsed or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
+    if not RULE_CONDITION: return
+    waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or eventPlayer.DoubleUsed or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
+    if not RULE_CONDITION: return
+    eventPlayer.cancelPrimaryAction()
+    if RULE_CONDITION: goto RULE_START
