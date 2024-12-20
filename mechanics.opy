@@ -245,5 +245,22 @@ rule "Ban | Emote Savehop":
     @Condition eventPlayer.isCommunicatingEmote() == true
     smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
     checkpointFailReset()
+/*
+playervar banSaveDouble
+rule "Ban save double - 封禁二段跳":
+    @Event eachPlayer
+    @Disabled
+    @Condition eventPlayer.isOnGround() == false
+    @Condition eventPlayer.DoubleUsed == false
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
 
-
+    eventPlayer.banSaveDouble = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "(BETA) ban save double - 封禁二段跳", true, 0)
+    if not eventPlayer.banSaveDouble: return
+    waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or eventPlayer.DoubleUsed or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
+    if not RULE_CONDITION: return
+    waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or eventPlayer.DoubleUsed or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
+    if not RULE_CONDITION: return
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   二段跳已禁用!" checkCN "   save double banned!")
+    checkpointFailReset()
+*/
