@@ -230,9 +230,11 @@ rule "Little destructo - fence breaker":
     MapVectorArray = null
 
 rule "Basic Map Checker":
-    @Condition createWorkshopSetting(bool,"map settings \n地图设置","Basic Validator - CN TRANSLATE",true,0)
+    @Disabled
+    @Condition createWorkshopSetting(bool,"map settings \n地图设置","Basic Validator - CN TRANSLATE",false,0)
     @Condition isGameInProgress()
     @Condition len(CheckpointPositions) > 1
+
     createDummy(Hero.ANA, Team.1 if getNumberOfSlots(Team.1) < getNumberOfSlots(Team.2) else Team.2, -1, CheckpointPositions[0], null)
     MapChecker = getLastCreatedEntity()
     MapChecker.disableEnvironmentCollision(false)
