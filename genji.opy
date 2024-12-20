@@ -34,7 +34,6 @@ editortoggle(0) # 0 is editor, rest is numbers
 # height added to player for orb detection. inludes the + 
 #!define bounceoffset + Vector.UP * 0.7
 
-
 #disable overpy map detection (command removed by zezo after fix by blizzard)
 ##!disableMapDetectionFix 
 
