@@ -424,8 +424,8 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     @Condition not eventPlayer.isHoldingButton(Button.MELEE)
     @Condition not eventPlayer.isHoldingButton(Button.INTERACT)
     if eventPlayer.QuickRestartToggle:
-        eventPlayer.flytoggle = null
-        eventPlayer.stopForcingPosition()
+        if eventPlayer.flytoggle:
+            eventPlayer.flytoggle = CheckpointPositions[eventPlayer.CurrentCheckpoint].last()
         checkpointFailReset()
 
         wait(0.32)
