@@ -808,20 +808,14 @@ rule "Editor |  Fly/Noclip Toggle":
 
     eventPlayer.flytoggle = eventPlayer.getPosition() + Vector.UP
     eventPlayer.startForcingPosition(eventPlayer.flytoggle, true)
-    eventPlayer.disableEnvironmentCollision(true)
     waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_1), 1)
 
     while eventPlayer.isAlive() and eventPlayer.flytoggle != null and not eventPlayer.isHoldingButton(Button.ABILITY_1):
         if not (eventPlayer == hostPlayer and EditorMoveItem):
-            eventPlayer.flytoggle += eventPlayer.getFacingDirection() * (
-                0.25 + eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z > 0 else 
-                -0.25 - eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z < 0 else 
-                0
-                )
-            eventPlayer.flytoggle += worldVector(vect(eventPlayer.getThrottle().x*0.3,0,0), eventPlayer, Transform.ROTATION) 
+            eventPlayer.flytoggle += (0.25 + eventPlayer.isHoldingButton(Button.JUMP) - 0.24 * eventPlayer.isHoldingButton(Button.CROUCH)) * (
+                eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z +
+                worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION))
         wait()
-    
-    eventPlayer.enableEnvironmentCollision()
     eventPlayer.flytoggle = null
     eventPlayer.stopForcingPosition()
     wait(1)
