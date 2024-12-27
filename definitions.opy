@@ -180,6 +180,7 @@ globalvar BanClimb 85
 globalvar BanBhop 86
 globalvar BanStand 87                       # bans on second hop
 globalvar BanDjump 88
+globalvar BanSaveDouble 89
 #!define MapCheckerIter DestructoIter
 globalvar DestructoIter 90
 globalvar MapVectorArray 91
@@ -267,6 +268,7 @@ playervar ban_climb
 playervar ban_bhop
 playervar ban_standcreate                   # bans on second hop
 playervar ban_djump
+playervar ban_savedouble
 playervar splittime                         # int                       --- stored time that the split compares to
 playervar splitdisplay                      # int                       --- displayed split value
 #playervar splitson                         # bool                      --- turning splits on/off is now done via seting splittime to -999
