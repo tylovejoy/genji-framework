@@ -361,6 +361,7 @@ rule "Ledge Grab Patch v1.5":
         #Create cBhop
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)
 
+/* Obsoleted by hero settings.
 rule "Save Double - enable rule - 二段跳":
     @Event eachPlayer
     @Disabled
@@ -374,3 +375,4 @@ rule "Save Double - enable rule - 二段跳":
     if not RULE_CONDITION: return
     eventPlayer.cancelPrimaryAction()
     if RULE_CONDITION: goto RULE_START
+*/
