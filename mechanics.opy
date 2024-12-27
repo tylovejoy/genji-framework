@@ -82,7 +82,7 @@ rule "Checking | Jump":
 
 rule "Checking | Bhop in the air":
     @Event eachPlayer
-    @Condition eventPlayer.JumpCount == 0
+    @Condition eventPlayer.JumpCount == null
     @Condition eventPlayer.isInAir() 
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false #?????? why wasnt this as fales
     eventPlayer.BhopUsed = false
@@ -90,7 +90,7 @@ rule "Checking | Bhop in the air":
 rule "Checking | In the air":
     @Event eachPlayer
     @Hero genji
-    @Condition eventPlayer.JumpCount == 0
+    @Condition eventPlayer.JumpCount == null
     @Condition eventPlayer.isInAir() 
     eventPlayer.JumpCount = 1
 
@@ -112,6 +112,7 @@ rule "Checking | Player on the wall":
 
 rule "Checking | Using Emote":
     @Event eachPlayer
+    @Condition eventPlayer.InvincibleToggle == false
     @Condition eventPlayer.isCommunicatingEmote() == true
     eventPlayer.BhopUsed = false
     if eventPlayer.ban_emote:
@@ -143,13 +144,14 @@ rule "Checking | Create Bhop":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isCrouching()
+    #@Condition eventPlayer.isOnGround() == false
+    #@Condition eventPlayer.isOnWall() == false
     @Condition eventPlayer.isInAir()
-    @Condition eventPlayer.isOnWall() == false
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     @Condition eventPlayer.isJumping() == false
-    @Condition eventPlayer.isOnGround() == false
+    
     eventPlayer.BhopUsed = false
-    if eventPlayer.LockState: # prevent restart from giving messsage, but stil alow it to become green
+    if eventPlayer.LockState: # prevent restart from giving messsage, but stil allow it to become green
         return
 
     if eventPlayer.ban_create and eventPlayer.InvincibleToggle == false and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
@@ -157,7 +159,7 @@ rule "Checking | Create Bhop":
         checkpointFailReset()
         return
     
-    if eventPlayer.ban_standcreate and eventPlayer.Bhopcount > 0:
+    if eventPlayer.ban_standcreate and eventPlayer.Bhopcount > null:
         eventPlayer.Bhopcount --
 
     eventPlayer.CreateCounter ++
@@ -167,13 +169,13 @@ rule "Checking | standing resets variables":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.isOnGround()
-    eventPlayer.JumpCount = 0
+    eventPlayer.JumpCount = null
     eventPlayer.WallclimbUsed = false
-    eventPlayer.MultiClimbCount = 0
-    eventPlayer.CreateCounter = 0
-    eventPlayer.Bhopcount = 0
+    eventPlayer.MultiClimbCount = null
+    eventPlayer.CreateCounter = null
+    eventPlayer.Bhopcount = null
     eventPlayer.DoubleUsed = null
-    wait(0)
+    wait()
     if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
         goto RULE_START
     eventPlayer.BhopUsed = true
@@ -181,7 +183,7 @@ rule "Checking | standing resets variables":
 rule "Checking | Double Jump":
     @Event eachPlayer
     @Hero genji
-    @Condition evalOnce(len(BanDjump)) or eventPlayer.ban_djump
+    #@Condition evalOnce(len(BanDjump)) or eventPlayer.ban_djump
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isOnGround() == false
     #Saved Double Jump
@@ -240,27 +242,24 @@ rule "Ban | Wallclimb - indicator ":
 rule "Ban | Emote Savehop":
     @Event eachPlayer
     @Condition eventPlayer.ban_emote
-    @Condition not eventPlayer.InvincibleToggle
+    @Condition eventPlayer.InvincibleToggle == false
     @Condition eventPlayer.NotOnLastCp
-    @Condition eventPlayer.isCommunicatingEmote() == true
+    @Condition eventPlayer.isCommunicatingEmote()
     smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
     checkpointFailReset()
-/*
-playervar banSaveDouble
+
 rule "Ban save double - 封禁二段跳":
     @Event eachPlayer
-    @Disabled
+    @Hero genji
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.DoubleUsed == false
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
 
-    eventPlayer.banSaveDouble = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "(BETA) ban save double - 封禁二段跳", true, 0)
-    if not eventPlayer.banSaveDouble: return
+    if not eventPlayer.ban_savedouble: return
     waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or eventPlayer.DoubleUsed or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
     if not RULE_CONDITION: return
     waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or eventPlayer.DoubleUsed or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
     if not RULE_CONDITION: return
     wait(1, Wait.ABORT_WHEN_FALSE)
-    smallMessage(eventPlayer, "   二段跳已禁用!" checkCN "   save double banned!")
+    smallMessage(eventPlayer, "   延二段跳已禁用!" checkCN "   save double banned!")
     checkpointFailReset()
-*/
