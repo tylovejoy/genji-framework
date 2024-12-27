@@ -230,8 +230,7 @@ rule "Little destructo - fence breaker":
     MapVectorArray = null
 
 rule "Basic Map Checker":
-    @Disabled
-    @Condition createWorkshopSetting(bool,"map settings \n地图设置","Basic Validator - CN TRANSLATE",false,0)
+    @Condition createWorkshopSetting(bool,"map settings \n地图设置","[X] Basic Map Validator - 验证地图",false,3)
     @Condition isGameInProgress()
     @Condition len(CheckpointPositions) > 1
 
