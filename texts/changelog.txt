@@ -377,17 +377,17 @@ fixed:
 
 1.9.4a
 - Added a check for double jump
- └ added new variable "DoubleUsed"
- └ after each use of"CancelPrimaryAction()", reset "DoubleUsed" value
-X Added a new addon to fix ow update 2.12 for ledge grabs (default disabled)
-X└ Has support for Hanzo & Kiriko (In-case someone needs it later)
-X└ Known Issues: Heli/Vertical Multi-climb input timing is slower
- └ Commented out for safe keeping, but do not compile
+  * added new variable "DoubleUsed"
+  * after each use of"CancelPrimaryAction()", reset "DoubleUsed" value
+- ~~Added a new addon to fix ow update 2.12 for ledge grabs (default disabled)
+  * Has support for Hanzo & Kiriko (In-case someone needs it later)
+  * Known Issues: Heli/Vertical Multi-climb input timing is slower~~
+ * Commented out for safe keeping, but do not compile
 - Optimize ban emote
 - Fix some comment typos and make line spacing more consistent
 - Append to the "ChangeLog" & "Known Issues"
 - Updated "Fake Triple Jump - enable rule - 启用此规则 - 假三段跳"
- └ Uses the new "DoubleUsed" for more accurate recreation of the original
+  * Uses the new "DoubleUsed" for more accurate recreation of the original
 
 1.10.0
 Features
@@ -396,17 +396,27 @@ Features
 - Negative bounce orbs give double jump
 - Global mechanics bans are visible in-game to player
 - Huds, improve FPS
- └ Local Player for commands
- └ Simplify Chinese
+  * Local Player for commands
+  * Simplify Chinese
 Optimizations
 - Double Jump
- └ checks only if there is a checkpoint restriction
- └ removed an unnecessary check that caused server load issues
+  * checks only if there is a checkpoint restriction
+  * removed an unnecessary check that caused server load issues
 - Removed phased out & invincible status and related rules
 - Quick Reset, remove duplicate code.
 - Removed vestige of Dva dummy destruct code
 - Disable Match Voice (we are all on the same team)
 - refactor effects to huds.opy
 Editor
- └ Remove teleport doesn't reset to checkpoint while in invincibility mode
- └ Inspector is re-disabled after exporting map data
+- Remove teleport doesn't reset to checkpoint while in invincibility mode
+- Inspector is re-disabled after exporting map data
+
+1.10.1
+Features
+- Ban Save Double tech
+- Basic Map Validator [WIP]
+Editor
+- FlyMode
+  * Will not be turned off by Quick Reset
+  * Hold crouch for slow speed modifer
+  * Strafe will be affected by speed modifiers
