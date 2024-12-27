@@ -223,7 +223,7 @@ rule "Huds: Global/Localplayer":
         # find the value
     Difficultyhud = [
         createWorkshopSetting(enum[ "playtest - 游戏测试", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display - 不显示"],"map settings \n地图设置","difficulty (display hud) - 难度 (顶部hud)",0, 0)
-        , createWorkshopSetting(bool,"map settings \n地图设置","Playtest display - 游戏测试",false,0) 
+        , createWorkshopSetting(bool,"map settings \n地图设置","Playtest display - 游戏测试",false,1) 
         ] 
     # display
     if Difficultyhud[0] != 17: # 17th entry is 'dont display'
