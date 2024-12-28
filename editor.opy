@@ -907,8 +907,10 @@ rule "Editor | create cp/orb":
             BanDead = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanDead]
             BanEmote = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanEmote]
             BanClimb = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanClimb]
+            BanSaveDouble = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanSaveDouble]
             BanBhop = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanBhop]
-
+            BanDjump = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanDjump]
+            
         smallMessage(getAllPlayers(), "   新检查点已创建" checkCN "   New Checkpoint has been created")
     
     elif len(CheckpointPositions) < 1:
@@ -1060,7 +1062,9 @@ rule "Editor | delete cp/orb/portal":
         RemoveCPandLower(BanDead)
         RemoveCPandLower(BanEmote)
         RemoveCPandLower(BanClimb)
+        RemoveCPandLower(BanSaveDouble)
         RemoveCPandLower(BanBhop)
+        RemoveCPandLower(BanDjump)
 
         # Remove specified checkpoint =====================
         del CheckpointPositions[hostPlayer.CurrentCheckpoint]
