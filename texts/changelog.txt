@@ -37,7 +37,7 @@ adjustments:
 - guide toggle hint is now orange if closed
 - traces now display on/off in hud and color green if on
 - server restart time is now a smaller hud
-- the lobby should now autometically restart if the match is over
+- the lobby should now automatically restart if the match is over
 - left top hud is now bigger
 
 0.9.2 - date 22-8-2022
@@ -413,10 +413,11 @@ Editor
 
 1.10.1
 Features
-- Ban Save Double tech
+- Ban Save Double setting
 - Basic Map Validator [WIP]
 Editor
 - FlyMode
   * Will not be turned off by Quick Reset
   * Hold crouch for slow speed modifer
   * Strafe will be affected by speed modifiers
+- Ban Double Jump & Ban Save Double are adjusted on CP addition/deletion
