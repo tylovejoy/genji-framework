@@ -10,7 +10,7 @@ rule "Checking | ult combined rule":
     wait(1.8, Wait.ABORT_WHEN_FALSE)
     if eventPlayer.NotOnLastCp and (not eventPlayer.InvincibleToggle):
         eventPlayer.disallowButton(Button.PRIMARY_FIRE) # disable primary fire because of slash exploit
-    waitUntil(not eventPlayer.isUsingUltimate(),2)
+    waitUntil(not eventPlayer.isUsingUltimate(), 2)
     wait()
     eventPlayer.allowButton(Button.PRIMARY_FIRE)
     async(CheckUlt(), AsyncBehavior.RESTART) # sets ult charge back if done with map etc
@@ -116,7 +116,7 @@ rule "Checking | Using Emote":
     @Condition eventPlayer.isCommunicatingEmote() == true
     eventPlayer.BhopUsed = false
     if eventPlayer.ban_emote:
-        waitUntil(not eventPlayer.isCommunicatingEmote() == true, 9999)
+        waitUntil(not eventPlayer.isCommunicatingEmote() == true, Math.INFINITY)
         waitUntil(eventPlayer.isOnWall(), 1)
         if eventPlayer.isOnWall():
             eventPlayer.cancelPrimaryAction()
@@ -190,14 +190,14 @@ rule "Checking | Double Jump":
     if not RULE_CONDITION: return
     while true:
         #Released Jump
-        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
         if not RULE_CONDITION: return
         #Double Jumped
-        waitUntil(eventPlayer.isOnGround() or eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        waitUntil(eventPlayer.isOnGround() or eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
         if not RULE_CONDITION: return
         eventPlayer.DoubleUsed = true
         #Reset
-        waitUntil(eventPlayer.isOnGround() or not eventPlayer.DoubleUsed, 9999)
+        waitUntil(eventPlayer.isOnGround() or not eventPlayer.DoubleUsed, Math.INFINITY)
         if not RULE_CONDITION: return
 
 rule "HUD | Multiclimb Counter":
