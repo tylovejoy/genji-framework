@@ -124,7 +124,7 @@ rule "Checking | Using Emote":
 
 rule "Checking | Bhop":
     @Event eachPlayer
-    @Condition not eventPlayer.BhopUsed
+    @Condition eventPlayer.BhopUsed == false
     @Condition eventPlayer.isJumping()
     eventPlayer.BhopUsed = true
     smallMessage(eventPlayer,"   小跳已用" checkCN "   Bhop")
@@ -183,7 +183,6 @@ rule "Checking | standing resets variables":
 rule "Checking | Double Jump":
     @Event eachPlayer
     @Hero genji
-    #@Condition evalOnce(len(BanDjump)) or eventPlayer.ban_djump
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isOnGround() == false
     #Saved Double Jump
@@ -232,7 +231,7 @@ rule "Ban | Wallclimb - indicator ":
     # Credit: TITANXPASCAL#5554
     @Event eachPlayer
     @Condition eventPlayer.ban_climb
-    @Condition not eventPlayer.InvincibleToggle
+    @Condition eventPlayer.InvincibleToggle == false
     @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.WallclimbUsed
     #checkpointFailReset()
@@ -251,14 +250,13 @@ rule "Ban | Emote Savehop":
 rule "Ban save double - 封禁二段跳":
     @Event eachPlayer
     @Hero genji
+    @Condition eventPlayer.ban_savedouble
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.DoubleUsed == false
-    @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
-
-    if not eventPlayer.ban_savedouble: return
-    waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or eventPlayer.DoubleUsed or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
+    @Condition eventPlayer.isHoldingButton(Button.JUMP)
+    waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
     if not RULE_CONDITION: return
-    waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or eventPlayer.DoubleUsed or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
+    waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
     if not RULE_CONDITION: return
     wait(1, Wait.ABORT_WHEN_FALSE)
     smallMessage(eventPlayer, "   延二段跳已禁用!" checkCN "   save double banned!")
