@@ -163,7 +163,7 @@ rule "Checking | Create Bhop":
         eventPlayer.Bhopcount --
 
     eventPlayer.CreateCounter ++
-    smallMessage(eventPlayer, "   succes!" checkCN "   Bhop has been created!")    
+    smallMessage(eventPlayer, "   success!" checkCN "   Bhop has been created!")    
 
 rule "Checking | standing resets variables":
     @Event eachPlayer
@@ -258,6 +258,7 @@ rule "Ban save double - 封禁二段跳":
     if not RULE_CONDITION: return
     waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
     if not RULE_CONDITION: return
-    wait(1, Wait.ABORT_WHEN_FALSE)
+    if eventPlayer.getVerticalSpeed() < null: goto RULE_START #Prevent false positives
+    wait(0.8, Wait.ABORT_WHEN_FALSE)
     smallMessage(eventPlayer, "   延二段跳已禁用!" checkCN "   save double banned!")
     checkpointFailReset()
