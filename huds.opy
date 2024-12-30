@@ -222,7 +222,7 @@ rule "Huds: Global/Localplayer":
     #if not hostPlayer.EditorOn:
         # find the value
     Difficultyhud = [
-        createWorkshopSetting(enum[ "playtest - 游戏测试", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display - 不显示"],"map settings \n地图设置","difficulty (display hud) - 难度 (顶部hud)",0, 0)
+        createWorkshopSetting(enum[ "<fg27AAFFFF>playtest - 游戏测试", "<fgA0E81BFF>easy-", "<fgA0E81BFF>easy", "<fgA0E81BFF>easy+", "<fgFFFF00FF>medium-", "<fgFFFF00FF>medium", "<fgFFFF00FF>medium+", "<fgEC9900FF>hard-", "<fgEC9900FF>hard", "<fgEC9900FF>hard+", "<fgFF4500FF>very hard-", "<fgFF4500FF>very hard", "<fgFF4500FF>very hard+", "<fgC80013FF>extreme-", "<fgC80013FF>extreme", "<fgC80013FF>extreme+", "<fg960000FF>hell", "don't display - 不显示"],"map settings \n地图设置","difficulty (display hud) - 难度 (顶部hud)",0, 0)
         , createWorkshopSetting(bool,"map settings \n地图设置","Playtest display - 游戏测试",false,1) 
         ] 
     # display
