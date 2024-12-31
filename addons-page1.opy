@@ -17,9 +17,9 @@ rule "Pre-set control map portal | function | toggled via workshop":
     @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc])
     if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] != vect(0,0,0):
         eventPlayer.teleport(
-            PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] 
+            PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])]
         )
-   
+
 rule "Custom portals | function":
     @Event eachPlayer
     @Condition len(eventPlayer.PortalStart_Cache) > 0
@@ -31,7 +31,7 @@ rule "Custom portals | function":
         ]
     )
     wait(0.4)
-    
+
 rule "Pre-set control map portal | toggled on via workshop settings":
     @Condition PortalOn
     wait(0.5, Wait.ABORT_WHEN_FALSE) # overwrite pasta
@@ -40,7 +40,7 @@ rule "Pre-set control map portal | toggled on via workshop settings":
         PortalNames = ["Sanctuary","MEKA base","Downtown","MEKA base","Sanctuary","Downtown"]
         PortalLoc = [vect(47.946, 7.248, -93.922), vect(55.921, 6.998, -94.024), vect(-326.382, 10.81, 117.261), vect(-330.96, 10.81, 117.416), vect(219.567, 10.215, 243.653), vect(225.976, 10.227, 240.799)]
         PortalDest = [vect(-328.552, 10.01, 120.82), vect(221.152, 9.376, 238.765), vect(52.197, 6.301, -97.513), vect(221.271, 9.431, 238.978), vect(-328.601, 10.01, 120.823), vect(52.197, 6.299, -97.513)]
-    
+
     elif getCurrentMap() == Map.ILIOS:
         #"light > ruin","light > well","ruin > light","ruin > well","well > light","well > ruin"
         PortalNames = ["Ruins","Well","Lighthouse","Well","Lighthouse","Ruins"]
@@ -69,7 +69,7 @@ rule "Pre-set control map portal | toggled on via workshop settings":
         PortalNames = ["labs", "icebreaker", "Sublevel", "icebreaker", "labs", "Sublevel"]
         PortalLoc = [vect(280.66, -12.15, -223.65), vect(273.27, 42.74, 198.15), vect(266.58, 42.74, 198.17), vect(-58.29, -154, 63.03), vect(-58.36, -154, 56.47), vect(287.08, -12.15, -223.59)]
         PortalDest = [vect(270, 42.7, 190.44), vect(284.07, -12.75, -216.15), vect(-53.51, -154.5, 60.08), vect(284.07, -12.75, -216.15), vect(270, 42.7, 190.44), vect(-53.51, -154.5, 60.08)]
-    
+
     elif getCurrentMap() == Map.SAMOA:
         PortalNames = ["beach","volcano", "downtown", "volcano", "beach","downtown"  ]
         PortalLoc = [vect(231.98, 7.23, -262.84), vect(236.78, 7.23, -262.75), vect(-327.59, 3.6, -108.69), vect(-332.71, 3.6, -108.59), vect(25.4, 341, 354.38), vect( 30, 341, 354.34)     ]
@@ -80,12 +80,12 @@ rule "Pre-set control map portal | toggled on via workshop settings":
         PortalLoc = null
         PortalNames = null
         return
-    
-/* 
+
+/*
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
     @Condition isGameInProgress()
-    
+
     MsDestructo = []  # Multiple bots
     waitUntil(any([x.hasSpawned() for x in getAllPlayers()]), 99999)
 
@@ -115,8 +115,8 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
             MapVectorArray = [vect(-328.19, 90.5, -103.11), vect(233.75, 71.95, -258.42), vect(26.93, 428.04, 336.34)]
             break
 
-        default: 
-       
+        default:
+
             if strContains( "{}".format(getCurrentMap()) , "{}".format(Map.LIJIANG_TOWER)): # lunar new year catch
                 MapVectorArray = [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)]
             elif strContains( "{}".format(getCurrentMap()) ,"{}".format(Map.BUSAN)): # lunar new year catch
@@ -125,7 +125,7 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
                 MapVectorArray = [
                     vect(73, 62, -17),
                     vect(169, 62, 82),
-                    vect(-23, 62, -124), 
+                    vect(-23, 62, -124),
                     vect(-23, 62, 100)
                 ]
 
@@ -176,11 +176,11 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
 rule "Little destructo - fence breaker":
     # Made by FishoFire
     # version 1.0
-    # 
+    #
     # wait to overwrite any from copy pastas
-	wait(0.032) 
+	wait(0.032)
     # first entry will act as index, rest is the points themselves
-    MapVectorArray = [0] 
+    MapVectorArray = [0]
     # flag mode = both flag points, just incase
     # tdm/dm = first spawn points, the maps are not big so it just covers entire map. all teams defaults to team 1 spawn
     # push: payload and cp 0 are set but rest isnt. normal payload maps have more then 1 point.
@@ -192,14 +192,14 @@ rule "Little destructo - fence breaker":
         [getObjectivePosition(0),getObjectivePosition(1),getObjectivePosition(2)]
     )
     # explode in a grid around the selected points
-    while len(MapVectorArray) > 1: 
+    while len(MapVectorArray) > 1:
         MapVectorArray[0] = 0
-        while MapVectorArray[0] < (fence_grid*fence_grid):              
+        while MapVectorArray[0] < (fence_grid*fence_grid):
             createProjectile(
                 Projectile.ORB,  # the only orb available without fx extension
-                getAllPlayers(), 
+                getAllPlayers(),
                 fence_position ,
-                Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size, 
+                Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
                 DynamicEffect.GOOD_EXPLOSION, # possible without extensions: bad, good, ring
                 DynamicEffect.EXPLOSION_SOUND, # possible without extensions: explosion sound, buf sound, ring explosion sound
                 1, 1, 0, 0, 0, 0
@@ -210,18 +210,18 @@ rule "Little destructo - fence breaker":
                 wait()
 
         del MapVectorArray[1]
-  
+
     # handle exceptions (looking at you new queen street)
     MapVectorArray = [vect(8.276, 4.113, 15.261), vect(-8.319, 2.624, 14.245), vect(0.006, 4.821, 18.513)]
-    while len(MapVectorArray) > 0: 
+    while len(MapVectorArray) > 0:
         # same as other projectile before
         createProjectile(
-            Projectile.ORB,  
-            getAllPlayers(), 
+            Projectile.ORB,
+            getAllPlayers(),
             MapVectorArray[0],
-            Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size, 
+            Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
             DynamicEffect.GOOD_EXPLOSION,
-            DynamicEffect.EXPLOSION_SOUND, 
+            DynamicEffect.EXPLOSION_SOUND,
             1, 1, 0, 0, 0, 0
         )
         del MapVectorArray[0]
@@ -230,41 +230,33 @@ rule "Little destructo - fence breaker":
     MapVectorArray = null
 
 rule "Basic Map Checker":
-    @Condition createWorkshopSetting(bool,"map settings \n地图设置","[X] Basic Map Validator - 验证地图",false,3)
-    @Condition isGameInProgress()
+    @Condition createWorkshopSetting(bool,"map settings \n地图设置","Basic Map Validator - 验证地图",true,3)
     @Condition len(CheckpointPositions) > 1
-
+    wait(1) #Allow map data to load
     createDummy(Hero.ANA, Team.1 if getNumberOfSlots(Team.1) < getNumberOfSlots(Team.2) else Team.2, -1, CheckpointPositions[0], null)
     MapChecker = getLastCreatedEntity()
     MapChecker.disableEnvironmentCollision(false)
     MapChecker.disablePlayerCollision()
     MapChecker.setStatusEffect(null, Status.PHASED_OUT, Math.INFINITY)
-    #MapChecker.setInvisibility(Invis.ALL)
+    MapChecker.setInvisibility(Invis.ALL)
     MapChecker.startScalingSize(cpcircleradius / 0.45, false)
-    #MapChecker.startForcingButton(Button.CROUCH)
+    MapChecker.setGravity(Math.INFINITY)
     MapChecker.CurrentCheckpoint = []
     waitUntil(MapChecker.hasSpawned(), Math.INFINITY)
+
     for MapCheckerIter in range(1, len(CheckpointPositions)):
-        #for MapCheckerIter in range(34, 35):
-        MapChecker.Temp = 0
-        goto lbl_0
-        while MapChecker.y > CheckpointPositions[MapCheckerIter].y - cpcircleradius:
-            lbl_0:
-            MapChecker.setGravity(false)
-            MapChecker.startForcingPosition(CheckpointPositions[MapCheckerIter] + (cpcircleradius - MapChecker.Temp * cpcircleradius) * Vector.UP,false)
-            wait(0.128)
+        if distance(CheckpointPositions[MapCheckerIter], nearestWalkablePosition(CheckpointPositions[MapCheckerIter])) > cpcircleradius:
+            MapChecker.startForcingPosition(raycast(CheckpointPositions[MapCheckerIter]+Vector.UP*cpcircleradius,CheckpointPositions[MapCheckerIter]+
+                Vector.DOWN*cpcircleradius, [],[],false).getHitPosition(),true)
+            wait(0.096)
             MapChecker.stopForcingPosition()
-            MapChecker.setGravity(100)
             waitUntil(MapChecker.isOnGround(), true)
-            if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapCheckerIter]) <= cpcircleradius:
-                break
-            MapChecker.Temp += 0.1
-        #Debug
-        if not(MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapCheckerIter]) <= cpcircleradius):
-            smallMessage(hostPlayer, "Fail All")
-            enableInspector()
-            MapChecker.CurrentCheckpoint.append(MapCheckerIter)
-            printLog("Fail {0}: {1}".format(MapCheckerIter, distance(MapChecker, CheckpointPositions[MapCheckerIter])))
-            disableInspector()
+
+            if not MapChecker.isOnGround() or distance(MapChecker, CheckpointPositions[MapCheckerIter]) > cpcircleradius:
+                enableInspector()
+                MapChecker.CurrentCheckpoint.append(MapCheckerIter)
+                printLog("Fail {0}: {1}".format(MapCheckerIter, distance(MapChecker, CheckpointPositions[MapCheckerIter])))
+                disableInspector()
+
     destroyDummy(MapChecker.getTeam(), MapChecker.getSlot())
     MapChecker = null
