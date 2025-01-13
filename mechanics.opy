@@ -185,6 +185,7 @@ rule "Checking | Double Jump":
     @Hero genji
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isOnGround() == false
+    @Condition eventPlayer.ban_djump or eventPlayer.ban_savedouble
     #Saved Double Jump
     waitUntil(eventPlayer.isOnGround() or eventPlayer.isJumping() or eventPlayer.isHoldingButton(Button.JUMP), 0.096)
     if not RULE_CONDITION: return
