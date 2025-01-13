@@ -241,22 +241,50 @@ rule "Basic Map Checker":
     MapChecker.setInvisibility(Invis.ALL)
     MapChecker.startScalingSize(cpcircleradius / 0.45, false)
     MapChecker.setGravity(Math.INFINITY)
-    MapChecker.CurrentCheckpoint = []
     waitUntil(MapChecker.hasSpawned(), Math.INFINITY)
 
     for MapCheckerIter in range(1, len(CheckpointPositions)):
         if distance(CheckpointPositions[MapCheckerIter], nearestWalkablePosition(CheckpointPositions[MapCheckerIter])) > cpcircleradius:
             MapChecker.startForcingPosition(raycast(CheckpointPositions[MapCheckerIter]+Vector.UP*cpcircleradius,CheckpointPositions[MapCheckerIter]+
                 Vector.DOWN*cpcircleradius, [],[],false).getHitPosition(),true)
-            wait(0.096)
+            wait(7*0.016)
             MapChecker.stopForcingPosition()
             waitUntil(MapChecker.isOnGround(), true)
 
+            for MapCheckerIter.Temp in range(-cpcircleradius,cpcircleradius,0.2):
+                if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapCheckerIter]) <= cpcircleradius:
+                    goto lbl_MapChecker_nextCp
+                else:
+                    wait(7*0.016)
+                    MapChecker.startForcingPosition(CheckpointPositions[MapCheckerIter]+Vector.UP*MapCheckerIter.Temp,true)
+                    MapChecker.stopForcingPosition()
+                    waitUntil(MapChecker.isOnGround(), true)
+
             if not MapChecker.isOnGround() or distance(MapChecker, CheckpointPositions[MapCheckerIter]) > cpcircleradius:
                 enableInspector()
-                MapChecker.CurrentCheckpoint.append(MapCheckerIter)
                 printLog("Fail {0}: {1}".format(MapCheckerIter, distance(MapChecker, CheckpointPositions[MapCheckerIter])))
                 disableInspector()
+        lbl_MapChecker_nextCp:
 
+            /*
+            #Edge Cases
+            if not MapChecker.isOnGround() or distance(MapChecker, CheckpointPositions[MapCheckerIter]) > cpcircleradius:
+                MapChecker.startForcingPosition(CheckpointPositions[MapCheckerIter]+Vector.UP*cpcircleradius,true)
+                wait(7*0.016)
+                MapChecker.stopForcingPosition()
+                waitUntil(MapChecker.isOnGround(), true)
+
+                if not MapChecker.isOnGround() or distance(MapChecker, CheckpointPositions[MapCheckerIter]) > cpcircleradius:
+                    MapChecker.startForcingPosition(CheckpointPositions[MapCheckerIter],true)
+                    wait(7*0.016)
+                    MapChecker.stopForcingPosition()
+                    waitUntil(MapChecker.isOnGround(), true)
+
+                    if not MapChecker.isOnGround() or distance(MapChecker, CheckpointPositions[MapCheckerIter]) > cpcircleradius:
+                        MapChecker.startForcingPosition(CheckpointPositions[MapCheckerIter]+Vector.DOWN*cpcircleradius,true)
+                        wait(7*0.016)
+                        MapChecker.stopForcingPosition()
+                        waitUntil(MapChecker.isOnGround(), true)
+            */
     destroyDummy(MapChecker.getTeam(), MapChecker.getSlot())
     MapChecker = null
