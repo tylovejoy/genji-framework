@@ -232,7 +232,7 @@ rule "Little destructo - fence breaker":
 rule "Poll jump and crouch inputs for spectators":
     @Event playerJoined
     wait()
-    eventPlayer.HUDInputs = vect(eventPlayer.isHoldingButton(Button.JUMP),eventPlayer.isHoldingButton(Button.CROUCH),null)
+    eventPlayer.HUDInputs = vect(eventPlayer.isHoldingButton(Button.JUMP),eventPlayer.isHoldingButton(Button.CROUCH),false)
     goto RULE_START
 
 rule "Basic Map Checker":
