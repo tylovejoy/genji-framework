@@ -506,9 +506,12 @@ rule "Huds: each player":
     )
 
     hudSubtext(eventPlayer,"{0}{1}{2}\n{3}{4}{5}".format(
-        "■" if eventPlayer.isHoldingButton(Button.JUMP) else "□", "▲" if eventPlayer.getThrottle().z > null else "△",
-        "●" if eventPlayer.isHoldingButton(Button.CROUCH) else "○", "◀" if eventPlayer.getThrottle().x > null else "◁",
-        "▼" if eventPlayer.getThrottle().z < null else "∇", "▶" if eventPlayer.getThrottle().x < null else "▷"),
+        "■" if eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.HUDInputs.x else "□",
+        "▲" if eventPlayer.getThrottle().z > null else "△", 
+        "●" if eventPlayer.isHoldingButton(Button.CROUCH) or eventPlayer.HUDInputs.y else "○",
+        "◀" if eventPlayer.getThrottle().x > null else "◁",
+        "▼" if eventPlayer.getThrottle().z < null else "∇",
+        "▶" if eventPlayer.getThrottle().x < null else "▷"),
         HudPosition.LEFT, HO.game_input, evalOnce(ColorConfig[customize.time]),HudReeval.STRING, SpecVisibility.DEFAULT)
 
     # climb/bhop indicators

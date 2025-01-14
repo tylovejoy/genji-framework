@@ -229,6 +229,12 @@ rule "Little destructo - fence breaker":
 
     MapVectorArray = null
 
+rule "Poll jump and crouch inputs for spectators":
+    @Event playerJoined
+    wait()
+    eventPlayer.HUDInputs = vect(eventPlayer.isHoldingButton(Button.JUMP),eventPlayer.isHoldingButton(Button.CROUCH),null)
+    goto RULE_START
+
 rule "Basic Map Checker":
     @Condition createWorkshopSetting(bool,"map settings \n地图设置","Basic Map Validator - 验证地图",true,3)
     @Condition len(CheckpointPositions) > 1

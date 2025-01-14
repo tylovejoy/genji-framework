@@ -275,6 +275,7 @@ playervar splitdisplay                      # int                       --- disp
 playervar practicetimer
 playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
 playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
+playervar HUDInputs
 
 #Subroutine names
 subroutine StartGame
