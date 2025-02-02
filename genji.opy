@@ -308,12 +308,12 @@ def StartGame():
     TriggerOnFailSuccesReset()
 
 #!include "editor.opy"
+
 #!include "commands.opy"
 
 rule "------------------------------------------------------------------------  General rules ------------------------------------------------------------------------ ":
     @Delimiter
     @Disabled
-
 
 rule "Setup and Variables":
     if not inspectoron:
@@ -443,7 +443,6 @@ rule "Setup and Variables":
     RebuildKillOrbs()
     RebuildBounceOrbs()
     RebuildPortals()
-
 
 rule "Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
@@ -656,8 +655,6 @@ rule "Kill Orb | Activate":
     @Condition (any([distance(i, eventPlayer) <= eventPlayer.KillRadii_Cache[eventPlayer.KillPosition_Cache.index(i)] for i in eventPlayer.KillPosition_Cache]))
     checkpointFailReset()
 
-
-
 rule "Bounce Ball / Orb | Activate":
     @Event eachPlayer
     @Condition eventPlayer.BouncePosition_Cache != []
@@ -714,7 +711,6 @@ rule "Bounce Ball / Orb | Activate":
         goto RULE_START
 
     eventPlayer.bouncetouchedlast = -1
-
 
 /*
 death rule notes ( not death note)
