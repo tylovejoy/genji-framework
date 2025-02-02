@@ -214,6 +214,7 @@ rule "Toggle Invincible Mode | Melee + Reload":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
     @Condition eventPlayer.isUsingAbility1() == false
     #@Condition eventPlayer.isUsingUltimate() == false
     @Condition eventPlayer.isAlive()
