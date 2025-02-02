@@ -1,4 +1,4 @@
-#!define versionhere "1.10.1♨E"
+#!define versionhere "1.10.1♨F"
 #♨ Dev Build Icon
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
@@ -143,230 +143,6 @@ def UpdateCache():
         EditorSelectLast()
         eventPlayer.MovedCheckpoint = false     
 
-#!include "editor.opy"
-
-rule "------------------------------------------------------------------------  General rules ------------------------------------------------------------------------ ":
-    @Delimiter
-    @Disabled
-
-
-rule "Setup and Variables":
-    if not inspectoron:
-        disableInspector()
-
-    disableGamemodeCompletion()
-    disableScoring()
-    disableMusic()
-    disableAnnouncer()
-    startForcingSpawn(Team.ALL,  0)
-    startForcingSpawn(Team.ALL,  1)
-    startForcingSpawn(Team.ALL,  2)
-    wait(0.024) # wait for map data rule
-    
-    # fix team because of naming
-    if ColorConfig[customize.orb_lock] == Color.TEAM_1: 
-        ColorConfig[customize.orb_lock] = Color.BLUE 
-    elif ColorConfig[customize.orb_lock] == Color.TEAM_2:
-        ColorConfig[customize.orb_lock] = Color.RED
-
-    # prevent same color lock orbs
-    if ColorConfig[customize.orb_normal] == ColorConfig[customize.orb_lock]:
-        ColorConfig[customize.orb_lock] = Color.GREEN  if ColorConfig[customize.orb_normal] == Color.ORANGE else Color.ORANGE
-
-    # prevent same color bhop/climb used/unused
-    if ColorConfig[customize.bhopclimb_available] == ColorConfig[customize.bhopclimb_used]:
-        ColorConfig[customize.bhopclimb_used] = Color.ORANGE if ColorConfig[customize.bhopclimb_available] == Color.RED else Color.RED
-
-    SaveName = []
-    SaveCp = []
-    SaveTimer = []
-    SaveEnt = []
-    SavePauseTime = []
-    SavePauseEnabled = []
-    SaveElapsed = []
-
-    if BladeEnabledCheckpoints == null and len(BladeEnabledCheckpoints) == 1:
-        BladeEnabledCheckpoints = [0]
-    else:
-        BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints != null else []
-    
-    if DashEnabledCheckpoints == null and len(DashEnabledCheckpoints) == 1:
-        DashEnabledCheckpoints = [0]
-    else:
-        DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints != null  else  []
-
-    BouncePadCheckpoints = BouncePadCheckpoints if len(BouncePadCheckpoints) else []
-    CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
-    CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
-    KillballCheckpoints = KillballCheckpoints if len(KillballCheckpoints) else []
-    KillBallPositions = KillBallPositions if len(KillBallPositions) else []
-    KillBallRadii = KillBallRadii if len(KillBallRadii) else []
-    KillBallEffects = KillBallEffects if len(KillBallEffects) else []
-    BouncePositions = BouncePositions if len(BouncePositions) else []
-    BounceEffects = BounceEffects if len(BounceEffects) else []
-    BounceStrength = BounceStrength if len(BounceStrength) else []
-    BounceToggleUlt = BounceToggleUlt if len(BounceToggleUlt) else []
-    BounceToggleDash = BounceToggleDash if len(BounceToggleDash) else []
-    BounceToggleLock = BounceToggleLock if len(BounceToggleLock) else []
-
-    CustomPortalStart = CustomPortalStart if len(CustomPortalStart) > 0 else [] 
-    CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) > 0 else [] 
-    CustomPortalCP = CustomPortalCP if len(CustomPortalCP) > 0 else [] 
-
-    LeaderBoardFull = []
-    TitleData = null
-    PortalNames = []
-    PortalLoc = []
-    PortalDest  = []
-    
-    HintCp = []
-    HintText = []
-
-    wait(1)
-
-    # clean out -1's after the ban has loaded
-    BanBhop = [i for i in BanBhop if i != -1] if len(BanBhop) else []
-    BanClimb = [i for i in BanClimb if i != -1] if len(BanClimb) else []
-    BanEmote = [i for i in BanEmote if i != -1] if len(BanEmote) else []
-    BanDead = [i for i in BanDead if i != -1] if len(BanDead) else []
-    BanCreate = [i for i in BanCreate if i != -1] if len(BanCreate) else []
-    BanMulti = [i for i in BanMulti if i != -1] if len(BanMulti) else []
-    BanTriple = null #[i for i in BanTriple if i != -1] if len(BanTriple) > 0 else [] # legacy code, now auto sets it to null to save space
-    BanStand = [i for i in BanStand if i != -1] if len(BanStand) else []
-    BanSaveDouble = BanSaveDouble if len(BanSaveDouble) else []
-    BanDjump = BanDjump if len(BanDjump) else []
-
-    DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
-    PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用传送门 (占点地图)",true, 4)
-    CompMode = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","Turn on competitive mode - 开启竞赛模式" , compmodetoggle , 100)
-    if CompMode:
-        # -! comp minutes !- 
-        CompTime = createWorkshopSetting(int[1:240], "Competitive mode\n竞赛模式", "time limit (global) - 时间限制", comptimelimit, 101) # 5-240
-        # -! comp attempt count !- 
-        CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode\n竞赛模式", "attempt count - 尝试次数", attemptcount, 102) 
-        # -! comp restartlimiter !-
-        CompRestartLimit = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","disable restart during run - 竞赛中禁用重新开始" , comprestartlimit , 103)
-    else:
-        instructiontext = null
-
-    wait(1) # add back to below wait if removed
-
-    if len(PortalDest) > 0: # pre set control map portals. not in portal rule because shared I variable
-        for TempIterator1 in range(len(PortalLoc)):
-            createEffect(
-                [i for i in getAllPlayers() if i.InvincibleToggle or not i.NotOnLastCp],
-                Effect.BAD_AURA, 
-                Color.AQUA if evalOnce(TempIterator1) % 2 == 1 else Color.ORANGE,
-                PortalLoc[evalOnce(TempIterator1)], 
-                0.6,
-                EffectReeval.VISIBILITY
-            )
-            createInWorldText(
-                [i for i in getAllPlayers() if i.InvincibleToggle or not i.NotOnLastCp], 
-                "{0}".format(PortalNames[evalOnce(TempIterator1)]), 
-                PortalLoc[evalOnce(TempIterator1)] + vect(0,1,0), 
-                1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
-            )
-    waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]),9999)
-    wait(1)
-    if not [i for i in getAllPlayers() if not i.isDummy()][0].EditorOn:
-        EffectsCreate()
-        return
-
-    RebuildKillOrbs()
-    RebuildBounceOrbs()
-    RebuildPortals()
-
-
-rule "Match time":
-    if getCurrentGamemode() != Gamemode.SKIRMISH:
-        wait(0.25)
-        setMatchTime(1)
-        wait(1.1)
-        setMatchTime(1)
-        wait(1.1)
-        wait(10)
-    
-    setMatchTime(69)
-    pauseMatchTime()
-    wait(5)
-    TimeRemaining = 265
-
-    while TimeRemaining > 0:
-        wait(60)
-        TimeRemaining --
-        if CompMode:
-            CompTime --
-            if CompTime == 0:
-                bigMessage(getAllPlayers(),"时间到了" checkCN "time's up")
-                getAllPlayers().CompDone = true
-                stopChasingVariable(getAllPlayers().Timer)
-                getAllPlayers().disableRespawn()
-                getAllPlayers().setDamageReceived(100)
-                kill(getAllPlayers(), null)
-                wait(0.032)
-                async(CreateLeaderBoard(), AsyncBehavior.RESTART)            
-
-    bigMessage(localPlayer, "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time expired, restarting")
-    wait(5)
-    if getCurrentGamemode() == Gamemode.FFA:
-        declarePlayerVictory(hostPlayer)
-    else:
-        declareTeamVictory(hostPlayer.getTeam())
-
-rule "Player Initialize":
-    @Event playerJoined
-    @Condition eventPlayer.isDummy() == false
-    eventPlayer.setDamageReceived(0)
-    eventPlayer.EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
-    eventPlayer.LockEditor = true
-    eventPlayer.preloadHero(Hero.GENJI)
-    eventPlayer.GuideToggle = true
-    eventPlayer.disableGamemodeHud()
-    eventPlayer.enableDeathSpectateAllPlayers()
-    eventPlayer.enableDeathSpectateTargetHud()
-    eventPlayer.disablePlayerCollision()
-    eventPlayer.SpectateToggle = false
-    eventPlayer.WallclimbUsed = false #Climbing the wall prompts the HUD
-    eventPlayer.JumpCount = 0
-    eventPlayer.bouncetouchedlast = -1
-    eventPlayer.bouncetouched = -1
-    eventPlayer.PreviewsI = null
-    #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
-    wait(1) 
-    eventPlayer.setRespawnTime(1)
-    createEffect(eventPlayer, Effect.RING, ColorConfig[customize.ring_current], CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), cpcirklefx, EffectReeval.POSITION_AND_RADIUS)
-    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, ColorConfig[customize.ring_next] , CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, ColorConfig[customize.shaft], CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, ColorConfig[customize.nexticon_color], true)
-
-    waitUntil(eventPlayer.hasSpawned(), 9999)
-    eventPlayer.LockEditor = false
-
-    if CompMode:
-        eventPlayer.setInvisibility(Invis.ALL)
-        if not "{0}".format(eventPlayer) in CompAtmpSaveNames: # instructions and settings for comp start
-            eventPlayer.instructionhud = true
-            CompAtmpSaveNames.append("{0}".format(eventPlayer))
-            CompAtmpSaveCount.append(1)
-            eventPlayer.AttemptCount = 1
-            eventPlayer.setMoveSpeed(0)
-            eventPlayer.setAbility1Enabled(false)
-            eventPlayer.setUltEnabled(false)
-            waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT),1)
-            waitUntil(eventPlayer.isHoldingButton(Button.INTERACT) or CompTime < 1,99999)
-            eventPlayer.setMoveSpeed(100)
-            eventPlayer.instructionhud = false
-        else:
-            eventPlayer.AttemptCount = CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))]
-            #smallMessage(eventPlayer,"now {0}".format( eventPlayer.AttemptCount))
-        if eventPlayer.AttemptCount == (-1) or CompTime < 1:
-            eventPlayer.CompDone = true
-    
-
-    wait()
-    StartGame()  # initialization of the game
-    
 def DeleteSave():
     @Name "delete save" 
     del SaveName[SaveEnt.index(eventPlayer)]
@@ -530,6 +306,233 @@ def StartGame():
     eventPlayer.MovedCheckpoint = true
     UpdateCache()
     TriggerOnFailSuccesReset()
+
+#!include "editor.opy"
+#!include "commands.opy"
+
+rule "------------------------------------------------------------------------  General rules ------------------------------------------------------------------------ ":
+    @Delimiter
+    @Disabled
+
+
+rule "Setup and Variables":
+    if not inspectoron:
+        disableInspector()
+
+    disableGamemodeCompletion()
+    disableScoring()
+    disableMusic()
+    disableAnnouncer()
+    startForcingSpawn(Team.ALL,  0)
+    startForcingSpawn(Team.ALL,  1)
+    startForcingSpawn(Team.ALL,  2)
+    wait(0.024) # wait for map data rule
+    
+    # fix team because of naming
+    if ColorConfig[customize.orb_lock] == Color.TEAM_1: 
+        ColorConfig[customize.orb_lock] = Color.BLUE 
+    elif ColorConfig[customize.orb_lock] == Color.TEAM_2:
+        ColorConfig[customize.orb_lock] = Color.RED
+
+    # prevent same color lock orbs
+    if ColorConfig[customize.orb_normal] == ColorConfig[customize.orb_lock]:
+        ColorConfig[customize.orb_lock] = Color.GREEN  if ColorConfig[customize.orb_normal] == Color.ORANGE else Color.ORANGE
+
+    # prevent same color bhop/climb used/unused
+    if ColorConfig[customize.bhopclimb_available] == ColorConfig[customize.bhopclimb_used]:
+        ColorConfig[customize.bhopclimb_used] = Color.ORANGE if ColorConfig[customize.bhopclimb_available] == Color.RED else Color.RED
+
+    SaveName = []
+    SaveCp = []
+    SaveTimer = []
+    SaveEnt = []
+    SavePauseTime = []
+    SavePauseEnabled = []
+    SaveElapsed = []
+
+    if BladeEnabledCheckpoints == null and len(BladeEnabledCheckpoints) == 1:
+        BladeEnabledCheckpoints = [0]
+    else:
+        BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints != null else []
+    
+    if DashEnabledCheckpoints == null and len(DashEnabledCheckpoints) == 1:
+        DashEnabledCheckpoints = [0]
+    else:
+        DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints != null  else  []
+
+    BouncePadCheckpoints = BouncePadCheckpoints if len(BouncePadCheckpoints) else []
+    CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
+    CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
+    KillballCheckpoints = KillballCheckpoints if len(KillballCheckpoints) else []
+    KillBallPositions = KillBallPositions if len(KillBallPositions) else []
+    KillBallRadii = KillBallRadii if len(KillBallRadii) else []
+    KillBallEffects = KillBallEffects if len(KillBallEffects) else []
+    BouncePositions = BouncePositions if len(BouncePositions) else []
+    BounceEffects = BounceEffects if len(BounceEffects) else []
+    BounceStrength = BounceStrength if len(BounceStrength) else []
+    BounceToggleUlt = BounceToggleUlt if len(BounceToggleUlt) else []
+    BounceToggleDash = BounceToggleDash if len(BounceToggleDash) else []
+    BounceToggleLock = BounceToggleLock if len(BounceToggleLock) else []
+
+    CustomPortalStart = CustomPortalStart if len(CustomPortalStart) > 0 else [] 
+    CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) > 0 else [] 
+    CustomPortalCP = CustomPortalCP if len(CustomPortalCP) > 0 else [] 
+
+    LeaderBoardFull = []
+    TitleData = null
+    PortalNames = []
+    PortalLoc = []
+    PortalDest  = []
+    
+    HintCp = []
+    HintText = []
+
+    wait(1)
+
+    # clean out -1's after the ban has loaded
+    BanBhop = [i for i in BanBhop if i != -1] if len(BanBhop) else []
+    BanClimb = [i for i in BanClimb if i != -1] if len(BanClimb) else []
+    BanEmote = [i for i in BanEmote if i != -1] if len(BanEmote) else []
+    BanDead = [i for i in BanDead if i != -1] if len(BanDead) else []
+    BanCreate = [i for i in BanCreate if i != -1] if len(BanCreate) else []
+    BanMulti = [i for i in BanMulti if i != -1] if len(BanMulti) else []
+    BanTriple = null #[i for i in BanTriple if i != -1] if len(BanTriple) > 0 else [] # legacy code, now auto sets it to null to save space
+    BanStand = [i for i in BanStand if i != -1] if len(BanStand) else []
+    BanSaveDouble = BanSaveDouble if len(BanSaveDouble) else []
+    BanDjump = BanDjump if len(BanDjump) else []
+
+    DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
+    if createWorkshopSetting(bool,"map settings \n地图设置","Basic Map Validator - 验证地图", false, 3):
+        async(CheckMap, AsyncBehavior.NOOP)
+    PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用传送门 (占点地图)", true, 4)
+    CompMode = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","Turn on competitive mode - 开启竞赛模式" , compmodetoggle , 100)
+    if CompMode:
+        # -! comp minutes !- 
+        CompTime = createWorkshopSetting(int[1:240], "Competitive mode\n竞赛模式", "time limit (global) - 时间限制", comptimelimit, 101) # 5-240
+        # -! comp attempt count !- 
+        CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode\n竞赛模式", "attempt count - 尝试次数", attemptcount, 102) 
+        # -! comp restartlimiter !-
+        CompRestartLimit = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","disable restart during run - 竞赛中禁用重新开始" , comprestartlimit , 103)
+    else:
+        instructiontext = null
+
+    wait(1) # add back to below wait if removed
+
+    if len(PortalDest) > 0: # pre set control map portals. not in portal rule because shared I variable
+        for TempIterator1 in range(len(PortalLoc)):
+            createEffect(
+                [i for i in getAllPlayers() if i.InvincibleToggle or not i.NotOnLastCp],
+                Effect.BAD_AURA, 
+                Color.AQUA if evalOnce(TempIterator1) % 2 == 1 else Color.ORANGE,
+                PortalLoc[evalOnce(TempIterator1)], 
+                0.6,
+                EffectReeval.VISIBILITY
+            )
+            createInWorldText(
+                [i for i in getAllPlayers() if i.InvincibleToggle or not i.NotOnLastCp], 
+                "{0}".format(PortalNames[evalOnce(TempIterator1)]), 
+                PortalLoc[evalOnce(TempIterator1)] + vect(0,1,0), 
+                1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
+            )
+    waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]),9999)
+    wait(1)
+    if not [i for i in getAllPlayers() if not i.isDummy()][0].EditorOn:
+        EffectsCreate()
+        return
+
+    RebuildKillOrbs()
+    RebuildBounceOrbs()
+    RebuildPortals()
+
+
+rule "Match time":
+    if getCurrentGamemode() != Gamemode.SKIRMISH:
+        wait(0.25)
+        setMatchTime(1)
+        wait(1.1)
+        setMatchTime(1)
+        wait(1.1)
+        wait(10)
+    
+    setMatchTime(69)
+    pauseMatchTime()
+    wait(5)
+    TimeRemaining = 265
+
+    while TimeRemaining > 0:
+        wait(60)
+        TimeRemaining --
+        if CompMode:
+            CompTime --
+            if CompTime == 0:
+                bigMessage(getAllPlayers(),"时间到了" checkCN "time's up")
+                getAllPlayers().CompDone = true
+                stopChasingVariable(getAllPlayers().Timer)
+                getAllPlayers().disableRespawn()
+                getAllPlayers().setDamageReceived(100)
+                kill(getAllPlayers(), null)
+                wait(0.032)
+                async(CreateLeaderBoard(), AsyncBehavior.RESTART)            
+
+    bigMessage(localPlayer, "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time expired, restarting")
+    wait(5)
+    if getCurrentGamemode() == Gamemode.FFA:
+        declarePlayerVictory(hostPlayer)
+    else:
+        declareTeamVictory(hostPlayer.getTeam())
+
+rule "Player Initialize":
+    @Event playerJoined
+    @Condition eventPlayer.isDummy() == false
+    eventPlayer.setDamageReceived(0)
+    eventPlayer.EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
+    eventPlayer.LockEditor = true
+    eventPlayer.preloadHero(Hero.GENJI)
+    eventPlayer.GuideToggle = true
+    eventPlayer.disableGamemodeHud()
+    eventPlayer.enableDeathSpectateAllPlayers()
+    eventPlayer.enableDeathSpectateTargetHud()
+    eventPlayer.disablePlayerCollision()
+    eventPlayer.SpectateToggle = false
+    eventPlayer.WallclimbUsed = false #Climbing the wall prompts the HUD
+    eventPlayer.JumpCount = 0
+    eventPlayer.bouncetouchedlast = -1
+    eventPlayer.bouncetouched = -1
+    eventPlayer.PreviewsI = null
+    #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
+    wait(1) 
+    eventPlayer.setRespawnTime(1)
+    createEffect(eventPlayer, Effect.RING, ColorConfig[customize.ring_current], CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), cpcirklefx, EffectReeval.POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, ColorConfig[customize.ring_next] , CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, ColorConfig[customize.shaft], CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, ColorConfig[customize.nexticon_color], true)
+
+    waitUntil(eventPlayer.hasSpawned(), 9999)
+    eventPlayer.LockEditor = false
+
+    if CompMode:
+        eventPlayer.setInvisibility(Invis.ALL)
+        if not "{0}".format(eventPlayer) in CompAtmpSaveNames: # instructions and settings for comp start
+            eventPlayer.instructionhud = true
+            CompAtmpSaveNames.append("{0}".format(eventPlayer))
+            CompAtmpSaveCount.append(1)
+            eventPlayer.AttemptCount = 1
+            eventPlayer.setMoveSpeed(0)
+            eventPlayer.setAbility1Enabled(false)
+            eventPlayer.setUltEnabled(false)
+            waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT),1)
+            waitUntil(eventPlayer.isHoldingButton(Button.INTERACT) or CompTime < 1,99999)
+            eventPlayer.setMoveSpeed(100)
+            eventPlayer.instructionhud = false
+        else:
+            eventPlayer.AttemptCount = CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))]
+            #smallMessage(eventPlayer,"now {0}".format( eventPlayer.AttemptCount))
+        if eventPlayer.AttemptCount == (-1) or CompTime < 1:
+            eventPlayer.CompDone = true
+    
+
+    wait()
+    StartGame()  # initialization of the game
 
 rule "Arrive | Ground reset | traces":
     @Event eachPlayer
@@ -803,9 +806,7 @@ rule "AFK timer":
         goto RULE_START
 
 
-#!include "huds.opy"
-
-#!include "commands.opy"     
+#!include "huds.opy"     
 
 #!include "mechanics.opy"
 
