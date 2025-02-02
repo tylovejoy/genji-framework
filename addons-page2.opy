@@ -263,7 +263,7 @@ def TriggerOnFailSuccesReset():
     @Disabled
     # This subroutine triggers on failing, arriving, reseting, skipping etc
     enableInspector()
-    printLog("------------")
+    printLog("■■■■■■■■■■■■■■■■■■■■■■■■")
     disableInspector()
     # example: reset gravity and movespeed after being changed by custom orbs
     eventPlayer.setGravity(100)
