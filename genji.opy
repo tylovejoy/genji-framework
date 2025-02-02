@@ -42,7 +42,6 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!include "settings.opy"
 #!include "definitions.opy"
 
-
 rule "fisho cp cheat for overpy toggle":
     @Event eachPlayer
     @Condition cpcheat
@@ -58,8 +57,8 @@ rule "fisho cp cheat for overpy toggle":
         eventPlayer.CurrentCheckpoint += 1
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
 
-
-FILLER
+rule FILLER:
+    @Delimiter
 
 rule "------------------------------------------------------------------------  General functions ------------------------------------------------------------------------ ":
     @Delimiter
@@ -809,16 +808,10 @@ rule "AFK timer":
 #!include "addons-page1.opy"
 
 # padding to make rest of rules go on page 2
-rule "------------------------------------------------------------------------  filler rules ------------------------------------------------------------------------ ":
-    @Delimiter
-    @Disabled
+rule "MAP DATA - 地图数据":
+    @NewPage FILLER
 
-rule "------------------------------------------------------------------------ MAP DATA - 地图数据 ------------------------------------------------------------------------":
-    @NewPage "Map data and addon settings are on page 2 - 地图数据和附加组件的设置在第2页"
-    @Delimiter
-    @Disabled
-
-rule "Map Data - 数据录入 <---- INSERT HERE / 在这输入":
+rule "<tx0C0000000000D297><fg00FFFFFF> Map Data - 数据录入 <---- INSERT HERE / 在这输入":
     @Delimiter
 
 editorordata
@@ -826,7 +819,7 @@ editorordata
 # note: Don't change defaults only here.
 # If you change this, also change it in the name/credit construciton in the huds
 # The old default should always be included to make old data valid
-rule "Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这输入 ": 
+rule "<tx0C0000000002A917><fg0FFFFFFF> Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这输入 ": 
     #Filling this in adds it to the inspector pasta after next restart.
     #You can fill in again to overwrite.
     #修改的内容 在重新开始 比赛后生效
@@ -881,7 +874,7 @@ rule "Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这
 
 
 
-rule "instructions depricated rules (ban / portal / dash /ult) - 旧版编辑器中已弃用规则指引 (单关封禁 / 传送门 / 给刀给S)":
+rule "Instructions for Depricated Rules (ban / portal / dash /ult) - 旧版编辑器中已弃用规则指引 (单关封禁 / 传送门 / 给刀给S)":
     @Delimiter
     printLog("----------------")
     # The following rules should now be handled with the ingame editor
