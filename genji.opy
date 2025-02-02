@@ -40,6 +40,7 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!suppressWarnings w_ow2_communicate_bug
 
 #!include "settings.opy"
+
 #!include "definitions.opy"
 
 rule "fisho cp cheat for overpy toggle":
@@ -60,9 +61,8 @@ rule "fisho cp cheat for overpy toggle":
 rule FILLER:
     @Delimiter
 
-rule "------------------------------------------------------------------------  General functions ------------------------------------------------------------------------ ":
+rule "<tx0C00000000001344> General functions <tx0C00000000001344>":
     @Delimiter
-    @Disabled
 
 def UpdateCache():
     @Name "SUB | Update Effect Cache"
@@ -310,9 +310,8 @@ def StartGame():
 
 #!include "commands.opy"
 
-rule "------------------------------------------------------------------------  General rules ------------------------------------------------------------------------ ":
+rule "<tx0C00000000001344> General rules <tx0C00000000001344>":
     @Delimiter
-    @Disabled
 
 rule "Setup and Variables":
     if not inspectoron:

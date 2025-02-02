@@ -6,9 +6,8 @@ this gets put on page 2
 this should be parts of addons that get toggled by turning on rules
 */
 
-rule "------------------------------------------------------------------------ Addons Settings and data - 附加组件 ------------------------------------------------------------------------":
+rule "<tx0C00000000001344> Addons Settings & Data - 附加组件 <tx0C00000000001344>":
     @Delimiter
-    @Disabled
 
 rule "Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
     @Disabled
@@ -118,9 +117,8 @@ rule "Hint text for certain Checkpoints - 特定关卡的提示文本 <---- EDIT
     # 修改数组 “HintCp” 为提示文本 显示的关卡
     HintCp = [1, 3]
 
-rule "------------------------------------------------------------------------ Addons skills - 附加组件技能 ------------------------------------------------------------------------":
+rule "<tx0C00000000001344> Addons Skills - 附加组件技能 <tx0C00000000001344>":
     @Delimiter
-    @Disabled
 
 # keeps you still shortly after getting in a stall
 # makes it much easier to get in one

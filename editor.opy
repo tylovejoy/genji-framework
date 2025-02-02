@@ -1,7 +1,6 @@
 #!mainFile "genji.opy"
-rule "------------------------------------------------------------------------  Editor ------------------------------------------------------------------------":
+rule "<tx0C00000000001344> Parkour Editor <tx0C00000000001344>":
     @Delimiter
-    @Disabled
 
 def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Bounce Ball Effects" 
     @Name "SUB | Rebuild Bounce Orbs"

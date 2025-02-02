@@ -5,9 +5,8 @@ this gets put on page 1
 this should be parts of addons that get toggled with a workshop toggle
 */
 
-rule "------------------------------------------------------------------------ Addon functions  ------------------------------------------------------------------------":
+rule "<tx0C00000000001344> Addon Functions <tx0C00000000001344>":
     @Delimiter
-    @Disabled
 
 rule "Pre-set control map portal | function | toggled via workshop":
     @Event eachPlayer
@@ -236,7 +235,7 @@ rule "Poll jump and crouch inputs for spectators":
     goto RULE_START
 
 def CheckMap():
-    @Name "Basic Map Validator"
+    @Name "SUB | Basic Map Validator"
     if len(CheckpointPositions) <= 1: return
     createDummy(Hero.ANA, Team.1 if getNumberOfSlots(Team.1) < getNumberOfSlots(Team.2) else Team.2, -1, CheckpointPositions[0], null)
     MapChecker = getLastCreatedEntity()

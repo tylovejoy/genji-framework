@@ -1,8 +1,7 @@
 #!mainFile "genji.opy"
 
-rule "------------------------------------------------------------------------ Checks ------------------------------------------------------------------------ ":
+rule "<tx0C00000000001344> Mechanics | Checks <tx0C00000000001344>":
     @Delimiter
-    @Disabled
 
 rule "Checking | ult combined rule":
     @Event eachPlayer
@@ -163,7 +162,7 @@ rule "Checking | Create Bhop":
     eventPlayer.CreateCounter ++
     smallMessage(eventPlayer, "   success!" checkCN "   Bhop has been created!")    
 
-rule "Checking | standing resets variables":
+rule "Checking | Ground Reset":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround()
     eventPlayer.JumpCount = null
@@ -221,11 +220,10 @@ rule "HUD | Bhop Indicator | Used | Red":
     @Condition eventPlayer.isJumping()
     eventPlayer.BhopHUDColor = ColorConfig[customize.bhopclimb_used]
 
-rule "-------------------------------------------------------------------------- Bans --------------------------------------------------------------------------":
+rule "<tx0C00000000001344> Mechanics | Bans <tx0C00000000001344>":
     @Delimiter
-    @Disabled
 
-rule "Ban | Wallclimb - indicator ":
+rule "Ban | Wallclimb - Indicator ":
     # Credit: TITANXPASCAL#5554
     @Event eachPlayer
     @Condition eventPlayer.ban_climb
@@ -245,7 +243,7 @@ rule "Ban | Emote Savehop":
     smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
     checkpointFailReset()
 
-rule "Ban save double - 封禁二段跳":
+rule "Ban | Save Double - 封禁二段跳":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.ban_savedouble

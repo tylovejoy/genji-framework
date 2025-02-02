@@ -1,8 +1,7 @@
 #!mainFile "genji.opy"
 
-rule "------------------------------------------------------------------------ commands ------------------------------------------------------------------------ ":
+rule "<tx0C00000000001344> Commands <tx0C00000000001344>":
     @Delimiter
-    @Disabled
 
 rule "Toggle Leaderboard | Hold Melee":
     @Event eachPlayer
