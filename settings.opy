@@ -2,9 +2,9 @@
 # code 代码
 settings {
     "main": {
-        "description": "  ~ The Official Genji Parkour Editor ~\nCode: 54CRY\nAdapted by: nebula#11571/FishoFire#2431",
-        #"description": "  ~ The Official Genji Parkour Editor ~\nCode: 54CRY\nAdapted by: nebula#11571/FishoFire#2431",
-        "modeName": "Genji Parkour - 源氏跑酷 - v" + versionhere
+        "modeName": "Genji Parkour - 源氏跑酷 - v" + versionhere,
+        "description": "My Fun Map\n◀ The Official Genji Parkour Editor ▶\nCode: 54CRY\nAdapted by: LulledLion, FishoFire, Nebula\nv" + versionhere
+        #"description": "  ~ The Official Genji Parkour Editor ~\nCode: 54CRY\nAdapted by: LulledLion#1133 FishoFire#2431 nebula#11571",
     },
     "lobby": {
         "allowPlayersInQueue": true,
@@ -44,10 +44,6 @@ settings {
     },
     "heroes": {
         "allTeams": {
-            #"dva": {
-                #"enableSpawningWithUlt": true
-                #"spawnWithoutMech": true
-            #},
             "genji": {
                 "enableAbility2": false,
                 "enableInfiniteAmmo": true,
@@ -64,6 +60,6 @@ settings {
     }
 }
 
-# extensions
+#extensions
 #!extension spawnMoreDummyBots
 #!extension playMoreEffects

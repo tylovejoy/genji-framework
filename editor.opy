@@ -1,7 +1,54 @@
 #!mainFile "genji.opy"
-rule "------------------------------------------------------------------------  Editor ------------------------------------------------------------------------":
+rule "<tx0C00000000001344> Parkour Editor <tx0C00000000001344>":
     @Delimiter
-    @Disabled
+
+def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Bounce Ball Effects" 
+    @Name "SUB | Rebuild Bounce Orbs"
+    destroyEffect(BounceEffects)
+    BounceEffects = [] 
+    for TempIterator1 in range(0, len(BouncePadCheckpoints)):
+        createEffect(
+            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected], 
+            Effect.ORB, 
+            ColorConfig[customize.orb_lock] if BounceToggleLock[evalOnce(TempIterator1)] else ColorConfig[customize.orb_normal], 
+            BouncePositions[evalOnce(TempIterator1)], 
+            1, 
+            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
+        )
+        BounceEffects.append(getLastCreatedEntity())
+        #wait()
+        if TempIterator1 % 5 == 0:
+            wait()
+
+def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Kill Orb Effects" 
+    @Name "SUB | Rebuild Kill Orbs"
+    destroyEffect(KillBallEffects)
+    KillBallEffects = []  
+    for TempIterator1 in range(0, len(KillballCheckpoints)):
+        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, ColorConfig[customize.killorb], KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        KillBallEffects.append(getLastCreatedEntity())
+        if TempIterator1 % 5 == 0:
+            wait()
+
+def RebuildPortals():
+    @Name "SUB | Rebuild Portals"
+    destroyEffect(PortalEffects)
+    PortalEffects = [] 
+    if len(CustomPortalCP) < 1:
+        return
+    
+    for TempIterator1 in range(0, len(CustomPortalCP)):
+        createEffect(
+            [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
+            Effect.GOOD_AURA, 
+            ColorConfig[customize.portal],
+            CustomPortalStart[evalOnce(TempIterator1)], 
+            0.6,
+            EffectReeval.VISIBILITY_POSITION_AND_RADIUS
+        )
+        PortalEffects.append(getLastCreatedEntity())
+        if TempIterator1 % 5 == 0:
+            wait()
 
 rule "Editor | Clear Excess Data to Save Map":
     @Event eachPlayer
@@ -13,6 +60,7 @@ rule "Editor | Clear Excess Data to Save Map":
     #@Condition not eventPlayer.LockEditor # !!! don't lock. always be sure data can be exported incase of a perma lock situation
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.LockEditor = true # doesnt matter thats its in pasta's because it wil be fixed on spawning
+    async(CheckMap, AsyncBehavior.NOOP)
     CheckpointRings_Editing = 0
     KillBallEffects = 0
     TempIterator1 = 0
@@ -131,54 +179,6 @@ rule "Editor | Clear Excess Data to Save Map":
     destroyHudText(eventPlayer.savemaphud[2])
     eventPlayer.savemaphud = null
     eventPlayer.LockEditor = false
-
-
-def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Bounce Ball Effects" 
-    @Name "SUB | Rebuild Bounce Orbs"
-    destroyEffect(BounceEffects)
-    BounceEffects = [] 
-    for TempIterator1 in range(0, len(BouncePadCheckpoints)):
-        createEffect(
-            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected], 
-            Effect.ORB, 
-            ColorConfig[customize.orb_lock] if BounceToggleLock[evalOnce(TempIterator1)] else ColorConfig[customize.orb_normal], 
-            BouncePositions[evalOnce(TempIterator1)], 
-            1, 
-            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
-        )
-        BounceEffects.append(getLastCreatedEntity())
-        #wait()
-        if TempIterator1 % 5 == 0:
-            wait()
-
-def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Kill Orb Effects" 
-    @Name "SUB | Rebuild Kill Orbs"
-    destroyEffect(KillBallEffects)
-    KillBallEffects = []  
-    for TempIterator1 in range(0, len(KillballCheckpoints)):
-        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, ColorConfig[customize.killorb], KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-        KillBallEffects.append(getLastCreatedEntity())
-        if TempIterator1 % 5 == 0:
-            wait()
-
-def RebuildPortals():
-    destroyEffect(PortalEffects)
-    PortalEffects = [] 
-    if len(CustomPortalCP) < 1:
-        return
-    
-    for TempIterator1 in range(0, len(CustomPortalCP)):
-        createEffect(
-            [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
-            Effect.GOOD_AURA, 
-            ColorConfig[customize.portal],
-            CustomPortalStart[evalOnce(TempIterator1)], 
-            0.6,
-            EffectReeval.VISIBILITY_POSITION_AND_RADIUS
-        )
-        PortalEffects.append(getLastCreatedEntity())
-        if TempIterator1 % 5 == 0:
-            wait()
 
 rule "Editor | Hud and Effects":
     waitUntil(hostPlayer.hasSpawned(), 90)  # cant be condition because host player can leaves, removing the rule fx
@@ -813,14 +813,11 @@ rule "Editor |  Fly/Noclip Toggle":
 
     while eventPlayer.isAlive() and eventPlayer.flytoggle != null and not eventPlayer.isHoldingButton(Button.ABILITY_1):
         if not (eventPlayer == hostPlayer and EditorMoveItem):
-            eventPlayer.flytoggle += eventPlayer.getFacingDirection() * (
-                0.25 + eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z > 0 else 
-                -0.25 - eventPlayer.isHoldingButton(Button.JUMP) if eventPlayer.getThrottle().z < 0 else 
-                0
-                )
-            eventPlayer.flytoggle += worldVector(vect(eventPlayer.getThrottle().x*0.3,0,0), eventPlayer, Transform.ROTATION) 
+            eventPlayer.flytoggle += (0.25 + eventPlayer.isHoldingButton(Button.JUMP) - 0.24 * eventPlayer.isHoldingButton(Button.CROUCH)) * (
+                eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z +
+                worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION))
         wait()
-    
+
     eventPlayer.enableEnvironmentCollision()
     eventPlayer.flytoggle = null
     eventPlayer.stopForcingPosition()
@@ -910,8 +907,10 @@ rule "Editor | create cp/orb":
             BanDead = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanDead]
             BanEmote = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanEmote]
             BanClimb = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanClimb]
+            BanSaveDouble = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanSaveDouble]
             BanBhop = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanBhop]
-
+            BanDjump = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanDjump]
+            
         smallMessage(getAllPlayers(), "   新检查点已创建" checkCN "   New Checkpoint has been created")
     
     elif len(CheckpointPositions) < 1:
@@ -1063,7 +1062,9 @@ rule "Editor | delete cp/orb/portal":
         RemoveCPandLower(BanDead)
         RemoveCPandLower(BanEmote)
         RemoveCPandLower(BanClimb)
+        RemoveCPandLower(BanSaveDouble)
         RemoveCPandLower(BanBhop)
+        RemoveCPandLower(BanDjump)
 
         # Remove specified checkpoint =====================
         del CheckpointPositions[hostPlayer.CurrentCheckpoint]

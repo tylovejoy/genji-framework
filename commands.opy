@@ -1,8 +1,7 @@
 #!mainFile "genji.opy"
 
-rule "------------------------------------------------------------------------ commands ------------------------------------------------------------------------ ":
+rule "<tx0C00000000001344> Commands <tx0C00000000001344>":
     @Delimiter
-    @Disabled
 
 rule "Toggle Leaderboard | Hold Melee":
     @Event eachPlayer
@@ -215,6 +214,7 @@ rule "Toggle Invincible Mode | Melee + Reload":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
     @Condition eventPlayer.isUsingAbility1() == false
     #@Condition eventPlayer.isUsingUltimate() == false
     @Condition eventPlayer.isAlive()
@@ -424,8 +424,8 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     @Condition not eventPlayer.isHoldingButton(Button.MELEE)
     @Condition not eventPlayer.isHoldingButton(Button.INTERACT)
     if eventPlayer.QuickRestartToggle:
-        eventPlayer.flytoggle = null
-        eventPlayer.stopForcingPosition()
+        if eventPlayer.flytoggle:
+            eventPlayer.flytoggle = CheckpointPositions[eventPlayer.CurrentCheckpoint].last()
         checkpointFailReset()
 
         wait(0.32)

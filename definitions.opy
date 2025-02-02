@@ -36,9 +36,7 @@ arrayname = [x - (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in arrayn
 
 ##!define FILLER rule "Addon settings are on next page! Click the next page button!":\
 ##!define FILLER rule "Map data and addon settings are on page 2 !!!!!!!!!!!!!!!!!!!":\
-#!define FILLER rule "Map data and addon settings are on page 2 - 地图数据和附加组件的设置在第2页":\
-    @Delimiter\
-    #@Disabled
+#!define FILLER "<tx0C000000000207B5><fgFFFF00FF> Map Data & Addon Settings Are on Page 2 - 地图数据和附加组件的设置在第2页"
 
 #----------------Global Variables------------------
 # Warning do not change global variable indices.
@@ -180,6 +178,7 @@ globalvar BanClimb 85
 globalvar BanBhop 86
 globalvar BanStand 87                       # bans on second hop
 globalvar BanDjump 88
+globalvar BanSaveDouble 89
 #!define MapCheckerIter DestructoIter
 globalvar DestructoIter 90
 globalvar MapVectorArray 91
@@ -267,12 +266,14 @@ playervar ban_climb
 playervar ban_bhop
 playervar ban_standcreate                   # bans on second hop
 playervar ban_djump
+playervar ban_savedouble
 playervar splittime                         # int                       --- stored time that the split compares to
 playervar splitdisplay                      # int                       --- displayed split value
 #playervar splitson                         # bool                      --- turning splits on/off is now done via seting splittime to -999
 playervar practicetimer
 playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
 playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
+playervar HUDInputs
 
 #Subroutine names
 subroutine StartGame
@@ -283,7 +284,6 @@ subroutine EffectsCreate
 subroutine Leaderboardupdate # fishos
 subroutine CreateLeaderBoard
 subroutine UpdateTitle
-
 subroutine DashUltGive
 subroutine CheckUlt
 subroutine CheckDash
@@ -293,8 +293,8 @@ subroutine StartPauseTimer
 subroutine StopPauseTimer
 subroutine editupdateselectedids
 subroutine EditorSelectLast
-
 subroutine TriggerOnFailSuccesReset
+subroutine CheckMap
 
 enum HO:
     # Left #####################
