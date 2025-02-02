@@ -84,10 +84,8 @@ rule "Pre-set control map portal | toggled on via workshop settings":
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
     @Condition isGameInProgress()
-
     MsDestructo = []  # Multiple bots
     waitUntil(any([x.hasSpawned() for x in getAllPlayers()]), 99999)
-
     switch getCurrentMap():
         case Map.ILIOS:
             MapVectorArray = [vect(322.988, 40, -37.732), vect(27.711, 100, -161.298), vect(-223.895, 50, 0.89)]
@@ -113,23 +111,14 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         case Map.SAMOA:
             MapVectorArray = [vect(-328.19, 90.5, -103.11), vect(233.75, 71.95, -258.42), vect(26.93, 428.04, 336.34)]
             break
-
         default:
-
             if strContains( "{}".format(getCurrentMap()) , "{}".format(Map.LIJIANG_TOWER)): # lunar new year catch
                 MapVectorArray = [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)]
             elif strContains( "{}".format(getCurrentMap()) ,"{}".format(Map.BUSAN)): # lunar new year catch
                 MapVectorArray = [vect(51.885, 37.172, -113.654), vect(-329.934, 56.136, 149.839), vect(227.21, 43.353, 252.64)]
             else:  # This default covers almost every map
-                MapVectorArray = [
-                    vect(73, 62, -17),
-                    vect(169, 62, 82),
-                    vect(-23, 62, -124),
-                    vect(-23, 62, 100)
-                ]
-
+                MapVectorArray = [vect(73, 62, -17), vect(169, 62, 82), vect(-23, 62, -124), vect(-23, 62, 100)]
             break
-
     for DestructoIter in range(len(MapVectorArray)):
         createDummy(Hero.DVA, [player for player in getAllPlayers() if player.hasSpawned() and not player.isDummy()][0].getTeam(), 20 - evalOnce(DestructoIter), evalOnce(MapVectorArray[evalOnce(DestructoIter)]), vect(0, 0, 0))
         MsDestructo[evalOnce(DestructoIter)] = getLastCreatedEntity()
@@ -145,15 +134,12 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         wait()
         MsDestructo[evalOnce(DestructoIter)].setUltCharge(100)
         wait()
-
     wait(1)
     for DestructoIter in range(len(MapVectorArray)):
         MsDestructo[evalOnce(DestructoIter)].startForcingButton(Button.ULTIMATE)
-
     wait(5)
     for DestructoIter in range(len(MapVectorArray)):
         destroyDummy(MsDestructo[evalOnce(DestructoIter)].getTeam(), MsDestructo[evalOnce(DestructoIter)].getSlot())
-
     # Remove MsDestructo data when done
     MapVectorArray = null
     DestructoIter = null
@@ -173,9 +159,7 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
 #!define fence_position  MapVectorArray[1] - fence_offset + ( MapVectorArray[0] % fence_grid ) * vect(fence_proj_size,00,00) + floor( MapVectorArray[0] / fence_grid ) * vect(00,00,fence_proj_size)
 
 rule "Little destructo - fence breaker":
-    # Made by FishoFire
-    # version 1.0
-    #
+    # Made by FishoFire version 1.0
     # wait to overwrite any from copy pastas
 	wait(0.032)
     # first entry will act as index, rest is the points themselves
@@ -242,32 +226,37 @@ def CheckMap():
     MapChecker.disableEnvironmentCollision(false)
     MapChecker.disablePlayerCollision()
     MapChecker.setStatusEffect(null, Status.PHASED_OUT, Math.INFINITY)
-    #MapChecker.setInvisibility(Invis.ALL)
+    MapChecker.setInvisibility(Invis.ALL)
     MapChecker.startScalingSize(cpcircleradius / 0.45, false)
     MapChecker.setGravity(Math.INFINITY)
     waitUntil(MapChecker.hasSpawned(), Math.INFINITY)
 
     for MapCheckerIter in range(1, len(CheckpointPositions)):
-        if distance(CheckpointPositions[MapCheckerIter], nearestWalkablePosition(CheckpointPositions[MapCheckerIter])) > cpcircleradius:
-            MapChecker.startForcingPosition(raycast(CheckpointPositions[MapCheckerIter]+Vector.UP*cpcircleradius,CheckpointPositions[MapCheckerIter]+
-                Vector.DOWN*cpcircleradius, [],[],false).getHitPosition(),true)
-            wait(7*0.016)
+        if nearestWalkablePosition(CheckpointPositions[MapCheckerIter]) and distance(CheckpointPositions[MapCheckerIter], nearestWalkablePosition(CheckpointPositions[MapCheckerIter])) > cpcircleradius:
+            MapChecker.startForcingPosition(raycast(CheckpointPositions[MapCheckerIter] + Vector.UP * cpcircleradius,CheckpointPositions[MapCheckerIter] +
+                Vector.DOWN * cpcircleradius, [], [], false).getHitPosition(), true)
+            wait(7 * 0.016)
             MapChecker.stopForcingPosition()
             waitUntil(MapChecker.isOnGround(), true)
-            
-            for MapCheckerIter.Temp in range(cpcircleradius, cpcircleradius - 0.2, -0.2):
-                if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapCheckerIter]) <= cpcircleradius:
-                    goto lbl_MapChecker_nextCp 
-                MapChecker.startForcingPosition(CheckpointPositions[MapCheckerIter]+Vector.UP*MapCheckerIter.Temp,true)
-                wait(7*0.016)
+            if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapCheckerIter]) <= cpcircleradius:
+                goto lbl_MapChecker_nextCp
+
+            for MapChecker.Temp in range(cpcircleradius, cpcircleradius - 0.2, -0.2):
+                MapChecker.startForcingPosition(CheckpointPositions[MapCheckerIter] + Vector.UP * MapChecker.Temp,true)
+                wait(7 * 0.016)
                 MapChecker.stopForcingPosition()
                 waitUntil(MapChecker.isOnGround(), true)
+                if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapCheckerIter]) <= cpcircleradius:
+                    goto lbl_MapChecker_nextCp
                     
-                if not MapChecker.isOnGround() or distance(MapChecker, CheckpointPositions[MapCheckerIter]) > cpcircleradius:
-                    enableInspector()
-                    printLog("Fail {0}".format(MapCheckerIter))
-                    disableInspector()
+            enableInspector()
+            printLog("Fail {0}".format(MapCheckerIter))
+            disableInspector()
         lbl_MapChecker_nextCp:
-    MapCheckerIter = null
+
     destroyDummy(MapChecker.getTeam(), MapChecker.getSlot())
     MapChecker = null
+    MapCheckerIter = null
+    enableInspector()
+    printLog("■■■■■■■■■■■■■■■■■■■■■■■■")
+    disableInspector()
