@@ -124,7 +124,7 @@ rule "------------------------------------------------------------------------ A
 
 # keeps you still shortly after getting in a stall
 # makes it much easier to get in one
-rule "Stall enhancer - 增强系統跳的判定 - 启用此规则":
+rule "Stall enhancer - 增强系統跳的判定":
     @Event eachPlayer
     #原作：家里有妖怪#5202(国服)
     @Disabled
@@ -167,7 +167,7 @@ rule "Stall enhancer - 增强系統跳的判定 - 启用此规则":
 # stores speed and launches you after dash if you done it during climb
 # LedgeDash var 0 count - 1 eventPlayer.LedgeDash[1] 1 stored speed
 # based on code taken: wzr31 and S7DR0 and simplified
-rule "Fake Ledge Dash - enable rule - 超级跳 - 启用此规则":
+rule "Fake Ledge Dash - 超级跳":
     @Disabled
     @Event eachPlayer
     @Condition eventPlayer.isUsingAbility1()
@@ -301,7 +301,7 @@ rule "Custom Orb Script":
         eventPlayer.setMoveSpeed(250)
         smallMessage(eventPlayer," zooom")
 
-rule "Fake Triple Jump - enable rule - 启用此规则 - 假三段跳":
+rule "Fake Triple Jump - 假三段跳":
     @Disabled
     @Event eachPlayer
     @Hero genji
@@ -327,10 +327,10 @@ rule "Fake Triple Jump - enable rule - 启用此规则 - 假三段跳":
     if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping():
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
+# Obsolete for OW v2.12        
 rule "Ledge Grab Patch v1.5":
-    @Disabled
     @Event eachPlayer
-    #For OW v2.12
+    @Condition false
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.getCurrentHero() == Hero.GENJI == eventPlayer.DoubleUsed
@@ -361,10 +361,10 @@ rule "Ledge Grab Patch v1.5":
         #Create cBhop
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)
 
-/* Obsoleted by hero settings.
+# Obsoleted by hero settings.
 rule "Save Double - enable rule - 二段跳":
     @Event eachPlayer
-    @Disabled
+    @Condition false
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.DoubleUsed == false
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
@@ -375,4 +375,3 @@ rule "Save Double - enable rule - 二段跳":
     if not RULE_CONDITION: return
     eventPlayer.cancelPrimaryAction()
     if RULE_CONDITION: goto RULE_START
-*/
