@@ -235,16 +235,15 @@ rule "Poll jump and crouch inputs for spectators":
     eventPlayer.HUDInputs = vect(eventPlayer.isHoldingButton(Button.JUMP),eventPlayer.isHoldingButton(Button.CROUCH),false)
     goto RULE_START
 
-rule "Basic Map Checker":
-    @Condition createWorkshopSetting(bool,"map settings \n地图设置","Basic Map Validator - 验证地图",true,3)
-    @Condition len(CheckpointPositions) > 1
-    wait(1) #Allow map data to load
+def CheckMap():
+    @Name "Basic Map Validator"
+    if len(CheckpointPositions) <= 1: return
     createDummy(Hero.ANA, Team.1 if getNumberOfSlots(Team.1) < getNumberOfSlots(Team.2) else Team.2, -1, CheckpointPositions[0], null)
     MapChecker = getLastCreatedEntity()
     MapChecker.disableEnvironmentCollision(false)
     MapChecker.disablePlayerCollision()
     MapChecker.setStatusEffect(null, Status.PHASED_OUT, Math.INFINITY)
-    MapChecker.setInvisibility(Invis.ALL)
+    #MapChecker.setInvisibility(Invis.ALL)
     MapChecker.startScalingSize(cpcircleradius / 0.45, false)
     MapChecker.setGravity(Math.INFINITY)
     waitUntil(MapChecker.hasSpawned(), Math.INFINITY)
@@ -256,41 +255,20 @@ rule "Basic Map Checker":
             wait(7*0.016)
             MapChecker.stopForcingPosition()
             waitUntil(MapChecker.isOnGround(), true)
-
-            for MapCheckerIter.Temp in range(-cpcircleradius,cpcircleradius,0.2):
+            
+            for MapCheckerIter.Temp in range(cpcircleradius, cpcircleradius - 0.2, -0.2):
                 if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapCheckerIter]) <= cpcircleradius:
-                    goto lbl_MapChecker_nextCp
-                else:
-                    wait(7*0.016)
-                    MapChecker.startForcingPosition(CheckpointPositions[MapCheckerIter]+Vector.UP*MapCheckerIter.Temp,true)
-                    MapChecker.stopForcingPosition()
-                    waitUntil(MapChecker.isOnGround(), true)
-
-            if not MapChecker.isOnGround() or distance(MapChecker, CheckpointPositions[MapCheckerIter]) > cpcircleradius:
-                enableInspector()
-                printLog("Fail {0}: {1}".format(MapCheckerIter, distance(MapChecker, CheckpointPositions[MapCheckerIter])))
-                disableInspector()
-        lbl_MapChecker_nextCp:
-
-            /*
-            #Edge Cases
-            if not MapChecker.isOnGround() or distance(MapChecker, CheckpointPositions[MapCheckerIter]) > cpcircleradius:
-                MapChecker.startForcingPosition(CheckpointPositions[MapCheckerIter]+Vector.UP*cpcircleradius,true)
+                    goto lbl_MapChecker_nextCp 
+                MapChecker.startForcingPosition(CheckpointPositions[MapCheckerIter]+Vector.UP*MapCheckerIter.Temp,true)
                 wait(7*0.016)
                 MapChecker.stopForcingPosition()
                 waitUntil(MapChecker.isOnGround(), true)
-
+                    
                 if not MapChecker.isOnGround() or distance(MapChecker, CheckpointPositions[MapCheckerIter]) > cpcircleradius:
-                    MapChecker.startForcingPosition(CheckpointPositions[MapCheckerIter],true)
-                    wait(7*0.016)
-                    MapChecker.stopForcingPosition()
-                    waitUntil(MapChecker.isOnGround(), true)
-
-                    if not MapChecker.isOnGround() or distance(MapChecker, CheckpointPositions[MapCheckerIter]) > cpcircleradius:
-                        MapChecker.startForcingPosition(CheckpointPositions[MapCheckerIter]+Vector.DOWN*cpcircleradius,true)
-                        wait(7*0.016)
-                        MapChecker.stopForcingPosition()
-                        waitUntil(MapChecker.isOnGround(), true)
-            */
+                    enableInspector()
+                    printLog("Fail {0}".format(MapCheckerIter))
+                    disableInspector()
+        lbl_MapChecker_nextCp:
+    MapCheckerIter = null
     destroyDummy(MapChecker.getTeam(), MapChecker.getSlot())
     MapChecker = null

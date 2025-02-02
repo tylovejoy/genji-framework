@@ -13,6 +13,7 @@ rule "Editor | Clear Excess Data to Save Map":
     #@Condition not eventPlayer.LockEditor # !!! don't lock. always be sure data can be exported incase of a perma lock situation
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.LockEditor = true # doesnt matter thats its in pasta's because it wil be fixed on spawning
+    async(CheckMap, AsyncBehavior.NOOP)
     CheckpointRings_Editing = 0
     KillBallEffects = 0
     TempIterator1 = 0

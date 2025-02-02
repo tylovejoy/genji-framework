@@ -286,7 +286,6 @@ subroutine EffectsCreate
 subroutine Leaderboardupdate # fishos
 subroutine CreateLeaderBoard
 subroutine UpdateTitle
-
 subroutine DashUltGive
 subroutine CheckUlt
 subroutine CheckDash
@@ -296,8 +295,8 @@ subroutine StartPauseTimer
 subroutine StopPauseTimer
 subroutine editupdateselectedids
 subroutine EditorSelectLast
-
 subroutine TriggerOnFailSuccesReset
+subroutine CheckMap
 
 enum HO:
     # Left #####################
