@@ -75,7 +75,6 @@ def CheckDash(): # checks if dash should be  turned on
 
 rule "Checking | Jump":
     @Event eachPlayer
-    @Hero genji
     @Condition eventPlayer.isHoldingButton(Button.JUMP)
     @Condition eventPlayer.JumpCount != 2
     eventPlayer.JumpCount += 1
@@ -89,7 +88,6 @@ rule "Checking | Bhop in the air":
 
 rule "Checking | In the air":
     @Event eachPlayer
-    @Hero genji
     @Condition eventPlayer.JumpCount == null
     @Condition eventPlayer.isInAir() 
     eventPlayer.JumpCount = 1
@@ -167,7 +165,6 @@ rule "Checking | Create Bhop":
 
 rule "Checking | standing resets variables":
     @Event eachPlayer
-    @Hero genji
     @Condition eventPlayer.isOnGround()
     eventPlayer.JumpCount = null
     eventPlayer.WallclimbUsed = false
