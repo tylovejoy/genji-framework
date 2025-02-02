@@ -198,7 +198,7 @@ rule "Fake Ledge Dash - 超级跳":
     eventPlayer.LedgeDash[1] = null
     eventPlayer.LedgeDash[2] = null
 
-rule "Grup up | text/effect -":
+rule "Grup up | text/effect":
     @Disabled
     # replace 777 with checkpoint number
     # replace vector 0,0,0 with orb position
@@ -264,7 +264,9 @@ def TriggerOnFailSuccesReset():
     @Name "Custom script on fail, succes, reset, skip"
     @Disabled
     # This subroutine triggers on failing, arriving, reseting, skipping etc
+    enableInspector()
     printLog("------------")
+    disableInspector()
     # example: reset gravity and movespeed after being changed by custom orbs
     eventPlayer.setGravity(100)
     eventPlayer.setMoveSpeed(100)
