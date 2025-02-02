@@ -143,7 +143,7 @@ def UpdateCache():
         eventPlayer.MovedCheckpoint = false     
 
 def DeleteSave():
-    @Name "delete save" 
+    @Name "SUB | Delete Save" 
     del SaveName[SaveEnt.index(eventPlayer)]
     del SaveCp[SaveEnt.index(eventPlayer)]
     del SaveTimer[SaveEnt.index(eventPlayer)]
@@ -153,7 +153,7 @@ def DeleteSave():
     del SaveEnt[SaveEnt.index(eventPlayer)] # must always be last because its the index itself
 
 def MakeSave():
-    @Name "make save"
+    @Name "SUB | Make Save"
     SaveName.append("{}".format(eventPlayer))
     SaveCp.append(eventPlayer.CurrentCheckpoint)
     SaveTimer.append(eventPlayer.Timer)
@@ -163,21 +163,21 @@ def MakeSave():
     SavePauseEnabled.append(false)
 
 def StartPauseTimer():
-    @Name "start pause timer"
+    @Name "SUB | Start Pause Timer"
     chase(eventPlayer.PauseTimer, 999999, rate=1, ChaseReeval.NONE)
     SaveTimer[SaveEnt.index(eventPlayer)] = eventPlayer.Timer
     SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
     SavePauseEnabled[SaveEnt.index(eventPlayer)] = true
 
 def StopPauseTimer():
-    @Name "stop pause timer"
+    @Name "SUB | Stop Pause Timer"
     stopChasingVariable(eventPlayer.PauseTimer)
     SavePauseTime[SaveEnt.index(eventPlayer)] = eventPlayer.PauseTimer
     eventPlayer.PauseTimer = 0
     SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
 
 def CreateLeaderBoard():
-    @Name "leaderboard hud"
+    @Name "SUB | Leaderboard HUD"
     # turns into global rule so it doesnt delete when player leaves
     LeaderBoardRemake = false
     wait()
@@ -819,7 +819,7 @@ editorordata
 # note: Don't change defaults only here.
 # If you change this, also change it in the name/credit construciton in the huds
 # The old default should always be included to make old data valid
-rule "<tx0C0000000002A917><fg0FFFFFFF> Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这输入 ": 
+rule "<tx0C00000000044B55><fg0FFFFFFF> Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这输入 ": 
     #Filling this in adds it to the inspector pasta after next restart.
     #You can fill in again to overwrite.
     #修改的内容 在重新开始 比赛后生效
