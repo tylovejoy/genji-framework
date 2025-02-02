@@ -411,13 +411,26 @@ Editor
 - Remove teleport doesn't reset to checkpoint while in invincibility mode
 - Inspector is re-disabled after exporting map data
 
-1.10.1
-Features
+@Framework Patch Notes
+# 1.10.1
+### Features
 - Ban Save Double setting
-- Basic Map Validator [WIP]
-Editor
+  * Individual level bans require manual map data editing
+- Basic Map Validator, a quick simple checker for impossible maps
+  * Runs on Game Start or Map Saving
+  * Logs impossible checkpoints to Inspector
+- Workshop Code Beautifying
+  * Description "My Fun Map" on the first line, for map devs to easily type custom message
+  * Difficulty Settings & Rules - Icons & Colorized
+### Editor
 - FlyMode
   * Will not be turned off by Quick Reset
   * Hold crouch for slow speed modifer
   * Strafe will be affected by speed modifiers
 - Ban Double Jump & Ban Save Double are adjusted on CP addition/deletion
+### Fixes
+- Allow spectators to view jump & crouch in the Input HUD
+- Enable new bans to readjust CP values upon creation & deletion of a CP
+- Removed checks that prevented climb from being reset for non-Genjis
+- Removed an exploit allowing climbing with climb ban enabled
+  * Found by @Sumpin + 100xp
