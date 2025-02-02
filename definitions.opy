@@ -36,7 +36,7 @@ arrayname = [x - (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in arrayn
 
 ##!define FILLER rule "Addon settings are on next page! Click the next page button!":\
 ##!define FILLER rule "Map data and addon settings are on page 2 !!!!!!!!!!!!!!!!!!!":\
-#!define FILLER "<tx0C00000000005A0C><fgFFFF00FF> Map Data & Addon Settings Are on Page 2 - 地图数据和附加组件的设置在第2页"
+#!define FILLER "<tx0C000000000207B5><fgFFFF00FF> Map Data & Addon Settings Are on Page 2 - 地图数据和附加组件的设置在第2页"
 
 #----------------Global Variables------------------
 # Warning do not change global variable indices.
