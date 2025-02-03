@@ -23,7 +23,8 @@ if (x == 0){
     17: "test-maps/routetest.opy",
     18: "test-maps/rialtofisho.opy", // my rialto
     19: "test-maps/2cpmulti.opy", // 2 cp multi
-    20: "test-maps/generaltest.opy"
+    20: "test-maps/generaltest.opy",
+    21: "test-maps/bandoublejump.opy"
     }[x]
 
     selectedmap = {
@@ -46,7 +47,8 @@ if (x == 0){
     17: "route66",
     18: "rialto",
     19: "workshopChamber",
-    20: "workshopChamber"
+    20: "workshopChamber",
+    21: "lijiangNightMarket"
     }[x]
 
     x = '#!define editorordata #!include "'+ datafiles + '"\n #!define selectedmap "' + selectedmap + '"' + '\n #!define editoron false\n'
