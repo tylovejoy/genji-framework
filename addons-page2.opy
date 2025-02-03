@@ -224,7 +224,7 @@ rule "Grup up | function":
     # replace 777 with checkpoint number
     @Condition eventPlayer.CurrentCheckpoint == 777
     @Condition eventPlayer.isAlive()
-    @Condition not eventPlayer.isOnGround()
+    @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.InvincibleToggle == false
     # replace vector 0,0,0 with orb position
     # 3.5 is the radius
