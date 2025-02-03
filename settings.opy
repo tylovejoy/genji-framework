@@ -48,7 +48,7 @@ settings {
                 "enableAbility2": false,
                 "enableInfiniteAmmo": true,
                 #"enableSpawningWithUlt": true,
-                "ability1Cooldown%": 0,
+                "ability1Cooldown%": 1,
                 "ultDuration%": 25,
                 "passiveUltGen%": 0,
                 "ultGen%": 10
