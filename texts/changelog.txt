@@ -433,4 +433,4 @@ Editor
 - Enable new bans to readjust CP values upon creation & deletion of a CP
 - Removed checks that prevented climb from being reset for non-Genjis
 - Removed an exploit allowing climbing with climb ban enabled
-  * Found by @Sumpin + 100xp
+  * Found by @Sumpin +100xp
