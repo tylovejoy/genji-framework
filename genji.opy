@@ -3,9 +3,7 @@
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
-#!define touchground false
 #!define cpcheat false
-#!define inspectoron false
 
 # disable via double ## at include, not the define because the define needs to exist
 #!define testToggle ##!include "test-scripts.opy"
@@ -33,7 +31,7 @@ editortoggle(0) # 0 is editor, rest is numbers
 # height added to player for orb detection. inludes the + 
 #!define bounceoffset + Vector.UP * 0.7
 
-#disable overpy map detection (command removed by zezo after fix by blizzard)
+#disable overpy map detection (command removed by zezy after fix by blizzard)
 ##!disableMapDetectionFix 
 
 # supress warning for emote
@@ -42,21 +40,6 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!include "settings.opy"
 
 #!include "definitions.opy"
-
-rule "fisho cp cheat for overpy toggle":
-    @Event eachPlayer
-    @Condition cpcheat
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH)
-    @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.NotOnLastCp) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
-    @Condition eventPlayer.EditorOn == false
-    @Condition eventPlayer.PracticeToggle == false
-
-    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
-        eventPlayer.CurrentCheckpoint -= 1
-    else:
-        eventPlayer.CurrentCheckpoint += 1
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
 
 rule FILLER:
     @Delimiter
@@ -314,9 +297,7 @@ rule "<tx0C00000000001344> General Rules <tx0C00000000001344>":
     @Delimiter
 
 rule "Setup and Variables":
-    if not inspectoron:
-        disableInspector()
-
+    disableInspector()
     disableGamemodeCompletion()
     disableScoring()
     disableMusic()

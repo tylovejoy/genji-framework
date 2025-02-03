@@ -327,8 +327,23 @@ rule "Fake Triple Jump - 假三段跳":
     if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping():
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
-# Obsolete for OW v2.12        
+rule "fisho cp cheat for overpy toggle":
+    @Event eachPlayer
+    @Condition cpcheat
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH)
+    @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.NotOnLastCp) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
+    @Condition eventPlayer.EditorOn == false
+    @Condition eventPlayer.PracticeToggle == false
+
+    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
+        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
+        eventPlayer.CurrentCheckpoint -= 1
+    else:
+        eventPlayer.CurrentCheckpoint += 1
+        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
+
 rule "Ledge Grab Patch v1.5":
+    # Obsolete for OW v2.12  
     @Event eachPlayer
     @Condition false
     @Condition eventPlayer.isAlive() == true
@@ -361,8 +376,8 @@ rule "Ledge Grab Patch v1.5":
         #Create cBhop
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)
 
-# Obsoleted by hero settings.
 rule "Save Double - enable rule - 二段跳":
+    # Obsoleted by hero settings.
     @Event eachPlayer
     @Condition false
     @Condition eventPlayer.isOnGround() == false
