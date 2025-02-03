@@ -1,4 +1,4 @@
-#!define versionhere "1.10.1"
+#!define versionhere "1.10.2♨A"
 #♨ Dev Build Icon
 # cheats ##############################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
@@ -103,11 +103,9 @@ def UpdateCache():
 
     wait()
     async(CheckUlt(), AsyncBehavior.RESTART)
-    async(CheckDash(), AsyncBehavior.RESTART)
-    
+    async(CheckDash(), AsyncBehavior.RESTART)    
 
-    if not eventPlayer.EditorOn:
-        return
+    if not eventPlayer.EditorOn: return
 
     editupdateselectedids()
 
