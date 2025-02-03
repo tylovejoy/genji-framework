@@ -201,13 +201,18 @@ rule "HUD | Multiclimb Counter":
     @Event eachPlayer
     @Condition eventPlayer.isOnWall()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
-    @Condition not eventPlayer.WallclimbUsed
+    @Condition eventPlayer.WallclimbUsed == false
     
-    if eventPlayer.ban_multi and eventPlayer.NotOnLastCp and not eventPlayer.InvincibleToggle:
-        smallMessage(eventPlayer, "    蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
-        checkpointFailReset() 
+    wait()
+    if eventPlayer.isOnWall() and not(eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.WallclimbUsed):
+        eventPlayer.JumpCount = 2
+        eventPlayer.WallclimbUsed = true
     else:
-        eventPlayer.MultiClimbCount += 1
+        if eventPlayer.ban_multi and eventPlayer.NotOnLastCp and not eventPlayer.InvincibleToggle:
+            smallMessage(eventPlayer, "    蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
+            checkpointFailReset() 
+        else:
+            eventPlayer.MultiClimbCount += 1
 
 rule "HUD | Bhop Indicator | Unused | Green":
     @Event eachPlayer

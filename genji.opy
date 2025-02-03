@@ -48,8 +48,8 @@ rule "fisho cp cheat for overpy toggle":
     @Condition cpcheat
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.NotOnLastCp) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
-    @Condition not eventPlayer.EditorOn
-    @Condition not eventPlayer.PracticeToggle   
+    @Condition eventPlayer.EditorOn == false
+    @Condition eventPlayer.PracticeToggle == false
 
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
@@ -647,7 +647,7 @@ rule "Arrive | Ground reset | traces":
 rule "Kill Orb | Activate":
     @Event eachPlayer
     @Condition eventPlayer.KillPosition_Cache != []
-    @Condition not eventPlayer.InvincibleToggle
+    @Condition eventPlayer.InvincibleToggle == false
     @Condition eventPlayer.NotOnLastCp
     @Condition (any([distance(i, eventPlayer) <= eventPlayer.KillRadii_Cache[eventPlayer.KillPosition_Cache.index(i)] for i in eventPlayer.KillPosition_Cache]))
     checkpointFailReset()
@@ -767,8 +767,8 @@ rule "AFK timer":
     @Event eachPlayer
     @Condition eventPlayer.isMoving() == false
     @Condition eventPlayer.isAlive()
-    @Condition not eventPlayer.isCommunicatingEmote()   
-    @Condition not eventPlayer.EditorOn
+    @Condition eventPlayer.isCommunicatingEmote() == false
+    @Condition eventPlayer.EditorOn == false
     wait(300, Wait.ABORT_WHEN_FALSE)
 
     eventPlayer.setStatusEffect(null, Status.ASLEEP, 9999)

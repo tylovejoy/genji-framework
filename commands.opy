@@ -6,7 +6,7 @@ rule "<tx0C00000000001344> Commands <tx0C00000000001344>":
 rule "Toggle Leaderboard | Hold Melee":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
-    @Condition not eventPlayer.EditorOn
+    @Condition eventPlayer.EditorOn == false
     wait(1, Wait.ABORT_WHEN_FALSE)
 
     eventPlayer.LeaderboardToggle = not eventPlayer.LeaderboardToggle
@@ -28,8 +28,8 @@ rule "Toggle Invisible | Hold Deflect":
     @Condition enableInvisCommand
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
-    @Condition not eventPlayer.EditorOn
-    @Condition not CompMode
+    @Condition eventPlayer.EditorOn == false
+    @Condition CompMode == false
     wait(1, Wait.ABORT_WHEN_FALSE)
 
     eventPlayer.invis = not eventPlayer.invis
@@ -49,8 +49,8 @@ rule "Preview orbs/portals | Hold Primary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
-    @Condition not eventPlayer.EditorOn
-    @Condition not eventPlayer.LockState
+    @Condition eventPlayer.EditorOn == false
+    @Condition eventPlayer.LockState == false
     @Condition eventPlayer.NotOnLastCp
     #wait(0.9, Wait.ABORT_WHEN_FALSE)
     wait(0.45, Wait.ABORT_WHEN_FALSE)
@@ -105,8 +105,8 @@ rule "Restart Run | Crouch + Interact + Deflect":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) 
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition eventPlayer.LockEditor == false or eventPlayer != hostPlayer
-    @Condition not eventPlayer.LockState
-    #@Condition not eventPlayer.isUsingAbility1()
+    @Condition eventPlayer.LockState == false
+    #@Condition eventPlayer.isUsingAbility1() == false
 
     eventPlayer.LockState = true 
     # prevent 0.02 time bug with next 2 checks
@@ -172,8 +172,8 @@ rule "Enter Spectate | Hold Interact":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
     @Condition not (eventPlayer.EditorOn and eventPlayer.isHoldingButton(Button.MELEE))
-    @Condition eventPlayer.EditorOn == false or not(eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE))
-    #@Condition not editoron
+    @Condition not eventPlayer.EditorOn or not(eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE))
+    #@Condition editoron == false
     wait(1, Wait.ABORT_WHEN_FALSE)
     if eventPlayer.EditorOn: # editor has interact combos
         wait(1, Wait.ABORT_WHEN_FALSE)
@@ -218,8 +218,8 @@ rule "Toggle Invincible Mode | Melee + Reload":
     @Condition eventPlayer.isUsingAbility1() == false
     #@Condition eventPlayer.isUsingUltimate() == false
     @Condition eventPlayer.isAlive()
-    @Condition (not CompMode) or (not eventPlayer.CompDone)
-    @Condition not eventPlayer.LockState
+    @Condition not (CompMode and eventPlayer.CompDone)
+    @Condition eventPlayer.LockState == false
 
     if eventPlayer.isUsingUltimate():
         smallMessage(eventPlayer, "    终极技能开启时无法切换探点模式" checkCN "   Cannot toggle invincible while using ultimate")
@@ -282,8 +282,8 @@ rule "Toggle Practice Mode | Melee + Ultimate":
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition eventPlayer.isUsingAbility1() == false
     @Condition eventPlayer.isAlive()
-    @Condition not eventPlayer.EditorOn
-    @Condition not CompMode 
+    @Condition eventPlayer.EditorOn == false
+    @Condition CompMode == false
     @Condition eventPlayer.LockState == false
 
     if eventPlayer.InvincibleToggle:
@@ -347,9 +347,9 @@ rule "Practice Restart | Interact":
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == false
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
     @Condition eventPlayer.isAlive() or eventPlayer.SpectateToggle
-    @Condition not eventPlayer.EditorOn
+    @Condition eventPlayer.EditorOn == false
     @Condition eventPlayer.PracticeToggle
-    @Condition not eventPlayer.LockState
+    @Condition eventPlayer.LockState == false
    
     #  first 2 ifs prevent collide with spec
     if eventPlayer.SpectateToggle: 
@@ -421,8 +421,8 @@ rule "Skip | Crouch + Primary/Secondary Fire":
 rule "Quick Reset | Reload, Hold Reload to Enable":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
-    @Condition not eventPlayer.isHoldingButton(Button.MELEE)
-    @Condition not eventPlayer.isHoldingButton(Button.INTERACT)
+    @Condition eventPlayer.isHoldingButton(Button.MELEE) == false
+    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
     if eventPlayer.QuickRestartToggle:
         if eventPlayer.flytoggle:
             eventPlayer.flytoggle = CheckpointPositions[eventPlayer.CurrentCheckpoint].last()
@@ -438,12 +438,10 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
         "Quick reset is enabled" if eventPlayer.QuickRestartToggle else "Quick reset is disabled"
     )
 
-
-
 rule "Toggle Hud | hold secondary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
-    @Condition not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false
     @Condition not (eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.ABILITY_1)) # don't trigger during skiping
     #@Condition eventPlayer
     @Condition not (eventPlayer.EditorOn and eventPlayer == hostPlayer and eventPlayer.isHoldingButton(Button.MELEE))
@@ -456,9 +454,7 @@ rule "Toggle Hud | hold secondary":
         checkCN
         ("   Hud is now open" if eventPlayer.GuideToggle else "   Hud is now hidden")
     ) 
-    
     eventPlayer.GuideToggle = not eventPlayer.GuideToggle 
-
 
 rule "Toggle hints":
     @Event eachPlayer
