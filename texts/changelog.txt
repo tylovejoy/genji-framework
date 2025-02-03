@@ -438,8 +438,8 @@ fixed:
 `@Framework Patch Notes`
 # 1.10.2
 ### Features
-- feature
-  * details
+- Faster unlimited dashes
+  * `@Kackspn` +1xp
 ### Editor
 - feature
   * details
