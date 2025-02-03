@@ -444,5 +444,6 @@ fixed:
 - feature
   * details
 ### Fixes
+- Auto-Climb is not detected as Multi-Climb
 - feature
   * details
