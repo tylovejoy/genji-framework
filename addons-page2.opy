@@ -6,9 +6,8 @@ this gets put on page 2
 this should be parts of addons that get toggled by turning on rules
 */
 
-rule "------------------------------------------------------------------------ Addons Settings and data - 附加组件 ------------------------------------------------------------------------":
+rule "<tx0C00000000001344> Addons Settings & Data - 附加组件 <tx0C00000000001344>":
     @Delimiter
-    @Disabled
 
 rule "Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
     @Disabled
@@ -118,13 +117,12 @@ rule "Hint text for certain Checkpoints - 特定关卡的提示文本 <---- EDIT
     # 修改数组 “HintCp” 为提示文本 显示的关卡
     HintCp = [1, 3]
 
-rule "------------------------------------------------------------------------ Addons skills - 附加组件技能 ------------------------------------------------------------------------":
+rule "<tx0C00000000001344> Addons Skills - 附加组件技能 <tx0C00000000001344>":
     @Delimiter
-    @Disabled
 
 # keeps you still shortly after getting in a stall
 # makes it much easier to get in one
-rule "Stall enhancer - 增强系統跳的判定 - 启用此规则":
+rule "Stall enhancer - 增强系統跳的判定":
     @Event eachPlayer
     #原作：家里有妖怪#5202(国服)
     @Disabled
@@ -167,7 +165,7 @@ rule "Stall enhancer - 增强系統跳的判定 - 启用此规则":
 # stores speed and launches you after dash if you done it during climb
 # LedgeDash var 0 count - 1 eventPlayer.LedgeDash[1] 1 stored speed
 # based on code taken: wzr31 and S7DR0 and simplified
-rule "Fake Ledge Dash - enable rule - 超级跳 - 启用此规则":
+rule "Fake Ledge Dash - 超级跳":
     @Disabled
     @Event eachPlayer
     @Condition eventPlayer.isUsingAbility1()
@@ -198,7 +196,7 @@ rule "Fake Ledge Dash - enable rule - 超级跳 - 启用此规则":
     eventPlayer.LedgeDash[1] = null
     eventPlayer.LedgeDash[2] = null
 
-rule "Grup up | text/effect -":
+rule "Grup up | text/effect":
     @Disabled
     # replace 777 with checkpoint number
     # replace vector 0,0,0 with orb position
@@ -264,7 +262,9 @@ def TriggerOnFailSuccesReset():
     @Name "Custom script on fail, succes, reset, skip"
     @Disabled
     # This subroutine triggers on failing, arriving, reseting, skipping etc
-    printLog("------------")
+    enableInspector()
+    printLog("■■■■■■■■■■■■■■■■■■■■■■■■")
+    disableInspector()
     # example: reset gravity and movespeed after being changed by custom orbs
     eventPlayer.setGravity(100)
     eventPlayer.setMoveSpeed(100)
@@ -301,7 +301,7 @@ rule "Custom Orb Script":
         eventPlayer.setMoveSpeed(250)
         smallMessage(eventPlayer," zooom")
 
-rule "Fake Triple Jump - enable rule - 启用此规则 - 假三段跳":
+rule "Fake Triple Jump - 假三段跳":
     @Disabled
     @Event eachPlayer
     @Hero genji
@@ -327,10 +327,10 @@ rule "Fake Triple Jump - enable rule - 启用此规则 - 假三段跳":
     if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping():
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
+# Obsolete for OW v2.12        
 rule "Ledge Grab Patch v1.5":
-    @Disabled
     @Event eachPlayer
-    #For OW v2.12
+    @Condition false
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.getCurrentHero() == Hero.GENJI == eventPlayer.DoubleUsed
@@ -360,3 +360,18 @@ rule "Ledge Grab Patch v1.5":
         waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
         #Create cBhop
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)
+
+# Obsoleted by hero settings.
+rule "Save Double - enable rule - 二段跳":
+    @Event eachPlayer
+    @Condition false
+    @Condition eventPlayer.isOnGround() == false
+    @Condition eventPlayer.DoubleUsed == false
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
+
+    waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or eventPlayer.DoubleUsed or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
+    if not RULE_CONDITION: return
+    waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or eventPlayer.DoubleUsed or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
+    if not RULE_CONDITION: return
+    eventPlayer.cancelPrimaryAction()
+    if RULE_CONDITION: goto RULE_START

@@ -222,8 +222,8 @@ rule "Huds: Global/Localplayer":
     #if not hostPlayer.EditorOn:
         # find the value
     Difficultyhud = [
-        createWorkshopSetting(enum[ "playtest - 游戏测试", "easy-", "easy", "easy+", "medium-", "medium", "medium+", "hard-", "hard", "hard+", "very hard-", "very hard", "very hard+", "extreme-", "extreme", "extreme+", "hell", "don't display - 不显示"],"map settings \n地图设置","difficulty (display hud) - 难度 (顶部hud)",0, 0)
-        , createWorkshopSetting(bool,"map settings \n地图设置","Playtest display - 游戏测试",false,0) 
+        createWorkshopSetting(enum[ "<fg27AAFFFF>playtest - 游戏测试", "<fgA0E81BFF>easy-", "<fgA0E81BFF>easy", "<fgA0E81BFF>easy+", "<fge0e000FF>medium-", "<fge0e000FF>medium", "<fge0e000FF>medium+", "<fgEC9900FF>hard-", "<fgEC9900FF>hard", "<fgEC9900FF>hard+", "<fgFF4500FF>very hard-", "<fgFF4500FF>very hard", "<fgFF4500FF>very hard+", "<fgC80013FF>extreme-", "<fgC80013FF>extreme", "<fgC80013FF>extreme+", "<fg960000FF>hell", "don't display - 不显示"],"map settings \n地图设置","difficulty (display hud) - 难度 (顶部hud)",0, 0)
+        , createWorkshopSetting(bool,"map settings \n地图设置","Playtest display - 游戏测试",false,1) 
         ] 
     # display
     if Difficultyhud[0] != 17: # 17th entry is 'dont display'
@@ -506,9 +506,12 @@ rule "Huds: each player":
     )
 
     hudSubtext(eventPlayer,"{0}{1}{2}\n{3}{4}{5}".format(
-        "■" if eventPlayer.isHoldingButton(Button.JUMP) else "□", "▲" if eventPlayer.getThrottle().z > null else "△",
-        "●" if eventPlayer.isHoldingButton(Button.CROUCH) else "○", "◀" if eventPlayer.getThrottle().x > null else "◁",
-        "▼" if eventPlayer.getThrottle().z < null else "∇", "▶" if eventPlayer.getThrottle().x < null else "▷"),
+        "■" if eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.HUDInputs.x else "□",
+        "▲" if eventPlayer.getThrottle().z > null else "△", 
+        "●" if eventPlayer.isHoldingButton(Button.CROUCH) or eventPlayer.HUDInputs.y else "○",
+        "◀" if eventPlayer.getThrottle().x > null else "◁",
+        "▼" if eventPlayer.getThrottle().z < null else "∇",
+        "▶" if eventPlayer.getThrottle().x < null else "▷"),
         HudPosition.LEFT, HO.game_input, evalOnce(ColorConfig[customize.time]),HudReeval.STRING, SpecVisibility.DEFAULT)
 
     # climb/bhop indicators

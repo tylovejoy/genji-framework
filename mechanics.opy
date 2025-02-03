@@ -1,8 +1,7 @@
 #!mainFile "genji.opy"
 
-rule "------------------------------------------------------------------------ Checks ------------------------------------------------------------------------ ":
+rule "<tx0C00000000001344> Mechanics | Checks <tx0C00000000001344>":
     @Delimiter
-    @Disabled
 
 rule "Checking | ult combined rule":
     @Event eachPlayer
@@ -10,7 +9,7 @@ rule "Checking | ult combined rule":
     wait(1.8, Wait.ABORT_WHEN_FALSE)
     if eventPlayer.NotOnLastCp and (not eventPlayer.InvincibleToggle):
         eventPlayer.disallowButton(Button.PRIMARY_FIRE) # disable primary fire because of slash exploit
-    waitUntil(not eventPlayer.isUsingUltimate(),2)
+    waitUntil(not eventPlayer.isUsingUltimate(), 2)
     wait()
     eventPlayer.allowButton(Button.PRIMARY_FIRE)
     async(CheckUlt(), AsyncBehavior.RESTART) # sets ult charge back if done with map etc
@@ -75,22 +74,20 @@ def CheckDash(): # checks if dash should be  turned on
 
 rule "Checking | Jump":
     @Event eachPlayer
-    @Hero genji
     @Condition eventPlayer.isHoldingButton(Button.JUMP)
     @Condition eventPlayer.JumpCount != 2
     eventPlayer.JumpCount += 1
 
 rule "Checking | Bhop in the air":
     @Event eachPlayer
-    @Condition eventPlayer.JumpCount == 0
+    @Condition eventPlayer.JumpCount == null
     @Condition eventPlayer.isInAir() 
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false #?????? why wasnt this as fales
     eventPlayer.BhopUsed = false
 
 rule "Checking | In the air":
     @Event eachPlayer
-    @Hero genji
-    @Condition eventPlayer.JumpCount == 0
+    @Condition eventPlayer.JumpCount == null
     @Condition eventPlayer.isInAir() 
     eventPlayer.JumpCount = 1
 
@@ -112,10 +109,11 @@ rule "Checking | Player on the wall":
 
 rule "Checking | Using Emote":
     @Event eachPlayer
+    @Condition eventPlayer.InvincibleToggle == false
     @Condition eventPlayer.isCommunicatingEmote() == true
     eventPlayer.BhopUsed = false
     if eventPlayer.ban_emote:
-        waitUntil(not eventPlayer.isCommunicatingEmote() == true, 9999)
+        waitUntil(not eventPlayer.isCommunicatingEmote() == true, Math.INFINITY)
         waitUntil(eventPlayer.isOnWall(), 1)
         if eventPlayer.isOnWall():
             eventPlayer.cancelPrimaryAction()
@@ -123,7 +121,7 @@ rule "Checking | Using Emote":
 
 rule "Checking | Bhop":
     @Event eachPlayer
-    @Condition not eventPlayer.BhopUsed
+    @Condition eventPlayer.BhopUsed == false
     @Condition eventPlayer.isJumping()
     eventPlayer.BhopUsed = true
     smallMessage(eventPlayer,"   小跳已用" checkCN "   Bhop")
@@ -143,13 +141,14 @@ rule "Checking | Create Bhop":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isCrouching()
+    #@Condition eventPlayer.isOnGround() == false
+    #@Condition eventPlayer.isOnWall() == false
     @Condition eventPlayer.isInAir()
-    @Condition eventPlayer.isOnWall() == false
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     @Condition eventPlayer.isJumping() == false
-    @Condition eventPlayer.isOnGround() == false
+    
     eventPlayer.BhopUsed = false
-    if eventPlayer.LockState: # prevent restart from giving messsage, but stil alow it to become green
+    if eventPlayer.LockState: # prevent restart from giving messsage, but stil allow it to become green
         return
 
     if eventPlayer.ban_create and eventPlayer.InvincibleToggle == false and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
@@ -157,23 +156,22 @@ rule "Checking | Create Bhop":
         checkpointFailReset()
         return
     
-    if eventPlayer.ban_standcreate and eventPlayer.Bhopcount > 0:
+    if eventPlayer.ban_standcreate and eventPlayer.Bhopcount > null:
         eventPlayer.Bhopcount --
 
     eventPlayer.CreateCounter ++
-    smallMessage(eventPlayer, "   succes!" checkCN "   Bhop has been created!")    
+    smallMessage(eventPlayer, "   success!" checkCN "   Bhop has been created!")    
 
-rule "Checking | standing resets variables":
+rule "Checking | Ground Reset":
     @Event eachPlayer
-    @Hero genji
     @Condition eventPlayer.isOnGround()
-    eventPlayer.JumpCount = 0
+    eventPlayer.JumpCount = null
     eventPlayer.WallclimbUsed = false
-    eventPlayer.MultiClimbCount = 0
-    eventPlayer.CreateCounter = 0
-    eventPlayer.Bhopcount = 0
+    eventPlayer.MultiClimbCount = null
+    eventPlayer.CreateCounter = null
+    eventPlayer.Bhopcount = null
     eventPlayer.DoubleUsed = null
-    wait(0)
+    wait()
     if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
         goto RULE_START
     eventPlayer.BhopUsed = true
@@ -181,22 +179,22 @@ rule "Checking | standing resets variables":
 rule "Checking | Double Jump":
     @Event eachPlayer
     @Hero genji
-    @Condition evalOnce(len(BanDjump)) or eventPlayer.ban_djump
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isOnGround() == false
+    @Condition eventPlayer.ban_djump or eventPlayer.ban_savedouble
     #Saved Double Jump
     waitUntil(eventPlayer.isOnGround() or eventPlayer.isJumping() or eventPlayer.isHoldingButton(Button.JUMP), 0.096)
     if not RULE_CONDITION: return
     while true:
         #Released Jump
-        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
         if not RULE_CONDITION: return
         #Double Jumped
-        waitUntil(eventPlayer.isOnGround() or eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        waitUntil(eventPlayer.isOnGround() or eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
         if not RULE_CONDITION: return
         eventPlayer.DoubleUsed = true
         #Reset
-        waitUntil(eventPlayer.isOnGround() or not eventPlayer.DoubleUsed, 9999)
+        waitUntil(eventPlayer.isOnGround() or not eventPlayer.DoubleUsed, Math.INFINITY)
         if not RULE_CONDITION: return
 
 rule "HUD | Multiclimb Counter":
@@ -222,15 +220,14 @@ rule "HUD | Bhop Indicator | Used | Red":
     @Condition eventPlayer.isJumping()
     eventPlayer.BhopHUDColor = ColorConfig[customize.bhopclimb_used]
 
-rule "-------------------------------------------------------------------------- Bans --------------------------------------------------------------------------":
+rule "<tx0C00000000001344> Mechanics | Bans <tx0C00000000001344>":
     @Delimiter
-    @Disabled
 
-rule "Ban | Wallclimb - indicator ":
+rule "Ban | Wallclimb - Indicator ":
     # Credit: TITANXPASCAL#5554
     @Event eachPlayer
     @Condition eventPlayer.ban_climb
-    @Condition not eventPlayer.InvincibleToggle
+    @Condition eventPlayer.InvincibleToggle == false
     @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.WallclimbUsed
     #checkpointFailReset()
@@ -240,10 +237,24 @@ rule "Ban | Wallclimb - indicator ":
 rule "Ban | Emote Savehop":
     @Event eachPlayer
     @Condition eventPlayer.ban_emote
-    @Condition not eventPlayer.InvincibleToggle
+    @Condition eventPlayer.InvincibleToggle == false
     @Condition eventPlayer.NotOnLastCp
-    @Condition eventPlayer.isCommunicatingEmote() == true
+    @Condition eventPlayer.isCommunicatingEmote()
     smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
     checkpointFailReset()
 
-
+rule "Ban | Save Double - 封禁二段跳":
+    @Event eachPlayer
+    @Hero genji
+    @Condition eventPlayer.ban_savedouble
+    @Condition eventPlayer.isOnGround() == false
+    @Condition eventPlayer.DoubleUsed == false
+    @Condition eventPlayer.isHoldingButton(Button.JUMP)
+    waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
+    if not RULE_CONDITION: return
+    waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
+    if not RULE_CONDITION: return
+    if eventPlayer.getVerticalSpeed() < null: goto RULE_START #Prevent false positives
+    wait(0.8, Wait.ABORT_WHEN_FALSE)
+    smallMessage(eventPlayer, "   延二段跳已禁用!" checkCN "   save double banned!")
+    checkpointFailReset()
