@@ -375,22 +375,22 @@ thanks to @junior for making this ban.
 fixed:
 - fixed a bug that caused Deathbhop ban to stop working
 
-1.9.4a
+# 1.9.4a
 - Added a check for double jump
   * added new variable "DoubleUsed"
   * after each use of"CancelPrimaryAction()", reset "DoubleUsed" value
 - ~~Added a new addon to fix ow update 2.12 for ledge grabs (default disabled)
   * Has support for Hanzo & Kiriko (In-case someone needs it later)
   * Known Issues: Heli/Vertical Multi-climb input timing is slower~~
- * Commented out for safe keeping, but do not compile
+  * Commented out for safe keeping, but do not compile
 - Optimize ban emote
 - Fix some comment typos and make line spacing more consistent
 - Append to the "ChangeLog" & "Known Issues"
 - Updated "Fake Triple Jump - enable rule - 启用此规则 - 假三段跳"
   * Uses the new "DoubleUsed" for more accurate recreation of the original
 
-1.10.0
-Features
+# 1.10.0
+### Features
 - Input UI
 - Checkpoint can have Double Jump Required
 - Negative bounce orbs give double jump
@@ -398,7 +398,7 @@ Features
 - Huds, improve FPS
   * Local Player for commands
   * Simplify Chinese
-Optimizations
+### Optimizations
 - Double Jump
   * checks only if there is a checkpoint restriction
   * removed an unnecessary check that caused server load issues
@@ -407,11 +407,11 @@ Optimizations
 - Removed vestige of Dva dummy destruct code
 - Disable Match Voice (we are all on the same team)
 - refactor effects to huds.opy
-Editor
+### Editor
 - Remove teleport doesn't reset to checkpoint while in invincibility mode
 - Inspector is re-disabled after exporting map data
 
-@Framework Patch Notes
+`@Framework Patch Notes`
 # 1.10.1
 ### Features
 - Ban Save Double setting
@@ -433,4 +433,16 @@ Editor
 - Enable new bans to readjust CP values upon creation & deletion of a CP
 - Removed checks that prevented climb from being reset for non-Genjis
 - Removed an exploit allowing climbing with climb ban enabled
-  * Found by @Sumpin +100xp
+  * Found by `@Sumpin` +100xp
+
+`@Framework Patch Notes`
+# 1.10.2
+### Features
+- feature
+  * details
+### Editor
+- feature
+  * details
+### Fixes
+- feature
+  * details
