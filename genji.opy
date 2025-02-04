@@ -1,41 +1,15 @@
 #!define versionhere "1.10.2♨A"
 #♨ Dev Build Icon
-# cheats ##############################
+
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
-#!define cpcheat false
-
-# disable via double ## at include, not the define because the define needs to exist
+# Disable via double ## at include, not the define because the define needs to exist
 #!define testToggle ##!include "test-scripts.opy"
 
-# enable to remove invis command (this command cant be pasted in cn client die to null and none translating to same symbol) 
-#!define enableInvisCommand true
-
-# defaults: off, attempt:5, 120 min, restart:false
-#!define compmodetoggle false
-#!define attemptcount 5
-#!define comptimelimit 120
-#!define comprestartlimit false
-
-# settings ##############################
-# limit on how many orbs can be made
-#!define fxlimit 193
-#!define portaldistance 1.3
-
-# 1.4 is the default circle radius, fx is default to 1
-#!define cpcircleradius 1.4
-#!define cpcirklefx 1
-
-# distance range for player - orb 1.4
-#!define bounceorbdistance 1.4
-# height added to player for orb detection. inludes the + 
-#!define bounceoffset + Vector.UP * 0.7
-
-#disable overpy map detection (command removed by zezy after fix by blizzard)
-##!disableMapDetectionFix 
-
-# supress warning for emote
+# Supress warning for emote
 #!suppressWarnings w_ow2_communicate_bug
+#disable overpy map detection (command removed by zezy after fix by blizzard)
+# #!disableMapDetectionFix
 
 #!include "settings.opy"
 
@@ -382,14 +356,14 @@ rule "Setup and Variables":
     if createWorkshopSetting(bool,"map settings \n地图设置","Basic Map Validator - 验证地图", true, 3):
         async(CheckMap, AsyncBehavior.NOOP)
     PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用传送门 (占点地图)", true, 4)
-    CompMode = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","Turn on competitive mode - 开启竞赛模式" , compmodetoggle , 100)
+    CompMode = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","Turn on competitive mode - 开启竞赛模式" , compModeToggle , 100)
     if CompMode:
         # -! comp minutes !- 
-        CompTime = createWorkshopSetting(int[1:240], "Competitive mode\n竞赛模式", "time limit (global) - 时间限制", comptimelimit, 101) # 5-240
+        CompTime = createWorkshopSetting(int[1:240], "Competitive mode\n竞赛模式", "time limit (global) - 时间限制", compTimeLimit, 101) # 5-240
         # -! comp attempt count !- 
-        CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode\n竞赛模式", "attempt count - 尝试次数", attemptcount, 102) 
+        CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode\n竞赛模式", "attempt count - 尝试次数", attemptCount, 102) 
         # -! comp restartlimiter !-
-        CompRestartLimit = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","disable restart during run - 竞赛中禁用重新开始" , comprestartlimit , 103)
+        CompRestartLimit = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","disable restart during run - 竞赛中禁用重新开始" , compRestartLimit , 103)
     else:
         instructiontext = null
 
@@ -478,9 +452,9 @@ rule "Player Initialize":
     #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
     wait(1) 
     eventPlayer.setRespawnTime(1)
-    createEffect(eventPlayer, Effect.RING, ColorConfig[customize.ring_current], CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), cpcirklefx, EffectReeval.POSITION_AND_RADIUS)
-    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, ColorConfig[customize.ring_next] , CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, ColorConfig[customize.shaft], CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpcirklefx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer, Effect.RING, ColorConfig[customize.ring_current], CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), cpCirkleFx, EffectReeval.POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, ColorConfig[customize.ring_next] , CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, ColorConfig[customize.shaft], CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, ColorConfig[customize.nexticon_color], true)
 
     waitUntil(eventPlayer.hasSpawned(), 9999)

@@ -363,7 +363,7 @@ rule "Fake Triple Jump - 假三段跳":
 
 rule "fisho cp cheat for overpy toggle":
     @Event eachPlayer
-    @Condition cpcheat
+    @Condition cpCheat
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.NotOnLastCp) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
     @Condition eventPlayer.EditorOn == false

@@ -1,44 +1,62 @@
 #!mainFile "genji.opy"
+######################################## Settings ####################
+# Debug force CN mode on
+# #!define checkCN if true else
 
+# Enable Invis Command (Invis Command cant be pasted in CN client die to null and none translating to same symbol) 
+#!define enableInvisCommand true
+
+# Limit on how many orbs can be made
+#!define fxLimit 193
+
+#!define portalDistance 1.3
+
+# Default circle radius: 1.4
+#!define cpcircleradius 1.4
+
+# Default fx: 1
+#!define cpCirkleFx 1
+
+# distance range for player - orb 1.4
+#!define bounceorbdistance 1.4
+
+# height added to player for orb detection. inludes the + 
+#!define bounceoffset + Vector.UP * 0.7
+
+#!define cpCheat false
+
+# defaults: off, attempt:5, 120 min, restart:false
+#!define compModeToggle false
+#!define attemptCount 5
+#!define compTimeLimit 120
+#!define compRestartLimit false
+
+######################################## Macro Tools ####################
 ##!define RestartTimer(timeInMinutes) "{0} Hours and {1} Minutes".format(floor(timeInMinutes / 60 / 60), "{0}{1}".format(floor(timeInMinutes % 60 / 10), floor(timeInMinutes % 60 - floor(timeInMinutes % 60 / 10) * 10)))
 ##!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format("" if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
 ##!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
 ##!define prettyTime(timeInSeconds) "{0} {1}".format(timeInSeconds,"秒"  checkCN "sec")
 #!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
 
+#!define insert(insert_array, insert_index, insert_value)\
+insert_array.append(insert_value)\
+insert_array = [elementhere if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for elementhere, i in insert_array]
 
-#!define insert(insert_array, insert_index, insert_value)  insert_array.append(insert_value) \
-        insert_array = [elementhere if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for elementhere, i in insert_array]
-
-#!define togglecpinarray(baninput)\
+#!define toggleCpInArray(baninput)\
 if eventPlayer.CurrentCheckpoint in baninput:\
     baninput = [i for i in baninput if i != eventPlayer.CurrentCheckpoint]\
 else:\
     baninput.append(eventPlayer.CurrentCheckpoint)
 
-#!define RemoveCPandLower(arrayname)  arrayname = [i for i in arrayname if i != hostPlayer.CurrentCheckpoint ]\
+#!define removeCPandLower(arrayname)\
+arrayname = [i for i in arrayname if i != hostPlayer.CurrentCheckpoint ]\
 arrayname = [x - (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in arrayname]
 
-
-# check if cn client
-/*
-#!define checkCN if any([ \
-        "{0}".format(Color.ROSE) == "玫红", \
-        l"No" == "不行",  \
-        l"Capture" ==  "夺取",    # 捕捉cn \
-        l"Capture" == "捕捉"  # 捕捉 tw  check \
-    ]) else
-#!define checkCN if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
-*/
-# debug force CN mode on
-##!define checkCN if true else
 #!define checkCN if l"Oof" == "噢" else
 
-##!define FILLER rule "Addon settings are on next page! Click the next page button!":\
-##!define FILLER rule "Map data and addon settings are on page 2 !!!!!!!!!!!!!!!!!!!":\
 #!define FILLER "<tx0C000000000207B5><fgFFFF00FF> Map Data & Addon Settings Are on Page 2 - 地图数据和附加组件的设置在第2页"
 
-#----------------Global Variables------------------
+######################################## Global Variables ####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
 # Current Unused Variables: 1,6,9,11,16,17,19,28,29,31,36,37,48,49,59,72,89,92+
@@ -183,7 +201,7 @@ globalvar BanSaveDouble 89
 globalvar DestructoIter 90
 globalvar MapVectorArray 91
 
-#----------------Player Variables------------------
+######################################## Player Variables ####################
 playervar CurrentCheckpoint                 # int                       --- Current Checkpoint
 
 #PlayerEffects data
@@ -275,7 +293,7 @@ playervar ult_cd_global                     # int                       --- trac
 playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
 playervar HUDInputs
 
-#Subroutine names
+######################################## Subroutines ####################
 subroutine StartGame
 #subroutine KILLBALL
 #subroutine pinball
@@ -296,6 +314,7 @@ subroutine EditorSelectLast
 subroutine TriggerOnFailSuccesReset
 subroutine CheckMap
 
+######################################## Enums ####################
 enum HO:
     # Left #####################
     data_name = -200,

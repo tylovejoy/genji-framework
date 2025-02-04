@@ -645,9 +645,9 @@ rule "Editor | Hud and Effects":
     )
 
     hudText(hostPlayer if hostPlayer.GuideToggle else null,
-        "球体/传送门上限: {0}/{1} ".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart), fxlimit)
+        "球体/传送门上限: {0}/{1} ".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart), fxLimit)
         checkCN
-        "orb/portal limit: {0}/{1} ".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart), fxlimit),
+        "orb/portal limit: {0}/{1} ".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart), fxLimit),
         null, null, HudPosition.LEFT, HO.edit_orblimit, Color.BLUE, Color.SKY_BLUE,Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     
@@ -916,7 +916,7 @@ rule "Editor | create cp/orb":
     elif len(CheckpointPositions) < 1:
         smallMessage(eventPlayer, "   请先放置检查点" checkCN "   You first have to make a checkpoint")
         goto endlbl
-    elif len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart) >= fxlimit:
+    elif len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart) >= fxLimit:
         bigMessage(eventPlayer, "当前地图弹球/传送门数量已达上限" checkCN "Orb/portal limit reached for this map")
         goto endlbl
 
@@ -1054,17 +1054,17 @@ rule "Editor | delete cp/orb/portal":
         eventPlayer.Temp = []
 
         # ult/dash/ban remove and lower the cp number of rest
-        RemoveCPandLower(BladeEnabledCheckpoints)
-        RemoveCPandLower(DashEnabledCheckpoints)
-        RemoveCPandLower(BanMulti)
-        RemoveCPandLower(BanCreate)
-        RemoveCPandLower(BanStand)
-        RemoveCPandLower(BanDead)
-        RemoveCPandLower(BanEmote)
-        RemoveCPandLower(BanClimb)
-        RemoveCPandLower(BanSaveDouble)
-        RemoveCPandLower(BanBhop)
-        RemoveCPandLower(BanDjump)
+        removeCPandLower(BladeEnabledCheckpoints)
+        removeCPandLower(DashEnabledCheckpoints)
+        removeCPandLower(BanMulti)
+        removeCPandLower(BanCreate)
+        removeCPandLower(BanStand)
+        removeCPandLower(BanDead)
+        removeCPandLower(BanEmote)
+        removeCPandLower(BanClimb)
+        removeCPandLower(BanSaveDouble)
+        removeCPandLower(BanBhop)
+        removeCPandLower(BanDjump)
 
         # Remove specified checkpoint =====================
         del CheckpointPositions[hostPlayer.CurrentCheckpoint]
@@ -1260,9 +1260,9 @@ rule "Editor | add ult/dash":
     @Condition eventPlayer.LockEditor == false
     
     if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
-        togglecpinarray(BladeEnabledCheckpoints)
+        toggleCpInArray(BladeEnabledCheckpoints)
     else:
-        togglecpinarray(DashEnabledCheckpoints)
+        toggleCpInArray(DashEnabledCheckpoints)
     wait()
 
 
@@ -1279,21 +1279,21 @@ rule "Editor | toggle bans":
     eventPlayer.LockEditor = true
     if eventPlayer.isHoldingButton(Button.INTERACT):
         if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
-            togglecpinarray(BanMulti)
+            toggleCpInArray(BanMulti)
         elif eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-            togglecpinarray(BanCreate)
+            toggleCpInArray(BanCreate)
         else:
-            togglecpinarray(BanClimb)
+            toggleCpInArray(BanClimb)
 
     else:
         if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
-            togglecpinarray(BanDead)
+            toggleCpInArray(BanDead)
         elif eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-            togglecpinarray(BanEmote)     
+            toggleCpInArray(BanEmote)     
         elif eventPlayer.isHoldingButton(Button.CROUCH):
-            togglecpinarray(BanStand) 
+            toggleCpInArray(BanStand) 
         else:
-            togglecpinarray(BanBhop)
+            toggleCpInArray(BanBhop)
 
     # BanStand
 

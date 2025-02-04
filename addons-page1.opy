@@ -22,8 +22,8 @@ rule "Pre-set control map portal | function | toggled via workshop":
 rule "Custom portals | function":
     @Event eachPlayer
     @Condition len(eventPlayer.PortalStart_Cache) > 0
-    @Condition [i for i in eventPlayer.PortalStart_Cache if distance(i, eventPlayer.getPosition() + vect(0,0.2,0)) < portaldistance]
-    #@Condition any([distance(eventPlayer.getPosition() + vect(0, 0.2, 0), ent) < portaldistance for ent in eventPlayer.PortalStart_Cache]) == true
+    @Condition [i for i in eventPlayer.PortalStart_Cache if distance(i, eventPlayer.getPosition() + vect(0,0.2,0)) < portalDistance]
+    #@Condition any([distance(eventPlayer.getPosition() + vect(0, 0.2, 0), ent) < portalDistance for ent in eventPlayer.PortalStart_Cache]) == true
 
     eventPlayer.teleport(
         eventPlayer.PortalEnd_cache[eventPlayer.PortalStart_Cache.index(sorted([i for i in eventPlayer.PortalStart_Cache],lambda x: distance(eventPlayer,x))[0])
