@@ -11,9 +11,13 @@ editortoggle(0) # 0 is editor, rest is numbers
 #disable overpy map detection (command removed by zezy after fix by blizzard)
 # #!disableMapDetectionFix
 
+################################################################################
+
 #!include "settings.opy"
 
 #!include "definitions.opy"
+
+################################################################################
 
 rule FILLER:
     @Delimiter
@@ -261,9 +265,13 @@ def StartGame():
     UpdateCache()
     TriggerOnFailSuccesReset()
 
+################################################################################
+
 #!include "editor.opy"
 
 #!include "commands.opy"
+
+################################################################################
 
 rule "<tx0C00000000001344> General Rules <tx0C00000000001344>":
     @Delimiter
@@ -751,11 +759,15 @@ rule "AFK timer":
     if RULE_CONDITION:
         goto RULE_START
 
+################################################################################
+
 #!include "huds.opy"     
 
 #!include "mechanics.opy"
 
 #!include "addons-page1.opy"
+
+################################################################################
 
 # padding to make rest of rules go on page 2
 rule "MAP DATA - 地图数据":
@@ -851,6 +863,8 @@ rule "Instructions for Depricated Rules (ban / portal / dash /ult) - 旧版编�
 	#		  (不要复制含 等待 地图工坊设置 的指令, 只要 全局变量 的数据)
 	#	步骤 3) 将全局变 量数据粘 贴到新版 编辑器的 地图数 据规则
     printLog("■■■■■■■■■■■■■■■■■■■■■■■■")
+
+################################################################################
 
 #!include "addons-page2.opy"
 

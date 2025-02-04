@@ -31,7 +31,7 @@
 #!define compTimeLimit 120
 #!define compRestartLimit false
 
-######################################## Macro Tools ####################
+######################################## Macro Tools ##########################
 ##!define RestartTimer(timeInMinutes) "{0} Hours and {1} Minutes".format(floor(timeInMinutes / 60 / 60), "{0}{1}".format(floor(timeInMinutes % 60 / 10), floor(timeInMinutes % 60 - floor(timeInMinutes % 60 / 10) * 10)))
 ##!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format("" if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
 ##!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
@@ -56,7 +56,7 @@ arrayname = [x - (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in arrayn
 
 #!define FILLER "<tx0C000000000207B5><fgFFFF00FF> Map Data & Addon Settings Are on Page 2 - 地图数据和附加组件的设置在第2页"
 
-######################################## Global Variables ####################
+######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
 # Current Unused Variables: 1,6,9,11,16,17,19,28,29,31,36,37,48,49,59,72,89,92+
@@ -201,7 +201,7 @@ globalvar BanSaveDouble 89
 globalvar DestructoIter 90
 globalvar MapVectorArray 91
 
-######################################## Player Variables ####################
+######################################## Player Variables #####################
 playervar CurrentCheckpoint                 # int                       --- Current Checkpoint
 
 #PlayerEffects data
@@ -293,7 +293,7 @@ playervar ult_cd_global                     # int                       --- trac
 playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
 playervar HUDInputs
 
-######################################## Subroutines ####################
+######################################## Subroutines ##########################
 subroutine StartGame
 #subroutine KILLBALL
 #subroutine pinball
@@ -314,7 +314,7 @@ subroutine EditorSelectLast
 subroutine TriggerOnFailSuccesReset
 subroutine CheckMap
 
-######################################## Enums ####################
+######################################## Enums ################################
 enum HO:
     # Left #####################
     data_name = -200,
