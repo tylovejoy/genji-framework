@@ -28,8 +28,6 @@ rule "<tx0C00000000001344> General Functions <tx0C00000000001344>":
 def UpdateCache():
     @Name "SUB | Update Effect Cache"
     # note: if adding cp pos to cache, make sure to also adjust editor things like move and teleport
-    eventPlayer.NotOnLastCp = (eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 and len(CheckpointPositions)  > 1)
-    
     eventPlayer.BouncePosition_Cache = [_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.BounceStrength_Cache = [_ for _, i in BounceStrength if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.BounceUlt_Cache = [_ for _, i in BounceToggleUlt if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
@@ -41,44 +39,55 @@ def UpdateCache():
     eventPlayer.PortalStart_Cache = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == 999]
     eventPlayer.PortalEnd_cache = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == 999]
 
+    eventPlayer.NotOnLastCp = (eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 and len(CheckpointPositions)  > 1)
     eventPlayer.banstring = []
     wait()
-    eventPlayer.ban_multi = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Multiclimb - 封禁蹭留", false, 1) else eventPlayer.CurrentCheckpoint in BanMulti
-    if eventPlayer.ban_multi:
-        eventPlayer.banstring = "∞ {}".format(eventPlayer.banstring)
+    if not eventPlayer.NotOnLastCp:
+        eventPlayer.ban_multi = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Multiclimb - 封禁蹭留", false, 1) else eventPlayer.CurrentCheckpoint in BanMulti
+        if eventPlayer.ban_multi:
+            eventPlayer.banstring = "∞ {}".format(eventPlayer.banstring)
 
-    eventPlayer.ban_create = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Createbhop - 封禁卡小", false, 2) else eventPlayer.CurrentCheckpoint in BanCreate
-    if eventPlayer.ban_create:
-        eventPlayer.banstring = "♂ {}".format(eventPlayer.banstring)
+        eventPlayer.ban_create = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Createbhop - 封禁卡小", false, 2) else eventPlayer.CurrentCheckpoint in BanCreate
+        if eventPlayer.ban_create:
+            eventPlayer.banstring = "♂ {}".format(eventPlayer.banstring)
 
-    eventPlayer.ban_standcreate = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","ban standcreate - 封禁站卡", false, 3) else eventPlayer.CurrentCheckpoint in BanStand
-    if eventPlayer.ban_standcreate:
-        eventPlayer.banstring = "♠ {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓
+        eventPlayer.ban_standcreate = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","ban standcreate - 封禁站卡", false, 3) else eventPlayer.CurrentCheckpoint in BanStand
+        if eventPlayer.ban_standcreate:
+            eventPlayer.banstring = "♠ {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓
 
-    eventPlayer.ban_dedhop = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Deathbhop - 封禁死小", false, 4) else eventPlayer.CurrentCheckpoint in BanDead
-    if eventPlayer.ban_dedhop:
-        eventPlayer.banstring = "X {}".format(eventPlayer.banstring)
+        eventPlayer.ban_dedhop = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Deathbhop - 封禁死小", false, 4) else eventPlayer.CurrentCheckpoint in BanDead
+        if eventPlayer.ban_dedhop:
+            eventPlayer.banstring = "X {}".format(eventPlayer.banstring)
 
-    eventPlayer.ban_emote = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Emote Savehop - 封禁表情留小", false, 5) else eventPlayer.CurrentCheckpoint in BanEmote
-    if eventPlayer.ban_emote:
-        eventPlayer.banstring = "♥ {}".format(eventPlayer.banstring)
+        eventPlayer.ban_emote = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Emote Savehop - 封禁表情留小", false, 5) else eventPlayer.CurrentCheckpoint in BanEmote
+        if eventPlayer.ban_emote:
+            eventPlayer.banstring = "♥ {}".format(eventPlayer.banstring)
 
-    eventPlayer.ban_climb = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Wallclimb - 封禁爬墙", false, 6) else eventPlayer.CurrentCheckpoint in BanClimb
-    if eventPlayer.ban_climb:
-        eventPlayer.banstring = "↑ {}".format(eventPlayer.banstring)
+        eventPlayer.ban_climb = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Wallclimb - 封禁爬墙", false, 6) else eventPlayer.CurrentCheckpoint in BanClimb
+        if eventPlayer.ban_climb:
+            eventPlayer.banstring = "↑ {}".format(eventPlayer.banstring)
 
-    eventPlayer.ban_savedouble = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban save double - 封禁延二段跳", false, 7) else eventPlayer.CurrentCheckpoint in BanSaveDouble
-    if eventPlayer.ban_savedouble:
-        eventPlayer.banstring = "△ {}".format(eventPlayer.banstring)
+        eventPlayer.ban_savedouble = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban save double - 封禁延二段跳", false, 7) else eventPlayer.CurrentCheckpoint in BanSaveDouble
+        if eventPlayer.ban_savedouble:
+            eventPlayer.banstring = "△ {}".format(eventPlayer.banstring)
 
-    eventPlayer.ban_bhop = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require bhop available - 留小跳进点 ", false, 8) else eventPlayer.CurrentCheckpoint in BanBhop
-    if eventPlayer.ban_bhop:
-        eventPlayer.banstring = "≥ {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓
+        eventPlayer.ban_bhop = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require bhop available - 留小跳进点 ", false, 8) else eventPlayer.CurrentCheckpoint in BanBhop
+        if eventPlayer.ban_bhop:
+            eventPlayer.banstring = "≥ {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓
 
-    eventPlayer.ban_djump = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require djump available - 留二段跳 ", false, 9) else eventPlayer.CurrentCheckpoint in BanDjump
-    if eventPlayer.ban_djump:
-        eventPlayer.banstring = "» {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓ ︽
-
+        eventPlayer.ban_djump = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require djump available - 留二段跳 ", false, 9) else eventPlayer.CurrentCheckpoint in BanDjump
+        if eventPlayer.ban_djump:
+            eventPlayer.banstring = "» {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓ ︽
+    else:
+        eventPlayer.ban_multi = false
+        eventPlayer.ban_create = false
+        eventPlayer.ban_standcreate = false
+        eventPlayer.ban_dedhop = false
+        eventPlayer.ban_emote = false
+        eventPlayer.ban_climb = false
+        eventPlayer.ban_savedouble = false
+        eventPlayer.ban_bhop = false
+        eventPlayer.ban_djump = false
     wait()
     async(CheckUlt(), AsyncBehavior.RESTART)
     async(CheckDash(), AsyncBehavior.RESTART)    
@@ -178,7 +187,7 @@ def checkpointFailReset():
     if len(CheckpointPositions) > 0:
         eventPlayer.teleport( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() )
 
-    if eventPlayer.ban_dedhop and eventPlayer.InvincibleToggle == false and eventPlayer.NotOnLastCp:
+    if eventPlayer.ban_dedhop and eventPlayer.InvincibleToggle == false:
         # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
         wait(0.1) # finish teleport first     
         if eventPlayer.isHoldingButton(Button.JUMP):

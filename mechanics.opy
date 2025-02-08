@@ -131,7 +131,7 @@ rule "Checking | Bhop count for stand ban":
     @Condition eventPlayer.isJumping()
     @Condition eventPlayer.ban_standcreate
     eventPlayer.Bhopcount ++
-    if eventPlayer.Bhopcount > 1 and eventPlayer.InvincibleToggle == false and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:   
+    if eventPlayer.Bhopcount > 1 and eventPlayer.InvincibleToggle == false:   
         smallMessage(eventPlayer, "   站卡 ♠ 已禁用!" checkCN "   Stand createBhop ♠ is banned!")
         checkpointFailReset()
         return
@@ -151,7 +151,7 @@ rule "Checking | Create Bhop":
     if eventPlayer.LockState: # prevent restart from giving messsage, but stil allow it to become green
         return
 
-    if eventPlayer.ban_create and eventPlayer.InvincibleToggle == false and eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1:
+    if eventPlayer.ban_create and eventPlayer.InvincibleToggle == false:
         smallMessage(eventPlayer, "   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!")
         checkpointFailReset()
         return
@@ -179,7 +179,7 @@ rule "Checking | Ground Reset":
 rule "Checking | Double Jump":
     @Event eachPlayer
     @Hero genji
-    @Condition eventPlayer.isAlive() == true
+    @Condition eventPlayer.isAlive()
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.ban_djump or eventPlayer.ban_savedouble
     #Saved Double Jump
@@ -204,7 +204,7 @@ rule "HUD | Multiclimb Counter":
     @Condition eventPlayer.WallclimbUsed == false
     
     wait()
-    if eventPlayer.isOnWall() and not(eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.WallclimbUsed):
+    if eventPlayer.isOnWall() and not eventPlayer.isHoldingButton(Button.JUMP):
         eventPlayer.JumpCount = 2
         eventPlayer.WallclimbUsed = true
     else:
@@ -233,7 +233,6 @@ rule "Ban | Wallclimb - Indicator ":
     @Event eachPlayer
     @Condition eventPlayer.ban_climb
     @Condition eventPlayer.InvincibleToggle == false
-    @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.WallclimbUsed
     #checkpointFailReset()
     #eventPlayer.setStatusEffect(null,Status.BURNING, 0.1)
@@ -243,7 +242,6 @@ rule "Ban | Emote Savehop":
     @Event eachPlayer
     @Condition eventPlayer.ban_emote
     @Condition eventPlayer.InvincibleToggle == false
-    @Condition eventPlayer.NotOnLastCp
     @Condition eventPlayer.isCommunicatingEmote()
     smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
     checkpointFailReset()
@@ -252,6 +250,7 @@ rule "Ban | Save Double - 封禁二段跳":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.ban_savedouble
+    @Condition eventPlayer.InvincibleToggle == false
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.DoubleUsed == false
     @Condition eventPlayer.isHoldingButton(Button.JUMP)
