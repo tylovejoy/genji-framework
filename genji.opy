@@ -1,4 +1,4 @@
-#!define versionhere "1.10.2♨A"
+#!define versionhere "1.10.2♨B"
 #♨ Dev Build Icon
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
