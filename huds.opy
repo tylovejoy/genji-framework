@@ -52,12 +52,12 @@ rule "Huds: Global/Localplayer":
     hudSubheader(localPlayer,
         "房间将在 {0} 分钟后重启 - V{1}{2}".format(
             TimeRemaining, versionhere,
-            "\n错误: 已达到最大HUD数量上限" if getNumberOfTextIds() >= 128 else ""  
+            "\n错误: 已达到最大HUD数量上限" if getNumberOfTextIds() >= 128 else []
         ) 
         checkCN 
         "Server Restarts In {0} Min - V{1}{2}".format(
             TimeRemaining,versionhere,
-            "\nerror: max hud count reached" if getNumberOfTextIds() >= 128 else ""       
+            "\nerror: max hud count reached" if getNumberOfTextIds() >= 128 else []    
         )
         , HudPosition.RIGHT, HO.data_remaingtime, ColorConfig[customize.servertime] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS
     )
@@ -66,25 +66,25 @@ rule "Huds: Global/Localplayer":
     hudSubtext(localPlayer, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv", HudPosition.TOP, HO.fillermain, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     
     hudSubtext(localPlayer.GuideToggle, 
-        "{0} {1} | {2}".format( "" if localPlayer.QuickRestartToggle else "长按",buttonString(Button.RELOAD),"快速回点 | 启用" if localPlayer.QuickRestartToggle else "启用快速回点")
+        "{0} {1} | {2}".format( [] if localPlayer.QuickRestartToggle else "长按",buttonString(Button.RELOAD),"快速回点 | 启用" if localPlayer.QuickRestartToggle else "启用快速回点")
         checkCN
-        "{0} {1} | {2}".format( "" if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset")
+        "{0} {1} | {2}".format( [] if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset")
         , HudPosition.RIGHT, HO.com_quickres, ColorConfig[customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     hudSubtext(localPlayer.GuideToggle, 
-        "{0} + {1} | 探点模式{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | 启用" if localPlayer.InvincibleToggle else "") 
+        "{0} + {1} | 探点模式{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | 启用" if localPlayer.InvincibleToggle else []) 
         checkCN
-        "{0} + {1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.InvincibleToggle else "") 
+        "{0} + {1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.InvincibleToggle else []) 
         ,HudPosition.RIGHT, HO.com_invincible, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.InvincibleToggle else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     hudText(localPlayer,
         null,
         "{0}{1}{2}".format(
-            abilityIconString(Hero.BAPTISTE, Button.ABILITY_2) if localPlayer.InvincibleToggle else "",
-            abilityIconString(Hero.DVA, Button.ULTIMATE) if localPlayer.PracticeToggle else "",
-            abilityIconString(Hero.SOMBRA, Button.ABILITY_1) if localPlayer.invis else ""
-        ) if not localPlayer.GuideToggle else "", 
+            abilityIconString(Hero.BAPTISTE, Button.ABILITY_2) if localPlayer.InvincibleToggle else [],
+            abilityIconString(Hero.DVA, Button.ULTIMATE) if localPlayer.PracticeToggle else [],
+            abilityIconString(Hero.SOMBRA, Button.ABILITY_1) if localPlayer.invis else []
+        ) if not localPlayer.GuideToggle else [], 
         "长按 {0} | 切换显示HUD".format(buttonString(Button.SECONDARY_FIRE))
         checkCN
         "Hold {0} | toggle hud".format(buttonString(Button.SECONDARY_FIRE))
@@ -300,16 +300,16 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
         "　 3:　{2} - {7}　\n"
         "　 4:　{3} - {8}　\n"
         "　 5:　{4} - {9}\n".format(
-        LeaderBoardFull[0][0] if LeaderBoardFull[0] else "",
-        LeaderBoardFull[1][0] if LeaderBoardFull[1] else "",
-        LeaderBoardFull[2][0] if LeaderBoardFull[2] else "",
-        LeaderBoardFull[3][0] if LeaderBoardFull[3] else "",
-        LeaderBoardFull[4][0] if LeaderBoardFull[4] else "",
-        LeaderBoardFull[0][2] if LeaderBoardFull[0] else "",
-        LeaderBoardFull[1][2] if LeaderBoardFull[1] else "",
-        LeaderBoardFull[2][2] if LeaderBoardFull[2] else "",
-        LeaderBoardFull[3][2] if LeaderBoardFull[3] else "",
-        LeaderBoardFull[4][2] if LeaderBoardFull[4] else ""
+        LeaderBoardFull[0][0] if LeaderBoardFull[0] else [],
+        LeaderBoardFull[1][0] if LeaderBoardFull[1] else [],
+        LeaderBoardFull[2][0] if LeaderBoardFull[2] else [],
+        LeaderBoardFull[3][0] if LeaderBoardFull[3] else [],
+        LeaderBoardFull[4][0] if LeaderBoardFull[4] else [],
+        LeaderBoardFull[0][2] if LeaderBoardFull[0] else [],
+        LeaderBoardFull[1][2] if LeaderBoardFull[1] else [],
+        LeaderBoardFull[2][2] if LeaderBoardFull[2] else [],
+        LeaderBoardFull[3][2] if LeaderBoardFull[3] else [],
+        LeaderBoardFull[4][2] if LeaderBoardFull[4] else []
         ),HudPosition.TOP, HO.board_display1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
     )
     LeaderBoardHuds.append(getLastCreatedText())
@@ -323,16 +323,16 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
             "　 8:　{2} - {7}　\n"
             "　 9:　{3} - {8}　\n"
             "　10:　{4} - {9}\n".format(
-            LeaderBoardFull[5][0] if LeaderBoardFull[5] else "",
-            LeaderBoardFull[6][0] if LeaderBoardFull[6] else "",
-            LeaderBoardFull[7][0] if LeaderBoardFull[7] else "",
-            LeaderBoardFull[8][0] if LeaderBoardFull[8] else "",
-            LeaderBoardFull[9][0] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[5][2] if LeaderBoardFull[5] else "",
-            LeaderBoardFull[6][2] if LeaderBoardFull[6] else "",
-            LeaderBoardFull[7][2] if LeaderBoardFull[7] else "",
-            LeaderBoardFull[8][2] if LeaderBoardFull[8] else "",
-            LeaderBoardFull[9][2] if LeaderBoardFull[9] else ""
+            LeaderBoardFull[5][0] if LeaderBoardFull[5] else [],
+            LeaderBoardFull[6][0] if LeaderBoardFull[6] else [],
+            LeaderBoardFull[7][0] if LeaderBoardFull[7] else [],
+            LeaderBoardFull[8][0] if LeaderBoardFull[8] else [],
+            LeaderBoardFull[9][0] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[5][2] if LeaderBoardFull[5] else [],
+            LeaderBoardFull[6][2] if LeaderBoardFull[6] else [],
+            LeaderBoardFull[7][2] if LeaderBoardFull[7] else [],
+            LeaderBoardFull[8][2] if LeaderBoardFull[8] else [],
+            LeaderBoardFull[9][2] if LeaderBoardFull[9] else []
             ),HudPosition.TOP, HO.board_display2, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
         )
         LeaderBoardHuds.append(getLastCreatedText())
@@ -346,16 +346,16 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
             "　13:　{2} - {7}　\n"
             "　14:　{3} - {8}　\n"
             "　15:　{4} - {9}\n".format(
-            LeaderBoardFull[10][0] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[11][0] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[12][0] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[13][0] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[14][0] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[10][2] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[11][2] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[12][2] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[13][2] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[14][2] if LeaderBoardFull[9] else ""
+            LeaderBoardFull[10][0] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[11][0] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[12][0] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[13][0] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[14][0] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[10][2] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[11][2] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[12][2] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[13][2] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[14][2] if LeaderBoardFull[9] else []
             ),HudPosition.TOP, HO.board_display3, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
         )
         LeaderBoardHuds.append(getLastCreatedText())
@@ -369,16 +369,16 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
             "　18:　{2} - {7}　\n"
             "　19:　{3} - {8}　\n"
             "　20:　{4} - {9}\n".format(
-            LeaderBoardFull[15][0] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[16][0] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[17][0] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[18][0] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[19][0] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[15][2] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[16][2] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[17][2] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[18][2] if LeaderBoardFull[9] else "",
-            LeaderBoardFull[19][2] if LeaderBoardFull[9] else ""
+            LeaderBoardFull[15][0] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[16][0] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[17][0] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[18][0] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[19][0] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[15][2] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[16][2] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[17][2] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[18][2] if LeaderBoardFull[9] else [],
+            LeaderBoardFull[19][2] if LeaderBoardFull[9] else []
             ),HudPosition.TOP, HO.board_display4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
         )
         LeaderBoardHuds.append(getLastCreatedText())
