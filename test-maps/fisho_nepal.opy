@@ -37,18 +37,18 @@ rule "custom portals - data <---- EDIT ME":
     #Portal end position (on same number as start position)
     CustomPortalEndpoint = [vect(81.16, 250, -0.082), vect(-50.25, 120, 0.621), vect(-173.972, -59.179, 0.021)]
     #Portal checkpoint (on same number as start position) 
-    #999 = apply portal to entire map
+    #Math.INFINITY = apply portal to entire map
     CustomPortalCP = [30, 30, 30]
 
 /*
 rule "custom portals - function":
     @Event eachPlayer
     @Condition len(CustomPortalStart) > 0
-    @Condition (any([distance(eventPlayer.getPosition() + vect(0, 0.2, 0), player) < 1.1 and CustomPortalCP[i] in [999, eventPlayer.A] for player, i in CustomPortalStart])) == true
+    @Condition (any([distance(eventPlayer.getPosition() + vect(0, 0.2, 0), player) < 1.1 and CustomPortalCP[i] in [Math.INFINITY, eventPlayer.A] for player, i in CustomPortalStart])) == true
     
     eventPlayer.PortalLoop = 0
     for eventPlayer.PortalLoop in range(len(CustomPortalStart)):
-        if distance(eventPlayer.getPosition() + vect(0, 0.2, 0), CustomPortalStart[eventPlayer.PortalLoop]) < 1.1 and CustomPortalCP[eventPlayer.PortalLoop] in [999, eventPlayer.A]:
+        if distance(eventPlayer.getPosition() + vect(0, 0.2, 0), CustomPortalStart[eventPlayer.PortalLoop]) < 1.1 and CustomPortalCP[eventPlayer.PortalLoop] in [Math.INFINITY, eventPlayer.A]:
             eventPlayer.teleport(CustomPortalEndpoint[eventPlayer.PortalLoop])
             return
     wait(1)

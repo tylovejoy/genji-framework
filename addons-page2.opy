@@ -394,7 +394,7 @@ rule "Ledge Grab Patch v1.5":
     eventPlayer.stopForcingButton(Button.JUMP)
     wait(false)
     eventPlayer.startForcingButton(Button.JUMP)
-    waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+    waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
     eventPlayer.stopForcingButton(Button.JUMP)
     #Ledge Grab loop
     while not eventPlayer.isOnGround():
@@ -405,8 +405,8 @@ rule "Ledge Grab Patch v1.5":
             eventPlayer.startForcingButton(Button.JUMP)
             wait(false)
             eventPlayer.stopForcingButton(Button.JUMP)
-        waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or eventPlayer.isHoldingButton(Button.JUMP), 9999)
-        waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or not eventPlayer.isHoldingButton(Button.JUMP), 9999)
+        waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
+        waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
         #Create cBhop
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)
 

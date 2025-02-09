@@ -109,7 +109,7 @@ rule "Huds: Global/Localplayer":
 
 
     hudSubtext(localPlayer, 
-        "" if localPlayer.splitdisplay == -999 else
+        "" if localPlayer.splitdisplay == -Math.INFINITY else
         ("单关用时 {0}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else "")
         checkCN
         ("Split: {0}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else "")
@@ -388,7 +388,7 @@ def EffectsCreate():
     if CustomPortalStart:
         for TempIterator1 in range(len(CustomPortalStart)):
             createEffect(
-                [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
+                [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == Math.INFINITY],
                 Effect.GOOD_AURA, ColorConfig[customize.portal],
                 CustomPortalStart[evalOnce(TempIterator1)], 
                 0.6,

@@ -36,8 +36,8 @@ def UpdateCache():
     eventPlayer.BounceLockMax_Cache = len([i for i in eventPlayer.BounceLock_Cache if i])    
     eventPlayer.KillPosition_Cache = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.PortalStart_Cache = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == 999]
-    eventPlayer.PortalEnd_cache = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == 999]
+    eventPlayer.PortalStart_Cache = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == Math.INFINITY]
+    eventPlayer.PortalEnd_cache = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == Math.INFINITY]
 
     eventPlayer.NotOnLastCp = (eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 and len(CheckpointPositions)  > 1)
     eventPlayer.banstring = []
@@ -132,7 +132,7 @@ def MakeSave():
 
 def StartPauseTimer():
     @Name "SUB | Start Pause Timer"
-    chase(eventPlayer.PauseTimer, 999999, rate=1, ChaseReeval.NONE)
+    chase(eventPlayer.PauseTimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
     SaveTimer[SaveEnt.index(eventPlayer)] = eventPlayer.Timer
     SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
     SavePauseEnabled[SaveEnt.index(eventPlayer)] = true
@@ -263,7 +263,7 @@ def StartGame():
             UpdateTitle()
     
     eventPlayer.splittime = 0
-    chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE)
+    chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
     eventPlayer.LockCollected = []
     eventPlayer.InvincibleToggle = false
     eventPlayer.enableRespawn()
@@ -402,7 +402,7 @@ rule "Setup and Variables":
                 PortalLoc[evalOnce(TempIterator1)] + vect(0,1,0), 
                 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
             )
-    waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]),9999)
+    waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]),Math.INFINITY)
     wait(1)
     if not [i for i in getAllPlayers() if not i.isDummy()][0].EditorOn:
         EffectsCreate()
@@ -474,7 +474,7 @@ rule "Player Initialize":
     createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, ColorConfig[customize.shaft], CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createIcon(eventPlayer if eventPlayer.NotOnLastCp  else null, CheckpointPositions[eventPlayer.CurrentCheckpoint + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, ColorConfig[customize.nexticon_color], true)
 
-    waitUntil(eventPlayer.hasSpawned(), 9999)
+    waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
     eventPlayer.LockEditor = false
 
     if CompMode:
@@ -488,7 +488,7 @@ rule "Player Initialize":
             eventPlayer.setAbility1Enabled(false)
             eventPlayer.setUltEnabled(false)
             waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT),1)
-            waitUntil(eventPlayer.isHoldingButton(Button.INTERACT) or CompTime < 1,99999)
+            waitUntil(eventPlayer.isHoldingButton(Button.INTERACT) or CompTime < 1, Math.INFINITY)
             eventPlayer.setMoveSpeed(100)
             eventPlayer.instructionhud = false
         else:
@@ -565,7 +565,7 @@ rule "Arrive | Ground reset | traces":
             async(CheckDash(), AsyncBehavior.RESTART)
 
         
-        if eventPlayer.splitdisplay != -999:
+        if eventPlayer.splitdisplay != -Math.INFINITY:
             eventPlayer.splitdisplay =  (eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer) - eventPlayer.splittime
         wait()
         playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
@@ -741,7 +741,7 @@ rule "AFK timer":
     @Condition eventPlayer.EditorOn == false
     wait(300, Wait.ABORT_WHEN_FALSE)
 
-    eventPlayer.setStatusEffect(null, Status.ASLEEP, 9999)
+    eventPlayer.setStatusEffect(null, Status.ASLEEP, Math.INFINITY)
       # raycast to prevent camera stuck on low wall
     eventPlayer.startCamera(
         eventPlayer.getPosition() + 
@@ -757,7 +757,7 @@ rule "AFK timer":
     )
     # cancel it after jumping or not sleep, reset cures sleep
     wait(1)
-    waitUntil(eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.hasStatusEffect(Status.ASLEEP) == false, 99999)
+    waitUntil(eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.hasStatusEffect(Status.ASLEEP) == false, Math.INFINITY)
     eventPlayer.clearStatusEffect(Status.ASLEEP)
     eventPlayer.stopCamera()
     waitUntil(eventPlayer.isOnWall(), 2)

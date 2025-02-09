@@ -85,7 +85,7 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
     @Condition isGameInProgress()
     MsDestructo = []  # Multiple bots
-    waitUntil(any([x.hasSpawned() for x in getAllPlayers()]), 99999)
+    waitUntil(any([x.hasSpawned() for x in getAllPlayers()]), Math.INFINITY)
     switch getCurrentMap():
         case Map.ILIOS:
             MapVectorArray = [vect(322.988, 40, -37.732), vect(27.711, 100, -161.298), vect(-223.895, 50, 0.89)]

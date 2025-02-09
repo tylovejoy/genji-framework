@@ -39,7 +39,7 @@ def RebuildPortals():
     
     for TempIterator1 in range(0, len(CustomPortalCP)):
         createEffect(
-            [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == 999],
+            [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == Math.INFINITY],
             Effect.GOOD_AURA, 
             ColorConfig[customize.portal],
             CustomPortalStart[evalOnce(TempIterator1)], 
@@ -172,8 +172,8 @@ rule "Editor | Clear Excess Data to Save Map":
 
     enableInspector()
     disableInspector()
-    waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), 9999)
-    waitUntil(eventPlayer.isHoldingButton(Button.INTERACT), 9999)
+    waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
+    waitUntil(eventPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
     destroyHudText(eventPlayer.savemaphud[0])
     destroyHudText(eventPlayer.savemaphud[1])
     destroyHudText(eventPlayer.savemaphud[2])
@@ -198,7 +198,7 @@ rule "Editor | Hud and Effects":
 
     if CompMode: # infinite time and atemps
         CompAtmpNum = 0 
-        CompTime = 99999
+        CompTime = Math.INFINITY
         getAllPlayers().AttemptCount = null
         getAllPlayers().CompDone = false
 
@@ -697,9 +697,9 @@ rule "Editor | Hud and Effects":
                 "".format(
                 CustomPortalStart[EditSelected],
                 CustomPortalEndpoint[EditSelected],
-                "所有" if CustomPortalCP[EditSelected] == 999 else hostPlayer.CurrentCheckpoint
+                "所有" if CustomPortalCP[EditSelected] == Math.INFINITY else hostPlayer.CurrentCheckpoint
                 )
-            if hostPlayer.EditModeSelection == 4 and CustomPortalCP[EditSelected] in [hostPlayer.CurrentCheckpoint,999] and len(CustomPortalCP) > 0 else
+            if hostPlayer.EditModeSelection == 4 and CustomPortalCP[EditSelected] in [hostPlayer.CurrentCheckpoint, Math.INFINITY] and len(CustomPortalCP) > 0 else
             "\n   当前无数据选中   \n"
         )         
         checkCN
@@ -747,9 +747,9 @@ rule "Editor | Hud and Effects":
                 "".format(
                 CustomPortalStart[EditSelected],
                 CustomPortalEndpoint[EditSelected],
-                "All" if CustomPortalCP[EditSelected] == 999 else hostPlayer.CurrentCheckpoint
+                "All" if CustomPortalCP[EditSelected] == Math.INFINITY else hostPlayer.CurrentCheckpoint
                 )
-            if hostPlayer.EditModeSelection == 4 and CustomPortalCP[EditSelected] in [hostPlayer.CurrentCheckpoint,999] and len(CustomPortalCP) > 0 else
+            if hostPlayer.EditModeSelection == 4 and CustomPortalCP[EditSelected] in [hostPlayer.CurrentCheckpoint, Math.INFINITY] and len(CustomPortalCP) > 0 else
 
             "\n   No data selected   \n"
             
@@ -861,7 +861,7 @@ def editupdateselectedids():
         EditSelectIdArray = [ i for i in EditSelectIdArray if BouncePadCheckpoints[i] == hostPlayer.CurrentCheckpoint ]
     elif hostPlayer.EditModeSelection == 4:
         EditSelectIdArray  = [i for _, i in CustomPortalCP]
-        EditSelectIdArray = [i for i in EditSelectIdArray if CustomPortalCP[i] == 999 or CustomPortalCP[i] == hostPlayer.CurrentCheckpoint ]
+        EditSelectIdArray = [i for i in EditSelectIdArray if CustomPortalCP[i] == Math.INFINITY or CustomPortalCP[i] == hostPlayer.CurrentCheckpoint ]
     else:
         EditSelectIdArray  = []
 
@@ -969,7 +969,7 @@ rule "Editor | create cp/orb":
         editupdateselectedids()
         EditorSelectLast()
         createEffect(
-            [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(EditSelected)] or CustomPortalCP[evalOnce(EditSelected)] == 999],
+            [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(EditSelected)] or CustomPortalCP[evalOnce(EditSelected)] == Math.INFINITY],
             Effect.GOOD_AURA, ColorConfig[customize.portal], CustomPortalStart[evalOnce(EditSelected)], 0.6,  EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
         PortalEffects.append(getLastCreatedEntity())
@@ -1313,7 +1313,7 @@ rule "Editor | portal cp change":
     #@Condition EditorMoveItem == false
     @Condition eventPlayer.LockEditor == false
 
-    CustomPortalCP[EditSelected] = eventPlayer.CurrentCheckpoint if CustomPortalCP[EditSelected] == 999 else 999
+    CustomPortalCP[EditSelected] = eventPlayer.CurrentCheckpoint if CustomPortalCP[EditSelected] == Math.INFINITY else Math.INFINITY
     wait(0.3)
 
 

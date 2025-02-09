@@ -287,7 +287,7 @@ playervar ban_djump
 playervar ban_savedouble
 playervar splittime                         # int                       --- stored time that the split compares to
 playervar splitdisplay                      # int                       --- displayed split value
-#playervar splitson                         # bool                      --- turning splits on/off is now done via seting splittime to -999
+#playervar splitson                         # bool                      --- turning splits on/off is now done via seting splittime to -Math.INFINITY
 playervar practicetimer
 playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
 playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD

@@ -18,11 +18,11 @@ rule "Split hide":
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) 
     wait(1, Wait.ABORT_WHEN_FALSE)
     
-    #smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay != -999 else "   split display on")
-    eventPlayer.splitdisplay = 0 if eventPlayer.splitdisplay == -999 else -999
+    #smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay != -Math.INFINITY else "   split display on")
+    eventPlayer.splitdisplay = 0 if eventPlayer.splitdisplay == -Math.INFINITY else -Math.INFINITY
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     wait(0.32)
-    smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay == -999 else "   split display on")
+    smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay == -Math.INFINITY else "   split display on")
     
 rule "Toggle Invisible | Hold Deflect":
     @Condition enableInvisCommand
@@ -150,7 +150,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
     eventPlayer.HintsOn = false
     stopChasingVariable(eventPlayer.practicetimer)
     eventPlayer.practicetimer = 0
-    eventPlayer.splitdisplay = -999 if eventPlayer.splitdisplay == -999 else 0
+    eventPlayer.splitdisplay = -Math.INFINITY if eventPlayer.splitdisplay == -Math.INFINITY else 0
     if eventPlayer in SaveEnt:
         DeleteSave()
     
@@ -184,9 +184,9 @@ rule "Enter Spectate | Hold Interact":
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
         if eventPlayer.NotOnLastCp:
             if eventPlayer.PracticeToggle:
-                chase(eventPlayer.practicetimer, 9999999, rate=1, ChaseReeval.NONE)
+                chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
             else:
-                chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE)
+                chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
 
         async(CheckUlt(),AsyncBehavior.RESTART)
         async(CheckDash(), AsyncBehavior.RESTART) 
@@ -242,10 +242,10 @@ rule "Toggle Invincible Mode | Melee + Reload":
         wait(0.16)
         if eventPlayer.PracticeToggle:
             bigMessage(eventPlayer, "练习模式" checkCN "Practice mode")
-            chase(eventPlayer.practicetimer, 9999999, rate=1, ChaseReeval.NONE)
+            chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
         else:
             bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
-            chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE)
+            chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
             StopPauseTimer()
         TriggerOnFailSuccesReset()
     else:
@@ -307,7 +307,7 @@ rule "Toggle Practice Mode | Melee + Ultimate":
         bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
         if eventPlayer.NotOnLastCp:
             eventPlayer.splittime = eventPlayer.Timer
-            chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE) #abs removed
+            chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE) #abs removed
             StopPauseTimer()
         eventPlayer.stopForcingPosition()
         TriggerOnFailSuccesReset()
@@ -320,10 +320,10 @@ rule "Toggle Practice Mode | Melee + Ultimate":
         if eventPlayer.NotOnLastCp:
             StartPauseTimer()
         
-        eventPlayer.splitdisplay = -999 if eventPlayer.splitdisplay == -999 else 0
+        eventPlayer.splitdisplay = -Math.INFINITY if eventPlayer.splitdisplay == -Math.INFINITY else 0
         eventPlayer.splittime = 0
         eventPlayer.practicetimer = 0
-        chase(eventPlayer.practicetimer, 9999999, rate=1, ChaseReeval.NONE)
+        chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
         wait(0.2)
         
     eventPlayer.HintsOn = false
@@ -347,7 +347,7 @@ rule "Practice Restart | Interact":
    
     #  first 2 ifs prevent collide with spec
     if eventPlayer.SpectateToggle: 
-        waitUntil(eventPlayer.isAlive(), 9999)
+        waitUntil(eventPlayer.isAlive(), Math.INFINITY)
         waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), 2)
         return
     waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), 0.9)
