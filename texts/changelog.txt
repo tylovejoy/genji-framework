@@ -446,4 +446,4 @@ fixed:
 ### Fixes
 - Auto-Climb is not detected as Multi-Climb
 - Save Double ban persisting when Invincible and on Last Point
-  * Found by `@bioslet` +1xp
+  * Found by `@bioslet` +5xp

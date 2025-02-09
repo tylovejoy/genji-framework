@@ -506,23 +506,22 @@ rule "Huds: each player":
     )
 
     hudSubtext(eventPlayer,"{0}{1}{2}\n{3}{4}{5}".format(
-        "■" if eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.HUDInputs.x else "□",
+        "■" if eventPlayer.HUDInputs.x else "□",
         "▲" if eventPlayer.getThrottle().z > null else "△", 
-        "●" if eventPlayer.isHoldingButton(Button.CROUCH) or eventPlayer.HUDInputs.y else "○",
+        "●" if eventPlayer.HUDInputs.y else "○",
         "◀" if eventPlayer.getThrottle().x > null else "◁",
         "▼" if eventPlayer.getThrottle().z < null else "∇",
         "▶" if eventPlayer.getThrottle().x < null else "▷"),
         HudPosition.LEFT, HO.game_input, evalOnce(ColorConfig[customize.time]),HudReeval.STRING, SpecVisibility.DEFAULT)
-
+    
     # climb/bhop indicators
     hudHeader(eventPlayer,         
-        #"爬墙已用{0}".format("" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
-        "{1}{0}".format(
-            "" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount),
+        #"爬墙已用{0}".format([] if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
+        "{1}{0}".format([] if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount),
             "爬墙已用" if  eventPlayer.WallclimbUsed else "爬墙未用" # cn version text updates to say the status, unlike en
         )
         checkCN
-        "Climb{0}".format("" if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
+        "Climb{0}".format([] if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
         , HudPosition.LEFT, HO.game_climb, 
         evalOnce(ColorConfig[customize.bhopclimb_used]) if eventPlayer.WallclimbUsed else evalOnce(ColorConfig[customize.bhopclimb_available]), 
         HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
@@ -531,12 +530,12 @@ rule "Huds: each player":
         ( # cn version text updates to say the status, unlike en version
             "{0}{1}".format(
                 "小跳未用" if eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == evalOnce(ColorConfig[customize.bhopclimb_available]) else "小跳已用",
-                "" if eventPlayer.CreateCounter < 1 else " ({0})".format(eventPlayer.CreateCounter)  
+                [] if eventPlayer.CreateCounter < 1 else " ({0})".format(eventPlayer.CreateCounter)  
             )  
         ) 
         checkCN 
         "Bhop{0}".format(
-            "" if eventPlayer.CreateCounter < 1 else
+            [] if eventPlayer.CreateCounter < 1 else
             " ({0})".format(eventPlayer.CreateCounter) 
         )
         , HudPosition.LEFT, HO.game_bhop, 
@@ -567,7 +566,7 @@ rule "Huds: each player":
                     CompTime, 
                     "\n你没有尝试过" if eventPlayer.AttemptCount == -1 else
                     "\n尝试 {0} / {1}".format(eventPlayer.AttemptCount, CompAtmpNum) if CompAtmpNum > 0 
-                    else "" 
+                    else []
                 )
             )
             checkCN
@@ -577,7 +576,7 @@ rule "Huds: each player":
                     CompTime, 
                     "\nYou are out of attemps" if eventPlayer.AttemptCount == -1 else
                     "\nAttempt {0} / {1}".format(eventPlayer.AttemptCount, CompAtmpNum) if CompAtmpNum > 0 
-                    else "" 
+                    else []
                 )
             ), 
             ("竞赛模式" if CompTime > 0 else "竞赛模式\n\n\n")
