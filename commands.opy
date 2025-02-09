@@ -228,7 +228,6 @@ rule "Toggle Invincible Mode | Melee + Reload":
 
     eventPlayer.LockState = true
     eventPlayer.LockCollected = []
-    eventPlayer.flytoggle = null
     
     if eventPlayer.NotOnLastCp and (eventPlayer.CurrentCheckpoint > 0 or DashExploitToggle):
         eventPlayer.disallowButton(Button.ABILITY_1)
@@ -248,15 +247,12 @@ rule "Toggle Invincible Mode | Melee + Reload":
             bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
             chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE)
             StopPauseTimer()
-        eventPlayer.stopForcingPosition()
-        eventPlayer.flytoggle = null
         TriggerOnFailSuccesReset()
     else:
         StartPauseTimer()
         stopChasingVariable(eventPlayer.Timer)
         stopChasingVariable(eventPlayer.practicetimer)
         bigMessage(eventPlayer,"探点模式" checkCN "Invincible mode")
-        eventPlayer.flytoggle = null
         wait(0.2)
               
     eventPlayer.InvincibleToggle = not eventPlayer.InvincibleToggle
@@ -301,8 +297,8 @@ rule "Toggle Practice Mode | Melee + Ultimate":
       
     wait(0.16)
     if eventPlayer.PracticeToggle:
-        eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.PracticeCheckpoint].last(), true)
         eventPlayer.CurrentCheckpoint = eventPlayer.PracticeCheckpoint
+        eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.PracticeCheckpoint].last(), true)
         checkpointFailReset()
         eventPlayer.LockCollected = []
         UpdateCache()
@@ -313,8 +309,6 @@ rule "Toggle Practice Mode | Melee + Ultimate":
             eventPlayer.splittime = eventPlayer.Timer
             chase(eventPlayer.Timer, 9999999, rate=1, ChaseReeval.NONE) #abs removed
             StopPauseTimer()
-        async(CheckUlt(), AsyncBehavior.RESTART)
-        async(CheckDash(), AsyncBehavior.RESTART)
         eventPlayer.stopForcingPosition()
         TriggerOnFailSuccesReset()
     else:
