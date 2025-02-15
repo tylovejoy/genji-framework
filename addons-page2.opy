@@ -191,7 +191,7 @@ rule "Stall enhancer - 增强系統跳的判定":
         eventPlayer.isAlive() and
         not eventPlayer.isHoldingButton(Button.RELOAD)
         ):
-        eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+        eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
         if RULE_CONDITION:
             goto RULE_START
 
@@ -221,7 +221,7 @@ rule "Fake Ledge Dash - 超级跳":
         wait()
 
     if eventPlayer.LedgeDash[0] >= 5: #and eventPlayer.LedgeDash[0] <= 12: # ledge dash execute
-        eventPlayer.applyImpulse(eventPlayer.LedgeDash[1], eventPlayer.LedgeDash[2], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+        eventPlayer.applyImpulse(eventPlayer.LedgeDash[1], eventPlayer.LedgeDash[2], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
     # above 12 - climbed to long
     # below 5 - dashed into object
 

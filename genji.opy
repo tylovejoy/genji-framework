@@ -1,8 +1,8 @@
-#!define versionhere "1.10.2♨B"
+#!define versionhere "1.10.2♨C"
 #♨ Dev Build Icon
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(1) # 0 is editor, rest is numbers
 # Disable via double ## at include, not the define because the define needs to exist
 #!define testToggle ##!include "test-scripts.opy"
 
@@ -181,7 +181,7 @@ def checkpointFailReset():
     eventPlayer.LockCollected = []
     eventPlayer.cancelPrimaryAction()
     eventPlayer.DoubleUsed = null
-    eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+    eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
 
     if len(CheckpointPositions) > 0:
@@ -192,7 +192,7 @@ def checkpointFailReset():
         wait(0.1) # finish teleport first     
         if eventPlayer.isHoldingButton(Button.JUMP):
             eventPlayer.forceButtonPress(Button.JUMP)
-            eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed() + 0.1, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION)
+            eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed() + 0.1, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
         # end new
 
     if eventPlayer.CurrentCheckpoint == 0 and not eventPlayer.PracticeToggle:
@@ -645,7 +645,7 @@ rule "Bounce Ball / Orb | Activate":
     eventPlayer.bouncetouchedlast = eventPlayer.bouncetouched 
 
     if eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched] > 0:
-        eventPlayer.applyImpulse(Vector.UP, eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+        eventPlayer.applyImpulse(Vector.UP, eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
     elif eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched] < 0:
         eventPlayer.cancelPrimaryAction()
         eventPlayer.DoubleUsed = null
