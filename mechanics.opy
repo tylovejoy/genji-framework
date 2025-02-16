@@ -35,10 +35,10 @@ def CheckUlt(): # checks if ult should be turned on
     if eventPlayer.isUsingUltimate():
         waitUntil(not eventPlayer.isUsingUltimate(), 2)
         wait()
-    if eventPlayer.isHoldingButton(Button.ULTIMATE): # incase spaming the button
+    if eventPlayer.isHoldingButton(Button.ULTIMATE): # incase spamming the button
         wait()
 
-    if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):
+    if eventPlayer.InvincibleToggle or eventPlayer.EditorOn or (not eventPlayer.NotOnLastCp):
         goto lbl_a #skip msg if these
     elif eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= cpcircleradius: 
         smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"终极技能已就绪" checkCN "Ultimate is ready")) 
@@ -46,12 +46,6 @@ def CheckUlt(): # checks if ult should be turned on
         wait()        
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
-        
-    elif eventPlayer.EditorOn:
-        wait()        
-        eventPlayer.setUltEnabled(true)
-        eventPlayer.setUltCharge(100)
-
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 2 or eventPlayer.getUltCharge() < 100: # used to be just else, but have to deal with multi ult orbs
         eventPlayer.setUltEnabled(false)
         eventPlayer.setUltCharge(0)
@@ -60,14 +54,12 @@ def CheckUlt(): # checks if ult should be turned on
 
 def CheckDash(): # checks if dash should be  turned on
     waitUntil(not eventPlayer.isUsingAbility1(), 2)
-    if eventPlayer.InvincibleToggle or (not eventPlayer.NotOnLastCp):
+    if eventPlayer.InvincibleToggle or eventPlayer.EditorOn or (not eventPlayer.NotOnLastCp):
         goto lbl_a #skip msg if these
     elif eventPlayer.CurrentCheckpoint in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= cpcircleradius: 
         smallMessage(eventPlayer, "   {0} {1}".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready")) 
         lbl_a:
         wait()        
-        eventPlayer.setAbility1Enabled(true)
-    elif eventPlayer.EditorOn: # seeprate so msg stil plays
         eventPlayer.setAbility1Enabled(true)
     else:
         eventPlayer.setAbility1Enabled(false)
@@ -82,7 +74,7 @@ rule "Checking | Bhop in the air":
     @Event eachPlayer
     @Condition eventPlayer.JumpCount == null
     @Condition eventPlayer.isInAir() 
-    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false #?????? why wasnt this as fales
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false #?????? why wasnt this as false
     eventPlayer.BhopUsed = false
 
 rule "Checking | In the air":
@@ -95,7 +87,7 @@ rule "Checking | In the air":
 rule "Checking | Triple jump":
     @Event eachPlayer
     @Condition eventPlayer.JumpCount == 1
-    # actualy just checks if you been in the air for atleast 0.1 seconds
+    # actually just checks if you been in the air for at least 0.1 seconds
     wait(0.1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.JumpCount = 2
 
