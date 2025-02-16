@@ -3,7 +3,7 @@
 rule "<tx0C00000000001344> Commands <tx0C00000000001344>":
     @Delimiter
 
-rule "Toggle Leaderboard | Hold Melee":
+rule "Command | Toggle Leaderboard (Hold Melee)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.EditorOn == false
@@ -11,7 +11,7 @@ rule "Toggle Leaderboard | Hold Melee":
 
     eventPlayer.LeaderboardToggle = not eventPlayer.LeaderboardToggle
 
-rule "Split hide":
+rule "Command | Split hide (Hold Dash + Primary + Secondary)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
@@ -24,7 +24,7 @@ rule "Split hide":
     wait(0.32)
     smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay == -Math.INFINITY else "   split display on")
     
-rule "Toggle Invisible | Hold Deflect":
+rule "Command | Toggle Invisible (Hold Deflect)":
     @Condition enableInvisCommand
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
@@ -45,7 +45,7 @@ previewarray = list of all vectors to be displayed
 previewarray2 = stored item ID to be used to preview abilities etc
 a few huds show/hides when reviewarray is not null !!!!!!!!!!!!!!!!!
 */
-rule "Preview orbs/portals | Hold Primary":
+rule "Command | Preview Orbs & Portals (Hold Primary)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
@@ -99,7 +99,7 @@ rule "Preview orbs/portals | Hold Primary":
     eventPlayer.PreviewsArray = null
     eventPlayer.PreviewsArray2 = null
 
-rule "Restart Run | Crouch + Interact + Deflect":
+rule "Command | Restart Run (Crouch + Interact + Deflect)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) 
@@ -167,7 +167,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
     else:
         wait()
 
-rule "Enter Spectate | Hold Interact":
+rule "Command | Spectate (Hold Interact)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
@@ -201,7 +201,7 @@ rule "Enter Spectate | Hold Interact":
                 StopPauseTimer()
         checkpointFailReset()
 
-rule "Toggle Invincible Mode | Melee + Reload":
+rule "Command | Toggle Invincible Mode (Melee + Reload)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
@@ -242,7 +242,7 @@ rule "Toggle Invincible Mode | Melee + Reload":
     eventPlayer.LockState = false
     wait()
 
-rule "Toggle Practice Mode | Melee + Ultimate":
+rule "Command | Toggle Practice Mode (Melee + Ultimate)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false 
     @Condition eventPlayer.isHoldingButton(Button.MELEE) 
@@ -288,7 +288,7 @@ rule "Toggle Practice Mode | Melee + Ultimate":
     eventPlayer.LockState = false
     wait(0.1)
 
-rule "Practice Restart | Interact":
+rule "Command | Restart Practice (Hold Interact)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == false
@@ -316,7 +316,7 @@ rule "Practice Restart | Interact":
     checkpointFailReset()
     UpdateCache()
 
-rule "Skip | Crouch + Primary/Secondary Fire":
+rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) )
@@ -334,7 +334,7 @@ rule "Skip | Crouch + Primary/Secondary Fire":
         if eventPlayer.CurrentCheckpoint < 1:
             eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 1
         elif (len(CheckpointPositions[eventPlayer.CurrentCheckpoint -1]) > 1 and distance(CheckpointPositions[eventPlayer.CurrentCheckpoint ][0], CheckpointPositions[eventPlayer.CurrentCheckpoint-1][1]) < cpcircleradius):
-            # if last cp is an instand complete teleport cp, go back further
+            # if last cp is an instant complete teleport cp, go back further
             eventPlayer.CurrentCheckpoint -= 2 
         else:
             eventPlayer.CurrentCheckpoint -= 1
@@ -358,7 +358,7 @@ rule "Skip | Crouch + Primary/Secondary Fire":
     if RULE_CONDITION:
         goto RULE_START
 
-rule "Quick Reset | Reload, Hold Reload to Enable":
+rule "Command | Quick Reset (Reload | Hold Reload to Enable)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == false
@@ -378,7 +378,7 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
         "Quick reset is enabled" if eventPlayer.QuickRestartToggle else "Quick reset is disabled"
     )
 
-rule "Toggle Hud | hold secondary":
+rule "Command | Toggle Hud (Hold Secondary)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false
@@ -395,7 +395,7 @@ rule "Toggle Hud | hold secondary":
     ) 
     eventPlayer.GuideToggle = not eventPlayer.GuideToggle 
 
-rule "Toggle hints":
+rule "Command | Toggle Hints (Melee + Deflect)":
     @Event eachPlayer
     @Condition HintText != null
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
