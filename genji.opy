@@ -219,7 +219,7 @@ def StartGame():
         eventPlayer.setDamageReceived(0)
         return
     
-    if DashExploitToggle and len(CheckpointPositions)>0:
+    /*if DashExploitToggle and len(CheckpointPositions)>0:
         eventPlayer.setAbility1Enabled(false)
         wait()
         if eventPlayer.isUsingAbility1():
@@ -229,7 +229,7 @@ def StartGame():
     if eventPlayer.isUsingUltimate():
         eventPlayer.setDamageReceived(100)
         kill(eventPlayer, null)
-        eventPlayer.setDamageReceived(0)
+        eventPlayer.setDamageReceived(0)*/
        
     if len(CheckpointPositions) != 0:
         destroyInWorldText(eventPlayer.TitleStore) # restarting reset title even if non on cp 0
@@ -240,9 +240,7 @@ def StartGame():
             SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
             SavePauseTime[SaveEnt.index(eventPlayer)] = 0
             SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
-            eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint] + Vector.UP)
             if TitleData != null and  any([i for i in TitleData[0] if i <= eventPlayer.CurrentCheckpoint]) and (not eventPlayer.EditorOn ): # if any title data, find last cp
-                
                 createInWorldText(
                     getAllPlayers() if not eventPlayer.invis else null,
                     TitleData[1][TitleData[0].index(
@@ -252,9 +250,7 @@ def StartGame():
                     SpecVisibility.DEFAULT
                 )
                 eventPlayer.TitleStore = getLastCreatedText()
-
         else:
-            eventPlayer.teleport(CheckpointPositions[0] + Vector.UP) # dont remove up because now people are used to it and see it as a tech
             eventPlayer.CurrentCheckpoint = 0
             eventPlayer.Timer = 0
             stopChasingVariable(eventPlayer.PauseTimer)
@@ -262,17 +258,14 @@ def StartGame():
             MakeSave()
             UpdateTitle()
     
-    eventPlayer.splittime = 0
     chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
-    eventPlayer.LockCollected = []
     eventPlayer.InvincibleToggle = false
     eventPlayer.enableRespawn()
     eventPlayer.SpectateToggle = false
-
     # eventPlayer.LockState = false
     eventPlayer.MovedCheckpoint = true
     UpdateCache()
-    TriggerOnFailSuccesReset()
+    checkpointFailReset()
 
 ################################################################################
 

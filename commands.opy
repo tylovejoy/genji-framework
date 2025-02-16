@@ -119,7 +119,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
     if CompMode:      
         wait()
         if CompTime < 1:
-            smallMessage(eventPlayer, "   比赛结束" checkCN "   The competition is over"  )
+            smallMessage(eventPlayer, "   比赛结束" checkCN "   Competition is over"  )
             eventPlayer.LockState = false
             return
         elif eventPlayer.CompDone:
@@ -131,7 +131,7 @@ rule "Restart Run | Crouch + Interact + Deflect":
             return
         elif CompAtmpNum > 0: 
             if eventPlayer.AttemptCount == CompAtmpNum:
-                smallMessage(eventPlayer, "   最后一次尝试" checkCN "   You are on your last attempt"  )
+                smallMessage(eventPlayer, "   最后一次尝试" checkCN "   This is your final attempt"  )
                 eventPlayer.LockState = false
                 return
             if eventPlayer.AttemptCount == (-1):
@@ -178,37 +178,28 @@ rule "Enter Spectate | Hold Interact":
     if eventPlayer.EditorOn: # editor has interact combos
         wait(1, Wait.ABORT_WHEN_FALSE)
 
-    smallMessage(eventPlayer, "   再次长按互动键关闭观战模式" checkCN "   Hold Interact again to turn off spectate mode")
+    eventPlayer.SpectateToggle = not eventPlayer.SpectateToggle
     if eventPlayer.SpectateToggle:
-        eventPlayer.respawn()
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
-        if eventPlayer.NotOnLastCp:
-            if eventPlayer.PracticeToggle:
-                chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
-            else:
-                chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
-
-        async(CheckUlt(),AsyncBehavior.RESTART)
-        async(CheckDash(), AsyncBehavior.RESTART) 
-        eventPlayer.enableRespawn()
+        smallMessage(eventPlayer, "   再次长按互动键关闭观战模式" checkCN "   Hold Interact again to turn off spectate mode")
         eventPlayer.InvincibleToggle = false
-        eventPlayer.LockCollected = []
-        TriggerOnFailSuccesReset()
-        if eventPlayer.NotOnLastCp:
-            StopPauseTimer()
-    else:
         if eventPlayer.NotOnLastCp:
             StartPauseTimer()
         stopChasingVariable(eventPlayer.practicetimer)
         stopChasingVariable(eventPlayer.Timer)
         eventPlayer.disableRespawn()
-        wait(0.2)
         eventPlayer.setDamageReceived(100)
         kill(eventPlayer, null)
         eventPlayer.setDamageReceived(0)
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
- 
-    eventPlayer.SpectateToggle = not eventPlayer.SpectateToggle
+    else:
+        eventPlayer.enableRespawn()
+        eventPlayer.respawn()
+        if eventPlayer.NotOnLastCp:
+            if eventPlayer.PracticeToggle:
+                chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
+            else:
+                chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
+                StopPauseTimer()
+        checkpointFailReset()
 
 rule "Toggle Invincible Mode | Melee + Reload":
     @Event eachPlayer
@@ -216,30 +207,30 @@ rule "Toggle Invincible Mode | Melee + Reload":
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
     @Condition eventPlayer.isUsingAbility1() == false
-    #@Condition eventPlayer.isUsingUltimate() == false
     @Condition eventPlayer.isAlive()
     @Condition not (CompMode and eventPlayer.CompDone)
     @Condition eventPlayer.LockState == false
 
-    if eventPlayer.isUsingUltimate():
-        smallMessage(eventPlayer, "    终极技能开启时无法切换探点模式" checkCN "   Cannot toggle invincible while using ultimate")
-        wait()
-        return
-
     eventPlayer.LockState = true
     eventPlayer.LockCollected = []
-    
-    if eventPlayer.NotOnLastCp and (eventPlayer.CurrentCheckpoint > 0 or DashExploitToggle):
-        eventPlayer.disallowButton(Button.ABILITY_1)
-        wait(0.16)
-        if eventPlayer.isUsingAbility1():
-            waitUntil(not eventPlayer.isUsingAbility1(), 1.5)
-            wait()
+    eventPlayer.InvincibleToggle = not eventPlayer.InvincibleToggle
 
     if eventPlayer.InvincibleToggle:
-        eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), true)
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
-        wait(0.16)
+        StartPauseTimer()
+        stopChasingVariable(eventPlayer.Timer)
+        stopChasingVariable(eventPlayer.practicetimer)
+        bigMessage(eventPlayer,"探点模式" checkCN "Invincible mode")
+        wait(0.2)
+        async( CheckUlt(), AsyncBehavior.RESTART)
+        async( CheckDash(), AsyncBehavior.RESTART)
+    else:
+        /*if eventPlayer.NotOnLastCp and (eventPlayer.CurrentCheckpoint > 0 or DashExploitToggle):
+            eventPlayer.disallowButton(Button.ABILITY_1)
+            wait(0.16)
+            if eventPlayer.isUsingAbility1():
+                waitUntil(not eventPlayer.isUsingAbility1(), 1.5)
+                wait(0.032)
+            eventPlayer.allowButton(Button.ABILITY_1)*/
         if eventPlayer.PracticeToggle:
             bigMessage(eventPlayer, "练习模式" checkCN "Practice mode")
             chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
@@ -247,29 +238,9 @@ rule "Toggle Invincible Mode | Melee + Reload":
             bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
             chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
             StopPauseTimer()
-        TriggerOnFailSuccesReset()
-    else:
-        StartPauseTimer()
-        stopChasingVariable(eventPlayer.Timer)
-        stopChasingVariable(eventPlayer.practicetimer)
-        bigMessage(eventPlayer,"探点模式" checkCN "Invincible mode")
-        wait(0.2)
-              
-    eventPlayer.InvincibleToggle = not eventPlayer.InvincibleToggle
-    async( CheckUlt(), AsyncBehavior.RESTART)
-    async( CheckDash(), AsyncBehavior.RESTART)
-
-    if eventPlayer.CurrentCheckpoint > 0 or DashExploitToggle: # cp 0 start dash ban is via startgame sub because it has to give msg
-        wait(0.16)
-        eventPlayer.allowButton(Button.ABILITY_1)
-    wait()
-    if eventPlayer.isUsingUltimate():
-        eventPlayer.setDamageReceived(100)
-        kill(eventPlayer, null)
-        eventPlayer.setDamageReceived(0)
+        checkpointFailReset()
     eventPlayer.LockState = false
-    wait(0.16)
-    #waitUntil(not eventPlayer.isHoldingButton(Button.RELOAD), 2)
+    wait()
 
 rule "Toggle Practice Mode | Melee + Ultimate":
     @Event eachPlayer
@@ -282,52 +253,36 @@ rule "Toggle Practice Mode | Melee + Ultimate":
     @Condition CompMode == false
     @Condition eventPlayer.LockState == false
 
-    if eventPlayer.InvincibleToggle:
-        smallMessage(eventPlayer,"   探点模式下无法切换练习模式" checkCN "   Cannot toggle practice mode while in invincible")
-        wait()
-        return
-
     eventPlayer.LockState = true
+    eventPlayer.HintsOn = false
+    eventPlayer.PracticeToggle = not eventPlayer.PracticeToggle
+
     eventPlayer.disallowButton(Button.ABILITY_1)
 
-    if eventPlayer.isUsingUltimate():
-        eventPlayer.setDamageReceived(100)
-        kill(eventPlayer, null)
-        eventPlayer.setDamageReceived(0)
-      
-    wait(0.16)
     if eventPlayer.PracticeToggle:
-        eventPlayer.CurrentCheckpoint = eventPlayer.PracticeCheckpoint
-        eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.PracticeCheckpoint].last(), true)
-        checkpointFailReset()
-        eventPlayer.LockCollected = []
-        UpdateCache()
-        wait(0.1)
-        stopChasingVariable(eventPlayer.practicetimer)
-        bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
-        if eventPlayer.NotOnLastCp:
-            eventPlayer.splittime = eventPlayer.Timer
-            chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE) #abs removed
-            StopPauseTimer()
-        eventPlayer.stopForcingPosition()
-        TriggerOnFailSuccesReset()
-    else:
-        eventPlayer.PracticeCheckpoint = eventPlayer.CurrentCheckpoint
-        eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), true)
-        stopChasingVariable(eventPlayer.Timer)
         bigMessage(eventPlayer,"练习模式" checkCN "Practice mode")
-        eventPlayer.stopForcingPosition()
+        eventPlayer.PracticeCheckpoint = eventPlayer.CurrentCheckpoint
+        stopChasingVariable(eventPlayer.Timer)
         if eventPlayer.NotOnLastCp:
             StartPauseTimer()
-        
         eventPlayer.splitdisplay = -Math.INFINITY if eventPlayer.splitdisplay == -Math.INFINITY else 0
         eventPlayer.splittime = 0
         eventPlayer.practicetimer = 0
         chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
-        wait(0.2)
-        
-    eventPlayer.HintsOn = false
-    eventPlayer.PracticeToggle = not eventPlayer.PracticeToggle 
+
+        if eventPlayer.InvincibleToggle:
+            eventPlayer.InvincibleToggle = false
+            checkpointFailReset()
+    else:
+        bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
+        eventPlayer.CurrentCheckpoint = eventPlayer.PracticeCheckpoint
+        stopChasingVariable(eventPlayer.practicetimer)
+        if eventPlayer.NotOnLastCp or eventPlayer.InvincibleToggle:
+            eventPlayer.splittime = eventPlayer.Timer
+            chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
+            StopPauseTimer()
+        checkpointFailReset()
+        UpdateCache()
     wait(0.2)
     eventPlayer.allowButton(Button.ABILITY_1)
     eventPlayer.LockState = false
@@ -353,22 +308,13 @@ rule "Practice Restart | Interact":
     waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), 0.9)
     if eventPlayer.isHoldingButton(Button.INTERACT):
         return
-    
-    if eventPlayer.isUsingUltimate():
-        eventPlayer.setDamageReceived(100)
-        kill(eventPlayer, null)
-        eventPlayer.setDamageReceived(0)
 
     eventPlayer.practicetimer = 0
-    eventPlayer.splittime = 0 
+    eventPlayer.splittime = 0
     eventPlayer.HintsOn = false
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.PracticeCheckpoint])
     eventPlayer.CurrentCheckpoint = eventPlayer.PracticeCheckpoint
-
-    eventPlayer.setStatusEffect(null, Status.ROOTED, 0.2)
-    eventPlayer.LockCollected = []
+    checkpointFailReset()
     UpdateCache()
-    TriggerOnFailSuccesReset()
 
 rule "Skip | Crouch + Primary/Secondary Fire":
     @Event eachPlayer
@@ -417,11 +363,11 @@ rule "Quick Reset | Reload, Hold Reload to Enable":
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == false
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
+
     if eventPlayer.QuickRestartToggle:
         if eventPlayer.flytoggle:
             eventPlayer.flytoggle = CheckpointPositions[eventPlayer.CurrentCheckpoint].last()
         checkpointFailReset()
-
         wait(0.32)
     wait(1, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
@@ -436,8 +382,7 @@ rule "Toggle Hud | hold secondary":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false
-    @Condition not (eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.ABILITY_1)) # don't trigger during skiping
-    #@Condition eventPlayer
+    @Condition not (eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.ABILITY_1)) # don't trigger during skipping
     @Condition not (eventPlayer.EditorOn and eventPlayer == hostPlayer and eventPlayer.isHoldingButton(Button.MELEE))
     @Condition EditorMoveItem == false
 
