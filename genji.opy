@@ -38,8 +38,8 @@ def UpdateCache():
     eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.PortalStart_Cache = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == Math.INFINITY]
     eventPlayer.PortalEnd_cache = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == Math.INFINITY]
-
     eventPlayer.NotOnLastCp = (eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 and len(CheckpointPositions)  > 1)
+    eventPlayer.HintsOn = false
     eventPlayer.banstring = []
     wait()
     if not eventPlayer.NotOnLastCp:
@@ -184,20 +184,23 @@ def checkpointFailReset():
     eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
 
+    if eventPlayer.CurrentCheckpoint == 0 and not eventPlayer.PracticeToggle:
+        eventPlayer.Timer = 0
+        eventPlayer.splittime = 0
+    
     if len(CheckpointPositions) > 0:
-        eventPlayer.teleport( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() )
+        waitUntil(not eventPlayer.isUsingAbility1(), DashExploitToggle)
+        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
 
-    if eventPlayer.ban_dedhop and eventPlayer.InvincibleToggle == false:
-        # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
+    /*
+    if eventPlayer.ban_dedhop:
+    # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
         wait(0.1) # finish teleport first     
         if eventPlayer.isHoldingButton(Button.JUMP):
             eventPlayer.forceButtonPress(Button.JUMP)
             eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed() + 0.1, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
-        # end new
+    # end new */
 
-    if eventPlayer.CurrentCheckpoint == 0 and not eventPlayer.PracticeToggle:
-        eventPlayer.Timer = 0
-        eventPlayer.splittime = 0
     if eventPlayer.isUsingUltimate():
         eventPlayer.setDamageReceived(100)
         kill(eventPlayer, null)
@@ -259,13 +262,13 @@ def StartGame():
             UpdateTitle()
     
     chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
-    eventPlayer.InvincibleToggle = false
-    eventPlayer.enableRespawn()
-    eventPlayer.SpectateToggle = false
-    # eventPlayer.LockState = false
-    eventPlayer.MovedCheckpoint = true
     UpdateCache()
     checkpointFailReset()
+    eventPlayer.enableRespawn()
+    eventPlayer.InvincibleToggle = false
+    eventPlayer.SpectateToggle = false
+    eventPlayer.MovedCheckpoint = true
+    # eventPlayer.LockState = false
 
 ################################################################################
 
@@ -453,7 +456,6 @@ rule "Player Initialize":
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
     eventPlayer.disablePlayerCollision()
-    eventPlayer.SpectateToggle = false
     eventPlayer.WallclimbUsed = false #Climbing the wall prompts the HUD
     eventPlayer.JumpCount = 0
     eventPlayer.bouncetouchedlast = -1
@@ -543,19 +545,19 @@ rule "Arrive | Ground reset | traces":
 
         #eventPlayer.LockCollected = []
         eventPlayer.CurrentCheckpoint += 1
-        eventPlayer.HintsOn = false
         UpdateCache()
         # remove ult feature disabled for speedruning purposes
         #if eventPlayer.isUsingUltimate() and not eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints:
         #    kill(eventPlayer, null)
         if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]) > 1:# teleport cps
+            checkpointFailReset()/*
             eventPlayer.startForcingPosition( CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ,false)
             eventPlayer.flytoggle = null
             wait(0.1)
             eventPlayer.stopForcingPosition()
             # position wasnt ready when check cache ran
             async(CheckUlt(), AsyncBehavior.RESTART)
-            async(CheckDash(), AsyncBehavior.RESTART)
+            async(CheckDash(), AsyncBehavior.RESTART)*/
 
         
         if eventPlayer.splitdisplay != -Math.INFINITY:
@@ -667,8 +669,7 @@ rule "Bounce Ball / Orb | Activate":
     wait()
     eventPlayer.bouncetouched = -1
     wait(0.24)
-    if RULE_CONDITION:
-        goto RULE_START
+    if RULE_CONDITION: goto RULE_START
 
     eventPlayer.bouncetouchedlast = -1
 
@@ -788,8 +789,8 @@ rule "<tx0C00000000044B55><fg0FFFFFFF> Credits and Colors here - 作者代码HUD
     #You can fill in again to overwrite.
     #修改的内容 在重新开始 比赛后生效
     #您可以反复 修改字符串 中的内容
-    Name = "name here - 作者"
-    Code = "code here - 代码"
+    Name = "Name Here - 作者"
+    Code = "Code Here - 代码"
     #
     #+++++  +++++  +++++  +++++  +++++  +++++  
     #color customization below / 自定义 颜色(实体、HUD)
