@@ -145,9 +145,6 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
     eventPlayer.flytoggle = null
     eventPlayer.CurrentCheckpoint = 0  
     eventPlayer.PracticeToggle = false
-    eventPlayer.PracticeCheckpoint = 0
-    eventPlayer.InvincibleToggle = false
-    eventPlayer.HintsOn = false
     stopChasingVariable(eventPlayer.practicetimer)
     eventPlayer.practicetimer = 0
     eventPlayer.splitdisplay = -Math.INFINITY if eventPlayer.splitdisplay == -Math.INFINITY else 0
@@ -160,7 +157,7 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
     StartGame()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     wait()
-    eventPlayer.allowButton(Button.ABILITY_1)
+    #eventPlayer.allowButton(Button.ABILITY_1)
     eventPlayer.LockState = false
     if CompMode:
         wait(1)
@@ -178,8 +175,17 @@ rule "Command | Spectate (Hold Interact)":
     if eventPlayer.EditorOn: # editor has interact combos
         wait(1, Wait.ABORT_WHEN_FALSE)
 
-    eventPlayer.SpectateToggle = not eventPlayer.SpectateToggle
     if eventPlayer.SpectateToggle:
+        eventPlayer.enableRespawn()
+        eventPlayer.respawn()
+        if eventPlayer.NotOnLastCp:
+            if eventPlayer.PracticeToggle:
+                chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
+            else:
+                chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
+                StopPauseTimer()
+        checkpointFailReset()
+    else:
         smallMessage(eventPlayer, "   再次长按互动键关闭观战模式" checkCN "   Hold Interact again to turn off spectate mode")
         eventPlayer.InvincibleToggle = false
         if eventPlayer.NotOnLastCp:
@@ -190,47 +196,22 @@ rule "Command | Spectate (Hold Interact)":
         eventPlayer.setDamageReceived(100)
         kill(eventPlayer, null)
         eventPlayer.setDamageReceived(0)
-    else:
-        eventPlayer.enableRespawn()
-        eventPlayer.respawn()
-        if eventPlayer.NotOnLastCp:
-            if eventPlayer.PracticeToggle:
-                chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
-            else:
-                chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
-                StopPauseTimer()
-        checkpointFailReset()
+    eventPlayer.SpectateToggle = not eventPlayer.SpectateToggle
 
 rule "Command | Toggle Invincible Mode (Melee + Reload)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
-    @Condition eventPlayer.isUsingAbility1() == false
+    #@Condition eventPlayer.isUsingAbility1() == false
     @Condition eventPlayer.isAlive()
     @Condition not (CompMode and eventPlayer.CompDone)
     @Condition eventPlayer.LockState == false
 
     eventPlayer.LockState = true
     eventPlayer.LockCollected = []
-    eventPlayer.InvincibleToggle = not eventPlayer.InvincibleToggle
 
     if eventPlayer.InvincibleToggle:
-        StartPauseTimer()
-        stopChasingVariable(eventPlayer.Timer)
-        stopChasingVariable(eventPlayer.practicetimer)
-        bigMessage(eventPlayer,"探点模式" checkCN "Invincible mode")
-        wait(0.2)
-        async( CheckUlt(), AsyncBehavior.RESTART)
-        async( CheckDash(), AsyncBehavior.RESTART)
-    else:
-        /*if eventPlayer.NotOnLastCp and (eventPlayer.CurrentCheckpoint > 0 or DashExploitToggle):
-            eventPlayer.disallowButton(Button.ABILITY_1)
-            wait(0.16)
-            if eventPlayer.isUsingAbility1():
-                waitUntil(not eventPlayer.isUsingAbility1(), 1.5)
-                wait(0.032)
-            eventPlayer.allowButton(Button.ABILITY_1)*/
         if eventPlayer.PracticeToggle:
             bigMessage(eventPlayer, "练习模式" checkCN "Practice mode")
             chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
@@ -239,6 +220,16 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
             chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
             StopPauseTimer()
         checkpointFailReset()
+    else:
+        StartPauseTimer()
+        stopChasingVariable(eventPlayer.Timer)
+        stopChasingVariable(eventPlayer.practicetimer)
+        bigMessage(eventPlayer,"探点模式" checkCN "Invincible mode")
+        wait(0.2)
+        async( CheckUlt(), AsyncBehavior.RESTART)
+        async( CheckDash(), AsyncBehavior.RESTART)
+
+    eventPlayer.InvincibleToggle = not eventPlayer.InvincibleToggle
     eventPlayer.LockState = false
     wait()
 
@@ -247,19 +238,26 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false 
     @Condition eventPlayer.isHoldingButton(Button.MELEE) 
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
-    @Condition eventPlayer.isUsingAbility1() == false
+    #@Condition eventPlayer.isUsingAbility1() == false
     @Condition eventPlayer.isAlive()
     @Condition eventPlayer.EditorOn == false
     @Condition CompMode == false
     @Condition eventPlayer.LockState == false
 
     eventPlayer.LockState = true
-    eventPlayer.HintsOn = false
-    eventPlayer.PracticeToggle = not eventPlayer.PracticeToggle
-
-    eventPlayer.disallowButton(Button.ABILITY_1)
+    #eventPlayer.disallowButton(Button.ABILITY_1)
 
     if eventPlayer.PracticeToggle:
+        bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
+        eventPlayer.CurrentCheckpoint = eventPlayer.PracticeCheckpoint
+        stopChasingVariable(eventPlayer.practicetimer)
+        if eventPlayer.NotOnLastCp or eventPlayer.InvincibleToggle:
+            eventPlayer.splittime = eventPlayer.Timer
+            chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
+            StopPauseTimer()
+        UpdateCache()    
+        checkpointFailReset()
+    else:
         bigMessage(eventPlayer,"练习模式" checkCN "Practice mode")
         eventPlayer.PracticeCheckpoint = eventPlayer.CurrentCheckpoint
         stopChasingVariable(eventPlayer.Timer)
@@ -269,22 +267,12 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
         eventPlayer.splittime = 0
         eventPlayer.practicetimer = 0
         chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
-
         if eventPlayer.InvincibleToggle:
             eventPlayer.InvincibleToggle = false
             checkpointFailReset()
-    else:
-        bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
-        eventPlayer.CurrentCheckpoint = eventPlayer.PracticeCheckpoint
-        stopChasingVariable(eventPlayer.practicetimer)
-        if eventPlayer.NotOnLastCp or eventPlayer.InvincibleToggle:
-            eventPlayer.splittime = eventPlayer.Timer
-            chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
-            StopPauseTimer()
-        checkpointFailReset()
-        UpdateCache()
-    wait(0.2)
-    eventPlayer.allowButton(Button.ABILITY_1)
+    #wait(0.2)
+    #eventPlayer.allowButton(Button.ABILITY_1)
+    eventPlayer.PracticeToggle = not eventPlayer.PracticeToggle
     eventPlayer.LockState = false
     wait(0.1)
 
@@ -311,10 +299,9 @@ rule "Command | Restart Practice (Hold Interact)":
 
     eventPlayer.practicetimer = 0
     eventPlayer.splittime = 0
-    eventPlayer.HintsOn = false
     eventPlayer.CurrentCheckpoint = eventPlayer.PracticeCheckpoint
-    checkpointFailReset()
     UpdateCache()
+    checkpointFailReset()
 
 rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
     @Event eachPlayer
@@ -346,13 +333,11 @@ rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
         else:
             eventPlayer.CurrentCheckpoint += 1
 
-    wait()
-    checkpointFailReset()
     wait(0.064)
-    eventPlayer.HintsOn = false
     eventPlayer.MovedCheckpoint = true
-    UpdateCache() 
     eventPlayer.LockState = false
+    UpdateCache()
+    checkpointFailReset()
     wait()
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.28) # faster if you spam button
     if RULE_CONDITION:
