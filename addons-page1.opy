@@ -258,5 +258,5 @@ def CheckMap():
     MapChecker = null
     MapCheckerIter = null
     enableInspector()
-    printLog("■■■■■■■■■■■■■■■■■■■■■■■■")
+    printLog("■■ Map ■ Check ■ Complete ■■")
     disableInspector()
