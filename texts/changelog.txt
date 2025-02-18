@@ -438,6 +438,11 @@ fixed:
 `@Framework Patch Notes`
 # 1.10.2
 ### Features
+- Practice Mode
+ * Can enter with Invincibility active. (Auto disables Invincibility)
+ * Can exit with Invincibility active. (Auto disables Invincibility)
+- Invincibility Mode
+  * Can exit with ultimate active
 - Faster unlimited dashes
   * `@Kackspn` +1xp
 ### Editor
@@ -447,3 +452,5 @@ fixed:
 - Auto-Climb is not detected as Multi-Climb
 - Save Double ban persisting when Invincible and on Last Point
   * Found by `@bioslet` +5xp
+- Rainbow finish rings not displaying
+  * Found by `@Sumpin` +5xp
