@@ -2,7 +2,7 @@
 #♨ Dev Build Icon
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(1) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 # Disable via double ## at include, not the define because the define needs to exist
 #!define testToggle ##!include "test-scripts.opy"
 
@@ -38,7 +38,7 @@ def UpdateCache():
     eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.PortalStart_Cache = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == Math.INFINITY]
     eventPlayer.PortalEnd_cache = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == Math.INFINITY]
-    eventPlayer.NotOnLastCp = (eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 and len(CheckpointPositions)  > 1)
+    eventPlayer.NotOnLastCp = (eventPlayer.CurrentCheckpoint < len(CheckpointPositions) - 1 and len(CheckpointPositions) > 1)
     eventPlayer.HintsOn = false
     eventPlayer.banstring = []
     wait()
@@ -181,16 +181,21 @@ def checkpointFailReset():
     eventPlayer.LockCollected = []
     eventPlayer.cancelPrimaryAction()
     eventPlayer.DoubleUsed = null
-    eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed(), Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
-    eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
-
+    
     if eventPlayer.CurrentCheckpoint == 0 and not eventPlayer.PracticeToggle:
         eventPlayer.Timer = 0
         eventPlayer.splittime = 0
     
     if len(CheckpointPositions) > 0:
-        waitUntil(not eventPlayer.isUsingAbility1(), DashExploitToggle)
+        eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)  
+        if eventPlayer.isUsingAbility1() and DashExploitToggle:
+            #smallMessage(eventPlayer,"   0关卡Shift已禁用!" checkCN "   Dash Start is banned!")
+            eventPlayer.startForcingPosition(eventPlayer, false)
+            waitUntil(not eventPlayer.isUsingAbility1(), DashExploitToggle)
+            eventPlayer.stopForcingPosition()
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
+        #After teleport incase stopForcingPosition launches the player
+        eventPlayer.applyImpulse( -1 * eventPlayer.getVelocity(), 0.0001, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
     /*
     if eventPlayer.ban_dedhop:
@@ -198,7 +203,7 @@ def checkpointFailReset():
         wait(0.1) # finish teleport first     
         if eventPlayer.isHoldingButton(Button.JUMP):
             eventPlayer.forceButtonPress(Button.JUMP)
-            eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed() + 0.1, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+            eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed() + 0.1, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
     # end new */
 
     if eventPlayer.isUsingUltimate():
