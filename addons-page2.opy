@@ -359,7 +359,7 @@ rule "Fake Triple Jump - 假三段跳":
         return
     #Apply fake triple jump
     if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping():
-        eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+        eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
 rule "fisho cp cheat for overpy toggle":
     @Event eachPlayer
