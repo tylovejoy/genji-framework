@@ -215,19 +215,18 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
         if eventPlayer.PracticeToggle:
             bigMessage(eventPlayer, "练习模式" checkCN "Practice mode")
             chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
-        else:
+        elif eventPlayer.NotOnLastCp:
             bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
             chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
             StopPauseTimer()
         checkpointFailReset()
     else:
+        bigMessage(eventPlayer,"探点模式" checkCN "Invincible mode")
         StartPauseTimer()
         stopChasingVariable(eventPlayer.Timer)
         stopChasingVariable(eventPlayer.practicetimer)
-        bigMessage(eventPlayer,"探点模式" checkCN "Invincible mode")
-        wait(0.2)
-        async( CheckUlt(), AsyncBehavior.RESTART)
-        async( CheckDash(), AsyncBehavior.RESTART)
+        async(CheckUlt(), AsyncBehavior.RESTART)
+        async(CheckDash(), AsyncBehavior.RESTART)
 
     eventPlayer.InvincibleToggle = not eventPlayer.InvincibleToggle
     eventPlayer.LockState = false
