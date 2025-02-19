@@ -17,17 +17,17 @@ settings {
     },
     "gamemodes": {
         "skirmish": {
+            #"Enable Perks": Off
             "enabledMaps": [
                 #"workshopChamber"
                 selectedmap
             ]
         },
         "tdm": {
+            #"Enable Perks": Off
             "enabledMaps": [
                 selectedmap
             ],
-            "gameLengthInMn": 15,
-            "enableMercyRezKillCancel": false,
             "enableSelfInitiatedRespawn": false
         },
         "general": {
