@@ -178,12 +178,11 @@ rule "Command | Spectate (Hold Interact)":
     if eventPlayer.SpectateToggle:
         eventPlayer.enableRespawn()
         eventPlayer.respawn()
-        if eventPlayer.NotOnLastCp:
-            if eventPlayer.PracticeToggle:
-                chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
-            else:
-                chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
-                StopPauseTimer()
+        if eventPlayer.PracticeToggle:
+            chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
+        elif eventPlayer.NotOnLastCp:
+            chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
+            StopPauseTimer()
         checkpointFailReset()
     else:
         smallMessage(eventPlayer, "   再次长按互动键关闭观战模式" checkCN "   Hold Interact again to turn off spectate mode")
