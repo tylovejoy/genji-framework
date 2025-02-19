@@ -449,8 +449,10 @@ fixed:
 - feature
   * details
 ### Fixes
-- Auto-Climb is not detected as Multi-Climb
-- Save Double ban persisting when Invincible and on Last Point
+- Auto-Climb was not detected as Multi-Climb
+- Save Double ban was persisting when Invincible or on last point
   * Found by `@bioslet` +5xp
-- Rainbow finish rings not displaying
+- Rainbow finish rings was not displaying
+  * Found by `@Sumpin` +5xp
+- Invincibility Mode was resuming timer
   * Found by `@Sumpin` +5xp
