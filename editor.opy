@@ -245,7 +245,7 @@ rule "Editor | Hud and Effects":
                 "{0} | 向上移动 \n"
                 "{1} | 向下移动 \n"
                 "{2} (长按) | 快速移动"
-                "".format(  buttonString(Button.JUMP), buttonString(Button.CROUCH),  buttonString(Button.SECONDARY_FIRE))
+                "".format(buttonString(Button.JUMP), buttonString(Button.CROUCH),  buttonString(Button.SECONDARY_FIRE))
             
         ) checkCN
         (
@@ -274,7 +274,7 @@ rule "Editor | Hud and Effects":
                 "{0} | move up\n" 
                 "{1} | move down\n" 
                 "{2} (hold) | move faster" 
-                "".format(  buttonString(Button.JUMP), buttonString(Button.CROUCH),  buttonString(Button.SECONDARY_FIRE))
+                "".format(buttonString(Button.JUMP), buttonString(Button.CROUCH),  buttonString(Button.SECONDARY_FIRE))
             
         )
         , HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
@@ -284,7 +284,7 @@ rule "Editor | Hud and Effects":
     hudSubtext(hostPlayer if hostPlayer.GuideToggle else null, 
         (
             [
-            "",
+            [],
             
             "{0} + {1} | 删除选中的击杀球"
             "".format(buttonString(Button.INTERACT), buttonString(Button.SECONDARY_FIRE) ),
@@ -292,7 +292,7 @@ rule "Editor | Hud and Effects":
             "{0} + {1} | 删除选中的弹球"
             "".format(buttonString(Button.INTERACT), buttonString(Button.SECONDARY_FIRE) ),
 
-            "",
+            [],
 
             "{0} + {1} | 删除选中的传送门"
             "".format(buttonString(Button.INTERACT), buttonString(Button.SECONDARY_FIRE)),
@@ -302,7 +302,7 @@ rule "Editor | Hud and Effects":
         (
             
             [
-            "",
+            [],
             
             "{0} + {1} | Delete selected"
             "".format(buttonString(Button.INTERACT),  buttonString(Button.SECONDARY_FIRE) ),
@@ -310,7 +310,7 @@ rule "Editor | Hud and Effects":
             "{0} + {1} | Delete selected"
             "".format(buttonString(Button.INTERACT),  buttonString(Button.SECONDARY_FIRE) ),
 
-            "",
+            [],
 
             "{0} + {1} | delete selected"
             "".format(buttonString(Button.INTERACT), buttonString(Button.SECONDARY_FIRE)),
@@ -342,13 +342,13 @@ rule "Editor | Hud and Effects":
             
             "{0} + {1} | 选择下一个传送门\n"
             "{0} + {2} | 选择上一个传送门\n"
-            "".format( buttonString(Button.INTERACT), buttonString(Button.JUMP), buttonString(Button.CROUCH))
+            "".format(buttonString(Button.INTERACT), buttonString(Button.JUMP), buttonString(Button.CROUCH))
 
 
             ][hostPlayer.EditModeSelection] if EditorMoveItem == false else
                 #"{0} (长按) | 快速移动"
                 "{0} | 放置实体"
-                "".format( buttonString(Button.PRIMARY_FIRE) )
+                "".format(buttonString(Button.PRIMARY_FIRE) )
                 
         ) checkCN
         (
@@ -370,12 +370,12 @@ rule "Editor | Hud and Effects":
             
             "{0} + {1} | select next\n"
             "{0} + {2} | select previous\n"
-            "".format( buttonString(Button.INTERACT), buttonString(Button.JUMP), buttonString(Button.CROUCH))
+            "".format(buttonString(Button.INTERACT), buttonString(Button.JUMP), buttonString(Button.CROUCH))
 
 
             ][hostPlayer.EditModeSelection] if EditorMoveItem == false else
                 "{0} | confirm placement" 
-                "".format( buttonString(Button.PRIMARY_FIRE) )
+                "".format(buttonString(Button.PRIMARY_FIRE) )
                 
         )
         ,HudPosition.RIGHT, HO.edit_instructions_edit2, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
@@ -394,17 +394,17 @@ rule "Editor | Hud and Effects":
 
             "{0} + {1} | 增加弹球弹力\n"
             "{0} + {2} | 减少弹球弹力"
-            "".format(  buttonString(Button.ABILITY_2), buttonString(Button.JUMP),buttonString(Button.CROUCH) ),
+            "".format(buttonString(Button.ABILITY_2), buttonString(Button.JUMP),buttonString(Button.CROUCH) ),
 
             "{0} + {1} | 死小\n"
             "{0} + {2} | 表情留小"
-            "".format( buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE) ),
+            "".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE) ),
 
             "{0} + {1} | 移动选中的实体\n"
             "{0} + {2} | 应用到当前/所有关卡(开关)"
-            "".format(  buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.JUMP) )
+            "".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.JUMP) )
 
-            ][hostPlayer.EditModeSelection] if EditorMoveItem == false else ""
+            ][hostPlayer.EditModeSelection] if EditorMoveItem == false else []
         ) checkCN
         (
             [
@@ -417,17 +417,17 @@ rule "Editor | Hud and Effects":
 
             "{0} + {1} | Increase strength\n"
             "{0} + {2} | Decrease strength"
-            "".format(  buttonString(Button.ABILITY_2), buttonString(Button.JUMP),buttonString(Button.CROUCH) ),
+            "".format(buttonString(Button.ABILITY_2), buttonString(Button.JUMP),buttonString(Button.CROUCH) ),
 
             "{0} + {1} | deadhop\n"
             "{0} + {2} | emote"
-            "".format( buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE) ),
+            "".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE) ),
 
             "{0} + {1} | move\n"
             "{0} + {2} | cp/map (toggle)"
-            "".format(  buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.JUMP) )
+            "".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.JUMP) )
 
-            ][hostPlayer.EditModeSelection] if EditorMoveItem == false else ""
+            ][hostPlayer.EditModeSelection] if EditorMoveItem == false else []
         )
         ,HudPosition.RIGHT, HO.edit_instructions_edit3, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
@@ -436,29 +436,29 @@ rule "Editor | Hud and Effects":
     hudSubtext(hostPlayer if hostPlayer.GuideToggle else null, 
         (
             [
-            "",
+            [],
             "{0} + {1} | 移动选中的实体"
-            "".format( buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)  ),
+            "".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)  ),
             "{0} + {1} | 移动选中的实体"
-            "".format( buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE) ),
+            "".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE) ),
             "{0} + {1} |  留小跳进点\n"
             "{0} + {2} | 站卡"
-            "".format( buttonString(Button.ABILITY_2) , buttonString(Button.JUMP), buttonString(Button.CROUCH)),
-            ""
-            ][hostPlayer.EditModeSelection] if EditorMoveItem == false else ""
+            "".format(buttonString(Button.ABILITY_2) , buttonString(Button.JUMP), buttonString(Button.CROUCH)),
+            []
+            ][hostPlayer.EditModeSelection] if EditorMoveItem == false else []
         ) checkCN
         (
         [
-        "",
+        [],
         "{0} + {1} | Move"
-        "".format( buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)  ),
+        "".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)  ),
         "{0} + {1} | Move"
-        "".format( buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE) ),
+        "".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE) ),
         "{0} + {1} | require bhop\n"
         "{0} + {2} | stand create"
-        "".format( buttonString(Button.ABILITY_2) , buttonString(Button.JUMP), buttonString(Button.CROUCH)),
-        ""
-        ][hostPlayer.EditModeSelection] if EditorMoveItem == false else ""
+        "".format(buttonString(Button.ABILITY_2) , buttonString(Button.JUMP), buttonString(Button.CROUCH)),
+        []
+        ][hostPlayer.EditModeSelection] if EditorMoveItem == false else []
         )
         ,HudPosition.RIGHT, HO.edit_instructions_edit4, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
@@ -495,7 +495,7 @@ rule "Editor | Hud and Effects":
         hostPlayer if hostPlayer.GuideToggle else null, 
         "{1} + {2} | 上一关\n"
         "{0} (长按) | 飞行\n"
-        "".format( buttonString(Button.ABILITY_1), buttonString(Button.CROUCH),buttonString(Button.SECONDARY_FIRE))
+        "".format(buttonString(Button.ABILITY_1), buttonString(Button.CROUCH),buttonString(Button.SECONDARY_FIRE))
         checkCN
         "{1} + {2} | Prev checkpoint\n"
         "{0} (hold)| Fly\n"
@@ -656,7 +656,7 @@ rule "Editor | Hud and Effects":
         (
             "\n 选中的检查点 \n 矢量: {0}{1} \n".format(
                 CheckpointPositions[hostPlayer.CurrentCheckpoint],
-                "" if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) < 2 else
+                [] if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) < 2 else
                 "\n 传送点: {0}".format(CheckpointPositions[hostPlayer.CurrentCheckpoint][1])
             ) 
             if hostPlayer.EditModeSelection == 0 and len(CheckpointPositions) > 0 else  
@@ -706,7 +706,7 @@ rule "Editor | Hud and Effects":
         (
             "\n Selected Checkpoint \n Vector: {0}{1} \n".format(
                 CheckpointPositions[hostPlayer.CurrentCheckpoint],
-                "" if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) < 2 else
+                [] if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) < 2 else
                 "\n Teleport: {0}".format(CheckpointPositions[hostPlayer.CurrentCheckpoint][1])
             ) 
             if hostPlayer.EditModeSelection == 0 and len(CheckpointPositions) > 0 else  
