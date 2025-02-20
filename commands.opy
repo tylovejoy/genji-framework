@@ -152,7 +152,8 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
         DeleteSave()
     
     if eventPlayer.isDead():
-        eventPlayer.respawn()
+        eventPlayer.resurrect()
+        #eventPlayer.respawn()
 
     StartGame()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
@@ -176,8 +177,9 @@ rule "Command | Spectate (Hold Interact)":
         wait(1, Wait.ABORT_WHEN_FALSE)
 
     if eventPlayer.SpectateToggle:
-        eventPlayer.enableRespawn()
-        eventPlayer.respawn()
+        #eventPlayer.enableRespawn()
+        eventPlayer.resurrect()
+        #eventPlayer.respawn()
         if eventPlayer.PracticeToggle:
             chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
         elif eventPlayer.NotOnLastCp:
@@ -191,7 +193,7 @@ rule "Command | Spectate (Hold Interact)":
             StartPauseTimer()
         stopChasingVariable(eventPlayer.practicetimer)
         stopChasingVariable(eventPlayer.Timer)
-        eventPlayer.disableRespawn()
+        #eventPlayer.disableRespawn()
         eventPlayer.setDamageReceived(100)
         kill(eventPlayer, null)
         eventPlayer.setDamageReceived(0)

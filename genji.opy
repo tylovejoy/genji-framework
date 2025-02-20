@@ -221,7 +221,7 @@ def StartGame():
     if CompMode and (CompTime < 1 or eventPlayer.CompDone):
         eventPlayer.LeaderboardToggle = true
         eventPlayer.CompDone = true
-        eventPlayer.disableRespawn()
+        #eventPlayer.disableRespawn()
         eventPlayer.setDamageReceived(100)
         kill(eventPlayer,null)
         eventPlayer.setDamageReceived(0)
@@ -269,7 +269,7 @@ def StartGame():
     chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
     UpdateCache()
     checkpointFailReset()
-    eventPlayer.enableRespawn()
+    #eventPlayer.enableRespawn()
     eventPlayer.InvincibleToggle = false
     eventPlayer.SpectateToggle = false
     eventPlayer.MovedCheckpoint = true
@@ -436,7 +436,7 @@ rule "Match time":
                 bigMessage(getAllPlayers(),"时间到了" checkCN "time's up")
                 getAllPlayers().CompDone = true
                 stopChasingVariable(getAllPlayers().Timer)
-                getAllPlayers().disableRespawn()
+                #getAllPlayers().disableRespawn()
                 getAllPlayers().setDamageReceived(100)
                 kill(getAllPlayers(), null)
                 wait(0.032)
@@ -467,8 +467,9 @@ rule "Player Initialize":
     eventPlayer.bouncetouched = -1
     eventPlayer.PreviewsI = null
     #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
-    wait(1) 
-    eventPlayer.setRespawnTime(1)
+    wait(1)
+    eventPlayer.disableRespawn()
+    #eventPlayer.setRespawnTime(1)
     createEffect(eventPlayer, Effect.RING, ColorConfig[customize.ring_current], CheckpointPositions[eventPlayer.CurrentCheckpoint].last(), cpCirkleFx, EffectReeval.POSITION_AND_RADIUS)
     createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.RING, ColorConfig[customize.ring_next] , CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createEffect(eventPlayer if eventPlayer.NotOnLastCp  else null, Effect.LIGHT_SHAFT, ColorConfig[customize.shaft], CheckpointPositions[eventPlayer.CurrentCheckpoint + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
@@ -594,7 +595,7 @@ rule "Arrive | Ground reset | traces":
                     eventPlayer.AttemptCount = -1                     
                     eventPlayer.CompDone = true
                     eventPlayer.LeaderboardToggle = true
-                    eventPlayer.disableRespawn()
+                    #eventPlayer.disableRespawn()
                     eventPlayer.setDamageReceived(100)
                     kill(eventPlayer,null)
                     eventPlayer.setDamageReceived(0)
@@ -693,7 +694,7 @@ rule "Death Reset":
     else:
         eventPlayer.respawn()
     checkpointFailReset()
-    # rest is to prevent dead spaming from crashign server
+    # rest is to prevent dead spamming from crashing server
     # but doing waits only when needed
     waitUntil(eventPlayer.isAlive(), 1)
     waitUntil(eventPlayer.isDead(), 1)
