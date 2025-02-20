@@ -359,8 +359,9 @@ rule "Setup and Variables":
     BanDjump = BanDjump if len(BanDjump) else []
 
     #Check if old map forces ban off
-    #DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
-    if DashExploitToggle != []: DashExploitToggle = true
+    if DashExploitToggle != [] and not DashExploitToggle:
+        #DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
+        DashExploitToggle = true
     
     if createWorkshopSetting(bool,"map settings \n地图设置","Basic Map Validator - 验证地图", true, 3):
         async(CheckMap, AsyncBehavior.NOOP)
