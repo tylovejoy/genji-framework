@@ -55,9 +55,9 @@ def UpdateCache():
         if eventPlayer.ban_standcreate:
             eventPlayer.banstring = "♠ {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓
 
-        eventPlayer.ban_dedhop = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Deathbhop - 封禁死小", false, 4) else eventPlayer.CurrentCheckpoint in BanDead
+        /* eventPlayer.ban_dedhop = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Deathbhop - 封禁死小", false, 4) else eventPlayer.CurrentCheckpoint in BanDead
         if eventPlayer.ban_dedhop:
-            eventPlayer.banstring = "X {}".format(eventPlayer.banstring)
+            eventPlayer.banstring = "X {}".format(eventPlayer.banstring) */
 
         eventPlayer.ban_emote = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Emote Savehop - 封禁表情留小", false, 5) else eventPlayer.CurrentCheckpoint in BanEmote
         if eventPlayer.ban_emote:
@@ -350,7 +350,7 @@ rule "Setup and Variables":
     BanBhop = [i for i in BanBhop if i != -1] if len(BanBhop) else []
     BanClimb = [i for i in BanClimb if i != -1] if len(BanClimb) else []
     BanEmote = [i for i in BanEmote if i != -1] if len(BanEmote) else []
-    BanDead = [i for i in BanDead if i != -1] if len(BanDead) else []
+    BanDead = null # [i for i in BanDead if i != -1] if len(BanDead) else [] # legacy code, now auto sets it to null to save space
     BanCreate = [i for i in BanCreate if i != -1] if len(BanCreate) else []
     BanMulti = [i for i in BanMulti if i != -1] if len(BanMulti) else []
     BanTriple = null #[i for i in BanTriple if i != -1] if len(BanTriple) > 0 else [] # legacy code, now auto sets it to null to save space
