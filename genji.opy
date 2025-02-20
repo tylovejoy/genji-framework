@@ -226,18 +226,6 @@ def StartGame():
         kill(eventPlayer,null)
         eventPlayer.setDamageReceived(0)
         return
-    
-    /*if DashExploitToggle and len(CheckpointPositions)>0:
-        eventPlayer.setAbility1Enabled(false)
-        wait()
-        if eventPlayer.isUsingAbility1():
-            waitUntil(not eventPlayer.isUsingAbility1(), 1.5)
-            smallMessage(eventPlayer,"   0关卡Shift已禁用!" checkCN "   Dash Start is banned!")            
-
-    if eventPlayer.isUsingUltimate():
-        eventPlayer.setDamageReceived(100)
-        kill(eventPlayer, null)
-        eventPlayer.setDamageReceived(0)*/
        
     if len(CheckpointPositions) != 0:
         destroyInWorldText(eventPlayer.TitleStore) # restarting reset title even if non on cp 0
@@ -370,7 +358,10 @@ rule "Setup and Variables":
     BanSaveDouble = BanSaveDouble if len(BanSaveDouble) else []
     BanDjump = BanDjump if len(BanDjump) else []
 
-    DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
+    #Check if old map forces ban off
+    #DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
+    if DashExploitToggle != []: DashExploitToggle = true
+    
     if createWorkshopSetting(bool,"map settings \n地图设置","Basic Map Validator - 验证地图", true, 3):
         async(CheckMap, AsyncBehavior.NOOP)
     PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用传送门 (占点地图)", true, 4)
