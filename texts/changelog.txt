@@ -456,3 +456,5 @@ fixed:
   * Found by `@Sumpin` +5xp
 - Invincibility Mode was resuming timer
   * Found by `@Sumpin` +5xp
+- Spray would disappear upon returning from spectator
+  * Found by `@Shade Yato`

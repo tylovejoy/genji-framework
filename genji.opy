@@ -712,7 +712,7 @@ rule "Death Reset":
             waitUntil(eventPlayer.isDead(), 1)
             if eventPlayer.isDead() and (not eventPlayer.SpectateToggle) and (not eventPlayer.CompDone):
                 wait(0.64)
-                eventPlayer.resurrect()
+                eventPlayer.respawn()
                 checkpointFailReset()
 
 rule "Player Leaves":
