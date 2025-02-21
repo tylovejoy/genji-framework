@@ -39,7 +39,7 @@ rule "Huds: Global/Localplayer":
         , HudPosition.LEFT, HO.data_name, ColorConfig[customize.credit_name] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
-    hudSubtext(getAllPlayers(), 
+    hudSubtext(localPlayer, 
         "代码: {}".format( Cachedcredits[1] )
         checkCN
         "Map code: {}".format( Cachedcredits[1] )
@@ -269,22 +269,22 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
             , HudPosition.RIGHT, HO.board_top5, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
         )
         LeaderBoardHuds.append(getLastCreatedText())
-        hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0][2], HudPosition.RIGHT, HO.board_top5+1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0][2], HudPosition.RIGHT, HO.board_top5+1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         LeaderBoardHuds.append(getLastCreatedText())
     if LeaderBoardFull[1]:
-        hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[1][0], LeaderBoardFull[1][2], HudPosition.RIGHT, HO.board_top5+2, Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[1][0], LeaderBoardFull[1][2], HudPosition.RIGHT, HO.board_top5+2, Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         LeaderBoardHuds.append(getLastCreatedText())
     if LeaderBoardFull[2]:
-        hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[2][0], LeaderBoardFull[2][2], HudPosition.RIGHT, HO.board_top5+3, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[2][0], LeaderBoardFull[2][2], HudPosition.RIGHT, HO.board_top5+3, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         LeaderBoardHuds.append(getLastCreatedText())
     if LeaderBoardFull[3]:
-        hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[3][0], LeaderBoardFull[3][2], HudPosition.RIGHT, HO.board_top5+4, Color.LIME_GREEN, Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[3][0], LeaderBoardFull[3][2], HudPosition.RIGHT, HO.board_top5+4, Color.LIME_GREEN, Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         LeaderBoardHuds.append(getLastCreatedText())
     if LeaderBoardFull[4]:
-        hudText(getAllPlayers(), heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4][2], HudPosition.RIGHT, HO.board_top5+5, Color.GREEN, Color.GREEN, Color.GREEN,HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4][2], HudPosition.RIGHT, HO.board_top5+5, Color.GREEN, Color.GREEN, Color.GREEN,HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         LeaderBoardHuds.append(getLastCreatedText())
 
-    hudHeader(getAllPlayers() if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle, 
+    hudHeader(localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle, 
         "　　　　 {0} {1} {0} 　　　".format(
             iconString(Icon.FLAG),
             "成绩排名" checkCN "Leaderboard"
@@ -293,7 +293,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
     LeaderBoardHuds.append(getLastCreatedText())
 
     hudHeader(
-        getAllPlayers() if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
+        localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
         "　　　　　　　　　　　　　　　　　　\n"
         "　 1:　{0} - {5}　\n"
         "　 2:　{1} - {6}　\n"
@@ -316,7 +316,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
 
     if LeaderBoardFull[5]:
         hudHeader(
-            getAllPlayers() if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
+            localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
             "　　　　　　　　　　　　　　　　　　\n"
             "　 6:　{0} - {5}　\n"
             "　 7:　{1} - {6}　\n"
@@ -339,7 +339,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
 
     if LeaderBoardFull[10]:
         hudHeader( 
-        getAllPlayers() if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
+            localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
             "　　　　　　　　　　　　　　　　　　\n"
             "　11:　{0} - {5}　\n"
             "　12:　{1} - {6}　\n"
@@ -362,7 +362,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
 
     if LeaderBoardFull[15]:
         hudHeader(
-            getAllPlayers() if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
+            localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
             "　　　　　　　　　　　　　　　　　　\n"
             "　16:　{0} - {5}　\n"
             "　17:　{1} - {6}　\n"
@@ -589,5 +589,5 @@ def UpdateTitle():
     if TitleData == null or CompMode or eventPlayer.PracticeToggle or eventPlayer.EditorOn or (not eventPlayer.CurrentCheckpoint in TitleData[0]): 
         return
     destroyInWorldText(eventPlayer.TitleStore)
-    createInWorldText(getAllPlayers() if not eventPlayer.invis else null,TitleData[1][TitleData[0].index(eventPlayer.CurrentCheckpoint)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.CurrentCheckpoint)], SpecVisibility.DEFAULT)
+    createInWorldText(localPlayer if not eventPlayer.invis else null,TitleData[1][TitleData[0].index(eventPlayer.CurrentCheckpoint)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.CurrentCheckpoint)], SpecVisibility.DEFAULT)
     eventPlayer.TitleStore = getLastCreatedText()

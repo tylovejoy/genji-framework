@@ -180,7 +180,7 @@ rule "Little destructo - fence breaker":
         while MapVectorArray[0] < (fence_grid*fence_grid):
             createProjectile(
                 Projectile.ORB,  # the only orb available without fx extension
-                getAllPlayers(),
+                null,
                 fence_position ,
                 Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
                 DynamicEffect.GOOD_EXPLOSION, # possible without extensions: bad, good, ring
@@ -200,7 +200,7 @@ rule "Little destructo - fence breaker":
         # same as other projectile before
         createProjectile(
             Projectile.ORB,
-            getAllPlayers(),
+            null,
             MapVectorArray[0],
             Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
             DynamicEffect.GOOD_EXPLOSION,
