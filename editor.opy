@@ -61,22 +61,23 @@ rule "Editor | Clear Excess Data to Save Map":
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.LockEditor = true # doesnt matter thats its in pasta's because it wil be fixed on spawning
     async(CheckMap, AsyncBehavior.NOOP)
-    CheckpointRings_Editing = 0
-    KillBallEffects = 0
-    TempIterator1 = 0
-    BounceEffects = 0
+    CheckpointRings_Editing = null
+    KillBallEffects = null
+    TempIterator1 = null
+    BounceEffects = null
 
-    SaveName = []
-    SaveCp = []
-    SaveTimer = []
-    SaveEnt = []
-    SavePauseTime = []
-    SavePauseEnabled = []
-    SaveElapsed = []
+    SaveName = null
+    SaveCp = null
+    SaveTimer = null
+    SaveEnt = null
+    SavePauseTime = null
+    SavePauseEnabled = null
+    SaveElapsed = null
 
-    LeaderBoardFull = []
-    LeaderBoardHuds = []
-    PortalOn = false
+    CompMode = null
+    LeaderBoardFull = null
+    LeaderBoardHuds = null
+    PortalOn = null
     TitleData = null
     CpHudText = null
     CpHudCp = null
@@ -86,9 +87,9 @@ rule "Editor | Clear Excess Data to Save Map":
     CpIwtCp = null
     CpIwtPos = null
     CpIwtColor = null
-    PortalNames = []
-    PortalLoc = []
-    PortalDest  = []
+    PortalNames = null
+    PortalLoc = null
+    PortalDest  = null
     PortalEffects = null
 
     hudText(eventPlayer,  
@@ -197,7 +198,7 @@ rule "Editor | Hud and Effects":
     wait()
 
     if CompMode: # infinite time and atemps
-        CompAtmpNum = 0 
+        CompAtmpNum = null
         CompTime = Math.INFINITY
         getAllPlayers().AttemptCount = null
         getAllPlayers().CompDone = false

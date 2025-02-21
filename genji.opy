@@ -147,9 +147,9 @@ def StopPauseTimer():
 def CreateLeaderBoard():
     @Name "SUB | Leaderboard HUD"
     # turns into global rule so it doesnt delete when player leaves
-    LeaderBoardRemake = false
-    wait()
     LeaderBoardRemake = true
+    wait()
+    LeaderBoardRemake = null
  
 def Leaderboardupdate():
     @Name "SUB | Leaderboard Update"
@@ -361,7 +361,7 @@ rule "Setup and Variables":
     #Check if old map forces ban off
     if DashExploitToggle != [] and not DashExploitToggle:
         #DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
-        DashExploitToggle = true
+        DashExploitToggle = null
     
     if createWorkshopSetting(bool,"map settings \n地图设置","Basic Map Validator - 验证地图", true, 3):
         async(CheckMap, AsyncBehavior.NOOP)
