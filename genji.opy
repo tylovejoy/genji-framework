@@ -3,8 +3,6 @@
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
-# Disable via double ## at include, not the define because the define needs to exist
-#!define testToggle ##!include "test-scripts.opy"
 
 #!optimizeForSize
 # Supress warning for emote

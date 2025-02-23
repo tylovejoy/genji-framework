@@ -1,9 +1,12 @@
 #!mainFile "genji.opy"
 ######################################## Settings ####################
-# Debug force CN mode on
-# #!define checkCN if true else
+# Disable via double ## at include, not the define because the define needs to exist
+#!define testToggle ##!include "test-scripts.opy"
 
-# Enable Invis Command (Invis Command cant be pasted in CN client die to null and none translating to same symbol) 
+# Debug force CN mode on
+##!define checkCN if true else
+
+# Enable Invis Command (Invis Command cant be pasted in CN client die to null and none translating to same symbol)
 #!define enableInvisCommand true
 
 # Limit on how many orbs can be made
@@ -20,7 +23,7 @@
 # distance range for player - orb 1.4
 #!define bounceorbdistance 1.4
 
-# height added to player for orb detection. inludes the + 
+# height added to player for orb detection. inludes the +
 #!define bounceoffset + Vector.UP * 0.7
 
 #!define cpCheat false
@@ -147,7 +150,7 @@ globalvar PortalDest 42                     # [vect]                    --- port
 globalvar PortalOn 43                       # bool                      --- portals enabled
 globalvar Difficultyhud 44                  # number                    --- workshop toggle to display difficulty hud
 
-globalvar CustomPortalStart 45              # [vect]                    --- custom portal start 
+globalvar CustomPortalStart 45              # [vect]                    --- custom portal start
 globalvar CustomPortalEndpoint 46           # [vect]                    --- custom portal end points
 globalvar CustomPortalCP 47                 # [int]                     --- custom portal checkpoints
 
@@ -158,7 +161,7 @@ globalvar CompAtmpSaveNames 53              # [strings]                 --- comp
 globalvar CompAtmpSaveCount 54              # [int]                      --- compt attempt list
 globalvar CompRestartLimit 55               # bool                      --- resest limiter
 globalvar instructiontext 56                # [text]                    --- array of instructions
-globalvar TitleData 57                      # [[cp ,[title],[color]]    --- title addon 
+globalvar TitleData 57                      # [[cp ,[title],[color]]    --- title addon
 globalvar HudStoreEdit 58                   # [textid]                  --- list of huds to delete if editormode is on
 
 globalvar SaveName 60
@@ -205,12 +208,12 @@ globalvar MapVectorArray 91
 playervar CurrentCheckpoint                 # int                       --- Current Checkpoint
 
 #PlayerEffects data
-#0 - Current ring, 
-#1 - Next ring, 
-#2 - Next lightshaft, 
-#3 - Next arrow icon, 
+#0 - Current ring,
+#1 - Next ring,
+#2 - Next lightshaft,
+#3 - Next arrow icon,
 #4 - Next "Come here" text
-#playervar PlayerEffects                    # list[effect]              --- Player effect data array  
+#playervar PlayerEffects                    # list[effect]              --- Player effect data array
 playervar InvincibleToggle                  # bool                       --- invincible/normal mode toggle now a bool
 playervar Timer                             # float                     --- Timer, chased.
 playervar EditModeSelection                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
@@ -235,7 +238,7 @@ playervar NotOnLastCp                       # bool                      --- fals
 playervar Bhopcount                         # int                       --- counts bhops used for stand create ban
 playervar JumpCount                         # int                       --- jump tracking count, 0, 1, 2
 #playervar MultiClimbCountHUD                # HUD                       --- climb counter
-playervar CreateCounter 
+playervar CreateCounter
 playervar QuickRestartToggle                # bool                      -- enable reload to restart cp
 playervar MultiClimbCount                   # int                       --- climb count # for HUD
 playervar finishfxcache                     # color                     --- color of fx after finish the map
@@ -321,7 +324,7 @@ enum HO:
     data_code,
     data_dsc,
     edit_savemap,
-    
+
     game_timer,
     game_split_display,
     game_bhop,
@@ -353,7 +356,7 @@ enum HO:
     data_dif,
     game_level_orb,
     com_previewsub,
-    
+
     filler_custommsg,
     add_custommsg1,
     add_custommsg2,
@@ -420,4 +423,3 @@ enum customize: # always add new options on end so previously configured colors 
     orb_lock,
     portal,
     dsc,
-    
