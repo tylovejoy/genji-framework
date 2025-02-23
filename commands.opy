@@ -73,10 +73,8 @@ rule "Command | Preview Orbs & Portals (Hold Primary)":
     eventPlayer.setMoveSpeed(0)
     eventPlayer.PreviewsI = 0
     eventPlayer.startCamera(
-        eventPlayer.PreviewsArray[eventPlayer.PreviewsI] + eventPlayer.getFacingDirection()*-3.5,
-        eventPlayer.PreviewsArray[eventPlayer.PreviewsI],
-        15
-    )
+        eventPlayer.PreviewsArray[eventPlayer.PreviewsI] + (3.5 - 2 * eventPlayer.getThrottle().z) * eventPlayer.getFacingDirection(),
+        eventPlayer.PreviewsArray[eventPlayer.PreviewsI], 15)
     eventPlayer.setPrimaryFireEnabled(false)
     eventPlayer.setSecondaryFireEnabled(false)
     eventPlayer.disallowButton(Button.ABILITY_1)
