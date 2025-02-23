@@ -559,22 +559,20 @@ rule "Editor | Hud and Effects":
     )
 
     hudText(
-        getAllPlayers(),
+        localPlayer,
         null,  # original part of the one ontop of it
-        (
-        "{0} + 射击 | 切换作图模式".format(buttonString(Button.MELEE)) if localPlayer == hostPlayer else
-        "房主/编辑者 {0}".format(hostPlayer)
-        )
+        ("{0} + 射击 | 切换作图模式".format(buttonString(Button.MELEE)) if localPlayer == hostPlayer else
+        "房主/编辑者 {0}".format(hostPlayer))
         checkCN
-        (
-        "{0} + shoot | change mode".format(buttonString(Button.MELEE)) if localPlayer == hostPlayer else
-        "Current host/editor: {0}".format(hostPlayer)
-        )
-        , null, HudPosition.TOP, HO.edit_changemode,
-            Color.SKY_BLUE,
-            Color.GRAY if localPlayer.LockEditor else Color.WHITE,
-            Color.WHITE,
-            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        ("{0} + shoot | change mode".format(buttonString(Button.MELEE)) if localPlayer == hostPlayer else
+        "Current host/editor: {0}".format(hostPlayer)),
+        null,
+        HudPosition.TOP,
+        HO.edit_changemode,
+        Color.SKY_BLUE,
+        Color.GRAY if localPlayer.LockEditor else Color.WHITE,
+        Color.WHITE,
+        HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
     hudSubtext(hostPlayer if hostPlayer.GuideToggle and (hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null,
@@ -762,7 +760,7 @@ rule "Editor | Hud and Effects":
     wait(1)
     # effects ==========================================================================================================================================================================
     createInWorldText(
-        getAllPlayers() if len(EditSelectIdArray) > 0 else null,
+        localPlayer if len(EditSelectIdArray) > 0 else null,
         "选中的实体" checkCN "selected"
         ,
         KillBallPositions[EditSelected] if hostPlayer.EditModeSelection == 1 else
@@ -773,7 +771,7 @@ rule "Editor | Hud and Effects":
     )
 
     createIcon(
-        getAllPlayers() if len(EditSelectIdArray) > 0 else null,
+        localPlayer if len(EditSelectIdArray) > 0 else null,
         KillBallPositions[EditSelected] if hostPlayer.EditModeSelection == 1 else
         BouncePositions[EditSelected] if hostPlayer.EditModeSelection == 2 else
         CustomPortalStart[EditSelected] if hostPlayer.EditModeSelection == 4 else
@@ -783,10 +781,10 @@ rule "Editor | Hud and Effects":
     )
 
     # Purple sphere for teleport location
-    createEffect(getAllPlayers() if len(CheckpointPositions[hostPlayer.CurrentCheckpoint] ) > 1 and hostPlayer.EditModeSelection == 0 else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[hostPlayer.CurrentCheckpoint][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(localPlayer if len(CheckpointPositions[hostPlayer.CurrentCheckpoint] ) > 1 and hostPlayer.EditModeSelection == 0 else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[hostPlayer.CurrentCheckpoint][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
 
     # Teleport text
-    createInWorldText(getAllPlayers() if len(CheckpointPositions[hostPlayer.CurrentCheckpoint] ) > 1 and hostPlayer.EditModeSelection == 0 else null, "传送点位置" checkCN "teleporter location", CheckpointPositions[hostPlayer.CurrentCheckpoint][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+    createInWorldText(localPlayer if len(CheckpointPositions[hostPlayer.CurrentCheckpoint] ) > 1 and hostPlayer.EditModeSelection == 0 else null, "传送点位置" checkCN "teleporter location", CheckpointPositions[hostPlayer.CurrentCheckpoint][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
 
     # normal cp if teleport
     createEffect(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and hostPlayer.EditModeSelection == 0 else null, Effect.RING, Color.ORANGE, CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
@@ -912,7 +910,7 @@ rule "Editor | create cp/orb":
             BanBhop = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanBhop]
             BanDjump = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanDjump]
 
-        smallMessage(getAllPlayers(), "   新检查点已创建" checkCN "   New Checkpoint has been created")
+        smallMessage(localPlayer, "   新检查点已创建" checkCN "   New Checkpoint has been created")
 
     elif len(CheckpointPositions) < 1:
         smallMessage(eventPlayer, "   请先放置检查点" checkCN "   You first have to make a checkpoint")
@@ -935,7 +933,7 @@ rule "Editor | create cp/orb":
             EffectReeval.VISIBILITY_POSITION_AND_RADIUS
         )
         KillBallEffects.append(getLastCreatedEntity())
-        bigMessage(getAllPlayers(), "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新击杀球已创建! \r\n仅生效于检查点" checkCN "New Kill Orb has been created! \r\nIt's only valid for checkpoint"))
+        bigMessage(localPlayer, "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新击杀球已创建! \r\n仅生效于检查点" checkCN "New Kill Orb has been created! \r\nIt's only valid for checkpoint"))
         waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)), 1)
         #editupdateselectedids() # to arrow during the placement properly
         while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
@@ -957,7 +955,7 @@ rule "Editor | create cp/orb":
             BouncePositions[evalOnce(EditSelected)], 1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
         BounceEffects.append(getLastCreatedEntity())
-        bigMessage(getAllPlayers(), "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新弹球已创建! \r\n仅生效于检查点" checkCN "New Bounce Orb has been created! \r\nIt's only valid for checkpoint"))
+        bigMessage(localPlayer, "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新弹球已创建! \r\n仅生效于检查点" checkCN "New Bounce Orb has been created! \r\nIt's only valid for checkpoint"))
         waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)), 1)
         while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             BouncePositions[EditSelected] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 7, null, null, false).getHitPosition()
@@ -981,7 +979,7 @@ rule "Editor | create cp/orb":
             CustomPortalStart[EditSelected] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 6, null, null, false).getHitPosition()
             wait()
 
-        bigMessage(getAllPlayers(), "新传送门已创建!\n生效于当前检查点" checkCN "Portal created \r\nIt's only valid for checkpoint")
+        bigMessage(localPlayer, "新传送门已创建!\n生效于当前检查点" checkCN "Portal created \r\nIt's only valid for checkpoint")
         EditorMoveItem = true
         return
     else:
@@ -1080,7 +1078,7 @@ rule "Editor | delete cp/orb/portal":
         RebuildKillOrbs()
         RebuildBounceOrbs()
         RebuildPortals()
-        smallMessage(getAllPlayers(), "   检查点已删除" checkCN "   Checkpoint has been deleted")
+        smallMessage(localPlayer, "   检查点已删除" checkCN "   Checkpoint has been deleted")
     elif eventPlayer.EditModeSelection == 1 and len(EditSelectIdArray) > 0:
         del KillBallPositions[EditSelected]
         del KillBallRadii[EditSelected]

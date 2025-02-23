@@ -1,4 +1,4 @@
-#!define versionhere "1.10.2♨D"
+#!define versionhere "1.10.2♨F"
 #♨ Dev Build Icon
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
@@ -237,7 +237,7 @@ def StartGame():
             SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
             if TitleData != null and  any([i for i in TitleData[0] if i <= eventPlayer.CurrentCheckpoint]) and (not eventPlayer.EditorOn ): # if any title data, find last cp
                 createInWorldText(
-                    getAllPlayers() if not eventPlayer.invis else null,
+                    localPlayer if not eventPlayer.invis else null,
                     TitleData[1][TitleData[0].index(
                     sorted([i for i in TitleData[0] if i <= eventPlayer.CurrentCheckpoint], lambda i:i*-1)[0])],
                     eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION,
@@ -424,7 +424,7 @@ rule "Match time":
         if CompMode:
             CompTime --
             if CompTime == 0:
-                bigMessage(getAllPlayers(),"时间到了" checkCN "time's up")
+                bigMessage(localPlayer,"时间到了" checkCN "time's up")
                 getAllPlayers().CompDone = true
                 stopChasingVariable(getAllPlayers().Timer)
                 #getAllPlayers().disableRespawn()
@@ -560,7 +560,7 @@ rule "Arrive | Ground reset | traces":
             eventPlayer.splitdisplay =  (eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer) - eventPlayer.splittime
         wait()
         playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
-        playEffect(eventPlayer if CompMode or eventPlayer.invis else getAllPlayers(), DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
+        playEffect(eventPlayer if CompMode or eventPlayer.invis else localPlayer, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.CurrentCheckpoint] + vect(0, 1.5, 0), 4)
         # msg disabled due to annoying new sound
         #bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.CurrentCheckpoint, "抵达检查点" checkCN "Arrived at level")   )
         wait()
@@ -576,7 +576,7 @@ rule "Arrive | Ground reset | traces":
             stopChasingVariable(eventPlayer.Timer)
             stopChasingVariable(eventPlayer.practicetimer)
             wait()
-            bigMessage(getAllPlayers(), "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.Timer),"已通关! 用时" checkCN "Mission complete! Time"))
+            bigMessage(localPlayer, "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.Timer),"已通关! 用时" checkCN "Mission complete! Time"))
 
             DeleteSave()
             Leaderboardupdate()
