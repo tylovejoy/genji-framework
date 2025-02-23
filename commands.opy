@@ -73,7 +73,7 @@ rule "Command | Preview Orbs & Portals (Hold Primary)":
     eventPlayer.setMoveSpeed(0)
     eventPlayer.PreviewsI = 0
     eventPlayer.startCamera(
-        eventPlayer.PreviewsArray[eventPlayer.PreviewsI] - (3.5 - 2 * eventPlayer.getThrottle().z) * eventPlayer.getFacingDirection(),
+        eventPlayer.PreviewsArray[eventPlayer.PreviewsI] - (3.5 - 2.5 * eventPlayer.getThrottle().z) * eventPlayer.getFacingDirection(),
         eventPlayer.PreviewsArray[eventPlayer.PreviewsI], 15)
     eventPlayer.setPrimaryFireEnabled(false)
     eventPlayer.setSecondaryFireEnabled(false)
@@ -332,10 +332,10 @@ rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
             eventPlayer.CurrentCheckpoint += 1
 
     wait(0.064)
-    eventPlayer.LockState = false
+    eventPlayer.MovedCheckpoint = true
     UpdateCache()
     checkpointFailReset()
-    eventPlayer.MovedCheckpoint = true
+    eventPlayer.LockState = false
     wait()
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.28) # faster if you spam button
     if RULE_CONDITION:
