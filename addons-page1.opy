@@ -248,7 +248,7 @@ def CheckMap():
                 waitUntil(MapChecker.isOnGround(), true)
                 if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapCheckerIter]) <= cpcircleradius:
                     goto lbl_MapChecker_nextCp
-                    
+
             enableInspector()
             printLog("Fail {0}".format(MapCheckerIter))
             disableInspector()
@@ -258,5 +258,5 @@ def CheckMap():
     MapChecker = null
     MapCheckerIter = null
     enableInspector()
-    printLog("■■ Map ■ Check ■ Complete ■■")
+    printLog("■ Map Check Complete ■")
     disableInspector()

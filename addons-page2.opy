@@ -14,7 +14,7 @@ rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE
     # Instructions that show when you start comp mode.
     # Due to the hud text limit, you there is 4 huds available.
     # If you dont need a field just empty the textfield.
-    printLog("■■■■■■■■■■■■■■■■■■■■■■■■")
+    return
     # 竞赛模式 指引消息
     # 指引消息将 会在竞赛模 式开始时 显示
     # 由于 hud 文本限制，你有 4 个hud可用
@@ -34,9 +34,9 @@ rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输�
     #1) 地图工坊设 置难度改为 “不显示”
     #2) 勾选此规则 点击上方的 开启/关闭 开启此规则
     #3) 修改下面的 创建hud文本 中的“enter custom difficulty here”
-    hudText(getAllPlayers(), 
+    hudText(getAllPlayers(),
         ("游戏测试" checkCN "Playtest") if Difficultyhud[1] else [],
-        "enter custom difficulty here",    
+        "enter custom difficulty here",
         null,
         HudPosition.TOP, HO.data_dif,
         Color.BLUE, Color.GREEN, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
@@ -48,17 +48,17 @@ rule "Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
     # enable this rule and fill in the title data below.
     # 启用此规则 并填写下面 的标题数据
     wait(1)
-    # checkpoint number 
+    # checkpoint number
     # 每关数量
     TitleData[0] = [
-        0,  
+        0,
         10,
         20,
         30,
         40,
         50
     ]
-    # title 
+    # title
     # 标题文本
     TitleData[1] = [
         "Bunny",
@@ -101,7 +101,7 @@ rule "Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
         createInWorldText(getAllPlayers(), "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
 
-rule "Display World Record - 展示世界纪录 <---- EDIT ME / 在此处编辑": 
+rule "Display World Record - 展示世界纪录 <---- EDIT ME / 在此处编辑":
     @Disabled
     @Delimiter
     # type your entry in the textfield that says "name and time here"
@@ -120,22 +120,22 @@ rule "HUD text for certain Checkpoints - 特定关卡显示的HUD文本 <---- ED
     # in CpHudCp fill in the at wich to display
     # 修改数组 “CpHudCp” 为hud文本 显示的关卡
     CpHudCp = [1, 3]
-    
+
 rule "Inworld text for certain Checkpoints - 特定关卡显示的地图文本 <---- EDIT ME / 在此处编辑":
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的地图文本
     wait(1)
-    # in CpIwtText fill in text 
+    # in CpIwtText fill in text
     # 修改字符串 “CpIwtText” 为关卡显示 的地图文本
     CpIwtText = ["text cp 1","text cp 3"]
     # in CpIwtCp fill in cp at wich to display
     # 修改数组 “CpIwtCp” 为显示地图 文本的关卡
     CpIwtCp = [1, 3]
-    # in CpIwtPos fill in the vector 
+    # in CpIwtPos fill in the vector
     # 修改数组 “CpIwtPos” 为地图文本 的矢量位置
     CpIwtPos = [vect(0,0,0), vect(0,0,0)]
-    # color applies to all 
+    # color applies to all
     # 选择应用到 所有地图文 本的颜色
     CpIwtColor = Color.LIME_GREEN
 
@@ -168,7 +168,7 @@ rule "Stall enhancer - 增强系統跳的判定":
     @Condition eventPlayer.isOnGround() == false
     @Condition not (eventPlayer.EditorOn and eventPlayer.flytoggle != null)
     #@Condition createWorkshopSetting(bool, "map settings \n地图设置"," Autobounce enhancer - 增强系統跳的判定",false,3)
-    
+
     wait(0.25, Wait.ABORT_WHEN_FALSE)
     eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
     waitUntil(eventPlayer.isMoving() == false, 1)
@@ -213,10 +213,10 @@ rule "Fake Ledge Dash - 超级跳":
         eventPlayer.LedgeDash[1] = eventPlayer.getFacingDirection()
         eventPlayer.LedgeDash[2] = eventPlayer.getSpeed()
         if eventPlayer.getSpeed() < 45: # dashed into air or object = end
-            goto lbla 
-        else: 
+            goto lbla
+        else:
             eventPlayer.LedgeDash[0] ++
-        if eventPlayer.LedgeDash[0] == 12: # stop storing, we keep this speed/direction 
+        if eventPlayer.LedgeDash[0] == 12: # stop storing, we keep this speed/direction
             waitUntil(eventPlayer.getSpeed() < 40, 0.4) # wait for dash to finish to execute
         wait()
 
@@ -239,20 +239,20 @@ rule "Grup up | text/effect":
         "{0} {1} {0}".format(
             abilityIconString(Hero.GENJI, Button.ULTIMATE),
             "待在这里" checkCN "grup up"
-            ), 
-        vect(0,0,0), 
-        1.5, 
+            ),
+        vect(0,0,0),
+        1.5,
         Clip.NONE, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT
     )
     # replace 777 with checkpoint number
     # replace vector 0,0,0 with orb position
     # 3.5 is the radius
     createEffect(
-        [i for i in getAllPlayers() if i.CurrentCheckpoint == 777], 
+        [i for i in getAllPlayers() if i.CurrentCheckpoint == 777],
         Effect.SPHERE, Color.ORANGE, vect(0,0,0),  3.5, EffectReeval.VISIBILITY
     )
 
-rule "Grup up | function": 
+rule "Grup up | function":
     @Disabled
     @Event eachPlayer
     # replace 777 with checkpoint number
@@ -262,8 +262,8 @@ rule "Grup up | function":
     @Condition eventPlayer.InvincibleToggle == false
     # replace vector 0,0,0 with orb position
     # 3.5 is the radius
-    @Condition distance(eventPlayer,  vect(0,0,0)) < 3.5 
-    
+    @Condition distance(eventPlayer,  vect(0,0,0)) < 3.5
+
     smallMessage(eventPlayer, "   stay in the bubble")
     wait(1, Wait.ABORT_WHEN_FALSE)
     smallMessage(eventPlayer, "   9")
@@ -296,9 +296,6 @@ def TriggerOnFailSuccesReset():
     @Name "Custom script on fail, succes, reset, skip"
     @Disabled
     # This subroutine triggers on failing, arriving, reseting, skipping etc
-    enableInspector()
-    printLog("■■■■■■■■■■■■■■■■■■■■■■■■")
-    disableInspector()
     # example: reset gravity and movespeed after being changed by custom orbs
     eventPlayer.setGravity(100)
     eventPlayer.setMoveSpeed(100)
@@ -323,13 +320,13 @@ rule "Custom Orb Script":
         smallMessage(eventPlayer," you feel light")
         wait(2)
         eventPlayer.setGravity(100)
-                   
+
     if eventPlayer.BounceTrueId in [2,3]:
        # example canceling primary makes double jump recover
        eventPlayer.cancelPrimaryAction()
        eventPlayer.DoubleUsed = null
        smallMessage(eventPlayer," double jump recovered")
-                
+
     if eventPlayer.BounceTrueId in [4]:
         # example move speed
         eventPlayer.setMoveSpeed(250)
@@ -377,7 +374,7 @@ rule "fisho cp cheat for overpy toggle":
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
 
 rule "Ledge Grab Patch v1.5":
-    # Obsolete for OW v2.12  
+    # Obsolete for OW v2.12
     @Event eachPlayer
     @Condition false
     @Condition eventPlayer.isAlive() == true
@@ -385,7 +382,7 @@ rule "Ledge Grab Patch v1.5":
     @Condition eventPlayer.getCurrentHero() == Hero.GENJI == eventPlayer.DoubleUsed
     @Condition eventPlayer.getCurrentHero() == Hero.HANZO == eventPlayer.getAbilityCooldown(Button.JUMP)
     @Condition (eventPlayer.getCurrentHero() == Hero.KIRIKO and eventPlayer.isHoldingButton(Button.JUMP)) == (eventPlayer.getCurrentHero() == Hero.KIRIKO)
-    
+
     #Directly after Double Jumping
     eventPlayer.stopForcingButton(Button.JUMP)
     wait(false)

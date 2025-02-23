@@ -6,6 +6,7 @@ editortoggle(0) # 0 is editor, rest is numbers
 # Disable via double ## at include, not the define because the define needs to exist
 #!define testToggle ##!include "test-scripts.opy"
 
+#!optimizeForSize
 # Supress warning for emote
 #!suppressWarnings w_ow2_communicate_bug
 #disable overpy map detection (command removed by zezy after fix by blizzard)
@@ -33,7 +34,7 @@ def UpdateCache():
     eventPlayer.BounceUlt_Cache = [_ for _, i in BounceToggleUlt if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.BounceDash_Cache = [_ for _, i in BounceToggleDash if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.BounceLock_Cache = [_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint]
-    eventPlayer.BounceLockMax_Cache = len([i for i in eventPlayer.BounceLock_Cache if i])    
+    eventPlayer.BounceLockMax_Cache = len([i for i in eventPlayer.BounceLock_Cache if i])
     eventPlayer.KillPosition_Cache = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.KillRadii_Cache = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.CurrentCheckpoint]
     eventPlayer.PortalStart_Cache = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.CurrentCheckpoint or CustomPortalCP[i] == Math.INFINITY]
@@ -90,7 +91,7 @@ def UpdateCache():
         eventPlayer.ban_djump = false
     wait()
     async(CheckUlt(), AsyncBehavior.RESTART)
-    async(CheckDash(), AsyncBehavior.RESTART)    
+    async(CheckDash(), AsyncBehavior.RESTART)
 
     if not eventPlayer.EditorOn: return
 
@@ -108,10 +109,10 @@ def UpdateCache():
 
     if eventPlayer.MovedCheckpoint and eventPlayer == hostPlayer:
         EditorSelectLast()
-        eventPlayer.MovedCheckpoint = false     
+        eventPlayer.MovedCheckpoint = false
 
 def DeleteSave():
-    @Name "SUB | Delete Save" 
+    @Name "SUB | Delete Save"
     del SaveName[SaveEnt.index(eventPlayer)]
     del SaveCp[SaveEnt.index(eventPlayer)]
     del SaveTimer[SaveEnt.index(eventPlayer)]
@@ -150,7 +151,7 @@ def CreateLeaderBoard():
     LeaderBoardRemake = true
     wait()
     LeaderBoardRemake = null
- 
+
 def Leaderboardupdate():
     @Name "SUB | Leaderboard Update"
     # [i[0] for i in var1]   list of first element of each in var 1
@@ -181,13 +182,13 @@ def checkpointFailReset():
     eventPlayer.LockCollected = []
     eventPlayer.cancelPrimaryAction()
     eventPlayer.DoubleUsed = null
-    
+
     if eventPlayer.CurrentCheckpoint == 0 and not eventPlayer.PracticeToggle:
         eventPlayer.Timer = 0
         eventPlayer.splittime = 0
-    
+
     if len(CheckpointPositions) > 0:
-        eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)  
+        eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
         if eventPlayer.isUsingAbility1() and DashExploitToggle:
             #smallMessage(eventPlayer,"   0关卡Shift已禁用!" checkCN "   Dash Start is banned!")
             eventPlayer.startForcingPosition(eventPlayer, false)
@@ -200,7 +201,7 @@ def checkpointFailReset():
     /*
     if eventPlayer.ban_dedhop:
     # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
-        wait(0.1) # finish teleport first     
+        wait(0.1) # finish teleport first
         if eventPlayer.isHoldingButton(Button.JUMP):
             eventPlayer.forceButtonPress(Button.JUMP)
             eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed() + 0.1, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
@@ -226,7 +227,7 @@ def StartGame():
         kill(eventPlayer,null)
         eventPlayer.setDamageReceived(0)
         return
-       
+
     if len(CheckpointPositions) != 0:
         destroyInWorldText(eventPlayer.TitleStore) # restarting reset title even if non on cp 0
         if "{0}".format(eventPlayer) in SaveName: # load saved progres
@@ -240,9 +241,9 @@ def StartGame():
                 createInWorldText(
                     getAllPlayers() if not eventPlayer.invis else null,
                     TitleData[1][TitleData[0].index(
-                    sorted([i for i in TitleData[0] if i <= eventPlayer.CurrentCheckpoint], lambda i:i*-1)[0])], 
-                    eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, 
-                    TitleData[2][TitleData[0].index(sorted([i for i in TitleData[0] if i <= eventPlayer.CurrentCheckpoint], lambda i:i*-1)[0])], 
+                    sorted([i for i in TitleData[0] if i <= eventPlayer.CurrentCheckpoint], lambda i:i*-1)[0])],
+                    eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION,
+                    TitleData[2][TitleData[0].index(sorted([i for i in TitleData[0] if i <= eventPlayer.CurrentCheckpoint], lambda i:i*-1)[0])],
                     SpecVisibility.DEFAULT
                 )
                 eventPlayer.TitleStore = getLastCreatedText()
@@ -253,7 +254,7 @@ def StartGame():
             eventPlayer.PauseTimer = 0
             MakeSave()
             UpdateTitle()
-    
+
     chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
     UpdateCache()
     checkpointFailReset()
@@ -284,10 +285,10 @@ rule "Setup and Variables":
     startForcingSpawn(Team.ALL,  1)
     startForcingSpawn(Team.ALL,  2)
     wait(0.024) # wait for map data rule
-    
+
     # fix team because of naming
-    if ColorConfig[customize.orb_lock] == Color.TEAM_1: 
-        ColorConfig[customize.orb_lock] = Color.BLUE 
+    if ColorConfig[customize.orb_lock] == Color.TEAM_1:
+        ColorConfig[customize.orb_lock] = Color.BLUE
     elif ColorConfig[customize.orb_lock] == Color.TEAM_2:
         ColorConfig[customize.orb_lock] = Color.RED
 
@@ -311,7 +312,7 @@ rule "Setup and Variables":
         BladeEnabledCheckpoints = [0]
     else:
         BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints != null else []
-    
+
     if DashEnabledCheckpoints == null and len(DashEnabledCheckpoints) == 1:
         DashEnabledCheckpoints = [0]
     else:
@@ -331,16 +332,16 @@ rule "Setup and Variables":
     BounceToggleDash = BounceToggleDash if len(BounceToggleDash) else []
     BounceToggleLock = BounceToggleLock if len(BounceToggleLock) else []
 
-    CustomPortalStart = CustomPortalStart if len(CustomPortalStart) > 0 else [] 
-    CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) > 0 else [] 
-    CustomPortalCP = CustomPortalCP if len(CustomPortalCP) > 0 else [] 
+    CustomPortalStart = CustomPortalStart if len(CustomPortalStart) > 0 else []
+    CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) > 0 else []
+    CustomPortalCP = CustomPortalCP if len(CustomPortalCP) > 0 else []
 
     LeaderBoardFull = []
     TitleData = null
     PortalNames = []
     PortalLoc = []
     PortalDest  = []
-    
+
     HintCp = []
     HintText = []
 
@@ -362,16 +363,16 @@ rule "Setup and Variables":
     if DashExploitToggle != [] and not DashExploitToggle:
         #DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
         DashExploitToggle = null
-    
+
     if createWorkshopSetting(bool,"map settings \n地图设置","Basic Map Validator - 验证地图", true, 3):
         async(CheckMap, AsyncBehavior.NOOP)
     PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用传送门 (占点地图)", true, 4)
     CompMode = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","Turn on competitive mode - 开启竞赛模式" , compModeToggle , 100)
     if CompMode:
-        # -! comp minutes !- 
+        # -! comp minutes !-
         CompTime = createWorkshopSetting(int[1:240], "Competitive mode\n竞赛模式", "time limit (global) - 时间限制", compTimeLimit, 101) # 5-240
-        # -! comp attempt count !- 
-        CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode\n竞赛模式", "attempt count - 尝试次数", attemptCount, 102) 
+        # -! comp attempt count !-
+        CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode\n竞赛模式", "attempt count - 尝试次数", attemptCount, 102)
         # -! comp restartlimiter !-
         CompRestartLimit = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","disable restart during run - 竞赛中禁用重新开始" , compRestartLimit , 103)
     else:
@@ -383,16 +384,16 @@ rule "Setup and Variables":
         for TempIterator1 in range(len(PortalLoc)):
             createEffect(
                 [i for i in getAllPlayers() if i.InvincibleToggle or not i.NotOnLastCp],
-                Effect.BAD_AURA, 
+                Effect.BAD_AURA,
                 Color.AQUA if evalOnce(TempIterator1) % 2 == 1 else Color.ORANGE,
-                PortalLoc[evalOnce(TempIterator1)], 
+                PortalLoc[evalOnce(TempIterator1)],
                 0.6,
                 EffectReeval.VISIBILITY
             )
             createInWorldText(
-                [i for i in getAllPlayers() if i.InvincibleToggle or not i.NotOnLastCp], 
-                "{0}".format(PortalNames[evalOnce(TempIterator1)]), 
-                PortalLoc[evalOnce(TempIterator1)] + vect(0,1,0), 
+                [i for i in getAllPlayers() if i.InvincibleToggle or not i.NotOnLastCp],
+                "{0}".format(PortalNames[evalOnce(TempIterator1)]),
+                PortalLoc[evalOnce(TempIterator1)] + vect(0,1,0),
                 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
             )
     waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]),Math.INFINITY)
@@ -413,7 +414,7 @@ rule "Match time":
         setMatchTime(1)
         wait(1.1)
         wait(10)
-    
+
     setMatchTime(69)
     pauseMatchTime()
     wait(5)
@@ -432,7 +433,7 @@ rule "Match time":
                 getAllPlayers().setDamageReceived(100)
                 kill(getAllPlayers(), null)
                 wait(0.032)
-                async(CreateLeaderBoard(), AsyncBehavior.RESTART)            
+                async(CreateLeaderBoard(), AsyncBehavior.RESTART)
 
     bigMessage(localPlayer, "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time expired, restarting")
     wait(5)
@@ -489,7 +490,7 @@ rule "Player Initialize":
             #smallMessage(eventPlayer,"now {0}".format( eventPlayer.AttemptCount))
         if eventPlayer.AttemptCount == (-1) or CompTime < 1:
             eventPlayer.CompDone = true
-    
+
 
     wait()
     StartGame()  # initialization of the game
@@ -520,7 +521,7 @@ rule "Arrive | Ground reset | traces":
         eventPlayer.MovedCheckpoint = true
         if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache: # kill player if not colleted the locks
             if eventPlayer.isUsingAbility1():
-                waitUntil(not eventPlayer.isUsingAbility1(), 1)    
+                waitUntil(not eventPlayer.isUsingAbility1(), 1)
             smallMessage(eventPlayer, "   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[customize.orb_lock]))
             #kill(eventPlayer, null)
             checkpointFailReset()
@@ -529,7 +530,7 @@ rule "Arrive | Ground reset | traces":
             smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
             checkpointFailReset()
             goto lbl_abc
-        
+
         if eventPlayer.ban_bhop and not (eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == Color.GREEN):
             smallMessage(eventPlayer, "   ≥ 留小跳进点!" checkCN "   ≥ Must have a bhop to complete!")
             checkpointFailReset()
@@ -556,7 +557,7 @@ rule "Arrive | Ground reset | traces":
             async(CheckUlt(), AsyncBehavior.RESTART)
             async(CheckDash(), AsyncBehavior.RESTART)*/
 
-        
+
         if eventPlayer.splitdisplay != -Math.INFINITY:
             eventPlayer.splitdisplay =  (eventPlayer.practicetimer if eventPlayer.PracticeToggle else eventPlayer.Timer) - eventPlayer.splittime
         wait()
@@ -567,24 +568,24 @@ rule "Arrive | Ground reset | traces":
         wait()
         UpdateTitle()
         TriggerOnFailSuccesReset()
-        
+
         if eventPlayer.PracticeToggle:
             eventPlayer.splittime = eventPlayer.practicetimer
             goto lbl_abc
-        
+
         eventPlayer.splittime = eventPlayer.Timer
         if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1 and (not eventPlayer.EditorOn) and (not eventPlayer.PracticeToggle): # complete lvl
             stopChasingVariable(eventPlayer.Timer)
-            stopChasingVariable(eventPlayer.practicetimer) 
+            stopChasingVariable(eventPlayer.practicetimer)
             wait()
             bigMessage(getAllPlayers(), "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.Timer),"已通关! 用时" checkCN "Mission complete! Time"))
-                
+
             DeleteSave()
             Leaderboardupdate()
             if CompMode and CompAtmpNum > 0:
-                if eventPlayer.AttemptCount == CompAtmpNum: 
-                    CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = -1 
-                    eventPlayer.AttemptCount = -1                     
+                if eventPlayer.AttemptCount == CompAtmpNum:
+                    CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = -1
+                    eventPlayer.AttemptCount = -1
                     eventPlayer.CompDone = true
                     eventPlayer.LeaderboardToggle = true
                     #eventPlayer.disableRespawn()
@@ -604,8 +605,8 @@ rule "Arrive | Ground reset | traces":
     wait(0.048)
 
     if RULE_CONDITION:
-        goto RULE_START               
-   
+        goto RULE_START
+
 rule "Kill Orb | Activate":
     @Event eachPlayer
     @Condition eventPlayer.KillPosition_Cache != []
@@ -619,7 +620,7 @@ rule "Bounce Ball / Orb | Activate":
     @Condition eventPlayer.BouncePosition_Cache != []
     #@Condition eventPlayer.NotOnLastCp # disabled coz editor
     @Condition (any([distance(i, eventPlayer.getPosition() bounceoffset) < bounceorbdistance for i in eventPlayer.BouncePosition_Cache]))
-    
+
     eventPlayer.bouncetouched = eventPlayer.BouncePosition_Cache.index( # cashe the touched bouncepad number
         sorted(
             [i for i in eventPlayer.BouncePosition_Cache if distance(eventPlayer bounceoffset, i ) < bounceorbdistance and not (i in eventPlayer.LockCollected) ],
@@ -634,7 +635,7 @@ rule "Bounce Ball / Orb | Activate":
             goto RULE_START
         return #only return if no others in radius
 
-    eventPlayer.bouncetouchedlast = eventPlayer.bouncetouched 
+    eventPlayer.bouncetouchedlast = eventPlayer.bouncetouched
 
     if eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched] > 0:
         eventPlayer.applyImpulse(Vector.UP, eventPlayer.BounceStrength_Cache[eventPlayer.bouncetouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
@@ -646,13 +647,13 @@ rule "Bounce Ball / Orb | Activate":
     if eventPlayer.BounceUlt_Cache[eventPlayer.bouncetouched]:
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
-        smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"#终极技能已就绪" checkCN "Ultimate is ready")) 
+        smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"#终极技能已就绪" checkCN "Ultimate is ready"))
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     if eventPlayer.BounceLock_Cache[eventPlayer.bouncetouched]:
         eventPlayer.LockCollected.append(eventPlayer.BouncePosition_Cache[eventPlayer.bouncetouched])
         smallMessage(eventPlayer, "   弹球已收集" checkCN "   orb has been collected")
-        
+
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     if eventPlayer.BounceDash_Cache[eventPlayer.bouncetouched]:
@@ -660,7 +661,7 @@ rule "Bounce Ball / Orb | Activate":
             waitUntil(not eventPlayer.isUsingAbility1(), 1)
             wait(0.032) # wait til set false by check
         eventPlayer.setAbility1Enabled(true)
-        smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready")) 
+        smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready"))
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     wait()
@@ -715,11 +716,11 @@ rule "Player Leaves":
         if SaveCp[SaveEnt.index(eventPlayer)] >= len(CheckpointPositions) - 1 or SavePauseEnabled[SaveEnt.index(eventPlayer)]: # level complete or ?
             goto lbl_a
         SaveTimer[SaveEnt.index(eventPlayer)]  = (
-            getTotalTimeElapsed() - 
-            SaveElapsed[SaveEnt.index(eventPlayer)]  - 
-            SavePauseTime[SaveEnt.index(eventPlayer)]  + 
-            SaveTimer[SaveEnt.index(eventPlayer)] 
-        )        
+            getTotalTimeElapsed() -
+            SaveElapsed[SaveEnt.index(eventPlayer)]  -
+            SavePauseTime[SaveEnt.index(eventPlayer)]  +
+            SaveTimer[SaveEnt.index(eventPlayer)]
+        )
         lbl_a:
         SavePauseTime[SaveEnt.index(eventPlayer)] = 0
         SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
@@ -735,15 +736,15 @@ rule "AFK timer":
     eventPlayer.setStatusEffect(null, Status.ASLEEP, Math.INFINITY)
       # raycast to prevent camera stuck on low wall
     eventPlayer.startCamera(
-        eventPlayer.getPosition() + 
-        Vector.UP * 
+        eventPlayer.getPosition() +
+        Vector.UP *
         (
         distance(
             eventPlayer.getPosition(),
             raycast(eventPlayer.getPosition(),eventPlayer.getPosition()+vect(0,4,0), null, null,false).getHitPosition()
         ) - 1
         ) ,
-        eventPlayer.getPosition(), 
+        eventPlayer.getPosition(),
         10
     )
     # cancel it after jumping or not sleep, reset cures sleep
@@ -753,7 +754,7 @@ rule "AFK timer":
     eventPlayer.stopCamera()
     waitUntil(eventPlayer.isOnWall(), 2)
     if eventPlayer.isOnWall(): # prevent save bhop climb
-        eventPlayer.cancelPrimaryAction() 
+        eventPlayer.cancelPrimaryAction()
         eventPlayer.DoubleUsed = null
 
     if RULE_CONDITION:
@@ -761,7 +762,7 @@ rule "AFK timer":
 
 ################################################################################
 
-#!include "huds.opy"     
+#!include "huds.opy"
 
 #!include "mechanics.opy"
 
@@ -781,7 +782,7 @@ editorordata
 # note: Don't change defaults only here.
 # If you change this, also change it in the name/credit construciton in the huds
 # The old default should always be included to make old data valid
-rule "<tx0C00000000044B55><fg0FFFFFFF> Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这输入 ": 
+rule "<tx0C00000000044B55><fg0FFFFFFF> Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这输入 ":
     #Filling this in adds it to the inspector pasta after next restart.
     #You can fill in again to overwrite.
     #修改的内容 在重新开始 比赛后生效
@@ -789,10 +790,10 @@ rule "<tx0C00000000044B55><fg0FFFFFFF> Credits and Colors here - 作者代码HUD
     Name = "Name Here - 作者"
     Code = "Code Here - 代码"
     #
-    #+++++  +++++  +++++  +++++  +++++  +++++  
+    #+++++  +++++  +++++  +++++  +++++  +++++
     #color customization below / 自定义 颜色(实体、HUD)
-    #+++++  +++++  +++++  +++++  +++++  +++++  
-    # 
+    #+++++  +++++  +++++  +++++  +++++  +++++
+    #
     #credit hud name   -   作者HUD
     ColorConfig[customize.credit_name] = Color.VIOLET
     #credit hud code   -   代码HUD
@@ -813,7 +814,7 @@ rule "<tx0C00000000044B55><fg0FFFFFFF> Credits and Colors here - 作者代码HUD
     ColorConfig[customize.bhopclimb_available] = Color.GREEN
     #bhop/climb used (cant be same as available)   -   小跳/爬墙已用HUD
     ColorConfig[customize.bhopclimb_used] = Color.RED
-        
+
     #current checkpoint ring   -   当前检查点光圈
     ColorConfig[customize.ring_current] =  Color.SKY_BLUE
     #next checkpoint ring   -   下一关检查点光圈
@@ -828,7 +829,7 @@ rule "<tx0C00000000044B55><fg0FFFFFFF> Credits and Colors here - 作者代码HUD
     ColorConfig[customize.killorb] = Color.BLUE
     #normal orbs   -   弹球
     ColorConfig[customize.orb_normal] = Color.GREEN
-    #lock orbs (overwritten if its same as normal)   
+    #lock orbs (overwritten if its same as normal)
     #收集球 (与普通弹 球相同时将 自动覆写)
     ColorConfig[customize.orb_lock] = Color.ORANGE
     #portals   -   自定义 传送门
@@ -836,37 +837,36 @@ rule "<tx0C00000000044B55><fg0FFFFFFF> Credits and Colors here - 作者代码HUD
 
 rule "Instructions for Depricated Rules (ban / portal / dash /ult) - 旧版编辑器中已弃用规则指引 (单关封禁 / 传送门 / 给刀给S)":
     @Delimiter
-    printLog("■■■■■■■■■■■■■■■■■■■■■■■■")
     # The following rules should now be handled with the ingame editor
     #- Ban per checkpoint
     #- Dash/Ult per checkpoint
     #- Custom portals
-    printLog("■■■■■■■■■■■■■■■■■■■■■■■■")
+    return
     # When updating old maps, these things should be added to your map data.
     # This is done with the instructions below
-    printLog("■■■■■■■■■■■■■■■■■■■■■■■■")
+    return
     #step 1) Open the old rule
     #step 2) Select the variables and press copy
     #      (do not select waits or workshop toggles, only select variables)
     #step 3) Go to map data rule and paste this the variables
-    printLog("■■■■■■■■■■■■■■■■■■■■■■■■")
+    return
     #以下规则现在 要用游戏内置 编辑器编辑
 	#	- 单关 封禁(卡小、蹭留等)
 	#	- 检查点给 刀给S
 	#	- 自定义 传送门
-    printLog("■■■■■■■■■■■■■■■■■■■■■■■■")
+    return
 	#	当更新旧 图数据 时，以上 这些东西 应该放 到地图 数据里
-    #	以下是一 些更新旧 图数据 指引: 
-    printLog("■■■■■■■■■■■■■■■■■■■■■■■■")
+    #	以下是一 些更新旧 图数据 指引:
+    return
 	#	步骤 1) 找到旧图 数据的 规则
 	#	步骤 2) 选中旧图 数据的 全局变 量并复制
 	#		  (不要复制含 等待 地图工坊设置 的指令, 只要 全局变量 的数据)
 	#	步骤 3) 将全局变 量数据粘 贴到新版 编辑器的 地图数 据规则
-    printLog("■■■■■■■■■■■■■■■■■■■■■■■■")
+    return
 
 ################################################################################
 
 #!include "addons-page2.opy"
 
 # enable/disable the include via defines
-testToggle 
+testToggle
