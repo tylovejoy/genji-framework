@@ -29,7 +29,7 @@ if (x == 0){
     }[x]
 
     selectedmap = {
-    1: "workshopIsland",
+    1: "workshopIsland\",\"workshopChamber",
     2: "lijiangTower",//"workshopChamber",// "antarcticPeninsula", 
     3: "hollywood",
     4: "route66",
