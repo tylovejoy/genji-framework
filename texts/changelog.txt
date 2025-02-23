@@ -460,15 +460,9 @@ fixed:
   * Found by `@Sumpin` +5xp
 - Spray would disappear upon returning from spectator
   * Found by `@Shade Yato`
-### Framework
-- Clean up & optimizations (-1.5k elements)
 ### Obsoleting Features
-These are exploits are specific to this framework and are being deprecated due to refactoring to a single reset function.
 - Dash Start
   * Setting `ban Dash Start - 0关卡Shift` has been removed.
+  * Deprecated due to refactoring to a single reset function.
   * To enable Dash Start when upgrading existing maps, Map data must include: `DashExploitToggle = false`
   * Dash Start when enabled, will affect all checkpoints
-- Death hop
-  * Setting `ban Deathbhop - 封禁死小` has been removed
-  * Death hop was never a hop, but a misconfigured teleport placing player 1m up
-  * To recreate, place a teleporter 1m above the checkpoint

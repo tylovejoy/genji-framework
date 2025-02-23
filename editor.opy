@@ -676,7 +676,8 @@ rule "Editor | Hud and Effects":
             " {} 卡小\n"
             " {} 站卡\n"
             " {} 爬墙\n"
-            " {} 延二段跳\n"
+            " {} 死小\n"
+            #" {} 延二段跳\n"
             " {} 表情留小\n"
             "――――――――――――\n"
             " {} 留小跳进点\n"
@@ -685,7 +686,8 @@ rule "Editor | Hud and Effects":
                 "√" if hostPlayer.CurrentCheckpoint in BanCreate else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanStand else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanClimb else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanSaveDouble else [],
+                "√" if hostPlayer.CurrentCheckpoint in BanDead else " ",
+                #"√" if hostPlayer.CurrentCheckpoint in BanSaveDouble else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanEmote else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanBhop else []
             )
@@ -726,7 +728,8 @@ rule "Editor | Hud and Effects":
             " {} create\n"
             " {} stand\n"
             " {} climb\n"
-            " {} save double\n"
+            " {} dead\n"
+            #" {} save double\n"
             " {} emote\n"
             "――――――――――――\n"
             " {} require bhop\n"
@@ -735,7 +738,8 @@ rule "Editor | Hud and Effects":
                 "√" if hostPlayer.CurrentCheckpoint in BanCreate else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanStand else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanClimb else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanSaveDouble else [],
+                "√" if hostPlayer.CurrentCheckpoint in BanDead else " ",
+                #"√" if hostPlayer.CurrentCheckpoint in BanSaveDouble else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanEmote else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanBhop else []
             )
@@ -903,7 +907,7 @@ rule "Editor | create cp/orb":
             BanMulti = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanMulti]
             BanCreate = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanCreate]
             BanStand = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanStand]
-            #BanDead = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanDead]
+            BanDead = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanDead]
             BanEmote = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanEmote]
             BanClimb = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanClimb]
             BanSaveDouble = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanSaveDouble]
@@ -1058,7 +1062,7 @@ rule "Editor | delete cp/orb/portal":
         removeCPandLower(BanMulti)
         removeCPandLower(BanCreate)
         removeCPandLower(BanStand)
-        #removeCPandLower(BanDead)
+        removeCPandLower(BanDead)
         removeCPandLower(BanEmote)
         removeCPandLower(BanClimb)
         removeCPandLower(BanSaveDouble)
@@ -1286,8 +1290,8 @@ rule "Editor | toggle bans":
 
     else:
         if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
-            #toggleCpInArray(BanDead)
-            toggleCpInArray(BanSaveDouble)
+            toggleCpInArray(BanDead)
+            #toggleCpInArray(BanSaveDouble)
         elif eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
             toggleCpInArray(BanEmote)
         elif eventPlayer.isHoldingButton(Button.CROUCH):

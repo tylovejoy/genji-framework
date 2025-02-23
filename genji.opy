@@ -2,7 +2,7 @@
 #♨ Dev Build Icon
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
+editortoggle(1) # 0 is editor, rest is numbers
 
 #!optimizeForSize
 # Supress warning for emote
@@ -54,9 +54,9 @@ def UpdateCache():
         if eventPlayer.ban_standcreate:
             eventPlayer.banstring = "♠ {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓
 
-        /* eventPlayer.ban_dedhop = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Deathbhop - 封禁死小", false, 4) else eventPlayer.CurrentCheckpoint in BanDead
+        eventPlayer.ban_dedhop = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Deathbhop - 封禁死小", false, 4) else eventPlayer.CurrentCheckpoint in BanDead
         if eventPlayer.ban_dedhop:
-            eventPlayer.banstring = "X {}".format(eventPlayer.banstring) */
+            eventPlayer.banstring = "X {}".format(eventPlayer.banstring)
 
         eventPlayer.ban_emote = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Emote Savehop - 封禁表情留小", false, 5) else eventPlayer.CurrentCheckpoint in BanEmote
         if eventPlayer.ban_emote:
@@ -196,13 +196,13 @@ def checkpointFailReset():
         #After teleport incase stopForcingPosition launches the player
         eventPlayer.applyImpulse( -1 * eventPlayer.getVelocity(), 0.0001, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
-    /*
+    
     if eventPlayer.ban_dedhop:
-    # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
+        # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
         wait(0.1) # finish teleport first
         if eventPlayer.isHoldingButton(Button.JUMP):
             eventPlayer.forceButtonPress(Button.JUMP)
-            eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed() + 0.1, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+            #eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed() + 0.1, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
     # end new */
 
     if eventPlayer.isUsingUltimate():
@@ -349,7 +349,7 @@ rule "Setup and Variables":
     BanBhop = [i for i in BanBhop if i != -1] if len(BanBhop) else []
     BanClimb = [i for i in BanClimb if i != -1] if len(BanClimb) else []
     BanEmote = [i for i in BanEmote if i != -1] if len(BanEmote) else []
-    BanDead = null # [i for i in BanDead if i != -1] if len(BanDead) else [] # legacy code, now auto sets it to null to save space
+    BanDead = [i for i in BanDead if i != -1] if len(BanDead) else []
     BanCreate = [i for i in BanCreate if i != -1] if len(BanCreate) else []
     BanMulti = [i for i in BanMulti if i != -1] if len(BanMulti) else []
     BanTriple = null #[i for i in BanTriple if i != -1] if len(BanTriple) > 0 else [] # legacy code, now auto sets it to null to save space
