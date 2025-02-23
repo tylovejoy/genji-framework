@@ -439,8 +439,8 @@ fixed:
 # 1.10.2
 ### Features
 - Practice Mode
- * Can enter with Invincibility active. (Auto disables Invincibility)
- * Can exit with Invincibility active. (Auto disables Invincibility)
+  * Can enter with Invincibility active. (Auto disables Invincibility)
+  * Can exit with Invincibility active. (Auto disables Invincibility)
 - Invincibility Mode
   * Can exit with ultimate active
 - Preview Checkpoint
