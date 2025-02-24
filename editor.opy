@@ -246,7 +246,7 @@ rule "Editor | Hud and Effects":
                 "{0} | 向上移动 \n"
                 "{1} | 向下移动 \n"
                 "{2} (长按) | 快速移动"
-                "".format(buttonString(Button.JUMP), buttonString(Button.CROUCH),  buttonString(Button.SECONDARY_FIRE))
+                "".format(buttonString(Button.JUMP), buttonString(Button.CROUCH),  buttonString(Button.ABILITY_1))
 
         ) checkCN
         (
@@ -275,7 +275,7 @@ rule "Editor | Hud and Effects":
                 "{0} | move up\n"
                 "{1} | move down\n"
                 "{2} (hold) | move faster"
-                "".format(buttonString(Button.JUMP), buttonString(Button.CROUCH),  buttonString(Button.SECONDARY_FIRE))
+                "".format(buttonString(Button.JUMP), buttonString(Button.CROUCH),  buttonString(Button.ABILITY_1))
 
         )
         , HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
@@ -1331,55 +1331,51 @@ rule "Editor | move object":
     eventPlayer.LockEditor = true
     EditorMoveItem = true
     if eventPlayer.flytoggle == null:
-        eventPlayer.startForcingPosition(eventPlayer.getPosition(),false)
+        eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
 
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 1)
     if eventPlayer.EditModeSelection == 1:
         eventPlayer.startCamera(
             KillBallPositions[EditSelected] + eventPlayer.getFacingDirection() * ((KillBallRadii[EditSelected]) * -1.2),
             KillBallPositions[EditSelected],
-            30
-        )
+            30)
 
-        while eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false:
-            KillBallPositions[EditSelected] += vect(0, 0.1 if eventPlayer.isHoldingButton(Button.JUMP) else -0.1 if eventPlayer.isHoldingButton(Button.CROUCH) else 0, 0) * (1 if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) else 0.3)
-            KillBallPositions[EditSelected] += worldVector(eventPlayer.getThrottle() * (0.25 if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) else 0.08) ,eventPlayer, Transform.ROTATION)
+        while not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
+            KillBallPositions[EditSelected] += 0.03 * Vector.UP * (eventPlayer.isHoldingButton(Button.JUMP) - eventPlayer.isHoldingButton(Button.CROUCH)) * (3 if eventPlayer.isHoldingButton(Button.ABILITY_1) else 1) + \
+                worldVector(eventPlayer.getThrottle() * (0.25 if eventPlayer.isHoldingButton(Button.ABILITY_1) else 0.08) ,eventPlayer, Transform.ROTATION)
             wait()
 
     elif eventPlayer.EditModeSelection == 2:
         eventPlayer.startCamera(
-            BouncePositions[EditSelected] + eventPlayer.getFacingDirection() * -4,
+            BouncePositions[EditSelected] + eventPlayer.getFacingDirection() * -3.5,
             BouncePositions[EditSelected],
-            30
-        )
-        while eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false:
-            BouncePositions[EditSelected] += vect(0, 0.1 if eventPlayer.isHoldingButton(Button.JUMP) else -0.1 if eventPlayer.isHoldingButton(Button.CROUCH) else 0, 0) * (1 if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) else 0.3)
-            BouncePositions[EditSelected] += worldVector(eventPlayer.getThrottle() * (0.25 if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) else 0.08) ,eventPlayer, Transform.ROTATION)
+            30)
+        while not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
+            BouncePositions[EditSelected] += 0.03 * Vector.UP * (eventPlayer.isHoldingButton(Button.JUMP) - eventPlayer.isHoldingButton(Button.CROUCH)) * (3 if eventPlayer.isHoldingButton(Button.ABILITY_1) else 1) + \
+                worldVector(eventPlayer.getThrottle() * (0.25 if eventPlayer.isHoldingButton(Button.ABILITY_1) else 0.08) ,eventPlayer, Transform.ROTATION)
             wait()
 
     elif eventPlayer.EditModeSelection == 4:
         # move start position
         eventPlayer.startCamera(
-            CustomPortalStart[EditSelected] + eventPlayer.getFacingDirection() * -3,
+            CustomPortalStart[EditSelected] + eventPlayer.getFacingDirection() * -3.5,
             CustomPortalStart[EditSelected],
-            30
-        )
+            30)
 
-        while eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false:
-            CustomPortalStart[EditSelected] += vect(0, 0.1 if eventPlayer.isHoldingButton(Button.JUMP) else -0.1 if eventPlayer.isHoldingButton(Button.CROUCH) else 0, 0) * (1 if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) else 0.3)
-            CustomPortalStart[EditSelected] += worldVector(eventPlayer.getThrottle() * (0.25 if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) else 0.08) ,eventPlayer, Transform.ROTATION)
+        while not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
+            CustomPortalStart[EditSelected] += 0.03 * Vector.UP * (eventPlayer.isHoldingButton(Button.JUMP) - eventPlayer.isHoldingButton(Button.CROUCH)) * (3 if eventPlayer.isHoldingButton(Button.ABILITY_1) else 1) + \
+                worldVector(eventPlayer.getThrottle() * (0.25 if eventPlayer.isHoldingButton(Button.ABILITY_1) else 0.08) ,eventPlayer, Transform.ROTATION)
             wait()
 
         # move destination
         eventPlayer.startCamera(
-            CustomPortalEndpoint[EditSelected] + eventPlayer.getFacingDirection() * -3,
+            CustomPortalEndpoint[EditSelected] + eventPlayer.getFacingDirection() * -3.5,
             CustomPortalEndpoint[EditSelected],
-            30
-        )
+            30)
         waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 1)
-        while eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false:
-            CustomPortalEndpoint[EditSelected] += vect(0, 0.1 if eventPlayer.isHoldingButton(Button.JUMP) else -0.1 if eventPlayer.isHoldingButton(Button.CROUCH) else 0, 0) * (1 if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) else 0.3)
-            CustomPortalEndpoint[EditSelected] += worldVector(eventPlayer.getThrottle() * (0.25 if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) else 0.08) ,eventPlayer, Transform.ROTATION)
+        while not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
+            CustomPortalEndpoint[EditSelected] += 0.03 * Vector.UP * (eventPlayer.isHoldingButton(Button.JUMP) - eventPlayer.isHoldingButton(Button.CROUCH)) * (3 if eventPlayer.isHoldingButton(Button.ABILITY_1) else 1) + \
+                worldVector(eventPlayer.getThrottle() * (0.25 if eventPlayer.isHoldingButton(Button.ABILITY_1) else 0.08) ,eventPlayer, Transform.ROTATION)
             wait()
 
     eventPlayer.stopCamera()
