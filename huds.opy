@@ -549,7 +549,7 @@ rule "Huds: each player":
             iconString(Icon.WARNING),
             "先收集橙球" checkCN "collect orbs first"
         ) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
-        "到这里来" checkCN "Come here",
+        "到这里来" checkCN "come here",
         CheckpointPositions[eventPlayer.CurrentCheckpoint + 1],
         1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING,  ColorConfig[customize.cometext], SpecVisibility.DEFAULT
     )
@@ -573,7 +573,7 @@ rule "Huds: each player":
                 "! competition is over !" if CompTime <= 0 else
                 "time left: {0} min{1}".format(
                     CompTime,
-                    "\nYou are out of attemps" if eventPlayer.AttemptCount == -1 else
+                    "\nYou are out of attempts" if eventPlayer.AttemptCount == -1 else
                     "\nAttempt {0} / {1}".format(eventPlayer.AttemptCount, CompAtmpNum) if CompAtmpNum > 0
                     else []
                 )
