@@ -1,8 +1,8 @@
-#!define versionhere "1.10.2♨F"
+#!define versionhere "1.10.2♨G"
 #♨ Dev Build Icon
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(1) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 
 #!optimizeForSize
 # Supress warning for emote
@@ -198,10 +198,10 @@ def checkpointFailReset():
 
         # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
         if eventPlayer.ban_dedhop and eventPlayer.isHoldingButton(Button.JUMP):
-            #wait(0.1) # finish teleport first
-            #if eventPlayer.isHoldingButton(Button.JUMP):
-                #eventPlayer.forceButtonPress(Button.JUMP)
-                #eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed() + 0.1, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+            /*wait(0.1) # finish teleport first
+            if eventPlayer.isHoldingButton(Button.JUMP):
+                eventPlayer.forceButtonPress(Button.JUMP)
+                eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed() + 0.1, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)*/
             eventPlayer.forceButtonPress(Button.JUMP)
 
         if eventPlayer.isUsingUltimate():
