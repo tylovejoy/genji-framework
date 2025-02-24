@@ -41,7 +41,7 @@ def UpdateCache():
     eventPlayer.HintsOn = false
     eventPlayer.banstring = []
     wait()
-    if not eventPlayer.NotOnLastCp:
+    if eventPlayer.NotOnLastCp:
         eventPlayer.ban_multi = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Multiclimb - 封禁蹭留", false, 1) else eventPlayer.CurrentCheckpoint in BanMulti
         if eventPlayer.ban_multi:
             eventPlayer.banstring = "∞ {}".format(eventPlayer.banstring)
@@ -186,7 +186,7 @@ def checkpointFailReset():
         eventPlayer.splittime = 0
 
     if len(CheckpointPositions) > 0:
-        eventPlayer.setStatusEffect(null, Status.ROOTED, 0.1)
+        eventPlayer.setStatusEffect(null, Status.ROOTED, false)
         if eventPlayer.isUsingAbility1() and DashExploitToggle:
             #smallMessage(eventPlayer,"   0关卡Shift已禁用!" checkCN "   Dash Start is banned!")
             eventPlayer.startForcingPosition(eventPlayer, false)
@@ -194,22 +194,21 @@ def checkpointFailReset():
             eventPlayer.stopForcingPosition()
         eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint].last())
         #After teleport incase stopForcingPosition launches the player
-        eventPlayer.applyImpulse( -1 * eventPlayer.getVelocity(), 0.0001, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+        eventPlayer.applyImpulse(-1 * eventPlayer.getVelocity(), 0.0001, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
-    
-    if eventPlayer.ban_dedhop:
         # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
-        wait(0.1) # finish teleport first
-        if eventPlayer.isHoldingButton(Button.JUMP):
+        if eventPlayer.ban_dedhop and eventPlayer.isHoldingButton(Button.JUMP):
+            #wait(0.1) # finish teleport first
+            #if eventPlayer.isHoldingButton(Button.JUMP):
+                #eventPlayer.forceButtonPress(Button.JUMP)
+                #eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed() + 0.1, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
             eventPlayer.forceButtonPress(Button.JUMP)
-            #eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed() + 0.1, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
-    # end new */
 
-    if eventPlayer.isUsingUltimate():
-        eventPlayer.setDamageReceived(100)
-        kill(eventPlayer, null)
-        eventPlayer.setDamageReceived(0)
-        wait()
+        if eventPlayer.isUsingUltimate():
+            eventPlayer.setDamageReceived(100)
+            kill(eventPlayer, null)
+            eventPlayer.setDamageReceived(0)
+            wait()
 
     async(CheckUlt(), AsyncBehavior.RESTART)
     async(CheckDash(), AsyncBehavior.RESTART)
@@ -346,14 +345,14 @@ rule "Setup and Variables":
     wait(1)
 
     # clean out -1's after the ban has loaded
-    BanBhop = [i for i in BanBhop if i != -1] if len(BanBhop) else []
-    BanClimb = [i for i in BanClimb if i != -1] if len(BanClimb) else []
-    BanEmote = [i for i in BanEmote if i != -1] if len(BanEmote) else []
-    BanDead = [i for i in BanDead if i != -1] if len(BanDead) else []
-    BanCreate = [i for i in BanCreate if i != -1] if len(BanCreate) else []
-    BanMulti = [i for i in BanMulti if i != -1] if len(BanMulti) else []
-    BanTriple = null #[i for i in BanTriple if i != -1] if len(BanTriple) > 0 else [] # legacy code, now auto sets it to null to save space
-    BanStand = [i for i in BanStand if i != -1] if len(BanStand) else []
+    BanBhop = [i for i in BanBhop if i + false >= 0] if len(BanBhop) else []
+    BanClimb = [i for i in BanClimb if i + false >= 0] if len(BanClimb) else []
+    BanEmote = [i for i in BanEmote if i + false >= 0] if len(BanEmote) else []
+    BanDead = [i for i in BanDead if i + false >= 0] if len(BanDead) else []
+    BanCreate = [i for i in BanCreate if i + false >= 0] if len(BanCreate) else []
+    BanMulti = [i for i in BanMulti if i + false >= 0] if len(BanMulti) else []
+    BanTriple = null #[i for i in BanTriple if i + false >= 0] if len(BanTriple) > 0 else [] # legacy code, now auto sets it to null to save space
+    BanStand = [i for i in BanStand if i + false >= 0] if len(BanStand) else []
     BanSaveDouble = BanSaveDouble if len(BanSaveDouble) else []
     BanDjump = BanDjump if len(BanDjump) else []
 
