@@ -252,8 +252,8 @@ rule "Editor | Hud and Effects":
             "{0} | move up\n"
             "{1} | move down\n"
             "{2} (hold) | move faster".format(buttonString(Button.JUMP), buttonString(Button.CROUCH),  buttonString(Button.ABILITY_1))
-        )
-        , HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        ),
+        HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     # hud 1-5
@@ -273,8 +273,8 @@ rule "Editor | Hud and Effects":
             [],
             "{0} + {1} | delete selected".format(buttonString(Button.INTERACT), buttonString(Button.SECONDARY_FIRE)),
         ][hostPlayer.EditModeSelection]
-        )
-        , HudPosition.RIGHT, HO.edit_instructions_edit1, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        ),
+        HudPosition.RIGHT, HO.edit_instructions_edit1, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     # hud 2
@@ -305,8 +305,8 @@ rule "Editor | Hud and Effects":
             "{0} + {2} | select previous\n".format(buttonString(Button.INTERACT), buttonString(Button.JUMP), buttonString(Button.CROUCH))
         ][hostPlayer.EditModeSelection] if EditorMoveItem == false else
             "{0} | confirm placement".format(buttonString(Button.PRIMARY_FIRE))
-        )
-        , HudPosition.RIGHT, HO.edit_instructions_edit2, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        ),
+        HudPosition.RIGHT, HO.edit_instructions_edit2, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     # hud3
@@ -334,8 +334,8 @@ rule "Editor | Hud and Effects":
             "{0} + {1} | move\n"
             "{0} + {2} | cp/map (toggle)".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.JUMP))
         ][hostPlayer.EditModeSelection] if EditorMoveItem == false else []
-        )
-        ,HudPosition.RIGHT, HO.edit_instructions_edit3, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        ),
+        HudPosition.RIGHT, HO.edit_instructions_edit3, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     # hud4
@@ -357,8 +357,8 @@ rule "Editor | Hud and Effects":
             "{0} + {2} | stand create".format(buttonString(Button.ABILITY_2) , buttonString(Button.JUMP), buttonString(Button.CROUCH)),
             []
         ][hostPlayer.EditModeSelection] if EditorMoveItem == false else []
-        )
-        ,HudPosition.RIGHT, HO.edit_instructions_edit4, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        ),
+        HudPosition.RIGHT, HO.edit_instructions_edit4, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     # ==
@@ -379,80 +379,69 @@ rule "Editor | Hud and Effects":
     */
     hudSubtext(
         hostPlayer if hostPlayer.GuideToggle else null,
-        " \n{0} + {1} | 下一关"
+        " \n{0} + {1} | 下一关".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE))
         #"{0} + {2} | 上一关"
-        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE))
         checkCN
-        " \n{0} + {1} | Next checkpoint"
+        " \n{0} + {1} | Next checkpoint".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE)),
         #"{0} + {2} | Prev checkpoint"
-        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE))
-        ,HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
     hudSubtext(
         hostPlayer if hostPlayer.GuideToggle else null,
         "{1} + {2} | 上一关\n"
-        "{0} (长按) | 飞行\n"
-        "".format(buttonString(Button.ABILITY_1), buttonString(Button.CROUCH),buttonString(Button.SECONDARY_FIRE))
+        "{0} (长按) | 飞行\n".format(buttonString(Button.ABILITY_1), buttonString(Button.CROUCH),buttonString(Button.SECONDARY_FIRE))
         checkCN
         "{1} + {2} | Prev checkpoint\n"
-        "{0} (hold)| Fly\n"
-
-        "".format(buttonString(Button.ABILITY_1), buttonString(Button.CROUCH),buttonString(Button.SECONDARY_FIRE))
-        ,HudPosition.RIGHT, HO.edit_instructions_general1, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        "{0} (hold)| Fly\n".format(buttonString(Button.ABILITY_1), buttonString(Button.CROUCH),buttonString(Button.SECONDARY_FIRE)),
+        HudPosition.RIGHT, HO.edit_instructions_general1, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
     hudSubheader(hostPlayer if hostPlayer.GuideToggle else null,
         "保存地图长按 {0} + {1} + {2} 后按弹出窗口的提示进行操作".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD))
         checkCN
-        "to save map hold {0} + {1} + {2} and follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD))
-        ,HudPosition.LEFT, HO.edit_savemap, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        "to save map hold {0} + {1} + {2} and follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
+        HudPosition.LEFT, HO.edit_savemap, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     hudText(localPlayer if not localPlayer.savemaphud else null,
         (
-        "{0} 检查点模式 \n"
-        "{1} 击杀球模式 \n"
-        "{2} 弹球模式 \n"
-        "{3} 封禁(单关) \n"
-        "{4} 自定义传送门 "
-        "".format(
-        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 0 else "     ",
-        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 1 else "     ",
-        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 2 else "     ",
-        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 3 else "     ",
-        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 4 else "     "
-        )
+            "{0} 检查点模式 \n"
+            "{1} 击杀球模式 \n"
+            "{2} 弹球模式 \n"
+            "{3} 封禁(单关) \n"
+            "{4} 自定义传送门 ".format(
+                iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 0 else "     ",
+                iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 1 else "     ",
+                iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 2 else "     ",
+                iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 3 else "     ",
+                iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 4 else "     ")
         if hostPlayer.isHoldingButton(Button.MELEE) else
-        " {1} {0} ".format(
-            ["检查点模式" ,"击杀球模式","弹球模式","封禁(单关)","自定义传送门"][ hostPlayer.EditModeSelection],
-            [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][ hostPlayer.EditModeSelection]
-        )  if localPlayer == hostPlayer else
-        " {0} 源氏 编辑者 {0} ".format( iconString(Icon.BOLT) )
-        )
-        checkCN
-        "{0} Checkpoints \n"
-        "{1} Kills orbs \n"
-        "{2} Bounce Orb \n"
-        "{3} checkpoint bans\n"
-        "{4} portals "
-        "".format(
-        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 0 else "     ",
-        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 1 else "     ",
-        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 2 else "     ",
-        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 3 else "     ",
-        iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 4 else "     "
-        )
+            " {1} {0} ".format(
+                ["检查点模式" ,"击杀球模式","弹球模式","封禁(单关)","自定义传送门"][ hostPlayer.EditModeSelection],
+                [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP), iconString(Icon.SPIRAL)][ hostPlayer.EditModeSelection])
+        if localPlayer == hostPlayer else
+            " {0} 源氏 编辑者 {0} ".format( iconString(Icon.BOLT))
+        ) checkCN
+            "{0} Checkpoints \n"
+            "{1} Kills orbs \n"
+            "{2} Bounce Orb \n"
+            "{3} checkpoint bans\n"
+            "{4} portals ".format(
+                iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 0 else "     ",
+                iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 1 else "     ",
+                iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 2 else "     ",
+                iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 3 else "     ",
+                iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 4 else "     ")
         if hostPlayer.isHoldingButton(Button.MELEE) else
-        " {1} {0} ".format(
-            ["Checkpoints" ,"Kill orbs","Function Orb","checkpoint bans","portals"][ hostPlayer.EditModeSelection],
-            [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][ hostPlayer.EditModeSelection]
-       )  if localPlayer == hostPlayer else
-        " {0} Genji editor {0} ".format( iconString(Icon.BOLT) ),
-
+            " {1} {0} ".format(
+                ["Checkpoints" ,"Kill orbs","Function Orb","checkpoint bans","portals"][ hostPlayer.EditModeSelection],
+                [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][ hostPlayer.EditModeSelection]) 
+        if localPlayer == hostPlayer else
+            " {0} Genji editor {0} ".format(iconString(Icon.BOLT)),
         null,
         null,
-       HudPosition.TOP, HO.edit_host_mode, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        HudPosition.TOP, HO.edit_host_mode, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     hudText(
