@@ -175,22 +175,16 @@ rule "Stall enhancer - 增强系統跳的判定":
     eventPlayer.stopForcingPosition()
     eventPlayer.setMoveSpeed(0)
     eventPlayer.setGravity(0)
+
     waitUntil(
         eventPlayer.isHoldingButton(Button.RELOAD) or
-        eventPlayer.flytoggle != null or
-        eventPlayer.isDead() or
+        eventPlayer.flytoggle or eventPlayer.isDead() or
         eventPlayer.isUsingAbility1() or
-        eventPlayer.getSpeed() > 3 # double jump catch
-        , 3
-    )
+        eventPlayer.getSpeed() > 3 , 3) # double jump catch
     #wait(3)
     eventPlayer.setGravity(100)
     eventPlayer.setMoveSpeed(100)
-    if (
-        eventPlayer.flytoggle == null and
-        eventPlayer.isAlive() and
-        not eventPlayer.isHoldingButton(Button.RELOAD)
-        ):
+    if not eventPlayer.flytoggle and eventPlayer.isAlive() and not eventPlayer.isHoldingButton(Button.RELOAD):
         eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
         if RULE_CONDITION:
             goto RULE_START
