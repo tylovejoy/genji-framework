@@ -210,11 +210,11 @@ rule "Huds: Global/Localplayer":
         HudStoreEdit.append(getLastCreatedText())
 
         hudSubheader([i for i in getAllPlayers() if i.PracticeToggle and i.GuideToggle],
-            "{0} + {1} | 下一关\n{0} + {2} | 上一关\n{3} | 回到练习模式起点 "
-            "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT) )
+            "{0} + {1} | 下一关\n{0} + {2} | 上一关\n{3} | 回到练习模式起点 ".format(
+                buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT) )
             checkCN
-            "{0} + {1} | Next level\n{0} + {2} | Previous level\n{3} | Start from practice cp "
-            "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT) )
+            "{0} + {1} | Next level\n{0} + {2} | Previous level\n{3} | Start from practice cp ".format(
+                buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT) )
             , HudPosition.RIGHT, HO.com_practicesub, evalOnce(ColorConfig[customize.command_highlight]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         HudStoreEdit.append(getLastCreatedText())
@@ -456,8 +456,7 @@ rule "Huds: each player":
 
     hudText(
         eventPlayer if not eventPlayer.LeaderboardToggle else null,
-        " {0} ({2}/{3})\n―――――――――――\n {1}\n"
-        "".format(
+        " {0} ({2}/{3})\n―――――――――――\n {1}\n".format(
             ("检查点" if eventPlayer.PreviewsI == 0 else "弹球" if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1  else "自定义传送门") checkCN
             "checkpoint" if eventPlayer.PreviewsI == 0 else "orb" if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1  else "portal",
             "{} {} {} {}".format(

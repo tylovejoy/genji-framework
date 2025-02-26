@@ -367,13 +367,11 @@ rule "Editor | Hud and Effects":
         hostPlayer if hostPlayer.GuideToggle else null,
         " \n{0} + {1} | 下一关\n"
         "{0} + {2} | 上一关\n"
-        "{3} (长按) | 飞行\n"
-        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1))
+        "{3} (长按) | 飞行\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1))
         checkCN
         " \n{0} + {1} | Next checkpoint\n"
         "{0} + {2} | Prev checkpoint\n"
-        "{3} (hold)| Fly\n"
-        "".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1))
+        "{3} (hold)| Fly\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1))
         ,HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     */
@@ -576,8 +574,7 @@ rule "Editor | Hud and Effects":
             if hostPlayer.EditModeSelection == 3 else
                 "\n 入口矢量: {} \n"
                 " 出口矢量: {} \n"
-                " 应用关卡: {} \n"
-                "".format(
+                " 应用关卡: {} \n".format(
                 CustomPortalStart[EditSelected],
                 CustomPortalEndpoint[EditSelected],
                 "所有" if CustomPortalCP[EditSelected] == Math.INFINITY else hostPlayer.CurrentCheckpoint)
@@ -621,8 +618,7 @@ rule "Editor | Hud and Effects":
             if hostPlayer.EditModeSelection == 3 else
                 "\n Start: {} \n"
                 " End: {} \n"
-                " CP: {} \n"
-                "".format(
+                " CP: {} \n".format(
                 CustomPortalStart[EditSelected],
                 CustomPortalEndpoint[EditSelected],
                 "All" if CustomPortalCP[EditSelected] == Math.INFINITY else hostPlayer.CurrentCheckpoint)
