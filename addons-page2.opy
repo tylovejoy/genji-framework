@@ -9,7 +9,7 @@ this should be parts of addons that get toggled by turning on rules
 rule "<tx0C00000000001344> Addons Settings & Data - 附加组件 <tx0C00000000001344>":
     @Delimiter
 
-rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":
+rule "Comp Mode instruction mess­age - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":
     wait(0.4)
     # Instructions that show when you start comp mode.
     # Due to the hud text limit, you there is 4 huds available.
@@ -19,10 +19,10 @@ rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE
     # 指引消息将 会在竞赛模 式开始时 显示
     # 由于 hud 文本限制，你有 4 个hud可用
     # 如果你不需 要一个字段 只是空文 本字段
-    instructiontext[0] = "Change in Comp Mode instruction message hud 1"
-    instructiontext[1] = "Change in Comp Mode instruction message hud 2"
-    instructiontext[2] = "Change in Comp Mode instruction message hud 3"
-    instructiontext[3] = "Change in Comp Mode instruction message hud 4"
+    instructiontext[0] = "Change in Comp Mode instruction mess­age hud 1"
+    instructiontext[1] = "Change in Comp Mode instruction mess­age hud 2"
+    instructiontext[2] = "Change in Comp Mode instruction mess­age hud 3"
+    instructiontext[3] = "Change in Comp Mode instruction mess­age hud 4"
 
 rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled
@@ -79,7 +79,7 @@ rule "Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
         Color.RED
     ]
 
-rule "Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
+rule "Friend Title - 朋友称号 <---- DISPLAY MESS­AGE HERE (ON PLAYER)":
     @Disabled
     @Delimiter
     @Event eachPlayer
