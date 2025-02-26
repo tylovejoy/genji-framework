@@ -687,7 +687,7 @@ rule "Editor |  Fly/Noclip Toggle":
 
     while eventPlayer.isAlive() and eventPlayer.flytoggle != null and not eventPlayer.isHoldingButton(Button.ABILITY_1):
         if not (eventPlayer == hostPlayer and EditorMoveItem):
-            eventPlayer.flytoggle += 0.25 * (eventPlayer.isHoldingButton(Button.JUMP) - eventPlayer.isHoldingButton(Button.CROUCH)) * (
+            eventPlayer.flytoggle += (0.25 + eventPlayer.isHoldingButton(Button.JUMP) - 0.24 * eventPlayer.isHoldingButton(Button.CROUCH)) * (
                 eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z +
                 worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION))
         wait()
@@ -1112,9 +1112,12 @@ rule "Editor | moving checkpoint":
 
     eventPlayer.LockEditor = true
     eventPlayer.editor_undo = CheckpointPositions[eventPlayer.CurrentCheckpoint]
-    eventPlayer.setMoveSpeed(3)
     eventPlayer.startCamera(eventPlayer.getEyePosition() + 0.5 * Vector.UP - 2.5 * eventPlayer.getFacingDirection(), eventPlayer.getEyePosition(), 15)
     while eventPlayer.isHoldingButton(Button.ABILITY_2) and eventPlayer.isAlive() and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
+        if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
+            eventPlayer.setMoveSpeed(100)
+        else:
+            eventPlayer.setMoveSpeed(3)
         if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]):
             CheckpointPositions[eventPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[eventPlayer.CurrentCheckpoint][1] ]
         else:
