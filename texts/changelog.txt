@@ -445,11 +445,16 @@ fixed:
   * Can exit with ultimate active
 - Preview Checkpoint
   * Modify zoom using ▲ ▼
+- Death bhop
+  * Will apply to all type of resets Ex. Quick, AFK, Spectate, etc
 - Faster unlimited dashes
   * `@Kackspn` +1xp
 ### Editor
-- feature
-  * details
+- Move Checkpoint
+  * Hold Primary for normal speed modifer
+  * Press Secondary will cancel & undo moving checkpoint
+- Move Objects
+  * Hold Ability_1 for fast speed modifer (Formerly Secondary)
 ### Fixes
 - Auto-Climb was not detected as Multi-Climb
 - Save Double ban was persisting when Invincible or on last point
@@ -460,9 +465,10 @@ fixed:
   * Found by `@Sumpin` +5xp
 - Spray would disappear upon returning from spectator
   * Found by `@Shade Yato`
+- Ban death bhop would not prevent early climb when checkpoint was set too high
 ### Obsoleting Features
 - Dash Start
   * Setting `ban Dash Start - 0关卡Shift` has been removed.
-  * Deprecated due to refactoring to a single reset function.
   * To enable Dash Start when upgrading existing maps, Map data must include: `DashExploitToggle = false`
-  * Dash Start when enabled, will affect all checkpoints
+  * Dash Start if enabled, will affect all checkpoints - Not just checkpoint 0.
+  * Deprecated due to refactoring to a single reset function.
