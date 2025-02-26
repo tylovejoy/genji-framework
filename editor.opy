@@ -687,7 +687,7 @@ rule "Editor |  Fly/Noclip Toggle":
 
     while eventPlayer.isAlive() and eventPlayer.flytoggle != null and not eventPlayer.isHoldingButton(Button.ABILITY_1):
         if not (eventPlayer == hostPlayer and EditorMoveItem):
-            eventPlayer.flytoggle += (0.25 + eventPlayer.isHoldingButton(Button.JUMP) - 0.24 * eventPlayer.isHoldingButton(Button.CROUCH)) * (
+            eventPlayer.flytoggle += 0.25 * (eventPlayer.isHoldingButton(Button.JUMP) - eventPlayer.isHoldingButton(Button.CROUCH)) * (
                 eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z +
                 worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION))
         wait()
@@ -1105,22 +1105,28 @@ rule "Editor | moving checkpoint":
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.EditModeSelection == 0
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
+    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false
     @Condition len(CheckpointPositions) > 0
     @Condition eventPlayer.LockEditor == false
     wait(0.3, Wait.ABORT_WHEN_FALSE)
 
     eventPlayer.LockEditor = true
+    eventPlayer.editor_undo = CheckpointPositions[eventPlayer.CurrentCheckpoint]
     eventPlayer.setMoveSpeed(3)
-    eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), 15)
-    while eventPlayer.isHoldingButton(Button.ABILITY_2) and eventPlayer.isAlive() and not eventPlayer.isHoldingButton(Button.INTERACT):
-        if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]):
-            CheckpointPositions[hostPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[hostPlayer.CurrentCheckpoint][1] ]
+    eventPlayer.startCamera(eventPlayer.getEyePosition() + 0.5 * Vector.UP - 2.5 * eventPlayer.getFacingDirection(), eventPlayer.getEyePosition(), 15)
+    while eventPlayer.isHoldingButton(Button.ABILITY_2) and eventPlayer.isAlive() and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
+        if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]):
+            CheckpointPositions[eventPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[eventPlayer.CurrentCheckpoint][1] ]
         else:
-            CheckpointPositions[hostPlayer.CurrentCheckpoint] = eventPlayer.getPosition()
+            CheckpointPositions[eventPlayer.CurrentCheckpoint] = eventPlayer.getPosition()
         wait()
 
     eventPlayer.stopCamera()
     eventPlayer.setMoveSpeed(100)
+    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
+        CheckpointPositions[eventPlayer.CurrentCheckpoint] = eventPlayer.editor_undo
+        waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_2), Math.INFINITY)
+
     eventPlayer.LockEditor = false
 
 rule "Editor | add ult/dash":
