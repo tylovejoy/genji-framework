@@ -688,19 +688,19 @@ rule "Death Reset":
     # but doing waits only when needed
     waitUntil(eventPlayer.isAlive(), 1)
     waitUntil(eventPlayer.isDead(), 1)
-    if eventPlayer.isDead() and (not eventPlayer.SpectateToggle) and (not eventPlayer.CompDone):
+    if eventPlayer.isDead() and not(eventPlayer.SpectateToggle or eventPlayer.CompDone):
         wait(0.16)
         eventPlayer.resurrect()
         checkpointFailReset()
         waitUntil(eventPlayer.isAlive(), 1)
         waitUntil(eventPlayer.isDead(), 1)
-        if eventPlayer.isDead() and (not eventPlayer.SpectateToggle) and (not eventPlayer.CompDone):
+        if eventPlayer.isDead() and not(eventPlayer.SpectateToggle or eventPlayer.CompDone):
             wait(0.44)
             eventPlayer.resurrect()
             checkpointFailReset()
             waitUntil(eventPlayer.isAlive(), 1)
             waitUntil(eventPlayer.isDead(), 1)
-            if eventPlayer.isDead() and (not eventPlayer.SpectateToggle) and (not eventPlayer.CompDone):
+            if eventPlayer.isDead() and not(eventPlayer.SpectateToggle or eventPlayer.CompDone):
                 wait(0.64)
                 eventPlayer.respawn()
                 checkpointFailReset()
@@ -734,25 +734,17 @@ rule "AFK timer":
       # raycast to prevent camera stuck on low wall
     eventPlayer.startCamera(
         eventPlayer.getPosition() +
-        Vector.UP *
-        (
-        distance(
-            eventPlayer.getPosition(),
-            raycast(eventPlayer.getPosition(),eventPlayer.getPosition()+vect(0,4,0), null, null,false).getHitPosition()
-        ) - 1
-        ) ,
-        eventPlayer.getPosition(),
-        10
+        Vector.UP * (distance(eventPlayer.getPosition(), raycast(eventPlayer.getPosition(), eventPlayer.getPosition() + 4 * Vector.UP, null, null, false).getHitPosition()) - 1),
+        eventPlayer.getPosition(), 10
     )
     # cancel it after jumping or not sleep, reset cures sleep
     wait(1)
-    waitUntil(eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.hasStatusEffect(Status.ASLEEP) == false, Math.INFINITY)
+    waitUntil(eventPlayer.isHoldingButton(Button.JUMP) or not eventPlayer.hasStatusEffect(Status.ASLEEP), Math.INFINITY)
     eventPlayer.clearStatusEffect(Status.ASLEEP)
     eventPlayer.stopCamera()
-    waitUntil(eventPlayer.isOnWall(), 2)
-    if eventPlayer.isOnWall(): # prevent save bhop climb
-        eventPlayer.cancelPrimaryAction()
-        eventPlayer.DoubleUsed = null
+
+    if eventPlayer.NotOnLastCp and not eventPlayer.InvincibleToggle:
+        checkpointFailReset()
 
     if RULE_CONDITION:
         goto RULE_START
