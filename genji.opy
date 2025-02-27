@@ -1,4 +1,4 @@
-#!define versionhere "1.10.2♨H"
+#!define versionhere "1.10.2♨I"
 #♨ Dev Build Icon
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
@@ -451,8 +451,8 @@ rule "Player Initialize":
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
     eventPlayer.disablePlayerCollision()
-    eventPlayer.WallclimbUsed = false #Climbing the wall prompts the HUD
-    eventPlayer.JumpCount = 0
+    #eventPlayer.WallclimbUsed = false #Climbing the wall prompts the HUD
+    #eventPlayer.JumpCount = 0
     eventPlayer.bouncetouchedlast = -1
     eventPlayer.bouncetouched = -1
     eventPlayer.PreviewsI = null
