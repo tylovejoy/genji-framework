@@ -437,7 +437,7 @@ fixed:
 
 `@Framework Patch Notes`
 # 1.10.2
-### Features
+### Gameplay Features
 - Practice Mode
   * Can enter with Invincibility active. (Auto disables Invincibility)
   * Can exit with Invincibility active. (Auto disables Invincibility)
@@ -453,8 +453,13 @@ fixed:
 - Move Checkpoint
   * Hold Primary for normal speed modifer
   * Press Secondary will cancel & undo moving checkpoint
+- Fly Mode
+  * Press Ability_1 to move Up
+  * Press Ultimate to move Down
 - Move Objects
-  * Hold Ability_1 for fast speed modifer (Formerly Secondary)
+  * Now uses Fly Mode control scheme
+  * Press Ability_1 to lock walking on Y Axis
+  * Press Secondary will cancel & undo moving object(s)
 ### Fixes
 - Auto-Climb was not detected as Multi-Climb
 - Save Double ban was persisting when Invincible or on last point
@@ -466,9 +471,9 @@ fixed:
 - Spray would disappear upon returning from spectator
   * Found by `@Shade Yato`
 - Ban death bhop would not prevent early climb when checkpoint was set too high
-### Obsoleting Features
+### Obsoleting Feature
 - Dash Start
   * Setting `ban Dash Start - 0关卡Shift` has been removed.
-  * To enable Dash Start when upgrading existing maps, Map data must include: `DashExploitToggle = false`
-  * Dash Start if enabled, will affect all checkpoints - Not just checkpoint 0.
+  * To re-enable Dash Start when upgrading existing maps, Map data must include: `DashExploitToggle = false`
+  * Dash Start if re-enabled, will affect all checkpoints - Not just checkpoint 0.
   * Deprecated due to refactoring to a single reset function.
