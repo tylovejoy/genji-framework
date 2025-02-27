@@ -366,14 +366,10 @@ rule "Editor | Hud and Effects":
     hudSubtext(hostPlayer if hostPlayer.GuideToggle and not EditorMoveItem else null,
         ([
             [],
-
             "{0} + {1} | 移动选中的实体".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)),
-
             "{0} + {1} | 移动选中的实体".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)),
-
             "{0} + {1} | 留小跳进点\n"
             "{0} + {2} | 站卡".format(buttonString(Button.ABILITY_2) , buttonString(Button.JUMP), buttonString(Button.CROUCH)),
-
             []
         ][hostPlayer.EditModeSelection]
         ) checkCN
@@ -432,10 +428,10 @@ rule "Editor | Hud and Effects":
 
     hudText(localPlayer if not localPlayer.savemaphud else null,
         (
-            "{0} 检查点模式 \n"
-            "{1} 击杀球模式 \n"
-            "{2} 弹球模式 \n"
-            "{3} 封禁(单关) \n"
+            "{0} 检查点模式\n"
+            "{1} 击杀球模式\n"
+            "{2} 弹球模式\n"
+            "{3} 封禁(单关)\n"
             "{4} 自定义传送门 ".format(
                 iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 0 else "     ",
                 iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 1 else "     ",
@@ -449,11 +445,11 @@ rule "Editor | Hud and Effects":
         if localPlayer == hostPlayer else
             " {0} 源氏 编辑者 {0} ".format( iconString(Icon.BOLT))
         ) checkCN
-            "{0} Checkpoints \n"
-            "{1} Kills orbs \n"
-            "{2} Bounce Orb \n"
+            "{0} Checkpoints\n"
+            "{1} Kills orbs\n"
+            "{2} Function orbs\n"
             "{3} checkpoint bans\n"
-            "{4} portals ".format(
+            "{4} portals".format(
                 iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 0 else "     ",
                 iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 1 else "     ",
                 iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 2 else "     ",
@@ -461,7 +457,7 @@ rule "Editor | Hud and Effects":
                 iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 4 else "     ")
         if hostPlayer.isHoldingButton(Button.MELEE) else
             " {1} {0} ".format(
-                ["Checkpoints" ,"Kill orbs","Function Orb","checkpoint bans","portals"][ hostPlayer.EditModeSelection],
+                ["Checkpoints" ,"Kill orbs","Function Orbs","checkpoint bans","portals"][ hostPlayer.EditModeSelection],
                 [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][ hostPlayer.EditModeSelection])
         if localPlayer == hostPlayer else
             " {0} Genji editor {0} ".format(iconString(Icon.BOLT)),
