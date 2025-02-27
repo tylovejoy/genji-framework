@@ -60,7 +60,7 @@ arrayname = [x - (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in arrayn
 #!define FILLER "<tx0C000000000207B5><fgFFFF00FF> Map Data & Addon Settings Are on Page 2 - 地图数据和附加组件的设置在第2页"
 
 #!define flyMovementDelta ((0.096 + 0.192 * eventPlayer.isHoldingButton(Button.JUMP) - 0.048 * eventPlayer.isHoldingButton(Button.CROUCH)) * \
-    (eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z + \
+    (eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z * (vect(1, not eventPlayer.isHoldingButton(Button.ABILITY_1), 1))+ \
     worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION) + \
     Vector.UP * (eventPlayer.isHoldingButton(Button.ABILITY_2) - eventPlayer.isHoldingButton(Button.ULTIMATE))))
 
