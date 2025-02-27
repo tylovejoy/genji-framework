@@ -448,7 +448,7 @@ rule "Editor | Hud and Effects":
             "{0} Checkpoints\n"
             "{1} Kills orbs\n"
             "{2} Function orbs\n"
-            "{3} checkpoint bans\n"
+            "{3} gameplay bans\n"
             "{4} portals".format(
                 iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 0 else "     ",
                 iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 1 else "     ",
@@ -457,7 +457,7 @@ rule "Editor | Hud and Effects":
                 iconString(Icon.ARROW_RIGHT) if hostPlayer.EditModeSelection == 4 else "     ")
         if hostPlayer.isHoldingButton(Button.MELEE) else
             " {1} {0} ".format(
-                ["Checkpoints" ,"Kill orbs","Function Orbs","checkpoint bans","portals"][ hostPlayer.EditModeSelection],
+                ["Checkpoints" ,"Kill orbs","Function Orbs","gameplay bans","portals"][ hostPlayer.EditModeSelection],
                 [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][ hostPlayer.EditModeSelection])
         if localPlayer == hostPlayer else
             " {0} Genji editor {0} ".format(iconString(Icon.BOLT)),
@@ -582,17 +582,17 @@ rule "Editor | Hud and Effects":
             " {} 站卡\n"
             " {} 爬墙\n"
             " {} 死小\n"
-            #" {} 延二段跳\n"
             " {} 表情留小\n"
             "――――――――――――\n"
+            #" {} 延二段跳\n"
             " {} 留小跳进点\n".format(
                 "√" if hostPlayer.CurrentCheckpoint in BanMulti else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanCreate else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanStand else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanClimb else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanDead else " ",
-                #"√" if hostPlayer.CurrentCheckpoint in BanSaveDouble else [],
+                "√" if hostPlayer.CurrentCheckpoint in BanDead else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanEmote else [],
+                #"√" if hostPlayer.CurrentCheckpoint in BanSaveDouble else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanBhop else []
             )
             if hostPlayer.EditModeSelection == 3 else
@@ -620,24 +620,24 @@ rule "Editor | Hud and Effects":
                 BouncePositions[EditSelected],
                 EditSelected)
             if hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0  else
-            "\n bans\n"
+            "\n gameplay bans\n"
             "――――――――――――\n"
             " {} multi-climb\n"
             " {} create\n"
             " {} stand\n"
             " {} climb\n"
             " {} dead\n"
-            #" {} save double\n"
             " {} emote\n"
             "――――――――――――\n"
+            #" {} save double\n"
             " {} require bhop\n".format(
                 "√" if hostPlayer.CurrentCheckpoint in BanMulti else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanCreate else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanStand else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanClimb else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanDead else " ",
-                #"√" if hostPlayer.CurrentCheckpoint in BanSaveDouble else [],
+                "√" if hostPlayer.CurrentCheckpoint in BanDead else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanEmote else [],
+                #"√" if hostPlayer.CurrentCheckpoint in BanSaveDouble else [],
                 "√" if hostPlayer.CurrentCheckpoint in BanBhop else [])
             if hostPlayer.EditModeSelection == 3 else
                 "\n Start: {} \n"
@@ -656,8 +656,7 @@ rule "Editor | Hud and Effects":
     # effects ==========================================================================================================================================================================
     createInWorldText(
         localPlayer if len(EditSelectIdArray) > 0 else null,
-        "选中的实体" checkCN "selected"
-        ,
+        "选中的实体" checkCN "selected",
         KillBallPositions[EditSelected] if hostPlayer.EditModeSelection == 1 else
         BouncePositions[EditSelected] if hostPlayer.EditModeSelection == 2 else
         CustomPortalStart[EditSelected] if hostPlayer.EditModeSelection == 4 else
