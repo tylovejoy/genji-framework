@@ -105,11 +105,13 @@ rule "Checking | Using Emote":
     @Condition eventPlayer.isCommunicatingEmote() == true
     eventPlayer.BhopUsed = false
     if eventPlayer.ban_emote:
+        smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
+        checkpointFailReset()/*
         waitUntil(not eventPlayer.isCommunicatingEmote() == true, Math.INFINITY)
         waitUntil(eventPlayer.isOnWall(), 1)
         if eventPlayer.isOnWall():
             eventPlayer.cancelPrimaryAction()
-            eventPlayer.DoubleUsed = null
+            eventPlayer.DoubleUsed = null*/
 
 rule "Checking | Bhop":
     @Event eachPlayer
@@ -164,7 +166,7 @@ rule "Checking | Ground Reset":
     eventPlayer.Bhopcount = null
     eventPlayer.DoubleUsed = null
     wait()
-    if (eventPlayer.JumpCount != 0 or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
+    if (eventPlayer.JumpCount or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
         goto RULE_START
     eventPlayer.BhopUsed = true
 
@@ -230,13 +232,13 @@ rule "Ban | Wallclimb - Indicator ":
     #eventPlayer.setStatusEffect(null,Status.BURNING, 0.1)
     smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
 
-rule "Ban | Emote Savehop":
+/*rule "Ban | Emote Savehop":
     @Event eachPlayer
     @Condition eventPlayer.ban_emote
     @Condition eventPlayer.InvincibleToggle == false
     @Condition eventPlayer.isCommunicatingEmote()
     smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
-    checkpointFailReset()
+    checkpointFailReset()*/
 
 rule "Ban | Save Double - 封禁二段跳":
     @Event eachPlayer
