@@ -17,14 +17,14 @@ settings {
     },
     "gamemodes": {
         "skirmish": {
-            #"Enable Perks": "off",
+            #"enablePerks": "off",
             "enabledMaps": [
                 #"workshopChamber"
                 selectedmap
             ]
         },
         "tdm": {
-            #"Enable Perks": "off",
+            #"enablePerks": "off",
             "enabledMaps": [
                 selectedmap
             ],
