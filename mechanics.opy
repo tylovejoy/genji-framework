@@ -249,7 +249,12 @@ rule "Ban | Save Double - 封禁二段跳":
     if not RULE_CONDITION: return
     waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
     if not RULE_CONDITION: return
-    if eventPlayer.getVerticalSpeed() < null: goto RULE_START #Prevent false positives
-    wait(0.8, Wait.ABORT_WHEN_FALSE)
+    if eventPlayer.getVerticalSpeed() < 6: goto RULE_START #Prevent false positives
+    if eventPlayer.BhopUsed:
+        wait(0.8, Wait.ABORT_WHEN_FALSE)
+    else:
+        wait(0.8, Wait.ABORT_WHEN_FALSE)
+        #This can give a false negative, but advantage is small
+        if eventPlayer.BhopUsed: return
     smallMessage(eventPlayer, "   延二段跳已禁用!" checkCN "   save double banned!")
     checkpointFailReset()
