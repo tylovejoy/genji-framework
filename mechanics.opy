@@ -249,7 +249,9 @@ rule "Ban | Save Double - 封禁二段跳":
     if not RULE_CONDITION: return
     waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
     if not RULE_CONDITION: return
-    if eventPlayer.getVerticalSpeed() < 6: goto RULE_START #Prevent false positives
+    #Prevent false positives
+    #Default climb speed is 7.8 and small slowdown upon mantling
+    if eventPlayer.getVerticalSpeed() < 6: goto RULE_START 
     if eventPlayer.BhopUsed:
         wait(0.8, Wait.ABORT_WHEN_FALSE)
     else:
