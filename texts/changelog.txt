@@ -462,6 +462,8 @@ fixed:
   * Press Secondary will cancel & undo moving object(s)
 ### Fixes
 - Auto-Climb was not detected as Multi-Climb
+- Reduced false positives from Ban Save Double by increasing the required upwards vertical speed from 0 to 6
+- Ban death bhop would not prevent early climb when checkpoint was set too high
 - Save Double ban was persisting when Invincible or on last point
   * Found by `@bioslet` +5xp
 - Rainbow finish rings was not displaying
@@ -470,7 +472,6 @@ fixed:
   * Found by `@Sumpin` +5xp
 - Spray would disappear upon returning from spectator
   * Found by `@Shade Yato`
-- Ban death bhop would not prevent early climb when checkpoint was set too high
 ### Obsoleting Feature
 - Dash Start
   * Setting `ban Dash Start - 0关卡Shift` has been removed.
