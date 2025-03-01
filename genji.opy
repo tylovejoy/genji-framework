@@ -197,11 +197,8 @@ def checkpointFailReset():
         eventPlayer.applyImpulse(-1 * eventPlayer.getVelocity(), 0.0001, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
         # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
+        #if eventPlayer.ban_dedhop or eventPlayer.ban_emote and eventPlayer.isHoldingButton(Button.JUMP):
         if eventPlayer.ban_dedhop and eventPlayer.isHoldingButton(Button.JUMP):
-            /*wait(0.1) # finish teleport first
-            if eventPlayer.isHoldingButton(Button.JUMP):
-                eventPlayer.forceButtonPress(Button.JUMP)
-                eventPlayer.applyImpulse(Vector.DOWN, eventPlayer.getSpeed() + 0.1, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)*/
             eventPlayer.forceButtonPress(Button.JUMP)
 
         if eventPlayer.isUsingUltimate():

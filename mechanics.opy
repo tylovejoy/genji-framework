@@ -105,13 +105,10 @@ rule "Checking | Using Emote":
     @Condition eventPlayer.isCommunicatingEmote() == true
     eventPlayer.BhopUsed = false
     if eventPlayer.ban_emote:
+        #waitUntil(not (eventPlayer.isCommunicatingEmote() and eventPlayer.isOnGround()), Math.INFINITY)
+        #eventPlayer.applyImpulse(Vector.DOWN, 0.0001, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
         smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
-        checkpointFailReset()/*
-        waitUntil(not eventPlayer.isCommunicatingEmote() == true, Math.INFINITY)
-        waitUntil(eventPlayer.isOnWall(), 1)
-        if eventPlayer.isOnWall():
-            eventPlayer.cancelPrimaryAction()
-            eventPlayer.DoubleUsed = null*/
+        checkpointFailReset()
 
 rule "Checking | Bhop":
     @Event eachPlayer
