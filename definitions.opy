@@ -259,10 +259,10 @@ playervar toggle_leaderboard                 # bool                      --- sho
 playervar toggle_invisible                             # bool                      --- invis toggle added by fisho
 playervar toggle_hints
 
-playervar EditorOn                          # bool                      --- on all players, but only gets checked from host player
-playervar EditModeSelection                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
-playervar flytoggle                         # vector/null               --- null if not flying, else vector position, added by fisho
-playervar savemaphud                        # array                     --- array of save map hud ids
+playervar editor_on                          # bool                      --- on all players, but only gets checked from host player
+playervar editor_modeSelect                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
+playervar editor_toggleFly                         # vector/null               --- null if not flying, else vector position, added by fisho
+playervar editor_saveHud                        # array                     --- array of save map hud ids
 
 playervar LedgeDash #$$ move it down later
 playervar LockEditor                        # bool                      --- ensure only 1 editor command can go of at the time

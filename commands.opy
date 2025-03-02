@@ -6,7 +6,7 @@ rule "<tx0C00000000001344> Commands <tx0C00000000001344>":
 rule "Command | Toggle Leaderboard (Hold Melee)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
-    @Condition eventPlayer.EditorOn == false
+    @Condition eventPlayer.editor_on == false
     wait(1, Wait.ABORT_WHEN_FALSE)
 
     eventPlayer.toggle_leaderboard = not eventPlayer.toggle_leaderboard
@@ -28,7 +28,7 @@ rule "Command | Toggle Invisible (Hold Deflect)":
     @Condition enableInvisCommand
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
-    @Condition eventPlayer.EditorOn == false
+    @Condition eventPlayer.editor_on == false
     @Condition CompMode == false
     wait(1, Wait.ABORT_WHEN_FALSE)
 
@@ -49,7 +49,7 @@ rule "Command | Preview Orbs & Portals (Hold Primary)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
-    @Condition eventPlayer.EditorOn == false
+    @Condition eventPlayer.editor_on == false
     @Condition eventPlayer.LockState == false
     @Condition eventPlayer.checkpoint_notLast
     #wait(0.9, Wait.ABORT_WHEN_FALSE)
@@ -140,7 +140,7 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
             CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.AttemptCount
 
 
-    eventPlayer.flytoggle = null
+    eventPlayer.editor_toggleFly = null
     eventPlayer.checkpoint_current = 0
     eventPlayer.toggle_practice = false
     stopChasingVariable(eventPlayer.timer_practice)
@@ -167,11 +167,11 @@ rule "Command | Spectate (Hold Interact)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
-    @Condition not (eventPlayer.EditorOn and eventPlayer.isHoldingButton(Button.MELEE))
-    @Condition not eventPlayer.EditorOn or not(eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE))
+    @Condition not (eventPlayer.editor_on and eventPlayer.isHoldingButton(Button.MELEE))
+    @Condition not eventPlayer.editor_on or not(eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE))
     #@Condition editoron == false
     wait(1, Wait.ABORT_WHEN_FALSE)
-    if eventPlayer.EditorOn: # editor has interact combos
+    if eventPlayer.editor_on: # editor has interact combos
         wait(1, Wait.ABORT_WHEN_FALSE)
 
     if eventPlayer.toggle_spectate:
@@ -238,7 +238,7 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     #@Condition eventPlayer.isUsingAbility1() == false
     @Condition eventPlayer.isAlive()
-    @Condition eventPlayer.EditorOn == false
+    @Condition eventPlayer.editor_on == false
     @Condition CompMode == false
     @Condition eventPlayer.LockState == false
 
@@ -282,7 +282,7 @@ rule "Command | Restart Practice (Hold Interact)":
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == false
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
     @Condition eventPlayer.isAlive() or eventPlayer.toggle_spectate
-    @Condition eventPlayer.EditorOn == false
+    @Condition eventPlayer.editor_on == false
     @Condition eventPlayer.toggle_practice
     @Condition eventPlayer.LockState == false
 
@@ -305,9 +305,9 @@ rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) )
-    #@Condition hostPlayer.EditorOn or ( eventPlayer.toggle_practice and eventPlayer.isHoldingButton(Button.ABILITY_1) )
+    #@Condition hostPlayer.editor_on or ( eventPlayer.toggle_practice and eventPlayer.isHoldingButton(Button.ABILITY_1) )
     @Condition eventPlayer.LockState == false
-    @Condition hostPlayer.EditorOn or eventPlayer.toggle_practice
+    @Condition hostPlayer.editor_on or eventPlayer.toggle_practice
     @Condition len(CheckpointPositions) > 1
     @Condition EditorMoveItem == false
     @Condition (eventPlayer.LockEditor and eventPlayer == hostPlayer) == false
@@ -348,8 +348,8 @@ rule "Command | Quick Reset (Reload | Hold Reload to Enable)":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
 
     if eventPlayer.toggle_quickRestart:
-        if eventPlayer.flytoggle:
-            eventPlayer.flytoggle = CheckpointPositions[eventPlayer.checkpoint_current].last()
+        if eventPlayer.editor_toggleFly:
+            eventPlayer.editor_toggleFly = CheckpointPositions[eventPlayer.checkpoint_current].last()
         checkpointFailReset()
         wait(0.32)
     wait(1, Wait.ABORT_WHEN_FALSE)
@@ -366,7 +366,7 @@ rule "Command | Toggle Hud (Hold Secondary)":
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false
     @Condition not (eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.ABILITY_1)) # don't trigger during skipping
-    @Condition not (eventPlayer.EditorOn and eventPlayer == hostPlayer and eventPlayer.isHoldingButton(Button.MELEE))
+    @Condition not (eventPlayer.editor_on and eventPlayer == hostPlayer and eventPlayer.isHoldingButton(Button.MELEE))
     @Condition EditorMoveItem == false
 
     wait(1.5, Wait.ABORT_WHEN_FALSE)

@@ -166,8 +166,8 @@ rule "Stall enhancer - 增强系統跳的判定":
     @Condition eventPlayer.isInAir() == true
     @Condition eventPlayer.isOnWall() == false
     @Condition eventPlayer.isOnGround() == false
-    @Condition not (eventPlayer.EditorOn and eventPlayer.flytoggle != null)
-    #@Condition createWorkshopSetting(bool, "map settings \n地图设置"," Autobounce enhancer - 增强系統跳的判定",false,3)
+    @Condition not (eventPlayer.editor_on and eventPlayer.editor_toggleFly != null) #$$
+    #@Condition createWorkshopSetting(bool, "map settings \n地图设置"," Autobounce enhancer - 增强系統跳的判定", false, 3)
 
     wait(0.25, Wait.ABORT_WHEN_FALSE)
     eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
@@ -178,13 +178,13 @@ rule "Stall enhancer - 增强系統跳的判定":
 
     waitUntil(
         eventPlayer.isHoldingButton(Button.RELOAD) or
-        eventPlayer.flytoggle or eventPlayer.isDead() or
+        eventPlayer.editor_toggleFly or eventPlayer.isDead() or
         eventPlayer.isUsingAbility1() or
         eventPlayer.getSpeed() > 3 , 3) # double jump catch
     #wait(3)
     eventPlayer.setGravity(100)
     eventPlayer.setMoveSpeed(100)
-    if not eventPlayer.flytoggle and eventPlayer.isAlive() and not eventPlayer.isHoldingButton(Button.RELOAD):
+    if not eventPlayer.editor_toggleFly and eventPlayer.isAlive() and not eventPlayer.isHoldingButton(Button.RELOAD):
         eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
         if RULE_CONDITION:
             goto RULE_START
@@ -357,7 +357,7 @@ rule "fisho cp cheat for overpy toggle":
     @Condition cpCheat
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.checkpoint_notLast) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.checkpoint_current != 0)
-    @Condition eventPlayer.EditorOn == false
+    @Condition eventPlayer.editor_on == false
     @Condition eventPlayer.toggle_practice == false
 
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):

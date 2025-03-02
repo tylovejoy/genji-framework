@@ -81,7 +81,7 @@ def UpdateCache():
     async(CheckUlt(), AsyncBehavior.RESTART)
     async(CheckDash(), AsyncBehavior.RESTART)
 
-    if not eventPlayer.EditorOn: return
+    if not eventPlayer.editor_on: return
 
     editupdateselectedids()
 
@@ -221,7 +221,7 @@ def StartGame():
             SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
             SavePauseTime[SaveEnt.index(eventPlayer)] = 0
             SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
-            if TitleData != null and  any([i for i in TitleData[0] if i <= eventPlayer.checkpoint_current]) and (not eventPlayer.EditorOn ): # if any title data, find last cp
+            if TitleData != null and  any([i for i in TitleData[0] if i <= eventPlayer.checkpoint_current]) and (not eventPlayer.editor_on ): # if any title data, find last cp
                 createInWorldText(
                     localPlayer if not eventPlayer.toggle_invisible else null,
                     TitleData[1][TitleData[0].index(
@@ -382,7 +382,7 @@ rule "Setup and Variables":
             )
     waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]),Math.INFINITY)
     wait(1)
-    if not [i for i in getAllPlayers() if not i.isDummy()][0].EditorOn:
+    if not [i for i in getAllPlayers() if not i.isDummy()][0].editor_on:
         EffectsCreate()
         return
 
@@ -406,10 +406,10 @@ rule "Match time":
 
     while TimeRemaining > 0:
         wait(60)
-        TimeRemaining --
+        TimeRemaining--
         if CompMode:
-            CompTime --
-            if CompTime == 0:
+            CompTime--
+            if CompTime == 0: #$$
                 bigMessage(localPlayer,"时间到了" checkCN "time's up")
                 getAllPlayers().CompDone = true
                 stopChasingVariable(getAllPlayers().timer_normal)
@@ -431,7 +431,7 @@ rule "Player Initialize":
     @Event playerJoined
     @Condition eventPlayer.isDummy() == false
     eventPlayer.setDamageReceived(0)
-    eventPlayer.EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
+    eventPlayer.editor_on = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
     eventPlayer.LockEditor = true
     eventPlayer.preloadHero(Hero.GENJI)
     eventPlayer.toggle_guide = true
@@ -486,7 +486,7 @@ rule "Arrive | Ground reset | traces":
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isAlive()
     if not eventPlayer.checkpoint_notLast:
-        if (eventPlayer.isMoving() and not (eventPlayer.toggle_practice or eventPlayer.toggle_invisible or eventPlayer.EditorOn or CompMode)):
+        if (eventPlayer.isMoving() and not (eventPlayer.toggle_practice or eventPlayer.toggle_invisible or eventPlayer.editor_on or CompMode)):
             # traces ----------------------------------------------------------------------------------------------------
             eventPlayer.finishfxcache = [Color.RED, Color.ORANGE, Color.YELLOW, Color.LIME_GREEN, Color.GREEN, Color.TURQUOISE, Color.BLUE, Color.PURPLE, Color.VIOLET, Color.ROSE][(floor(getTotalTimeElapsed()*2))%10]
             #eventPlayer.finishfxcache =  rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255)
@@ -535,7 +535,7 @@ rule "Arrive | Ground reset | traces":
         if len(CheckpointPositions[eventPlayer.checkpoint_current]) > 1:# teleport cps
             checkpointFailReset()/*
             eventPlayer.startForcingPosition( CheckpointPositions[eventPlayer.checkpoint_current].last() ,false)
-            eventPlayer.flytoggle = null
+            eventPlayer.editor_toggleFly = null
             wait(0.1)
             eventPlayer.stopForcingPosition()
             # position wasnt ready when check cache ran
@@ -559,7 +559,7 @@ rule "Arrive | Ground reset | traces":
             goto lbl_abc
 
         eventPlayer.timer_split = eventPlayer.timer_normal
-        if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and (not eventPlayer.EditorOn) and (not eventPlayer.toggle_practice): # complete lvl
+        if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and (not eventPlayer.editor_on) and (not eventPlayer.toggle_practice): # complete lvl
             stopChasingVariable(eventPlayer.timer_normal)
             stopChasingVariable(eventPlayer.timer_practice)
             wait()
@@ -715,7 +715,7 @@ rule "AFK timer":
     @Condition eventPlayer.isMoving() == false
     @Condition eventPlayer.isAlive()
     @Condition eventPlayer.isCommunicatingEmote() == false
-    @Condition eventPlayer.EditorOn == false
+    @Condition eventPlayer.editor_on == false
     wait(300, Wait.ABORT_WHEN_FALSE)
 
     eventPlayer.setStatusEffect(null, Status.ASLEEP, Math.INFINITY)

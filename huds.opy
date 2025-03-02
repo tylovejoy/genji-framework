@@ -219,7 +219,7 @@ rule "Huds: Global/Localplayer":
         )
         HudStoreEdit.append(getLastCreatedText())
 
-    #if not hostPlayer.EditorOn:
+    #if not hostPlayer.editor_on:
         # find the value
     Difficultyhud = [
         createWorkshopSetting(enum[ "<fg27AAFFFF>playtest - 游戏测试", "<fgA0E81BFF>easy-", "<fgA0E81BFF>easy", "<fgA0E81BFF>easy+", "<fge0e000FF>medium-", "<fge0e000FF>medium", "<fge0e000FF>medium+", "<fgEC9900FF>hard-", "<fgEC9900FF>hard", "<fgEC9900FF>hard+", "<fgFF4500FF>very hard-", "<fgFF4500FF>very hard", "<fgFF4500FF>very hard+", "<fgC80013FF>extreme-", "<fgC80013FF>extreme", "<fgC80013FF>extreme+", "<fg960000FF>hell", "don't display - 不显示"],"map settings \n地图设置","difficulty (display hud) - 难度 (顶部hud)",0, 0)
@@ -585,7 +585,7 @@ rule "Huds: each player":
 
 def UpdateTitle():
     @Name "Title"
-    if TitleData == null or CompMode or eventPlayer.toggle_practice or eventPlayer.EditorOn or (not eventPlayer.checkpoint_current in TitleData[0]):
+    if TitleData == null or CompMode or eventPlayer.toggle_practice or eventPlayer.editor_on or (not eventPlayer.checkpoint_current in TitleData[0]):
         return
     destroyInWorldText(eventPlayer.TitleStore)
     createInWorldText(localPlayer if not eventPlayer.toggle_invisible else null,TitleData[1][TitleData[0].index(eventPlayer.checkpoint_current)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.checkpoint_current)], SpecVisibility.DEFAULT)

@@ -329,7 +329,7 @@ rule "hud test":
             "{5} + {3} | Decrease orb strength\n"
             "{5} + {1} | Move orb forward\n"
             "{5} + {2} | Move orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
-            ][hostPlayer.EditModeSelection])
+            ][hostPlayer.editor_modeSelect])
 
             checkCN
 
@@ -361,7 +361,7 @@ rule "hud test":
             "{5} + {3} | Decasfrease orb strength\n"
             "{5} + {1} | Movasfe orb forward\n"
             "{5} + {2} | Moveafaf orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
-            ][hostPlayer.EditModeSelection])
+            ][hostPlayer.editor_modeSelect])
 
             ,
             HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
@@ -406,7 +406,7 @@ rule "each":
             "{5} + {3} | Decrease orb strength\n"
             "{5} + {1} | Move orb forward\n"
             "{5} + {2} | Move orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
-            ][hostPlayer.EditModeSelection])
+            ][hostPlayer.editor_modeSelect])
 
             checkCN
 
@@ -438,7 +438,7 @@ rule "each":
             "{5} + {3} | Decasfrease orb strength\n"
             "{5} + {1} | Movasfe orb forward\n"
             "{5} + {2} | Moveafaf orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
-            ][hostPlayer.EditModeSelection])
+            ][hostPlayer.editor_modeSelect])
 
             ,
             HudPosition.TOP, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
