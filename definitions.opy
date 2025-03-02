@@ -250,21 +250,21 @@ playervar timer_split                         # int                       --- st
 playervar timer_splitDisplay                      # int                       --- displayed split value
 #playervar timer_splitsOn                         # bool                      --- turning splits on/off is now done via seting splittime to -Math.INFINITY
 
-playervar InvincibleToggle                  # bool                       --- invincible/normal mode toggle now a bool
-playervar SpectateToggle                    # bool                       --- turned into bool
-playervar PracticeToggle                    # int                       --- turned into bool
-playervar QuickRestartToggle                # bool                      -- enable reload to restart cp
-playervar GuideToggle                       # bool                       --- turned into bool, shows/hides editor hud
-playervar LeaderboardToggle                 # bool                      --- show/hide leaderboard
-playervar invis                             # bool                      --- invis toggle added by fisho
-playervar HintsOn
+playervar toggle_invincible                  # bool                       --- invincible/normal mode toggle now a bool
+playervar toggle_spectate                    # bool                       --- turned into bool
+playervar toggle_practice                    # int                       --- turned into bool
+playervar toggle_quickRestart                # bool                      -- enable reload to restart cp
+playervar toggle_guide                       # bool                       --- turned into bool, shows/hides editor hud
+playervar toggle_leaderboard                 # bool                      --- show/hide leaderboard
+playervar toggle_invisible                             # bool                      --- invis toggle added by fisho
+playervar toggle_hints
 
 playervar EditorOn                          # bool                      --- on all players, but only gets checked from host player
 playervar EditModeSelection                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
 playervar flytoggle                         # vector/null               --- null if not flying, else vector position, added by fisho
 playervar savemaphud                        # array                     --- array of save map hud ids
 
-playervar LedgeDash #$$
+playervar LedgeDash #$$ move it down later
 playervar LockEditor                        # bool                      --- ensure only 1 editor command can go of at the time
 playervar LockState                         # bool                      --- locked means you are curently runing arrive checkpoint rule
 playervar EffectSizeArray

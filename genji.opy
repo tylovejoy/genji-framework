@@ -28,7 +28,7 @@ def UpdateCache():
     eventPlayer.PortalStart_Cache = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] == Math.INFINITY]
     eventPlayer.PortalEnd_cache = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] == Math.INFINITY]
     eventPlayer.checkpoint_notLast = (eventPlayer.checkpoint_current < len(CheckpointPositions) - 1 and len(CheckpointPositions) > 1)
-    eventPlayer.HintsOn = false
+    eventPlayer.toggle_hints = false
     eventPlayer.banstring = []
     wait()
     if eventPlayer.checkpoint_notLast:
@@ -166,12 +166,12 @@ def Leaderboardupdate():
 
 def checkpointFailReset():
     @Name "SUB | Checkpoint Fail"
-    eventPlayer.timer_split = eventPlayer.timer_practice if eventPlayer.PracticeToggle else eventPlayer.timer_normal
+    eventPlayer.timer_split = eventPlayer.timer_practice if eventPlayer.toggle_practice else eventPlayer.timer_normal
     eventPlayer.LockCollected = []
     eventPlayer.cancelPrimaryAction()
     eventPlayer.DoubleUsed = null
 
-    if eventPlayer.checkpoint_current == 0 and not eventPlayer.PracticeToggle:
+    if eventPlayer.checkpoint_current == 0 and not eventPlayer.toggle_practice: #$$
         eventPlayer.timer_normal = 0
         eventPlayer.timer_split = 0
 
@@ -204,7 +204,7 @@ def checkpointFailReset():
 def StartGame():
     @Name "SUB | Start Game"
     if CompMode and (CompTime < 1 or eventPlayer.CompDone):
-        eventPlayer.LeaderboardToggle = true
+        eventPlayer.toggle_leaderboard = true
         eventPlayer.CompDone = true
         #eventPlayer.disableRespawn()
         eventPlayer.setDamageReceived(100)
@@ -223,7 +223,7 @@ def StartGame():
             SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
             if TitleData != null and  any([i for i in TitleData[0] if i <= eventPlayer.checkpoint_current]) and (not eventPlayer.EditorOn ): # if any title data, find last cp
                 createInWorldText(
-                    localPlayer if not eventPlayer.invis else null,
+                    localPlayer if not eventPlayer.toggle_invisible else null,
                     TitleData[1][TitleData[0].index(
                     sorted([i for i in TitleData[0] if i <= eventPlayer.checkpoint_current], lambda i:i*-1)[0])],
                     eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION,
@@ -243,8 +243,8 @@ def StartGame():
     UpdateCache()
     checkpointFailReset()
     #eventPlayer.enableRespawn()
-    eventPlayer.InvincibleToggle = false
-    eventPlayer.SpectateToggle = false
+    eventPlayer.toggle_invincible = false
+    eventPlayer.toggle_spectate = false
     eventPlayer.checkpoint_moved = true
     # eventPlayer.LockState = false
 
@@ -367,7 +367,7 @@ rule "Setup and Variables":
     if len(PortalDest) > 0: # pre set control map portals. not in portal rule because shared I variable
         for TempIterator1 in range(len(PortalLoc)):
             createEffect(
-                [i for i in getAllPlayers() if i.InvincibleToggle or not i.checkpoint_notLast],
+                [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast],
                 Effect.BAD_AURA,
                 Color.AQUA if evalOnce(TempIterator1) % 2 == 1 else Color.ORANGE,
                 PortalLoc[evalOnce(TempIterator1)],
@@ -375,7 +375,7 @@ rule "Setup and Variables":
                 EffectReeval.VISIBILITY
             )
             createInWorldText(
-                [i for i in getAllPlayers() if i.InvincibleToggle or not i.checkpoint_notLast],
+                [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast],
                 "{0}".format(PortalNames[evalOnce(TempIterator1)]),
                 PortalLoc[evalOnce(TempIterator1)] + vect(0,1,0),
                 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
@@ -421,6 +421,7 @@ rule "Match time":
 
     bigMessage(localPlayer, "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time expired, restarting")
     wait(5)
+    #$$ remove if branch?
     if getCurrentGamemode() == Gamemode.FFA:
         declarePlayerVictory(hostPlayer)
     else:
@@ -433,7 +434,7 @@ rule "Player Initialize":
     eventPlayer.EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
     eventPlayer.LockEditor = true
     eventPlayer.preloadHero(Hero.GENJI)
-    eventPlayer.GuideToggle = true
+    eventPlayer.toggle_guide = true
     eventPlayer.disableGamemodeHud()
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
@@ -485,7 +486,7 @@ rule "Arrive | Ground reset | traces":
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isAlive()
     if not eventPlayer.checkpoint_notLast:
-        if (eventPlayer.isMoving() and not (eventPlayer.PracticeToggle or eventPlayer.invis or eventPlayer.EditorOn or CompMode)):
+        if (eventPlayer.isMoving() and not (eventPlayer.toggle_practice or eventPlayer.toggle_invisible or eventPlayer.EditorOn or CompMode)):
             # traces ----------------------------------------------------------------------------------------------------
             eventPlayer.finishfxcache = [Color.RED, Color.ORANGE, Color.YELLOW, Color.LIME_GREEN, Color.GREEN, Color.TURQUOISE, Color.BLUE, Color.PURPLE, Color.VIOLET, Color.ROSE][(floor(getTotalTimeElapsed()*2))%10]
             #eventPlayer.finishfxcache =  rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255)
@@ -498,7 +499,7 @@ rule "Arrive | Ground reset | traces":
             playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.6)
             playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.4)
             wait(0.128)
-    elif eventPlayer.InvincibleToggle or (CompMode and CompTime == 0) or eventPlayer.LockState:
+    elif eventPlayer.toggle_invincible or (CompMode and CompTime == 0) or eventPlayer.LockState:
         # Do nothing
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpcircleradius:
         # arrived ----------------------------------------------------------------------------------------------------
@@ -543,22 +544,22 @@ rule "Arrive | Ground reset | traces":
 
 
         if eventPlayer.timer_splitDisplay != -Math.INFINITY:
-            eventPlayer.timer_splitDisplay =  (eventPlayer.timer_practice if eventPlayer.PracticeToggle else eventPlayer.timer_normal) - eventPlayer.timer_split
+            eventPlayer.timer_splitDisplay =  (eventPlayer.timer_practice if eventPlayer.toggle_practice else eventPlayer.timer_normal) - eventPlayer.timer_split
         wait()
         playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
-        playEffect(eventPlayer if CompMode or eventPlayer.invis else localPlayer, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.checkpoint_current] + vect(0, 1.5, 0), 4)
+        playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else localPlayer, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.checkpoint_current] + vect(0, 1.5, 0), 4)
         # msg disabled due to annoying new sound
         #bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.checkpoint_current, "抵达检查点" checkCN "Arrived at level")   )
         wait()
         UpdateTitle()
         TriggerOnFailSuccesReset()
 
-        if eventPlayer.PracticeToggle:
+        if eventPlayer.toggle_practice:
             eventPlayer.timer_split = eventPlayer.timer_practice
             goto lbl_abc
 
         eventPlayer.timer_split = eventPlayer.timer_normal
-        if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and (not eventPlayer.EditorOn) and (not eventPlayer.PracticeToggle): # complete lvl
+        if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and (not eventPlayer.EditorOn) and (not eventPlayer.toggle_practice): # complete lvl
             stopChasingVariable(eventPlayer.timer_normal)
             stopChasingVariable(eventPlayer.timer_practice)
             wait()
@@ -571,7 +572,7 @@ rule "Arrive | Ground reset | traces":
                     CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = -1
                     eventPlayer.AttemptCount = -1
                     eventPlayer.CompDone = true
-                    eventPlayer.LeaderboardToggle = true
+                    eventPlayer.toggle_leaderboard = true
                     #eventPlayer.disableRespawn()
                     eventPlayer.setDamageReceived(100)
                     kill(eventPlayer,null)
@@ -594,7 +595,7 @@ rule "Arrive | Ground reset | traces":
 rule "Kill Orb | Activate":
     @Event eachPlayer
     @Condition eventPlayer.KillPosition_Cache != []
-    @Condition eventPlayer.InvincibleToggle == false
+    @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.checkpoint_notLast
     @Condition (any([distance(i, eventPlayer) <= eventPlayer.KillRadii_Cache[eventPlayer.KillPosition_Cache.index(i)] for i in eventPlayer.KillPosition_Cache]))
     checkpointFailReset()
@@ -664,7 +665,7 @@ this waituntil contrusction gives higher delay without relying on a variable cou
 rule "Death Reset":
     @Event playerDied
     @Condition eventPlayer.isDummy() == false
-    @Condition eventPlayer.SpectateToggle == false
+    @Condition eventPlayer.toggle_spectate == false
     @Condition eventPlayer.CompDone == false
     if len(CheckpointPositions) > 0:
         eventPlayer.resurrect()
@@ -675,19 +676,19 @@ rule "Death Reset":
     # but doing waits only when needed
     waitUntil(eventPlayer.isAlive(), 1)
     waitUntil(eventPlayer.isDead(), 1)
-    if eventPlayer.isDead() and not(eventPlayer.SpectateToggle or eventPlayer.CompDone):
+    if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.CompDone):
         wait(0.16)
         eventPlayer.resurrect()
         checkpointFailReset()
         waitUntil(eventPlayer.isAlive(), 1)
         waitUntil(eventPlayer.isDead(), 1)
-        if eventPlayer.isDead() and not(eventPlayer.SpectateToggle or eventPlayer.CompDone):
+        if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.CompDone):
             wait(0.44)
             eventPlayer.resurrect()
             checkpointFailReset()
             waitUntil(eventPlayer.isAlive(), 1)
             waitUntil(eventPlayer.isDead(), 1)
-            if eventPlayer.isDead() and not(eventPlayer.SpectateToggle or eventPlayer.CompDone):
+            if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.CompDone):
                 wait(0.64)
                 eventPlayer.respawn()
                 checkpointFailReset()
@@ -730,7 +731,7 @@ rule "AFK timer":
     eventPlayer.clearStatusEffect(Status.ASLEEP)
     eventPlayer.stopCamera()
 
-    if eventPlayer.checkpoint_notLast and not eventPlayer.InvincibleToggle:
+    if eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
         checkpointFailReset()
 
     if RULE_CONDITION:

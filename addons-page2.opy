@@ -253,7 +253,7 @@ rule "Grup up | function":
     @Condition eventPlayer.checkpoint_current == 777
     @Condition eventPlayer.isAlive()
     @Condition eventPlayer.isOnGround() == false
-    @Condition eventPlayer.InvincibleToggle == false
+    @Condition eventPlayer.toggle_invincible == false
     # replace vector 0,0,0 with orb position
     # 3.5 is the radius
     @Condition distance(eventPlayer,  vect(0,0,0)) < 3.5
@@ -358,7 +358,7 @@ rule "fisho cp cheat for overpy toggle":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.checkpoint_notLast) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.checkpoint_current != 0)
     @Condition eventPlayer.EditorOn == false
-    @Condition eventPlayer.PracticeToggle == false
+    @Condition eventPlayer.toggle_practice == false
 
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current - 1])

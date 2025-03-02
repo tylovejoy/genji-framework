@@ -210,7 +210,7 @@ rule "Editor | Hud and Effects":
     # huds ==========================================================================================================================================================================
 
     # restart without leaderboard (old one deleted)
-    hudSubtext(localPlayer if localPlayer.GuideToggle else null,  # restart without leadwerboard
+    hudSubtext(localPlayer if localPlayer.toggle_guide else null,  # restart without leadwerboard
         "{0}+{1}+{2} | 重新开始".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT))
         checkCN
         "{0}+{1}+{2} | Restart".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT))
@@ -218,7 +218,7 @@ rule "Editor | Hud and Effects":
     )
 
     # hud 1
-    hudSubtext(hostPlayer if hostPlayer.GuideToggle else null,
+    hudSubtext(hostPlayer if hostPlayer.toggle_guide else null,
         ([
             "{0} + {1} | 新建检查点\n"
             "{0} + {2} | 删除选中的检查点".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE)),
@@ -265,7 +265,7 @@ rule "Editor | Hud and Effects":
     )
 
     # hud 1-5
-    hudSubtext(hostPlayer if hostPlayer.GuideToggle and not EditorMoveItem else null,
+    hudSubtext(hostPlayer if hostPlayer.toggle_guide and not EditorMoveItem else null,
         ([
             [],
             "{0} + {1} | 删除选中的击杀球".format(buttonString(Button.INTERACT), buttonString(Button.SECONDARY_FIRE)),
@@ -286,7 +286,7 @@ rule "Editor | Hud and Effects":
     )
 
     # hud 2
-    hudSubtext(hostPlayer if hostPlayer.GuideToggle else null,
+    hudSubtext(hostPlayer if hostPlayer.toggle_guide else null,
       ([
             "{0} + {1} | 移除/新建传送点\n"
             "{0} + {2} | 检查点碰撞模型\n".format(buttonString(Button.INTERACT) , buttonString(Button.RELOAD), buttonString(Button.ABILITY_1)),
@@ -328,7 +328,7 @@ rule "Editor | Hud and Effects":
     )
 
     # hud3
-    hudSubtext(hostPlayer if hostPlayer.GuideToggle and not EditorMoveItem else null,
+    hudSubtext(hostPlayer if hostPlayer.toggle_guide and not EditorMoveItem else null,
         ([
             "{0} (长按) | 移动检查点".format(buttonString(Button.ABILITY_2)),
             "{0} + {1} | 增大击杀球\n"
@@ -363,7 +363,7 @@ rule "Editor | Hud and Effects":
     )
 
     # hud4
-    hudSubtext(hostPlayer if hostPlayer.GuideToggle and not EditorMoveItem else null,
+    hudSubtext(hostPlayer if hostPlayer.toggle_guide and not EditorMoveItem else null,
         ([
             [],
             "{0} + {1} | 移动选中的实体".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)),
@@ -388,7 +388,7 @@ rule "Editor | Hud and Effects":
     # ==
     /*
     hudSubtext(
-        hostPlayer if hostPlayer.GuideToggle else null,
+        hostPlayer if hostPlayer.toggle_guide else null,
         " \n{0} + {1} | 下一关\n"
         "{0} + {2} | 上一关\n"
         "{3} (长按) | 飞行\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1))
@@ -396,30 +396,30 @@ rule "Editor | Hud and Effects":
         " \n{0} + {1} | Next checkpoint\n"
         "{0} + {2} | Prev checkpoint\n"
         "{3} (hold)| Fly\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1))
-        ,HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        ,HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.toggle_guide else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     */
     hudSubtext(
-        hostPlayer if hostPlayer.GuideToggle else null,
+        hostPlayer if hostPlayer.toggle_guide else null,
         " \n{0} + {1} | 下一关".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE))
         #"{0} + {2} | 上一关"
         checkCN
         " \n{0} + {1} | Next checkpoint".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE)),
         #"{0} + {2} | Prev checkpoint"
-        HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.toggle_guide else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
     hudSubtext(
-        hostPlayer if hostPlayer.GuideToggle else null,
+        hostPlayer if hostPlayer.toggle_guide else null,
         "{1} + {2} | 上一关\n"
         "{0} (长按) | 飞行\n".format(buttonString(Button.ABILITY_1), buttonString(Button.CROUCH),buttonString(Button.SECONDARY_FIRE))
         checkCN
         "{1} + {2} | Prev checkpoint\n"
         "{0} (hold)| Fly\n".format(buttonString(Button.ABILITY_1), buttonString(Button.CROUCH),buttonString(Button.SECONDARY_FIRE)),
-        HudPosition.RIGHT, HO.edit_instructions_general1, Color.GREEN if hostPlayer.GuideToggle else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        HudPosition.RIGHT, HO.edit_instructions_general1, Color.GREEN if hostPlayer.toggle_guide else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
-    hudSubheader(hostPlayer if hostPlayer.GuideToggle else null,
+    hudSubheader(hostPlayer if hostPlayer.toggle_guide else null,
         "保存地图长按 {0} + {1} + {2} 后按弹出窗口的提示进行操作".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD))
         checkCN
         "to save map hold {0} + {1} + {2} and follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
@@ -483,7 +483,7 @@ rule "Editor | Hud and Effects":
         HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(hostPlayer if hostPlayer.GuideToggle and (hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null,
+    hudSubtext(hostPlayer if hostPlayer.toggle_guide and (hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and hostPlayer.toggle_guide and len(hostPlayer.BounceIndex_Cache) > 0 else null,
         "{0} + {1} | {4} {3} | {2}".format(
             buttonString(Button.ULTIMATE),
             buttonString(Button.PRIMARY_FIRE),
@@ -508,7 +508,7 @@ rule "Editor | Hud and Effects":
         , HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(hostPlayer if hostPlayer.GuideToggle and (hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null,
+    hudSubtext(hostPlayer if hostPlayer.toggle_guide and (hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.EditModeSelection == 0 or hostPlayer.EditModeSelection == 2 and hostPlayer.toggle_guide and len(hostPlayer.BounceIndex_Cache) > 0 else null,
         "{0} + {1} | {4} {3} | {2}".format(
             buttonString(Button.ULTIMATE),
             buttonString(Button.SECONDARY_FIRE),
@@ -534,7 +534,7 @@ rule "Editor | Hud and Effects":
         , HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 2 and hostPlayer.GuideToggle and len(hostPlayer.BounceIndex_Cache) > 0 else null,
+    hudSubtext(hostPlayer if hostPlayer.EditModeSelection == 2 and hostPlayer.toggle_guide and len(hostPlayer.BounceIndex_Cache) > 0 else null,
         "{0} + {1} |  收集球(进点前必须集齐) {3} | {2}\n".format(
             buttonString(Button.ULTIMATE),
             buttonString(Button.ABILITY_2),
@@ -551,7 +551,7 @@ rule "Editor | Hud and Effects":
         , HudPosition.LEFT, HO.edit_orb_lock, Color.GREEN if BounceToggleLock[EditSelected] != 0 else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
-    hudText(hostPlayer if hostPlayer.GuideToggle else null,
+    hudText(hostPlayer if hostPlayer.toggle_guide else null,
         "球体/传送门上限: {0}/{1} ".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart), fxLimit)
         checkCN
         "orb/portal limit: {0}/{1} ".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart), fxLimit),
@@ -559,7 +559,7 @@ rule "Editor | Hud and Effects":
     )
 
     # display selected cc/orb info
-    hudText(hostPlayer if hostPlayer.GuideToggle else null,
+    hudText(hostPlayer if hostPlayer.toggle_guide else null,
         (
             "\n 选中的检查点 \n 矢量: {0}{1} \n".format(
                 CheckpointPositions[hostPlayer.checkpoint_current],

@@ -7,7 +7,7 @@ rule "Checking | ult combined rule":
     @Event eachPlayer
     @Condition eventPlayer.isUsingUltimate()
     wait(1.8, Wait.ABORT_WHEN_FALSE)
-    if eventPlayer.checkpoint_notLast and (not eventPlayer.InvincibleToggle):
+    if eventPlayer.checkpoint_notLast and (not eventPlayer.toggle_invincible):
         eventPlayer.disallowButton(Button.PRIMARY_FIRE) # disable primary fire because of slash exploit
     waitUntil(not eventPlayer.isUsingUltimate(), 2)
     wait()
@@ -38,7 +38,7 @@ def CheckUlt(): # checks if ult should be turned on
     if eventPlayer.isHoldingButton(Button.ULTIMATE): # incase spamming the button
         wait()
 
-    if eventPlayer.InvincibleToggle or eventPlayer.EditorOn or (not eventPlayer.checkpoint_notLast):
+    if eventPlayer.toggle_invincible or eventPlayer.EditorOn or (not eventPlayer.checkpoint_notLast):
         goto lbl_a #skip msg if these
     elif eventPlayer.checkpoint_current in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last() ) <= cpcircleradius: 
         smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"终极技能已就绪" checkCN "Ultimate is ready")) 
@@ -54,7 +54,7 @@ def CheckUlt(): # checks if ult should be turned on
 
 def CheckDash(): # checks if dash should be  turned on
     waitUntil(not eventPlayer.isUsingAbility1(), 2)
-    if eventPlayer.InvincibleToggle or eventPlayer.EditorOn or (not eventPlayer.checkpoint_notLast):
+    if eventPlayer.toggle_invincible or eventPlayer.EditorOn or (not eventPlayer.checkpoint_notLast):
         goto lbl_a #skip msg if these
     elif eventPlayer.checkpoint_current in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last() ) <= cpcircleradius: 
         smallMessage(eventPlayer, "   {0} {1}".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready")) 
@@ -101,7 +101,7 @@ rule "Checking | Player on the wall":
 
 rule "Checking | Using Emote":
     @Event eachPlayer
-    @Condition eventPlayer.InvincibleToggle == false
+    @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.isCommunicatingEmote() == true
     eventPlayer.BhopUsed = false
     if eventPlayer.ban_emote:
@@ -122,7 +122,7 @@ rule "Checking | Bhop count for stand ban":
     @Condition eventPlayer.isJumping()
     @Condition eventPlayer.ban_standcreate
     eventPlayer.Bhopcount ++
-    if eventPlayer.Bhopcount > 1 and eventPlayer.InvincibleToggle == false:   
+    if eventPlayer.Bhopcount > 1 and eventPlayer.toggle_invincible == false:   
         smallMessage(eventPlayer, "   站卡 ♠ 已禁用!" checkCN "   Stand createBhop ♠ is banned!")
         checkpointFailReset()
         return
@@ -142,7 +142,7 @@ rule "Checking | Create Bhop":
     if eventPlayer.LockState: # prevent restart from giving messsage, but stil allow it to become green
         return
 
-    if eventPlayer.ban_create and eventPlayer.InvincibleToggle == false:
+    if eventPlayer.ban_create and eventPlayer.toggle_invincible == false:
         smallMessage(eventPlayer, "   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!")
         checkpointFailReset()
         return
@@ -199,7 +199,7 @@ rule "HUD | Multiclimb Counter":
         eventPlayer.JumpCount = 2
         eventPlayer.WallclimbUsed = true
     else:
-        if eventPlayer.ban_multi and eventPlayer.checkpoint_notLast and not eventPlayer.InvincibleToggle:
+        if eventPlayer.ban_multi and eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
             smallMessage(eventPlayer, "    蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
             checkpointFailReset() 
         else:
@@ -223,7 +223,7 @@ rule "Ban | Wallclimb - Indicator ":
     # Credit: TITANXPASCAL#5554
     @Event eachPlayer
     @Condition eventPlayer.ban_climb
-    @Condition eventPlayer.InvincibleToggle == false
+    @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.WallclimbUsed
     #checkpointFailReset()
     #eventPlayer.setStatusEffect(null,Status.BURNING, 0.1)
@@ -232,7 +232,7 @@ rule "Ban | Wallclimb - Indicator ":
 /*rule "Ban | Emote Savehop":
     @Event eachPlayer
     @Condition eventPlayer.ban_emote
-    @Condition eventPlayer.InvincibleToggle == false
+    @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.isCommunicatingEmote()
     smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
     checkpointFailReset()*/
@@ -241,7 +241,7 @@ rule "Ban | Save Double - 封禁二段跳":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.ban_savedouble
-    @Condition eventPlayer.InvincibleToggle == false
+    @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.DoubleUsed == false
     @Condition eventPlayer.isHoldingButton(Button.JUMP)

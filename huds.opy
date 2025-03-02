@@ -46,7 +46,7 @@ rule "Huds: Global/Localplayer":
         , HudPosition.LEFT, HO.data_code, ColorConfig[customize.credit_code] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
-    hudSubtext(localPlayer.GuideToggle, "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, ColorConfig[customize.dsc], HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(localPlayer.toggle_guide, "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, ColorConfig[customize.dsc], HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
     # global huds
     hudSubheader(localPlayer,
@@ -65,33 +65,33 @@ rule "Huds: Global/Localplayer":
     # padding for custom hud display
     hudSubtext(localPlayer, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nv", HudPosition.TOP, HO.fillermain, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
-    hudSubtext(localPlayer.GuideToggle,
-        "{0} {1} | {2}".format( [] if localPlayer.QuickRestartToggle else "长按",buttonString(Button.RELOAD),"快速回点 | 启用" if localPlayer.QuickRestartToggle else "启用快速回点")
+    hudSubtext(localPlayer.toggle_guide,
+        "{0} {1} | {2}".format( [] if localPlayer.toggle_quickRestart else "长按",buttonString(Button.RELOAD),"快速回点 | 启用" if localPlayer.toggle_quickRestart else "启用快速回点")
         checkCN
-        "{0} {1} | {2}".format( [] if localPlayer.QuickRestartToggle else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.QuickRestartToggle else "Enable Quick reset")
+        "{0} {1} | {2}".format( [] if localPlayer.toggle_quickRestart else "Hold",buttonString(Button.RELOAD),"Quick reset" if localPlayer.toggle_quickRestart else "Enable Quick reset")
         , HudPosition.RIGHT, HO.com_quickres, ColorConfig[customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(localPlayer.GuideToggle,
-        "{0} + {1} | 探点模式{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | 启用" if localPlayer.InvincibleToggle else [])
+    hudSubtext(localPlayer.toggle_guide,
+        "{0} + {1} | 探点模式{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | 启用" if localPlayer.toggle_invincible else [])
         checkCN
-        "{0} + {1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.InvincibleToggle else [])
-        ,HudPosition.RIGHT, HO.com_invincible, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.InvincibleToggle else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        "{0} + {1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.toggle_invincible else [])
+        ,HudPosition.RIGHT, HO.com_invincible, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.toggle_invincible else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     hudText(localPlayer,
         null,
         "{0}{1}{2}".format(
-            abilityIconString(Hero.BAPTISTE, Button.ABILITY_2) if localPlayer.InvincibleToggle else [],
-            abilityIconString(Hero.DVA, Button.ULTIMATE) if localPlayer.PracticeToggle else [],
-            abilityIconString(Hero.SOMBRA, Button.ABILITY_1) if localPlayer.invis else []
-        ) if not localPlayer.GuideToggle else [],
+            abilityIconString(Hero.BAPTISTE, Button.ABILITY_2) if localPlayer.toggle_invincible else [],
+            abilityIconString(Hero.DVA, Button.ULTIMATE) if localPlayer.toggle_practice else [],
+            abilityIconString(Hero.SOMBRA, Button.ABILITY_1) if localPlayer.toggle_invisible else []
+        ) if not localPlayer.toggle_guide else [],
         "长按 {0} | 切换显示HUD".format(buttonString(Button.SECONDARY_FIRE))
         checkCN
         "Hold {0} | toggle hud".format(buttonString(Button.SECONDARY_FIRE))
         ,HudPosition.RIGHT, HO.com_displaytoggle, ColorConfig[customize.command_normal], ColorConfig[customize.command_normal], ColorConfig[customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(localPlayer.GuideToggle,
+    hudSubtext(localPlayer.toggle_guide,
         "长按 {0} + {1} | 预览关卡".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
         checkCN
         "Hold {0} + {1} | Preview cp".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
@@ -99,7 +99,7 @@ rule "Huds: Global/Localplayer":
     )
     HudStoreEdit.append(getLastCreatedText())
 
-    hudSubheader(localPlayer if localPlayer.PreviewsArray and localPlayer.GuideToggle else null,
+    hudSubheader(localPlayer if localPlayer.PreviewsArray and localPlayer.toggle_guide else null,
         "移动键 ◀ ▶ | 预览其他\n移动键 ◀ ▶ | 修改间距 \n视角移动 | 调整浏览视角"
         checkCN
         "Walk ◀ ▶ | preview others\nWalk ▲ ▼ | modify zoom\nAim | change preview angle"
@@ -110,9 +110,9 @@ rule "Huds: Global/Localplayer":
 
     hudSubtext(localPlayer,
         [] if localPlayer.timer_splitDisplay == -Math.INFINITY else
-        ("单关用时 {0}".format(localPlayer.timer_splitDisplay) if not localPlayer.SpectateToggle else [])
+        ("单关用时 {0}".format(localPlayer.timer_splitDisplay) if not localPlayer.toggle_spectate else [])
         checkCN
-        ("Split: {0}".format(localPlayer.timer_splitDisplay) if not localPlayer.SpectateToggle else [])
+        ("Split: {0}".format(localPlayer.timer_splitDisplay) if not localPlayer.toggle_spectate else [])
         ,HudPosition.LEFT, HO.game_split_display, ColorConfig[customize.time], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
@@ -122,10 +122,10 @@ rule "Huds: Global/Localplayer":
     if CpHudText != null: # text per checkpoint  text per cp each
         hudText(localPlayer,
             CpHudText[CpHudCp.index(localPlayer.checkpoint_current)]
-            if localPlayer.checkpoint_current in CpHudCp and localPlayer.GuideToggle else [],
-            ("(文本已隐藏)" if localPlayer.checkpoint_current in CpHudCp and not localPlayer.GuideToggle else [])
+            if localPlayer.checkpoint_current in CpHudCp and localPlayer.toggle_guide else [],
+            ("(文本已隐藏)" if localPlayer.checkpoint_current in CpHudCp and not localPlayer.toggle_guide else [])
             checkCN
-            ("(text hidden)" if localPlayer.checkpoint_current in CpHudCp and not localPlayer.GuideToggle else []),
+            ("(text hidden)" if localPlayer.checkpoint_current in CpHudCp and not localPlayer.toggle_guide else []),
             null
             , HudPosition.TOP, HO.add_custommsg1, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
         )
@@ -140,14 +140,14 @@ rule "Huds: Global/Localplayer":
             2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, CpIwtColor, SpecVisibility.DEFAULT)
 
     if len(HintText) > 0:
-        hudText(localPlayer.GuideToggle,
+        hudText(localPlayer.toggle_guide,
             null,
             (
-            "{0} ――  有可用提示―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.checkpoint_current in HintCp and localPlayer.HintsOn == false else
+            "{0} ――  有可用提示―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.checkpoint_current in HintCp and localPlayer.toggle_hints == false else
             "― ― ― ― ― 提示 ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)]) if localPlayer.checkpoint_current in HintCp else
             "(当前关卡无可用提示)"
             ) checkCN
-            "{0} ―― hint available ―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.checkpoint_current in HintCp and localPlayer.HintsOn == false else
+            "{0} ―― hint available ―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.checkpoint_current in HintCp and localPlayer.toggle_hints == false else
             #" ――――――― \n {} \n ――――――― ".format(HintText[HintCp.index(localPlayer.checkpoint_current)]) if localPlayer.checkpoint_current in HintCp else   # and true is implied from last if
             "― ― ― ― ― Hint ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)]) if localPlayer.checkpoint_current in HintCp else   # and true is implied from last if
             "(no hint on this level)"
@@ -156,17 +156,17 @@ rule "Huds: Global/Localplayer":
             "{} + {} | {}".format(
                 buttonString(Button.ABILITY_2),
                 buttonString(Button.MELEE),
-                ("隐藏提示" if localPlayer.HintsOn else "获取提示") checkCN
-                "hide hint" if localPlayer.HintsOn else "show hint"
+                ("隐藏提示" if localPlayer.toggle_hints else "获取提示") checkCN
+                "hide hint" if localPlayer.toggle_hints else "show hint"
 
             )
 
-            #"{} + {} | hide hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE)) if localPlayer.HintsOn else
+            #"{} + {} | hide hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE)) if localPlayer.toggle_hints else
             #"{} + {} | show hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE))
             ,
             HudPosition.RIGHT, HO.com_hints,
             Color.BLUE,
-            Color.ORANGE if localPlayer.checkpoint_current in HintCp and localPlayer.HintsOn == false else
+            Color.ORANGE if localPlayer.checkpoint_current in HintCp and localPlayer.toggle_hints == false else
             Color.GREEN if localPlayer.checkpoint_current in HintCp else
             Color.GRAY,
             evalOnce(ColorConfig[customize.command_normal]) if localPlayer.checkpoint_current in HintCp else Color.GRAY,
@@ -187,29 +187,29 @@ rule "Huds: Global/Localplayer":
         hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                   Press {0} to start                                ".format(buttonString(Button.INTERACT)), HudPosition.TOP, HO.comp_instructbottom, Color.WHITE, HudReeval.VISIBILITY_AND_STRING,SpecVisibility.DEFAULT)
 
     elif not CompMode:
-        hudSubtext(localPlayer.GuideToggle,
-            "长按 {0} | 观战模式{1}".format(buttonString(Button.INTERACT)," | 启用" if localPlayer.SpectateToggle else [])
+        hudSubtext(localPlayer.toggle_guide,
+            "长按 {0} | 观战模式{1}".format(buttonString(Button.INTERACT)," | 启用" if localPlayer.toggle_spectate else [])
             checkCN
-            "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.SpectateToggle else [])
-            , HudPosition.RIGHT, HO.com_spec, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.SpectateToggle else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+            "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.toggle_spectate else [])
+            , HudPosition.RIGHT, HO.com_spec, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.toggle_spectate else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
-        hudSubtext(localPlayer.GuideToggle,
-            "长按 {0} | 隐身模式{1}".format(buttonString(Button.ABILITY_2)," | 启用" if localPlayer.invis else [])
+        hudSubtext(localPlayer.toggle_guide,
+            "长按 {0} | 隐身模式{1}".format(buttonString(Button.ABILITY_2)," | 启用" if localPlayer.toggle_invisible else [])
             checkCN
-            "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.invis else [])
-            , HudPosition.RIGHT, HO.com_invis, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.invis else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
-        )
-        HudStoreEdit.append(getLastCreatedText())
-
-        hudSubtext(localPlayer.GuideToggle,
-            "{0} + {1} | 练习模式{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.checkpoint_practice) if localPlayer.PracticeToggle else [])
-            checkCN
-            "{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.checkpoint_practice) if localPlayer.PracticeToggle else [])
-            ,HudPosition.RIGHT, HO.com_practice, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.PracticeToggle else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+            "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.toggle_invisible else [])
+            , HudPosition.RIGHT, HO.com_invis, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.toggle_invisible else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         HudStoreEdit.append(getLastCreatedText())
 
-        hudSubheader([i for i in getAllPlayers() if i.PracticeToggle and i.GuideToggle],
+        hudSubtext(localPlayer.toggle_guide,
+            "{0} + {1} | 练习模式{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.checkpoint_practice) if localPlayer.toggle_practice else [])
+            checkCN
+            "{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.checkpoint_practice) if localPlayer.toggle_practice else [])
+            ,HudPosition.RIGHT, HO.com_practice, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.toggle_practice else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        )
+        HudStoreEdit.append(getLastCreatedText())
+
+        hudSubheader([i for i in getAllPlayers() if i.toggle_practice and i.toggle_guide],
             "{0} + {1} | 下一关\n{0} + {2} | 上一关\n{3} | 回到练习模式起点 ".format(
                 buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT) )
             checkCN
@@ -227,7 +227,7 @@ rule "Huds: Global/Localplayer":
         ]
     # display
     if Difficultyhud[0] != 17: # 17th entry is 'dont display'
-        hudText(localPlayer if localPlayer.GuideToggle and not localPlayer.LeaderboardToggle else null,
+        hudText(localPlayer if localPlayer.toggle_guide and not localPlayer.toggle_leaderboard else null,
             ("游戏测试" checkCN "Playtest") if Difficultyhud[1] else [],
             ["playtest", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell",null][Difficultyhud[0]],
             null,
@@ -241,7 +241,7 @@ rule "Huds: Global/Localplayer":
 
     # restart + leaderboard
     # this is remade in editor to not include leaderboard
-    hudSubtext(localPlayer.GuideToggle,
+    hudSubtext(localPlayer.toggle_guide,
         "{0} + {1} + {2} | 重新开始\n长按 {3} | 完整成绩排名".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE))
         checkCN
         "{0} + {1} + {2} | Restart\nHold {3} | leaderboard".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE))
@@ -283,8 +283,8 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
     if LeaderBoardFull[4]:
         hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4][2], HudPosition.RIGHT, HO.board_top5+5, Color.GREEN, Color.GREEN, Color.GREEN,HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         LeaderBoardHuds.append(getLastCreatedText())
-
-    hudHeader(localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
+    #$$ CompTime == 0
+    hudHeader(localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.toggle_leaderboard,
         "　　　　 {0} {1} {0} 　　　".format(
             iconString(Icon.FLAG),
             "成绩排名" checkCN "Leaderboard"
@@ -293,7 +293,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
     LeaderBoardHuds.append(getLastCreatedText())
 
     hudHeader(
-        localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
+        localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.toggle_leaderboard,
         "　　　　　　　　　　　　　　　　　　\n"
         "　 1:　{0} - {5}　\n"
         "　 2:　{1} - {6}　\n"
@@ -316,7 +316,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
 
     if LeaderBoardFull[5]:
         hudHeader(
-            localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
+            localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.toggle_leaderboard,
             "　　　　　　　　　　　　　　　　　　\n"
             "　 6:　{0} - {5}　\n"
             "　 7:　{1} - {6}　\n"
@@ -339,7 +339,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
 
     if LeaderBoardFull[10]:
         hudHeader(
-            localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
+            localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.toggle_leaderboard,
             "　　　　　　　　　　　　　　　　　　\n"
             "　11:　{0} - {5}　\n"
             "　12:　{1} - {6}　\n"
@@ -362,7 +362,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
 
     if LeaderBoardFull[15]:
         hudHeader(
-            localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.LeaderboardToggle,
+            localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.toggle_leaderboard,
             "　　　　　　　　　　　　　　　　　　\n"
             "　16:　{0} - {5}　\n"
             "　17:　{1} - {6}　\n"
@@ -438,11 +438,11 @@ rule "Huds: each player":
     # ban icons in level
     hudText(eventPlayer, null,
         /*
-        ("练习用时 {0}".format(prettyTime(eventPlayer.timer_practice)) if eventPlayer.PracticeToggle else [])
+        ("练习用时 {0}".format(prettyTime(eventPlayer.timer_practice)) if eventPlayer.toggle_practice else [])
         checkCN
-        ("Practice Time {0}".format(prettyTime(eventPlayer.timer_practice)) if eventPlayer.PracticeToggle else [])
+        ("Practice Time {0}".format(prettyTime(eventPlayer.timer_practice)) if eventPlayer.toggle_practice else [])
         */
-        "{} {}".format("练习用时" checkCN "Practice Time",prettyTime(eventPlayer.timer_practice)) if eventPlayer.PracticeToggle else [],
+        "{} {}".format("练习用时" checkCN "Practice Time",prettyTime(eventPlayer.timer_practice)) if eventPlayer.toggle_practice else [],
         # 19191
         "{} {}".format("用时" checkCN "Time", prettyTime(eventPlayer.timer_normal)),
         #checkCN
@@ -455,7 +455,7 @@ rule "Huds: each player":
 
 
     hudText(
-        eventPlayer if not eventPlayer.LeaderboardToggle else null,
+        eventPlayer if not eventPlayer.toggle_leaderboard else null,
         " {0} ({2}/{3})\n―――――――――――\n {1}\n".format(
             ("检查点" if eventPlayer.PreviewsI == 0 else "弹球" if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1  else "自定义传送门") checkCN
             "checkpoint" if eventPlayer.PreviewsI == 0 else "orb" if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1  else "portal",
@@ -543,7 +543,7 @@ rule "Huds: each player":
 
     createInWorldText(
         #eventPlayer if eventPlayer.checkpoint_notLast else null,
-        eventPlayer if eventPlayer.checkpoint_notLast and eventPlayer.GuideToggle else null,
+        eventPlayer if eventPlayer.checkpoint_notLast and eventPlayer.toggle_guide else null,
         "{0} {1}".format(
             iconString(Icon.WARNING),
             "先收集橙球" checkCN "collect orbs first"
@@ -585,8 +585,8 @@ rule "Huds: each player":
 
 def UpdateTitle():
     @Name "Title"
-    if TitleData == null or CompMode or eventPlayer.PracticeToggle or eventPlayer.EditorOn or (not eventPlayer.checkpoint_current in TitleData[0]):
+    if TitleData == null or CompMode or eventPlayer.toggle_practice or eventPlayer.EditorOn or (not eventPlayer.checkpoint_current in TitleData[0]):
         return
     destroyInWorldText(eventPlayer.TitleStore)
-    createInWorldText(localPlayer if not eventPlayer.invis else null,TitleData[1][TitleData[0].index(eventPlayer.checkpoint_current)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.checkpoint_current)], SpecVisibility.DEFAULT)
+    createInWorldText(localPlayer if not eventPlayer.toggle_invisible else null,TitleData[1][TitleData[0].index(eventPlayer.checkpoint_current)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.checkpoint_current)], SpecVisibility.DEFAULT)
     eventPlayer.TitleStore = getLastCreatedText()

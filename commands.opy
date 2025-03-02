@@ -9,7 +9,7 @@ rule "Command | Toggle Leaderboard (Hold Melee)":
     @Condition eventPlayer.EditorOn == false
     wait(1, Wait.ABORT_WHEN_FALSE)
 
-    eventPlayer.LeaderboardToggle = not eventPlayer.LeaderboardToggle
+    eventPlayer.toggle_leaderboard = not eventPlayer.toggle_leaderboard
 
 rule "Command | Split hide (Hold Dash + Primary + Secondary)":
     @Event eachPlayer
@@ -32,12 +32,12 @@ rule "Command | Toggle Invisible (Hold Deflect)":
     @Condition CompMode == false
     wait(1, Wait.ABORT_WHEN_FALSE)
 
-    eventPlayer.invis = not eventPlayer.invis
+    eventPlayer.toggle_invisible = not eventPlayer.toggle_invisible
     eventPlayer.setInvisibility(Invis.NONE)
-    if eventPlayer.invis:
+    if eventPlayer.toggle_invisible:
         eventPlayer.setInvisibility(Invis.ALL)
 
-    smallMessage(eventPlayer, "   {1} {0}".format("on" if eventPlayer.invis else "off","隐身模式" checkCN "Invisible"))
+    smallMessage(eventPlayer, "   {1} {0}".format("on" if eventPlayer.toggle_invisible else "off","隐身模式" checkCN "Invisible"))
     playEffect(eventPlayer, DynamicEffect.DEBUFF_IMPACT_SOUND, null, eventPlayer, 100)
 
 /*
@@ -142,7 +142,7 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
 
     eventPlayer.flytoggle = null
     eventPlayer.checkpoint_current = 0
-    eventPlayer.PracticeToggle = false
+    eventPlayer.toggle_practice = false
     stopChasingVariable(eventPlayer.timer_practice)
     eventPlayer.timer_practice = 0
     eventPlayer.timer_splitDisplay = -Math.INFINITY if eventPlayer.timer_splitDisplay == -Math.INFINITY else 0
@@ -174,11 +174,11 @@ rule "Command | Spectate (Hold Interact)":
     if eventPlayer.EditorOn: # editor has interact combos
         wait(1, Wait.ABORT_WHEN_FALSE)
 
-    if eventPlayer.SpectateToggle:
+    if eventPlayer.toggle_spectate:
         #eventPlayer.enableRespawn()
         eventPlayer.resurrect()
         #eventPlayer.respawn()
-        if eventPlayer.PracticeToggle:
+        if eventPlayer.toggle_practice:
             chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)
         elif eventPlayer.checkpoint_notLast:
             chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
@@ -186,7 +186,7 @@ rule "Command | Spectate (Hold Interact)":
         checkpointFailReset()
     else:
         smallMessage(eventPlayer, "   再次长按互动键关闭观战模式" checkCN "   Hold Interact again to turn off spectate mode")
-        eventPlayer.InvincibleToggle = false
+        eventPlayer.toggle_invincible = false
         if eventPlayer.checkpoint_notLast:
             StartPauseTimer()
         stopChasingVariable(eventPlayer.timer_practice)
@@ -195,7 +195,7 @@ rule "Command | Spectate (Hold Interact)":
         eventPlayer.setDamageReceived(100)
         kill(eventPlayer, null)
         eventPlayer.setDamageReceived(0)
-    eventPlayer.SpectateToggle = not eventPlayer.SpectateToggle
+    eventPlayer.toggle_spectate = not eventPlayer.toggle_spectate
 
 rule "Command | Toggle Invincible Mode (Melee + Reload)":
     @Event eachPlayer
@@ -210,8 +210,8 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
     eventPlayer.LockState = true
     eventPlayer.LockCollected = []
 
-    if eventPlayer.InvincibleToggle:
-        if eventPlayer.PracticeToggle:
+    if eventPlayer.toggle_invincible:
+        if eventPlayer.toggle_practice:
             bigMessage(eventPlayer, "练习模式" checkCN "Practice mode")
             chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)
         elif eventPlayer.checkpoint_notLast:
@@ -227,7 +227,7 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
         async(CheckUlt(), AsyncBehavior.RESTART)
         async(CheckDash(), AsyncBehavior.RESTART)
 
-    eventPlayer.InvincibleToggle = not eventPlayer.InvincibleToggle
+    eventPlayer.toggle_invincible = not eventPlayer.toggle_invincible
     eventPlayer.LockState = false
     wait()
 
@@ -245,11 +245,11 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
     eventPlayer.LockState = true
     #eventPlayer.disallowButton(Button.ABILITY_1)
 
-    if eventPlayer.PracticeToggle:
+    if eventPlayer.toggle_practice:
         bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
         eventPlayer.checkpoint_current = eventPlayer.checkpoint_practice
         stopChasingVariable(eventPlayer.timer_practice)
-        if eventPlayer.checkpoint_notLast or eventPlayer.InvincibleToggle:
+        if eventPlayer.checkpoint_notLast or eventPlayer.toggle_invincible:
             eventPlayer.timer_split = eventPlayer.timer_normal
             chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
             StopPauseTimer()
@@ -265,12 +265,12 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
         eventPlayer.timer_split = 0
         eventPlayer.timer_practice = 0
         chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)
-        if eventPlayer.InvincibleToggle:
-            eventPlayer.InvincibleToggle = false
+        if eventPlayer.toggle_invincible:
+            eventPlayer.toggle_invincible = false
             checkpointFailReset()
     #wait(0.2)
     #eventPlayer.allowButton(Button.ABILITY_1)
-    eventPlayer.PracticeToggle = not eventPlayer.PracticeToggle
+    eventPlayer.toggle_practice = not eventPlayer.toggle_practice
     eventPlayer.LockState = false
     wait(0.1)
 
@@ -281,13 +281,13 @@ rule "Command | Restart Practice (Hold Interact)":
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == false
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
-    @Condition eventPlayer.isAlive() or eventPlayer.SpectateToggle
+    @Condition eventPlayer.isAlive() or eventPlayer.toggle_spectate
     @Condition eventPlayer.EditorOn == false
-    @Condition eventPlayer.PracticeToggle
+    @Condition eventPlayer.toggle_practice
     @Condition eventPlayer.LockState == false
 
     #  first 2 ifs prevent collide with spec
-    if eventPlayer.SpectateToggle:
+    if eventPlayer.toggle_spectate:
         waitUntil(eventPlayer.isAlive(), Math.INFINITY)
         waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), 2)
         return
@@ -305,9 +305,9 @@ rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) )
-    #@Condition hostPlayer.EditorOn or ( eventPlayer.PracticeToggle and eventPlayer.isHoldingButton(Button.ABILITY_1) )
+    #@Condition hostPlayer.EditorOn or ( eventPlayer.toggle_practice and eventPlayer.isHoldingButton(Button.ABILITY_1) )
     @Condition eventPlayer.LockState == false
-    @Condition hostPlayer.EditorOn or eventPlayer.PracticeToggle
+    @Condition hostPlayer.EditorOn or eventPlayer.toggle_practice
     @Condition len(CheckpointPositions) > 1
     @Condition EditorMoveItem == false
     @Condition (eventPlayer.LockEditor and eventPlayer == hostPlayer) == false
@@ -347,18 +347,18 @@ rule "Command | Quick Reset (Reload | Hold Reload to Enable)":
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == false
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
 
-    if eventPlayer.QuickRestartToggle:
+    if eventPlayer.toggle_quickRestart:
         if eventPlayer.flytoggle:
             eventPlayer.flytoggle = CheckpointPositions[eventPlayer.checkpoint_current].last()
         checkpointFailReset()
         wait(0.32)
     wait(1, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
-    eventPlayer.QuickRestartToggle = not eventPlayer.QuickRestartToggle
+    eventPlayer.toggle_quickRestart = not eventPlayer.toggle_quickRestart
     bigMessage(eventPlayer,
-        ("快速回点已启用" if eventPlayer.QuickRestartToggle else "快速回点已关闭")
+        ("快速回点已启用" if eventPlayer.toggle_quickRestart else "快速回点已关闭")
         checkCN
-        "Quick reset is enabled" if eventPlayer.QuickRestartToggle else "Quick reset is disabled"
+        "Quick reset is enabled" if eventPlayer.toggle_quickRestart else "Quick reset is disabled"
     )
 
 rule "Command | Toggle Hud (Hold Secondary)":
@@ -372,17 +372,17 @@ rule "Command | Toggle Hud (Hold Secondary)":
     wait(1.5, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     smallMessage(eventPlayer,
-        ("   HUD已开启" if eventPlayer.GuideToggle else  "HUD已隐藏")
+        ("   HUD已开启" if eventPlayer.toggle_guide else  "HUD已隐藏")
         checkCN
-        ("   Hud is now open" if eventPlayer.GuideToggle else "   Hud is now hidden")
+        ("   Hud is now open" if eventPlayer.toggle_guide else "   Hud is now hidden")
     )
-    eventPlayer.GuideToggle = not eventPlayer.GuideToggle
+    eventPlayer.toggle_guide = not eventPlayer.toggle_guide
 
 rule "Command | Toggle Hints (Melee + Deflect)":
     @Event eachPlayer
     @Condition HintText != null
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
-    @Condition eventPlayer.HintsOn or eventPlayer.checkpoint_current in HintCp
+    @Condition eventPlayer.toggle_hints or eventPlayer.checkpoint_current in HintCp
 
-    eventPlayer.HintsOn = not eventPlayer.HintsOn
+    eventPlayer.toggle_hints = not eventPlayer.toggle_hints

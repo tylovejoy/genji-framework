@@ -301,7 +301,7 @@ rule "hud test":
     )
 
     while getNumberOfTextIds() < 95:
-        hudSubtext(hostPlayer if hostPlayer.GuideToggle else null,
+        hudSubtext(hostPlayer if hostPlayer.toggle_guide else null,
             "{0}".format(
             [
             "{0} + {1} | Create New Checkpoint\n"
@@ -378,7 +378,7 @@ rule "each":
     eventPlayer.sflkj = 0
 
     while eventPlayer.sflkj <= 3:
-           hudSubtext(eventPlayer if eventPlayer.GuideToggle else null,
+           hudSubtext(eventPlayer if eventPlayer.toggle_guide else null,
             "{0}".format(
             [
             "{0} + {1} | Create New Checkpoint\n"
