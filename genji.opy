@@ -1,4 +1,4 @@
-#!define versionhere "1.10.2♨J"
+#!define versionhere "v1.10.2♨J"
 #♨ Dev Build Icon
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
@@ -18,10 +18,14 @@ editortoggle(0) # 0 is editor, rest is numbers
 
 ################################################################################
 
-rule FILLER:
-    @Delimiter
-
 rule versionhere:
+    @Delimiter
+    #◀ The Official Genji Parkour Editor ▶
+    #Code: 54CRY
+    #Adapted by: LulledLion, FishoFire, Nebula
+    return
+
+rule FILLER:
     @Delimiter
 
 rule "<tx0C00000000001344> General Functions <tx0C00000000001344>":
