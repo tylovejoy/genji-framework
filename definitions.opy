@@ -210,8 +210,6 @@ globalvar DestructoIter 90
 globalvar MapVectorArray 91
 
 ######################################## Player Variables #####################
-playervar CurrentCheckpoint                 # int                       --- Current Checkpoint
-
 #PlayerEffects data
 #0 - Current ring,
 #1 - Next ring,
@@ -219,67 +217,50 @@ playervar CurrentCheckpoint                 # int                       --- Curr
 #3 - Next arrow icon,
 #4 - Next "Come here" text
 #playervar PlayerEffects                    # list[effect]              --- Player effect data array
-playervar InvincibleToggle                  # bool                       --- invincible/normal mode toggle now a bool
-playervar Timer                             # float                     --- Timer, chased.
-playervar EditModeSelection                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
-playervar SpectateToggle                    # bool                       --- turned into bool
 #playervar ArrayIterator                    # MsDestructo Iterator
 #playervar PortalText                       # In-World Text             --- Portal String inworld text
 #playervar MapVectorArray                   # MsDestructo Vectors
+playervar CurrentCheckpoint                 # int                       --- Current Checkpoint
+playervar PracticeCheckpoint                # int                       --- Saved practice checkpoint
+playervar MovedCheckpoint
+playervar NotOnLastCp                       # bool                      --- false if you are noton the last cp or level below 2 cps
+
+playervar Timer                             # float                     --- Timer, chased.
+playervar PauseTimer                        # float                     --- time in spectate/invincible, chased
+playervar practicetimer
+playervar splittime                         # int                       --- stored time that the split compares to
+playervar splitdisplay                      # int                       --- displayed split value
+#playervar splitson                         # bool                      --- turning splits on/off is now done via seting splittime to -Math.INFINITY
+
+playervar InvincibleToggle                  # bool                       --- invincible/normal mode toggle now a bool
+playervar SpectateToggle                    # bool                       --- turned into bool
+playervar PracticeToggle                    # int                       --- turned into bool
+playervar QuickRestartToggle                # bool                      -- enable reload to restart cp
+playervar GuideToggle                       # bool                       --- turned into bool, shows/hides editor hud
+playervar LeaderboardToggle                 # bool                      --- show/hide leaderboard
+playervar invis                             # bool                      --- invis toggle added by fisho
+playervar HintsOn
+
+playervar EditorOn                          # bool                      --- on all players, but only gets checked from host player
+playervar EditModeSelection                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
+playervar flytoggle                         # vector/null               --- null if not flying, else vector position, added by fisho
+playervar savemaphud                        # array                     --- array of save map hud ids
+
 playervar LedgeDash
 playervar LockEditor                        # bool                      --- ensure only 1 editor command can go of at the time
-playervar WallclimbUsed                     # bool                      --- turned into bool
-playervar GuideToggle                       # bool                       --- turned into bool, shows/hides editor hud
 playervar LockState                         # bool                      --- locked means you are curently runing arrive checkpoint rule
-playervar PauseTimer                        # float                     --- time in spectate/invincible, chased
-playervar Temp
-playervar BhopUsed                          # bool                      --- turned into bool
-playervar DoubleUsed                        # bool
-playervar MovedCheckpoint
-playervar PracticeCheckpoint                # int                       --- Saved practice checkpoint
-playervar PracticeToggle                    # int                       --- turned into bool
-playervar LeaderboardToggle                 # bool                      --- show/hide leaderboard
-playervar NotOnLastCp                       # bool                      --- false if you are noton the last cp or level below 2 cps
+playervar EffectSizeArray
+playervar EffectSizeToggle
+playervar editor_undo
+
 playervar Bhopcount                         # int                       --- counts bhops used for stand create ban
 playervar JumpCount                         # int                       --- jump tracking count, 0, 1, 2
 #playervar MultiClimbCountHUD                # HUD                       --- climb counter
 playervar CreateCounter
-playervar QuickRestartToggle                # bool                      -- enable reload to restart cp
 playervar MultiClimbCount                   # int                       --- climb count # for HUD
-playervar finishfxcache                     # color                     --- color of fx after finish the map
-playervar HintsOn
-playervar PreviewsArray2
-playervar PreviewsArray                     # array                     --- store preview positions
-playervar PreviewsI                         # int                       --- preview itterator
-playervar invis                             # bool                      --- invis toggle added by fisho
-playervar flytoggle                         # vector/null               --- null if not flying, else vector position, added by fisho
-playervar savemaphud                        # array                     --- array of save map hud ids
-#playervar TracesOff                        # bool                      --- turn traces (ring explosion fx) off
-playervar EditorOn                          # bool                      --- on all players, but only gets checked from host player
-playervar LockCollected                     # number                    --- amount collected lock this cp
-playervar bouncetouched                     # int                       --- cache of the bouncepad id you are currently touching
-#playervar PortalLoop                       # int                       --- loop to select portal
-playervar PortalStart_Cache
-playervar BounceLockMax_Cache
-playervar KillPosition_Cache
-playervar KillRadii_Cache
-playervar BouncePosition_Cache
-playervar BounceStrength_Cache
-playervar BounceUlt_Cache
-playervar BounceDash_Cache
-playervar BounceLock_Cache
-playervar BounceIndex_Cache
-playervar KillIndex_Cache
-playervar bouncetouchedlast
-
-playervar EffectSizeArray
-playervar EffectSizeToggle
-playervar CompDone                          # bool                      --- out of atemps or time?
-playervar AttemptCount                      # int                       --- amound of attemps remaining
-playervar instructionhud
-playervar TitleStore                        # textid                    --- store curent  title textid
-
-playervar PortalEnd_cache
+playervar WallclimbUsed                     # bool                      --- turned into bool
+playervar BhopUsed                          # bool                      --- turned into bool
+playervar DoubleUsed                        # bool
 
 playervar banstring                         # str                       --- displayed bans
 #playervar ban_triple
@@ -293,14 +274,38 @@ playervar ban_bhop
 playervar ban_standcreate                   # bans on second hop
 playervar ban_djump
 playervar ban_savedouble
-playervar splittime                         # int                       --- stored time that the split compares to
-playervar splitdisplay                      # int                       --- displayed split value
-#playervar splitson                         # bool                      --- turning splits on/off is now done via seting splittime to -Math.INFINITY
-playervar practicetimer
+
+playervar Temp
+playervar LockCollected                     # number                    --- amount collected lock this cp
+playervar bouncetouched                     # int                       --- cache of the bouncepad id you are currently touching
+playervar bouncetouchedlast
+#playervar PortalLoop                       # int                       --- loop to select portal
+playervar PortalStart_Cache
+playervar PortalEnd_cache
+playervar BounceLockMax_Cache
+playervar KillPosition_Cache
+playervar KillRadii_Cache
+playervar BouncePosition_Cache
+playervar BounceStrength_Cache
+playervar BounceUlt_Cache
+playervar BounceDash_Cache
+playervar BounceLock_Cache
+playervar BounceIndex_Cache
+playervar KillIndex_Cache
+
+playervar CompDone                          # bool                      --- out of atemps or time?
+playervar AttemptCount                      # int                       --- amound of attemps remaining
+playervar instructionhud
+
+playervar TitleStore                        # textid                    --- store curent  title textid
 playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
 playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
 playervar HUDInputs
-playervar editor_undo
+playervar finishfxcache                     # color                     --- color of fx after finish the map
+#playervar TracesOff                        # bool                      --- turn traces (ring explosion fx) off
+playervar PreviewsArray2
+playervar PreviewsArray                     # array                     --- store preview positions
+playervar PreviewsI                         # int                       --- preview itterator
 
 ######################################## Subroutines ##########################
 subroutine StartGame
