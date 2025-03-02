@@ -21,6 +21,7 @@ editortoggle(0) # 0 is editor, rest is numbers
 rule versionhere:
     @Delimiter
     #◀ The Official Genji Parkour Editor ▶
+    #Discord: dsc.gg/genjiparkour
     #Code: 54CRY
     #Adapted by: LulledLion, FishoFire, Nebula
     return
