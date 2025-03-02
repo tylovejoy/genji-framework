@@ -1,4 +1,17 @@
 #!mainFile "genji.opy"
+
+#!define versionhere "v1.10.2♨J"
+#♨ Dev Build Icon
+
+#!define editortoggle(x) __script__("test-maps/togglescript.js")
+editortoggle(0) # 0 is editor, rest is numbers
+
+#!optimizeForSize
+# Supress warning for emote
+#!suppressWarnings w_ow2_communicate_bug
+#disable overpy map detection (command removed by zezy after fix by blizzard)
+# #!disableMapDetectionFix
+
 ######################################## Settings ####################
 # Disable via double ## at include, not the define because the define needs to exist
 #!define testToggle ##!include "test-scripts.opy"
@@ -25,6 +38,8 @@
 
 # height added to player for orb detection. inludes the +
 #!define bounceoffset + Vector.UP * 0.7
+
+#!define usePerks false
 
 #!define cpCheat false
 
@@ -63,6 +78,10 @@ arrayname = [x - (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in arrayn
     (eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z * (vect(1, not eventPlayer.isHoldingButton(Button.ABILITY_1), 1))+ \
     worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION) + \
     Vector.UP * (eventPlayer.isHoldingButton(Button.ABILITY_2) - eventPlayer.isHoldingButton(Button.ULTIMATE))))
+
+###############################################################################
+
+#!include "settings.opy"
 
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.

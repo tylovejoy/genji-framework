@@ -1,22 +1,4 @@
-#!define versionhere "v1.10.2♨J"
-#♨ Dev Build Icon
-
-#!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
-
-#!optimizeForSize
-# Supress warning for emote
-#!suppressWarnings w_ow2_communicate_bug
-#disable overpy map detection (command removed by zezy after fix by blizzard)
-# #!disableMapDetectionFix
-
-################################################################################
-
-#!include "settings.opy"
-
 #!include "definitions.opy"
-
-################################################################################
 
 rule versionhere:
     @Delimiter
