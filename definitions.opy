@@ -238,10 +238,12 @@ globalvar MapVectorArray 91
 #playervar ArrayIterator                    # MsDestructo Iterator
 #playervar PortalText                       # In-World Text             --- Portal String inworld text
 #playervar MapVectorArray                   # MsDestructo Vectors
+#playervar TracesOff                        # bool                      --- turn traces (ring explosion fx) off
 playervar checkpoint_current                # int                       --- Current Checkpoint
 playervar checkpoint_practice               # int                       --- Saved practice checkpoint
 playervar checkpoint_moved
 playervar checkpoint_notLast                       # bool                      --- false if you are noton the last cp or level below 2 cps
+playervar LockState                         # bool                      --- locked means you are curently runing arrive checkpoint rule
 
 playervar timer_normal                             # float                     --- Timer, chased.
 playervar timer_pause                        # float                     --- time in spectate/invincible, chased
@@ -263,13 +265,10 @@ playervar editor_on                          # bool                      --- on 
 playervar editor_modeSelect                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
 playervar editor_toggleFly                         # vector/null               --- null if not flying, else vector position, added by fisho
 playervar editor_saveHud                        # array                     --- array of save map hud ids
-
-playervar LedgeDash #$$ move it down later
+playervar editor_undo
 playervar LockEditor                        # bool                      --- ensure only 1 editor command can go of at the time
-playervar LockState                         # bool                      --- locked means you are curently runing arrive checkpoint rule
 playervar EffectSizeArray
 playervar EffectSizeToggle
-playervar editor_undo
 
 playervar Bhopcount                         # int                       --- counts bhops used for stand create ban
 playervar JumpCount                         # int                       --- jump tracking count, 0, 1, 2
@@ -315,16 +314,17 @@ playervar CompDone                          # bool                      --- out 
 playervar AttemptCount                      # int                       --- amound of attemps remaining
 playervar instructionhud
 
-playervar TitleStore                        # textid                    --- store curent  title textid
 playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
 playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
 playervar HUDInputs
 playervar finishfxcache                     # color                     --- color of fx after finish the map
-#playervar TracesOff                        # bool                      --- turn traces (ring explosion fx) off
+
 playervar PreviewsArray2
 playervar PreviewsArray                     # array                     --- store preview positions
 playervar PreviewsI                         # int                       --- preview itterator
 
+playervar TitleStore                        # textid                    --- store curent  title textid
+playervar LedgeDash
 ######################################## Subroutines ##########################
 subroutine StartGame
 #subroutine KILLBALL
