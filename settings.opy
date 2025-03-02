@@ -16,20 +16,6 @@ settings {
         "swapTeamsAfterMatch": false
     },
     "gamemodes": {
-        "skirmish": {
-            #"enablePerks": "off",
-            "enabledMaps": [
-                #"workshopChamber"
-                selectedmap
-            ]
-        },
-        "tdm": {
-            #"enablePerks": "off",
-            "enabledMaps": [
-                selectedmap
-            ],
-            "enableSelfInitiatedRespawn": false
-        },
         "general": {
             "enableHeroSwitching": false,
             "enableEnemyHealthBars": false,
@@ -40,14 +26,73 @@ settings {
             "respawnTime%": 0,
             "spawnHealthPacks": "disabled",
             "enableRandomHeroes": true,
-        }
+        },
+        "skirmish": {
+            "enabled": true,
+            "enablePerks": usePerks,
+            "enabledMaps": [
+                #"workshopChamber"
+                selectedmap
+            ]
+        },
+        "tdm": {
+            "enabled": true,
+            "enablePerks": usePerks,
+            "enabledMaps": [
+                selectedmap
+            ],
+            "enableSelfInitiatedRespawn": false
+        },
+        "assault": {
+            "enabled": usePerks,
+            "enablePerks": false
+        },
+        "bountyHunter": {
+            "enabled": usePerks,
+            "enablePerks": false
+        },
+        "clash": {
+            "enabled": usePerks,
+            "enablePerks": false
+        },
+        "ctf": {
+            "enabled": usePerks,
+            "enablePerks": false
+        },
+        /*"control": {
+            "enabled": usePerks,
+            "enablePerks": false
+        },*/
+        "escort": {
+            "enabled": usePerks,
+            "enablePerks": false
+        },
+        "elimination": {
+            "enabled": usePerks,
+            "enablePerks": false
+        },
+        "flashpoint": {
+            "enabled": usePerks,
+            "enablePerks": false
+        },
+        /*"hybrid": {
+            "enabled": usePerks,
+            "enablePerks": false
+        },*/
+        "practiceRange": {
+            "enabled": usePerks,
+            "enablePerks": false
+        },
+        /*"push": {
+            "enabled": usePerks,
+            "enablePerks": false
+        },*/
     },
     "heroes": {
         "allTeams": {
             "genji": {
                 "enableAbility2": false,
                 "enableInfiniteAmmo": true,
-                #"enableSpawningWithUlt": true,
                 "ability1Cooldown%": 1,
                 "ultDuration%": 25,
                 "passiveUltGen%": 0,
