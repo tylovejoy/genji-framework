@@ -21,7 +21,7 @@ rule "Checking | Dash combined rule":
 
 
 def CheckUlt(): # checks if ult should be turned on
-    if eventPlayer.LockState:
+    if eventPlayer.lockState:
         eventPlayer.setUltCharge(0) # for dash start etc you can be away from cp so the keep charge triggers
     
     eventPlayer.disallowButton(Button.ULTIMATE) # make sure the button cant be pressed until the entire rule ends even if it restarts
@@ -67,36 +67,36 @@ def CheckDash(): # checks if dash should be  turned on
 rule "Checking | Jump":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.JUMP)
-    @Condition eventPlayer.JumpCount != 2
-    eventPlayer.JumpCount += 1
+    @Condition eventPlayer.skill_countJumps != 2
+    eventPlayer.skill_countJumps += 1
 
 rule "Checking | Bhop in the air":
     @Event eachPlayer
-    @Condition eventPlayer.JumpCount == null
+    @Condition eventPlayer.skill_countJumps == null
     @Condition eventPlayer.isInAir() 
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false #?????? why wasnt this as false
     eventPlayer.BhopUsed = false
 
 rule "Checking | In the air":
     @Event eachPlayer
-    @Condition eventPlayer.JumpCount == null
+    @Condition eventPlayer.skill_countJumps == null
     @Condition eventPlayer.isInAir() 
-    eventPlayer.JumpCount = 1
+    eventPlayer.skill_countJumps = 1
 
 /* Remove this rule? */
 rule "Checking | Triple jump":
     @Event eachPlayer
-    @Condition eventPlayer.JumpCount == 1
+    @Condition eventPlayer.skill_countJumps == 1
     # actually just checks if you been in the air for at least 0.1 seconds
     wait(0.1, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.JumpCount = 2
+    eventPlayer.skill_countJumps = 2
 
 rule "Checking | Player on the wall":
     @Event eachPlayer
     #This rule is also linked to the determination of wall climbing, please do not close/delete
     @Condition eventPlayer.isOnWall()
     @Condition eventPlayer.isHoldingButton(Button.JUMP)
-    eventPlayer.JumpCount = 2
+    eventPlayer.skill_countJumps = 2
     eventPlayer.WallclimbUsed = true
 
 rule "Checking | Using Emote":
@@ -121,8 +121,8 @@ rule "Checking | Bhop count for stand ban":
     @Event eachPlayer
     @Condition eventPlayer.isJumping()
     @Condition eventPlayer.ban_standcreate
-    eventPlayer.Bhopcount ++
-    if eventPlayer.Bhopcount > 1 and eventPlayer.toggle_invincible == false:   
+    eventPlayer.skill_countBhops++
+    if eventPlayer.skill_countBhops > 1 and eventPlayer.toggle_invincible == false:   
         smallMessage(eventPlayer, "   站卡 ♠ 已禁用!" checkCN "   Stand createBhop ♠ is banned!")
         checkpointFailReset()
         return
@@ -139,7 +139,7 @@ rule "Checking | Create Bhop":
     @Condition eventPlayer.isJumping() == false
     
     eventPlayer.BhopUsed = false
-    if eventPlayer.LockState: # prevent restart from giving messsage, but stil allow it to become green
+    if eventPlayer.lockState: # prevent restart from giving messsage, but stil allow it to become green
         return
 
     if eventPlayer.ban_create and eventPlayer.toggle_invincible == false:
@@ -147,23 +147,23 @@ rule "Checking | Create Bhop":
         checkpointFailReset()
         return
     
-    if eventPlayer.ban_standcreate and eventPlayer.Bhopcount > null:
-        eventPlayer.Bhopcount --
+    if eventPlayer.ban_standcreate and eventPlayer.skill_countBhops > null:
+        eventPlayer.skill_countBhops--
 
-    eventPlayer.CreateCounter ++
+    eventPlayer.skill_countCreates++
     smallMessage(eventPlayer, "   success!" checkCN "   Bhop has been created!")    
 
 rule "Checking | Ground Reset":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround()
-    eventPlayer.JumpCount = null
+    eventPlayer.skill_countJumps = null
     eventPlayer.WallclimbUsed = false
-    eventPlayer.MultiClimbCount = null
-    eventPlayer.CreateCounter = null
-    eventPlayer.Bhopcount = null
+    eventPlayer.skill_countMulti = null
+    eventPlayer.skill_countCreates = null
+    eventPlayer.skill_countBhops = null
     eventPlayer.DoubleUsed = null
     wait()
-    if (eventPlayer.JumpCount or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
+    if (eventPlayer.skill_countJumps or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
         goto RULE_START
     eventPlayer.BhopUsed = true
 
@@ -196,14 +196,14 @@ rule "HUD | Multiclimb Counter":
     
     wait()
     if eventPlayer.isOnWall() and not eventPlayer.isHoldingButton(Button.JUMP):
-        eventPlayer.JumpCount = 2
+        eventPlayer.skill_countJumps = 2
         eventPlayer.WallclimbUsed = true
     else:
         if eventPlayer.ban_multi and eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
             smallMessage(eventPlayer, "    蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
             checkpointFailReset() 
         else:
-            eventPlayer.MultiClimbCount += 1
+            eventPlayer.skill_countMulti += 1
 
 rule "HUD | Bhop Indicator | Unused | Green":
     @Event eachPlayer

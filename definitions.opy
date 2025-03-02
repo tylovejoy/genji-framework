@@ -243,7 +243,7 @@ playervar checkpoint_current                # int                       --- Curr
 playervar checkpoint_practice               # int                       --- Saved practice checkpoint
 playervar checkpoint_moved
 playervar checkpoint_notLast                       # bool                      --- false if you are noton the last cp or level below 2 cps
-playervar LockState                         # bool                      --- locked means you are curently runing arrive checkpoint rule
+playervar lockState                         # bool                      --- locked means you are curently runing arrive checkpoint rule
 
 playervar timer_normal                             # float                     --- Timer, chased.
 playervar timer_pause                        # float                     --- time in spectate/invincible, chased
@@ -263,28 +263,27 @@ playervar toggle_hints
 
 playervar editor_on                          # bool                      --- on all players, but only gets checked from host player
 playervar editor_modeSelect                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
-playervar editor_toggleFly                         # vector/null               --- null if not flying, else vector position, added by fisho
+playervar editor_fly                         # vector/null               --- null if not flying, else vector position, added by fisho
 playervar editor_saveHud                        # array                     --- array of save map hud ids
 playervar editor_undo
-playervar LockEditor                        # bool                      --- ensure only 1 editor command can go of at the time
-playervar EffectSizeArray
-playervar EffectSizeToggle
+playervar editor_lock                        # bool                      --- ensure only 1 editor command can go of at the time
+playervar editor_hitboxEffect
+playervar editor_hitboxToggle
 
-playervar Bhopcount                         # int                       --- counts bhops used for stand create ban
-playervar JumpCount                         # int                       --- jump tracking count, 0, 1, 2
-#playervar MultiClimbCountHUD                # HUD                       --- climb counter
-playervar CreateCounter
-playervar MultiClimbCount                   # int                       --- climb count # for HUD
+playervar skill_countBhops                         # int                       --- counts bhops used for stand create ban
+playervar skill_countJumps                         # int                       --- jump tracking count, 0, 1, 2
+playervar skill_countCreates
+playervar skill_countMulti                   # int                       --- climb count # for HUD
 playervar WallclimbUsed                     # bool                      --- turned into bool
 playervar BhopUsed                          # bool                      --- turned into bool
 playervar DoubleUsed                        # bool
 
-playervar banstring                         # str                       --- displayed bans
+playervar banString                         # str                       --- displayed bans
 #playervar ban_triple
+#playervar ban_dashStart
 playervar ban_multi
 playervar ban_create
 playervar ban_dead
-#playervar ban_dashStart
 playervar ban_emote
 playervar ban_climb
 playervar ban_bhop

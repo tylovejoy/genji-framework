@@ -29,44 +29,44 @@ def UpdateCache():
     eventPlayer.PortalEnd_cache = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] == Math.INFINITY]
     eventPlayer.checkpoint_notLast = (eventPlayer.checkpoint_current < len(CheckpointPositions) - 1 and len(CheckpointPositions) > 1)
     eventPlayer.toggle_hints = false
-    eventPlayer.banstring = []
+    eventPlayer.banString = []
     wait()
     if eventPlayer.checkpoint_notLast:
         eventPlayer.ban_multi = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Multiclimb - 封禁蹭留", false, 1) else eventPlayer.checkpoint_current in BanMulti
         if eventPlayer.ban_multi:
-            eventPlayer.banstring = "∞ {}".format(eventPlayer.banstring)
+            eventPlayer.banString = "∞ {}".format(eventPlayer.banString)
 
         eventPlayer.ban_create = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Createbhop - 封禁卡小", false, 2) else eventPlayer.checkpoint_current in BanCreate
         if eventPlayer.ban_create:
-            eventPlayer.banstring = "♂ {}".format(eventPlayer.banstring)
+            eventPlayer.banString = "♂ {}".format(eventPlayer.banString)
 
         eventPlayer.ban_standcreate = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","ban standcreate - 封禁站卡", false, 3) else eventPlayer.checkpoint_current in BanStand
         if eventPlayer.ban_standcreate:
-            eventPlayer.banstring = "♠ {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓
+            eventPlayer.banString = "♠ {}".format(eventPlayer.banString) # ≥  √ ▼ ↓
 
         eventPlayer.ban_dead = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Deathbhop - 封禁死小", false, 4) else eventPlayer.checkpoint_current in BanDead
         if eventPlayer.ban_dead:
-            eventPlayer.banstring = "X {}".format(eventPlayer.banstring)
+            eventPlayer.banString = "X {}".format(eventPlayer.banString)
 
         eventPlayer.ban_emote = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Emote Savehop - 封禁表情留小", false, 5) else eventPlayer.checkpoint_current in BanEmote
         if eventPlayer.ban_emote:
-            eventPlayer.banstring = "♥ {}".format(eventPlayer.banstring)
+            eventPlayer.banString = "♥ {}".format(eventPlayer.banString)
 
         eventPlayer.ban_climb = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Wallclimb - 封禁爬墙", false, 6) else eventPlayer.checkpoint_current in BanClimb
         if eventPlayer.ban_climb:
-            eventPlayer.banstring = "↑ {}".format(eventPlayer.banstring)
+            eventPlayer.banString = "↑ {}".format(eventPlayer.banString)
 
         eventPlayer.ban_savedouble = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban save double - 封禁延二段跳", false, 7) else eventPlayer.checkpoint_current in BanSaveDouble
         if eventPlayer.ban_savedouble:
-            eventPlayer.banstring = "△ {}".format(eventPlayer.banstring)
+            eventPlayer.banString = "△ {}".format(eventPlayer.banString)
 
         eventPlayer.ban_bhop = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require bhop available - 留小跳进点 ", false, 8) else eventPlayer.checkpoint_current in BanBhop
         if eventPlayer.ban_bhop:
-            eventPlayer.banstring = "≥ {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓
+            eventPlayer.banString = "≥ {}".format(eventPlayer.banString) # ≥  √ ▼ ↓
 
         eventPlayer.ban_djump = true if createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require djump available - 留二段跳 ", false, 9) else eventPlayer.checkpoint_current in BanDjump
         if eventPlayer.ban_djump:
-            eventPlayer.banstring = "» {}".format(eventPlayer.banstring) # ≥  √ ▼ ↓ ︽
+            eventPlayer.banString = "» {}".format(eventPlayer.banString) # ≥  √ ▼ ↓ ︽
     else:
         eventPlayer.ban_multi = false
         eventPlayer.ban_create = false
@@ -85,12 +85,12 @@ def UpdateCache():
 
     editupdateselectedids()
 
-    destroyEffect(eventPlayer.EffectSizeArray)
-    eventPlayer.EffectSizeArray = []
-    createEffect(eventPlayer if eventPlayer.EffectSizeToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.checkpoint_current], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    eventPlayer.EffectSizeArray.append(getLastCreatedEntity())
-    createEffect(eventPlayer if eventPlayer.EffectSizeToggle and eventPlayer.checkpoint_notLast else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.checkpoint_current + 1], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    eventPlayer.EffectSizeArray.append(getLastCreatedEntity())
+    destroyEffect(eventPlayer.editor_hitboxEffect)
+    eventPlayer.editor_hitboxEffect = [] #$$
+    createEffect(eventPlayer if eventPlayer.editor_hitboxToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.checkpoint_current], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    eventPlayer.editor_hitboxEffect.append(getLastCreatedEntity())
+    createEffect(eventPlayer if eventPlayer.editor_hitboxToggle and eventPlayer.checkpoint_notLast else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.checkpoint_current + 1], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    eventPlayer.editor_hitboxEffect.append(getLastCreatedEntity())
 
     eventPlayer.BounceIndex_Cache = [e for e in [(i if e2 == eventPlayer.checkpoint_current else -1) for e2, i in BouncePadCheckpoints] if  e >=0]
     eventPlayer.KillIndex_Cache = [e for e in [(i if e2 == eventPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if  e >=0]
@@ -246,7 +246,7 @@ def StartGame():
     eventPlayer.toggle_invincible = false
     eventPlayer.toggle_spectate = false
     eventPlayer.checkpoint_moved = true
-    # eventPlayer.LockState = false
+    # eventPlayer.lockState = false
 
 ################################################################################
 
@@ -432,7 +432,7 @@ rule "Player Initialize":
     @Condition eventPlayer.isDummy() == false
     eventPlayer.setDamageReceived(0)
     eventPlayer.editor_on = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
-    eventPlayer.LockEditor = true
+    eventPlayer.editor_lock = true
     eventPlayer.preloadHero(Hero.GENJI)
     eventPlayer.toggle_guide = true
     eventPlayer.disableGamemodeHud()
@@ -454,7 +454,7 @@ rule "Player Initialize":
     createIcon(eventPlayer if eventPlayer.checkpoint_notLast  else null, CheckpointPositions[eventPlayer.checkpoint_current + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, ColorConfig[customize.nexticon_color], true)
 
     waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
-    eventPlayer.LockEditor = false
+    eventPlayer.editor_lock = false
 
     if CompMode:
         eventPlayer.setInvisibility(Invis.ALL)
@@ -499,7 +499,7 @@ rule "Arrive | Ground reset | traces":
             playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.6)
             playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.finishfxcache, eventPlayer.getPosition(), 0.4)
             wait(0.128)
-    elif eventPlayer.toggle_invincible or (CompMode and CompTime == 0) or eventPlayer.LockState:
+    elif eventPlayer.toggle_invincible or (CompMode and CompTime == 0) or eventPlayer.lockState:
         # Do nothing
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpcircleradius:
         # arrived ----------------------------------------------------------------------------------------------------
@@ -535,7 +535,7 @@ rule "Arrive | Ground reset | traces":
         if len(CheckpointPositions[eventPlayer.checkpoint_current]) > 1:# teleport cps
             checkpointFailReset()/*
             eventPlayer.startForcingPosition( CheckpointPositions[eventPlayer.checkpoint_current].last() ,false)
-            eventPlayer.editor_toggleFly = null
+            eventPlayer.editor_fly = null
             wait(0.1)
             eventPlayer.stopForcingPosition()
             # position wasnt ready when check cache ran

@@ -496,8 +496,8 @@ rule "Huds: each player":
         "{3}{2}{4} {0} / {1}".format(
             eventPlayer.checkpoint_current,
             len(CheckpointPositions) - 1,
-            "\n" if eventPlayer.banstring else [],
-            eventPlayer.banstring if eventPlayer.banstring else [],
+            "\n" if eventPlayer.banString else [],
+            eventPlayer.banString if eventPlayer.banString else [],
             "关卡" checkCN "Level"
         ) if eventPlayer.PreviewsArray == null else [],
         HudPosition.TOP, HO.game_level_orb, ColorConfig[customize.level], ColorConfig[customize.orb_lock], ColorConfig[customize.level], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
@@ -514,12 +514,12 @@ rule "Huds: each player":
 
     # climb/bhop indicators
     hudHeader(eventPlayer,
-        #"爬墙已用{0}".format([] if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
-        "{1}{0}".format([] if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount),
+        #"爬墙已用{0}".format([] if eventPlayer.skill_countMulti < 1 else " ({0})".format(eventPlayer.skill_countMulti))
+        "{1}{0}".format([] if eventPlayer.skill_countMulti < 1 else " ({0})".format(eventPlayer.skill_countMulti),
             "爬墙已用" if  eventPlayer.WallclimbUsed else "爬墙未用" # cn version text updates to say the status, unlike en
         )
         checkCN
-        "Climb{0}".format([] if eventPlayer.MultiClimbCount < 1 else " ({0})".format(eventPlayer.MultiClimbCount))
+        "Climb{0}".format([] if eventPlayer.skill_countMulti < 1 else " ({0})".format(eventPlayer.skill_countMulti))
         , HudPosition.LEFT, HO.game_climb,
         evalOnce(ColorConfig[customize.bhopclimb_used]) if eventPlayer.WallclimbUsed else evalOnce(ColorConfig[customize.bhopclimb_available]),
         HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
@@ -527,17 +527,17 @@ rule "Huds: each player":
     hudHeader(eventPlayer,
         ( # cn version text updates to say the status, unlike en version
             "{0}{1}".format(
-                "小跳未用" if eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == evalOnce(ColorConfig[customize.bhopclimb_available]) else "小跳已用",
-                [] if eventPlayer.CreateCounter < 1 else " ({0})".format(eventPlayer.CreateCounter)
+                "小跳未用" if not eventPlayer.BhopUsed or eventPlayer.BhopHUDColor == evalOnce(ColorConfig[customize.bhopclimb_available]) else "小跳已用",
+                [] if eventPlayer.skill_countCreates < 1 else " ({0})".format(eventPlayer.skill_countCreates)
             )
         )
         checkCN
         "Bhop{0}".format(
-            [] if eventPlayer.CreateCounter < 1 else
-            " ({0})".format(eventPlayer.CreateCounter)
+            [] if eventPlayer.skill_countCreates < 1 else
+            " ({0})".format(eventPlayer.skill_countCreates)
         )
         , HudPosition.LEFT, HO.game_bhop,
-        evalOnce(ColorConfig[customize.bhopclimb_available]) if eventPlayer.BhopUsed == 0 else eventPlayer.BhopHUDColor,
+        evalOnce(ColorConfig[customize.bhopclimb_available]) if not eventPlayer.BhopUsed else eventPlayer.BhopHUDColor,
         HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 

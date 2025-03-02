@@ -166,7 +166,7 @@ rule "Stall enhancer - 增强系統跳的判定":
     @Condition eventPlayer.isInAir() == true
     @Condition eventPlayer.isOnWall() == false
     @Condition eventPlayer.isOnGround() == false
-    @Condition not (eventPlayer.editor_on and eventPlayer.editor_toggleFly != null) #$$
+    @Condition not (eventPlayer.editor_on and eventPlayer.editor_fly != null) #$$
     #@Condition createWorkshopSetting(bool, "map settings \n地图设置"," Autobounce enhancer - 增强系統跳的判定", false, 3)
 
     wait(0.25, Wait.ABORT_WHEN_FALSE)
@@ -178,13 +178,13 @@ rule "Stall enhancer - 增强系統跳的判定":
 
     waitUntil(
         eventPlayer.isHoldingButton(Button.RELOAD) or
-        eventPlayer.editor_toggleFly or eventPlayer.isDead() or
+        eventPlayer.editor_fly or eventPlayer.isDead() or
         eventPlayer.isUsingAbility1() or
         eventPlayer.getSpeed() > 3 , 3) # double jump catch
     #wait(3)
     eventPlayer.setGravity(100)
     eventPlayer.setMoveSpeed(100)
-    if not eventPlayer.editor_toggleFly and eventPlayer.isAlive() and not eventPlayer.isHoldingButton(Button.RELOAD):
+    if not eventPlayer.editor_fly and eventPlayer.isAlive() and not eventPlayer.isHoldingButton(Button.RELOAD):
         eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
         if RULE_CONDITION:
             goto RULE_START

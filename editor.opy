@@ -57,9 +57,9 @@ rule "Editor | Clear Excess Data to Save Map":
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
-    #@Condition eventPlayer.LockEditor == false # !!! don't lock. always be sure data can be exported incase of a perma lock situation
+    #@Condition eventPlayer.editor_lock == false # !!! don't lock. always be sure data can be exported incase of a perma lock situation
     wait(1, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.LockEditor = true # doesnt matter thats its in pasta's because it wil be fixed on spawning
+    eventPlayer.editor_lock = true # doesnt matter thats its in pasta's because it wil be fixed on spawning
     async(CheckMap, AsyncBehavior.NOOP)
     CheckpointRings_Editing = null
     KillBallEffects = null
@@ -179,7 +179,7 @@ rule "Editor | Clear Excess Data to Save Map":
     destroyHudText(eventPlayer.editor_saveHud[1])
     destroyHudText(eventPlayer.editor_saveHud[2])
     eventPlayer.editor_saveHud = null
-    eventPlayer.LockEditor = false
+    eventPlayer.editor_lock = false
 
 rule "Editor | Hud and Effects":
     waitUntil(hostPlayer.hasSpawned(), 90)  # cant be condition because host player can leaves, removing the rule fx
@@ -190,7 +190,7 @@ rule "Editor | Hud and Effects":
         HudStoreEdit = null
         return
     wait(2)
-    #hostPlayer.LockEditor = true
+    #hostPlayer.editor_lock = true
     while len(HudStoreEdit) > 0: # remove unnesesary huds
         destroyHudText(HudStoreEdit[0])
         destroyInWorldText(HudStoreEdit[0])
@@ -478,7 +478,7 @@ rule "Editor | Hud and Effects":
         HudPosition.TOP,
         HO.edit_changemode,
         Color.SKY_BLUE,
-        Color.GRAY if localPlayer.LockEditor else Color.WHITE,
+        Color.GRAY if localPlayer.editor_lock else Color.WHITE,
         Color.WHITE,
         HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
@@ -692,25 +692,25 @@ rule "Editor |  Fly/Noclip Toggle":
     @Event eachPlayer
     @Condition hostPlayer.editor_on
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
-    @Condition eventPlayer.editor_toggleFly == null
+    @Condition eventPlayer.editor_fly == null
     @Condition EditorMoveItem == false
     waitUntil(eventPlayer.isHoldingButton(Button.RELOAD) or not eventPlayer.isHoldingButton(Button.ABILITY_1), 0.7)
     if eventPlayer.isHoldingButton(Button.RELOAD) or not eventPlayer.isHoldingButton(Button.ABILITY_1):
         wait()
         return
 
-    eventPlayer.editor_toggleFly = eventPlayer.getPosition() + Vector.UP
-    eventPlayer.startForcingPosition(eventPlayer.editor_toggleFly, true)
+    eventPlayer.editor_fly = eventPlayer.getPosition() + Vector.UP
+    eventPlayer.startForcingPosition(eventPlayer.editor_fly, true)
     eventPlayer.disableEnvironmentCollision(true)
     waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_1), 1)
 
-    while eventPlayer.isAlive() and eventPlayer.editor_toggleFly != null and not eventPlayer.isHoldingButton(Button.ABILITY_1):
+    while eventPlayer.isAlive() and eventPlayer.editor_fly != null and not eventPlayer.isHoldingButton(Button.ABILITY_1):
         if not (eventPlayer == hostPlayer and EditorMoveItem):
-            eventPlayer.editor_toggleFly += flyMovementDelta
+            eventPlayer.editor_fly += flyMovementDelta
         wait()
 
     eventPlayer.enableEnvironmentCollision()
-    eventPlayer.editor_toggleFly = null
+    eventPlayer.editor_fly = null
     eventPlayer.stopForcingPosition()
     wait(1)
 
@@ -720,9 +720,9 @@ rule "Editor | change mode":
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
-    @Condition eventPlayer.LockEditor == false
+    @Condition eventPlayer.editor_lock == false
 
-    eventPlayer.LockEditor = true
+    eventPlayer.editor_lock = true
     EditorMoveItem = false
     if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
         while eventPlayer.isHoldingButton(Button.MELEE) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
@@ -739,7 +739,7 @@ rule "Editor | change mode":
     editupdateselectedids()
     EditorSelectLast()
     wait()
-    eventPlayer.LockEditor = false
+    eventPlayer.editor_lock = false
 
 def editupdateselectedids():
     @Name "Editor | update selected id"
@@ -766,10 +766,10 @@ rule "Editor | create cp/orb":
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
-    @Condition eventPlayer.LockEditor == false
+    @Condition eventPlayer.editor_lock == false
     @Condition hostPlayer.editor_modeSelect in [0,1,2,4]
 
-    eventPlayer.LockEditor = true
+    eventPlayer.editor_lock = true
     if eventPlayer.editor_modeSelect == 0:
         if len(CheckpointPositions) > 1 and distance(eventPlayer, CheckpointPositions[hostPlayer.checkpoint_current]) <= cpcircleradius:
             smallMessage(eventPlayer, "   放置的检查点距离太近" checkCN "   Cannot place checkpoints too close.")
@@ -880,7 +880,7 @@ rule "Editor | create cp/orb":
     UpdateCache()
 
     endlbl:
-    eventPlayer.LockEditor = false
+    eventPlayer.editor_lock = false
     wait(0.64)
 
 rule "Editor | delete cp/orb/portal":
@@ -891,9 +891,9 @@ rule "Editor | delete cp/orb/portal":
     @Condition eventPlayer == hostPlayer
     #@Condition EditorMoveItem == false
     #@Condition len(EditSelectIdArray) > 0
-    @Condition eventPlayer.LockEditor == false
+    @Condition eventPlayer.editor_lock == false
 
-    eventPlayer.LockEditor = true
+    eventPlayer.editor_lock = true
     if eventPlayer.editor_modeSelect == 0 and len(CheckpointPositions) > 0:
         # Resync Kill Orbs ==================
         eventPlayer.Temp = []
@@ -997,13 +997,13 @@ rule "Editor | delete cp/orb/portal":
         del PortalEffects[EditSelected]
         RebuildPortals()
     else:
-        eventPlayer.LockEditor = false
+        eventPlayer.editor_lock = false
         wait()
         return
 
     UpdateCache()
     EditorSelectLast()
-    eventPlayer.LockEditor = false
+    eventPlayer.editor_lock = false
     wait(0.16 + (getNumberOfEntityIds()*0.007))
 
 # orb functions ==============================================================
@@ -1016,9 +1016,9 @@ rule "Editor | toggle orb functions":
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) or eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition len(EditSelectIdArray) > 0
-    @Condition eventPlayer.LockEditor == false
+    @Condition eventPlayer.editor_lock == false
 
-    eventPlayer.LockEditor = true
+    eventPlayer.editor_lock = true
     if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
         BounceToggleUlt[EditSelected] = not BounceToggleUlt[EditSelected]
     elif eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
@@ -1028,7 +1028,7 @@ rule "Editor | toggle orb functions":
         BounceStrength[EditSelected] = 0 if BounceToggleLock[EditSelected] else 10
 
     UpdateCache()
-    eventPlayer.LockEditor = false
+    eventPlayer.editor_lock = false
     wait()
 
 rule "Editor | orb radi/strength":
@@ -1040,9 +1040,9 @@ rule "Editor | orb radi/strength":
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
-    @Condition eventPlayer.LockEditor == false
+    @Condition eventPlayer.editor_lock == false
 
-    eventPlayer.LockEditor = true
+    eventPlayer.editor_lock = true
     while eventPlayer.isHoldingButton(Button.ABILITY_2) and (eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isHoldingButton(Button.CROUCH)) :
         if eventPlayer.editor_modeSelect == 2 and len(eventPlayer.BounceIndex_Cache) > 0:
             BounceStrength[EditSelected] += 0.1 if eventPlayer.isHoldingButton(Button.JUMP) else -0.1
@@ -1050,7 +1050,7 @@ rule "Editor | orb radi/strength":
             KillBallRadii[EditSelected] +=  0.1 if eventPlayer.isHoldingButton(Button.JUMP) else -0.1
         wait(0.1)
     UpdateCache()
-    eventPlayer.LockEditor = false
+    eventPlayer.editor_lock = false
 
 rule "Editor | select orb/portal":
     @Event eachPlayer
@@ -1061,16 +1061,16 @@ rule "Editor | select orb/portal":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) or eventPlayer.isHoldingButton(Button.JUMP)
     #@Condition EditorMoveItem == false
-    @Condition eventPlayer.LockEditor == false
+    @Condition eventPlayer.editor_lock == false
 
-    eventPlayer.LockEditor = true
+    eventPlayer.editor_lock = true
     if eventPlayer.isHoldingButton(Button.CROUCH):
         EditSelected = EditSelectIdArray.last() if EditSelectIdArray.index(EditSelected) == 0 else EditSelectIdArray[EditSelectIdArray.index(EditSelected) - 1]
     else:
         EditSelected = EditSelectIdArray[0] if EditSelectIdArray.index(EditSelected) == len(EditSelectIdArray) - 1 else EditSelectIdArray[EditSelectIdArray.index(EditSelected) + 1]
 
     wait()
-    eventPlayer.LockEditor = false
+    eventPlayer.editor_lock = false
     waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT) or not (eventPlayer.isHoldingButton(Button.CROUCH) or eventPlayer.isHoldingButton(Button.JUMP)), 0.24)
 
 # checkpoint functions ==============================================================
@@ -1082,7 +1082,7 @@ rule "Editor | cp size hitbox display":
     @Condition hostPlayer.editor_modeSelect == 0
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
-    eventPlayer.EffectSizeToggle = not eventPlayer.EffectSizeToggle
+    eventPlayer.editor_hitboxToggle = not eventPlayer.editor_hitboxToggle
     wait()
 
 rule "Editor | cp add/remove teleport":
@@ -1092,15 +1092,15 @@ rule "Editor | cp add/remove teleport":
     @Condition hostPlayer.isHoldingButton(Button.MELEE) == false
     @Condition len(CheckpointPositions) > 1
     @Condition hostPlayer.editor_modeSelect == 0
-    @Condition hostPlayer.LockEditor == false
+    @Condition hostPlayer.editor_lock == false
     waitUntil(hostPlayer.isHoldingButton(Button.MELEE) or not (hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.RELOAD)), 1) # prevent overlap with save map
     if hostPlayer.isHoldingButton(Button.MELEE) or hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.RELOAD):
       return
 
-    hostPlayer.LockEditor = true
+    hostPlayer.editor_lock = true
     if not hostPlayer.checkpoint_current:
         smallMessage(hostPlayer,"   不能在第一个检查点设置传送门" checkCN "   Can't place a teleport on first checkpoint")
-        hostPlayer.LockEditor = false
+        hostPlayer.editor_lock = false
         return
 
     if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1: # remove
@@ -1113,7 +1113,7 @@ rule "Editor | cp add/remove teleport":
         ]
         smallMessage(hostPlayer, "{1} {0}".format(hostPlayer.checkpoint_current,"   传送点已添加到当前关卡" checkCN "   Teleport has been added for level"))
 
-    hostPlayer.LockEditor = false
+    hostPlayer.editor_lock = false
     wait()
 
 rule "Editor | moving checkpoint":
@@ -1124,10 +1124,10 @@ rule "Editor | moving checkpoint":
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false
     @Condition len(CheckpointPositions) > 0
-    @Condition eventPlayer.LockEditor == false
+    @Condition eventPlayer.editor_lock == false
     wait(0.3, Wait.ABORT_WHEN_FALSE)
 
-    eventPlayer.LockEditor = true
+    eventPlayer.editor_lock = true
     eventPlayer.editor_undo = CheckpointPositions[eventPlayer.checkpoint_current]
     eventPlayer.startCamera(eventPlayer.getEyePosition() + 0.5 * Vector.UP - 2.5 * eventPlayer.getFacingDirection(), eventPlayer.getEyePosition(), 15)
     while eventPlayer.isHoldingButton(Button.ABILITY_2) and eventPlayer.isAlive() and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
@@ -1147,7 +1147,7 @@ rule "Editor | moving checkpoint":
         CheckpointPositions[eventPlayer.checkpoint_current] = eventPlayer.editor_undo
         waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_2), Math.INFINITY)
 
-    eventPlayer.LockEditor = false
+    eventPlayer.editor_lock = false
 
 rule "Editor | add ult/dash":
     @Event eachPlayer
@@ -1157,7 +1157,7 @@ rule "Editor | add ult/dash":
     @Condition len(CheckpointPositions) > 0
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
-    @Condition eventPlayer.LockEditor == false
+    @Condition eventPlayer.editor_lock == false
 
     if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
         toggleCpInArray(BladeEnabledCheckpoints)
@@ -1174,9 +1174,9 @@ rule "Editor | toggle bans":
     @Condition len(CheckpointPositions) > 0
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) or eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) or eventPlayer.isHoldingButton(Button.ABILITY_2)
-    @Condition eventPlayer.LockEditor == false
+    @Condition eventPlayer.editor_lock == false
 
-    eventPlayer.LockEditor = true
+    eventPlayer.editor_lock = true
     if eventPlayer.isHoldingButton(Button.INTERACT):
         if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             toggleCpInArray(BanMulti)
@@ -1200,7 +1200,7 @@ rule "Editor | toggle bans":
 
     wait(0.3)
     UpdateCache()
-    eventPlayer.LockEditor = false
+    eventPlayer.editor_lock = false
 
 
 rule "Editor | portal cp change":
@@ -1212,7 +1212,7 @@ rule "Editor | portal cp change":
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition len(EditSelectIdArray) > 0
     #@Condition EditorMoveItem == false
-    @Condition eventPlayer.LockEditor == false
+    @Condition eventPlayer.editor_lock == false
 
     CustomPortalCP[EditSelected] = eventPlayer.checkpoint_current if CustomPortalCP[EditSelected] == Math.INFINITY else Math.INFINITY
     wait(0.3)
@@ -1224,12 +1224,12 @@ rule "Editor | move object":
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.editor_modeSelect in [1,2,4]
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false
-    @Condition EditorMoveItem or (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isHoldingButton(Button.ABILITY_2) and eventPlayer.LockEditor == false)
+    @Condition EditorMoveItem or (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isHoldingButton(Button.ABILITY_2) and eventPlayer.editor_lock == false)
     @Condition len(EditSelectIdArray) > 0
 
-    eventPlayer.LockEditor = true
+    eventPlayer.editor_lock = true
     EditorMoveItem = true
-    eventPlayer.editor_toggleFly = null
+    eventPlayer.editor_fly = null
     eventPlayer.editor_undo = [KillBallPositions[EditSelected], BouncePositions[EditSelected], CustomPortalStart[EditSelected], CustomPortalEndpoint[EditSelected]]
 
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 1)
@@ -1287,4 +1287,4 @@ rule "Editor | move object":
     EditorMoveItem = false
     UpdateCache()
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE),1)
-    eventPlayer.LockEditor = false
+    eventPlayer.editor_lock = false
