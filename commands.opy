@@ -18,11 +18,11 @@ rule "Command | Split hide (Hold Dash + Primary + Secondary)":
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     wait(1, Wait.ABORT_WHEN_FALSE)
 
-    #smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay != -Math.INFINITY else "   split display on")
-    eventPlayer.splitdisplay = 0 if eventPlayer.splitdisplay == -Math.INFINITY else -Math.INFINITY
+    #smallMessage(eventPlayer, "   split display off" if eventPlayer.timer_splitDisplay != -Math.INFINITY else "   split display on")
+    eventPlayer.timer_splitDisplay = 0 if eventPlayer.timer_splitDisplay == -Math.INFINITY else -Math.INFINITY
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     wait(0.32)
-    smallMessage(eventPlayer, "   split display off" if eventPlayer.splitdisplay == -Math.INFINITY else "   split display on")
+    smallMessage(eventPlayer, "   split display off" if eventPlayer.timer_splitDisplay == -Math.INFINITY else "   split display on")
 
 rule "Command | Toggle Invisible (Hold Deflect)":
     @Condition enableInvisCommand
@@ -51,19 +51,19 @@ rule "Command | Preview Orbs & Portals (Hold Primary)":
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer.EditorOn == false
     @Condition eventPlayer.LockState == false
-    @Condition eventPlayer.NotOnLastCp
+    @Condition eventPlayer.checkpoint_notLast
     #wait(0.9, Wait.ABORT_WHEN_FALSE)
     wait(0.45, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.PreviewsArray = [CheckpointPositions[eventPlayer.CurrentCheckpoint + 1]]
+    eventPlayer.PreviewsArray = [CheckpointPositions[eventPlayer.checkpoint_current + 1]]
 
     if len(BouncePadCheckpoints) > 0:
-        eventPlayer.PreviewsArray.append( ( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.CurrentCheckpoint] ) )
+        eventPlayer.PreviewsArray.append( ( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.checkpoint_current] ) )
         eventPlayer.PreviewsArray2 = [-2] # first entry is checkpoint itself, -1 would overlap with -1 in some orbs
         eventPlayer.PreviewsArray2.append( [i for _, i in BouncePadCheckpoints] )
-        eventPlayer.PreviewsArray2 = [ i for i in eventPlayer.PreviewsArray2 if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint or i == -2 ]
+        eventPlayer.PreviewsArray2 = [ i for i in eventPlayer.PreviewsArray2 if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current or i == -2 ]
 
     if len(CustomPortalStart) > 0:
-        #eventPlayer.PreviewsArray.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.CurrentCheckpoint] )
+        #eventPlayer.PreviewsArray.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.checkpoint_current] )
         for eventPlayer.PreviewsI in range(len(eventPlayer.PortalStart_Cache)):
             eventPlayer.PreviewsArray.append([eventPlayer.PortalStart_Cache[eventPlayer.PreviewsI ],eventPlayer.PortalEnd_cache[eventPlayer.PreviewsI ]])
             eventPlayer.PreviewsArray2.append([[0,eventPlayer.PreviewsI],[1,eventPlayer.PreviewsI]])
@@ -108,10 +108,10 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
 
     eventPlayer.LockState = true
     # prevent 0.02 time bug with next 2 checks
-    if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 2 and eventPlayer.getAltitude() < 3:
+    if eventPlayer.checkpoint_current == len(CheckpointPositions) - 2 and eventPlayer.getAltitude() < 3:
         waitUntil(eventPlayer.isOnGround(), 3)
         wait(0.42) # 0.64
-    if eventPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
+    if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1:
         wait(0.42)
 
     if CompMode:
@@ -123,7 +123,7 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
         elif eventPlayer.CompDone:
             eventPlayer.LockState = false
             return
-        elif CompRestartLimit and eventPlayer.NotOnLastCp:
+        elif CompRestartLimit and eventPlayer.checkpoint_notLast:
             smallMessage(eventPlayer, "   禁止在此比赛中运行期间重新启动" checkCN "   Restart during run is disabled for this competition")
             eventPlayer.LockState = false
             return
@@ -141,11 +141,11 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
 
 
     eventPlayer.flytoggle = null
-    eventPlayer.CurrentCheckpoint = 0
+    eventPlayer.checkpoint_current = 0
     eventPlayer.PracticeToggle = false
-    stopChasingVariable(eventPlayer.practicetimer)
-    eventPlayer.practicetimer = 0
-    eventPlayer.splitdisplay = -Math.INFINITY if eventPlayer.splitdisplay == -Math.INFINITY else 0
+    stopChasingVariable(eventPlayer.timer_practice)
+    eventPlayer.timer_practice = 0
+    eventPlayer.timer_splitDisplay = -Math.INFINITY if eventPlayer.timer_splitDisplay == -Math.INFINITY else 0
     if eventPlayer in SaveEnt:
         DeleteSave()
 
@@ -179,18 +179,18 @@ rule "Command | Spectate (Hold Interact)":
         eventPlayer.resurrect()
         #eventPlayer.respawn()
         if eventPlayer.PracticeToggle:
-            chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
-        elif eventPlayer.NotOnLastCp:
-            chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
+            chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)
+        elif eventPlayer.checkpoint_notLast:
+            chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
             StopPauseTimer()
         checkpointFailReset()
     else:
         smallMessage(eventPlayer, "   再次长按互动键关闭观战模式" checkCN "   Hold Interact again to turn off spectate mode")
         eventPlayer.InvincibleToggle = false
-        if eventPlayer.NotOnLastCp:
+        if eventPlayer.checkpoint_notLast:
             StartPauseTimer()
-        stopChasingVariable(eventPlayer.practicetimer)
-        stopChasingVariable(eventPlayer.Timer)
+        stopChasingVariable(eventPlayer.timer_practice)
+        stopChasingVariable(eventPlayer.timer_normal)
         #eventPlayer.disableRespawn()
         eventPlayer.setDamageReceived(100)
         kill(eventPlayer, null)
@@ -213,17 +213,17 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
     if eventPlayer.InvincibleToggle:
         if eventPlayer.PracticeToggle:
             bigMessage(eventPlayer, "练习模式" checkCN "Practice mode")
-            chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
-        elif eventPlayer.NotOnLastCp:
+            chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)
+        elif eventPlayer.checkpoint_notLast:
             bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
-            chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
+            chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
             StopPauseTimer()
         checkpointFailReset()
     else:
         bigMessage(eventPlayer,"探点模式" checkCN "Invincible mode")
         StartPauseTimer()
-        stopChasingVariable(eventPlayer.Timer)
-        stopChasingVariable(eventPlayer.practicetimer)
+        stopChasingVariable(eventPlayer.timer_normal)
+        stopChasingVariable(eventPlayer.timer_practice)
         async(CheckUlt(), AsyncBehavior.RESTART)
         async(CheckDash(), AsyncBehavior.RESTART)
 
@@ -247,24 +247,24 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
 
     if eventPlayer.PracticeToggle:
         bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
-        eventPlayer.CurrentCheckpoint = eventPlayer.PracticeCheckpoint
-        stopChasingVariable(eventPlayer.practicetimer)
-        if eventPlayer.NotOnLastCp or eventPlayer.InvincibleToggle:
-            eventPlayer.splittime = eventPlayer.Timer
-            chase(eventPlayer.Timer, Math.INFINITY, rate=1, ChaseReeval.NONE)
+        eventPlayer.checkpoint_current = eventPlayer.checkpoint_practice
+        stopChasingVariable(eventPlayer.timer_practice)
+        if eventPlayer.checkpoint_notLast or eventPlayer.InvincibleToggle:
+            eventPlayer.timer_split = eventPlayer.timer_normal
+            chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
             StopPauseTimer()
         UpdateCache()
         checkpointFailReset()
     else:
         bigMessage(eventPlayer,"练习模式" checkCN "Practice mode")
-        eventPlayer.PracticeCheckpoint = eventPlayer.CurrentCheckpoint
-        stopChasingVariable(eventPlayer.Timer)
-        if eventPlayer.NotOnLastCp:
+        eventPlayer.checkpoint_practice = eventPlayer.checkpoint_current
+        stopChasingVariable(eventPlayer.timer_normal)
+        if eventPlayer.checkpoint_notLast:
             StartPauseTimer()
-        eventPlayer.splitdisplay = -Math.INFINITY if eventPlayer.splitdisplay == -Math.INFINITY else 0
-        eventPlayer.splittime = 0
-        eventPlayer.practicetimer = 0
-        chase(eventPlayer.practicetimer, Math.INFINITY, rate=1, ChaseReeval.NONE)
+        eventPlayer.timer_splitDisplay = -Math.INFINITY if eventPlayer.timer_splitDisplay == -Math.INFINITY else 0
+        eventPlayer.timer_split = 0
+        eventPlayer.timer_practice = 0
+        chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)
         if eventPlayer.InvincibleToggle:
             eventPlayer.InvincibleToggle = false
             checkpointFailReset()
@@ -295,9 +295,9 @@ rule "Command | Restart Practice (Hold Interact)":
     if eventPlayer.isHoldingButton(Button.INTERACT):
         return
 
-    eventPlayer.practicetimer = 0
-    eventPlayer.splittime = 0
-    eventPlayer.CurrentCheckpoint = eventPlayer.PracticeCheckpoint
+    eventPlayer.timer_practice = 0
+    eventPlayer.timer_split = 0
+    eventPlayer.checkpoint_current = eventPlayer.checkpoint_practice
     UpdateCache()
     checkpointFailReset()
 
@@ -312,27 +312,27 @@ rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
     @Condition EditorMoveItem == false
     @Condition (eventPlayer.LockEditor and eventPlayer == hostPlayer) == false
     eventPlayer.LockState = true
-    eventPlayer.splittime = 0
-    eventPlayer.practicetimer = 0
+    eventPlayer.timer_split = 0
+    eventPlayer.timer_practice = 0
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         #eventPlayer.LockState = true
-        if eventPlayer.CurrentCheckpoint < 1:
-            eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 1
-        elif (len(CheckpointPositions[eventPlayer.CurrentCheckpoint -1]) > 1 and distance(CheckpointPositions[eventPlayer.CurrentCheckpoint ][0], CheckpointPositions[eventPlayer.CurrentCheckpoint-1][1]) < cpcircleradius):
+        if eventPlayer.checkpoint_current < 1:
+            eventPlayer.checkpoint_current = len(CheckpointPositions) - 1
+        elif (len(CheckpointPositions[eventPlayer.checkpoint_current -1]) > 1 and distance(CheckpointPositions[eventPlayer.checkpoint_current][0], CheckpointPositions[eventPlayer.checkpoint_current - 1][1]) < cpcircleradius):
             # if last cp is an instant complete teleport cp, go back further
-            eventPlayer.CurrentCheckpoint -= 2
+            eventPlayer.checkpoint_current -= 2
         else:
-            eventPlayer.CurrentCheckpoint -= 1
+            eventPlayer.checkpoint_current -= 1
     else:
         #eventPlayer.LockState = true
 
-        if eventPlayer.CurrentCheckpoint >= len(CheckpointPositions) - 1:
-            eventPlayer.CurrentCheckpoint = 0
+        if eventPlayer.checkpoint_current >= len(CheckpointPositions) - 1:
+            eventPlayer.checkpoint_current = 0
         else:
-            eventPlayer.CurrentCheckpoint += 1
+            eventPlayer.checkpoint_current += 1
 
     wait(0.064)
-    eventPlayer.MovedCheckpoint = true
+    eventPlayer.checkpoint_moved = true
     UpdateCache()
     checkpointFailReset()
     eventPlayer.LockState = false
@@ -349,7 +349,7 @@ rule "Command | Quick Reset (Reload | Hold Reload to Enable)":
 
     if eventPlayer.QuickRestartToggle:
         if eventPlayer.flytoggle:
-            eventPlayer.flytoggle = CheckpointPositions[eventPlayer.CurrentCheckpoint].last()
+            eventPlayer.flytoggle = CheckpointPositions[eventPlayer.checkpoint_current].last()
         checkpointFailReset()
         wait(0.32)
     wait(1, Wait.ABORT_WHEN_FALSE)
@@ -383,6 +383,6 @@ rule "Command | Toggle Hints (Melee + Deflect)":
     @Condition HintText != null
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
-    @Condition eventPlayer.HintsOn or eventPlayer.CurrentCheckpoint in HintCp
+    @Condition eventPlayer.HintsOn or eventPlayer.checkpoint_current in HintCp
 
     eventPlayer.HintsOn = not eventPlayer.HintsOn

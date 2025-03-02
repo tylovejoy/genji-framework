@@ -54,14 +54,14 @@ insert_array.append(insert_value)\
 insert_array = [elementhere if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for elementhere, i in insert_array]
 
 #!define toggleCpInArray(baninput)\
-if eventPlayer.CurrentCheckpoint in baninput:\
-    baninput = [i for i in baninput if i != eventPlayer.CurrentCheckpoint]\
+if eventPlayer.checkpoint_current in baninput:\
+    baninput = [i for i in baninput if i != eventPlayer.checkpoint_current]\
 else:\
-    baninput.append(eventPlayer.CurrentCheckpoint)
+    baninput.append(eventPlayer.checkpoint_current)
 
 #!define removeCPandLower(arrayname)\
-arrayname = [i for i in arrayname if i != hostPlayer.CurrentCheckpoint ]\
-arrayname = [x - (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in arrayname]
+arrayname = [i for i in arrayname if i != hostPlayer.checkpoint_current]\
+arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in arrayname]
 
 #!define checkCN if l"Oof" == "噢" else
 
@@ -182,7 +182,8 @@ globalvar CompAtmpNum 52                    # int                       --- comp
 globalvar CompAtmpSaveNames 53              # [strings]                 --- comp name list
 globalvar CompAtmpSaveCount 54              # [int]                      --- compt attempt list
 globalvar CompRestartLimit 55               # bool                      --- resest limiter
-globalvar instructiontext 56                # [text]                    --- array of instructions
+#!define InstructionText instructiontext
+globalvar InstructionText 56                # [text]                    --- array of instructions
 globalvar TitleData 57                      # [[cp ,[title],[color]]    --- title addon
 globalvar HudStoreEdit 58                   # [textid]                  --- list of huds to delete if editormode is on
 
@@ -237,17 +238,17 @@ globalvar MapVectorArray 91
 #playervar ArrayIterator                    # MsDestructo Iterator
 #playervar PortalText                       # In-World Text             --- Portal String inworld text
 #playervar MapVectorArray                   # MsDestructo Vectors
-playervar CurrentCheckpoint                 # int                       --- Current Checkpoint
-playervar PracticeCheckpoint                # int                       --- Saved practice checkpoint
-playervar MovedCheckpoint
-playervar NotOnLastCp                       # bool                      --- false if you are noton the last cp or level below 2 cps
+playervar checkpoint_current                # int                       --- Current Checkpoint
+playervar checkpoint_practice               # int                       --- Saved practice checkpoint
+playervar checkpoint_moved
+playervar checkpoint_notLast                       # bool                      --- false if you are noton the last cp or level below 2 cps
 
-playervar Timer                             # float                     --- Timer, chased.
-playervar PauseTimer                        # float                     --- time in spectate/invincible, chased
-playervar practicetimer
-playervar splittime                         # int                       --- stored time that the split compares to
-playervar splitdisplay                      # int                       --- displayed split value
-#playervar splitson                         # bool                      --- turning splits on/off is now done via seting splittime to -Math.INFINITY
+playervar timer_normal                             # float                     --- Timer, chased.
+playervar timer_pause                        # float                     --- time in spectate/invincible, chased
+playervar timer_practice
+playervar timer_split                         # int                       --- stored time that the split compares to
+playervar timer_splitDisplay                      # int                       --- displayed split value
+#playervar timer_splitsOn                         # bool                      --- turning splits on/off is now done via seting splittime to -Math.INFINITY
 
 playervar InvincibleToggle                  # bool                       --- invincible/normal mode toggle now a bool
 playervar SpectateToggle                    # bool                       --- turned into bool
@@ -263,7 +264,7 @@ playervar EditModeSelection                 # int                       --- Edit
 playervar flytoggle                         # vector/null               --- null if not flying, else vector position, added by fisho
 playervar savemaphud                        # array                     --- array of save map hud ids
 
-playervar LedgeDash
+playervar LedgeDash #$$
 playervar LockEditor                        # bool                      --- ensure only 1 editor command can go of at the time
 playervar LockState                         # bool                      --- locked means you are curently runing arrive checkpoint rule
 playervar EffectSizeArray
@@ -283,8 +284,8 @@ playervar banstring                         # str                       --- disp
 #playervar ban_triple
 playervar ban_multi
 playervar ban_create
-playervar ban_dedhop
-#playervar ban_dashstart
+playervar ban_dead
+#playervar ban_dashStart
 playervar ban_emote
 playervar ban_climb
 playervar ban_bhop
@@ -294,8 +295,8 @@ playervar ban_savedouble
 
 playervar Temp
 playervar LockCollected                     # number                    --- amount collected lock this cp
-playervar bouncetouched                     # int                       --- cache of the bouncepad id you are currently touching
-playervar bouncetouchedlast
+playervar bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
+playervar bounceLastTouched
 #playervar PortalLoop                       # int                       --- loop to select portal
 playervar PortalStart_Cache
 playervar PortalEnd_cache

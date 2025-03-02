@@ -11,7 +11,7 @@ rule "<tx0C00000000001344> Addon Functions <tx0C00000000001344>":
 rule "Pre-set control map portal | function | toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
-    @Condition eventPlayer.InvincibleToggle or not eventPlayer.NotOnLastCp
+    @Condition eventPlayer.InvincibleToggle or not eventPlayer.checkpoint_notLast
     @Condition len(PortalLoc) != null
     @Condition any([distance(eventPlayer.getPosition() + 0.2 * Vector.UP,i) < 1.4 for i in PortalLoc])
     if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])]:

@@ -7,7 +7,7 @@ rule "Checking | ult combined rule":
     @Event eachPlayer
     @Condition eventPlayer.isUsingUltimate()
     wait(1.8, Wait.ABORT_WHEN_FALSE)
-    if eventPlayer.NotOnLastCp and (not eventPlayer.InvincibleToggle):
+    if eventPlayer.checkpoint_notLast and (not eventPlayer.InvincibleToggle):
         eventPlayer.disallowButton(Button.PRIMARY_FIRE) # disable primary fire because of slash exploit
     waitUntil(not eventPlayer.isUsingUltimate(), 2)
     wait()
@@ -38,15 +38,15 @@ def CheckUlt(): # checks if ult should be turned on
     if eventPlayer.isHoldingButton(Button.ULTIMATE): # incase spamming the button
         wait()
 
-    if eventPlayer.InvincibleToggle or eventPlayer.EditorOn or (not eventPlayer.NotOnLastCp):
+    if eventPlayer.InvincibleToggle or eventPlayer.EditorOn or (not eventPlayer.checkpoint_notLast):
         goto lbl_a #skip msg if these
-    elif eventPlayer.CurrentCheckpoint in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= cpcircleradius: 
+    elif eventPlayer.checkpoint_current in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last() ) <= cpcircleradius: 
         smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"终极技能已就绪" checkCN "Ultimate is ready")) 
         lbl_a:
         wait()        
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
-    elif distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= 2 or eventPlayer.getUltCharge() < 100: # used to be just else, but have to deal with multi ult orbs
+    elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last() ) <= 2 or eventPlayer.getUltCharge() < 100: # used to be just else, but have to deal with multi ult orbs
         eventPlayer.setUltEnabled(false)
         eventPlayer.setUltCharge(0)
 
@@ -54,9 +54,9 @@ def CheckUlt(): # checks if ult should be turned on
 
 def CheckDash(): # checks if dash should be  turned on
     waitUntil(not eventPlayer.isUsingAbility1(), 2)
-    if eventPlayer.InvincibleToggle or eventPlayer.EditorOn or (not eventPlayer.NotOnLastCp):
+    if eventPlayer.InvincibleToggle or eventPlayer.EditorOn or (not eventPlayer.checkpoint_notLast):
         goto lbl_a #skip msg if these
-    elif eventPlayer.CurrentCheckpoint in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.CurrentCheckpoint].last() ) <= cpcircleradius: 
+    elif eventPlayer.checkpoint_current in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last() ) <= cpcircleradius: 
         smallMessage(eventPlayer, "   {0} {1}".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready")) 
         lbl_a:
         wait()        
@@ -199,7 +199,7 @@ rule "HUD | Multiclimb Counter":
         eventPlayer.JumpCount = 2
         eventPlayer.WallclimbUsed = true
     else:
-        if eventPlayer.ban_multi and eventPlayer.NotOnLastCp and not eventPlayer.InvincibleToggle:
+        if eventPlayer.ban_multi and eventPlayer.checkpoint_notLast and not eventPlayer.InvincibleToggle:
             smallMessage(eventPlayer, "    蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
             checkpointFailReset() 
         else:

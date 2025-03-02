@@ -109,10 +109,10 @@ rule "Huds: Global/Localplayer":
 
 
     hudSubtext(localPlayer,
-        [] if localPlayer.splitdisplay == -Math.INFINITY else
-        ("单关用时 {0}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else [])
+        [] if localPlayer.timer_splitDisplay == -Math.INFINITY else
+        ("单关用时 {0}".format(localPlayer.timer_splitDisplay) if not localPlayer.SpectateToggle else [])
         checkCN
-        ("Split: {0}".format(localPlayer.splitdisplay) if not localPlayer.SpectateToggle else [])
+        ("Split: {0}".format(localPlayer.timer_splitDisplay) if not localPlayer.SpectateToggle else [])
         ,HudPosition.LEFT, HO.game_split_display, ColorConfig[customize.time], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
@@ -121,11 +121,11 @@ rule "Huds: Global/Localplayer":
 
     if CpHudText != null: # text per checkpoint  text per cp each
         hudText(localPlayer,
-            CpHudText[CpHudCp.index(localPlayer.CurrentCheckpoint)]
-            if localPlayer.CurrentCheckpoint in CpHudCp and localPlayer.GuideToggle else [],
-            ("(文本已隐藏)" if localPlayer.CurrentCheckpoint in CpHudCp and not localPlayer.GuideToggle else [])
+            CpHudText[CpHudCp.index(localPlayer.checkpoint_current)]
+            if localPlayer.checkpoint_current in CpHudCp and localPlayer.GuideToggle else [],
+            ("(文本已隐藏)" if localPlayer.checkpoint_current in CpHudCp and not localPlayer.GuideToggle else [])
             checkCN
-            ("(text hidden)" if localPlayer.CurrentCheckpoint in CpHudCp and not localPlayer.GuideToggle else []),
+            ("(text hidden)" if localPlayer.checkpoint_current in CpHudCp and not localPlayer.GuideToggle else []),
             null
             , HudPosition.TOP, HO.add_custommsg1, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
         )
@@ -134,22 +134,22 @@ rule "Huds: Global/Localplayer":
     if CpIwtText != null:
         createInWorldText(
             localPlayer,
-            CpIwtText[CpIwtCp.index(localPlayer.CurrentCheckpoint)]
-            if localPlayer.CurrentCheckpoint in CpIwtCp else [],
-            CpIwtPos[CpIwtCp.index(localPlayer.CurrentCheckpoint)],
+            CpIwtText[CpIwtCp.index(localPlayer.checkpoint_current)]
+            if localPlayer.checkpoint_current in CpIwtCp else [],
+            CpIwtPos[CpIwtCp.index(localPlayer.checkpoint_current)],
             2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, CpIwtColor, SpecVisibility.DEFAULT)
 
     if len(HintText) > 0:
         hudText(localPlayer.GuideToggle,
             null,
             (
-            "{0} ――  有可用提示―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.CurrentCheckpoint in HintCp and localPlayer.HintsOn == false else
-            "― ― ― ― ― 提示 ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.CurrentCheckpoint)]) if localPlayer.CurrentCheckpoint in HintCp else
+            "{0} ――  有可用提示―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.checkpoint_current in HintCp and localPlayer.HintsOn == false else
+            "― ― ― ― ― 提示 ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)]) if localPlayer.checkpoint_current in HintCp else
             "(当前关卡无可用提示)"
             ) checkCN
-            "{0} ―― hint available ―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.CurrentCheckpoint in HintCp and localPlayer.HintsOn == false else
-            #" ――――――― \n {} \n ――――――― ".format(HintText[HintCp.index(localPlayer.CurrentCheckpoint)]) if localPlayer.CurrentCheckpoint in HintCp else   # and true is implied from last if
-            "― ― ― ― ― Hint ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.CurrentCheckpoint)]) if localPlayer.CurrentCheckpoint in HintCp else   # and true is implied from last if
+            "{0} ―― hint available ―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.checkpoint_current in HintCp and localPlayer.HintsOn == false else
+            #" ――――――― \n {} \n ――――――― ".format(HintText[HintCp.index(localPlayer.checkpoint_current)]) if localPlayer.checkpoint_current in HintCp else   # and true is implied from last if
+            "― ― ― ― ― Hint ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)]) if localPlayer.checkpoint_current in HintCp else   # and true is implied from last if
             "(no hint on this level)"
             ,
 
@@ -166,24 +166,24 @@ rule "Huds: Global/Localplayer":
             ,
             HudPosition.RIGHT, HO.com_hints,
             Color.BLUE,
-            Color.ORANGE if localPlayer.CurrentCheckpoint in HintCp and localPlayer.HintsOn == false else
-            Color.GREEN if localPlayer.CurrentCheckpoint in HintCp else
+            Color.ORANGE if localPlayer.checkpoint_current in HintCp and localPlayer.HintsOn == false else
+            Color.GREEN if localPlayer.checkpoint_current in HintCp else
             Color.GRAY,
-            evalOnce(ColorConfig[customize.command_normal]) if localPlayer.CurrentCheckpoint in HintCp else Color.GRAY,
+            evalOnce(ColorConfig[customize.command_normal]) if localPlayer.checkpoint_current in HintCp else Color.GRAY,
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         HudStoreEdit.append(getLastCreatedText())
 
     if CompMode:
         hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                                                                                                           ", HudPosition.TOP, HO.comp_instructtop, Color.WHITE, HudReeval.VISIBILITY,SpecVisibility.DEFAULT)
-        if instructiontext[0]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[0], HudPosition.TOP, HO.comp_instruct1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        if instructiontext[1]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[1], HudPosition.TOP, HO.comp_instruct2, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        if instructiontext[2]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[2], HudPosition.TOP, HO.comp_instruct3, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        if instructiontext[3]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], instructiontext[3], HudPosition.TOP, HO.comp_instruct4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        if InstructionText[0]:
+            hudSubtext([i for i in getAllPlayers() if i.instructionhud], InstructionText[0], HudPosition.TOP, HO.comp_instruct1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        if InstructionText[1]:
+            hudSubtext([i for i in getAllPlayers() if i.instructionhud], InstructionText[1], HudPosition.TOP, HO.comp_instruct2, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        if InstructionText[2]:
+            hudSubtext([i for i in getAllPlayers() if i.instructionhud], InstructionText[2], HudPosition.TOP, HO.comp_instruct3, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        if InstructionText[3]:
+            hudSubtext([i for i in getAllPlayers() if i.instructionhud], InstructionText[3], HudPosition.TOP, HO.comp_instruct4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                   Press {0} to start                                ".format(buttonString(Button.INTERACT)), HudPosition.TOP, HO.comp_instructbottom, Color.WHITE, HudReeval.VISIBILITY_AND_STRING,SpecVisibility.DEFAULT)
 
     elif not CompMode:
@@ -202,9 +202,9 @@ rule "Huds: Global/Localplayer":
         HudStoreEdit.append(getLastCreatedText())
 
         hudSubtext(localPlayer.GuideToggle,
-            "{0} + {1} | 练习模式{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else [])
+            "{0} + {1} | 练习模式{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.checkpoint_practice) if localPlayer.PracticeToggle else [])
             checkCN
-            "{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.PracticeCheckpoint) if localPlayer.PracticeToggle else [])
+            "{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.checkpoint_practice) if localPlayer.PracticeToggle else [])
             ,HudPosition.RIGHT, HO.com_practice, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.PracticeToggle else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         HudStoreEdit.append(getLastCreatedText())
@@ -388,7 +388,7 @@ def EffectsCreate():
     if CustomPortalStart:
         for TempIterator1 in range(len(CustomPortalStart)):
             createEffect(
-                [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == Math.INFINITY],
+                [i for i in getAllPlayers() if i.checkpoint_current == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == Math.INFINITY],
                 Effect.GOOD_AURA, ColorConfig[customize.portal],
                 CustomPortalStart[evalOnce(TempIterator1)],
                 0.6,
@@ -399,14 +399,14 @@ def EffectsCreate():
 
     if KillBallPositions != []:
         for TempIterator1 in range(0, len(KillBallPositions)):
-            createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, ColorConfig[customize.killorb] , KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
+            createEffect([x for x in getAllPlayers().concat(null) if x.checkpoint_current == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, ColorConfig[customize.killorb] , KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
             wait()
         wait(0.5)
 
     if BouncePositions != []:
         for TempIterator1 in range(0, len(BouncePositions)):
             createEffect(
-                [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected],
+                [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected],
                 Effect.ORB,
                 ColorConfig[customize.orb_lock] if BounceToggleLock[TempIterator1] else ColorConfig[customize.orb_normal] ,
                 BouncePositions[evalOnce(TempIterator1)],
@@ -438,18 +438,18 @@ rule "Huds: each player":
     # ban icons in level
     hudText(eventPlayer, null,
         /*
-        ("练习用时 {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else [])
+        ("练习用时 {0}".format(prettyTime(eventPlayer.timer_practice)) if eventPlayer.PracticeToggle else [])
         checkCN
-        ("Practice Time {0}".format(prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else [])
+        ("Practice Time {0}".format(prettyTime(eventPlayer.timer_practice)) if eventPlayer.PracticeToggle else [])
         */
-        "{} {}".format("练习用时" checkCN "Practice Time",prettyTime(eventPlayer.practicetimer)) if eventPlayer.PracticeToggle else [],
+        "{} {}".format("练习用时" checkCN "Practice Time",prettyTime(eventPlayer.timer_practice)) if eventPlayer.PracticeToggle else [],
         # 19191
-        "{} {}".format("用时" checkCN "Time", prettyTime(eventPlayer.Timer)),
+        "{} {}".format("用时" checkCN "Time", prettyTime(eventPlayer.timer_normal)),
         #checkCN
-        #"Time {0}".format(prettyTime(eventPlayer.Timer)) ,
-        #"用时 {0}".format(prettyTime(eventPlayer.Timer))
+        #"Time {0}".format(prettyTime(eventPlayer.timer_normal)) ,
+        #"用时 {0}".format(prettyTime(eventPlayer.timer_normal))
         #checkCN
-        #"Time {0}".format(prettyTime(eventPlayer.Timer)) ,
+        #"Time {0}".format(prettyTime(eventPlayer.timer_normal)) ,
         HudPosition.LEFT, HO.game_timer, ColorConfig[customize.time], Color.GRAY, ColorConfig[customize.time], HudReeval.STRING, SpecVisibility.DEFAULT
     )
 
@@ -494,7 +494,7 @@ rule "Huds: each player":
         ) if eventPlayer.BounceLockMax_Cache and eventPlayer.PreviewsArray == null else []
         ,
         "{3}{2}{4} {0} / {1}".format(
-            eventPlayer.CurrentCheckpoint,
+            eventPlayer.checkpoint_current,
             len(CheckpointPositions) - 1,
             "\n" if eventPlayer.banstring else [],
             eventPlayer.banstring if eventPlayer.banstring else [],
@@ -542,14 +542,14 @@ rule "Huds: each player":
     )
 
     createInWorldText(
-        #eventPlayer if eventPlayer.NotOnLastCp else null,
-        eventPlayer if eventPlayer.NotOnLastCp and eventPlayer.GuideToggle else null,
+        #eventPlayer if eventPlayer.checkpoint_notLast else null,
+        eventPlayer if eventPlayer.checkpoint_notLast and eventPlayer.GuideToggle else null,
         "{0} {1}".format(
             iconString(Icon.WARNING),
             "先收集橙球" checkCN "collect orbs first"
         ) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
         "到这里来" checkCN "come here",
-        CheckpointPositions[eventPlayer.CurrentCheckpoint + 1],
+        CheckpointPositions[eventPlayer.checkpoint_current + 1],
         1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING,  ColorConfig[customize.cometext], SpecVisibility.DEFAULT
     )
 
@@ -585,8 +585,8 @@ rule "Huds: each player":
 
 def UpdateTitle():
     @Name "Title"
-    if TitleData == null or CompMode or eventPlayer.PracticeToggle or eventPlayer.EditorOn or (not eventPlayer.CurrentCheckpoint in TitleData[0]):
+    if TitleData == null or CompMode or eventPlayer.PracticeToggle or eventPlayer.EditorOn or (not eventPlayer.checkpoint_current in TitleData[0]):
         return
     destroyInWorldText(eventPlayer.TitleStore)
-    createInWorldText(localPlayer if not eventPlayer.invis else null,TitleData[1][TitleData[0].index(eventPlayer.CurrentCheckpoint)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.CurrentCheckpoint)], SpecVisibility.DEFAULT)
+    createInWorldText(localPlayer if not eventPlayer.invis else null,TitleData[1][TitleData[0].index(eventPlayer.checkpoint_current)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.checkpoint_current)], SpecVisibility.DEFAULT)
     eventPlayer.TitleStore = getLastCreatedText()

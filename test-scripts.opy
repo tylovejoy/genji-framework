@@ -78,10 +78,10 @@ rule "multi purpose hud":
         "".format(
         getNumberOfTextIds(),
         getNumberOfEntityIds(),
-        localPlayer.NotOnLastCp,
+        localPlayer.checkpoint_notLast,
         EditorMoveItem,
-        localPlayer.bouncetouched,
-        localPlayer.bouncetouchedlast
+        localPlayer.bounceTouched,
+        localPlayer.bounceLastTouched
         )
         , HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
@@ -158,7 +158,7 @@ rule "orbradiustest": # show radius on all bounce orbs
     for TempIterator1 in range(0,len(BouncePadCheckpoints)):
 
         createEffect(
-            [i for i in getAllPlayers() if i.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]],
+            [i for i in getAllPlayers() if i.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)]],
             Effect.SPHERE,
             Color.WHITE,
             BouncePositions[evalOnce(TempIterator1)], #bounceoffset,
@@ -167,7 +167,7 @@ rule "orbradiustest": # show radius on all bounce orbs
         )
 
         createEffect(
-            [i for i in getAllPlayers() if i.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]],
+            [i for i in getAllPlayers() if i.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)]],
             Effect.SPHERE,
             Color.RED,
             BouncePositions[evalOnce(TempIterator1)], #bounceoffset,
@@ -208,7 +208,7 @@ rule "leaderboard test ai":
     @Condition leaderboardai
     @Condition eventPlayer in testAI
 
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) #- 1
+    @Condition eventPlayer.checkpoint_current < len(CheckpointPositions) #- 1
     @Condition (waitforcreate and AIcreated) or not waitforcreate
 
 
@@ -223,11 +223,11 @@ rule "leaderboard test ai":
     else:
         wait(1)
 
-    eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 2
+    eventPlayer.checkpoint_current = len(CheckpointPositions) - 2
     checkpointFailReset()
     wait(1)
     eventPlayer.LockCollected = eventPlayer.BouncePosition_Cache
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint+1]+ vect(0,3,0)) # teleport not needed
+    eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current+1]+ vect(0,3,0)) # teleport not needed
 
 
 rule "action test ai":
@@ -243,7 +243,7 @@ rule "action test ai":
     wait(1)
     wait( ((testAI.index(eventPlayer)) * 0.1 ) )
     # 1 for map 4 - 42 for rialto
-    eventPlayer.CurrentCheckpoint = 1
+    eventPlayer.checkpoint_current = 1
     wait()
     UpdateCache()
 
@@ -258,7 +258,7 @@ rule "action test ai":
     #waitUntil(eventPlayer.getAltitude() <  ((testAI.index(eventPlayer))*0.01), 4) # to early
     waitUntil(eventPlayer.isInAir(), 10)
     wait(0.1)
-    #eventPlayer.CurrentCheckpoint = 42
+    #eventPlayer.checkpoint_current = 42
 
     waitUntil(eventPlayer.isOnGround(), 40)
     #wait( ((testAI.index(eventPlayer))*0.01)  ) # result in 1

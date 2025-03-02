@@ -8,7 +8,7 @@ def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place 
     BounceEffects = []
     for TempIterator1 in range(0, len(BouncePadCheckpoints)):
         createEffect(
-            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected],
+            [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected],
             Effect.ORB,
             ColorConfig[customize.orb_lock] if BounceToggleLock[evalOnce(TempIterator1)] else ColorConfig[customize.orb_normal],
             BouncePositions[evalOnce(TempIterator1)],
@@ -25,7 +25,7 @@ def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place on
     destroyEffect(KillBallEffects)
     KillBallEffects = []
     for TempIterator1 in range(0, len(KillballCheckpoints)):
-        createEffect([x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, ColorConfig[customize.killorb], KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        createEffect([x for x in getAllPlayers().concat(null) if x.checkpoint_current == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, ColorConfig[customize.killorb], KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
         KillBallEffects.append(getLastCreatedEntity())
         if TempIterator1 % 5 == 0:
             wait()
@@ -39,7 +39,7 @@ def RebuildPortals():
 
     for TempIterator1 in range(0, len(CustomPortalCP)):
         createEffect(
-            [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == Math.INFINITY],
+            [i for i in getAllPlayers() if i.checkpoint_current == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == Math.INFINITY],
             Effect.GOOD_AURA,
             ColorConfig[customize.portal],
             CustomPortalStart[evalOnce(TempIterator1)],
@@ -488,7 +488,7 @@ rule "Editor | Hud and Effects":
             buttonString(Button.ULTIMATE),
             buttonString(Button.PRIMARY_FIRE),
             ("启用" if BounceToggleUlt[EditSelected] != 0 else "关闭") if  hostPlayer.EditModeSelection == 2 else
-            ("启用" if hostPlayer.CurrentCheckpoint in BladeEnabledCheckpoints else "关闭"),
+            ("启用" if hostPlayer.checkpoint_current in BladeEnabledCheckpoints else "关闭"),
             abilityIconString(Hero.GENJI, Button.ULTIMATE),
             "检查点给刀"  if hostPlayer.EditModeSelection == 0 else "弹球给刀"
         )
@@ -497,13 +497,13 @@ rule "Editor | Hud and Effects":
             buttonString(Button.ULTIMATE),
             buttonString(Button.PRIMARY_FIRE),
             ("on" if BounceToggleUlt[EditSelected] != 0 else "off") if  hostPlayer.EditModeSelection == 2 else
-            ("on" if hostPlayer.CurrentCheckpoint in BladeEnabledCheckpoints else "off"),
+            ("on" if hostPlayer.checkpoint_current in BladeEnabledCheckpoints else "off"),
             abilityIconString(Hero.GENJI, Button.ULTIMATE),
             "Level" if hostPlayer.EditModeSelection == 0  else "Orb"
         )
         , HudPosition.LEFT, HO.edit_orb_ult,
         Color.GREEN if BounceToggleUlt[EditSelected] != 0 and hostPlayer.EditModeSelection == 2 else
-        Color.GREEN if hostPlayer.CurrentCheckpoint in BladeEnabledCheckpoints and hostPlayer.EditModeSelection == 0 else
+        Color.GREEN if hostPlayer.checkpoint_current in BladeEnabledCheckpoints and hostPlayer.EditModeSelection == 0 else
         Color.ORANGE
         , HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
@@ -513,7 +513,7 @@ rule "Editor | Hud and Effects":
             buttonString(Button.ULTIMATE),
             buttonString(Button.SECONDARY_FIRE),
             ("启用" if BounceToggleDash[EditSelected] != 0 else "关闭") if  hostPlayer.EditModeSelection == 2 else
-            ("启用" if hostPlayer.CurrentCheckpoint in DashEnabledCheckpoints else "关闭"),
+            ("启用" if hostPlayer.checkpoint_current in DashEnabledCheckpoints else "关闭"),
             abilityIconString(Hero.GENJI, Button.ABILITY_1),
            "检查点给Shift" if hostPlayer.EditModeSelection == 0 else "弹球给Shift"
         )
@@ -522,14 +522,14 @@ rule "Editor | Hud and Effects":
             buttonString(Button.ULTIMATE),
             buttonString(Button.SECONDARY_FIRE),
             ("on" if BounceToggleDash[EditSelected] != 0 else "off") if  hostPlayer.EditModeSelection == 2 else
-            ("on" if hostPlayer.CurrentCheckpoint in DashEnabledCheckpoints else "off"),
+            ("on" if hostPlayer.checkpoint_current in DashEnabledCheckpoints else "off"),
             abilityIconString(Hero.GENJI, Button.ABILITY_1),
             "Level" if hostPlayer.EditModeSelection == 0
             else "Orb"
         )
         , HudPosition.LEFT, HO.edit_orb_dash,
         Color.GREEN if BounceToggleDash[EditSelected] != 0 and hostPlayer.EditModeSelection == 2 else
-        Color.GREEN if hostPlayer.CurrentCheckpoint in DashEnabledCheckpoints and hostPlayer.EditModeSelection == 0 else
+        Color.GREEN if hostPlayer.checkpoint_current in DashEnabledCheckpoints and hostPlayer.EditModeSelection == 0 else
         Color.ORANGE
         , HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
@@ -562,9 +562,9 @@ rule "Editor | Hud and Effects":
     hudText(hostPlayer if hostPlayer.GuideToggle else null,
         (
             "\n 选中的检查点 \n 矢量: {0}{1} \n".format(
-                CheckpointPositions[hostPlayer.CurrentCheckpoint],
-                [] if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) < 2 else
-                "\n 传送点: {0}".format(CheckpointPositions[hostPlayer.CurrentCheckpoint][1]))
+                CheckpointPositions[hostPlayer.checkpoint_current],
+                [] if len(CheckpointPositions[hostPlayer.checkpoint_current]) < 2 else
+                "\n 传送点: {0}".format(CheckpointPositions[hostPlayer.checkpoint_current][1]))
             if hostPlayer.EditModeSelection == 0 and len(CheckpointPositions) > 0 else
             "\n 选中的击杀球 \n 矢量: {1} \n 半径: {0} \n".format(
                 KillBallRadii[EditSelected],
@@ -586,14 +586,14 @@ rule "Editor | Hud and Effects":
             "――――――――――――\n"
             #" {} 延二段跳\n"
             " {} 留小跳进点\n".format(
-                "√" if hostPlayer.CurrentCheckpoint in BanMulti else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanCreate else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanStand else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanClimb else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanDead else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanEmote else [],
-                #"√" if hostPlayer.CurrentCheckpoint in BanSaveDouble else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanBhop else []
+                "√" if hostPlayer.checkpoint_current in BanMulti else [],
+                "√" if hostPlayer.checkpoint_current in BanCreate else [],
+                "√" if hostPlayer.checkpoint_current in BanStand else [],
+                "√" if hostPlayer.checkpoint_current in BanClimb else [],
+                "√" if hostPlayer.checkpoint_current in BanDead else [],
+                "√" if hostPlayer.checkpoint_current in BanEmote else [],
+                #"√" if hostPlayer.checkpoint_current in BanSaveDouble else [],
+                "√" if hostPlayer.checkpoint_current in BanBhop else []
             )
             if hostPlayer.EditModeSelection == 3 else
                 "\n 入口矢量: {} \n"
@@ -601,15 +601,15 @@ rule "Editor | Hud and Effects":
                 " 应用关卡: {} \n".format(
                 CustomPortalStart[EditSelected],
                 CustomPortalEndpoint[EditSelected],
-                "所有" if CustomPortalCP[EditSelected] == Math.INFINITY else hostPlayer.CurrentCheckpoint)
-            if hostPlayer.EditModeSelection == 4 and CustomPortalCP[EditSelected] in [hostPlayer.CurrentCheckpoint, Math.INFINITY] and len(CustomPortalCP) > 0 else
+                "所有" if CustomPortalCP[EditSelected] == Math.INFINITY else hostPlayer.checkpoint_current)
+            if hostPlayer.EditModeSelection == 4 and CustomPortalCP[EditSelected] in [hostPlayer.checkpoint_current, Math.INFINITY] and len(CustomPortalCP) > 0 else
             "\n   当前无数据选中   \n"
         ) checkCN
         (
             "\n Selected Checkpoint \n Vector: {0}{1} \n".format(
-                CheckpointPositions[hostPlayer.CurrentCheckpoint],
-                [] if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) < 2 else
-                "\n Teleport: {0}".format(CheckpointPositions[hostPlayer.CurrentCheckpoint][1]))
+                CheckpointPositions[hostPlayer.checkpoint_current],
+                [] if len(CheckpointPositions[hostPlayer.checkpoint_current]) < 2 else
+                "\n Teleport: {0}".format(CheckpointPositions[hostPlayer.checkpoint_current][1]))
             if hostPlayer.EditModeSelection == 0 and len(CheckpointPositions) > 0 else
             "\n Selected Kill Orb \n Vector: {1} \n radius: {0} \n".format(
                 KillBallRadii[EditSelected],
@@ -631,22 +631,22 @@ rule "Editor | Hud and Effects":
             "――――――――――――\n"
             #" {} save double\n"
             " {} require bhop\n".format(
-                "√" if hostPlayer.CurrentCheckpoint in BanMulti else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanCreate else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanStand else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanClimb else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanDead else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanEmote else [],
-                #"√" if hostPlayer.CurrentCheckpoint in BanSaveDouble else [],
-                "√" if hostPlayer.CurrentCheckpoint in BanBhop else [])
+                "√" if hostPlayer.checkpoint_current in BanMulti else [],
+                "√" if hostPlayer.checkpoint_current in BanCreate else [],
+                "√" if hostPlayer.checkpoint_current in BanStand else [],
+                "√" if hostPlayer.checkpoint_current in BanClimb else [],
+                "√" if hostPlayer.checkpoint_current in BanDead else [],
+                "√" if hostPlayer.checkpoint_current in BanEmote else [],
+                #"√" if hostPlayer.checkpoint_current in BanSaveDouble else [],
+                "√" if hostPlayer.checkpoint_current in BanBhop else [])
             if hostPlayer.EditModeSelection == 3 else
                 "\n Start: {} \n"
                 " End: {} \n"
                 " CP: {} \n".format(
                 CustomPortalStart[EditSelected],
                 CustomPortalEndpoint[EditSelected],
-                "All" if CustomPortalCP[EditSelected] == Math.INFINITY else hostPlayer.CurrentCheckpoint)
-            if hostPlayer.EditModeSelection == 4 and CustomPortalCP[EditSelected] in [hostPlayer.CurrentCheckpoint, Math.INFINITY] and len(CustomPortalCP) > 0 else
+                "All" if CustomPortalCP[EditSelected] == Math.INFINITY else hostPlayer.checkpoint_current)
+            if hostPlayer.EditModeSelection == 4 and CustomPortalCP[EditSelected] in [hostPlayer.checkpoint_current, Math.INFINITY] and len(CustomPortalCP) > 0 else
             "\n   No data selected   \n"
         )
         , null, null, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
@@ -675,14 +675,14 @@ rule "Editor | Hud and Effects":
     )
 
     # Purple sphere for teleport location
-    createEffect(localPlayer if len(CheckpointPositions[hostPlayer.CurrentCheckpoint] ) > 1 and hostPlayer.EditModeSelection == 0 else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[hostPlayer.CurrentCheckpoint][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(localPlayer if len(CheckpointPositions[hostPlayer.checkpoint_current] ) > 1 and hostPlayer.EditModeSelection == 0 else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[hostPlayer.checkpoint_current][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
 
     # Teleport text
-    createInWorldText(localPlayer if len(CheckpointPositions[hostPlayer.CurrentCheckpoint] ) > 1 and hostPlayer.EditModeSelection == 0 else null, "传送点位置" checkCN "teleporter location", CheckpointPositions[hostPlayer.CurrentCheckpoint][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+    createInWorldText(localPlayer if len(CheckpointPositions[hostPlayer.checkpoint_current] ) > 1 and hostPlayer.EditModeSelection == 0 else null, "传送点位置" checkCN "teleporter location", CheckpointPositions[hostPlayer.checkpoint_current][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
 
     # normal cp if teleport
-    createEffect(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and hostPlayer.EditModeSelection == 0 else null, Effect.RING, Color.ORANGE, CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createInWorldText(hostPlayer if CheckpointPositions[hostPlayer.CurrentCheckpoint][1] and hostPlayer.EditModeSelection == 0 else null, "检查点位置" checkCN "level location", CheckpointPositions[hostPlayer.CurrentCheckpoint][0], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+    createEffect(hostPlayer if CheckpointPositions[hostPlayer.checkpoint_current][1] and hostPlayer.EditModeSelection == 0 else null, Effect.RING, Color.ORANGE, CheckpointPositions[hostPlayer.checkpoint_current][0], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createInWorldText(hostPlayer if CheckpointPositions[hostPlayer.checkpoint_current][1] and hostPlayer.EditModeSelection == 0 else null, "检查点位置" checkCN "level location", CheckpointPositions[hostPlayer.checkpoint_current][0], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
 
     # portal fx
     createEffect(hostPlayer if len(EditSelectIdArray) > 0 and hostPlayer.EditModeSelection == 4 else null, Effect.SPARKLES, Color.PURPLE, CustomPortalEndpoint[EditSelected], 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
@@ -746,13 +746,13 @@ def editupdateselectedids():
 
     if hostPlayer.EditModeSelection == 1:
         EditSelectIdArray  = [i for _, i in KillballCheckpoints]
-        EditSelectIdArray = [ i for i in EditSelectIdArray if KillballCheckpoints[i] == hostPlayer.CurrentCheckpoint ]
+        EditSelectIdArray = [ i for i in EditSelectIdArray if KillballCheckpoints[i] == hostPlayer.checkpoint_current ]
     elif hostPlayer.EditModeSelection == 2:
         EditSelectIdArray  = [i for _, i in BouncePadCheckpoints]
-        EditSelectIdArray = [ i for i in EditSelectIdArray if BouncePadCheckpoints[i] == hostPlayer.CurrentCheckpoint ]
+        EditSelectIdArray = [ i for i in EditSelectIdArray if BouncePadCheckpoints[i] == hostPlayer.checkpoint_current ]
     elif hostPlayer.EditModeSelection == 4:
         EditSelectIdArray  = [i for _, i in CustomPortalCP]
-        EditSelectIdArray = [i for i in EditSelectIdArray if CustomPortalCP[i] == Math.INFINITY or CustomPortalCP[i] == hostPlayer.CurrentCheckpoint ]
+        EditSelectIdArray = [i for i in EditSelectIdArray if CustomPortalCP[i] == Math.INFINITY or CustomPortalCP[i] == hostPlayer.checkpoint_current]
     else:
         EditSelectIdArray  = []
 
@@ -771,36 +771,36 @@ rule "Editor | create cp/orb":
 
     eventPlayer.LockEditor = true
     if eventPlayer.EditModeSelection == 0:
-        if len(CheckpointPositions) > 1 and distance(eventPlayer, CheckpointPositions[hostPlayer.CurrentCheckpoint]) <= cpcircleradius:
+        if len(CheckpointPositions) > 1 and distance(eventPlayer, CheckpointPositions[hostPlayer.checkpoint_current]) <= cpcircleradius:
             smallMessage(eventPlayer, "   放置的检查点距离太近" checkCN "   Cannot place checkpoints too close.")
             goto endlbl
 
-        if eventPlayer.CurrentCheckpoint > len(CheckpointPositions) - 1:
-            eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 1
+        if eventPlayer.checkpoint_current >= len(CheckpointPositions) - 1: #$$
+            eventPlayer.checkpoint_current = len(CheckpointPositions) - 1
 
-        if hostPlayer.CurrentCheckpoint == len(CheckpointPositions) - 1:
+        if hostPlayer.checkpoint_current == len(CheckpointPositions) - 1:
             CheckpointPositions.append(eventPlayer.getPosition() )
-            eventPlayer.CurrentCheckpoint ++
+            eventPlayer.checkpoint_current++
             UpdateCache()
         else:
-            insert(CheckpointPositions, hostPlayer.CurrentCheckpoint + 1, eventPlayer.getPosition())
-            hostPlayer.CurrentCheckpoint ++
+            insert(CheckpointPositions, hostPlayer.checkpoint_current + 1, eventPlayer.getPosition())
+            hostPlayer.checkpoint_current++
 
-            KillballCheckpoints = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in KillballCheckpoints]
-            BouncePadCheckpoints = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BouncePadCheckpoints]
-            CustomPortalCP = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in CustomPortalCP]
-            BladeEnabledCheckpoints = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BladeEnabledCheckpoints]
-            DashEnabledCheckpoints = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in DashEnabledCheckpoints]
+            KillballCheckpoints = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in KillballCheckpoints]
+            BouncePadCheckpoints = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BouncePadCheckpoints]
+            CustomPortalCP = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in CustomPortalCP]
+            BladeEnabledCheckpoints = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BladeEnabledCheckpoints]
+            DashEnabledCheckpoints = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in DashEnabledCheckpoints]
 
-            BanMulti = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanMulti]
-            BanCreate = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanCreate]
-            BanStand = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanStand]
-            BanDead = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanDead]
-            BanEmote = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanEmote]
-            BanClimb = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanClimb]
-            BanSaveDouble = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanSaveDouble]
-            BanBhop = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanBhop]
-            BanDjump = [x + (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in BanDjump]
+            BanMulti = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanMulti]
+            BanCreate = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanCreate]
+            BanStand = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanStand]
+            BanDead = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanDead]
+            BanEmote = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanEmote]
+            BanClimb = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanClimb]
+            BanSaveDouble = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanSaveDouble]
+            BanBhop = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanBhop]
+            BanDjump = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanDjump]
 
         smallMessage(localPlayer, "   新检查点已创建" checkCN "   New Checkpoint has been created")
 
@@ -813,19 +813,19 @@ rule "Editor | create cp/orb":
 
     elif eventPlayer.EditModeSelection == 1:
         KillBallPositions.append(eventPlayer.getPosition())
-        KillballCheckpoints.append(eventPlayer.CurrentCheckpoint)
+        KillballCheckpoints.append(eventPlayer.checkpoint_current)
         KillBallRadii.append(5)
         editupdateselectedids() # to create the fx properly
         EditorSelectLast()
         createEffect(
-            [i for i in getAllPlayers() if i.CurrentCheckpoint == KillballCheckpoints[evalOnce(EditSelected)]],
+            [i for i in getAllPlayers() if i.checkpoint_current == KillballCheckpoints[evalOnce(EditSelected)]],
             Effect.SPHERE, ColorConfig[customize.killorb],
             KillBallPositions[evalOnce(EditSelected)],
             KillBallRadii[evalOnce(EditSelected)],
             EffectReeval.VISIBILITY_POSITION_AND_RADIUS
         )
         KillBallEffects.append(getLastCreatedEntity())
-        bigMessage(localPlayer, "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新击杀球已创建! \r\n仅生效于检查点" checkCN "New Kill Orb has been created! \r\nIt's only valid for checkpoint"))
+        bigMessage(localPlayer, "{1} {0}".format(eventPlayer.checkpoint_current, "新击杀球已创建! \r\n仅生效于检查点" checkCN "New Kill Orb has been created! \r\nIt's only valid for checkpoint"))
         waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)), 1)
         #editupdateselectedids() # to arrow during the placement properly
         while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
@@ -834,7 +834,7 @@ rule "Editor | create cp/orb":
 
     elif eventPlayer.EditModeSelection == 2:
         BouncePositions.append(eventPlayer.getPosition())
-        BouncePadCheckpoints.append(eventPlayer.CurrentCheckpoint)
+        BouncePadCheckpoints.append(eventPlayer.checkpoint_current)
         BounceStrength.append(10)
         BounceToggleUlt.append(false)
         BounceToggleDash.append(false)
@@ -842,12 +842,12 @@ rule "Editor | create cp/orb":
         editupdateselectedids()
         EditorSelectLast()
         createEffect(
-            [x for x in getAllPlayers().concat(null) if x.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(EditSelected)] and not BouncePositions[evalOnce(EditSelected)]  in x.LockCollected],
+            [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(EditSelected)] and not BouncePositions[evalOnce(EditSelected)]  in x.LockCollected],
             Effect.ORB, ColorConfig[customize.orb_lock] if BounceToggleLock[evalOnce(EditSelected)] else ColorConfig[customize.orb_normal],
             BouncePositions[evalOnce(EditSelected)], 1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
         BounceEffects.append(getLastCreatedEntity())
-        bigMessage(localPlayer, "{1} {0}".format(eventPlayer.CurrentCheckpoint, "新弹球已创建! \r\n仅生效于检查点" checkCN "New Bounce Orb has been created! \r\nIt's only valid for checkpoint"))
+        bigMessage(localPlayer, "{1} {0}".format(eventPlayer.checkpoint_current, "新弹球已创建! \r\n仅生效于检查点" checkCN "New Bounce Orb has been created! \r\nIt's only valid for checkpoint"))
         waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)), 1)
         while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             BouncePositions[EditSelected] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 7, null, null, false).getHitPosition()
@@ -855,12 +855,12 @@ rule "Editor | create cp/orb":
 
     elif eventPlayer.EditModeSelection == 4:
         CustomPortalStart.append(eventPlayer.getPosition())
-        CustomPortalEndpoint.append(eventPlayer.getPosition()+vect(0,10,0))
-        CustomPortalCP.append(eventPlayer.CurrentCheckpoint)
+        CustomPortalEndpoint.append(eventPlayer.getPosition()+vect(0,10,0))#$$
+        CustomPortalCP.append(eventPlayer.checkpoint_current)
         editupdateselectedids()
         EditorSelectLast()
         createEffect(
-            [i for i in getAllPlayers() if i.CurrentCheckpoint == CustomPortalCP[evalOnce(EditSelected)] or CustomPortalCP[evalOnce(EditSelected)] == Math.INFINITY],
+            [i for i in getAllPlayers() if i.checkpoint_current == CustomPortalCP[evalOnce(EditSelected)] or CustomPortalCP[evalOnce(EditSelected)] == Math.INFINITY],
             Effect.GOOD_AURA, ColorConfig[customize.portal], CustomPortalStart[evalOnce(EditSelected)], 0.6,  EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
         PortalEffects.append(getLastCreatedEntity())
@@ -897,31 +897,31 @@ rule "Editor | delete cp/orb/portal":
     if eventPlayer.EditModeSelection == 0 and len(CheckpointPositions) > 0:
         # Resync Kill Orbs ==================
         eventPlayer.Temp = []
-        eventPlayer.Temp = [e for e in [(i if e2 == hostPlayer.CurrentCheckpoint else -1) for e2, i in KillballCheckpoints] if  e >=0]
-        # eventPlayer.Temp = [i for e, i in KillballCheckpoints if e == hostPlayer.CurrentCheckpoint]
+        eventPlayer.Temp = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if  e >=0]
+        # eventPlayer.Temp = [i for e, i in KillballCheckpoints if e == hostPlayer.checkpoint_current]
         for TempIterator1 in range(len(eventPlayer.Temp)):
             destroyEffect(KillBallEffects[eventPlayer.Temp[TempIterator1]])
             del KillBallEffects[eventPlayer.Temp[TempIterator1]]
             wait()
         # Remove specified checkpoint
-        KillballCheckpoints = [x for x in KillballCheckpoints if x != hostPlayer.CurrentCheckpoint]
+        KillballCheckpoints = [x for x in KillballCheckpoints if x != hostPlayer.checkpoint_current]
         # Decrement checkpoints after removed one
-        KillballCheckpoints = [x - (1 if x > hostPlayer.CurrentCheckpoint else 0) for x in KillballCheckpoints]
+        KillballCheckpoints = [x - (1 if x > hostPlayer.checkpoint_current else 0) for x in KillballCheckpoints]
         # Remove Radii at Checkpoint indexes (temp)
         KillBallRadii = [x for x, i in KillBallRadii if i not in eventPlayer.Temp]
         KillBallPositions = [x for x, i in KillBallPositions if i not in eventPlayer.Temp]
         eventPlayer.Temp = []
         # Resync Bounce Orbs ==============
-        eventPlayer.Temp = [e for e in [(i if e2 == hostPlayer.CurrentCheckpoint else -1) for e2, i in BouncePadCheckpoints] if  e >= 0]
-        # eventPlayer.Temp = [i for e, i in BouncePadCheckpoints if e == hostPlayer.CurrentCheckpoint]
+        eventPlayer.Temp = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in BouncePadCheckpoints] if  e >= 0]
+        # eventPlayer.Temp = [i for e, i in BouncePadCheckpoints if e == hostPlayer.checkpoint_current]
         for TempIterator1 in range(len(eventPlayer.Temp)):
             destroyEffect(BounceEffects[eventPlayer.Temp[TempIterator1]])
             del BounceEffects[eventPlayer.Temp[TempIterator1]]
             wait()
 
-        BouncePadCheckpoints = [x for x in BouncePadCheckpoints if x != hostPlayer.CurrentCheckpoint]
+        BouncePadCheckpoints = [x for x in BouncePadCheckpoints if x != hostPlayer.checkpoint_current]
         # Decrement checkpoints after removed one
-        BouncePadCheckpoints = [x - (1 if x > hostPlayer.CurrentCheckpoint else 0) for x in BouncePadCheckpoints]
+        BouncePadCheckpoints = [x - (1 if x > hostPlayer.checkpoint_current else 0) for x in BouncePadCheckpoints]
         BouncePositions = [x for x, i in BouncePositions if i not in eventPlayer.Temp]
         BounceStrength = [x for x, i in BounceStrength if i not in eventPlayer.Temp]
         BounceToggleUlt = [x for x, i in BounceToggleUlt if i not in eventPlayer.Temp]
@@ -930,15 +930,15 @@ rule "Editor | delete cp/orb/portal":
 
         # Resync custom portals ==================
         eventPlayer.Temp = []
-        eventPlayer.Temp = [e for e in [(i if e2 == hostPlayer.CurrentCheckpoint else -1) for e2, i in CustomPortalCP] if  e >=0]
+        eventPlayer.Temp = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in CustomPortalCP] if  e >=0]
         for TempIterator1 in range(len(eventPlayer.Temp)):
             destroyEffect(PortalEffects[eventPlayer.Temp[TempIterator1]])
             del PortalEffects[eventPlayer.Temp[TempIterator1]]
             wait()
         # Remove specified checkpoint
-        CustomPortalCP = [x for x in CustomPortalCP if x != hostPlayer.CurrentCheckpoint]
+        CustomPortalCP = [x for x in CustomPortalCP if x != hostPlayer.checkpoint_current]
         # Decrement checkpoints after removed one
-        CustomPortalCP = [x - (1 if x > hostPlayer.CurrentCheckpoint else 0) for x in CustomPortalCP]
+        CustomPortalCP = [x - (1 if x > hostPlayer.checkpoint_current else 0) for x in CustomPortalCP]
         # Remove Radii at Checkpoint indexes (temp)
         CustomPortalStart = [x for x, i in CustomPortalStart if i not in eventPlayer.Temp]
         CustomPortalEndpoint = [x for x, i in CustomPortalEndpoint if i not in eventPlayer.Temp]
@@ -958,14 +958,14 @@ rule "Editor | delete cp/orb/portal":
         removeCPandLower(BanDjump)
 
         # Remove specified checkpoint =====================
-        del CheckpointPositions[hostPlayer.CurrentCheckpoint]
-        del CheckpointRings_Editing[hostPlayer.CurrentCheckpoint]
+        del CheckpointPositions[hostPlayer.checkpoint_current]
+        del CheckpointRings_Editing[hostPlayer.checkpoint_current]
 
-        if hostPlayer.CurrentCheckpoint < 1 and len(CheckpointPositions) > 0 or CheckpointPositions == []:
-            hostPlayer.CurrentCheckpoint = 0
+        if hostPlayer.checkpoint_current < 1 and len(CheckpointPositions) > 0 or CheckpointPositions == []:
+            hostPlayer.checkpoint_current = 0
             goto lbl_a
 
-        hostPlayer.CurrentCheckpoint -= 1
+        hostPlayer.checkpoint_current -= 1
         lbl_a:
         RebuildKillOrbs()
         RebuildBounceOrbs()
@@ -1098,20 +1098,20 @@ rule "Editor | cp add/remove teleport":
       return
 
     hostPlayer.LockEditor = true
-    if hostPlayer.CurrentCheckpoint == 0:
+    if not hostPlayer.checkpoint_current:
         smallMessage(hostPlayer,"   不能在第一个检查点设置传送门" checkCN "   Can't place a teleport on first checkpoint")
         hostPlayer.LockEditor = false
         return
 
-    if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) > 1: # remove
-        CheckpointPositions[hostPlayer.CurrentCheckpoint] = CheckpointPositions[hostPlayer.CurrentCheckpoint][0]
-        smallMessage(hostPlayer,"   关卡{0}的传送点已移除".format(hostPlayer.CurrentCheckpoint) checkCN "   Teleport for level {0} has been removed".format(hostPlayer.CurrentCheckpoint))
+    if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1: # remove
+        CheckpointPositions[hostPlayer.checkpoint_current] = CheckpointPositions[hostPlayer.checkpoint_current][0]
+        smallMessage(hostPlayer,"   关卡{0}的传送点已移除".format(hostPlayer.checkpoint_current) checkCN "   Teleport for level {0} has been removed".format(hostPlayer.checkpoint_current))
     else: # add
-        CheckpointPositions[hostPlayer.CurrentCheckpoint] = [
-            CheckpointPositions[hostPlayer.CurrentCheckpoint][0] if len(CheckpointPositions[hostPlayer.CurrentCheckpoint]) != 0 else CheckpointPositions[hostPlayer.CurrentCheckpoint],
+        CheckpointPositions[hostPlayer.checkpoint_current] = [
+            CheckpointPositions[hostPlayer.checkpoint_current][0] if len(CheckpointPositions[hostPlayer.checkpoint_current]) != 0 else CheckpointPositions[hostPlayer.checkpoint_current],
             hostPlayer.getPosition()
         ]
-        smallMessage(hostPlayer, "{1} {0}".format(hostPlayer.CurrentCheckpoint,"   传送点已添加到当前关卡" checkCN "   Teleport has been added for level"))
+        smallMessage(hostPlayer, "{1} {0}".format(hostPlayer.checkpoint_current,"   传送点已添加到当前关卡" checkCN "   Teleport has been added for level"))
 
     hostPlayer.LockEditor = false
     wait()
@@ -1128,23 +1128,23 @@ rule "Editor | moving checkpoint":
     wait(0.3, Wait.ABORT_WHEN_FALSE)
 
     eventPlayer.LockEditor = true
-    eventPlayer.editor_undo = CheckpointPositions[eventPlayer.CurrentCheckpoint]
+    eventPlayer.editor_undo = CheckpointPositions[eventPlayer.checkpoint_current]
     eventPlayer.startCamera(eventPlayer.getEyePosition() + 0.5 * Vector.UP - 2.5 * eventPlayer.getFacingDirection(), eventPlayer.getEyePosition(), 15)
     while eventPlayer.isHoldingButton(Button.ABILITY_2) and eventPlayer.isAlive() and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             eventPlayer.setMoveSpeed(100)
         else:
             eventPlayer.setMoveSpeed(3)
-        if len(CheckpointPositions[eventPlayer.CurrentCheckpoint]):
-            CheckpointPositions[eventPlayer.CurrentCheckpoint] = [eventPlayer.getPosition(), CheckpointPositions[eventPlayer.CurrentCheckpoint][1] ]
+        if len(CheckpointPositions[eventPlayer.checkpoint_current]):
+            CheckpointPositions[eventPlayer.checkpoint_current] = [eventPlayer.getPosition(), CheckpointPositions[eventPlayer.checkpoint_current][1] ]
         else:
-            CheckpointPositions[eventPlayer.CurrentCheckpoint] = eventPlayer.getPosition()
+            CheckpointPositions[eventPlayer.checkpoint_current] = eventPlayer.getPosition()
         wait()
 
     eventPlayer.stopCamera()
     eventPlayer.setMoveSpeed(100)
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-        CheckpointPositions[eventPlayer.CurrentCheckpoint] = eventPlayer.editor_undo
+        CheckpointPositions[eventPlayer.checkpoint_current] = eventPlayer.editor_undo
         waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_2), Math.INFINITY)
 
     eventPlayer.LockEditor = false
@@ -1214,7 +1214,7 @@ rule "Editor | portal cp change":
     #@Condition EditorMoveItem == false
     @Condition eventPlayer.LockEditor == false
 
-    CustomPortalCP[EditSelected] = eventPlayer.CurrentCheckpoint if CustomPortalCP[EditSelected] == Math.INFINITY else Math.INFINITY
+    CustomPortalCP[EditSelected] = eventPlayer.checkpoint_current if CustomPortalCP[EditSelected] == Math.INFINITY else Math.INFINITY
     wait(0.3)
 
 

@@ -19,10 +19,10 @@ rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE
     # 指引消息将 会在竞赛模 式开始时 显示
     # 由于 hud 文本限制，你有 4 个hud可用
     # 如果你不需 要一个字段 只是空文 本字段
-    instructiontext[0] = "Change in Comp Mode instruction message hud 1"
-    instructiontext[1] = "Change in Comp Mode instruction message hud 2"
-    instructiontext[2] = "Change in Comp Mode instruction message hud 3"
-    instructiontext[3] = "Change in Comp Mode instruction message hud 4"
+    InstructionText[0] = "Change in Comp Mode instruction message hud 1"
+    InstructionText[1] = "Change in Comp Mode instruction message hud 2"
+    InstructionText[2] = "Change in Comp Mode instruction message hud 3"
+    InstructionText[3] = "Change in Comp Mode instruction message hud 4"
 
 rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled
@@ -229,7 +229,7 @@ rule "Grup up | text/effect":
     # replace 777 with checkpoint number
     # replace vector 0,0,0 with orb position
     createInWorldText(
-        [i for i in getAllPlayers() if i.CurrentCheckpoint == 777],
+        [i for i in getAllPlayers() if i.checkpoint_current == 777],
         "{0} {1} {0}".format(
             abilityIconString(Hero.GENJI, Button.ULTIMATE),
             "待在这里" checkCN "grup up"
@@ -242,7 +242,7 @@ rule "Grup up | text/effect":
     # replace vector 0,0,0 with orb position
     # 3.5 is the radius
     createEffect(
-        [i for i in getAllPlayers() if i.CurrentCheckpoint == 777],
+        [i for i in getAllPlayers() if i.checkpoint_current == 777],
         Effect.SPHERE, Color.ORANGE, vect(0,0,0),  3.5, EffectReeval.VISIBILITY
     )
 
@@ -250,7 +250,7 @@ rule "Grup up | function":
     @Disabled
     @Event eachPlayer
     # replace 777 with checkpoint number
-    @Condition eventPlayer.CurrentCheckpoint == 777
+    @Condition eventPlayer.checkpoint_current == 777
     @Condition eventPlayer.isAlive()
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.InvincibleToggle == false
@@ -279,7 +279,7 @@ rule "Grup up | function":
     smallMessage(eventPlayer, "   1")
     wait(1, Wait.ABORT_WHEN_FALSE)
 
-    eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.CurrentCheckpoint +1] + vect(0,0.1,0), true)
+    eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.checkpoint_current +1] + vect(0,0.1,0), true)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.3)
     eventPlayer.cancelPrimaryAction()
     eventPlayer.DoubleUsed = null
@@ -299,12 +299,12 @@ rule "Custom Orb Script":
     @Disabled
     @Event eachPlayer
     #don't edit this condition !!!!!!!!!!!!!!!!!
-    @Condition eventPlayer.bouncetouched > -1
+    @Condition eventPlayer.bounceTouched > -1
     #Enable this rule and find the ID number of the bounce orbs via the editor display.
     #Note that the ID can change if you place or delete orbs infront of that orb.
     #Do NOT edit the next 2 actions.
     eventPlayer.BounceTrueId   = [i for _, i in BouncePadCheckpoints]
-    eventPlayer.BounceTrueId  = [ i for i in eventPlayer.BounceTrueId if BouncePadCheckpoints[i] == eventPlayer.CurrentCheckpoint and  BouncePositions[i] == eventPlayer.BouncePosition_Cache[eventPlayer.bouncetouched]][0]
+    eventPlayer.BounceTrueId  = [ i for i in eventPlayer.BounceTrueId if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and  BouncePositions[i] == eventPlayer.BouncePosition_Cache[eventPlayer.bounceTouched]][0]
     #Add the desired ID numbers for the bounces in the array
     #add the script after it
     #you can use the trigger sub above this rule to reset the effects
@@ -356,16 +356,16 @@ rule "fisho cp cheat for overpy toggle":
     @Event eachPlayer
     @Condition cpCheat
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
-    @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.NotOnLastCp) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.CurrentCheckpoint != 0)
+    @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.checkpoint_notLast) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.checkpoint_current != 0)
     @Condition eventPlayer.EditorOn == false
     @Condition eventPlayer.PracticeToggle == false
 
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint - 1])
-        eventPlayer.CurrentCheckpoint -= 1
+        eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current - 1])
+        eventPlayer.checkpoint_current -= 1
     else:
-        eventPlayer.CurrentCheckpoint += 1
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint])
+        eventPlayer.checkpoint_current += 1
+        eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current])
 
 rule "Ledge Grab Patch v1.5":
     # Obsolete for OW v2.12
