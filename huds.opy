@@ -50,13 +50,13 @@ rule "Huds: Global/Localplayer":
 
     # global huds
     hudSubheader(localPlayer,
-        "房间将在 {0} 分钟后重启 - V{1}{2}".format(
+        "房间将在 {0} 分钟后重启 - {1}{2}".format(
             TimeRemaining, versionhere,
             "\n错误: 已达到最大HUD数量上限" if getNumberOfTextIds() >= 128 else []
         )
         checkCN
-        "Server Restarts In {0} Min - V{1}{2}".format(
-            TimeRemaining,versionhere,
+        "Server Restarts In {0} Min - {1}{2}".format(
+            TimeRemaining, versionhere,
             "\nerror: max hud count reached" if getNumberOfTextIds() >= 128 else []
         )
         , HudPosition.RIGHT, HO.data_remaingtime, ColorConfig[customize.servertime] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS
@@ -175,16 +175,16 @@ rule "Huds: Global/Localplayer":
         HudStoreEdit.append(getLastCreatedText())
 
     if CompMode:
-        hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                                                                                                           ", HudPosition.TOP, HO.comp_instructtop, Color.WHITE, HudReeval.VISIBILITY,SpecVisibility.DEFAULT)
+        hudHeader([i for i in getAllPlayers() if i.comp_instructionHud],"                                                                                                                           ", HudPosition.TOP, HO.comp_instructtop, Color.WHITE, HudReeval.VISIBILITY,SpecVisibility.DEFAULT)
         if InstructionText[0]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], InstructionText[0], HudPosition.TOP, HO.comp_instruct1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudSubtext([i for i in getAllPlayers() if i.comp_instructionHud], InstructionText[0], HudPosition.TOP, HO.comp_instruct1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         if InstructionText[1]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], InstructionText[1], HudPosition.TOP, HO.comp_instruct2, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudSubtext([i for i in getAllPlayers() if i.comp_instructionHud], InstructionText[1], HudPosition.TOP, HO.comp_instruct2, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         if InstructionText[2]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], InstructionText[2], HudPosition.TOP, HO.comp_instruct3, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            hudSubtext([i for i in getAllPlayers() if i.comp_instructionHud], InstructionText[2], HudPosition.TOP, HO.comp_instruct3, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         if InstructionText[3]:
-            hudSubtext([i for i in getAllPlayers() if i.instructionhud], InstructionText[3], HudPosition.TOP, HO.comp_instruct4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        hudHeader([i for i in getAllPlayers() if i.instructionhud],"                                   Press {0} to start                                ".format(buttonString(Button.INTERACT)), HudPosition.TOP, HO.comp_instructbottom, Color.WHITE, HudReeval.VISIBILITY_AND_STRING,SpecVisibility.DEFAULT)
+            hudSubtext([i for i in getAllPlayers() if i.comp_instructionHud], InstructionText[3], HudPosition.TOP, HO.comp_instruct4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        hudHeader([i for i in getAllPlayers() if i.comp_instructionHud],"                                   Press {0} to start                                ".format(buttonString(Button.INTERACT)), HudPosition.TOP, HO.comp_instructbottom, Color.WHITE, HudReeval.VISIBILITY_AND_STRING,SpecVisibility.DEFAULT)
 
     elif not CompMode:
         hudSubtext(localPlayer.toggle_guide,
@@ -516,18 +516,18 @@ rule "Huds: each player":
     hudHeader(eventPlayer,
         #"爬墙已用{0}".format([] if eventPlayer.skill_countMulti < 1 else " ({0})".format(eventPlayer.skill_countMulti))
         "{1}{0}".format([] if eventPlayer.skill_countMulti < 1 else " ({0})".format(eventPlayer.skill_countMulti),
-            "爬墙已用" if  eventPlayer.WallclimbUsed else "爬墙未用" # cn version text updates to say the status, unlike en
+            "爬墙已用" if  eventPlayer.skill_usedClimb else "爬墙未用" # cn version text updates to say the status, unlike en
         )
         checkCN
         "Climb{0}".format([] if eventPlayer.skill_countMulti < 1 else " ({0})".format(eventPlayer.skill_countMulti))
         , HudPosition.LEFT, HO.game_climb,
-        evalOnce(ColorConfig[customize.bhopclimb_used]) if eventPlayer.WallclimbUsed else evalOnce(ColorConfig[customize.bhopclimb_available]),
+        evalOnce(ColorConfig[customize.bhopclimb_used]) if eventPlayer.skill_usedClimb else evalOnce(ColorConfig[customize.bhopclimb_available]),
         HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     hudHeader(eventPlayer,
         ( # cn version text updates to say the status, unlike en version
             "{0}{1}".format(
-                "小跳未用" if not eventPlayer.BhopUsed or eventPlayer.BhopHUDColor == evalOnce(ColorConfig[customize.bhopclimb_available]) else "小跳已用",
+                "小跳未用" if not eventPlayer.skill_usedBhop or eventPlayer.BhopHUDColor == evalOnce(ColorConfig[customize.bhopclimb_available]) else "小跳已用",
                 [] if eventPlayer.skill_countCreates < 1 else " ({0})".format(eventPlayer.skill_countCreates)
             )
         )
@@ -537,7 +537,7 @@ rule "Huds: each player":
             " ({0})".format(eventPlayer.skill_countCreates)
         )
         , HudPosition.LEFT, HO.game_bhop,
-        evalOnce(ColorConfig[customize.bhopclimb_available]) if not eventPlayer.BhopUsed else eventPlayer.BhopHUDColor,
+        evalOnce(ColorConfig[customize.bhopclimb_available]) if not eventPlayer.skill_usedBhop else eventPlayer.BhopHUDColor,
         HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
@@ -562,8 +562,8 @@ rule "Huds: each player":
                 "! 比赛结束 !" if CompTime <= 0 else
                 "剩余时间: {0} 分钟{1}".format(
                     CompTime,
-                    "\n你没有尝试过" if eventPlayer.AttemptCount == -1 else
-                    "\n尝试 {0} / {1}".format(eventPlayer.AttemptCount, CompAtmpNum) if CompAtmpNum > 0
+                    "\n你没有尝试过" if eventPlayer.comp_countAttempts == -1 else
+                    "\n尝试 {0} / {1}".format(eventPlayer.comp_countAttempts, CompAtmpNum) if CompAtmpNum > 0
                     else []
                 )
             )
@@ -572,8 +572,8 @@ rule "Huds: each player":
                 "! competition is over !" if CompTime <= 0 else
                 "time left: {0} min{1}".format(
                     CompTime,
-                    "\nYou are out of attempts" if eventPlayer.AttemptCount == -1 else
-                    "\nAttempt {0} / {1}".format(eventPlayer.AttemptCount, CompAtmpNum) if CompAtmpNum > 0
+                    "\nYou are out of attempts" if eventPlayer.comp_countAttempts == -1 else
+                    "\nAttempt {0} / {1}".format(eventPlayer.comp_countAttempts, CompAtmpNum) if CompAtmpNum > 0
                     else []
                 )
             ),

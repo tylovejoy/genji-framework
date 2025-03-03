@@ -282,7 +282,7 @@ rule "Grup up | function":
     eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.checkpoint_current +1] + vect(0,0.1,0), true)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.3)
     eventPlayer.cancelPrimaryAction()
-    eventPlayer.DoubleUsed = null
+    eventPlayer.skill_usedDouble = null
     wait(0.16)
     eventPlayer.stopForcingPosition()
 
@@ -318,7 +318,7 @@ rule "Custom Orb Script":
     if eventPlayer.BounceTrueId in [2,3]:
        # example canceling primary makes double jump recover
        eventPlayer.cancelPrimaryAction()
-       eventPlayer.DoubleUsed = null
+       eventPlayer.skill_usedDouble = null
        smallMessage(eventPlayer," double jump recovered")
 
     if eventPlayer.BounceTrueId in [4]:
@@ -334,14 +334,14 @@ rule "Fake Triple Jump - 假三段跳":
     #Updated Script by LulledLion 9-1-24
     @Condition BanTriple == false
     @Condition eventPlayer.isOnGround() == false
-    @Condition eventPlayer.DoubleUsed == false
+    @Condition eventPlayer.skill_usedDouble == false
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false #Don't trigger on reset
 
     #Double cannot be used already
     wait(false)
     if RULE_CONDITION:
         goto RULE_START
-    if eventPlayer.DoubleUsed:
+    if eventPlayer.skill_usedDouble:
         return
     #Input window to Triple
     waitUntil(eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD), 0.048)
@@ -373,7 +373,7 @@ rule "Ledge Grab Patch v1.5":
     @Condition false
     @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.isOnGround() == false
-    @Condition eventPlayer.getCurrentHero() == Hero.GENJI == eventPlayer.DoubleUsed
+    @Condition eventPlayer.getCurrentHero() == Hero.GENJI == eventPlayer.skill_usedDouble
     @Condition eventPlayer.getCurrentHero() == Hero.HANZO == eventPlayer.getAbilityCooldown(Button.JUMP)
     @Condition (eventPlayer.getCurrentHero() == Hero.KIRIKO and eventPlayer.isHoldingButton(Button.JUMP)) == (eventPlayer.getCurrentHero() == Hero.KIRIKO)
 
@@ -406,12 +406,12 @@ rule "Save Double - enable rule - 二段跳":
     @Event eachPlayer
     @Condition false
     @Condition eventPlayer.isOnGround() == false
-    @Condition eventPlayer.DoubleUsed == false
+    @Condition eventPlayer.skill_usedDouble == false
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
 
-    waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or eventPlayer.DoubleUsed or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
+    waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
     if not RULE_CONDITION: return
-    waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or eventPlayer.DoubleUsed or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
+    waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
     if not RULE_CONDITION: return
     eventPlayer.cancelPrimaryAction()
     if RULE_CONDITION: goto RULE_START

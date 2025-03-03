@@ -169,7 +169,7 @@ def checkpointFailReset():
     eventPlayer.timer_split = eventPlayer.timer_practice if eventPlayer.toggle_practice else eventPlayer.timer_normal
     eventPlayer.LockCollected = []
     eventPlayer.cancelPrimaryAction()
-    eventPlayer.DoubleUsed = null
+    eventPlayer.skill_usedDouble = null
 
     if eventPlayer.checkpoint_current == 0 and not eventPlayer.toggle_practice: #$$
         eventPlayer.timer_normal = 0
@@ -203,9 +203,9 @@ def checkpointFailReset():
 
 def StartGame():
     @Name "SUB | Start Game"
-    if CompMode and (CompTime < 1 or eventPlayer.CompDone):
+    if CompMode and (CompTime < 1 or eventPlayer.comp_done):
         eventPlayer.toggle_leaderboard = true
-        eventPlayer.CompDone = true
+        eventPlayer.comp_done = true
         #eventPlayer.disableRespawn()
         eventPlayer.setDamageReceived(100)
         kill(eventPlayer,null)
@@ -411,7 +411,7 @@ rule "Match time":
             CompTime--
             if CompTime == 0: #$$
                 bigMessage(localPlayer,"时间到了" checkCN "time's up")
-                getAllPlayers().CompDone = true
+                getAllPlayers().comp_done = true
                 stopChasingVariable(getAllPlayers().timer_normal)
                 #getAllPlayers().disableRespawn()
                 getAllPlayers().setDamageReceived(100)
@@ -439,7 +439,7 @@ rule "Player Initialize":
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
     eventPlayer.disablePlayerCollision()
-    #eventPlayer.WallclimbUsed = false #Climbing the wall prompts the HUD
+    #eventPlayer.skill_usedClimb = false #Climbing the wall prompts the HUD
     #eventPlayer.JumpCount = 0
     eventPlayer.bounceLastTouched = -1
     eventPlayer.bounceTouched = -1
@@ -459,22 +459,22 @@ rule "Player Initialize":
     if CompMode:
         eventPlayer.setInvisibility(Invis.ALL)
         if not "{0}".format(eventPlayer) in CompAtmpSaveNames: # instructions and settings for comp start
-            eventPlayer.instructionhud = true
+            eventPlayer.comp_instructionHud = true
             CompAtmpSaveNames.append("{0}".format(eventPlayer))
             CompAtmpSaveCount.append(1)
-            eventPlayer.AttemptCount = 1
+            eventPlayer.comp_countAttempts = 1
             eventPlayer.setMoveSpeed(0)
             eventPlayer.setAbility1Enabled(false)
             eventPlayer.setUltEnabled(false)
             waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT),1)
             waitUntil(eventPlayer.isHoldingButton(Button.INTERACT) or CompTime < 1, Math.INFINITY)
             eventPlayer.setMoveSpeed(100)
-            eventPlayer.instructionhud = false
+            eventPlayer.comp_instructionHud = false
         else:
-            eventPlayer.AttemptCount = CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))]
-            #smallMessage(eventPlayer,"now {0}".format( eventPlayer.AttemptCount))
-        if eventPlayer.AttemptCount == (-1) or CompTime < 1:
-            eventPlayer.CompDone = true
+            eventPlayer.comp_countAttempts = CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))]
+            #smallMessage(eventPlayer,"now {0}".format( eventPlayer.comp_countAttempts))
+        if eventPlayer.comp_countAttempts == (-1) or CompTime < 1:
+            eventPlayer.comp_done = true
 
 
     wait()
@@ -511,17 +511,17 @@ rule "Arrive | Ground reset | traces":
             #kill(eventPlayer, null)
             checkpointFailReset()
             goto lbl_abc
-        if eventPlayer.ban_climb and eventPlayer.WallclimbUsed:
+        if eventPlayer.ban_climb and eventPlayer.skill_usedClimb:
             smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
             checkpointFailReset()
             goto lbl_abc
 
-        if eventPlayer.ban_bhop and not (eventPlayer.BhopUsed == 0 or eventPlayer.BhopHUDColor == Color.GREEN):
+        if eventPlayer.ban_bhop and not (eventPlayer.skill_usedBhop == 0 or eventPlayer.BhopHUDColor == Color.GREEN): #$$
             smallMessage(eventPlayer, "   ≥ 留小跳进点!" checkCN "   ≥ Must have a bhop to complete!")
             checkpointFailReset()
             goto lbl_abc
 
-        if eventPlayer.ban_djump and not (eventPlayer.DoubleUsed == 0):
+        if eventPlayer.ban_djump and not (eventPlayer.skill_usedDouble == 0): #$$
             smallMessage(eventPlayer, "   » 留二段跳!" checkCN "   » Must have a double jump to complete!")
             checkpointFailReset()
             goto lbl_abc
@@ -568,17 +568,17 @@ rule "Arrive | Ground reset | traces":
             DeleteSave()
             Leaderboardupdate()
             if CompMode and CompAtmpNum > 0:
-                if eventPlayer.AttemptCount == CompAtmpNum:
+                if eventPlayer.comp_countAttempts == CompAtmpNum:
                     CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = -1
-                    eventPlayer.AttemptCount = -1
-                    eventPlayer.CompDone = true
+                    eventPlayer.comp_countAttempts = -1
+                    eventPlayer.comp_done = true
                     eventPlayer.toggle_leaderboard = true
                     #eventPlayer.disableRespawn()
                     eventPlayer.setDamageReceived(100)
                     kill(eventPlayer,null)
                     eventPlayer.setDamageReceived(0)
                 else:
-                    CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.AttemptCount + 1
+                    CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.comp_countAttempts + 1
         else: # update save
             DeleteSave()
             MakeSave()
@@ -626,7 +626,7 @@ rule "Bounce Ball / Orb | Activate":
         eventPlayer.applyImpulse(Vector.UP, eventPlayer.BounceStrength_Cache[eventPlayer.bounceTouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
     elif eventPlayer.BounceStrength_Cache[eventPlayer.bounceTouched] < 0:
         eventPlayer.cancelPrimaryAction()
-        eventPlayer.DoubleUsed = null
+        eventPlayer.skill_usedDouble = null
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     if eventPlayer.BounceUlt_Cache[eventPlayer.bounceTouched]:
@@ -666,7 +666,7 @@ rule "Death Reset":
     @Event playerDied
     @Condition eventPlayer.isDummy() == false
     @Condition eventPlayer.toggle_spectate == false
-    @Condition eventPlayer.CompDone == false
+    @Condition eventPlayer.comp_done == false
     if len(CheckpointPositions) > 0:
         eventPlayer.resurrect()
     else:
@@ -676,19 +676,19 @@ rule "Death Reset":
     # but doing waits only when needed
     waitUntil(eventPlayer.isAlive(), 1)
     waitUntil(eventPlayer.isDead(), 1)
-    if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.CompDone):
+    if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):
         wait(0.16)
         eventPlayer.resurrect()
         checkpointFailReset()
         waitUntil(eventPlayer.isAlive(), 1)
         waitUntil(eventPlayer.isDead(), 1)
-        if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.CompDone):
+        if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):
             wait(0.44)
             eventPlayer.resurrect()
             checkpointFailReset()
             waitUntil(eventPlayer.isAlive(), 1)
             waitUntil(eventPlayer.isDead(), 1)
-            if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.CompDone):
+            if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):
                 wait(0.64)
                 eventPlayer.respawn()
                 checkpointFailReset()

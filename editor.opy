@@ -197,11 +197,11 @@ rule "Editor | Hud and Effects":
         del HudStoreEdit[0]
     wait()
 
-    if CompMode: # infinite time and atemps
+    if CompMode: # infinite time and attempts
         CompAtmpNum = null
         CompTime = Math.INFINITY
-        getAllPlayers().AttemptCount = null
-        getAllPlayers().CompDone = false
+        getAllPlayers().comp_countAttempts = null
+        getAllPlayers().comp_done = false
 
     #CustomPortalStart = CustomPortalStart if len(CustomPortalStart) > 0 else []
     #CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) > 0 else []
@@ -896,53 +896,50 @@ rule "Editor | delete cp/orb/portal":
     eventPlayer.editor_lock = true
     if eventPlayer.editor_modeSelect == 0 and len(CheckpointPositions) > 0:
         # Resync Kill Orbs ==================
-        eventPlayer.Temp = []
-        eventPlayer.Temp = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if  e >=0]
-        # eventPlayer.Temp = [i for e, i in KillballCheckpoints if e == hostPlayer.checkpoint_current]
-        for TempIterator1 in range(len(eventPlayer.Temp)):
-            destroyEffect(KillBallEffects[eventPlayer.Temp[TempIterator1]])
-            del KillBallEffects[eventPlayer.Temp[TempIterator1]]
+        eventPlayer.editor_temp = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if  e >=0]
+        # eventPlayer.editor_temp = [i for e, i in KillballCheckpoints if e == hostPlayer.checkpoint_current]
+        for TempIterator1 in range(len(eventPlayer.editor_temp)):
+            destroyEffect(KillBallEffects[eventPlayer.editor_temp[TempIterator1]])
+            del KillBallEffects[eventPlayer.editor_temp[TempIterator1]]
             wait()
         # Remove specified checkpoint
         KillballCheckpoints = [x for x in KillballCheckpoints if x != hostPlayer.checkpoint_current]
         # Decrement checkpoints after removed one
         KillballCheckpoints = [x - (1 if x > hostPlayer.checkpoint_current else 0) for x in KillballCheckpoints]
         # Remove Radii at Checkpoint indexes (temp)
-        KillBallRadii = [x for x, i in KillBallRadii if i not in eventPlayer.Temp]
-        KillBallPositions = [x for x, i in KillBallPositions if i not in eventPlayer.Temp]
-        eventPlayer.Temp = []
+        KillBallRadii = [x for x, i in KillBallRadii if i not in eventPlayer.editor_temp]
+        KillBallPositions = [x for x, i in KillBallPositions if i not in eventPlayer.editor_temp]
         # Resync Bounce Orbs ==============
-        eventPlayer.Temp = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in BouncePadCheckpoints] if  e >= 0]
-        # eventPlayer.Temp = [i for e, i in BouncePadCheckpoints if e == hostPlayer.checkpoint_current]
-        for TempIterator1 in range(len(eventPlayer.Temp)):
-            destroyEffect(BounceEffects[eventPlayer.Temp[TempIterator1]])
-            del BounceEffects[eventPlayer.Temp[TempIterator1]]
+        eventPlayer.editor_temp = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in BouncePadCheckpoints] if  e >= 0]
+        # eventPlayer.editor_temp = [i for e, i in BouncePadCheckpoints if e == hostPlayer.checkpoint_current]
+        for TempIterator1 in range(len(eventPlayer.editor_temp)):
+            destroyEffect(BounceEffects[eventPlayer.editor_temp[TempIterator1]])
+            del BounceEffects[eventPlayer.editor_temp[TempIterator1]]
             wait()
 
         BouncePadCheckpoints = [x for x in BouncePadCheckpoints if x != hostPlayer.checkpoint_current]
         # Decrement checkpoints after removed one
         BouncePadCheckpoints = [x - (1 if x > hostPlayer.checkpoint_current else 0) for x in BouncePadCheckpoints]
-        BouncePositions = [x for x, i in BouncePositions if i not in eventPlayer.Temp]
-        BounceStrength = [x for x, i in BounceStrength if i not in eventPlayer.Temp]
-        BounceToggleUlt = [x for x, i in BounceToggleUlt if i not in eventPlayer.Temp]
-        BounceToggleDash = [x for x, i in BounceToggleDash if i not in eventPlayer.Temp]
-        BounceToggleLock = [x for x, i in BounceToggleLock if i not in eventPlayer.Temp]
+        BouncePositions = [x for x, i in BouncePositions if i not in eventPlayer.editor_temp]
+        BounceStrength = [x for x, i in BounceStrength if i not in eventPlayer.editor_temp]
+        BounceToggleUlt = [x for x, i in BounceToggleUlt if i not in eventPlayer.editor_temp]
+        BounceToggleDash = [x for x, i in BounceToggleDash if i not in eventPlayer.editor_temp]
+        BounceToggleLock = [x for x, i in BounceToggleLock if i not in eventPlayer.editor_temp]
 
         # Resync custom portals ==================
-        eventPlayer.Temp = []
-        eventPlayer.Temp = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in CustomPortalCP] if  e >=0]
-        for TempIterator1 in range(len(eventPlayer.Temp)):
-            destroyEffect(PortalEffects[eventPlayer.Temp[TempIterator1]])
-            del PortalEffects[eventPlayer.Temp[TempIterator1]]
+        eventPlayer.editor_temp = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in CustomPortalCP] if  e >=0]
+        for TempIterator1 in range(len(eventPlayer.editor_temp)):
+            destroyEffect(PortalEffects[eventPlayer.editor_temp[TempIterator1]])
+            del PortalEffects[eventPlayer.editor_temp[TempIterator1]]
             wait()
         # Remove specified checkpoint
         CustomPortalCP = [x for x in CustomPortalCP if x != hostPlayer.checkpoint_current]
         # Decrement checkpoints after removed one
         CustomPortalCP = [x - (1 if x > hostPlayer.checkpoint_current else 0) for x in CustomPortalCP]
         # Remove Radii at Checkpoint indexes (temp)
-        CustomPortalStart = [x for x, i in CustomPortalStart if i not in eventPlayer.Temp]
-        CustomPortalEndpoint = [x for x, i in CustomPortalEndpoint if i not in eventPlayer.Temp]
-        eventPlayer.Temp = []
+        CustomPortalStart = [x for x, i in CustomPortalStart if i not in eventPlayer.editor_temp]
+        CustomPortalEndpoint = [x for x, i in CustomPortalEndpoint if i not in eventPlayer.editor_temp]
+        eventPlayer.editor_temp = null
 
         # ult/dash/ban remove and lower the cp number of rest
         removeCPandLower(BladeEnabledCheckpoints)

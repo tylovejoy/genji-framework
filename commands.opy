@@ -120,7 +120,7 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
             smallMessage(eventPlayer, "   比赛结束" checkCN "   Competition is over"  )
             eventPlayer.lockState = false
             return
-        elif eventPlayer.CompDone:
+        elif eventPlayer.comp_done:
             eventPlayer.lockState = false
             return
         elif CompRestartLimit and eventPlayer.checkpoint_notLast:
@@ -128,16 +128,16 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
             eventPlayer.lockState = false
             return
         elif CompAtmpNum > 0:
-            if eventPlayer.AttemptCount == CompAtmpNum:
+            if eventPlayer.comp_countAttempts == CompAtmpNum:
                 smallMessage(eventPlayer, "   最后一次尝试" checkCN "   This is your final attempt"  )
                 eventPlayer.lockState = false
                 return
-            if eventPlayer.AttemptCount == (-1):
+            if eventPlayer.comp_countAttempts == (-1):
                 smallMessage(eventPlayer, "   你没有尝试过" checkCN "   You are out of attempts"  )
                 eventPlayer.lockState = false
                 return
-            eventPlayer.AttemptCount ++
-            CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.AttemptCount
+            eventPlayer.comp_countAttempts++
+            CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.comp_countAttempts
 
 
     eventPlayer.editor_fly = null
@@ -204,7 +204,7 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
     #@Condition eventPlayer.isUsingAbility1() == false
     @Condition eventPlayer.isAlive()
-    @Condition not (CompMode and eventPlayer.CompDone)
+    @Condition not (CompMode and eventPlayer.comp_done)
     @Condition eventPlayer.lockState == false
 
     eventPlayer.lockState = true

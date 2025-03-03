@@ -84,7 +84,7 @@ arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in array
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
-# Current Unused Variables: 1,6,9,11,16,17,19,28,29,31,36,37,48,49,59,72,89,92+
+# Current Unused Variables: 1,6,9,11,16,17,19,28,29,31,36,37,48,49,59,72,89,90,92+
 #!define CheckpointPositions A
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 #!define SelectedCheckpoint_Editing B
@@ -223,7 +223,6 @@ globalvar BanBhop 86
 globalvar BanStand 87                       # bans on second hop
 globalvar BanDjump 88
 globalvar BanSaveDouble 89
-#!define MapCheckerIter DestructoIter
 globalvar DestructoIter 90
 globalvar MapVectorArray 91
 
@@ -274,9 +273,9 @@ playervar skill_countBhops                         # int                       -
 playervar skill_countJumps                         # int                       --- jump tracking count, 0, 1, 2
 playervar skill_countCreates
 playervar skill_countMulti                   # int                       --- climb count # for HUD
-playervar WallclimbUsed                     # bool                      --- turned into bool
-playervar BhopUsed                          # bool                      --- turned into bool
-playervar DoubleUsed                        # bool
+playervar skill_usedClimb                     # bool                      --- turned into bool
+playervar skill_usedBhop                          # bool                      --- turned into bool
+playervar skill_usedDouble                        # bool
 
 playervar banString                         # str                       --- displayed bans
 #playervar ban_triple
@@ -291,11 +290,11 @@ playervar ban_standcreate                   # bans on second hop
 playervar ban_djump
 playervar ban_savedouble
 
-playervar Temp
+playervar editor_temp
+
 playervar LockCollected                     # number                    --- amount collected lock this cp
 playervar bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
 playervar bounceLastTouched
-#playervar PortalLoop                       # int                       --- loop to select portal
 playervar PortalStart_Cache
 playervar PortalEnd_cache
 playervar BounceLockMax_Cache
@@ -309,9 +308,9 @@ playervar BounceLock_Cache
 playervar BounceIndex_Cache
 playervar KillIndex_Cache
 
-playervar CompDone                          # bool                      --- out of atemps or time?
-playervar AttemptCount                      # int                       --- amound of attemps remaining
-playervar instructionhud
+playervar comp_done                          # bool                      --- out of atemps or time?
+playervar comp_countAttempts                      # int                       --- amound of attemps remaining
+playervar comp_instructionHud
 
 playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
 playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD

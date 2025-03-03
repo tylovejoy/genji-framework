@@ -75,7 +75,7 @@ rule "Checking | Bhop in the air":
     @Condition eventPlayer.skill_countJumps == null
     @Condition eventPlayer.isInAir() 
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false #?????? why wasnt this as false
-    eventPlayer.BhopUsed = false
+    eventPlayer.skill_usedBhop = false
 
 rule "Checking | In the air":
     @Event eachPlayer
@@ -97,13 +97,13 @@ rule "Checking | Player on the wall":
     @Condition eventPlayer.isOnWall()
     @Condition eventPlayer.isHoldingButton(Button.JUMP)
     eventPlayer.skill_countJumps = 2
-    eventPlayer.WallclimbUsed = true
+    eventPlayer.skill_usedClimb = true
 
 rule "Checking | Using Emote":
     @Event eachPlayer
     @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.isCommunicatingEmote() == true
-    eventPlayer.BhopUsed = false
+    eventPlayer.skill_usedBhop = false
     if eventPlayer.ban_emote:
         #waitUntil(not (eventPlayer.isCommunicatingEmote() and eventPlayer.isOnGround()), Math.INFINITY)
         #eventPlayer.applyImpulse(Vector.DOWN, 0.0001, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
@@ -112,9 +112,9 @@ rule "Checking | Using Emote":
 
 rule "Checking | Bhop":
     @Event eachPlayer
-    @Condition eventPlayer.BhopUsed == false
+    @Condition eventPlayer.skill_usedBhop == false
     @Condition eventPlayer.isJumping()
-    eventPlayer.BhopUsed = true
+    eventPlayer.skill_usedBhop = true
     smallMessage(eventPlayer,"   小跳已用" checkCN "   Bhop")
 
 rule "Checking | Bhop count for stand ban":
@@ -138,7 +138,7 @@ rule "Checking | Create Bhop":
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     @Condition eventPlayer.isJumping() == false
     
-    eventPlayer.BhopUsed = false
+    eventPlayer.skill_usedBhop = false
     if eventPlayer.lockState: # prevent restart from giving messsage, but stil allow it to become green
         return
 
@@ -157,15 +157,15 @@ rule "Checking | Ground Reset":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround()
     eventPlayer.skill_countJumps = null
-    eventPlayer.WallclimbUsed = false
+    eventPlayer.skill_usedClimb = false
     eventPlayer.skill_countMulti = null
     eventPlayer.skill_countCreates = null
     eventPlayer.skill_countBhops = null
-    eventPlayer.DoubleUsed = null
+    eventPlayer.skill_usedDouble = null
     wait()
-    if (eventPlayer.skill_countJumps or eventPlayer.WallclimbUsed) and eventPlayer.isOnGround():
+    if (eventPlayer.skill_countJumps or eventPlayer.skill_usedClimb) and eventPlayer.isOnGround():
         goto RULE_START
-    eventPlayer.BhopUsed = true
+    eventPlayer.skill_usedBhop = true
 
 rule "Checking | Double Jump":
     @Event eachPlayer
@@ -183,21 +183,21 @@ rule "Checking | Double Jump":
         #Double Jumped
         waitUntil(eventPlayer.isOnGround() or eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
         if not RULE_CONDITION: return
-        eventPlayer.DoubleUsed = true
+        eventPlayer.skill_usedDouble = true
         #Reset
-        waitUntil(eventPlayer.isOnGround() or not eventPlayer.DoubleUsed, Math.INFINITY)
+        waitUntil(eventPlayer.isOnGround() or not eventPlayer.skill_usedDouble, Math.INFINITY)
         if not RULE_CONDITION: return
 
 rule "HUD | Multiclimb Counter":
     @Event eachPlayer
     @Condition eventPlayer.isOnWall()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
-    @Condition eventPlayer.WallclimbUsed == false
+    @Condition eventPlayer.skill_usedClimb == false
     
     wait()
     if eventPlayer.isOnWall() and not eventPlayer.isHoldingButton(Button.JUMP):
         eventPlayer.skill_countJumps = 2
-        eventPlayer.WallclimbUsed = true
+        eventPlayer.skill_usedClimb = true
     else:
         if eventPlayer.ban_multi and eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
             smallMessage(eventPlayer, "    蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
@@ -224,7 +224,7 @@ rule "Ban | Wallclimb - Indicator ":
     @Event eachPlayer
     @Condition eventPlayer.ban_climb
     @Condition eventPlayer.toggle_invincible == false
-    @Condition eventPlayer.WallclimbUsed
+    @Condition eventPlayer.skill_usedClimb
     #checkpointFailReset()
     #eventPlayer.setStatusEffect(null,Status.BURNING, 0.1)
     smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
@@ -243,7 +243,7 @@ rule "Ban | Save Double - 封禁二段跳":
     @Condition eventPlayer.ban_savedouble
     @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.isOnGround() == false
-    @Condition eventPlayer.DoubleUsed == false
+    @Condition eventPlayer.skill_usedDouble == false
     @Condition eventPlayer.isHoldingButton(Button.JUMP)
     waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
     if not RULE_CONDITION: return
@@ -252,11 +252,11 @@ rule "Ban | Save Double - 封禁二段跳":
     #Prevent false positives
     #Default climb speed is 7.8 and small slowdown upon mantling
     if eventPlayer.getVerticalSpeed() < 6: goto RULE_START 
-    if eventPlayer.BhopUsed:
+    if eventPlayer.skill_usedBhop:
         wait(0.8, Wait.ABORT_WHEN_FALSE)
     else:
         wait(0.8, Wait.ABORT_WHEN_FALSE)
         #This can give a false negative, but advantage is small
-        if eventPlayer.BhopUsed: return
+        if eventPlayer.skill_usedBhop: return
     smallMessage(eventPlayer, "   延二段跳已禁用!" checkCN "   save double banned!")
     checkpointFailReset()
