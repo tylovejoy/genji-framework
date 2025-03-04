@@ -3,7 +3,7 @@
 rule "<tx0C00000000001344> Mechanics | Checks <tx0C00000000001344>":
     @Delimiter
 
-rule "Checking | ult combined rule":
+rule "Mechanics | ult combined rule":
     @Event eachPlayer
     @Condition eventPlayer.isUsingUltimate()
     wait(1.8, Wait.ABORT_WHEN_FALSE)
@@ -14,7 +14,7 @@ rule "Checking | ult combined rule":
     eventPlayer.allowButton(Button.PRIMARY_FIRE)
     async(CheckUlt(), AsyncBehavior.RESTART) # sets ult charge back if done with map etc
         
-rule "Checking | Dash combined rule":
+rule "Mechanics | Dash combined rule":
     @Event eachPlayer
     @Condition eventPlayer.isUsingAbility1()
     async(CheckDash(), AsyncBehavior.RESTART)
@@ -65,27 +65,27 @@ def CheckDash(): # checks if dash should be  turned on
     else:
         eventPlayer.setAbility1Enabled(false)
 
-rule "Checking | Jump":
+rule "Mechanics | Jump":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.JUMP)
     @Condition eventPlayer.skill_countJumps != 2
     eventPlayer.skill_countJumps += 1
 
-rule "Checking | In the air":
+rule "Mechanics | In the air":
     @Event eachPlayer
     @Condition eventPlayer.skill_countJumps == null
     @Condition eventPlayer.isInAir() 
     eventPlayer.skill_countJumps = 1
 
 /* Remove this rule? */
-rule "Checking | Triple jump":
+rule "Mechanics | Triple jump":
     @Event eachPlayer
     @Condition eventPlayer.skill_countJumps == 1
     # actually just checks if you been in the air for at least 0.1 seconds
     wait(0.1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.skill_countJumps = 2
 
-rule "Checking | Player on the wall":
+rule "Mechanics | Player on the wall":
     @Event eachPlayer
     #This rule is also linked to the determination of wall climbing, please do not close/delete
     @Condition eventPlayer.isOnWall()
@@ -93,7 +93,7 @@ rule "Checking | Player on the wall":
     eventPlayer.skill_countJumps = 2
     eventPlayer.skill_usedClimb = true
 
-rule "Checking | Using Emote":
+rule "Mechanics | Using Emote":
     @Event eachPlayer
     @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.isCommunicatingEmote() == true
@@ -104,7 +104,7 @@ rule "Checking | Using Emote":
         smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
         checkpointFailReset()
 
-rule "Checking | Bhop":
+rule "Mechanics | Bhop":
     @Event eachPlayer
     @Condition eventPlayer.skill_usedBhop == false
     @Condition eventPlayer.isJumping()
@@ -112,7 +112,7 @@ rule "Checking | Bhop":
     if eventPlayer.skill_countJumps > 1:
         smallMessage(eventPlayer,"   小跳已用" checkCN "   Bhop")
 
-rule "Checking | Bhop count for stand ban":
+rule "Mechanics | Bhop count for stand ban":
     @Event eachPlayer
     @Condition eventPlayer.isJumping()
     @Condition eventPlayer.ban_standcreate
@@ -122,7 +122,7 @@ rule "Checking | Bhop count for stand ban":
         checkpointFailReset()
         return
 
-rule "Checking | Create Bhop":
+rule "Mechanics | Create Bhop":
     # Credit: Githuboy#5249
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
@@ -146,7 +146,7 @@ rule "Checking | Create Bhop":
     eventPlayer.skill_countCreates++
     smallMessage(eventPlayer, "   success!" checkCN "   Bhop has been created!")    
 
-rule "Checking | Ground Reset":
+rule "Mechanics | Ground Reset":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround()
     eventPlayer.skill_countJumps = null
@@ -160,13 +160,13 @@ rule "Checking | Ground Reset":
         goto RULE_START
     #eventPlayer.skill_usedBhop = true
 
-rule "Checking | Bhop Reset":
+rule "Mechanics | Bhop Reset":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     eventPlayer.skill_usedBhop = false
 
-rule "Checking | Double Jump":
+rule "Mechanics | Double Jump":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.isAlive()
@@ -187,7 +187,7 @@ rule "Checking | Double Jump":
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.skill_usedDouble, Math.INFINITY)
         if not RULE_CONDITION: return
 
-rule "HUD | Multiclimb Counter":
+rule "Mechanics | Multiclimb":
     @Event eachPlayer
     @Condition eventPlayer.isOnWall()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
@@ -207,7 +207,7 @@ rule "HUD | Multiclimb Counter":
 rule "<tx0C00000000001344> Mechanics | Bans <tx0C00000000001344>":
     @Delimiter
 
-rule "Ban | Wallclimb - Indicator ":
+rule "Mechanics | Ban Wallclimb - Message":
     # Credit: TITANXPASCAL#5554
     @Event eachPlayer
     @Condition eventPlayer.ban_climb
@@ -217,15 +217,7 @@ rule "Ban | Wallclimb - Indicator ":
     #eventPlayer.setStatusEffect(null,Status.BURNING, 0.1)
     smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
 
-/*rule "Ban | Emote Savehop":
-    @Event eachPlayer
-    @Condition eventPlayer.ban_emote
-    @Condition eventPlayer.toggle_invincible == false
-    @Condition eventPlayer.isCommunicatingEmote()
-    smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
-    checkpointFailReset()*/
-
-rule "Ban | Save Double - 封禁二段跳":
+rule "Mechanics | Ban Save Double - 封禁二段跳":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.ban_savedouble
