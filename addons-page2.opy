@@ -167,7 +167,7 @@ rule "Stall enhancer - 增强系統跳的判定":
 
     wait(0.25, Wait.ABORT_WHEN_FALSE)
     eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
-    waitUntil(eventPlayer.isMoving() == false, 1)
+    waitUntil(not eventPlayer.isMoving(), 1)
     eventPlayer.stopForcingPosition()
     eventPlayer.setMoveSpeed(0)
     eventPlayer.setGravity(0)

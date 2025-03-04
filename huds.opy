@@ -143,11 +143,11 @@ rule "Huds: Global/Localplayer":
         hudText(localPlayer.toggle_guide,
             null,
             (
-            "{0} ――  有可用提示―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.checkpoint_current in HintCp and localPlayer.toggle_hints == false else
+            "{0} ――  有可用提示―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.checkpoint_current in HintCp and not localPlayer.toggle_hints else
             "― ― ― ― ― 提示 ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)]) if localPlayer.checkpoint_current in HintCp else
             "(当前关卡无可用提示)"
             ) checkCN
-            "{0} ―― hint available ―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.checkpoint_current in HintCp and localPlayer.toggle_hints == false else
+            "{0} ―― hint available ―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.checkpoint_current in HintCp and not localPlayer.toggle_hints else
             #" ――――――― \n {} \n ――――――― ".format(HintText[HintCp.index(localPlayer.checkpoint_current)]) if localPlayer.checkpoint_current in HintCp else   # and true is implied from last if
             "― ― ― ― ― Hint ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)]) if localPlayer.checkpoint_current in HintCp else   # and true is implied from last if
             "(no hint on this level)"
@@ -166,7 +166,7 @@ rule "Huds: Global/Localplayer":
             ,
             HudPosition.RIGHT, HO.com_hints,
             Color.BLUE,
-            Color.ORANGE if localPlayer.checkpoint_current in HintCp and localPlayer.toggle_hints == false else
+            Color.ORANGE if localPlayer.checkpoint_current in HintCp and not localPlayer.toggle_hints else
             Color.GREEN if localPlayer.checkpoint_current in HintCp else
             Color.GRAY,
             evalOnce(ColorConfig[customize.command_normal]) if localPlayer.checkpoint_current in HintCp else Color.GRAY,
