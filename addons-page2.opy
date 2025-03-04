@@ -81,15 +81,13 @@ rule "Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
 
 rule "Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
     @Disabled
-    @Delimiter
-    @Event eachPlayer
-    @Condition eventPlayer.hasSpawned()
+    @Event playerJoined
 
     # "your nickname" your friends ingame name
     # "display title" fill in the custom title
     # 修改字符串 "your nickname <-------" 为好友名字 区分大小写
     # 修改字符串 "display title" 为好友头顶 显示的称号
-
+    waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
     if "your nickname <-------" == "{0}".format(eventPlayer):
         bigMessage(localPlayer, "Message to the whole room")
         createInWorldText(localPlayer, "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
@@ -99,11 +97,9 @@ rule "Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
     if "your nickname <-------" == "{0}".format(eventPlayer):
         bigMessage(localPlayer, "Message to the whole room")
         createInWorldText(localPlayer, "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-
 
 rule "Display World Record - 展示世界纪录 <---- EDIT ME / 在此处编辑":
     @Disabled
-    @Delimiter
     # type your entry in the textfield that says "name and time here"
     # 在文本框 中输入“名称和时间”
     hudText(localPlayer, null," \n{0} world record {0}".format(iconString(Icon.FIRE)),"name and time here", HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)

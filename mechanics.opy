@@ -123,7 +123,7 @@ rule "Checking | Bhop count for stand ban":
     @Condition eventPlayer.isJumping()
     @Condition eventPlayer.ban_standcreate
     eventPlayer.skill_countBhops++
-    if eventPlayer.skill_countBhops > 1 and eventPlayer.toggle_invincible == false:   
+    if eventPlayer.skill_countBhops > 1 and not eventPlayer.toggle_invincible:   
         smallMessage(eventPlayer, "   站卡 ♠ 已禁用!" checkCN "   Stand createBhop ♠ is banned!")
         checkpointFailReset()
         return
@@ -133,8 +133,6 @@ rule "Checking | Create Bhop":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isCrouching()
-    #@Condition eventPlayer.isOnGround() == false
-    #@Condition eventPlayer.isOnWall() == false
     @Condition eventPlayer.isInAir()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     @Condition eventPlayer.isJumping() == false
@@ -143,7 +141,7 @@ rule "Checking | Create Bhop":
     if eventPlayer.lockState: # prevent restart from giving messsage, but stil allow it to become green
         return
 
-    if eventPlayer.ban_create and eventPlayer.toggle_invincible == false:
+    if eventPlayer.ban_create and not eventPlayer.toggle_invincible:
         smallMessage(eventPlayer, "   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!")
         checkpointFailReset()
         return
@@ -167,6 +165,12 @@ rule "Checking | Ground Reset":
     if (eventPlayer.skill_countJumps or eventPlayer.skill_usedClimb) and eventPlayer.isOnGround():
         goto RULE_START
     #eventPlayer.skill_usedBhop = true
+
+rule "Checking | Bhop Reset":
+    @Event eachPlayer
+    @Condition eventPlayer.isOnGround()
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
+    eventPlayer.skill_usedBhop = false
 
 rule "Checking | Double Jump":
     @Event eachPlayer
@@ -205,20 +209,7 @@ rule "HUD | Multiclimb Counter":
             checkpointFailReset() 
         else:
             eventPlayer.skill_countMulti += 1
-#$$ BhopHUDColor refactor it into other rules?
 
-rule "HUD | Bhop Indicator | Unused | Green":
-    @Event eachPlayer
-    @Condition eventPlayer.isOnGround()
-    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
-    eventPlayer.skill_usedBhop = false
-    #eventPlayer.BhopHUDColor = ColorConfig[customize.bhopclimb_available]
-/*
-rule "HUD | Bhop Indicator | Used | Red":
-    @Event eachPlayer
-    @Condition eventPlayer.isJumping()
-    eventPlayer.BhopHUDColor = ColorConfig[customize.bhopclimb_used]
-*/
 rule "<tx0C00000000001344> Mechanics | Bans <tx0C00000000001344>":
     @Delimiter
 
