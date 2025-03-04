@@ -71,13 +71,6 @@ rule "Checking | Jump":
     @Condition eventPlayer.skill_countJumps != 2
     eventPlayer.skill_countJumps += 1
 
-rule "Checking | Bhop in the air":
-    @Event eachPlayer
-    @Condition eventPlayer.skill_countJumps == null
-    @Condition eventPlayer.isInAir() 
-    @Condition eventPlayer.isHoldingButton(Button.JUMP) == false #?????? why wasnt this as false
-    eventPlayer.skill_usedBhop = false
-
 rule "Checking | In the air":
     @Event eachPlayer
     @Condition eventPlayer.skill_countJumps == null
@@ -116,7 +109,8 @@ rule "Checking | Bhop":
     @Condition eventPlayer.skill_usedBhop == false
     @Condition eventPlayer.isJumping()
     eventPlayer.skill_usedBhop = true
-    smallMessage(eventPlayer,"   小跳已用" checkCN "   Bhop")
+    if eventPlayer.skill_countJumps > 1:
+        smallMessage(eventPlayer,"   小跳已用" checkCN "   Bhop")
 
 rule "Checking | Bhop count for stand ban":
     @Event eachPlayer
