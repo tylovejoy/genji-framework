@@ -420,6 +420,8 @@ rule "Match time":
 
     bigMessage(true[0], "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time expired, restarting")
     wait(5)
+    #Prevent crash during POTG and closing lobby
+    getAllPlayers().lockState = true
     declarePlayerVictory(hostPlayer)
     declareTeamVictory(hostPlayer.getTeam())
 
