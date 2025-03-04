@@ -58,9 +58,8 @@ rule "Command | Preview Orbs & Portals (Hold Primary)": #$$ various
 
     if len(BouncePadCheckpoints) > 0:
         eventPlayer.preview_array1.append([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.checkpoint_current])
-        eventPlayer.preview_array2 = [-2] # first entry is checkpoint itself, -1 would overlap with -1 in some orbs
-        eventPlayer.preview_array2.append([i for _, i in BouncePadCheckpoints])
-        eventPlayer.preview_array2 = [i for i in eventPlayer.preview_array2 if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current or i == -2]
+        # first entry is checkpoint itself, -1 would overlap with -1 in some orbs
+        eventPlayer.preview_array2 = [i for i in [i for _, i in BouncePadCheckpoints].concat(-2) if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current or i == -2]
 
     if len(CustomPortalStart) > 0:
         #eventPlayer.preview_array1.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.checkpoint_current] )
@@ -73,8 +72,8 @@ rule "Command | Preview Orbs & Portals (Hold Primary)": #$$ various
     eventPlayer.setMoveSpeed(0)
     eventPlayer.preview_i = 0
     eventPlayer.startCamera(
-        eventPlayer.preview_array1[eventPlayer.preview_i] - (3.5 - 2.5 * eventPlayer.getThrottle().z) * eventPlayer.getFacingDirection(),
-        eventPlayer.preview_array1[eventPlayer.preview_i], 15)
+        eventPlayer.preview_array1[eventPlayer.preview_i] + Vector.UP - (3.5 - 3 * eventPlayer.getThrottle().z) * eventPlayer.getFacingDirection(),
+        eventPlayer.preview_array1[eventPlayer.preview_i] + Vector.UP, 15)
     eventPlayer.setPrimaryFireEnabled(false)
     eventPlayer.setSecondaryFireEnabled(false)
     eventPlayer.disallowButton(Button.ABILITY_1)
