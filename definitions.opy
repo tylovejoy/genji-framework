@@ -318,12 +318,11 @@ playervar editor_temp
 playervar comp_done                          # bool                      --- out of atemps or time?
 playervar comp_countAttempts                      # int                       --- amound of attemps remaining
 playervar comp_instructionHud
+playervar addon_ledgeDash
+playervar addon_bounceId
 
 #playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
 #playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
-
-playervar addon_ledgeDash
-playervar addon_bounceId
 ######################################## Subroutines ##########################
 #subroutine KillBall
 #subroutine PinBall
