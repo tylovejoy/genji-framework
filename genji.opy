@@ -24,7 +24,7 @@ def UpdateCache():
     eventPlayer.cache_bounceLocks = [_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
     eventPlayer.cache_bounceMaxLocks = len([i for i in eventPlayer.cache_bounceLocks if i])
     eventPlayer.cache_killPosition = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_killPosition = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.checkpoint_current]
+    eventPlayer.cache_killRadii = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.checkpoint_current]
     eventPlayer.cache_portalStart = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] == Math.INFINITY]
     eventPlayer.cache_portalEnd = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] == Math.INFINITY]
     eventPlayer.checkpoint_notLast = (eventPlayer.checkpoint_current < len(CheckpointPositions) - 1 and len(CheckpointPositions) > 1)
@@ -596,7 +596,7 @@ rule "Kill Orb | Activate":
     @Condition eventPlayer.cache_killPosition != []
     @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.checkpoint_notLast
-    @Condition (any([distance(i, eventPlayer) <= eventPlayer.cache_killPosition[eventPlayer.cache_killPosition.index(i)] for i in eventPlayer.cache_killPosition]))
+    @Condition (any([distance(i, eventPlayer) <= eventPlayer.cache_killRadii[eventPlayer.cache_killPosition.index(i)] for i in eventPlayer.cache_killPosition]))
     checkpointFailReset()
 
 rule "Bounce Ball / Orb | Activate":
