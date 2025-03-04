@@ -19,19 +19,19 @@ rule "Checking | Dash combined rule":
     @Condition eventPlayer.isUsingAbility1()
     async(CheckDash(), AsyncBehavior.RESTART)
 
-
 def CheckUlt(): # checks if ult should be turned on
     if eventPlayer.lockState:
         eventPlayer.setUltCharge(0) # for dash start etc you can be away from cp so the keep charge triggers
     
     eventPlayer.disallowButton(Button.ULTIMATE) # make sure the button cant be pressed until the entire rule ends even if it restarts
-    if eventPlayer.ult_cd_global > 0: # global cooldown construction that works even when rule is reset
-        waitUntil(eventPlayer.ult_cd_global == 0, 1)
-        wait()
+    #if eventPlayer.ult_cd_global > 0: # global cooldown construction that works even when rule is reset
+    if eventPlayer.skill_ultCd > getTotalTimeElapsed():
+        #waitUntil(eventPlayer.ult_cd_global == 0, 1)
+        wait(eventPlayer.skill_ultCd - getTotalTimeElapsed())
     else:
-        eventPlayer.ult_cd_global = 1 # this number doesnt matter because its a duration chase
-        #$$ ult_cd_global Total Time elapsed instead
-        chase(eventPlayer.ult_cd_global, 0, duration=0.36, ChaseReeval.NONE) # duration = the cooldown
+        #eventPlayer.ult_cd_global = 1 # this number doesnt matter because its a duration chase
+        #chase(eventPlayer.ult_cd_global, 0, duration=0.36, ChaseReeval.NONE) # duration = the cooldown
+        eventPlayer.skill_ultCd = getTotalTimeElapsed() + 0.36
 
     if eventPlayer.isUsingUltimate():
         waitUntil(not eventPlayer.isUsingUltimate(), 2)

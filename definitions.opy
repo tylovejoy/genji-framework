@@ -267,6 +267,7 @@ playervar skill_countMulti                   # int                       --- cli
 playervar skill_usedClimb                     # bool                      --- turned into bool
 playervar skill_usedBhop                          # bool                      --- turned into bool
 playervar skill_usedDouble                        # bool
+playervar skill_ultCd
 
 playervar banString                         # str                       --- displayed bans
 #playervar ban_triple
@@ -318,7 +319,7 @@ playervar comp_done                          # bool                      --- out
 playervar comp_countAttempts                      # int                       --- amound of attemps remaining
 playervar comp_instructionHud
 
-playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
+#playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
 #playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
 
 playervar addon_ledgeDash
