@@ -80,8 +80,8 @@ rule "multi purpose hud":
         getNumberOfEntityIds(),
         localPlayer.checkpoint_notLast,
         EditorMoveItem,
-        localPlayer.bounceTouched,
-        localPlayer.bounceLastTouched
+        localPlayer.cache_bounceTouched,
+        localPlayer.cache_bounceLastTouched
         )
         , HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
@@ -226,7 +226,7 @@ rule "leaderboard test ai":
     eventPlayer.checkpoint_current = len(CheckpointPositions) - 2
     checkpointFailReset()
     wait(1)
-    eventPlayer.LockCollected = eventPlayer.BouncePosition_Cache
+    eventPlayer.cache_collectedLocks = eventPlayer.cache_bouncePosition
     eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current+1]+ vect(0,3,0)) # teleport not needed
 
 

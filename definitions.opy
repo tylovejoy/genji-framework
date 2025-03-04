@@ -292,21 +292,21 @@ playervar ban_savedouble
 
 playervar editor_temp
 
-playervar LockCollected                     # number                    --- amount collected lock this cp
-playervar bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
-playervar bounceLastTouched
-playervar PortalStart_Cache
-playervar PortalEnd_cache
-playervar BounceLockMax_Cache
-playervar KillPosition_Cache
-playervar KillRadii_Cache
-playervar BouncePosition_Cache
-playervar BounceStrength_Cache
-playervar BounceUlt_Cache
-playervar BounceDash_Cache
-playervar BounceLock_Cache
-playervar BounceIndex_Cache
-playervar KillIndex_Cache
+playervar cache_collectedLocks                     # number                    --- amount collected lock this cp
+playervar cache_bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
+playervar cache_bounceLastTouched
+playervar cache_portalStart
+playervar cache_portalEnd
+playervar cache_bounceMaxLocks
+playervar cache_killPosition
+playervar cache_killRadii
+playervar cache_bouncePosition
+playervar cache_bounceStrength
+playervar cache_bounceUlt
+playervar cache_bounceDash
+playervar cache_bounceLocks
+playervar editor_bounceIndex
+playervar editor_killIndex
 
 playervar comp_done                          # bool                      --- out of atemps or time?
 playervar comp_countAttempts                      # int                       --- amound of attemps remaining
@@ -314,8 +314,9 @@ playervar comp_instructionHud
 
 playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
 playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
-playervar HUDInputs
-playervar finishfxcache                     # color                     --- color of fx after finish the map
+
+playervar cache_inputs
+playervar cache_rainbow                     # color                     --- color of fx after finish the map
 
 playervar PreviewsArray2
 playervar PreviewsArray                     # array                     --- store preview positions

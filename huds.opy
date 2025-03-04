@@ -406,7 +406,7 @@ def EffectsCreate():
     if BouncePositions != []:
         for TempIterator1 in range(0, len(BouncePositions)):
             createEffect(
-                [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected],
+                [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.cache_collectedLocks],
                 Effect.ORB,
                 ColorConfig[customize.orb_lock] if BounceToggleLock[TempIterator1] else ColorConfig[customize.orb_normal] ,
                 BouncePositions[evalOnce(TempIterator1)],
@@ -418,7 +418,7 @@ def EffectsCreate():
     createEffect( # portal preview
         localPlayer
             if
-            localPlayer.PreviewsI >= len(localPlayer.BouncePosition_Cache) + 1 and
+            localPlayer.PreviewsI >= len(localPlayer.cache_bouncePosition) + 1 and
             localPlayer.PreviewsI > 0 and
             localPlayer.PreviewsArray2[localPlayer.PreviewsI][0] == 1
         else null
@@ -457,16 +457,16 @@ rule "Huds: each player":
     hudText(
         eventPlayer if not eventPlayer.toggle_leaderboard else null,
         " {0} ({2}/{3})\n―――――――――――\n {1}\n".format(
-            ("检查点" if eventPlayer.PreviewsI == 0 else "弹球" if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1  else "自定义传送门") checkCN
-            "checkpoint" if eventPlayer.PreviewsI == 0 else "orb" if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1  else "portal",
+            ("检查点" if eventPlayer.PreviewsI == 0 else "弹球" if eventPlayer.PreviewsI < len(eventPlayer.cache_bouncePosition) + 1  else "自定义传送门") checkCN
+            "checkpoint" if eventPlayer.PreviewsI == 0 else "orb" if eventPlayer.PreviewsI < len(eventPlayer.cache_bouncePosition) + 1  else "portal",
             "{} {} {} {}".format(
                 abilityIconString(Hero.GENJI, Button.ULTIMATE) if BounceToggleUlt[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else [],
                 abilityIconString(Hero.GENJI, Button.ABILITY_1) if BounceToggleDash[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else [],
                 iconString(Icon.WARNING) if BounceToggleLock[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else [],
                 iconString(Icon.ARROW_UP) if BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] > 0 else
                 iconString(Icon.ARROW_DOWN) if BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] < 0 else []
-            #) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else [], # [0:cp, 1-x:bounce, x-y:portal]
-            ) if eventPlayer.PreviewsI < len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else
+            #) if eventPlayer.PreviewsI < len(eventPlayer.cache_bouncePosition) + 1 and eventPlayer.PreviewsI > 0 else [], # [0:cp, 1-x:bounce, x-y:portal]
+            ) if eventPlayer.PreviewsI < len(eventPlayer.cache_bouncePosition) + 1 and eventPlayer.PreviewsI > 0 else
 
             (
                 ("传送门 {} 入口 ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
@@ -479,7 +479,7 @@ rule "Huds: each player":
                 "portal {} destination ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
 
             )
-            if eventPlayer.PreviewsI >= len(eventPlayer.BouncePosition_Cache) + 1 and eventPlayer.PreviewsI > 0 else [],
+            if eventPlayer.PreviewsI >= len(eventPlayer.cache_bouncePosition) + 1 and eventPlayer.PreviewsI > 0 else [],
 
 
             eventPlayer.PreviewsI + 1,
@@ -487,11 +487,11 @@ rule "Huds: each player":
         ) if eventPlayer.PreviewsArray != null else []
         ,
         "{2} {0} / {1}".format(
-            len(eventPlayer.LockCollected),
-            eventPlayer.BounceLockMax_Cache,
+            len(eventPlayer.cache_collectedLocks),
+            eventPlayer.cache_bounceMaxLocks,
             "{0}球".format(ColorConfig[customize.orb_lock]) checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
             #"收集球" checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
-        ) if eventPlayer.BounceLockMax_Cache and eventPlayer.PreviewsArray == null else []
+        ) if eventPlayer.cache_bounceMaxLocks and eventPlayer.PreviewsArray == null else []
         ,
         "{3}{2}{4} {0} / {1}".format(
             eventPlayer.checkpoint_current,
@@ -504,9 +504,9 @@ rule "Huds: each player":
     )
 
     hudSubtext(eventPlayer,"{0}{1}{2}\n{3}{4}{5}".format(
-        "■" if eventPlayer.HUDInputs.x else "□",
+        "■" if eventPlayer.cache_inputs.x else "□",
         "▲" if eventPlayer.getThrottle().z > null else "△",
-        "●" if eventPlayer.HUDInputs.y else "○",
+        "●" if eventPlayer.cache_inputs.y else "○",
         "◀" if eventPlayer.getThrottle().x > null else "◁",
         "▼" if eventPlayer.getThrottle().z < null else "∇",
         "▶" if eventPlayer.getThrottle().x < null else "▷"),
@@ -527,7 +527,7 @@ rule "Huds: each player":
     hudHeader(eventPlayer,
         ( # cn version text updates to say the status, unlike en version
             "{0}{1}".format(
-                "小跳未用" if not eventPlayer.skill_usedBhop or eventPlayer.BhopHUDColor == evalOnce(ColorConfig[customize.bhopclimb_available]) else "小跳已用",
+                "小跳未用" if not eventPlayer.skill_usedBhop else "小跳已用",
                 [] if eventPlayer.skill_countCreates < 1 else " ({0})".format(eventPlayer.skill_countCreates)
             )
         )
@@ -547,7 +547,7 @@ rule "Huds: each player":
         "{0} {1}".format(
             iconString(Icon.WARNING),
             "先收集橙球" checkCN "collect orbs first"
-        ) if eventPlayer.BounceLockMax_Cache and len(eventPlayer.LockCollected) < eventPlayer.BounceLockMax_Cache else
+        ) if eventPlayer.cache_bounceMaxLocks and len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks else
         "到这里来" checkCN "come here",
         CheckpointPositions[eventPlayer.checkpoint_current + 1],
         1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING,  ColorConfig[customize.cometext], SpecVisibility.DEFAULT

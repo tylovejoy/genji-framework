@@ -21,12 +21,12 @@ rule "Pre-set control map portal | function | toggled via workshop":
 
 rule "Custom portals | function":
     @Event eachPlayer
-    @Condition len(eventPlayer.PortalStart_Cache) > 0
-    @Condition [i for i in eventPlayer.PortalStart_Cache if distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance]
-    #@Condition any([distance(eventPlayer.getPosition() + 0.2 * Vector.UP, ent) < portalDistance for ent in eventPlayer.PortalStart_Cache]) == true
+    @Condition len(eventPlayer.cache_portalStart) > 0
+    @Condition [i for i in eventPlayer.cache_portalStart if distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance]
+    #@Condition any([distance(eventPlayer.getPosition() + 0.2 * Vector.UP, ent) < portalDistance for ent in eventPlayer.cache_portalStart]) == true
 
     eventPlayer.teleport(
-        eventPlayer.PortalEnd_cache[eventPlayer.PortalStart_Cache.index(sorted([i for i in eventPlayer.PortalStart_Cache],lambda x: distance(eventPlayer,x))[0])
+        eventPlayer.cache_portalEnd[eventPlayer.cache_portalStart.index(sorted([i for i in eventPlayer.cache_portalStart],lambda x: distance(eventPlayer,x))[0])
         ]
     )
     wait(0.4)
@@ -212,10 +212,10 @@ rule "Little destructo - fence breaker":
 
     MapVectorArray = null
 
-rule "Poll jump and crouch inputs for spectators":
+rule "Cache jump & crouch inputs for spectators":
     @Event playerJoined
     wait()
-    eventPlayer.HUDInputs = vect(eventPlayer.isHoldingButton(Button.JUMP),eventPlayer.isHoldingButton(Button.CROUCH),false)
+    eventPlayer.cache_inputs = vect(eventPlayer.isHoldingButton(Button.JUMP), eventPlayer.isHoldingButton(Button.CROUCH), false)
     goto RULE_START
 
 def CheckMap():

@@ -8,7 +8,7 @@ def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place 
     BounceEffects = []
     for TempIterator1 in range(0, len(BouncePadCheckpoints)):
         createEffect(
-            [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.LockCollected],
+            [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.cache_collectedLocks],
             Effect.ORB,
             ColorConfig[customize.orb_lock] if BounceToggleLock[evalOnce(TempIterator1)] else ColorConfig[customize.orb_normal],
             BouncePositions[evalOnce(TempIterator1)],
@@ -483,7 +483,7 @@ rule "Editor | Hud and Effects":
         HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(hostPlayer if hostPlayer.toggle_guide and (hostPlayer.editor_modeSelect == 0 or hostPlayer.editor_modeSelect == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.editor_modeSelect == 0 or hostPlayer.editor_modeSelect == 2 and hostPlayer.toggle_guide and len(hostPlayer.BounceIndex_Cache) > 0 else null,
+    hudSubtext(hostPlayer if hostPlayer.toggle_guide and (hostPlayer.editor_modeSelect == 0 or hostPlayer.editor_modeSelect == 2 and len(hostPlayer.editor_bounceIndex) > 0) else null, #if hostPlayer.editor_modeSelect == 0 or hostPlayer.editor_modeSelect == 2 and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) > 0 else null,
         "{0} + {1} | {4} {3} | {2}".format(
             buttonString(Button.ULTIMATE),
             buttonString(Button.PRIMARY_FIRE),
@@ -508,7 +508,7 @@ rule "Editor | Hud and Effects":
         , HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(hostPlayer if hostPlayer.toggle_guide and (hostPlayer.editor_modeSelect == 0 or hostPlayer.editor_modeSelect == 2 and len(hostPlayer.BounceIndex_Cache) > 0) else null, #if hostPlayer.editor_modeSelect == 0 or hostPlayer.editor_modeSelect == 2 and hostPlayer.toggle_guide and len(hostPlayer.BounceIndex_Cache) > 0 else null,
+    hudSubtext(hostPlayer if hostPlayer.toggle_guide and (hostPlayer.editor_modeSelect == 0 or hostPlayer.editor_modeSelect == 2 and len(hostPlayer.editor_bounceIndex) > 0) else null, #if hostPlayer.editor_modeSelect == 0 or hostPlayer.editor_modeSelect == 2 and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) > 0 else null,
         "{0} + {1} | {4} {3} | {2}".format(
             buttonString(Button.ULTIMATE),
             buttonString(Button.SECONDARY_FIRE),
@@ -534,7 +534,7 @@ rule "Editor | Hud and Effects":
         , HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
-    hudSubtext(hostPlayer if hostPlayer.editor_modeSelect == 2 and hostPlayer.toggle_guide and len(hostPlayer.BounceIndex_Cache) > 0 else null,
+    hudSubtext(hostPlayer if hostPlayer.editor_modeSelect == 2 and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) > 0 else null,
         "{0} + {1} |  收集球(进点前必须集齐) {3} | {2}\n".format(
             buttonString(Button.ULTIMATE),
             buttonString(Button.ABILITY_2),
@@ -569,12 +569,12 @@ rule "Editor | Hud and Effects":
             "\n 选中的击杀球 \n 矢量: {1} \n 半径: {0} \n".format(
                 KillBallRadii[EditSelected],
                 KillBallPositions[EditSelected])
-            if hostPlayer.editor_modeSelect == 1 and len(hostPlayer.KillIndex_Cache) > 0 else
+            if hostPlayer.editor_modeSelect == 1 and len(hostPlayer.editor_killIndex) > 0 else
             "\n 选中的弹球 \n 矢量: {1} \n 弹力: {0} \n 序号: {2} \n".format(
                 BounceStrength[EditSelected],
                 BouncePositions[EditSelected],
                 EditSelected)
-            if hostPlayer.editor_modeSelect == 2 and len(hostPlayer.BounceIndex_Cache) > 0  else
+            if hostPlayer.editor_modeSelect == 2 and len(hostPlayer.editor_bounceIndex) > 0  else
             "\n 封禁(单关)\n"
             "――――――――――――\n"
             " {} 蹭留\n"
@@ -614,12 +614,12 @@ rule "Editor | Hud and Effects":
             "\n Selected Kill Orb \n Vector: {1} \n radius: {0} \n".format(
                 KillBallRadii[EditSelected],
                 KillBallPositions[EditSelected])
-            if hostPlayer.editor_modeSelect == 1 and len(hostPlayer.KillIndex_Cache) > 0 else
+            if hostPlayer.editor_modeSelect == 1 and len(hostPlayer.editor_killIndex) > 0 else
             "\n Selected Bounce Orb \n Vector: {1} \n strength: {0} \n ID: {2} \n".format(
                 BounceStrength[EditSelected],
                 BouncePositions[EditSelected],
                 EditSelected)
-            if hostPlayer.editor_modeSelect == 2 and len(hostPlayer.BounceIndex_Cache) > 0  else
+            if hostPlayer.editor_modeSelect == 2 and len(hostPlayer.editor_bounceIndex) > 0  else
             "\n gameplay bans\n"
             "――――――――――――\n"
             " {} multi-climb\n"
@@ -842,7 +842,7 @@ rule "Editor | create cp/orb":
         editupdateselectedids()
         EditorSelectLast()
         createEffect(
-            [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(EditSelected)] and not BouncePositions[evalOnce(EditSelected)]  in x.LockCollected],
+            [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(EditSelected)] and not BouncePositions[evalOnce(EditSelected)]  in x.cache_collectedLocks],
             Effect.ORB, ColorConfig[customize.orb_lock] if BounceToggleLock[evalOnce(EditSelected)] else ColorConfig[customize.orb_normal],
             BouncePositions[evalOnce(EditSelected)], 1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
@@ -1041,9 +1041,9 @@ rule "Editor | orb radi/strength":
 
     eventPlayer.editor_lock = true
     while eventPlayer.isHoldingButton(Button.ABILITY_2) and (eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isHoldingButton(Button.CROUCH)) :
-        if eventPlayer.editor_modeSelect == 2 and len(eventPlayer.BounceIndex_Cache) > 0:
+        if eventPlayer.editor_modeSelect == 2 and len(eventPlayer.editor_bounceIndex) > 0:
             BounceStrength[EditSelected] += 0.1 if eventPlayer.isHoldingButton(Button.JUMP) else -0.1
-        elif eventPlayer.editor_modeSelect == 1 and len(eventPlayer.KillIndex_Cache) > 0:
+        elif eventPlayer.editor_modeSelect == 1 and len(eventPlayer.editor_killIndex) > 0:
             KillBallRadii[EditSelected] +=  0.1 if eventPlayer.isHoldingButton(Button.JUMP) else -0.1
         wait(0.1)
     UpdateCache()

@@ -26,10 +26,11 @@ def CheckUlt(): # checks if ult should be turned on
     
     eventPlayer.disallowButton(Button.ULTIMATE) # make sure the button cant be pressed until the entire rule ends even if it restarts
     if eventPlayer.ult_cd_global > 0: # global cooldown construction that works even when rule is reset
-        waitUntil(eventPlayer.ult_cd_global == 0, 4)
+        waitUntil(eventPlayer.ult_cd_global == 0, 1)
         wait()
     else:
         eventPlayer.ult_cd_global = 1 # this number doesnt matter because its a duration chase
+        #$$ ult_cd_global Total Time elapsed instead
         chase(eventPlayer.ult_cd_global, 0, duration=0.36, ChaseReeval.NONE) # duration = the cooldown
 
     if eventPlayer.isUsingUltimate():
@@ -204,7 +205,7 @@ rule "HUD | Multiclimb Counter":
             checkpointFailReset() 
         else:
             eventPlayer.skill_countMulti += 1
-
+#$$ BhopHUDColor refactor it into other rules?
 rule "HUD | Bhop Indicator | Unused | Green":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround()

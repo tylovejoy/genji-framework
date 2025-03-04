@@ -64,8 +64,8 @@ rule "Command | Preview Orbs & Portals (Hold Primary)":
 
     if len(CustomPortalStart) > 0:
         #eventPlayer.PreviewsArray.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.checkpoint_current] )
-        for eventPlayer.PreviewsI in range(len(eventPlayer.PortalStart_Cache)):
-            eventPlayer.PreviewsArray.append([eventPlayer.PortalStart_Cache[eventPlayer.PreviewsI ],eventPlayer.PortalEnd_cache[eventPlayer.PreviewsI ]])
+        for eventPlayer.PreviewsI in range(len(eventPlayer.cache_portalStart)):
+            eventPlayer.PreviewsArray.append([eventPlayer.cache_portalStart[eventPlayer.PreviewsI ],eventPlayer.cache_portalEnd[eventPlayer.PreviewsI ]])
             eventPlayer.PreviewsArray2.append([[0,eventPlayer.PreviewsI],[1,eventPlayer.PreviewsI]])
             wait()
 
@@ -208,7 +208,7 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
     @Condition eventPlayer.lockState == false
 
     eventPlayer.lockState = true
-    eventPlayer.LockCollected = []
+    eventPlayer.cache_collectedLocks = []
 
     if eventPlayer.toggle_invincible:
         if eventPlayer.toggle_practice:

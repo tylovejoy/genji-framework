@@ -299,12 +299,12 @@ rule "Custom Orb Script":
     @Disabled
     @Event eachPlayer
     #don't edit this condition !!!!!!!!!!!!!!!!!
-    @Condition eventPlayer.bounceTouched > -1
+    @Condition eventPlayer.cache_bounceTouched > -1
     #Enable this rule and find the ID number of the bounce orbs via the editor display.
     #Note that the ID can change if you place or delete orbs infront of that orb.
     #Do NOT edit the next 2 actions.
     eventPlayer.BounceTrueId   = [i for _, i in BouncePadCheckpoints]
-    eventPlayer.BounceTrueId  = [ i for i in eventPlayer.BounceTrueId if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and  BouncePositions[i] == eventPlayer.BouncePosition_Cache[eventPlayer.bounceTouched]][0]
+    eventPlayer.BounceTrueId  = [ i for i in eventPlayer.BounceTrueId if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and  BouncePositions[i] == eventPlayer.cache_bouncePosition[eventPlayer.cache_bounceTouched]][0]
     #Add the desired ID numbers for the bounces in the array
     #add the script after it
     #you can use the trigger sub above this rule to reset the effects
