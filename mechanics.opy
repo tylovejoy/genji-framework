@@ -166,7 +166,7 @@ rule "Checking | Ground Reset":
     wait()
     if (eventPlayer.skill_countJumps or eventPlayer.skill_usedClimb) and eventPlayer.isOnGround():
         goto RULE_START
-    eventPlayer.skill_usedBhop = true
+    #eventPlayer.skill_usedBhop = true
 
 rule "Checking | Double Jump":
     @Event eachPlayer
@@ -206,17 +206,19 @@ rule "HUD | Multiclimb Counter":
         else:
             eventPlayer.skill_countMulti += 1
 #$$ BhopHUDColor refactor it into other rules?
+
 rule "HUD | Bhop Indicator | Unused | Green":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
-    eventPlayer.BhopHUDColor = ColorConfig[customize.bhopclimb_available]
-
+    eventPlayer.skill_usedBhop = false
+    #eventPlayer.BhopHUDColor = ColorConfig[customize.bhopclimb_available]
+/*
 rule "HUD | Bhop Indicator | Used | Red":
     @Event eachPlayer
     @Condition eventPlayer.isJumping()
     eventPlayer.BhopHUDColor = ColorConfig[customize.bhopclimb_used]
-
+*/
 rule "<tx0C00000000001344> Mechanics | Bans <tx0C00000000001344>":
     @Delimiter
 

@@ -537,7 +537,7 @@ rule "Huds: each player":
             " ({0})".format(eventPlayer.skill_countCreates)
         )
         , HudPosition.LEFT, HO.game_bhop,
-        evalOnce(ColorConfig[customize.bhopclimb_available]) if not eventPlayer.skill_usedBhop else eventPlayer.BhopHUDColor,
+        evalOnce(ColorConfig[customize.bhopclimb_available]) if not eventPlayer.skill_usedBhop else evalOnce(ColorConfig[customize.bhopclimb_used]),
         HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
