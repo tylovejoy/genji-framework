@@ -319,10 +319,10 @@ playervar comp_countAttempts                      # int                       --
 playervar comp_instructionHud
 
 playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
-playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
+#playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
 
-playervar LedgeDash
-playervar BounceTrueId
+playervar addon_ledgeDash
+playervar addon_bounceId
 ######################################## Subroutines ##########################
 #subroutine KillBall
 #subroutine PinBall

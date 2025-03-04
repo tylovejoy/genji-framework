@@ -191,7 +191,7 @@ rule "Stall enhancer - 增强系統跳的判定":
 
 # dash after ledge grab
 # stores speed and launches you after dash if you done it during climb
-# LedgeDash var 0 count - 1 eventPlayer.LedgeDash[1] 1 stored speed
+# LedgeDash var 0 count - 1 eventPlayer.addon_ledgeDash[1] 1 stored speed
 # based on code taken: wzr31 and S7DR0 and simplified
 rule "Fake Ledge Dash - 超级跳":
     @Disabled
@@ -200,29 +200,29 @@ rule "Fake Ledge Dash - 超级跳":
     #climb / ledge > hold jump > hands on the ledge > dash  > wait for launch > release jump
     #爬墙/扒 > 长按跳 > 抓住窗台 > SHIFT > 等待发射 > 释放跳跃
 
-    eventPlayer.LedgeDash[0] = 0
+    eventPlayer.addon_ledgeDash[0] = 0
     waitUntil(eventPlayer.getSpeed() >= 45, 0.4)
 
-    while eventPlayer.isUsingAbility1() and eventPlayer.LedgeDash[0] <= 12:
-        eventPlayer.LedgeDash[1] = eventPlayer.getFacingDirection()
-        eventPlayer.LedgeDash[2] = eventPlayer.getSpeed()
+    while eventPlayer.isUsingAbility1() and eventPlayer.addon_ledgeDash[0] <= 12:
+        eventPlayer.addon_ledgeDash[1] = eventPlayer.getFacingDirection()
+        eventPlayer.addon_ledgeDash[2] = eventPlayer.getSpeed()
         if eventPlayer.getSpeed() < 45: # dashed into air or object = end
             goto lbla
         else:
-            eventPlayer.LedgeDash[0] ++
-        if eventPlayer.LedgeDash[0] == 12: # stop storing, we keep this speed/direction
+            eventPlayer.addon_ledgeDash[0] ++
+        if eventPlayer.addon_ledgeDash[0] == 12: # stop storing, we keep this speed/direction
             waitUntil(eventPlayer.getSpeed() < 40, 0.4) # wait for dash to finish to execute
         wait()
 
-    if eventPlayer.LedgeDash[0] >= 5: #and eventPlayer.LedgeDash[0] <= 12: # ledge dash execute
-        eventPlayer.applyImpulse(eventPlayer.LedgeDash[1], eventPlayer.LedgeDash[2], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+    if eventPlayer.addon_ledgeDash[0] >= 5: #and eventPlayer.addon_ledgeDash[0] <= 12: # ledge dash execute
+        eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash[1], eventPlayer.addon_ledgeDash[2], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
     # above 12 - climbed to long
     # below 5 - dashed into object
 
     lbla:
-    eventPlayer.LedgeDash[0] = null
-    eventPlayer.LedgeDash[1] = null
-    eventPlayer.LedgeDash[2] = null
+    eventPlayer.addon_ledgeDash[0] = null
+    eventPlayer.addon_ledgeDash[1] = null
+    eventPlayer.addon_ledgeDash[2] = null
 
 rule "Grup up | text/effect":
     @Disabled
@@ -302,25 +302,24 @@ rule "Custom Orb Script":
     #Enable this rule and find the ID number of the bounce orbs via the editor display.
     #Note that the ID can change if you place or delete orbs infront of that orb.
     #Do NOT edit the next 2 actions.
-    eventPlayer.BounceTrueId   = [i for _, i in BouncePadCheckpoints]
-    eventPlayer.BounceTrueId  = [ i for i in eventPlayer.BounceTrueId if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and  BouncePositions[i] == eventPlayer.cache_bouncePosition[eventPlayer.cache_bounceTouched]][0]
+    eventPlayer.addon_bounceId = [i for i in [i for _, i in BouncePadCheckpoints] if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and  BouncePositions[i] == eventPlayer.cache_bouncePosition[eventPlayer.cache_bounceTouched]][0]
     #Add the desired ID numbers for the bounces in the array
     #add the script after it
     #you can use the trigger sub above this rule to reset the effects
-    if eventPlayer.BounceTrueId in [2]:
+    if eventPlayer.addon_bounceId in [2]:
         # example gravity (should be reset to 100 in trigger on fail)
         eventPlayer.setGravity(25)
         smallMessage(eventPlayer," you feel light")
         wait(2)
         eventPlayer.setGravity(100)
 
-    if eventPlayer.BounceTrueId in [2,3]:
+    if eventPlayer.addon_bounceId in [2,3]:
        # example canceling primary makes double jump recover
        eventPlayer.cancelPrimaryAction()
        eventPlayer.skill_usedDouble = null
        smallMessage(eventPlayer," double jump recovered")
 
-    if eventPlayer.BounceTrueId in [4]:
+    if eventPlayer.addon_bounceId in [4]:
         # example move speed
         eventPlayer.setMoveSpeed(250)
         smallMessage(eventPlayer," zooom")
