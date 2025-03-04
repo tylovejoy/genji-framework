@@ -736,12 +736,12 @@ rule "Editor | change mode":
             wait(0.1)
 
     wait()
-    editupdateselectedids()
+    EditUpdateSelectedIds()
     EditorSelectLast()
     wait()
     eventPlayer.editor_lock = false
 
-def editupdateselectedids():
+def EditUpdateSelectedIds():
     @Name "Editor | update selected id"
 
     if hostPlayer.editor_modeSelect == 1:
@@ -815,7 +815,7 @@ rule "Editor | create cp/orb":
         KillBallPositions.append(eventPlayer.getPosition())
         KillballCheckpoints.append(eventPlayer.checkpoint_current)
         KillBallRadii.append(5)
-        editupdateselectedids() # to create the fx properly
+        EditUpdateSelectedIds() # to create the fx properly
         EditorSelectLast()
         createEffect(
             [i for i in getAllPlayers() if i.checkpoint_current == KillballCheckpoints[evalOnce(EditSelected)]],
@@ -827,7 +827,7 @@ rule "Editor | create cp/orb":
         KillBallEffects.append(getLastCreatedEntity())
         bigMessage(localPlayer, "{1} {0}".format(eventPlayer.checkpoint_current, "新击杀球已创建! \r\n仅生效于检查点" checkCN "New Kill Orb has been created! \r\nIt's only valid for checkpoint"))
         waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)), 1)
-        #editupdateselectedids() # to arrow during the placement properly
+        #EditUpdateSelectedIds() # to arrow during the placement properly
         while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             KillBallPositions[EditSelected] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 8, null, null, false).getHitPosition()
             wait()
@@ -839,7 +839,7 @@ rule "Editor | create cp/orb":
         BounceToggleUlt.append(false)
         BounceToggleDash.append(false)
         BounceToggleLock.append(false)
-        editupdateselectedids()
+        EditUpdateSelectedIds()
         EditorSelectLast()
         createEffect(
             [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(EditSelected)] and not BouncePositions[evalOnce(EditSelected)]  in x.cache_collectedLocks],
@@ -857,7 +857,7 @@ rule "Editor | create cp/orb":
         CustomPortalStart.append(eventPlayer.getPosition())
         CustomPortalEndpoint.append(eventPlayer.getPosition()+vect(0,10,0))#$$
         CustomPortalCP.append(eventPlayer.checkpoint_current)
-        editupdateselectedids()
+        EditUpdateSelectedIds()
         EditorSelectLast()
         createEffect(
             [i for i in getAllPlayers() if i.checkpoint_current == CustomPortalCP[evalOnce(EditSelected)] or CustomPortalCP[evalOnce(EditSelected)] == Math.INFINITY],
@@ -866,7 +866,7 @@ rule "Editor | create cp/orb":
         PortalEffects.append(getLastCreatedEntity())
         EditSelected = len(CustomPortalStart) - 1
         waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)), 1)
-        #editupdateselectedids()
+        #EditUpdateSelectedIds()
         while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             CustomPortalStart[EditSelected] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 6, null, null, false).getHitPosition()
             wait()

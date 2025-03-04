@@ -95,11 +95,11 @@ rule "Huds: Global/Localplayer":
         "长按 {0} + {1} | 预览关卡".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
         checkCN
         "Hold {0} + {1} | Preview cp".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
-        ,HudPosition.RIGHT, HO.com_preview, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.PreviewsArray else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        ,HudPosition.RIGHT, HO.com_preview, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.preview_array1 else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
 
-    hudSubheader(localPlayer if localPlayer.PreviewsArray and localPlayer.toggle_guide else null,
+    hudSubheader(localPlayer if localPlayer.preview_array1 and localPlayer.toggle_guide else null,
         "移动键 ◀ ▶ | 预览其他\n移动键 ◀ ▶ | 修改间距 \n视角移动 | 调整浏览视角"
         checkCN
         "Walk ◀ ▶ | preview others\nWalk ▲ ▼ | modify zoom\nAim | change preview angle"
@@ -117,7 +117,7 @@ rule "Huds: Global/Localplayer":
     )
     HudStoreEdit.append(getLastCreatedText())
 
-    CreateLeaderBoard()
+    CreateLeaderboard()
 
     if CpHudText != null: # text per checkpoint  text per cp each
         hudText(localPlayer,
@@ -418,14 +418,14 @@ def EffectsCreate():
     createEffect( # portal preview
         localPlayer
             if
-            localPlayer.PreviewsI >= len(localPlayer.cache_bouncePosition) + 1 and
-            localPlayer.PreviewsI > 0 and
-            localPlayer.PreviewsArray2[localPlayer.PreviewsI][0] == 1
+            localPlayer.preview_i >= len(localPlayer.cache_bouncePosition) + 1 and
+            localPlayer.preview_i > 0 and
+            localPlayer.preview_array2[localPlayer.preview_i][0] == 1
         else null
         ,
         Effect.SPARKLES,
         Color.PURPLE,
-        localPlayer.PreviewsArray[localPlayer.PreviewsI],
+        localPlayer.preview_array1[localPlayer.preview_i],
         0.5, EffectReeval.VISIBILITY_POSITION_AND_RADIUS
     )
 
@@ -457,41 +457,41 @@ rule "Huds: each player":
     hudText(
         eventPlayer if not eventPlayer.toggle_leaderboard else null,
         " {0} ({2}/{3})\n―――――――――――\n {1}\n".format(
-            ("检查点" if eventPlayer.PreviewsI == 0 else "弹球" if eventPlayer.PreviewsI < len(eventPlayer.cache_bouncePosition) + 1  else "自定义传送门") checkCN
-            "checkpoint" if eventPlayer.PreviewsI == 0 else "orb" if eventPlayer.PreviewsI < len(eventPlayer.cache_bouncePosition) + 1  else "portal",
+            ("检查点" if eventPlayer.preview_i == 0 else "弹球" if eventPlayer.preview_i < len(eventPlayer.cache_bouncePosition) + 1  else "自定义传送门") checkCN
+            "checkpoint" if eventPlayer.preview_i == 0 else "orb" if eventPlayer.preview_i < len(eventPlayer.cache_bouncePosition) + 1  else "portal",
             "{} {} {} {}".format(
-                abilityIconString(Hero.GENJI, Button.ULTIMATE) if BounceToggleUlt[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else [],
-                abilityIconString(Hero.GENJI, Button.ABILITY_1) if BounceToggleDash[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else [],
-                iconString(Icon.WARNING) if BounceToggleLock[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] else [],
-                iconString(Icon.ARROW_UP) if BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] > 0 else
-                iconString(Icon.ARROW_DOWN) if BounceStrength[eventPlayer.PreviewsArray2[eventPlayer.PreviewsI]] < 0 else []
-            #) if eventPlayer.PreviewsI < len(eventPlayer.cache_bouncePosition) + 1 and eventPlayer.PreviewsI > 0 else [], # [0:cp, 1-x:bounce, x-y:portal]
-            ) if eventPlayer.PreviewsI < len(eventPlayer.cache_bouncePosition) + 1 and eventPlayer.PreviewsI > 0 else
+                abilityIconString(Hero.GENJI, Button.ULTIMATE) if BounceToggleUlt[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
+                abilityIconString(Hero.GENJI, Button.ABILITY_1) if BounceToggleDash[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
+                iconString(Icon.WARNING) if BounceToggleLock[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
+                iconString(Icon.ARROW_UP) if BounceStrength[eventPlayer.preview_array2[eventPlayer.preview_i]] > 0 else
+                iconString(Icon.ARROW_DOWN) if BounceStrength[eventPlayer.preview_array2[eventPlayer.preview_i]] < 0 else []
+            #) if eventPlayer.preview_i < len(eventPlayer.cache_bouncePosition) + 1 and eventPlayer.preview_i > 0 else [], # [0:cp, 1-x:bounce, x-y:portal]
+            ) if eventPlayer.preview_i < len(eventPlayer.cache_bouncePosition) + 1 and eventPlayer.preview_i > 0 else
 
             (
-                ("传送门 {} 入口 ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
-                if eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][0] == 0 else
-                "传送门 {} 出口 ".format( eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
+                ("传送门 {} 入口 ".format(eventPlayer.preview_array2[eventPlayer.preview_i][1])
+                if eventPlayer.preview_array2[eventPlayer.preview_i][0] == 0 else
+                "传送门 {} 出口 ".format( eventPlayer.preview_array2[eventPlayer.preview_i][1])
                 ) checkCN
 
-                "portal {} start ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
-                if eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][0] == 0 else
-                "portal {} destination ".format(eventPlayer.PreviewsArray2[eventPlayer.PreviewsI][1])
+                "portal {} start ".format(eventPlayer.preview_array2[eventPlayer.preview_i][1])
+                if eventPlayer.preview_array2[eventPlayer.preview_i][0] == 0 else
+                "portal {} destination ".format(eventPlayer.preview_array2[eventPlayer.preview_i][1])
 
             )
-            if eventPlayer.PreviewsI >= len(eventPlayer.cache_bouncePosition) + 1 and eventPlayer.PreviewsI > 0 else [],
+            if eventPlayer.preview_i >= len(eventPlayer.cache_bouncePosition) + 1 and eventPlayer.preview_i > 0 else [],
 
 
-            eventPlayer.PreviewsI + 1,
-            len(eventPlayer.PreviewsArray)
-        ) if eventPlayer.PreviewsArray != null else []
+            eventPlayer.preview_i + 1,
+            len(eventPlayer.preview_array1)
+        ) if eventPlayer.preview_array1 != null else []
         ,
         "{2} {0} / {1}".format(
             len(eventPlayer.cache_collectedLocks),
             eventPlayer.cache_bounceMaxLocks,
             "{0}球".format(ColorConfig[customize.orb_lock]) checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
             #"收集球" checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
-        ) if eventPlayer.cache_bounceMaxLocks and eventPlayer.PreviewsArray == null else []
+        ) if eventPlayer.cache_bounceMaxLocks and eventPlayer.preview_array1 == null else []
         ,
         "{3}{2}{4} {0} / {1}".format(
             eventPlayer.checkpoint_current,
@@ -499,7 +499,7 @@ rule "Huds: each player":
             "\n" if eventPlayer.banString else [],
             eventPlayer.banString if eventPlayer.banString else [],
             "关卡" checkCN "Level"
-        ) if eventPlayer.PreviewsArray == null else [],
+        ) if eventPlayer.preview_array1 == null else [],
         HudPosition.TOP, HO.game_level_orb, ColorConfig[customize.level], ColorConfig[customize.orb_lock], ColorConfig[customize.level], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
@@ -585,8 +585,9 @@ rule "Huds: each player":
 
 def UpdateTitle():
     @Name "Title"
-    if TitleData == null or CompMode or eventPlayer.toggle_practice or eventPlayer.editor_on or (not eventPlayer.checkpoint_current in TitleData[0]):
+    #$$
+    if TitleData == null or CompMode or eventPlayer.toggle_practice or eventPlayer.editor_on or not eventPlayer.checkpoint_current in TitleData[0]:
         return
-    destroyInWorldText(eventPlayer.TitleStore)
+    destroyInWorldText(eventPlayer.cache_titleHud)
     createInWorldText(localPlayer if not eventPlayer.toggle_invisible else null,TitleData[1][TitleData[0].index(eventPlayer.checkpoint_current)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.checkpoint_current)], SpecVisibility.DEFAULT)
-    eventPlayer.TitleStore = getLastCreatedText()
+    eventPlayer.cache_titleHud = getLastCreatedText()

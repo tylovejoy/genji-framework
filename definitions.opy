@@ -296,6 +296,11 @@ playervar cache_bounceDash
 playervar cache_bounceLocks
 playervar cache_inputs
 playervar cache_rainbow                     # color                     --- color of fx after finish the map
+playervar cache_titleHud                        # textid                    --- store curent  title textid
+
+playervar preview_array1                     # array                     --- store preview positions
+playervar preview_array2
+playervar preview_i                         # int                       --- preview itterator
 
 playervar editor_on                          # bool                      --- on all players, but only gets checked from host player
 playervar editor_modeSelect                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
@@ -316,21 +321,16 @@ playervar comp_instructionHud
 playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
 playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
 
-playervar PreviewsArray2
-playervar PreviewsArray                     # array                     --- store preview positions
-playervar PreviewsI                         # int                       --- preview itterator
-
-playervar TitleStore                        # textid                    --- store curent  title textid
 playervar LedgeDash
 playervar BounceTrueId
 ######################################## Subroutines ##########################
-subroutine StartGame
-#subroutine KILLBALL
-#subroutine pinball
+#subroutine KillBall
+#subroutine PinBall
 #subroutine PortalCreate
+subroutine StartGame
 subroutine EffectsCreate
-subroutine Leaderboardupdate # fishos
-subroutine CreateLeaderBoard
+subroutine LeaderboardUpdate # fishos
+subroutine CreateLeaderboard
 subroutine UpdateTitle
 subroutine DashUltGive
 subroutine CheckUlt
@@ -339,7 +339,7 @@ subroutine DeleteSave
 subroutine MakeSave
 subroutine StartPauseTimer
 subroutine StopPauseTimer
-subroutine editupdateselectedids
+subroutine EditUpdateSelectedIds
 subroutine EditorSelectLast
 subroutine TriggerOnFailSuccesReset
 subroutine CheckMap

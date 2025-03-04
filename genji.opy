@@ -83,7 +83,7 @@ def UpdateCache():
 
     if not eventPlayer.editor_on: return
 
-    editupdateselectedids()
+    EditUpdateSelectedIds()
 
     destroyEffect(eventPlayer.editor_hitboxEffect)
     eventPlayer.editor_hitboxEffect = [] #$$ Skip first append
@@ -133,14 +133,14 @@ def StopPauseTimer():
     eventPlayer.timer_pause = 0
     SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
 
-def CreateLeaderBoard():
+def CreateLeaderboard():
     @Name "SUB | Leaderboard HUD"
     # turns into global rule so it doesnt delete when player leaves
     LeaderBoardRemake = true
     wait()
     LeaderBoardRemake = null
 
-def Leaderboardupdate():
+def LeaderboardUpdate():
     @Name "SUB | Leaderboard Update"
     # [i[0] for i in var1]   list of first element of each in var 1
     # [ [name, seconds, prettytime] ]
@@ -150,18 +150,18 @@ def Leaderboardupdate():
         else: # new time better
             LeaderBoardFull.remove([i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)])
             LeaderBoardFull.append([["{0}".format(eventPlayer),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]] )
-            CreateLeaderBoard()
+            CreateLeaderboard()
     else: # you are not in list yet
         if len(LeaderBoardFull) < 20: # board has room for more
             LeaderBoardFull.append([["{0}".format(eventPlayer),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)] ])
-            CreateLeaderBoard()
+            CreateLeaderboard()
         else: # 20 entries already
             if LeaderBoardFull[19][1] < eventPlayer.timer_normal:  # your time lower then last entry
                 goto lbl_a
             else: # you beat the last entry, thus replacing it
                 del LeaderBoardFull[19]
                 LeaderBoardFull.append([["{0}".format(eventPlayer),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]] )
-                CreateLeaderBoard()
+                CreateLeaderboard()
     lbl_a:
 
 def checkpointFailReset():
@@ -213,7 +213,7 @@ def StartGame():
         return
 
     if len(CheckpointPositions) != 0:
-        destroyInWorldText(eventPlayer.TitleStore) # restarting reset title even if non on cp 0
+        destroyInWorldText(eventPlayer.cache_titleHud) # restarting reset title even if non on cp 0
         if "{0}".format(eventPlayer) in SaveName: # load saved progres
             SaveEnt[SaveName.index("{}".format(eventPlayer))] = eventPlayer
             eventPlayer.checkpoint_current = SaveCp[SaveEnt.index(eventPlayer)]
@@ -230,7 +230,7 @@ def StartGame():
                     TitleData[2][TitleData[0].index(sorted([i for i in TitleData[0] if i <= eventPlayer.checkpoint_current], lambda i:i*-1)[0])],
                     SpecVisibility.DEFAULT
                 )
-                eventPlayer.TitleStore = getLastCreatedText()
+                eventPlayer.cache_titleHud = getLastCreatedText()
         else:
             eventPlayer.checkpoint_current = 0
             eventPlayer.timer_normal = 0
@@ -417,7 +417,7 @@ rule "Match time":
                 getAllPlayers().setDamageReceived(100)
                 kill(getAllPlayers(), null)
                 wait(0.032)
-                async(CreateLeaderBoard(), AsyncBehavior.RESTART)
+                async(CreateLeaderboard(), AsyncBehavior.RESTART)
 
     bigMessage(localPlayer, "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time expired, restarting")
     wait(5)
@@ -443,7 +443,6 @@ rule "Player Initialize":
     #eventPlayer.JumpCount = 0
     eventPlayer.cache_bounceLastTouched = -1
     eventPlayer.cache_bounceTouched = -1
-    eventPlayer.PreviewsI = null
     #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
     wait(1)
     eventPlayer.disableRespawn()
@@ -566,7 +565,7 @@ rule "Arrive | Ground reset | traces":
             bigMessage(localPlayer, "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.timer_normal),"已通关! 用时" checkCN "Mission complete! Time"))
 
             DeleteSave()
-            Leaderboardupdate()
+            LeaderboardUpdate()
             if CompMode and CompAtmpNum > 0:
                 if eventPlayer.comp_countAttempts == CompAtmpNum:
                     CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = -1
