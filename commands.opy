@@ -57,10 +57,10 @@ rule "Command | Preview Orbs & Portals (Hold Primary)": #$$ various
     eventPlayer.preview_array1 = [CheckpointPositions[eventPlayer.checkpoint_current + 1]]
 
     if len(BouncePadCheckpoints) > 0:
-        eventPlayer.preview_array1.append( ( [i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.checkpoint_current] ) )
+        eventPlayer.preview_array1.append([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.checkpoint_current])
         eventPlayer.preview_array2 = [-2] # first entry is checkpoint itself, -1 would overlap with -1 in some orbs
-        eventPlayer.preview_array2.append( [i for _, i in BouncePadCheckpoints] )
-        eventPlayer.preview_array2 = [ i for i in eventPlayer.preview_array2 if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current or i == -2 ]
+        eventPlayer.preview_array2.append([i for _, i in BouncePadCheckpoints])
+        eventPlayer.preview_array2 = [i for i in eventPlayer.preview_array2 if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current or i == -2]
 
     if len(CustomPortalStart) > 0:
         #eventPlayer.preview_array1.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.checkpoint_current] )
@@ -102,7 +102,7 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
-    @Condition eventPlayer.editor_lock == false or eventPlayer != hostPlayer #$$
+    @Condition eventPlayer.editor_lock == false or eventPlayer != hostPlayer
     @Condition eventPlayer.lockState == false
     #@Condition eventPlayer.isUsingAbility1() == false
 

@@ -283,8 +283,8 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
     if LeaderBoardFull[4]:
         hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4][2], HudPosition.RIGHT, HO.board_top5+5, Color.GREEN, Color.GREEN, Color.GREEN,HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         LeaderBoardHuds.append(getLastCreatedText())
-    #$$ CompTime == 0
-    hudHeader(localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.toggle_leaderboard,
+
+    hudHeader(localPlayer if evalOnce(CompMode and not CompTime) else localPlayer.toggle_leaderboard,
         "　　　　 {0} {1} {0} 　　　".format(
             iconString(Icon.FLAG),
             "成绩排名" checkCN "Leaderboard"
@@ -293,7 +293,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
     LeaderBoardHuds.append(getLastCreatedText())
 
     hudHeader(
-        localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.toggle_leaderboard,
+        localPlayer if evalOnce(CompMode and not CompTime) else localPlayer.toggle_leaderboard,
         "　　　　　　　　　　　　　　　　　　\n"
         "　 1:　{0} - {5}　\n"
         "　 2:　{1} - {6}　\n"
@@ -316,7 +316,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
 
     if LeaderBoardFull[5]:
         hudHeader(
-            localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.toggle_leaderboard,
+            localPlayer if evalOnce(CompMode and not CompTime) else localPlayer.toggle_leaderboard,
             "　　　　　　　　　　　　　　　　　　\n"
             "　 6:　{0} - {5}　\n"
             "　 7:　{1} - {6}　\n"
@@ -339,7 +339,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
 
     if LeaderBoardFull[10]:
         hudHeader(
-            localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.toggle_leaderboard,
+            localPlayer if evalOnce(CompMode and not CompTime) else localPlayer.toggle_leaderboard,
             "　　　　　　　　　　　　　　　　　　\n"
             "　11:　{0} - {5}　\n"
             "　12:　{1} - {6}　\n"
@@ -362,7 +362,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
 
     if LeaderBoardFull[15]:
         hudHeader(
-            localPlayer if evalOnce(CompMode and CompTime == 0) else localPlayer.toggle_leaderboard,
+            localPlayer if evalOnce(CompMode and not CompTime) else localPlayer.toggle_leaderboard,
             "　　　　　　　　　　　　　　　　　　\n"
             "　16:　{0} - {5}　\n"
             "　17:　{1} - {6}　\n"
@@ -559,7 +559,7 @@ rule "Huds: each player":
             eventPlayer,
             " ",
             (
-                "! 比赛结束 !" if CompTime <= 0 else
+                "! 比赛结束 !" if not CompTime else
                 "剩余时间: {0} 分钟{1}".format(
                     CompTime,
                     "\n你没有尝试过" if eventPlayer.comp_countAttempts == -1 else
@@ -569,7 +569,7 @@ rule "Huds: each player":
             )
             checkCN
             (
-                "! competition is over !" if CompTime <= 0 else
+                "! competition is over !" if not CompTime else
                 "time left: {0} min{1}".format(
                     CompTime,
                     "\nYou are out of attempts" if eventPlayer.comp_countAttempts == -1 else
@@ -577,16 +577,15 @@ rule "Huds: each player":
                     else []
                 )
             ),
-            ("竞赛模式" if CompTime > 0 else "竞赛模式\n\n\n")
+            ("竞赛模式" if CompTime else "竞赛模式\n\n\n")
             checkCN
-            ("competitive mode" if CompTime > 0 else "competitive mode\n\n\n")
+            ("competitive mode" if CompTime else "competitive mode\n\n\n")
             , HudPosition.TOP, HO.comp_info, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.STRING, SpecVisibility.DEFAULT
         )
 
 def UpdateTitle():
     @Name "Title"
-    #$$
-    if TitleData == null or CompMode or eventPlayer.toggle_practice or eventPlayer.editor_on or not eventPlayer.checkpoint_current in TitleData[0]:
+    if not TitleData or CompMode or eventPlayer.toggle_practice or eventPlayer.editor_on or not eventPlayer.checkpoint_current in TitleData[0]:
         return
     destroyInWorldText(eventPlayer.cache_titleHud)
     createInWorldText(localPlayer if not eventPlayer.toggle_invisible else null,TitleData[1][TitleData[0].index(eventPlayer.checkpoint_current)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.checkpoint_current)], SpecVisibility.DEFAULT)

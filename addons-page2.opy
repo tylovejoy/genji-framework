@@ -89,13 +89,13 @@ rule "Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
     # 修改字符串 "display title" 为好友头顶 显示的称号
     waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
     if "your nickname <-------" == "{0}".format(eventPlayer):
-        bigMessage(localPlayer, "Message to the whole room")
+        bigMessage(true[0], "Message to the whole room")
         createInWorldText(localPlayer, "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
     if "your nickname <-------" == "{0}".format(eventPlayer):
-        bigMessage(localPlayer, "Message to the whole room")
+        bigMessage(true[0], "Message to the whole room")
         createInWorldText(localPlayer, "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
     if "your nickname <-------" == "{0}".format(eventPlayer):
-        bigMessage(localPlayer, "Message to the whole room")
+        bigMessage(true[0], "Message to the whole room")
         createInWorldText(localPlayer, "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
 rule "Display World Record - 展示世界纪录 <---- EDIT ME / 在此处编辑":
@@ -162,7 +162,7 @@ rule "Stall enhancer - 增强系統跳的判定":
     @Condition eventPlayer.isInAir() == true
     @Condition eventPlayer.isOnWall() == false
     @Condition eventPlayer.isOnGround() == false
-    @Condition not (eventPlayer.editor_on and eventPlayer.editor_fly != null) #$$
+    @Condition not (eventPlayer.editor_on and eventPlayer.editor_fly)
     #@Condition createWorkshopSetting(bool, "map settings \n地图设置"," Autobounce enhancer - 增强系統跳的判定", false, 3)
 
     wait(0.25, Wait.ABORT_WHEN_FALSE)

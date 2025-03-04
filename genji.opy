@@ -86,9 +86,8 @@ def UpdateCache():
     EditUpdateSelectedIds()
 
     destroyEffect(eventPlayer.editor_hitboxEffect)
-    eventPlayer.editor_hitboxEffect = [] #$$ Skip first append
     createEffect(eventPlayer if eventPlayer.editor_hitboxToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.checkpoint_current], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    eventPlayer.editor_hitboxEffect.append(getLastCreatedEntity())
+    eventPlayer.editor_hitboxEffect = getLastCreatedEntity()
     createEffect(eventPlayer if eventPlayer.editor_hitboxToggle and eventPlayer.checkpoint_notLast else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.checkpoint_current + 1], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.editor_hitboxEffect.append(getLastCreatedEntity())
 
@@ -171,7 +170,7 @@ def checkpointFailReset():
     eventPlayer.cancelPrimaryAction()
     eventPlayer.skill_usedDouble = null
 
-    if eventPlayer.checkpoint_current == 0 and not eventPlayer.toggle_practice: #$$
+    if not (eventPlayer.checkpoint_current or eventPlayer.toggle_practice):
         eventPlayer.timer_normal = 0
         eventPlayer.timer_split = 0
 
@@ -392,16 +391,16 @@ rule "Setup and Variables":
 
 rule "Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
-        wait(0.25)
-        setMatchTime(1)
-        wait(1.1)
-        setMatchTime(1)
-        wait(1.1)
-        wait(10)
+        wait()#0.25
+        setMatchTime(false)#1
+        wait()#1.1
+        setMatchTime(false)#1
+        wait()#1.1
+        #wait(10)#10
 
-    setMatchTime(69)
+    setMatchTime(70)
     pauseMatchTime()
-    wait(5)
+    wait()
     TimeRemaining = 265
 
     while TimeRemaining > 0:
@@ -409,8 +408,8 @@ rule "Match time":
         TimeRemaining--
         if CompMode:
             CompTime--
-            if CompTime == 0: #$$
-                bigMessage(localPlayer,"时间到了" checkCN "time's up")
+            if not CompTime:
+                bigMessage(true[0],"时间到了" checkCN "time's up")
                 getAllPlayers().comp_done = true
                 stopChasingVariable(getAllPlayers().timer_normal)
                 #getAllPlayers().disableRespawn()
@@ -419,13 +418,10 @@ rule "Match time":
                 wait(0.032)
                 async(CreateLeaderboard(), AsyncBehavior.RESTART)
 
-    bigMessage(localPlayer, "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time expired, restarting")
+    bigMessage(true[0], "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time expired, restarting")
     wait(5)
-    #$$ remove if branch?
-    if getCurrentGamemode() == Gamemode.FFA:
-        declarePlayerVictory(hostPlayer)
-    else:
-        declareTeamVictory(hostPlayer.getTeam())
+    declarePlayerVictory(hostPlayer)
+    declareTeamVictory(hostPlayer.getTeam())
 
 rule "Player Initialize":
     @Event playerJoined
@@ -498,7 +494,7 @@ rule "Arrive | Ground reset | traces":
             playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 0.6)
             playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 0.4)
             wait(0.128)
-    elif eventPlayer.toggle_invincible or (CompMode and CompTime == 0) or eventPlayer.lockState: #$$
+    elif eventPlayer.toggle_invincible or (CompMode and not CompTime) or eventPlayer.lockState:
         # Do nothing
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpcircleradius:
         # arrived ----------------------------------------------------------------------------------------------------
@@ -515,12 +511,12 @@ rule "Arrive | Ground reset | traces":
             checkpointFailReset()
             goto lbl_abc
 
-        if eventPlayer.ban_bhop and not (eventPlayer.skill_usedBhop == 0): #$$
+        if eventPlayer.ban_bhop and eventPlayer.skill_usedBhop:
             smallMessage(eventPlayer, "   ≥ 留小跳进点!" checkCN "   ≥ Must have a bhop to complete!")
             checkpointFailReset()
             goto lbl_abc
 
-        if eventPlayer.ban_djump and not (eventPlayer.skill_usedDouble == 0): #$$
+        if eventPlayer.ban_djump and eventPlayer.skill_usedDouble:
             smallMessage(eventPlayer, "   » 留二段跳!" checkCN "   » Must have a double jump to complete!")
             checkpointFailReset()
             goto lbl_abc
@@ -562,7 +558,7 @@ rule "Arrive | Ground reset | traces":
             stopChasingVariable(eventPlayer.timer_normal)
             stopChasingVariable(eventPlayer.timer_practice)
             wait()
-            bigMessage(localPlayer, "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.timer_normal),"已通关! 用时" checkCN "Mission complete! Time"))
+            bigMessage(true[0], "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.timer_normal),"已通关! 用时" checkCN "Mission complete! Time"))
 
             DeleteSave()
             LeaderboardUpdate()
