@@ -84,7 +84,7 @@ arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in array
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
-# Current Unused Variables: 1,6,9,11,16,17,19,28,29,31,36,37,48,49,59,72,89,90,92+
+# Current Named Unused Variables: 1,6,9,11,16,17,19,28,29,31,36,37,48,49,59,72,89,90
 #!define CheckpointPositions A
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 #!define SelectedCheckpoint_Editing B
@@ -165,7 +165,6 @@ globalvar TempIterator1 38                  # int                       --- temp
 
 globalvar DashExploitToggle 39
 
-
 globalvar PortalNames 40                    # [str]                     --- display name of portals
 globalvar PortalLoc 41                      # [vect]                    --- portal position
 globalvar PortalDest 42                     # [vect]                    --- portal destination
@@ -238,11 +237,12 @@ globalvar MapVectorArray 91
 #playervar PortalText                       # In-World Text             --- Portal String inworld text
 #playervar MapVectorArray                   # MsDestructo Vectors
 #playervar TracesOff                        # bool                      --- turn traces (ring explosion fx) off
+playervar lockState                         # bool                      --- locked means you are curently runing arrive checkpoint rule
+
 playervar checkpoint_current                # int                       --- Current Checkpoint
 playervar checkpoint_practice               # int                       --- Saved practice checkpoint
 playervar checkpoint_moved
 playervar checkpoint_notLast                       # bool                      --- false if you are noton the last cp or level below 2 cps
-playervar lockState                         # bool                      --- locked means you are curently runing arrive checkpoint rule
 
 playervar timer_normal                             # float                     --- Timer, chased.
 playervar timer_pause                        # float                     --- time in spectate/invincible, chased
@@ -259,15 +259,6 @@ playervar toggle_guide                       # bool                       --- tu
 playervar toggle_leaderboard                 # bool                      --- show/hide leaderboard
 playervar toggle_invisible                             # bool                      --- invis toggle added by fisho
 playervar toggle_hints
-
-playervar editor_on                          # bool                      --- on all players, but only gets checked from host player
-playervar editor_modeSelect                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
-playervar editor_fly                         # vector/null               --- null if not flying, else vector position, added by fisho
-playervar editor_saveHud                        # array                     --- array of save map hud ids
-playervar editor_undo
-playervar editor_lock                        # bool                      --- ensure only 1 editor command can go of at the time
-playervar editor_hitboxEffect
-playervar editor_hitboxToggle
 
 playervar skill_countBhops                         # int                       --- counts bhops used for stand create ban
 playervar skill_countJumps                         # int                       --- jump tracking count, 0, 1, 2
@@ -290,8 +281,6 @@ playervar ban_standcreate                   # bans on second hop
 playervar ban_djump
 playervar ban_savedouble
 
-playervar editor_temp
-
 playervar cache_collectedLocks                     # number                    --- amount collected lock this cp
 playervar cache_bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
 playervar cache_bounceLastTouched
@@ -305,8 +294,20 @@ playervar cache_bounceStrength
 playervar cache_bounceUlt
 playervar cache_bounceDash
 playervar cache_bounceLocks
+playervar cache_inputs
+playervar cache_rainbow                     # color                     --- color of fx after finish the map
+
+playervar editor_on                          # bool                      --- on all players, but only gets checked from host player
+playervar editor_modeSelect                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
+playervar editor_fly                         # vector/null               --- null if not flying, else vector position, added by fisho
+playervar editor_saveHud                        # array                     --- array of save map hud ids
+playervar editor_undo
+playervar editor_lock                        # bool                      --- ensure only 1 editor command can go of at the time
+playervar editor_hitboxEffect
+playervar editor_hitboxToggle
 playervar editor_bounceIndex
 playervar editor_killIndex
+playervar editor_temp
 
 playervar comp_done                          # bool                      --- out of atemps or time?
 playervar comp_countAttempts                      # int                       --- amound of attemps remaining
@@ -315,15 +316,13 @@ playervar comp_instructionHud
 playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
 playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
 
-playervar cache_inputs
-playervar cache_rainbow                     # color                     --- color of fx after finish the map
-
 playervar PreviewsArray2
 playervar PreviewsArray                     # array                     --- store preview positions
 playervar PreviewsI                         # int                       --- preview itterator
 
 playervar TitleStore                        # textid                    --- store curent  title textid
 playervar LedgeDash
+playervar BounceTrueId
 ######################################## Subroutines ##########################
 subroutine StartGame
 #subroutine KILLBALL

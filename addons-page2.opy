@@ -294,7 +294,6 @@ def TriggerOnFailSuccesReset():
     eventPlayer.setGravity(100)
     eventPlayer.setMoveSpeed(100)
 
-playervar BounceTrueId
 rule "Custom Orb Script":
     @Disabled
     @Event eachPlayer
