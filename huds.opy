@@ -130,7 +130,6 @@ rule "Huds: Global/Localplayer":
             , HudPosition.TOP, HO.add_custommsg1, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
         )
 
-
     if CpIwtText != null:
         createInWorldText(
             localPlayer,
@@ -139,36 +138,23 @@ rule "Huds: Global/Localplayer":
             CpIwtPos[CpIwtCp.index(localPlayer.checkpoint_current)],
             2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, CpIwtColor, SpecVisibility.DEFAULT)
 
-    if len(HintText) > 0:
-        hudText(localPlayer.toggle_guide,
-            null,
-            (
-            "{0} ――  有可用提示―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.checkpoint_current in HintCp and not localPlayer.toggle_hints else
-            "― ― ― ― ― 提示 ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)]) if localPlayer.checkpoint_current in HintCp else
-            "(当前关卡无可用提示)"
-            ) checkCN
-            "{0} ―― hint available ―― {0}".format(iconString(Icon.HAPPY)) if localPlayer.checkpoint_current in HintCp and not localPlayer.toggle_hints else
-            #" ――――――― \n {} \n ――――――― ".format(HintText[HintCp.index(localPlayer.checkpoint_current)]) if localPlayer.checkpoint_current in HintCp else   # and true is implied from last if
-            "― ― ― ― ― Hint ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)]) if localPlayer.checkpoint_current in HintCp else   # and true is implied from last if
-            "(no hint on this level)"
-            ,
-
-            "{} + {} | {}".format(
-                buttonString(Button.ABILITY_2),
-                buttonString(Button.MELEE),
-                ("隐藏提示" if localPlayer.toggle_hints else "获取提示") checkCN
-                "hide hint" if localPlayer.toggle_hints else "show hint"
-
-            )
-
+    if len(HintText) > 0: #Remove no hints - visual and element bloat
+        hudText((localPlayer.toggle_guide and localPlayer.checkpoint_current in HintCp)[0], null,
+            ("― ― ― ― ― 提示 ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)])
+            if localPlayer.toggle_hints else "――――――  有可用提示 ――――――")
+            checkCN
+            ("― ― ― ― ― Hint ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)])
+            if localPlayer.toggle_hints else "― ― ― hint available ― ― ―"),
+            "{} + {} | {}".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE),
+                ("隐藏提示" if localPlayer.toggle_hints else "获取提示")
+                checkCN
+                "hide hint" if localPlayer.toggle_hints else "show hint")
             #"{} + {} | hide hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE)) if localPlayer.toggle_hints else
             #"{} + {} | show hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE))
-            ,
-            HudPosition.RIGHT, HO.com_hints,
+            , HudPosition.RIGHT, HO.com_hints,
             Color.BLUE,
-            Color.ORANGE if localPlayer.checkpoint_current in HintCp and not localPlayer.toggle_hints else
-            Color.GREEN if localPlayer.checkpoint_current in HintCp else
-            Color.GRAY,
+            Color.GREEN if localPlayer.toggle_hints else
+            Color.ORANGE,
             evalOnce(ColorConfig[customize.command_normal]) if localPlayer.checkpoint_current in HintCp else Color.GRAY,
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
