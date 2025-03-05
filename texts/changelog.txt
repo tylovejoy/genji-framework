@@ -464,7 +464,13 @@ fixed:
   * Press Secondary will cancel & undo moving object(s)
 ### Addons Page 2
 - Hints
-  * Simplified UX, no longer display there is no hint ☻⛏
+  * Simplified UX, no longer display there is no hint
+### Code
+- Renamed & reorganized player variable names
+- Moved all macro defines to Definitions.opy
+- Refactored all reseting to a single function
+- Disabled perks to most modes*
+  * Not Control, Push, or Hybrid due to paste conflicts
 ### Fixes
 - Auto-Climb was not detected as Multi-Climb
 - Reduced false positives from Ban Save Double
@@ -480,7 +486,7 @@ fixed:
   * Found by `@Sumpin` +5xp
 - Spray would disappear upon returning from spectator
   * Found by `@Shade Yato`
-### Obsoleting Feature
+### Obsoleting
 - Dash Start
   * Setting `ban Dash Start - 0关卡Shift` has been removed.
   * To re-enable Dash Start when upgrading existing maps, Map data must include: `DashExploitToggle = false`
