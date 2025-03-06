@@ -1,7 +1,7 @@
 #!mainFile "genji.opy"
 
 ######################################## Settings ####################
-#!define versionhere "v1.10.2♨K"
+#!define versionhere "v1.10.2♨L"
 #♨ Dev Build Icon
 
 #!define editortoggle(x) __script__("test-maps/togglescript.js")

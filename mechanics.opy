@@ -204,9 +204,6 @@ rule "Mechanics | Multiclimb":
         else:
             eventPlayer.skill_countMulti += 1
 
-rule "<tx0C00000000001344> Mechanics | Bans <tx0C00000000001344>":
-    @Delimiter
-
 rule "Mechanics | Ban Wallclimb - Message":
     # Credit: TITANXPASCAL#5554
     @Event eachPlayer
