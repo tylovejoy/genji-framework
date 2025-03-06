@@ -1123,7 +1123,7 @@ rule "Editor | moving checkpoint":
     @Condition len(CheckpointPositions) > 0
     @Condition eventPlayer.editor_lock == false
     wait(0.3, Wait.ABORT_WHEN_FALSE)
-
+    eventPlayer.addon_toggle3rdPov = null
     eventPlayer.editor_lock = true
     eventPlayer.editor_undo = CheckpointPositions[eventPlayer.checkpoint_current]
     eventPlayer.startCamera(eventPlayer.getEyePosition() + 0.5 * Vector.UP - 2.5 * eventPlayer.getFacingDirection(), eventPlayer.getEyePosition(), 15)
@@ -1226,6 +1226,7 @@ rule "Editor | move object":
 
     eventPlayer.editor_lock = true
     EditorMoveItem = true
+    eventPlayer.addon_toggle3rdPov = null
     eventPlayer.editor_fly = null
     eventPlayer.editor_undo = [KillBallPositions[EditSelected], BouncePositions[EditSelected], CustomPortalStart[EditSelected], CustomPortalEndpoint[EditSelected]]
 

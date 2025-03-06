@@ -462,11 +462,13 @@ fixed:
   * Now uses Fly Mode control scheme
   * Press Ability_1 to lock walking on Y Axis
   * Press Secondary will cancel & undo moving object(s)
-### Addons Page 2
+### Addons Page 2 (Default Off)
+- Togglable 3rd Person Camera Mode
+  * Default buttons: Hold Crouch + Hold Jump
 - Hints
   * Simplified UX, no longer display there is no hint
 - Fake Triple Jump
-  * Made enabling easier
+  * Made enabling simpler
 ### Code
 - Renamed & reorganized player variable names
 - Moved all macro defines to Definitions.opy

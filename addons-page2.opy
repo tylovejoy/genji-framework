@@ -98,11 +98,11 @@ rule "Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
         bigMessage(true[0], "Message to the whole room")
         createInWorldText(localPlayer, "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
-rule "Display World Record - 展示世界纪录 <---- EDIT ME / 在此处编辑":
-    @Disabled
+rule "Display Author Time - 展示世界纪录 <---- EDIT ME / 在此处编辑":
+    @Disabled #$$ Fix CN Translation
     # type your entry in the textfield that says "name and time here"
     # 在文本框 中输入“名称和时间”
-    hudText(localPlayer, null," \n{0} world record {0}".format(iconString(Icon.FIRE)),"name and time here", HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudText(localPlayer, null," \n{0} author time {0}".format(iconString(Icon.FIRE)),"name and time here", HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
 
 rule "HUD text for certain Checkpoints - 特定关卡显示的HUD文本 <---- EDIT ME / 在此处编辑":
@@ -146,6 +146,24 @@ rule "Hint text for certain Checkpoints - 特定关卡的提示文本 <---- EDIT
     # in HintCp fill in the at wich to display
     # 修改数组 “HintCp” 为提示文本 显示的关卡
     HintCp = [1, 3]
+
+rule "Togglable 3rd Person Camera Mode (Hold Crouch + Hold Jump)":
+    @Disabled
+    @Event eachPlayer
+    @Condition eventPlayer.lockState == false
+    @Condition eventPlayer.editor_lock == false
+    @Condition eventPlayer.isOnGround()
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH)
+    @Condition eventPlayer.isHoldingButton(Button.JUMP)
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    eventPlayer.addon_toggle3rdPov = not eventPlayer.addon_toggle3rdPov
+    if eventPlayer.addon_toggle3rdPov:
+        eventPlayer.startCamera(updateEveryTick(
+            raycast(0.5 * Vector.UP + eventPlayer.getEyePosition(),
+            0.5 * Vector.UP + eventPlayer.getEyePosition() + -3.5 * eventPlayer.getFacingDirection(), [], [], false).getHitPosition() + 0.5 * eventPlayer.getFacingDirection()),
+            updateEveryTick(0.5 * Vector.UP + eventPlayer.getEyePosition()), false)
+    else:
+        eventPlayer.stopCamera()
 
 rule "<tx0C00000000001344> Addons Skills - 附加组件技能 <tx0C00000000001344>":
     @Delimiter
