@@ -465,6 +465,8 @@ fixed:
 ### Addons Page 2
 - Hints
   * Simplified UX, no longer display there is no hint
+- Fake Triple Jump
+  * Made enabling easier
 ### Code
 - Renamed & reorganized player variable names
 - Moved all macro defines to Definitions.opy

@@ -328,11 +328,10 @@ rule "Fake Triple Jump - 假三段跳":
     #Updated Script by LulledLion 9-1-24
     @Condition BanTriple == false
     @Condition eventPlayer.isOnGround() == false
-    @Condition eventPlayer.skill_usedDouble == false
+    @Condition eventPlayer.skill_usedDouble == false #Double cannot be used already
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false #Don't trigger on reset
-
-    #Double cannot be used already
-    wait(false)
+    eventPlayer.addon_enableDoubleChecks = true #Enable checking double jump
+    wait()
     if RULE_CONDITION:
         goto RULE_START
     if eventPlayer.skill_usedDouble:
