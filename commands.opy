@@ -386,3 +386,21 @@ rule "Command | Toggle Hints (Melee + Deflect)":
     @Condition eventPlayer.toggle_hints or eventPlayer.checkpoint_current in HintCp
 
     eventPlayer.toggle_hints = not eventPlayer.toggle_hints
+
+rule "Command | Toggle 3rd Person Camera (Hold Crouch + Hold Jump)":
+    @Event eachPlayer
+    @Condition eventPlayer.addon_toggle3rdPov <= true #True if not null
+    @Condition eventPlayer.lockState == false
+    @Condition eventPlayer.editor_lock == false
+    @Condition eventPlayer.isOnGround()
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH)
+    @Condition eventPlayer.isHoldingButton(Button.JUMP)
+    wait(1, Wait.ABORT_WHEN_FALSE)
+    eventPlayer.addon_toggle3rdPov = not eventPlayer.addon_toggle3rdPov
+    if eventPlayer.addon_toggle3rdPov:
+        eventPlayer.startCamera(updateEveryTick(
+            raycast(0.5 * Vector.UP + eventPlayer.getEyePosition(),
+            0.5 * Vector.UP + eventPlayer.getEyePosition() + -3.5 * eventPlayer.getFacingDirection(), [], [], false).getHitPosition() + 0.5 * eventPlayer.getFacingDirection()),
+            updateEveryTick(0.5 * Vector.UP + eventPlayer.getEyePosition()), false)
+    else:
+        eventPlayer.stopCamera()

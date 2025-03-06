@@ -147,23 +147,11 @@ rule "Hint text for certain Checkpoints - 特定关卡的提示文本 <---- EDIT
     # 修改数组 “HintCp” 为提示文本 显示的关卡
     HintCp = [1, 3]
 
-rule "Togglable 3rd Person Camera Mode (Hold Crouch + Hold Jump)":
+rule "3rd Person Camera Mode":
     @Disabled
     @Event eachPlayer
-    @Condition eventPlayer.lockState == false
-    @Condition eventPlayer.editor_lock == false
-    @Condition eventPlayer.isOnGround()
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH)
-    @Condition eventPlayer.isHoldingButton(Button.JUMP)
-    wait(1, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.addon_toggle3rdPov = not eventPlayer.addon_toggle3rdPov
-    if eventPlayer.addon_toggle3rdPov:
-        eventPlayer.startCamera(updateEveryTick(
-            raycast(0.5 * Vector.UP + eventPlayer.getEyePosition(),
-            0.5 * Vector.UP + eventPlayer.getEyePosition() + -3.5 * eventPlayer.getFacingDirection(), [], [], false).getHitPosition() + 0.5 * eventPlayer.getFacingDirection()),
-            updateEveryTick(0.5 * Vector.UP + eventPlayer.getEyePosition()), false)
-    else:
-        eventPlayer.stopCamera()
+    #Start camera mode on by default: (false | true)
+    eventPlayer.addon_toggle3rdPov = false
 
 rule "<tx0C00000000001344> Addons Skills - 附加组件技能 <tx0C00000000001344>":
     @Delimiter
