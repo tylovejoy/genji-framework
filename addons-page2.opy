@@ -149,9 +149,8 @@ rule "Hint text for certain Checkpoints - 特定关卡的提示文本 <---- EDIT
 
 rule "3rd Person Camera Mode":
     @Disabled
-    @Event eachPlayer
-    #Start camera mode on by default: (false | true)
-    eventPlayer.addon_toggle3rdPov = true
+    @Event playerJoined
+    eventPlayer.addon_toggle3rdPov = false
 
 rule "<tx0C00000000001344> Addons Skills - 附加组件技能 <tx0C00000000001344>":
     @Delimiter
