@@ -578,3 +578,11 @@ def UpdateTitle():
     destroyInWorldText(eventPlayer.cache_titleHud)
     createInWorldText(localPlayer if not eventPlayer.toggle_invisible else null,TitleData[1][TitleData[0].index(eventPlayer.checkpoint_current)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.checkpoint_current)], SpecVisibility.DEFAULT)
     eventPlayer.cache_titleHud = getLastCreatedText()
+
+rule "Huds | Addon": #$$
+    waitUntil(getNumberOfPlayers(Team.ALL) > 0, Math.INFINITY)
+    wait()
+    if getAllPlayers().addon_toggle3rdPov <= true:
+        #"{0} + {1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.toggle_invincible else [])
+        hudSubtext(localPlayer.toggle_guide, "{0} + {1} | 3rd Person{2}".format(buttonString(Button.CROUCH), buttonString(Button.JUMP)," | ON" if localPlayer.addon_toggle3rdPov else []),
+            HudPosition.RIGHT,HO.com_3rd,evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.addon_toggle3rdPov else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
