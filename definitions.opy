@@ -401,17 +401,14 @@ enum HO:
     topend,
     # Right #####################
     data_remaingtime,
-
-    com_restart_n_board,
-    com_invincible,
-    com_quickres,
-    com_spec,
-    com_invis,
     com_displaytoggle,
-    com_splits,
-
     com_preview,
-    #com_previewsub,
+    com_3rd,
+    com_invis,
+    com_quickres,    
+    com_restart_n_board,
+    com_spec,
+    com_invincible,
     com_practice,
     com_practicesub,
     com_hints,
