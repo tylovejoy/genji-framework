@@ -69,7 +69,8 @@ rule "Command | Preview Orbs & Portals (Hold Primary)": #$$ various
             wait()
 
     wait(0.1)
-    eventPlayer.addon_toggle3rdPov = null
+    if eventPlayer.addon_toggle3rdPov:
+        eventPlayer.addon_toggle3rdPov = false
     eventPlayer.setMoveSpeed(0)
     eventPlayer.preview_i = 0
     eventPlayer.startCamera(

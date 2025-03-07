@@ -714,7 +714,8 @@ rule "AFK timer":
     @Condition eventPlayer.isCommunicatingEmote() == false
     @Condition eventPlayer.editor_on == false
     wait(300, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.addon_toggle3rdPov = null
+    if eventPlayer.addon_toggle3rdPov:
+        eventPlayer.addon_toggle3rdPov = false
     eventPlayer.setStatusEffect(null, Status.ASLEEP, Math.INFINITY)
       # raycast to prevent camera stuck on low wall
     eventPlayer.startCamera(
