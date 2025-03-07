@@ -95,13 +95,13 @@ rule "Mechanics | Player on the wall":
 
 rule "Mechanics | Using Emote":
     @Event eachPlayer
-    @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.isCommunicatingEmote() == true
     eventPlayer.skill_usedBhop = false
     if eventPlayer.ban_emote:
-        #waitUntil(not (eventPlayer.isCommunicatingEmote() and eventPlayer.isOnGround()), Math.INFINITY)
-        #eventPlayer.applyImpulse(Vector.DOWN, 0.0001, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+        waitUntil(not eventPlayer.isCommunicatingEmote(), Math.INFINITY)
+        if eventPlayer.toggle_invincible: return
         smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
+        wait()
         checkpointFailReset()
 
 rule "Mechanics | Bhop":
