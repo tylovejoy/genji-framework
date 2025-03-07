@@ -97,6 +97,9 @@ rule "Mechanics | Using Emote":
     @Event eachPlayer
     @Condition eventPlayer.isCommunicatingEmote() == true
     eventPlayer.skill_usedBhop = false
+    if eventPlayer.addon_toggle3rdPov:
+        eventPlayer.addon_toggle3rdPov = false
+        eventPlayer.stopCamera()
     if eventPlayer.ban_emote:
         waitUntil(not eventPlayer.isCommunicatingEmote(), Math.INFINITY)
         if eventPlayer.toggle_invincible: return
