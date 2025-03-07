@@ -7,8 +7,10 @@ huds outside this file:
     - editor huds ( editor)
 
 */
+rule "<tx0C00000000001344> Text & Effects <tx0C00000000001344>":
+    @Delimiter
 
-rule "Huds: Global/Localplayer":
+rule "Huds | Global Localplayer":
     wait(2)
 
     # name/credit construction
@@ -237,7 +239,7 @@ rule "Huds: Global/Localplayer":
     #else:
         # restart without leaderboard if editor on
 
-rule "Huds: remake leaderboard": # for global isntead of tied to player
+rule "Huds | Leaderboard": # for global instead of tied to player
     @Condition LeaderBoardRemake
     wait() # account for delay in completion
     LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
@@ -370,7 +372,7 @@ rule "Huds: remake leaderboard": # for global isntead of tied to player
         LeaderBoardHuds.append(getLastCreatedText())
 
 def EffectsCreate():
-    @Name "Effects Create"
+    @Name "Huds | Create Object Effects"
     if CustomPortalStart:
         for TempIterator1 in range(len(CustomPortalStart)):
             createEffect(
@@ -417,7 +419,7 @@ def EffectsCreate():
 
 ##############################################################################
 
-rule "Huds: each player":
+rule "Huds | Each Player":
     @Event playerJoined
     wait(0.5)
 
@@ -570,7 +572,7 @@ rule "Huds: each player":
         )
 
 def UpdateTitle():
-    @Name "Title"
+    @Name "Huds | Update Title"
     if not TitleData or CompMode or eventPlayer.toggle_practice or eventPlayer.editor_on or not eventPlayer.checkpoint_current in TitleData[0]:
         return
     destroyInWorldText(eventPlayer.cache_titleHud)
