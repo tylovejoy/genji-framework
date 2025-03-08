@@ -389,7 +389,7 @@ rule "Command | Toggle Hints (Melee + Deflect)":
 
     eventPlayer.toggle_hints = not eventPlayer.toggle_hints
 
-rule "Command | Toggle 3rd Person Camera (Hold Crouch + Hold Jump)":
+rule "Command | Toggle 3rd Person Camera (Hold Crouch + Jump)":
     @Event eachPlayer
     @Condition eventPlayer.addon_toggle3rdPov <= true #True if not null
     @Condition eventPlayer.lockState == false
