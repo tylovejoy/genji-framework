@@ -260,9 +260,8 @@ def AddonCheckMap():
     printLog("■ Map Check Complete ■")
     disableInspector()
 
-def Addon_Toggle3rdPerson():
+def AddonToggle3rdPerson():
     @Name "Toggle 3rd Person Camera"
-    if eventPlayer.addon_toggle3rdPov > true: return
     eventPlayer.addon_toggle3rdPov = not eventPlayer.addon_toggle3rdPov
     if eventPlayer.addon_toggle3rdPov:
         eventPlayer.startCamera(updateEveryTick(
