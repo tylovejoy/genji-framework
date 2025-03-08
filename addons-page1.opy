@@ -218,7 +218,7 @@ rule "Cache jump & crouch inputs for spectators":
     eventPlayer.cache_inputs = vect(eventPlayer.isHoldingButton(Button.JUMP), eventPlayer.isHoldingButton(Button.CROUCH), false)
     goto RULE_START
 
-def CheckMap():
+def AddonCheckMap():
     @Name "SUB | Basic Map Validator"
     if len(CheckpointPositions) <= 1: return
     createDummy(Hero.ANA, Team.1 if getNumberOfSlots(Team.1) < getNumberOfSlots(Team.2) else Team.2, -1, CheckpointPositions[0], null)
@@ -259,3 +259,15 @@ def CheckMap():
     enableInspector()
     printLog("■ Map Check Complete ■")
     disableInspector()
+
+def Addon_Toggle3rdPerson():
+    @Name "Toggle 3rd Person Camera"
+    if eventPlayer.addon_toggle3rdPov > true: return
+    eventPlayer.addon_toggle3rdPov = not eventPlayer.addon_toggle3rdPov
+    if eventPlayer.addon_toggle3rdPov:
+        eventPlayer.startCamera(updateEveryTick(
+            raycast(0.5 * Vector.UP + eventPlayer.getEyePosition(),
+            0.5 * Vector.UP + eventPlayer.getEyePosition() + -3.5 * eventPlayer.getFacingDirection(), [], [], false).getHitPosition() + 0.5 * eventPlayer.getFacingDirection()),
+            updateEveryTick(0.5 * Vector.UP + eventPlayer.getEyePosition()), false)
+    else:
+        eventPlayer.stopCamera()
