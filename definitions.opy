@@ -343,8 +343,9 @@ subroutine StartPauseTimer
 subroutine StopPauseTimer
 subroutine EditUpdateSelectedIds
 subroutine EditorSelectLast
-subroutine TriggerOnFailSuccesReset
-subroutine CheckMap
+subroutine AddonCustomLoadAndReset
+subroutine AddonCheckMap
+subroutine AddonToggle3rdPerson
 
 ######################################## Enums ################################
 enum HO:

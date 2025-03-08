@@ -151,6 +151,7 @@ rule "3rd Person Camera Mode":
     @Disabled
     @Event playerJoined
     eventPlayer.addon_toggle3rdPov = false
+    AddonToggle3rdPerson()
 
 rule "<tx0C00000000001344> Addons Skills - 附加组件技能 <tx0C00000000001344>":
     @Delimiter
@@ -287,8 +288,8 @@ rule "Grup up | function":
     wait(0.16)
     eventPlayer.stopForcingPosition()
 
-def TriggerOnFailSuccesReset():
-    @Name "Custom script on fail, succes, reset, skip"
+def AddonCustomLoadAndReset():
+    @Name "Custom script for checkpoint loading or reseting"
     @Disabled
     # This subroutine triggers on failing, arriving, reseting, skipping etc
     # example: reset gravity and movespeed after being changed by custom orbs

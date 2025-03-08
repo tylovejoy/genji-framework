@@ -60,7 +60,7 @@ rule "Editor | Clear Excess Data to Save Map":
     #@Condition eventPlayer.editor_lock == false # !!! don't lock. always be sure data can be exported incase of a perma lock situation
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.editor_lock = true # doesnt matter thats its in pasta's because it wil be fixed on spawning
-    async(CheckMap, AsyncBehavior.NOOP)
+    async(AddonCheckMap, AsyncBehavior.NOOP)
     CheckpointRings_Editing = null
     KillBallEffects = null
     TempIterator1 = null

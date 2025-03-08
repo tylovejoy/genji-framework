@@ -198,7 +198,7 @@ def checkpointFailReset():
 
     async(CheckUlt(), AsyncBehavior.RESTART)
     async(CheckDash(), AsyncBehavior.RESTART)
-    TriggerOnFailSuccesReset()
+    AddonCustomLoadAndReset()
 
 def StartGame():
     @Name "SUB | Start Game"
@@ -348,7 +348,7 @@ rule "Setup and Variables":
         DashExploitToggle = null
 
     if createWorkshopSetting(bool,"map settings \n地图设置","Basic Map Validator - 验证地图", true, 3):
-        async(CheckMap, AsyncBehavior.NOOP)
+        async(AddonCheckMap, AsyncBehavior.NOOP)
     PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用传送门 (占点地图)", true, 4)
     CompMode = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","Turn on competitive mode - 开启竞赛模式" , compModeToggle , 100)
     if CompMode:
@@ -549,7 +549,7 @@ rule "Arrive | Ground reset | traces":
         #bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.checkpoint_current, "抵达检查点" checkCN "Arrived at level")   )
         wait()
         UpdateTitle()
-        TriggerOnFailSuccesReset()
+        AddonCustomLoadAndReset()
 
         if eventPlayer.toggle_practice:
             eventPlayer.timer_split = eventPlayer.timer_practice
