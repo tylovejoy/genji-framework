@@ -401,8 +401,8 @@ rule "Command | Toggle 3rd Person Camera (Hold Crouch + Jump)":
     eventPlayer.addon_toggle3rdPov = not eventPlayer.addon_toggle3rdPov
     if eventPlayer.addon_toggle3rdPov:
         eventPlayer.startCamera(updateEveryTick(
-            raycast(0.5 * Vector.UP + eventPlayer.getEyePosition(),
-            0.5 * Vector.UP + eventPlayer.getEyePosition() + -3.5 * eventPlayer.getFacingDirection(), [], [], false).getHitPosition() + 0.5 * eventPlayer.getFacingDirection()),
+            raycast(eventPlayer.getEyePosition(),
+            eventPlayer.getEyePosition() + -3.5 * eventPlayer.getFacingDirection(), [], [], false).getHitPosition() + 0.5 * eventPlayer.getFacingDirection()),
             updateEveryTick(0.5 * Vector.UP + eventPlayer.getEyePosition()), false)
     else:
         eventPlayer.stopCamera()
