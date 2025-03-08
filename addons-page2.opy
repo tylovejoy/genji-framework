@@ -99,7 +99,7 @@ rule "Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
         createInWorldText(localPlayer, "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
 rule "Display Author Time - 展示世界纪录 <---- EDIT ME / 在此处编辑":
-    @Disabled #$$ Fix CN Translation
+    @Disabled
     # type your entry in the textfield that says "name and time here"
     # 在文本框 中输入“名称和时间”
     hudText(localPlayer, null," \n{0} author time {0}".format(iconString(Icon.FIRE)),"name and time here", HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
