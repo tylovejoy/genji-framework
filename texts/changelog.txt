@@ -463,8 +463,8 @@ fixed:
   * Press Secondary will cancel & undo moving object(s)
 ### Addons Page 2 (Default Off)
 - Togglable 3rd Person Camera Mode
-  * Default buttons: Hold Crouch + Hold Jump
-- Hints UX, no longer display there is no hint
+  * Default buttons: Hold Crouch + Jump
+- Hints UX, no longer display there is no hint ☻
 - Fake Triple Jump enabling is easier
 ### Code
 - Renamed & reorganized player variable names
