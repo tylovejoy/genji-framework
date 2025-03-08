@@ -441,14 +441,13 @@ fixed:
 - Practice Mode
   * Can enter with Invincibility active. (Auto disables Invincibility)
   * Can exit with Invincibility active. (Auto disables Invincibility)
-- Invincibility Mode
-  * Can exit with ultimate active
-- Quick Reset
-  * Can reset with dash active
+- Invincibility Mode can exit with ultimate active
+- Quick Reset can reset with dash active
 - Preview Checkpoint
   * Modify zoom using ▲ ▼
-- Death bhop
-  * Will apply to all type of resets Ex. Quick, AFK, Spectate, etc
+- Death hop will apply to all resets
+  * Ex. Quick, AFK, Spectate, etc
+- Emoting has a delayed reset for ban emote until after emote finishes ♥
 - Faster unlimited dashes
   * `@Kackspn` +1xp
 ### Editor
@@ -465,14 +464,13 @@ fixed:
 ### Addons Page 2 (Default Off)
 - Togglable 3rd Person Camera Mode
   * Default buttons: Hold Crouch + Hold Jump
-- Hints
-  * Simplified UX, no longer display there is no hint
-- Fake Triple Jump
-  * Made enabling simpler
+- Hints UX, no longer display there is no hint
+- Fake Triple Jump enabling is easier
 ### Code
 - Renamed & reorganized player variable names
 - Moved all macro defines to Definitions.opy
 - Refactored all reseting to a single function
+- Tons of small micro optimizations
 - Disabled perks to most modes*
   * Not Control, Push, or Hybrid due to paste conflicts
 ### Fixes
@@ -480,7 +478,7 @@ fixed:
 - Reduced false positives from Ban Save Double
   * Increased the required upwards vertical speed from 0 to 6
   * Add exception when bhop is used during grace period
-- Ban death bhop would not prevent early climb when checkpoint was set too high
+- Ban death hop would not prevent early climb when checkpoint was set too high
 - Ban bhop would not trigger when ColorConfig[bhopclimb_used] was set to Color.GREEN
 - Save Double ban was persisting when Invincible or on last point
   * Found by `@bioslet` +5xp
