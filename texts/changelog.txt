@@ -447,12 +447,12 @@ fixed:
   * Modify zoom using ▲ ▼
 - Death hop will apply to all resets
   * Ex. Quick, AFK, Spectate, etc
-- Emoting has a delayed reset for ban emote until after emote finishes ♥
+- Emoting is not reset immediately for ban emote hop ♥
 - Faster unlimited dashes
   * `@Kackspn` +1xp
 ### Editor
 - Move Checkpoint
-  * Hold Primary for normal speed modifer
+  * Hold Primary for normal speed modifier
   * Press Secondary will cancel & undo moving checkpoint
 - Fly Mode
   * Press Ability_1 to move Up
