@@ -150,10 +150,10 @@ rule "Hint text for certain Checkpoints - 特定关卡的提示文本 <---- EDIT
 rule "3rd Person Camera Mode - 无所不知":
     @Disabled
     @Event playerJoined
-    #Default 1st person: True
-    #Default 3rd person: False
-    eventPlayer.addon_toggle3rdPov = false
-    AddonToggle3rdPerson()
+    #Default 1st person: False
+    #Default 3rd person: True
+    eventPlayer.addon_toggle3rdPov = true
+    Addon3rdPerson()
 
 rule "<tx0C00000000001344> Addons Skills - 附加组件技能 <tx0C00000000001344>":
     @Delimiter

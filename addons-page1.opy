@@ -260,9 +260,8 @@ def AddonCheckMap():
     printLog("■ Map Check Complete ■")
     disableInspector()
 
-def AddonToggle3rdPerson():
-    @Name "Toggle 3rd Person Camera"
-    eventPlayer.addon_toggle3rdPov = not eventPlayer.addon_toggle3rdPov
+def Addon3rdPerson():
+    @Name "SUB | 3rd Person Camera"
     if eventPlayer.addon_toggle3rdPov:
         eventPlayer.startCamera(updateEveryTick(
             raycast(0.5 * Vector.UP + eventPlayer.getEyePosition(),

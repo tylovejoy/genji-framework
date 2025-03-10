@@ -397,4 +397,5 @@ rule "Command | Toggle 3rd Person Camera (Hold Crouch + Jump)":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.JUMP)
     wait(1, Wait.ABORT_WHEN_FALSE)
-    AddonToggle3rdPerson()
+    eventPlayer.addon_toggle3rdPov = not eventPlayer.addon_toggle3rdPov
+    Addon3rdPerson()

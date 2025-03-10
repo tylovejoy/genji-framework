@@ -345,7 +345,7 @@ subroutine EditUpdateSelectedIds
 subroutine EditorSelectLast
 subroutine AddonCustomLoadAndReset
 subroutine AddonCheckMap
-subroutine AddonToggle3rdPerson
+subroutine Addon3rdPerson
 
 ######################################## Enums ################################
 enum HO:
