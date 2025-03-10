@@ -702,13 +702,15 @@ rule "Editor |  Fly/Noclip Toggle":
     eventPlayer.editor_fly = eventPlayer.getPosition() + Vector.UP
     eventPlayer.startForcingPosition(eventPlayer.editor_fly, true)
     eventPlayer.disableEnvironmentCollision(true)
+    eventPlayer.disallowButton(Button.ULTIMATE)
     waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_1), 1)
 
     while eventPlayer.isAlive() and eventPlayer.editor_fly != null and not eventPlayer.isHoldingButton(Button.ABILITY_1):
         if not (eventPlayer == hostPlayer and EditorMoveItem):
             eventPlayer.editor_fly += flyMovementDelta
         wait()
-
+    
+    eventPlayer.allowButton(Button.ULTIMATE)
     eventPlayer.enableEnvironmentCollision()
     eventPlayer.editor_fly = null
     eventPlayer.stopForcingPosition()
@@ -1234,6 +1236,9 @@ rule "Editor | move object":
 
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 1)
     eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
+    #eventPlayer.disallowButton(Button.ULTIMATE)
+    #eventPlayer.disallowButton(Button.JUMP)
+    eventPlayer.setStatusEffect(null, Status.HACKED, Math.INFINITY)
 
     if eventPlayer.editor_modeSelect == 1:
         eventPlayer.startCamera(
@@ -1281,7 +1286,9 @@ rule "Editor | move object":
         CustomPortalStart[EditSelected] = eventPlayer.editor_undo[2]
         CustomPortalEndpoint[EditSelected] = eventPlayer.editor_undo[3]
     eventPlayer.editor_undo = null
-
+    #eventPlayer.allowButton(Button.ULTIMATE)
+    #eventPlayer.allowButton(Button.JUMP)
+    eventPlayer.clearStatusEffect(Status.HACKED)
     eventPlayer.stopCamera()
     eventPlayer.stopForcingPosition()
     EditorMoveItem = false
