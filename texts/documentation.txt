@@ -109,7 +109,7 @@ split time:
     the time is decided in the arrive rule
     it compares your new time vs the last stored time. once again taking into account practice mode
     when you fail or reset or complete a cp, the time is stored
-    the splittime variable tracks the last stored time while the display is the variable that displays on screen unles its set to -999 wich means toggle is off
+    the splittime variable tracks the last stored time while the display is the variable that displays on screen unles its set to -Math.INFINITY wich means toggle is off
 
 
 saving:

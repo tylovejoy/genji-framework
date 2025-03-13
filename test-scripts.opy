@@ -11,7 +11,7 @@
 
 ##### average load show #####
     #!define avrgon true
-    
+
 
 ##### orb visialize #####
     #!define orb_visialon false
@@ -29,7 +29,7 @@
     ##### delay after all bots are created - toggle #####
     #!define aistartdelay true
     ##### delay after all bots are created - seconds #####
-    #!define creationdelay 8 
+    #!define creationdelay 8
 
     ##### delay between each action #####
     #!define aiactiondelay 3 + (testAI.index(eventPlayer) * 2)
@@ -37,7 +37,7 @@
     ##!define aiactiondelay (testAI.index(eventPlayer) * 2)
 
     ##### AI #####
-        #!define leaderboardai true 
+        #!define leaderboardai true
         #!define actionai false
 
 globalvar AvrgSecStore
@@ -69,7 +69,7 @@ rule "3th person cam":
 
 rule "multi purpose hud":
     @Condition multipurposehud
-    hudSubheader(getAllPlayers(), 
+    hudSubheader(localPlayer,
         "hud count {}\n"
         "fx count: {}\n"
         "{}\n"
@@ -78,47 +78,47 @@ rule "multi purpose hud":
         "".format(
         getNumberOfTextIds(),
         getNumberOfEntityIds(),
-        localPlayer.NotOnLastCp,
+        localPlayer.checkpoint_notLast,
         EditorMoveItem,
-        localPlayer.bouncetouched,
-        localPlayer.bouncetouchedlast
-        )        
+        localPlayer.cache_bounceTouched,
+        localPlayer.cache_bounceLastTouched
+        )
         , HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
 
-  
+
 # Load Calc ######################################################################################################################################################
 
 rule "server load hud":
     @Condition avrgon
     #wait(11)
     hudSubheader(
-        getAllPlayers(), 
+        localPlayer,
         "Load: {0} / Avrg: {1} \n"
         "Mavrg: {3} / Last: {4} \n"
         "Minu: {5} / Peak: {2} \n".format(
-            getServerLoad(), 
+            getServerLoad(),
             getAverageServerLoad(),
             getPeakServerLoad(),
             AvrgSecDisplay,
             LastTimePeak,
             AvrgMinDisplay
-        ), 
-    
-        HudPosition.LEFT, HO.leftend, 
-        Color.RED if getAverageServerLoad() > 220 else 
-        Color.ORANGE if getAverageServerLoad() > 190 else 
-        Color.YELLOW if getAverageServerLoad() > 160  else 
+        ),
+
+        HudPosition.LEFT, HO.leftend,
+        Color.RED if getAverageServerLoad() > 220 else
+        Color.ORANGE if getAverageServerLoad() > 190 else
+        Color.YELLOW if getAverageServerLoad() > 160  else
         Color.BLUE if getAverageServerLoad() > 130 else
-        Color.LIME_GREEN, 
+        Color.LIME_GREEN,
         HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
 #!define avrg 125
 rule "Avrg Seconds":
     @Condition avrgon
-    while len(AvrgSecStore) < avrg:  
+    while len(AvrgSecStore) < avrg:
         AvrgSecStore.append(getAverageServerLoad())
         wait()
 
@@ -134,7 +134,7 @@ rule "Avrg Seconds":
     goto RULE_START
 
 #!define mintime 10
-rule "Avrg Seconds":   
+rule "Avrg Seconds":
     @Condition avrgon
     #@Condition len(AvrgMinStore) == mintime/avrg
     AvrgMinDisplay = 0
@@ -154,22 +154,22 @@ rule "Avrg Seconds":
 rule "orbradiustest": # show radius on all bounce orbs
     @Condition orb_visialon
     @Condition show_orbradius
-    wait(8)   
+    wait(8)
     for TempIterator1 in range(0,len(BouncePadCheckpoints)):
-        
+
         createEffect(
-            [i for i in getAllPlayers() if i.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], 
-            Effect.SPHERE, 
-            Color.WHITE, 
+            [i for i in getAllPlayers() if i.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)]],
+            Effect.SPHERE,
+            Color.WHITE,
             BouncePositions[evalOnce(TempIterator1)], #bounceoffset,
             bounceorbdistance,
             EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
-        
+
         createEffect(
-            [i for i in getAllPlayers() if i.CurrentCheckpoint == BouncePadCheckpoints[evalOnce(TempIterator1)]], 
-            Effect.SPHERE, 
-            Color.RED, 
+            [i for i in getAllPlayers() if i.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)]],
+            Effect.SPHERE,
+            Color.RED,
             BouncePositions[evalOnce(TempIterator1)], #bounceoffset,
             0.1,
             EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
@@ -180,12 +180,12 @@ rule "orbradiustest": # show player orb hit detection
     @Condition orb_visialon
     @Event eachPlayer
     if show_orbradius:
-        createEffect(getAllPlayers(), Effect.SPHERE, Color.RED, updateEveryTick( eventPlayer.getPosition() bounceoffset), 0.1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR) 
-        createEffect(getAllPlayers(), Effect.SPHERE, Color.ORANGE, updateEveryTick( eventPlayer.getPosition() bounceoffset), 0.03, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR) 
+        createEffect(localPlayer, Effect.SPHERE, Color.RED, updateEveryTick( eventPlayer.getPosition() bounceoffset), 0.1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
+        createEffect(localPlayer, Effect.SPHERE, Color.ORANGE, updateEveryTick( eventPlayer.getPosition() bounceoffset), 0.03, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
 
     if show_playerradius:
         # own orb radius
-        createEffect(getAllPlayers(), Effect.SPHERE, Color.YELLOW, updateEveryTick( eventPlayer.getPosition() bounceoffset), bounceorbdistance, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR) 
+        createEffect(localPlayer, Effect.SPHERE, Color.YELLOW, updateEveryTick( eventPlayer.getPosition() bounceoffset), bounceorbdistance, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
 
 
 # AI - leaderboard ######################################################################################################################################################
@@ -199,7 +199,7 @@ rule "leaderboard test bots":
         wait(0.1)
         testAI[len(testAI)-1].startForcingName("bot {0}".format(len(testAI)-1))
 
-        
+
     AIcreated = true
 
 rule "leaderboard test ai":
@@ -208,9 +208,9 @@ rule "leaderboard test ai":
     @Condition leaderboardai
     @Condition eventPlayer in testAI
 
-    @Condition eventPlayer.CurrentCheckpoint < len(CheckpointPositions) #- 1
+    @Condition eventPlayer.checkpoint_current < len(CheckpointPositions) #- 1
     @Condition (waitforcreate and AIcreated) or not waitforcreate
-    
+
 
     if aistartdelay:
         wait(aiactiondelay )
@@ -219,15 +219,15 @@ rule "leaderboard test ai":
         wait(0.16)
         eventPlayer.forceButtonPress(Button.INTERACT)
         wait(0.16)
-        
+
     else:
         wait(1)
 
-    eventPlayer.CurrentCheckpoint = len(CheckpointPositions) - 2
+    eventPlayer.checkpoint_current = len(CheckpointPositions) - 2
     checkpointFailReset()
     wait(1)
-    eventPlayer.LockCollected = eventPlayer.BouncePosition_Cache
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.CurrentCheckpoint+1]+ vect(0,3,0)) # teleport not needed
+    eventPlayer.cache_collectedLocks = eventPlayer.cache_bouncePosition
+    eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current+1]+ vect(0,3,0)) # teleport not needed
 
 
 rule "action test ai":
@@ -243,13 +243,13 @@ rule "action test ai":
     wait(1)
     wait( ((testAI.index(eventPlayer)) * 0.1 ) )
     # 1 for map 4 - 42 for rialto
-    eventPlayer.CurrentCheckpoint = 1
+    eventPlayer.checkpoint_current = 1
     wait()
     UpdateCache()
-    
+
     wait()
     checkpointFailReset()
-    
+
     wait()
     eventPlayer.teleport(CheckpointPositions[2] + vect(0,10,0) )
 
@@ -258,11 +258,11 @@ rule "action test ai":
     #waitUntil(eventPlayer.getAltitude() <  ((testAI.index(eventPlayer))*0.01), 4) # to early
     waitUntil(eventPlayer.isInAir(), 10)
     wait(0.1)
-    #eventPlayer.CurrentCheckpoint = 42
+    #eventPlayer.checkpoint_current = 42
 
     waitUntil(eventPlayer.isOnGround(), 40)
     #wait( ((testAI.index(eventPlayer))*0.01)  ) # result in 1
-    wait( ((testAI.index(eventPlayer))*0.04)  ) 
+    wait( ((testAI.index(eventPlayer))*0.04)  )
 
     eventPlayer.startForcingButton(Button.CROUCH)
     eventPlayer.startForcingButton(Button.INTERACT)
@@ -276,7 +276,7 @@ rule "action test ai":
 /*
 
 ## hud performance tests #################
- 
+
 globalvar hudtestafafafg
 playervar sflkj
 
@@ -284,7 +284,7 @@ rule "hud test":
     wait(10)
     destroyAllHudTexts()
 
-    hudSubheader(getAllPlayers(), 
+    hudSubheader(localPlayer,
         "hud count {}\n"
         "fx count: {}\n"
         "angles: {} : {}\n"
@@ -301,9 +301,9 @@ rule "hud test":
     )
 
     while getNumberOfTextIds() < 95:
-        hudSubtext(hostPlayer if hostPlayer.GuideToggle else null, 
-            "{0}".format(    
-            [   
+        hudSubtext(hostPlayer if hostPlayer.toggle_guide else null,
+            "{0}".format(
+            [
             "{0} + {1} | Create New Checkpoint\n"
             "{0} + {2} | Delete selected Checkpoint\n"
             "{0} + {3} | Remove/Add teleport\n"
@@ -319,7 +319,7 @@ rule "hud test":
             "{5} + {3} | Decrease orb size\n"
             "{5} + {1} | Move orb forward\n"
             "{5} + {2} | Move orb Backward".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2)),
-    
+
             "{0} + {1} | Create new Bounce orb\n"
             "{0} + {3} | Select previous orb\n"
             "{0} + {4} | Select next orb\n"
@@ -329,13 +329,13 @@ rule "hud test":
             "{5} + {3} | Decrease orb strength\n"
             "{5} + {1} | Move orb forward\n"
             "{5} + {2} | Move orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
-            ][hostPlayer.EditModeSelection])
-            
+            ][hostPlayer.editor_modeSelect])
+
             checkCN
-            
+
             #if localPlayer.sflkj else
-            "{0}".format(    
-            [   
+            "{0}".format(
+            [
             "{0} + {1} | Careate New Checkpoint\n"
             "{0} + {2} | asdDelete selected Checkpoint\n"
             "{0} + {3} | Rasmove/Add teleport\n"
@@ -351,7 +351,7 @@ rule "hud test":
             "{5} + {3} | Decrasfease orb size\n"
             "{5} + {1} | Move afsorb forward\n"
             "{5} + {2} | Moveafs orb Backward".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2)),
-    
+
             "{0} + {1} | Creaafste new Bounce orb\n"
             "{0} + {3} | Seleafsct previous orb\n"
             "{0} + {4} | Seleasfct next orb\n"
@@ -361,9 +361,9 @@ rule "hud test":
             "{5} + {3} | Decasfrease orb strength\n"
             "{5} + {1} | Movasfe orb forward\n"
             "{5} + {2} | Moveafaf orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
-            ][hostPlayer.EditModeSelection])
-            
-            , 
+            ][hostPlayer.editor_modeSelect])
+
+            ,
             HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
         )
         wait()
@@ -378,9 +378,9 @@ rule "each":
     eventPlayer.sflkj = 0
 
     while eventPlayer.sflkj <= 3:
-           hudSubtext(eventPlayer if eventPlayer.GuideToggle else null, 
-            "{0}".format(    
-            [   
+           hudSubtext(eventPlayer if eventPlayer.toggle_guide else null,
+            "{0}".format(
+            [
             "{0} + {1} | Create New Checkpoint\n"
             "{0} + {2} | Delete selected Checkpoint\n"
             "{0} + {3} | Remove/Add teleport\n"
@@ -396,7 +396,7 @@ rule "each":
             "{5} + {3} | Decrease orb size\n"
             "{5} + {1} | Move orb forward\n"
             "{5} + {2} | Move orb Backward".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2)),
-    
+
             "{0} + {1} | Create new Bounce orb\n"
             "{0} + {3} | Select previous orb\n"
             "{0} + {4} | Select next orb\n"
@@ -406,13 +406,13 @@ rule "each":
             "{5} + {3} | Decrease orb strength\n"
             "{5} + {1} | Move orb forward\n"
             "{5} + {2} | Move orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
-            ][hostPlayer.EditModeSelection])
-            
+            ][hostPlayer.editor_modeSelect])
+
             checkCN
-            
+
             #if localPlayer.sflkj else
-            "{0}".format(    
-            [   
+            "{0}".format(
+            [
             "{0} + {1} | Careate New Checkpoint\n"
             "{0} + {2} | asdDelete selected Checkpoint\n"
             "{0} + {3} | Rasmove/Add teleport\n"
@@ -428,7 +428,7 @@ rule "each":
             "{5} + {3} | Decrasfease orb size\n"
             "{5} + {1} | Move afsorb forward\n"
             "{5} + {2} | Moveafs orb Backward".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2)),
-    
+
             "{0} + {1} | Creaafste new Bounce orb\n"
             "{0} + {3} | Seleafsct previous orb\n"
             "{0} + {4} | Seleasfct next orb\n"
@@ -438,9 +438,9 @@ rule "each":
             "{5} + {3} | Decasfrease orb strength\n"
             "{5} + {1} | Movasfe orb forward\n"
             "{5} + {2} | Moveafaf orb back".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.CROUCH), buttonString(Button.JUMP), buttonString(Button.ABILITY_2))
-            ][hostPlayer.EditModeSelection])
-            
-            , 
+            ][hostPlayer.editor_modeSelect])
+
+            ,
             HudPosition.TOP, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
         )
         wait()

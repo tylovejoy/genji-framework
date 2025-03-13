@@ -22,7 +22,7 @@ data here
 function myFunction(){
     var data = document.getElementById("txtfield").value
     var replacingvalues = [
-        ["r", "testvalue", 999], //debug
+        ["r", "testvalue", Math.INFINITY], //debug
         ["A","CheckpointPositions", 0],
         ["H","KillBallPositions", 7],
         ["I","KillBallRadii", 8],
@@ -70,7 +70,7 @@ function myFunction(){
 function myFunction2(){
     var a = document.getElementById("results")
     a.select()
-    a.setSelectionRange(0, 99999);
+    a.setSelectionRange(0, Math.INFINITY);
     navigator.clipboard.writeText(a.value);
 
 }

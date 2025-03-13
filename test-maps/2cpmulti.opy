@@ -26,7 +26,7 @@ rule "test data":
     CustomPortalEndpoint = []
     CustomPortalCP = []
     CompMode = false
-    instructiontext = ["Change in Comp Mode instruction message hud 1", "Change in Comp Mode instruction message hud 2", "Change in Comp Mode instruction message hud 2", "Change in Comp Mode instruction message hud 2"]
+    InstructionText = ["Change in Comp Mode instruction message hud 1", "Change in Comp Mode instruction message hud 2", "Change in Comp Mode instruction message hud 2", "Change in Comp Mode instruction message hud 2"]
     HudStoreEdit = []
     SaveName = []
     SaveCp = []

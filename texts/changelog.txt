@@ -12,7 +12,7 @@
 - added dash start into a workshop toggle
 - adjusted default lobbyname and message
 - portals reworked to now isnetead of on set positions, enabled via toggle
-- re-ordered and renamed many rules, and translated remaining 
+- re-ordered and renamed many rules, and translated remaining
 - bans are now disabled in invincible mode/map completed
 
 editor:
@@ -49,7 +49,7 @@ added:
 adjustments:
 - time remaining now always shows
 
-0.9.3 
+0.9.3
 fixed:
 - orbs not working as intended
 - effect optimizations
@@ -81,8 +81,8 @@ fixed:
 new features:
 - orange orbs are now strength 0 by default.
 - allow effects on checkpoint 0. This still needs to be thoroughly tested.
-- disallow checkpoints being too close. 
-    In other words, rings cannot overlap and neither can the checking distance (1.4). 
+- disallow checkpoints being too close.
+    In other words, rings cannot overlap and neither can the checking distance (1.4).
     This also means you cannot walk into another checkpoint, you will have to leave the ground.
 
 0.9.7 - date 5-9-2022
@@ -172,7 +172,7 @@ fixed:
     - editor now has precise placement, hold ult in cp mode to move the cp slowly
     - you can now spec in the editor (but takes another second of holding button)
     - redid some editor hud and hide some hud if the editor is on
-    
+
     - optimized and cleaned up a lot of the code behind the scenes
     important notes for map updates:
     - orbs hitboxes are now 0.7 higher on the Y and detect your midle instead of your feet. double check your orbs.
@@ -195,7 +195,7 @@ fixed:
     - fixed an issue with dva disapearing to fast.
 
 1.7.5 - 6-2-2023
-    - changed how Dva works. This should fix some issues with her not working on special versions of maps. 
+    - changed how Dva works. This should fix some issues with her not working on special versions of maps.
     now unless the map is in the exception list, she wil just explode on default co-ordinates that work on most maps.
 
 1.7.6 - 6-2-2023
@@ -228,7 +228,7 @@ fixed:
     - for those who really want to still hide splits they can hold dash + primary + secondary for 1 second
     - you no longer die when landing on a cp while having ult. You get to keep the last second of your blade for next cp. This results in a much smoother experience.
     - you now lose collected orbs when returning to the current checkpoint, to prevent cheese
-    - added the "require available bhop to complete cp" 
+    - added the "require available bhop to complete cp"
     - added a difficulty called "playtest"
     - added back stall enhance from CN version
 
@@ -238,11 +238,11 @@ fixed:
     - fixed a bug that caused restarting during comp mode to get you soft locked
     - fixed world record hud apearing betwene "top 5" and the actual top 5 players.
     - fixed a bug that lets you dash starts always. found by vikingking/Pyramide#7222
-    
+
     editor:
     - you now only have to enter your name and code ones to include it in pasta. after that you dont have to enter it again unles you want to change it.
     - map data and addon settinsg rules have been moved to page 2. everything you need to edit is now on page 2 together.
-    
+
     - you can now remove a placed teleport cp by using the same button again
     - its now possible to move a cp without deleting its teleport
     - after placing a teleport, the cp location itself gets marked with an orange cirkle, incase you want to move that instead of the teleport.
@@ -277,13 +277,13 @@ fixed:
 
 1.8.2 - 8-5-2023
     - the "beginner" difficulty has been replaced by "playtest". This difficulty will also be removed from the discord bot.
-    - removed the dash button from the skip checkpoint command 
+    - removed the dash button from the skip checkpoint command
     - create bhops now get counted on the bhop hud
-    - you no longer get the bhop created message or ban trigger during the commands for restarting, resetting and skipping. 
+    - you no longer get the bhop created message or ban trigger during the commands for restarting, resetting and skipping.
     - afk sleep timer is now increased 5 minutes instead of 90 seconds
-    - preview orb now stops when restarting, resetting or skipping. This fixed a camera bug.  
+    - preview orb now stops when restarting, resetting or skipping. This fixed a camera bug.
     - some data cleanup behind the scene
-     
+
     editor:
     - quick reset now requires a map to have atleast 1 checkpoint. This was causing deadloops in some editor scenarios.
     - you can no longer place orbs if there are no checkpoints on the map. It will also give you an message if you try.
@@ -326,8 +326,8 @@ editor:
 
 1.9.1 - 13-6-2023
 - new addon: Hint per cp
-A player could asign hint text like "use saveclimb first" to a checkpoint. 
-if a player is stuck on a checkpoint they can press the hint button to see that hint text. 
+A player could asign hint text like "use saveclimb first" to a checkpoint.
+if a player is stuck on a checkpoint they can press the hint button to see that hint text.
 - preview rework: Preview now previews checkpoints and has its hud updated. You also stop firing shurikens during the preview.
 - effects now load much sooner when you start a lobby
 - if you fail to collect locks, you will now reset without being killed. It does wait until any ongoing dash is over.
@@ -375,22 +375,22 @@ thanks to @junior for making this ban.
 fixed:
 - fixed a bug that caused Deathbhop ban to stop working
 
-1.9.4a
+# 1.9.4a
 - Added a check for double jump
-  * added new variable "DoubleUsed"
-  * after each use of"CancelPrimaryAction()", reset "DoubleUsed" value
+  * added new variable "doubleUsed"
+  * after each use of"CancelPrimaryAction()", reset "doubleUsed" value
 - ~~Added a new addon to fix ow update 2.12 for ledge grabs (default disabled)
   * Has support for Hanzo & Kiriko (In-case someone needs it later)
   * Known Issues: Heli/Vertical Multi-climb input timing is slower~~
- * Commented out for safe keeping, but do not compile
+  * Commented out for safe keeping, but do not compile
 - Optimize ban emote
 - Fix some comment typos and make line spacing more consistent
 - Append to the "ChangeLog" & "Known Issues"
 - Updated "Fake Triple Jump - enable rule - 启用此规则 - 假三段跳"
-  * Uses the new "DoubleUsed" for more accurate recreation of the original
+  * Uses the new "doubleUsed" for more accurate recreation of the original
 
-1.10.0
-Features
+# 1.10.0
+### Features
 - Input UI
 - Checkpoint can have Double Jump Required
 - Negative bounce orbs give double jump
@@ -398,7 +398,7 @@ Features
 - Huds, improve FPS
   * Local Player for commands
   * Simplify Chinese
-Optimizations
+### Optimizations
 - Double Jump
   * checks only if there is a checkpoint restriction
   * removed an unnecessary check that caused server load issues
@@ -407,11 +407,11 @@ Optimizations
 - Removed vestige of Dva dummy destruct code
 - Disable Match Voice (we are all on the same team)
 - refactor effects to huds.opy
-Editor
+### Editor
 - Remove teleport doesn't reset to checkpoint while in invincibility mode
 - Inspector is re-disabled after exporting map data
 
-@Framework Patch Notes
+`@Framework Patch Notes`
 # 1.10.1
 ### Features
 - Ban Save Double setting
@@ -433,4 +433,64 @@ Editor
 - Enable new bans to readjust CP values upon creation & deletion of a CP
 - Removed checks that prevented climb from being reset for non-Genjis
 - Removed an exploit allowing climbing with climb ban enabled
-  * Found by @Sumpin + 100xp
+  * Found by `@Sumpin` +100xp
+
+`@Framework Patch Notes`
+# 1.10.2
+### Gameplay Features
+- Practice Mode
+  * Can enter with Invincibility active. (Auto disables Invincibility)
+  * Can exit with Invincibility active. (Auto disables Invincibility)
+- Invincibility Mode can exit with ultimate active
+- Quick Reset can use with dash active
+- Preview Checkpoint
+  * Modify zoom using ▲ ▼
+- Death hop will apply to all resets
+  * Ex. Quick, AFK, Spectate, etc
+- Emoting is not reset immediately for ban emote hop ♥
+- Faster unlimited dashes
+  * `@Kackspn` +1xp
+### Editor
+- Move Checkpoint
+  * Hold Primary for normal speed modifier
+  * Press Secondary will cancel & undo moving checkpoint
+- Fly Mode
+  * Press Ability_1 to move Up
+  * Press Ultimate to move Down
+- Move Objects
+  * Now uses Fly Mode control scheme
+  * Press Ability_1 to lock walking on Y Axis
+  * Press Secondary will cancel & undo moving object(s)
+### Addons Page 2 (Default Off)
+- Togglable 3rd Person Camera Mode
+  * Default buttons: Hold Crouch + Jump
+- Hints UX, no longer display there is no hint ☻
+- Fake Triple Jump enabling is easier
+### Code
+- Renamed & reorganized player variable names
+- Moved all macro defines to Definitions.opy
+- Refactored all reseting to a single function
+- Tons of small micro optimizations
+- Disabled perks to most modes*
+  * Not Control, Push, or Hybrid due to paste conflicts
+### Fixes
+- Auto-Climb was not detected as Multi-Climb
+- Reduced false positives from Ban Save Double
+  * Increased the required upwards vertical speed from 0 to 6
+  * Add exception when bhop is used during grace period
+- Ban death hop would not prevent early climb when checkpoint was set too high
+- Ban bhop would not trigger when ColorConfig[bhopclimb_used] was set to Color.GREEN
+- Save Double ban was persisting when Invincible or on last point
+  * Found by `@bioslet` +5xp
+- Rainbow finish rings was not displaying
+  * Found by `@Sumpin` +5xp
+- Invincibility Mode was resuming timer
+  * Found by `@Sumpin` +5xp
+- Spray would disappear upon returning from spectator
+  * Found by `@Shade Yato`
+### Obsoleting
+- Dash Start
+  * Setting `ban Dash Start - 0关卡Shift` has been removed.
+  * To re-enable Dash Start when upgrading existing maps, Map data must include: `DashExploitToggle = false`
+  * Dash Start if re-enabled, will affect all checkpoints - Not just checkpoint 0.
+  * Deprecated due to refactoring to a single reset function.
