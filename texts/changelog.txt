@@ -442,7 +442,7 @@ fixed:
   * Can enter with Invincibility active. (Auto disables Invincibility)
   * Can exit with Invincibility active. (Auto disables Invincibility)
 - Invincibility Mode can exit with ultimate active
-- Quick Reset can reset with dash active
+- Quick Reset can use with dash active
 - Preview Checkpoint
   * Modify zoom using ▲ ▼
 - Death hop will apply to all resets
