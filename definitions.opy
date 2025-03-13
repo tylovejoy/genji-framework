@@ -1,47 +1,90 @@
 #!mainFile "genji.opy"
 
+######################################## Settings ####################
+#!define versionhere "v1.10.2"
+#♨ Dev Build Icon
+
+#!define editortoggle(x) __script__("test-maps/togglescript.js")
+editortoggle(0) # 0 is editor, rest is numbers
+# Disable via double ## at include, not the define because the define needs to exist
+#!define testToggle ##!include "test-scripts.opy"
+
+# Debug force CN mode on
+##!define checkCN if true else
+
+# Enable Invis Command (Invis Command cant be pasted in CN client die to null and none translating to same symbol)
+#!define enableInvisCommand true
+
+# Limit on how many orbs can be made
+#!define fxLimit 193
+
+#!define portalDistance 1.3
+
+# Default circle radius: 1.4
+#!define cpcircleradius 1.4
+
+# Default fx: 1
+#!define cpCirkleFx 1
+
+# distance range for player - orb 1.4
+#!define bounceorbdistance 1.4
+
+# height added to player for orb detection. inludes the +
+#!define bounceoffset + Vector.UP * 0.7
+
+#!define usePerks false
+
+#!define cpCheat false
+
+# defaults: off, attempt:5, 120 min, restart:false
+#!define compModeToggle false
+#!define attemptCount 5
+#!define compTimeLimit 120
+#!define compRestartLimit false
+
+######################################## Macro Tools ##########################
 ##!define RestartTimer(timeInMinutes) "{0} Hours and {1} Minutes".format(floor(timeInMinutes / 60 / 60), "{0}{1}".format(floor(timeInMinutes % 60 / 10), floor(timeInMinutes % 60 - floor(timeInMinutes % 60 / 10) * 10)))
-##!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format("" if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
+##!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format([] if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
 ##!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
 ##!define prettyTime(timeInSeconds) "{0} {1}".format(timeInSeconds,"秒"  checkCN "sec")
 #!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
 
+#!define insert(insert_array, insert_index, insert_value)\
+insert_array.append(insert_value)\
+insert_array = [elementhere if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for elementhere, i in insert_array]
 
-#!define insert(insert_array, insert_index, insert_value)  insert_array.append(insert_value) \
-        insert_array = [elementhere if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for elementhere, i in insert_array]
-
-#!define togglecpinarray(baninput)\
-if eventPlayer.CurrentCheckpoint in baninput:\
-    baninput = [i for i in baninput if i != eventPlayer.CurrentCheckpoint]\
+#!define toggleCpInArray(baninput)\
+if eventPlayer.checkpoint_current in baninput:\
+    baninput = [i for i in baninput if i != eventPlayer.checkpoint_current]\
 else:\
-    baninput.append(eventPlayer.CurrentCheckpoint)
+    baninput.append(eventPlayer.checkpoint_current)
 
-#!define RemoveCPandLower(arrayname)  arrayname = [i for i in arrayname if i != hostPlayer.CurrentCheckpoint ]\
-arrayname = [x - (1 if x >= hostPlayer.CurrentCheckpoint else 0) for x in arrayname]
+#!define removeCPandLower(arrayname)\
+arrayname = [i for i in arrayname if i != hostPlayer.checkpoint_current]\
+arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in arrayname]
 
-
-# check if cn client
-/*
-#!define checkCN if any([ \
-        "{0}".format(Color.ROSE) == "玫红", \
-        l"No" == "不行",  \
-        l"Capture" ==  "夺取",    # 捕捉cn \
-        l"Capture" == "捕捉"  # 捕捉 tw  check \
-    ]) else
-#!define checkCN if l"Capture" == "捕捉" or l"Capture" == "捕捉" or "{0}".format(Color.ROSE) == "玫红" else
-*/
-# debug force CN mode on
-##!define checkCN if true else
 #!define checkCN if l"Oof" == "噢" else
 
-##!define FILLER rule "Addon settings are on next page! Click the next page button!":\
-##!define FILLER rule "Map data and addon settings are on page 2 !!!!!!!!!!!!!!!!!!!":\
 #!define FILLER "<tx0C000000000207B5><fgFFFF00FF> Map Data & Addon Settings Are on Page 2 - 地图数据和附加组件的设置在第2页"
 
-#----------------Global Variables------------------
+#!define flyMovementDelta ((0.096 + 0.192 * eventPlayer.isHoldingButton(Button.JUMP) - 0.048 * eventPlayer.isHoldingButton(Button.CROUCH)) * \
+    (eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z * (vect(1, not eventPlayer.isHoldingButton(Button.ABILITY_1), 1))+ \
+    worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION) + \
+    Vector.UP * (eventPlayer.isHoldingButton(Button.ABILITY_2) - eventPlayer.isHoldingButton(Button.ULTIMATE))))
+
+###############################################################################
+#!optimizeForSize
+# Supress warning for emote
+#!suppressWarnings w_ow2_communicate_bug
+#disable overpy map detection (command removed by zezy after fix by blizzard)
+# #!disableMapDetectionFix
+
+#!include "settings.opy"
+
+######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
-# Current Unused Variables: 1,6,9,11,16,17,19,28,29,31,36,37,48,49,59,72,89,92+
+# Current Named Unused Variables: 1,6,9,11,16,17,19,28,29,31,36,37,48,49,59,72,89,90
 #!define CheckpointPositions A
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 #!define SelectedCheckpoint_Editing B
@@ -122,14 +165,13 @@ globalvar TempIterator1 38                  # int                       --- temp
 
 globalvar DashExploitToggle 39
 
-
 globalvar PortalNames 40                    # [str]                     --- display name of portals
 globalvar PortalLoc 41                      # [vect]                    --- portal position
 globalvar PortalDest 42                     # [vect]                    --- portal destination
 globalvar PortalOn 43                       # bool                      --- portals enabled
 globalvar Difficultyhud 44                  # number                    --- workshop toggle to display difficulty hud
 
-globalvar CustomPortalStart 45              # [vect]                    --- custom portal start 
+globalvar CustomPortalStart 45              # [vect]                    --- custom portal start
 globalvar CustomPortalEndpoint 46           # [vect]                    --- custom portal end points
 globalvar CustomPortalCP 47                 # [int]                     --- custom portal checkpoints
 
@@ -139,8 +181,9 @@ globalvar CompAtmpNum 52                    # int                       --- comp
 globalvar CompAtmpSaveNames 53              # [strings]                 --- comp name list
 globalvar CompAtmpSaveCount 54              # [int]                      --- compt attempt list
 globalvar CompRestartLimit 55               # bool                      --- resest limiter
-globalvar instructiontext 56                # [text]                    --- array of instructions
-globalvar TitleData 57                      # [[cp ,[title],[color]]    --- title addon 
+#!define InstructionText instructiontext
+globalvar InstructionText 56                # [text]                    --- array of instructions
+globalvar TitleData 57                      # [[cp ,[title],[color]]    --- title addon
 globalvar HudStoreEdit 58                   # [textid]                  --- list of huds to delete if editormode is on
 
 globalvar SaveName 60
@@ -179,110 +222,117 @@ globalvar BanBhop 86
 globalvar BanStand 87                       # bans on second hop
 globalvar BanDjump 88
 globalvar BanSaveDouble 89
-#!define MapCheckerIter DestructoIter
 globalvar DestructoIter 90
 globalvar MapVectorArray 91
 
-#----------------Player Variables------------------
-playervar CurrentCheckpoint                 # int                       --- Current Checkpoint
-
+######################################## Player Variables #####################
 #PlayerEffects data
-#0 - Current ring, 
-#1 - Next ring, 
-#2 - Next lightshaft, 
-#3 - Next arrow icon, 
+#0 - Current ring,
+#1 - Next ring,
+#2 - Next lightshaft,
+#3 - Next arrow icon,
 #4 - Next "Come here" text
-#playervar PlayerEffects                    # list[effect]              --- Player effect data array  
-playervar InvincibleToggle                  # bool                       --- invincible/normal mode toggle now a bool
-playervar Timer                             # float                     --- Timer, chased.
-playervar EditModeSelection                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
-playervar SpectateToggle                    # bool                       --- turned into bool
+#playervar PlayerEffects                    # list[effect]              --- Player effect data array
 #playervar ArrayIterator                    # MsDestructo Iterator
 #playervar PortalText                       # In-World Text             --- Portal String inworld text
 #playervar MapVectorArray                   # MsDestructo Vectors
-playervar LedgeDash
-playervar LockEditor                        # bool                      --- ensure only 1 editor command can go of at the time
-playervar WallclimbUsed                     # bool                      --- turned into bool
-playervar GuideToggle                       # bool                       --- turned into bool, shows/hides editor hud
-playervar LockState                         # bool                      --- locked means you are curently runing arrive checkpoint rule
-playervar PauseTimer                        # float                     --- time in spectate/invincible, chased
-playervar Temp
-playervar BhopUsed                          # bool                      --- turned into bool
-playervar DoubleUsed                        # bool
-playervar MovedCheckpoint
-playervar PracticeCheckpoint                # int                       --- Saved practice checkpoint
-playervar PracticeToggle                    # int                       --- turned into bool
-playervar LeaderboardToggle                 # bool                      --- show/hide leaderboard
-playervar NotOnLastCp                       # bool                      --- false if you are noton the last cp or level below 2 cps
-playervar Bhopcount                         # int                       --- counts bhops used for stand create ban
-playervar JumpCount                         # int                       --- jump tracking count, 0, 1, 2
-#playervar MultiClimbCountHUD                # HUD                       --- climb counter
-playervar CreateCounter 
-playervar QuickRestartToggle                # bool                      -- enable reload to restart cp
-playervar MultiClimbCount                   # int                       --- climb count # for HUD
-playervar finishfxcache                     # color                     --- color of fx after finish the map
-playervar HintsOn
-playervar PreviewsArray2
-playervar PreviewsArray                     # array                     --- store preview positions
-playervar PreviewsI                         # int                       --- preview itterator
-playervar invis                             # bool                      --- invis toggle added by fisho
-playervar flytoggle                         # vector/null               --- null if not flying, else vector position, added by fisho
-playervar savemaphud                        # array                     --- array of save map hud ids
 #playervar TracesOff                        # bool                      --- turn traces (ring explosion fx) off
-playervar EditorOn                          # bool                      --- on all players, but only gets checked from host player
-playervar LockCollected                     # number                    --- amount collected lock this cp
-playervar bouncetouched                     # int                       --- cache of the bouncepad id you are currently touching
-#playervar PortalLoop                       # int                       --- loop to select portal
-playervar PortalStart_Cache
-playervar BounceLockMax_Cache
-playervar KillPosition_Cache
-playervar KillRadii_Cache
-playervar BouncePosition_Cache
-playervar BounceStrength_Cache
-playervar BounceUlt_Cache
-playervar BounceDash_Cache
-playervar BounceLock_Cache
-playervar BounceIndex_Cache
-playervar KillIndex_Cache
-playervar bouncetouchedlast
+playervar lockState                         # bool                      --- locked means you are curently runing arrive checkpoint rule
 
-playervar EffectSizeArray
-playervar EffectSizeToggle
-playervar CompDone                          # bool                      --- out of atemps or time?
-playervar AttemptCount                      # int                       --- amound of attemps remaining
-playervar instructionhud
-playervar TitleStore                        # textid                    --- store curent  title textid
+playervar checkpoint_current                # int                       --- Current Checkpoint
+playervar checkpoint_practice               # int                       --- Saved practice checkpoint
+playervar checkpoint_moved
+playervar checkpoint_notLast                       # bool                      --- false if you are noton the last cp or level below 2 cps
 
-playervar PortalEnd_cache
+playervar timer_normal                             # float                     --- Timer, chased.
+playervar timer_pause                        # float                     --- time in spectate/invincible, chased
+playervar timer_practice
+playervar timer_split                         # int                       --- stored time that the split compares to
+playervar timer_splitDisplay                      # int                       --- displayed split value
+#playervar timer_splitsOn                         # bool                      --- turning splits on/off is now done via seting splittime to -Math.INFINITY
 
-playervar banstring                         # str                       --- displayed bans
+playervar toggle_invincible                  # bool                       --- invincible/normal mode toggle now a bool
+playervar toggle_spectate                    # bool                       --- turned into bool
+playervar toggle_practice                    # int                       --- turned into bool
+playervar toggle_quickRestart                # bool                      -- enable reload to restart cp
+playervar toggle_guide                       # bool                       --- turned into bool, shows/hides editor hud
+playervar toggle_leaderboard                 # bool                      --- show/hide leaderboard
+playervar toggle_invisible                             # bool                      --- invis toggle added by fisho
+playervar toggle_hints
+
+playervar skill_countBhops                         # int                       --- counts bhops used for stand create ban
+playervar skill_countJumps                         # int                       --- jump tracking count, 0, 1, 2
+playervar skill_countCreates
+playervar skill_countMulti                   # int                       --- climb count # for HUD
+playervar skill_usedClimb                     # bool                      --- turned into bool
+playervar skill_usedBhop                          # bool                      --- turned into bool
+playervar skill_usedDouble                        # bool
+playervar skill_ultCd
+
+playervar banString                         # str                       --- displayed bans
 #playervar ban_triple
+#playervar ban_dashStart
 playervar ban_multi
 playervar ban_create
-playervar ban_dedhop
-#playervar ban_dashstart
+playervar ban_dead
 playervar ban_emote
 playervar ban_climb
 playervar ban_bhop
 playervar ban_standcreate                   # bans on second hop
 playervar ban_djump
 playervar ban_savedouble
-playervar splittime                         # int                       --- stored time that the split compares to
-playervar splitdisplay                      # int                       --- displayed split value
-#playervar splitson                         # bool                      --- turning splits on/off is now done via seting splittime to -999
-playervar practicetimer
-playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
-playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
-playervar HUDInputs
 
-#Subroutine names
-subroutine StartGame
-#subroutine KILLBALL
-#subroutine pinball
+playervar cache_collectedLocks                     # number                    --- amount collected lock this cp
+playervar cache_bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
+playervar cache_bounceLastTouched
+playervar cache_portalStart
+playervar cache_portalEnd
+playervar cache_bounceMaxLocks
+playervar cache_killPosition
+playervar cache_killRadii
+playervar cache_bouncePosition
+playervar cache_bounceStrength
+playervar cache_bounceUlt
+playervar cache_bounceDash
+playervar cache_bounceLocks
+playervar cache_inputs
+playervar cache_rainbow                     # color                     --- color of fx after finish the map
+playervar cache_titleHud                        # textid                    --- store curent  title textid
+
+playervar preview_array1                     # array                     --- store preview positions
+playervar preview_array2
+playervar preview_i                         # int                       --- preview itterator
+
+playervar editor_on                          # bool                      --- on all players, but only gets checked from host player
+playervar editor_modeSelect                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
+playervar editor_fly                         # vector/null               --- null if not flying, else vector position, added by fisho
+playervar editor_saveHud                        # array                     --- array of save map hud ids
+playervar editor_undo
+playervar editor_lock                        # bool                      --- ensure only 1 editor command can go of at the time
+playervar editor_hitboxEffect
+playervar editor_hitboxToggle
+playervar editor_bounceIndex
+playervar editor_killIndex
+playervar editor_temp
+
+playervar comp_done                          # bool                      --- out of atemps or time?
+playervar comp_countAttempts                      # int                       --- amound of attemps remaining
+playervar comp_instructionHud
+playervar addon_toggle3rdPov
+playervar addon_ledgeDash
+playervar addon_bounceId
+playervar addon_enableDoubleChecks
+
+#playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
+#playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
+######################################## Subroutines ##########################
+#subroutine KillBall
+#subroutine PinBall
 #subroutine PortalCreate
+subroutine StartGame
 subroutine EffectsCreate
-subroutine Leaderboardupdate # fishos
-subroutine CreateLeaderBoard
+subroutine LeaderboardUpdate # fishos
+subroutine CreateLeaderboard
 subroutine UpdateTitle
 subroutine DashUltGive
 subroutine CheckUlt
@@ -291,18 +341,20 @@ subroutine DeleteSave
 subroutine MakeSave
 subroutine StartPauseTimer
 subroutine StopPauseTimer
-subroutine editupdateselectedids
+subroutine EditUpdateSelectedIds
 subroutine EditorSelectLast
-subroutine TriggerOnFailSuccesReset
-subroutine CheckMap
+subroutine AddonCustomLoadAndReset
+subroutine AddonCheckMap
+subroutine Addon3rdPerson
 
+######################################## Enums ################################
 enum HO:
     # Left #####################
     data_name = -200,
     data_code,
     data_dsc,
     edit_savemap,
-    
+
     game_timer,
     game_split_display,
     game_bhop,
@@ -334,7 +386,7 @@ enum HO:
     data_dif,
     game_level_orb,
     com_previewsub,
-    
+
     filler_custommsg,
     add_custommsg1,
     add_custommsg2,
@@ -350,17 +402,14 @@ enum HO:
     topend,
     # Right #####################
     data_remaingtime,
-
-    com_restart_n_board,
-    com_invincible,
-    com_quickres,
-    com_spec,
-    com_invis,
     com_displaytoggle,
-    com_splits,
-
     com_preview,
-    #com_previewsub,
+    com_3rd,
+    com_invis,
+    com_quickres,    
+    com_restart_n_board,
+    com_spec,
+    com_invincible,
     com_practice,
     com_practicesub,
     com_hints,
@@ -401,4 +450,3 @@ enum customize: # always add new options on end so previously configured colors 
     orb_lock,
     portal,
     dsc,
-    

@@ -11,22 +11,22 @@ rule "<tx0C00000000001344> Addon Functions <tx0C00000000001344>":
 rule "Pre-set control map portal | function | toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
-    @Condition eventPlayer.InvincibleToggle or not eventPlayer.NotOnLastCp
+    @Condition eventPlayer.toggle_invincible or not eventPlayer.checkpoint_notLast
     @Condition len(PortalLoc) != null
-    @Condition any([distance(eventPlayer.getPosition() + vect(0,0.2,0),i) < 1.4 for i in PortalLoc])
-    if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])] != vect(0,0,0):
+    @Condition any([distance(eventPlayer.getPosition() + 0.2 * Vector.UP,i) < 1.4 for i in PortalLoc])
+    if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])]:
         eventPlayer.teleport(
             PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])]
         )
 
 rule "Custom portals | function":
     @Event eachPlayer
-    @Condition len(eventPlayer.PortalStart_Cache) > 0
-    @Condition [i for i in eventPlayer.PortalStart_Cache if distance(i, eventPlayer.getPosition() + vect(0,0.2,0)) < portaldistance]
-    #@Condition any([distance(eventPlayer.getPosition() + vect(0, 0.2, 0), ent) < portaldistance for ent in eventPlayer.PortalStart_Cache]) == true
+    @Condition len(eventPlayer.cache_portalStart) > 0
+    @Condition [i for i in eventPlayer.cache_portalStart if distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance]
+    #@Condition any([distance(eventPlayer.getPosition() + 0.2 * Vector.UP, ent) < portalDistance for ent in eventPlayer.cache_portalStart]) == true
 
     eventPlayer.teleport(
-        eventPlayer.PortalEnd_cache[eventPlayer.PortalStart_Cache.index(sorted([i for i in eventPlayer.PortalStart_Cache],lambda x: distance(eventPlayer,x))[0])
+        eventPlayer.cache_portalEnd[eventPlayer.cache_portalStart.index(sorted([i for i in eventPlayer.cache_portalStart],lambda x: distance(eventPlayer,x))[0])
         ]
     )
     wait(0.4)
@@ -85,7 +85,7 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
     @Condition isGameInProgress()
     MsDestructo = []  # Multiple bots
-    waitUntil(any([x.hasSpawned() for x in getAllPlayers()]), 99999)
+    waitUntil(any([x.hasSpawned() for x in getAllPlayers()]), Math.INFINITY)
     switch getCurrentMap():
         case Map.ILIOS:
             MapVectorArray = [vect(322.988, 40, -37.732), vect(27.711, 100, -161.298), vect(-223.895, 50, 0.89)]
@@ -180,7 +180,7 @@ rule "Little destructo - fence breaker":
         while MapVectorArray[0] < (fence_grid*fence_grid):
             createProjectile(
                 Projectile.ORB,  # the only orb available without fx extension
-                getAllPlayers(),
+                null,
                 fence_position ,
                 Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
                 DynamicEffect.GOOD_EXPLOSION, # possible without extensions: bad, good, ring
@@ -200,7 +200,7 @@ rule "Little destructo - fence breaker":
         # same as other projectile before
         createProjectile(
             Projectile.ORB,
-            getAllPlayers(),
+            null,
             MapVectorArray[0],
             Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
             DynamicEffect.GOOD_EXPLOSION,
@@ -212,13 +212,13 @@ rule "Little destructo - fence breaker":
 
     MapVectorArray = null
 
-rule "Poll jump and crouch inputs for spectators":
+rule "Cache jump & crouch inputs for spectators":
     @Event playerJoined
     wait()
-    eventPlayer.HUDInputs = vect(eventPlayer.isHoldingButton(Button.JUMP),eventPlayer.isHoldingButton(Button.CROUCH),false)
+    eventPlayer.cache_inputs = vect(eventPlayer.isHoldingButton(Button.JUMP), eventPlayer.isHoldingButton(Button.CROUCH), false)
     goto RULE_START
 
-def CheckMap():
+def AddonCheckMap():
     @Name "SUB | Basic Map Validator"
     if len(CheckpointPositions) <= 1: return
     createDummy(Hero.ANA, Team.1 if getNumberOfSlots(Team.1) < getNumberOfSlots(Team.2) else Team.2, -1, CheckpointPositions[0], null)
@@ -231,32 +231,41 @@ def CheckMap():
     MapChecker.setGravity(Math.INFINITY)
     waitUntil(MapChecker.hasSpawned(), Math.INFINITY)
 
-    for MapCheckerIter in range(1, len(CheckpointPositions)):
-        if nearestWalkablePosition(CheckpointPositions[MapCheckerIter]) and distance(CheckpointPositions[MapCheckerIter], nearestWalkablePosition(CheckpointPositions[MapCheckerIter])) > cpcircleradius:
-            MapChecker.startForcingPosition(raycast(CheckpointPositions[MapCheckerIter] + Vector.UP * cpcircleradius,CheckpointPositions[MapCheckerIter] +
+    for MapChecker.checkpoint_current in range(1, len(CheckpointPositions)):
+        if nearestWalkablePosition(CheckpointPositions[MapChecker.checkpoint_current]) and distance(CheckpointPositions[MapChecker.checkpoint_current], nearestWalkablePosition(CheckpointPositions[MapChecker.checkpoint_current])) > cpcircleradius:
+            MapChecker.startForcingPosition(raycast(CheckpointPositions[MapChecker.checkpoint_current] + Vector.UP * cpcircleradius,CheckpointPositions[MapChecker.checkpoint_current] +
                 Vector.DOWN * cpcircleradius, [], [], false).getHitPosition(), true)
             wait(7 * 0.016)
             MapChecker.stopForcingPosition()
             waitUntil(MapChecker.isOnGround(), true)
-            if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapCheckerIter]) <= cpcircleradius:
+            if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapChecker.checkpoint_current]) <= cpcircleradius:
                 goto lbl_MapChecker_nextCp
 
-            for MapChecker.Temp in range(cpcircleradius, cpcircleradius - 0.2, -0.2):
-                MapChecker.startForcingPosition(CheckpointPositions[MapCheckerIter] + Vector.UP * MapChecker.Temp,true)
+            for MapChecker.checkpoint_practice in range(cpcircleradius, cpcircleradius - 0.2, -0.2):
+                MapChecker.startForcingPosition(CheckpointPositions[MapChecker.checkpoint_current] + Vector.UP * MapChecker.checkpoint_practice,true)
                 wait(7 * 0.016)
                 MapChecker.stopForcingPosition()
                 waitUntil(MapChecker.isOnGround(), true)
-                if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapCheckerIter]) <= cpcircleradius:
+                if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapChecker.checkpoint_current]) <= cpcircleradius:
                     goto lbl_MapChecker_nextCp
-                    
+
             enableInspector()
-            printLog("Fail {0}".format(MapCheckerIter))
+            printLog("Fail {0}".format(MapChecker.checkpoint_current))
             disableInspector()
         lbl_MapChecker_nextCp:
 
     destroyDummy(MapChecker.getTeam(), MapChecker.getSlot())
     MapChecker = null
-    MapCheckerIter = null
     enableInspector()
-    printLog("■■■■■■■■■■■■■■■■■■■■■■■■")
+    printLog("■ Map Check Complete ■")
     disableInspector()
+
+def Addon3rdPerson():
+    @Name "SUB | 3rd Person Camera"
+    if eventPlayer.addon_toggle3rdPov:
+        eventPlayer.startCamera(updateEveryTick(
+            raycast(0.5 * Vector.UP + eventPlayer.getEyePosition(),
+            0.5 * Vector.UP + eventPlayer.getEyePosition() + -3.5 * eventPlayer.getFacingDirection(), [], [], false).getHitPosition() + 0.5 * eventPlayer.getFacingDirection()),
+            updateEveryTick(0.5 * Vector.UP + eventPlayer.getEyePosition()), false)
+    else:
+        eventPlayer.stopCamera()
