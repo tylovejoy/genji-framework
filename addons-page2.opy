@@ -147,7 +147,7 @@ rule "Hint text for certain Checkpoints - 特定关卡的提示文本 <---- EDIT
     # 修改数组 “HintCp” 为提示文本 显示的关卡
     HintCp = [1, 3]
 
-rule "3rd Person Camera Mode - 无所不知":
+rule "3rd Person Camera Mode - 第三人称":
     @Disabled
     @Event playerJoined
     #Default 1st person: False

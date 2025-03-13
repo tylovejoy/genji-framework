@@ -584,7 +584,7 @@ rule "Huds | Addon":
     wait()
     if getAllPlayers().addon_toggle3rdPov <= true:
         hudSubtext(localPlayer.toggle_guide,
-            "长按 {0} + {1} | 无所不知{2}".format(buttonString(Button.CROUCH), buttonString(Button.JUMP)," | 启用" if localPlayer.addon_toggle3rdPov else [])
+            "长按 {0} + {1} | 第三人称{2}".format(buttonString(Button.CROUCH), buttonString(Button.JUMP)," | 启用" if localPlayer.addon_toggle3rdPov else [])
             checkCN
             "Hold {0} + {1} | 3rd Person{2}".format(buttonString(Button.CROUCH), buttonString(Button.JUMP)," | ON" if localPlayer.addon_toggle3rdPov else []),
             HudPosition.RIGHT,HO.com_3rd,evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.addon_toggle3rdPov else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
