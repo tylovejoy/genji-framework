@@ -624,19 +624,16 @@ rule "Bounce Ball / Orb | Activate":
     elif eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched] < 0:
         eventPlayer.cancelPrimaryAction()
         eventPlayer.skill_usedDouble = null
-        playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
+        smallMessage(eventPlayer, "   二段跳已就绪" checkCN "   Double Jump is Reset")
 
     if eventPlayer.cache_bounceUlt[eventPlayer.cache_bounceTouched]:
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
         smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"#终极技能已就绪" checkCN "Ultimate is ready"))
-        playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     if eventPlayer.cache_bounceLocks[eventPlayer.cache_bounceTouched]:
         eventPlayer.cache_collectedLocks.append(eventPlayer.cache_bouncePosition[eventPlayer.cache_bounceTouched])
         smallMessage(eventPlayer, "   弹球已收集" checkCN "   orb has been collected")
-
-        playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
     if eventPlayer.cache_bounceDash[eventPlayer.cache_bounceTouched]:
         if eventPlayer.isUsingAbility1():
@@ -644,8 +641,9 @@ rule "Bounce Ball / Orb | Activate":
             wait(0.032) # wait til set false by check
         eventPlayer.setAbility1Enabled(true)
         smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready"))
-        playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
 
+    playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
+    
     wait()
     eventPlayer.cache_bounceTouched = -1
     wait(0.24)
