@@ -88,13 +88,13 @@ rule "Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
     # 修改字符串 "your nickname <-------" 为好友名字 区分大小写
     # 修改字符串 "display title" 为好友头顶 显示的称号
     waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
-    if "your nickname <-------" == "{0}".format(eventPlayer):
+    if "your nickname <-------" == eventPlayer.split([]):
         bigMessage(true[0], "Message to the whole room")
         createInWorldText(localPlayer, "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    if "your nickname <-------" == "{0}".format(eventPlayer):
+    if "your nickname <-------" == eventPlayer.split([]):
         bigMessage(true[0], "Message to the whole room")
         createInWorldText(localPlayer, "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    if "your nickname <-------" == "{0}".format(eventPlayer):
+    if "your nickname <-------" == eventPlayer.split([]):
         bigMessage(true[0], "Message to the whole room")
         createInWorldText(localPlayer, "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
