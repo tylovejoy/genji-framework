@@ -110,7 +110,7 @@ def DeleteSave():
 
 def MakeSave():
     @Name "SUB | Make Save"
-    SaveName.append("{}".format(eventPlayer))
+    SaveName.append(eventPlayer[0].split([]))
     SaveCp.append(eventPlayer.checkpoint_current)
     SaveTimer.append(eventPlayer.timer_normal)
     SaveEnt.append(eventPlayer)
@@ -143,19 +143,19 @@ def LeaderboardUpdate():
     @Name "SUB | Leaderboard Update"
     # [i[0] for i in var1]   list of first element of each in var 1
     # [ [name, seconds, prettytime] ]
-    if "{0}".format(eventPlayer) in [i[0] for i in LeaderBoardFull]: # you already have a time
-        if eventPlayer.timer_normal < [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)][0][1]: # new time better
-            LeaderBoardFull.remove([i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)])
-            LeaderBoardFull.append([["{0}".format(eventPlayer),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]] )
+    if eventPlayer[0].split([]) in [i[0] for i in LeaderBoardFull]: # you already have a time
+        if eventPlayer.timer_normal < [i for i in LeaderBoardFull if i[0] == eventPlayer[0].split([])][0][1]: # new time better
+            LeaderBoardFull.remove([i for i in LeaderBoardFull if i[0] == eventPlayer[0].split([])])
+            LeaderBoardFull.append([[eventPlayer[0].split([]),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]] )
             CreateLeaderboard()
     else: # you are not in list yet
         if len(LeaderBoardFull) < 20: # board has room for more
-            LeaderBoardFull.append([["{0}".format(eventPlayer),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)] ])
+            LeaderBoardFull.append([[eventPlayer[0].split([]),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)] ])
             CreateLeaderboard()
         else: # 20 entries already
             if eventPlayer.timer_normal < LeaderBoardFull[19][1]:  # your time lower then last entry
                 del LeaderBoardFull[19]
-                LeaderBoardFull.append([["{0}".format(eventPlayer),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]] )
+                LeaderBoardFull.append([[eventPlayer[0].split([]),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]] )
                 CreateLeaderboard()
 
 def checkpointFailReset():
@@ -208,8 +208,8 @@ def StartGame():
 
     if len(CheckpointPositions) != 0:
         destroyInWorldText(eventPlayer.cache_titleHud) # restarting reset title even if non on cp 0
-        if "{0}".format(eventPlayer) in SaveName: # load saved progres
-            SaveEnt[SaveName.index("{}".format(eventPlayer))] = eventPlayer
+        if eventPlayer[0].split([]) in SaveName: # load saved progres
+            SaveEnt[SaveName.index(eventPlayer[0].split([]))] = eventPlayer
             eventPlayer.checkpoint_current = SaveCp[SaveEnt.index(eventPlayer)]
             eventPlayer.timer_normal = SaveTimer[SaveEnt.index(eventPlayer)]
             SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
@@ -370,8 +370,8 @@ rule "Setup and Variables":
             )
             createInWorldText(
                 [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast],
-                "{0}".format(PortalNames[evalOnce(TempIterator1)]),
-                PortalLoc[evalOnce(TempIterator1)] + vect(0,1,0),
+                "{0}".format(PortalNames[evalOnce(TempIterator1)]), #$$ skip string conversion?
+                PortalLoc[evalOnce(TempIterator1)] + Vector.UP,
                 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
             )
     waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]),Math.INFINITY)
@@ -450,9 +450,12 @@ rule "Player Initialize":
 
     if CompMode:
         eventPlayer.setInvisibility(Invis.ALL)
-        if not "{0}".format(eventPlayer) in CompAtmpSaveNames: # instructions and settings for comp start
+        if eventPlayer[0].split([]) in CompAtmpSaveNames: 
+            eventPlayer.comp_countAttempts = CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))]
+            #smallMessage(eventPlayer,"now {0}".format(eventPlayer.comp_countAttempts))
+        else: # instructions and settings for comp start
             eventPlayer.comp_instructionHud = true
-            CompAtmpSaveNames.append("{0}".format(eventPlayer))
+            CompAtmpSaveNames.append(eventPlayer[0].split([]))
             CompAtmpSaveCount.append(1)
             eventPlayer.comp_countAttempts = 1
             eventPlayer.setMoveSpeed(0)
@@ -462,9 +465,6 @@ rule "Player Initialize":
             waitUntil(eventPlayer.isHoldingButton(Button.INTERACT) or CompTime < 1, Math.INFINITY)
             eventPlayer.setMoveSpeed(100)
             eventPlayer.comp_instructionHud = false
-        else:
-            eventPlayer.comp_countAttempts = CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))]
-            #smallMessage(eventPlayer,"now {0}".format( eventPlayer.comp_countAttempts))
         if eventPlayer.comp_countAttempts == (-1) or CompTime < 1:
             eventPlayer.comp_done = true
 
@@ -561,7 +561,7 @@ rule "Arrive | Ground reset | traces":
             LeaderboardUpdate()
             if CompMode and CompAtmpNum > 0:
                 if eventPlayer.comp_countAttempts == CompAtmpNum:
-                    CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = -1
+                    CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = -1
                     eventPlayer.comp_countAttempts = -1
                     eventPlayer.comp_done = true
                     eventPlayer.toggle_leaderboard = true
@@ -570,7 +570,7 @@ rule "Arrive | Ground reset | traces":
                     kill(eventPlayer,null)
                     eventPlayer.setDamageReceived(0)
                 else:
-                    CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.comp_countAttempts + 1
+                    CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts + 1
         else: # update save
             DeleteSave()
             MakeSave()
