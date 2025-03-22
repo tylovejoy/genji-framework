@@ -110,7 +110,7 @@ def DeleteSave():
 
 def MakeSave():
     @Name "SUB | Make Save"
-    SaveName.append(eventPlayer.split([]))
+    SaveName.append("{}".format(eventPlayer))
     SaveCp.append(eventPlayer.checkpoint_current)
     SaveTimer.append(eventPlayer.timer_normal)
     SaveEnt.append(eventPlayer)
@@ -143,23 +143,23 @@ def LeaderboardUpdate():
     @Name "SUB | Leaderboard Update"
     # [i[0] for i in var1]   list of first element of each in var 1
     # [ [name, seconds, prettytime] ]
-    if eventPlayer.split([]) in [i[0] for i in LeaderBoardFull]: # you already have a time
-        if eventPlayer.timer_normal > [i for i in LeaderBoardFull if i[0] == eventPlayer.split([])][0][1]: # new time worse
+    if "{0}".format(eventPlayer) in [i[0] for i in LeaderBoardFull]: # you already have a time
+        if eventPlayer.timer_normal > [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)][0][1]: # new time worse
             goto lbl_a
         else: # new time better
-            LeaderBoardFull.remove([i for i in LeaderBoardFull if i[0] == eventPlayer.split([])])
-            LeaderBoardFull.append([[eventPlayer.split([]),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]] )
+            LeaderBoardFull.remove([i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)])
+            LeaderBoardFull.append([["{0}".format(eventPlayer),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]] )
             CreateLeaderboard()
     else: # you are not in list yet
         if len(LeaderBoardFull) < 20: # board has room for more
-            LeaderBoardFull.append([[eventPlayer.split([]),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)] ])
+            LeaderBoardFull.append([["{0}".format(eventPlayer),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)] ])
             CreateLeaderboard()
         else: # 20 entries already
             if LeaderBoardFull[19][1] < eventPlayer.timer_normal:  # your time lower then last entry
                 goto lbl_a
             else: # you beat the last entry, thus replacing it
                 del LeaderBoardFull[19]
-                LeaderBoardFull.append([[eventPlayer.split([]),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]] )
+                LeaderBoardFull.append([["{0}".format(eventPlayer),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]] )
                 CreateLeaderboard()
     lbl_a:
 
@@ -213,8 +213,8 @@ def StartGame():
 
     if len(CheckpointPositions) != 0:
         destroyInWorldText(eventPlayer.cache_titleHud) # restarting reset title even if non on cp 0
-        if eventPlayer.split([]) in SaveName: # load saved progres
-            SaveEnt[SaveName.index(eventPlayer.split([]))] = eventPlayer
+        if "{0}".format(eventPlayer) in SaveName: # load saved progres
+            SaveEnt[SaveName.index("{}".format(eventPlayer))] = eventPlayer
             eventPlayer.checkpoint_current = SaveCp[SaveEnt.index(eventPlayer)]
             eventPlayer.timer_normal = SaveTimer[SaveEnt.index(eventPlayer)]
             SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
@@ -455,9 +455,9 @@ rule "Player Initialize":
 
     if CompMode:
         eventPlayer.setInvisibility(Invis.ALL)
-        if not eventPlayer.split([]) in CompAtmpSaveNames: # instructions and settings for comp start
+        if not "{0}".format(eventPlayer) in CompAtmpSaveNames: # instructions and settings for comp start
             eventPlayer.comp_instructionHud = true
-            CompAtmpSaveNames.append(eventPlayer.split([]))
+            CompAtmpSaveNames.append("{0}".format(eventPlayer))
             CompAtmpSaveCount.append(1)
             eventPlayer.comp_countAttempts = 1
             eventPlayer.setMoveSpeed(0)
@@ -468,7 +468,7 @@ rule "Player Initialize":
             eventPlayer.setMoveSpeed(100)
             eventPlayer.comp_instructionHud = false
         else:
-            eventPlayer.comp_countAttempts = CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer.split([]))]
+            eventPlayer.comp_countAttempts = CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))]
             #smallMessage(eventPlayer,"now {0}".format( eventPlayer.comp_countAttempts))
         if eventPlayer.comp_countAttempts == (-1) or CompTime < 1:
             eventPlayer.comp_done = true
@@ -566,7 +566,7 @@ rule "Arrive | Ground reset | traces":
             LeaderboardUpdate()
             if CompMode and CompAtmpNum > 0:
                 if eventPlayer.comp_countAttempts == CompAtmpNum:
-                    CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer.split([]))] = -1
+                    CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = -1
                     eventPlayer.comp_countAttempts = -1
                     eventPlayer.comp_done = true
                     eventPlayer.toggle_leaderboard = true
@@ -575,7 +575,7 @@ rule "Arrive | Ground reset | traces":
                     kill(eventPlayer,null)
                     eventPlayer.setDamageReceived(0)
                 else:
-                    CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer.split([]))] = eventPlayer.comp_countAttempts + 1
+                    CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.comp_countAttempts + 1
         else: # update save
             DeleteSave()
             MakeSave()

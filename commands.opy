@@ -138,7 +138,7 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
                 eventPlayer.lockState = false
                 return
             eventPlayer.comp_countAttempts++
-            CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer.split([]))] = eventPlayer.comp_countAttempts
+            CompAtmpSaveCount[CompAtmpSaveNames.index("{0}".format(eventPlayer))] = eventPlayer.comp_countAttempts
 
 
     eventPlayer.editor_fly = null
