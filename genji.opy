@@ -144,9 +144,7 @@ def LeaderboardUpdate():
     # [i[0] for i in var1]   list of first element of each in var 1
     # [ [name, seconds, prettytime] ]
     if "{0}".format(eventPlayer) in [i[0] for i in LeaderBoardFull]: # you already have a time
-        if eventPlayer.timer_normal > [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)][0][1]: # new time worse
-            goto lbl_a
-        else: # new time better
+        if eventPlayer.timer_normal < [i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)][0][1]: # new time better
             LeaderBoardFull.remove([i for i in LeaderBoardFull if i[0] == "{0}".format(eventPlayer)])
             LeaderBoardFull.append([["{0}".format(eventPlayer),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]] )
             CreateLeaderboard()
@@ -155,13 +153,10 @@ def LeaderboardUpdate():
             LeaderBoardFull.append([["{0}".format(eventPlayer),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)] ])
             CreateLeaderboard()
         else: # 20 entries already
-            if LeaderBoardFull[19][1] < eventPlayer.timer_normal:  # your time lower then last entry
-                goto lbl_a
-            else: # you beat the last entry, thus replacing it
+            if eventPlayer.timer_normal < LeaderBoardFull[19][1]:  # your time lower then last entry
                 del LeaderBoardFull[19]
                 LeaderBoardFull.append([["{0}".format(eventPlayer),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]] )
                 CreateLeaderboard()
-    lbl_a:
 
 def checkpointFailReset():
     @Name "SUB | Checkpoint Fail"
