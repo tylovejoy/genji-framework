@@ -251,9 +251,9 @@ rule "Huds | Leaderboard": # for global instead of tied to player
     # top 5
     if LeaderBoardFull[0]:
         hudSubtext(localPlayer,
-            " \n{0} 排名前5 {0}".format(abilityIconString(Hero.GENJI,Button.PRIMARY_FIRE))
+            " \n{0} 排名前5 {0}".format(iconString(Icon.FLAG))
             checkCN
-            " \n{0} Top 5 {0}".format(abilityIconString(Hero.GENJI,Button.PRIMARY_FIRE))
+            " \n{0} Top 5 {0}".format(iconString(Icon.FLAG))
             , HudPosition.RIGHT, HO.board_top5, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
         )
         LeaderBoardHuds.append(getLastCreatedText())
