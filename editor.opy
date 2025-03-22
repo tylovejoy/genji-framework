@@ -773,8 +773,8 @@ rule "Editor | create cp/orb":
 
     eventPlayer.editor_lock = true
     if eventPlayer.editor_modeSelect == 0:
-        if len(CheckpointPositions) > 1 and distance(eventPlayer, CheckpointPositions[hostPlayer.checkpoint_current]) <= cpcircleradius:
-            smallMessage(eventPlayer, "   放置的检查点距离太近" checkCN "   Cannot place checkpoints too close.")
+        if len(CheckpointPositions) and distance(eventPlayer, CheckpointPositions[hostPlayer.checkpoint_current]) <= cpcircleradius:
+            smallMessage(eventPlayer, "   放置的检查点距离太近" checkCN "   Cannot place checkpoint too close.")
             goto endlbl
 
         if eventPlayer.checkpoint_current >= len(CheckpointPositions) - 1:
@@ -827,7 +827,7 @@ rule "Editor | create cp/orb":
             EffectReeval.VISIBILITY_POSITION_AND_RADIUS
         )
         KillBallEffects.append(getLastCreatedEntity())
-        bigMessage(true[0], "{1} {0}".format(eventPlayer.checkpoint_current, "新击杀球已创建! \r\n仅生效于检查点" checkCN "New Kill Orb has been created! \r\nIt's only valid for checkpoint"))
+        bigMessage(true[0], "{1} {0}".format(eventPlayer.checkpoint_current, "新击杀球已创建! \n仅生效于检查点" checkCN "New Kill Orb has been created! \nOnly valid for this checkpoint"))
         waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)), 1)
         #EditUpdateSelectedIds() # to arrow during the placement properly
         while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
@@ -849,7 +849,7 @@ rule "Editor | create cp/orb":
             BouncePositions[evalOnce(EditSelected)], 1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
         BounceEffects.append(getLastCreatedEntity())
-        bigMessage(true[0], "{1} {0}".format(eventPlayer.checkpoint_current, "新弹球已创建! \r\n仅生效于检查点" checkCN "New Bounce Orb has been created! \r\nIt's only valid for checkpoint"))
+        bigMessage(true[0], "{1} {0}".format(eventPlayer.checkpoint_current, "新弹球已创建! \n仅生效于检查点" checkCN "New Bounce Orb has been created! \nOnly valid for this checkpoint"))
         waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)), 1)
         while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             BouncePositions[EditSelected] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 7, null, null, false).getHitPosition()
@@ -873,7 +873,7 @@ rule "Editor | create cp/orb":
             CustomPortalStart[EditSelected] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 6, null, null, false).getHitPosition()
             wait()
 
-        bigMessage(true[0], "新传送门已创建!\n生效于当前检查点" checkCN "Portal created \r\nIt's only valid for checkpoint")
+        bigMessage(true[0], "新传送门已创建!\n生效于当前检查点" checkCN "Portal created \nOnly valid for this checkpoint")
         EditorMoveItem = true
         return
     else:
@@ -898,7 +898,7 @@ rule "Editor | delete cp/orb/portal":
     eventPlayer.editor_lock = true
     if eventPlayer.editor_modeSelect == 0 and len(CheckpointPositions) > 0:
         # Resync Kill Orbs ==================
-        eventPlayer.editor_temp = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if  e >=0]
+        eventPlayer.editor_temp = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if  e >= 0]
         # eventPlayer.editor_temp = [i for e, i in KillballCheckpoints if e == hostPlayer.checkpoint_current]
         for TempIterator1 in range(len(eventPlayer.editor_temp)):
             destroyEffect(KillBallEffects[eventPlayer.editor_temp[TempIterator1]])
