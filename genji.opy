@@ -169,7 +169,7 @@ def checkpointFailReset():
         eventPlayer.timer_normal = 0
         eventPlayer.timer_split = 0
 
-    if len(CheckpointPositions) > 0:
+    if len(CheckpointPositions):
         eventPlayer.setStatusEffect(null, Status.ROOTED, false)
         if eventPlayer.isUsingAbility1() and DashExploitToggle:
             #smallMessage(eventPlayer,"   0关卡Shift已禁用!" checkCN "   Dash Start is banned!")
@@ -206,7 +206,7 @@ def StartGame():
         eventPlayer.setDamageReceived(0)
         return
 
-    if len(CheckpointPositions) != 0:
+    if len(CheckpointPositions):
         destroyInWorldText(eventPlayer.cache_titleHud) # restarting reset title even if non on cp 0
         if eventPlayer[0].split([]) in SaveName: # load saved progres
             SaveEnt[SaveName.index(eventPlayer[0].split([]))] = eventPlayer
@@ -310,9 +310,9 @@ rule "Setup and Variables":
     BounceToggleDash = BounceToggleDash if len(BounceToggleDash) else []
     BounceToggleLock = BounceToggleLock if len(BounceToggleLock) else []
 
-    CustomPortalStart = CustomPortalStart if len(CustomPortalStart) > 0 else []
-    CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) > 0 else []
-    CustomPortalCP = CustomPortalCP if len(CustomPortalCP) > 0 else []
+    CustomPortalStart = CustomPortalStart if len(CustomPortalStart) else []
+    CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) else []
+    CustomPortalCP = CustomPortalCP if len(CustomPortalCP) else []
 
     LeaderBoardFull = []
     TitleData = null
@@ -358,7 +358,7 @@ rule "Setup and Variables":
 
     wait(1) # add back to below wait if removed
 
-    if len(PortalDest) > 0: # pre set control map portals. not in portal rule because shared I variable
+    if len(PortalDest): # pre set control map portals. not in portal rule because shared I variable
         for TempIterator1 in range(len(PortalLoc)):
             createEffect(
                 [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast],
@@ -657,7 +657,7 @@ rule "Death Reset":
     @Condition eventPlayer.isDummy() == false
     @Condition eventPlayer.toggle_spectate == false
     @Condition eventPlayer.comp_done == false
-    if len(CheckpointPositions) > 0:
+    if len(CheckpointPositions):
         eventPlayer.resurrect()
     else:
         eventPlayer.respawn()

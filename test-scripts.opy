@@ -124,7 +124,7 @@ rule "Avrg Seconds":
 
     AvrgSecDisplay = 0
     LastTimePeak = 0
-    while len(AvrgSecStore) > 0:
+    while len(AvrgSecStore):
         LastTimePeak = max(LastTimePeak,AvrgSecStore[0] )
         AvrgSecDisplay += AvrgSecStore[0]
         del AvrgSecStore[0]
@@ -141,7 +141,7 @@ rule "Avrg Seconds":
     AvrgMinStoreTemp = AvrgMinStore
     AvrgMinStore = []
     AvrgMinStoreLen = len(AvrgMinStoreTemp)
-    while len(AvrgMinStoreTemp) > 0:
+    while len(AvrgMinStoreTemp):
         AvrgMinDisplay += AvrgMinStoreTemp[0]
         del AvrgMinStoreTemp[0]
 

@@ -56,12 +56,12 @@ rule "Command | Preview Orbs & Portals (Hold Primary)":
     wait(0.45, Wait.ABORT_WHEN_FALSE)
     eventPlayer.preview_array1 = [CheckpointPositions[eventPlayer.checkpoint_current + 1]]
 
-    if len(BouncePadCheckpoints) > 0:
+    if len(BouncePadCheckpoints):
         eventPlayer.preview_array1.append([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.checkpoint_current])
         # first entry is checkpoint itself, -1 would overlap with -1 in some orbs
         eventPlayer.preview_array2 = [i for i in [i for _, i in BouncePadCheckpoints].concat(-2) if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current or i == -2]
 
-    if len(CustomPortalStart) > 0:
+    if len(CustomPortalStart):
         #eventPlayer.preview_array1.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.checkpoint_current] )
         for eventPlayer.preview_i in range(len(eventPlayer.cache_portalStart)):
             eventPlayer.preview_array1.append([eventPlayer.cache_portalStart[eventPlayer.preview_i ],eventPlayer.cache_portalEnd[eventPlayer.preview_i ]])

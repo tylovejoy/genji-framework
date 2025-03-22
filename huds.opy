@@ -140,7 +140,7 @@ rule "Huds | Global Localplayer":
             CpIwtPos[CpIwtCp.index(localPlayer.checkpoint_current)],
             2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, CpIwtColor, SpecVisibility.DEFAULT)
 
-    if len(HintText) > 0: #Remove no hints - visual and element bloat
+    if len(HintText): #Remove no hints - visual and element bloat
         hudText((localPlayer.toggle_guide and localPlayer.checkpoint_current in HintCp)[0], null,
             ("― ― ― ― ― 提示 ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)])
             if localPlayer.toggle_hints else "――――――  有可用提示 ――――――")
@@ -244,7 +244,7 @@ rule "Huds | Leaderboard": # for global instead of tied to player
     wait() # account for delay in completion
     LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
 
-    while len(LeaderBoardHuds) > 0:
+    while len(LeaderBoardHuds):
         destroyHudText(LeaderBoardHuds[0])
         del LeaderBoardHuds[0]
 

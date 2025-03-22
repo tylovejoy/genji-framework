@@ -196,7 +196,7 @@ rule "Little destructo - fence breaker":
 
     # handle exceptions (looking at you new queen street)
     MapVectorArray = [vect(8.276, 4.113, 15.261), vect(-8.319, 2.624, 14.245), vect(0.006, 4.821, 18.513)]
-    while len(MapVectorArray) > 0:
+    while len(MapVectorArray):
         # same as other projectile before
         createProjectile(
             Projectile.ORB,
