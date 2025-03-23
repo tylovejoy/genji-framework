@@ -91,8 +91,8 @@ def UpdateCache():
     createEffect(eventPlayer if eventPlayer.editor_hitboxToggle and eventPlayer.checkpoint_notLast else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.checkpoint_current + 1], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.editor_hitboxEffect.append(getLastCreatedEntity())
 
-    eventPlayer.editor_bounceIndex = [e for e in [(i if e2 == eventPlayer.checkpoint_current else -1) for e2, i in BouncePadCheckpoints] if  e >=0]
-    eventPlayer.editor_killIndex = [e for e in [(i if e2 == eventPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if  e >=0]
+    eventPlayer.editor_bounceIndex = [e for e in [(i if e2 == eventPlayer.checkpoint_current else -1) for e2, i in BouncePadCheckpoints] if e >=0]
+    eventPlayer.editor_killIndex = [e for e in [(i if e2 == eventPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if e >=0]
 
     if eventPlayer.checkpoint_moved and eventPlayer == hostPlayer:
         EditorSelectLast()
@@ -286,12 +286,12 @@ rule "Setup and Variables":
     SavePauseEnabled = []
     SaveElapsed = []
 
-    if BladeEnabledCheckpoints == null and len(BladeEnabledCheckpoints) == 1:
+    if not BladeEnabledCheckpoints and len(BladeEnabledCheckpoints) == 1:
         BladeEnabledCheckpoints = [0]
     else:
         BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints != null else []
 
-    if DashEnabledCheckpoints == null and len(DashEnabledCheckpoints) == 1:
+    if not DashEnabledCheckpoints and len(DashEnabledCheckpoints) == 1:
         DashEnabledCheckpoints = [0]
     else:
         DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints != null  else  []

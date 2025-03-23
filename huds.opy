@@ -18,20 +18,20 @@ rule "Huds | Global Localplayer":
     # if you change it, also change it in the credits rule
     # the old credits should always remain valid here to keep old data valid
 
-    if Name != "name here - 作者" and Name != null:
+    if Name != "name here - 作者" and Name:
         Cachedcredits[0] = Name
-    elif Cachedcredits[0] == null:
+    elif not Cachedcredits[0]:
         Cachedcredits[0] = "name here - 作者"
 
-    if Code != "code here - 代码" and Code != null:
+    if Code != "code here - 代码" and Code:
         Cachedcredits[1] = Code
-    elif Cachedcredits[1] == null:
+    elif not Cachedcredits[1]:
         Cachedcredits[1] = "code here - 代码"
 
     Name = null
     Code = null
 
-    #  if Code != "code here - 代码" or Cachedcredits[1] == null::
+    #  if Code != "code here - 代码" or not Cachedcredits[1]:
 
 
     hudSubtext(localPlayer,
@@ -441,12 +441,14 @@ rule "Huds | Each Player":
         HudPosition.LEFT, HO.game_timer, ColorConfig[customize.time], Color.GRAY, ColorConfig[customize.time], HudReeval.STRING, SpecVisibility.DEFAULT
     )
 
-
+    #$$ not eventPlayer.preview_i
+    #$$ eventPlayer.preview_i < len(eventPlayer.cache_bouncePosition) + 1
+    #$$ eventPlayer.preview_i > 0
     hudText(
         eventPlayer if not eventPlayer.toggle_leaderboard else null,
         " {0} ({2}/{3})\n―――――――――――\n {1}\n".format(
-            ("检查点" if eventPlayer.preview_i == 0 else "弹球" if eventPlayer.preview_i < len(eventPlayer.cache_bouncePosition) + 1  else "自定义传送门") checkCN
-            "checkpoint" if eventPlayer.preview_i == 0 else "orb" if eventPlayer.preview_i < len(eventPlayer.cache_bouncePosition) + 1  else "portal",
+            ("检查点" if not eventPlayer.preview_i else "弹球" if eventPlayer.preview_i < len(eventPlayer.cache_bouncePosition) + 1  else "自定义传送门") checkCN
+            "checkpoint" if not eventPlayer.preview_i else "orb" if eventPlayer.preview_i < len(eventPlayer.cache_bouncePosition) + 1  else "portal",
             "{} {} {} {}".format(
                 abilityIconString(Hero.GENJI, Button.ULTIMATE) if BounceToggleUlt[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
                 abilityIconString(Hero.GENJI, Button.ABILITY_1) if BounceToggleDash[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
@@ -458,28 +460,26 @@ rule "Huds | Each Player":
 
             (
                 ("传送门 {} 入口 ".format(eventPlayer.preview_array2[eventPlayer.preview_i][1])
-                if eventPlayer.preview_array2[eventPlayer.preview_i][0] == 0 else
+                if not eventPlayer.preview_array2[eventPlayer.preview_i][0] else
                 "传送门 {} 出口 ".format( eventPlayer.preview_array2[eventPlayer.preview_i][1])
                 ) checkCN
 
                 "portal {} start ".format(eventPlayer.preview_array2[eventPlayer.preview_i][1])
-                if eventPlayer.preview_array2[eventPlayer.preview_i][0] == 0 else
+                if not eventPlayer.preview_array2[eventPlayer.preview_i][0] else
                 "portal {} destination ".format(eventPlayer.preview_array2[eventPlayer.preview_i][1])
-
             )
             if eventPlayer.preview_i >= len(eventPlayer.cache_bouncePosition) + 1 and eventPlayer.preview_i > 0 else [],
 
-
             eventPlayer.preview_i + 1,
             len(eventPlayer.preview_array1)
-        ) if eventPlayer.preview_array1 != null else []
+        ) if eventPlayer.preview_array1 else []
         ,
         "{2} {0} / {1}".format(
             len(eventPlayer.cache_collectedLocks),
             eventPlayer.cache_bounceMaxLocks,
             "{0}球".format(ColorConfig[customize.orb_lock]) checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
             #"收集球" checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
-        ) if eventPlayer.cache_bounceMaxLocks and eventPlayer.preview_array1 == null else []
+        ) if eventPlayer.cache_bounceMaxLocks and not eventPlayer.preview_array1 else []
         ,
         "{3}{2}{4} {0} / {1}".format(
             eventPlayer.checkpoint_current,
@@ -487,7 +487,7 @@ rule "Huds | Each Player":
             "\n" if eventPlayer.banString else [],
             eventPlayer.banString if eventPlayer.banString else [],
             "关卡" checkCN "Level"
-        ) if eventPlayer.preview_array1 == null else [],
+        ) if not eventPlayer.preview_array1 else [],
         HudPosition.TOP, HO.game_level_orb, ColorConfig[customize.level], ColorConfig[customize.orb_lock], ColorConfig[customize.level], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 

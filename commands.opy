@@ -85,7 +85,7 @@ rule "Command | Preview Orbs & Portals (Hold Primary)":
             eventPlayer.preview_i = 0 if eventPlayer.preview_i + 1 >= len(eventPlayer.preview_array1) else eventPlayer.preview_i + 1
             waitUntil(eventPlayer.getThrottle().x > -0.5, 1)
         elif eventPlayer.getThrottle().x > 0.5:
-            eventPlayer.preview_i = len(eventPlayer.preview_array1) -1  if eventPlayer.preview_i == 0 else  eventPlayer.preview_i - 1
+            eventPlayer.preview_i = len(eventPlayer.preview_array1) -1  if not eventPlayer.preview_i else  eventPlayer.preview_i - 1
             waitUntil(eventPlayer.getThrottle().x < 0.5, 1)
         wait()
     eventPlayer.setPrimaryFireEnabled(true)
@@ -146,7 +146,7 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
     eventPlayer.toggle_practice = false
     stopChasingVariable(eventPlayer.timer_practice)
     eventPlayer.timer_practice = 0
-    eventPlayer.timer_splitDisplay = -Math.INFINITY if eventPlayer.timer_splitDisplay == -Math.INFINITY else 0
+    eventPlayer.timer_splitDisplay = -Math.INFINITY if eventPlayer.timer_splitDisplay == -Math.INFINITY else 0 #$$ -Math.INFINITY * (eventPlayer.timer_splitDisplay == -Math.INFINITY)
     if eventPlayer in SaveEnt:
         DeleteSave()
 
@@ -262,7 +262,7 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
         stopChasingVariable(eventPlayer.timer_normal)
         if eventPlayer.checkpoint_notLast:
             StartPauseTimer()
-        eventPlayer.timer_splitDisplay = -Math.INFINITY if eventPlayer.timer_splitDisplay == -Math.INFINITY else 0
+        eventPlayer.timer_splitDisplay = -Math.INFINITY if eventPlayer.timer_splitDisplay == -Math.INFINITY else 0 #$$ -Math.INFINITY * (eventPlayer.timer_splitDisplay == -Math.INFINITY)
         eventPlayer.timer_split = 0
         eventPlayer.timer_practice = 0
         chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)

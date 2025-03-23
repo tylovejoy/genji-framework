@@ -26,7 +26,7 @@ def CheckUlt(): # checks if ult should be turned on
     eventPlayer.disallowButton(Button.ULTIMATE) # make sure the button cant be pressed until the entire rule ends even if it restarts
     #if eventPlayer.ult_cd_global > 0: # global cooldown construction that works even when rule is reset
     if eventPlayer.skill_ultCd > getTotalTimeElapsed():
-        #waitUntil(eventPlayer.ult_cd_global == 0, 1)
+        #waitUntil(not eventPlayer.ult_cd_global, 1)
         wait(eventPlayer.skill_ultCd - getTotalTimeElapsed())
     else:
         #eventPlayer.ult_cd_global = 1 # this number doesnt matter because its a duration chase
@@ -57,7 +57,7 @@ def CheckDash(): # checks if dash should be  turned on
     waitUntil(not eventPlayer.isUsingAbility1(), 2)
     if eventPlayer.toggle_invincible or eventPlayer.editor_on or (not eventPlayer.checkpoint_notLast):
         goto lbl_a #skip msg if these
-    elif eventPlayer.checkpoint_current in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last() ) <= cpcircleradius: 
+    elif eventPlayer.checkpoint_current in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= cpcircleradius: 
         smallMessage(eventPlayer, "   {0} {1}".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready")) 
         lbl_a:
         wait()        
