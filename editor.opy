@@ -773,7 +773,7 @@ rule "Editor | create cp/orb":
     if eventPlayer.editor_modeSelect == 0:
         if len(CheckpointPositions) and distance(eventPlayer, CheckpointPositions[hostPlayer.checkpoint_current]) <= cpcircleradius:
             smallMessage(eventPlayer, "   放置的检查点距离太近" checkCN "   Cannot place checkpoint too close.")
-            goto endlbl
+            goto lbl_a
 
         if eventPlayer.checkpoint_current >= len(CheckpointPositions) - 1:
             eventPlayer.checkpoint_current = len(CheckpointPositions) - 1
@@ -806,10 +806,10 @@ rule "Editor | create cp/orb":
 
     elif not len(CheckpointPositions):
         smallMessage(eventPlayer, "   请先放置检查点" checkCN "   You first have to make a checkpoint")
-        goto endlbl
+        goto lbl_a
     elif len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart) >= fxLimit:
         bigMessage(eventPlayer, "当前地图弹球/传送门数量已达上限" checkCN "Orb/portal limit reached for this map")
-        goto endlbl
+        goto lbl_a
 
     elif eventPlayer.editor_modeSelect == 1:
         KillBallPositions.append(eventPlayer.getPosition())
@@ -875,11 +875,11 @@ rule "Editor | create cp/orb":
         EditorMoveItem = true
         return
     else:
-        goto endlbl
+        goto lbl_a
 
     UpdateCache()
 
-    endlbl:
+    lbl_a:
     eventPlayer.editor_lock = false
     wait(0.64)
 

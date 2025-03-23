@@ -211,7 +211,7 @@ rule "Fake Ledge Dash - 超级跳":
         eventPlayer.addon_ledgeDash[1] = eventPlayer.getFacingDirection()
         eventPlayer.addon_ledgeDash[2] = eventPlayer.getSpeed()
         if eventPlayer.getSpeed() < 45: # dashed into air or object = end
-            goto lbla
+            goto lbl_a
         else:
             eventPlayer.addon_ledgeDash[0] ++
         if eventPlayer.addon_ledgeDash[0] == 12: # stop storing, we keep this speed/direction
@@ -223,7 +223,7 @@ rule "Fake Ledge Dash - 超级跳":
     # above 12 - climbed to long
     # below 5 - dashed into object
 
-    lbla:
+    lbl_a:
     eventPlayer.addon_ledgeDash[0] = null
     eventPlayer.addon_ledgeDash[1] = null
     eventPlayer.addon_ledgeDash[2] = null

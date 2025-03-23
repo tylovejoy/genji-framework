@@ -502,21 +502,21 @@ rule "Arrive | Ground reset | traces":
             smallMessage(eventPlayer, "   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[customize.orb_lock]))
             #kill(eventPlayer, null)
             checkpointFailReset()
-            goto lbl_abc
+            goto lbl_a
         if eventPlayer.ban_climb and eventPlayer.skill_usedClimb:
             smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
             checkpointFailReset()
-            goto lbl_abc
+            goto lbl_a
 
         if eventPlayer.ban_bhop and eventPlayer.skill_usedBhop:
             smallMessage(eventPlayer, "   ≥ 留小跳进点!" checkCN "   ≥ Must have a bhop to complete!")
             checkpointFailReset()
-            goto lbl_abc
+            goto lbl_a
 
         if eventPlayer.ban_djump and eventPlayer.skill_usedDouble:
             smallMessage(eventPlayer, "   » 留二段跳!" checkCN "   » Must have a double jump to complete!")
             checkpointFailReset()
-            goto lbl_abc
+            goto lbl_a
 
         #eventPlayer.cache_collectedLocks = []
         eventPlayer.checkpoint_current += 1
@@ -548,7 +548,7 @@ rule "Arrive | Ground reset | traces":
 
         if eventPlayer.toggle_practice:
             eventPlayer.timer_split = eventPlayer.timer_practice
-            goto lbl_abc
+            goto lbl_a
 
         eventPlayer.timer_split = eventPlayer.timer_normal
         if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and (not eventPlayer.editor_on) and (not eventPlayer.toggle_practice): # complete lvl
@@ -577,7 +577,7 @@ rule "Arrive | Ground reset | traces":
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpcircleradius:
         checkpointFailReset()
 
-    lbl_abc:
+    lbl_a:
     eventPlayer.cache_collectedLocks = []
     wait(0.048)
 
@@ -685,20 +685,14 @@ rule "Death Reset":
 
 rule "Player Leaves":
     @Event playerLeft
-    if SaveCp[SaveEnt.index(eventPlayer)] == 0: # delete if player didnt do first cp
-       DeleteSave()
-    else:
-        if SaveCp[SaveEnt.index(eventPlayer)] >= len(CheckpointPositions) - 1 or SavePauseEnabled[SaveEnt.index(eventPlayer)]: # level complete or ?
-            goto lbl_a
-        SaveTimer[SaveEnt.index(eventPlayer)]  = (
-            getTotalTimeElapsed() -
-            SaveElapsed[SaveEnt.index(eventPlayer)]  -
-            SavePauseTime[SaveEnt.index(eventPlayer)]  +
-            SaveTimer[SaveEnt.index(eventPlayer)]
-        )
-        lbl_a:
+    if SaveCp[SaveEnt.index(eventPlayer)]:
+       if SaveCp[SaveEnt.index(eventPlayer)] < len(CheckpointPositions) - 1 and not SavePauseEnabled[SaveEnt.index(eventPlayer)]:
+            SaveTimer[SaveEnt.index(eventPlayer)] = (
+                getTotalTimeElapsed() - SaveElapsed[SaveEnt.index(eventPlayer)] - SavePauseTime[SaveEnt.index(eventPlayer)] + SaveTimer[SaveEnt.index(eventPlayer)])
         SavePauseTime[SaveEnt.index(eventPlayer)] = 0
         SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
+    else: # delete if player didnt do first cp
+        DeleteSave()
 
 rule "AFK timer":
     @Event eachPlayer
