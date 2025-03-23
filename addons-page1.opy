@@ -156,7 +156,7 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
 # calculation to find the side of the map
 #!define fence_offset vect( (fence_grid*fence_proj_size)/2, 0, (fence_grid*fence_proj_size)/2 )
 # calculation for next explosion
-#!define fence_position  MapVectorArray[1] - fence_offset + ( MapVectorArray[0] % fence_grid ) * vect(fence_proj_size,00,00) + floor( MapVectorArray[0] / fence_grid ) * vect(00,00,fence_proj_size)
+#!define fence_position  MapVectorArray[1] - fence_offset + ( MapVectorArray[0] % fence_grid ) * (Vector.LEFT * fence_proj_size) + floor( MapVectorArray[0] / fence_grid ) * (Vector.FORWARD * fence_proj_size)
 
 rule "Little destructo - fence breaker":
     # Made by FishoFire version 1.0
@@ -171,9 +171,8 @@ rule "Little destructo - fence breaker":
     MapVectorArray.append(
         [getFlagPosition(Team.1), getFlagPosition(Team.2)] if getCurrentGamemode() == Gamemode.CTF else
         getSpawnPoints(Team.ALL)[0] if getCurrentGamemode() in [Gamemode.TDM, Gamemode.FFA] else
-        getPayloadPosition() if getPayloadPosition() != null and getObjectivePosition(1) == vect(0,0,0) and getObjectivePosition(2) == vect(0,0,0) else
-        [getObjectivePosition(0),getObjectivePosition(1),getObjectivePosition(2)]
-    )
+        getPayloadPosition() if getPayloadPosition()[0] and not (getObjectivePosition(1) + getObjectivePosition(2)) else
+        [getObjectivePosition(0),getObjectivePosition(1),getObjectivePosition(2)])
     # explode in a grid around the selected points
     while len(MapVectorArray) > 1:
         MapVectorArray[0] = 0
@@ -181,15 +180,14 @@ rule "Little destructo - fence breaker":
             createProjectile(
                 Projectile.ORB,  # the only orb available without fx extension
                 null,
-                fence_position ,
+                fence_position,
                 Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
                 DynamicEffect.GOOD_EXPLOSION, # possible without extensions: bad, good, ring
                 DynamicEffect.EXPLOSION_SOUND, # possible without extensions: explosion sound, buf sound, ring explosion sound
-                1, 1, 0, 0, 0, 0
-            )
+                1, 1, 0, 0, 0, 0)
 
             MapVectorArray[0] ++
-            if MapVectorArray[0] % fence_delay == 0: # use modulo to only wait every x orbs keep the 0 change the other number
+            if not (MapVectorArray[0] % fence_delay): # use modulo to only wait every x orbs keep the 0 change the other number
                 wait()
 
         del MapVectorArray[1]
@@ -205,11 +203,9 @@ rule "Little destructo - fence breaker":
             Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
             DynamicEffect.GOOD_EXPLOSION,
             DynamicEffect.EXPLOSION_SOUND,
-            1, 1, 0, 0, 0, 0
-        )
+            1, 1, 0, 0, 0, 0)
         del MapVectorArray[0]
         wait()
-
     MapVectorArray = null
 
 rule "Cache jump & crouch inputs for spectators":
