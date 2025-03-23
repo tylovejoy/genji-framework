@@ -19,10 +19,11 @@ rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE
     # 指引消息将 会在竞赛模 式开始时 显示
     # 由于 hud 文本限制，你有 4 个hud可用
     # 如果你不需 要一个字段 只是空文 本字段
-    InstructionText[0] = "Change in Comp Mode instruction message hud 1"
-    InstructionText[1] = "Change in Comp Mode instruction message hud 2"
-    InstructionText[2] = "Change in Comp Mode instruction message hud 3"
-    InstructionText[3] = "Change in Comp Mode instruction message hud 4"
+    InstructionText = [
+        "Change in Comp Mode instruction message hud 1",
+        "Change in Comp Mode instruction message hud 2",
+        "Change in Comp Mode instruction message hud 3",
+        "Change in Comp Mode instruction message hud 4"]
 
 rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled
