@@ -3,23 +3,8 @@
 rule "<tx0C00000000001344> Mechanics | Checks <tx0C00000000001344>":
     @Delimiter
 
-rule "Mechanics | ult combined rule":
-    @Event eachPlayer
-    @Condition eventPlayer.isUsingUltimate()
-    wait(1.8, Wait.ABORT_WHEN_FALSE)
-    if eventPlayer.checkpoint_notLast and (not eventPlayer.toggle_invincible):
-        eventPlayer.disallowButton(Button.PRIMARY_FIRE) # disable primary fire because of slash exploit
-    waitUntil(not eventPlayer.isUsingUltimate(), 2)
-    wait()
-    eventPlayer.allowButton(Button.PRIMARY_FIRE)
-    async(CheckUlt(), AsyncBehavior.RESTART) # sets ult charge back if done with map etc
-        
-rule "Mechanics | Dash combined rule":
-    @Event eachPlayer
-    @Condition eventPlayer.isUsingAbility1()
-    async(CheckDash(), AsyncBehavior.RESTART)
-
 def CheckUlt(): # checks if ult should be turned on
+    @Name "Mechanic | SUB Check Ultimate"
     if eventPlayer.lockState:
         eventPlayer.setUltCharge(0) # for dash start etc you can be away from cp so the keep charge triggers
     
@@ -54,6 +39,7 @@ def CheckUlt(): # checks if ult should be turned on
     eventPlayer.allowButton(Button.ULTIMATE)
 
 def CheckDash(): # checks if dash should be  turned on
+    @Name "Mechanic | SUB Check Dash"
     waitUntil(not eventPlayer.isUsingAbility1(), 2)
     if eventPlayer.toggle_invincible or eventPlayer.editor_on or (not eventPlayer.checkpoint_notLast):
         goto lbl_a #skip msg if these
@@ -65,27 +51,43 @@ def CheckDash(): # checks if dash should be  turned on
     else:
         eventPlayer.setAbility1Enabled(false)
 
-rule "Mechanics | Jump":
+rule "Mechanic | Ultimate":
+    @Event eachPlayer
+    @Condition eventPlayer.isUsingUltimate()
+    wait(1.8, Wait.ABORT_WHEN_FALSE)
+    if eventPlayer.checkpoint_notLast and (not eventPlayer.toggle_invincible):
+        eventPlayer.disallowButton(Button.PRIMARY_FIRE) # disable primary fire because of slash exploit
+    waitUntil(not eventPlayer.isUsingUltimate(), 2)
+    wait()
+    eventPlayer.allowButton(Button.PRIMARY_FIRE)
+    async(CheckUlt(), AsyncBehavior.RESTART) # sets ult charge back if done with map etc
+
+rule "Mechanic | Dash":
+    @Event eachPlayer
+    @Condition eventPlayer.isUsingAbility1()
+    async(CheckDash(), AsyncBehavior.RESTART)
+
+rule "Mechanic | Jump":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.JUMP)
     @Condition eventPlayer.skill_countJumps != 2
     eventPlayer.skill_countJumps += 1
 
-rule "Mechanics | In the air":
+rule "Mechanic | In the air":
     @Event eachPlayer
     @Condition eventPlayer.skill_countJumps == null
     @Condition eventPlayer.isInAir() 
     eventPlayer.skill_countJumps = 1
 
 /* Remove this rule? */
-rule "Mechanics | Triple jump":
+rule "Mechanic | Triple jump":
     @Event eachPlayer
     @Condition eventPlayer.skill_countJumps == 1
     # actually just checks if you been in the air for at least 0.1 seconds
     wait(0.1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.skill_countJumps = 2
 
-rule "Mechanics | Player on the wall":
+rule "Mechanic | Player on the wall":
     @Event eachPlayer
     #This rule is also linked to the determination of wall climbing, please do not close/delete
     @Condition eventPlayer.isOnWall()
@@ -93,7 +95,7 @@ rule "Mechanics | Player on the wall":
     eventPlayer.skill_countJumps = 2
     eventPlayer.skill_usedClimb = true
 
-rule "Mechanics | Using Emote":
+rule "Mechanic | Using Emote":
     @Event eachPlayer
     @Condition eventPlayer.isCommunicatingEmote() == true
     eventPlayer.skill_usedBhop = false
@@ -107,7 +109,7 @@ rule "Mechanics | Using Emote":
         wait()
         CheckpointFailReset()
 
-rule "Mechanics | Bhop":
+rule "Mechanic | Bhop":
     @Event eachPlayer
     @Condition eventPlayer.skill_usedBhop == false
     @Condition eventPlayer.isJumping()
@@ -115,7 +117,7 @@ rule "Mechanics | Bhop":
     if eventPlayer.skill_countJumps > 1:
         smallMessage(eventPlayer,"   小跳已用" checkCN "   Bhop")
 
-rule "Mechanics | Bhop count for stand ban":
+rule "Mechanic | Bhop count for stand ban":
     @Event eachPlayer
     @Condition eventPlayer.isJumping()
     @Condition eventPlayer.ban_standcreate
@@ -125,7 +127,7 @@ rule "Mechanics | Bhop count for stand ban":
         CheckpointFailReset()
         return
 
-rule "Mechanics | Create Bhop":
+rule "Mechanic | Create Bhop":
     # Credit: Githuboy#5249
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
@@ -149,7 +151,7 @@ rule "Mechanics | Create Bhop":
     eventPlayer.skill_countCreates++
     smallMessage(eventPlayer, "   success!" checkCN "   Bhop has been created!")    
 
-rule "Mechanics | Ground Reset":
+rule "Mechanic | Ground Reset":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround()
     eventPlayer.skill_countJumps = null
@@ -163,13 +165,13 @@ rule "Mechanics | Ground Reset":
         goto RULE_START
     #eventPlayer.skill_usedBhop = true
 
-rule "Mechanics | Bhop Reset":
+rule "Mechanic | Bhop Reset":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     eventPlayer.skill_usedBhop = false
 
-rule "Mechanics | Double Jump":
+rule "Mechanic | Double Jump":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.isAlive()
@@ -190,7 +192,7 @@ rule "Mechanics | Double Jump":
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.skill_usedDouble, Math.INFINITY)
         if not RULE_CONDITION: return
 
-rule "Mechanics | Multiclimb":
+rule "Mechanic | Multiclimb":
     @Event eachPlayer
     @Condition eventPlayer.isOnWall()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
@@ -207,7 +209,7 @@ rule "Mechanics | Multiclimb":
         else:
             eventPlayer.skill_countMulti += 1
 
-rule "Mechanics | Ban Wallclimb - Message":
+rule "Mechanic | Ban Wallclimb - Message":
     # Credit: TITANXPASCAL#5554
     @Event eachPlayer
     @Condition eventPlayer.ban_climb
@@ -217,7 +219,7 @@ rule "Mechanics | Ban Wallclimb - Message":
     #eventPlayer.setStatusEffect(null,Status.BURNING, 0.1)
     smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
 
-rule "Mechanics | Ban Save Double - 封禁二段跳":
+rule "Mechanic | Ban Save Double - 封禁二段跳":
     @Event eachPlayer
     @Hero genji
     @Condition eventPlayer.ban_savedouble

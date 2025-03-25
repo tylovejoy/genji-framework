@@ -8,7 +8,7 @@ this should be parts of addons that get toggled with a workshop toggle
 rule "<tx0C00000000001344> Addon Functions <tx0C00000000001344>":
     @Delimiter
 
-rule "Pre-set control map portal | function | toggled via workshop":
+rule "Addon | Pre-set control map portal - toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
     @Condition eventPlayer.toggle_invincible or not eventPlayer.checkpoint_notLast
@@ -19,7 +19,7 @@ rule "Pre-set control map portal | function | toggled via workshop":
             PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])]
         )
 
-rule "Custom portals | function":
+rule "Addon | Custom portals":
     @Event eachPlayer
     @Condition len(eventPlayer.cache_portalStart) > 0
     @Condition [i for i in eventPlayer.cache_portalStart if distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance]
@@ -31,7 +31,7 @@ rule "Custom portals | function":
     )
     wait(0.4)
 
-rule "Pre-set control map portal | toggled on via workshop settings":
+rule "Addon | Pre-set control map portal - toggled on via workshop settings":
     @Condition PortalOn
     wait(0.5, Wait.ABORT_WHEN_FALSE) # overwrite pasta
     if getCurrentMap() == Map.BUSAN:
@@ -158,7 +158,7 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
 # calculation for next explosion
 #!define fence_position  MapVectorArray[1] - fence_offset + ( MapVectorArray[0] % fence_grid ) * (Vector.LEFT * fence_proj_size) + floor( MapVectorArray[0] / fence_grid ) * (Vector.FORWARD * fence_proj_size)
 
-rule "Little destructo - fence breaker":
+rule "Addon | Little destructo - fence breaker":
     # Made by FishoFire version 1.0
     # wait to overwrite any from copy pastas
 	wait(0.032)
@@ -208,14 +208,14 @@ rule "Little destructo - fence breaker":
         wait()
     MapVectorArray = null
 
-rule "Cache jump & crouch inputs for spectators":
+rule "Addon | Cache jump & crouch inputs for spectators":
     @Event playerJoined
     wait()
     eventPlayer.cache_inputs = vect(eventPlayer.isHoldingButton(Button.JUMP), eventPlayer.isHoldingButton(Button.CROUCH), false)
     goto RULE_START
 
 def AddonCheckMap():
-    @Name "SUB | Basic Map Validator"
+    @Name "Addon | SUB Basic Map Validator"
     if len(CheckpointPositions) <= 1: return
     createDummy(Hero.ANA, Team.1 if getNumberOfSlots(Team.1) < getNumberOfSlots(Team.2) else Team.2, -1, CheckpointPositions[0], null)
     MapChecker = getLastCreatedEntity()
@@ -257,7 +257,7 @@ def AddonCheckMap():
     disableInspector()
 
 def Addon3rdPerson():
-    @Name "SUB | 3rd Person Camera"
+    @Name "Addon | SUB 3rd Person Camera"
     if eventPlayer.addon_toggle3rdPov:
         eventPlayer.startCamera(updateEveryTick(
             raycast(0.5 * Vector.UP + eventPlayer.getEyePosition(),

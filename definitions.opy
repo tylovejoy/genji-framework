@@ -23,7 +23,7 @@ arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in array
 
 #!define checkCN if l"Oof" == "噢" else
 
-#!define FILLER "<tx0C000000000207B5><fgFFFF00FF> Map Data & Addon Settings Are on Page 2 - 地图数据和附加组件的设置在第2页"
+#!define FILLER "<tx0C000000000207B5><fgFFFF00FF> Map Data & Addon Settings Are On Page 2 - 地图数据和附加组件的设置在第2页"
 
 #!define flyMovementDelta ((0.096 + 0.192 * eventPlayer.isHoldingButton(Button.JUMP) - 0.048 * eventPlayer.isHoldingButton(Button.CROUCH)) * \
     (eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z * (vect(1, not eventPlayer.isHoldingButton(Button.ABILITY_1), 1))+ \

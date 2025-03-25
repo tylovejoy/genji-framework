@@ -1,9 +1,9 @@
 #!mainFile "framework.opy"
-rule "<tx0C00000000001344> Parkour Editor <tx0C00000000001344>":
+rule "<tx0C00000000001344> Editor <tx0C00000000001344>":
     @Delimiter
 
 def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Bounce Ball Effects"
-    @Name "SUB | Rebuild Bounce Orbs"
+    @Name "Editor | SUB Rebuild Bounce Orbs"
     destroyEffect(BounceEffects)
     BounceEffects = []
     for TempIterator1 in range(0, len(BouncePadCheckpoints)):
@@ -21,7 +21,7 @@ def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place 
             wait()
 
 def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Kill Orb Effects"
-    @Name "SUB | Rebuild Kill Orbs"
+    @Name "Editor | SUB Rebuild Kill Orbs"
     destroyEffect(KillBallEffects)
     KillBallEffects = []
     for TempIterator1 in range(0, len(KillballCheckpoints)):
@@ -31,7 +31,7 @@ def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place on
             wait()
 
 def RebuildPortals():
-    @Name "SUB | Rebuild Portals"
+    @Name "Editor | SUB Rebuild Portals"
     destroyEffect(PortalEffects)
     PortalEffects = []
     if len(CustomPortalCP):

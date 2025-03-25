@@ -9,7 +9,7 @@ this should be parts of addons that get toggled by turning on rules
 rule "<tx0C00000000001344> Addons Settings & Data - 附加组件 <tx0C00000000001344>":
     @Delimiter
 
-rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":
+rule "Addon | Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":
     wait(0.4)
     # Instructions that show when you start comp mode.
     # Due to the hud text limit, you there is 4 huds available.
@@ -25,7 +25,7 @@ rule "Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE
         "Change in Comp Mode instruction message hud 3",
         "Change in Comp Mode instruction message hud 4"]
 
-rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
+rule "Addon | Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled
     @Delimiter
     #1) workshop settings > difficulty > set to "dont display"
@@ -44,7 +44,7 @@ rule "Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输�
     )
     HudStoreEdit.append(getLastCreatedText())
 
-rule "Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
+rule "Addon | Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
     @Disabled
     # enable this rule and fill in the title data below.
     # 启用此规则 并填写下面 的标题数据
@@ -80,7 +80,7 @@ rule "Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
         Color.RED
     ]
 
-rule "Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
+rule "Addon | Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
     @Disabled
     @Event playerJoined
 
@@ -99,14 +99,14 @@ rule "Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
         bigMessage(true[0], "Message to the whole room")
         createInWorldText(localPlayer, "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
-rule "Display Author Time - 展示世界纪录 <---- EDIT ME / 在此处编辑":
+rule "Addon | Display Author Time - 展示世界纪录 <---- EDIT ME / 在此处编辑":
     @Disabled
     # type your entry in the textfield that says "name and time here"
     # 在文本框 中输入“名称和时间”
     hudText(localPlayer, null," \n{0} author time {0}".format(iconString(Icon.FIRE)),"name and time here", HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
 
-rule "HUD text for certain Checkpoints - 特定关卡显示的HUD文本 <---- EDIT ME / 在此处编辑":
+rule "Addon | HUD text for certain Checkpoints - 特定关卡显示的HUD文本 <---- EDIT ME / 在此处编辑":
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的hud文本
@@ -118,7 +118,7 @@ rule "HUD text for certain Checkpoints - 特定关卡显示的HUD文本 <---- ED
     # 修改数组 “CpHudCp” 为hud文本 显示的关卡
     CpHudCp = [1, 3]
 
-rule "Inworld text for certain Checkpoints - 特定关卡显示的地图文本 <---- EDIT ME / 在此处编辑":
+rule "Addon | Inworld text for certain Checkpoints - 特定关卡显示的地图文本 <---- EDIT ME / 在此处编辑":
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的地图文本
@@ -136,7 +136,7 @@ rule "Inworld text for certain Checkpoints - 特定关卡显示的地图文本 <
     # 选择应用到 所有地图文 本的颜色
     CpIwtColor = Color.LIME_GREEN
 
-rule "Hint text for certain Checkpoints - 特定关卡的提示文本 <---- EDIT ME / 在此处编辑":
+rule "Addon | Hint text for certain Checkpoints - 特定关卡的提示文本 <---- EDIT ME / 在此处编辑":
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的提示文本
@@ -148,7 +148,7 @@ rule "Hint text for certain Checkpoints - 特定关卡的提示文本 <---- EDIT
     # 修改数组 “HintCp” 为提示文本 显示的关卡
     HintCp = [1, 3]
 
-rule "3rd Person Camera Mode - 第三人称":
+rule "Addon | 3rd Person Camera Mode - 第三人称":
     @Disabled
     @Event playerJoined
     #Default 1st person: False
@@ -161,7 +161,7 @@ rule "<tx0C00000000001344> Addons Skills - 附加组件技能 <tx0C0000000000134
 
 # keeps you still shortly after getting in a stall
 # makes it much easier to get in one
-rule "Stall enhancer - 增强系統跳的判定":
+rule "Addon | Stall enhancer - 增强系統跳的判定":
     @Event eachPlayer
     #原作：家里有妖怪#5202(国服)
     @Disabled
@@ -198,7 +198,7 @@ rule "Stall enhancer - 增强系統跳的判定":
 # stores speed and launches you after dash if you done it during climb
 # LedgeDash var 0 count - 1 eventPlayer.addon_ledgeDash[1] 1 stored speed
 # based on code taken: wzr31 and S7DR0 and simplified
-rule "Fake Ledge Dash - 超级跳":
+rule "Addon | Fake Ledge Dash - 超级跳":
     @Disabled
     @Event eachPlayer
     @Condition eventPlayer.isUsingAbility1()
@@ -229,7 +229,7 @@ rule "Fake Ledge Dash - 超级跳":
     eventPlayer.addon_ledgeDash[1] = null
     eventPlayer.addon_ledgeDash[2] = null
 
-rule "Grup up | text/effect":
+rule "Addon | Group up - Map Data":
     @Disabled
     # replace 777 with checkpoint number
     # replace vector 0,0,0 with orb position
@@ -237,7 +237,7 @@ rule "Grup up | text/effect":
         [i for i in getAllPlayers() if i.checkpoint_current == 777],
         "{0} {1} {0}".format(
             abilityIconString(Hero.GENJI, Button.ULTIMATE),
-            "待在这里" checkCN "grup up"
+            "待在这里" checkCN "group up"
             ),
         vect(0,0,0),
         1.5,
@@ -251,7 +251,7 @@ rule "Grup up | text/effect":
         Effect.SPHERE, Color.ORANGE, vect(0,0,0),  3.5, EffectReeval.VISIBILITY
     )
 
-rule "Grup up | function":
+rule "Addon | Group Up":
     @Disabled
     @Event eachPlayer
     # replace 777 with checkpoint number
@@ -292,14 +292,14 @@ rule "Grup up | function":
     eventPlayer.stopForcingPosition()
 
 def AddonCustomLoadAndReset():
-    @Name "Custom script for checkpoint loading or reseting"
+    @Name "Addon | Custom checkpoint loading or resetting"
     @Disabled
-    # This subroutine triggers on failing, arriving, reseting, skipping etc
+    # This subroutine triggers on failing, arriving, resetting, skipping etc
     # example: reset gravity and movespeed after being changed by custom orbs
     eventPlayer.setGravity(100)
     eventPlayer.setMoveSpeed(100)
 
-rule "Custom Orb Script":
+rule "Addon | Custom Orb Script":
     @Disabled
     @Event eachPlayer
     #don't edit this condition !!!!!!!!!!!!!!!!!
@@ -329,7 +329,7 @@ rule "Custom Orb Script":
         eventPlayer.setMoveSpeed(250)
         smallMessage(eventPlayer," zooom")
 
-rule "Fake Triple Jump - 假三段跳":
+rule "Addon | Fake Triple Jump - 假三段跳":
     @Disabled
     @Event eachPlayer
     @Hero genji
@@ -354,7 +354,7 @@ rule "Fake Triple Jump - 假三段跳":
     if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping():
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
-rule "fisho cp cheat for overpy toggle":
+rule "Addon | fisho cp cheat for overpy toggle":
     @Event eachPlayer
     @Condition cpCheat
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
@@ -369,7 +369,7 @@ rule "fisho cp cheat for overpy toggle":
         eventPlayer.checkpoint_current += 1
         eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current])
 
-rule "Ledge Grab Patch v1.5":
+rule "Addon | Ledge Grab Patch v1.5":
     # Obsolete for OW v2.12
     @Event eachPlayer
     @Condition false
@@ -403,7 +403,7 @@ rule "Ledge Grab Patch v1.5":
         #Create cBhop
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)
 
-rule "Save Double - enable rule - 二段跳":
+rule "Addon | Save Double - enable rule - 二段跳":
     # Obsoleted by hero settings.
     @Event eachPlayer
     @Condition false

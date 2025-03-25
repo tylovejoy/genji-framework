@@ -62,9 +62,8 @@ rule FILLER:
 ###############################################################################
 #!include "addons-page1.opy"
 ###############################################################################
-# padding to make rest of rules go on page 2
 rule "MAP DATA - 地图数据":
-    @NewPage FILLER
+    @NewPage FILLER # padding to make rest of rules go on page 2
 #!include "customize.opy"
 ###############################################################################
 #!include "addons-page2.opy"

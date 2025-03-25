@@ -1,10 +1,10 @@
 #!mainFile "framework.opy"
 
-rule "<tx0C00000000001344> General Subroutines <tx0C00000000001344>":
+rule "<tx0C00000000001344> General <tx0C00000000001344>":
     @Delimiter
 
 def UpdateCache():
-    @Name "SUB | Update Effect Cache"
+    @Name "General | SUB Update Effect Cache"
     # note: if adding cp pos to cache, make sure to also adjust editor things like move and teleport
     eventPlayer.cache_bouncePosition = [_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
     eventPlayer.cache_bounceStrength = [_ for _, i in BounceStrength if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
@@ -88,7 +88,7 @@ def UpdateCache():
         eventPlayer.checkpoint_moved = false
 
 def DeleteSave():
-    @Name "SUB | Delete Save"
+    @Name "General | SUB Delete Save"
     del SaveName[SaveEnt.index(eventPlayer)]
     del SaveCp[SaveEnt.index(eventPlayer)]
     del SaveTimer[SaveEnt.index(eventPlayer)]
@@ -98,7 +98,7 @@ def DeleteSave():
     del SaveEnt[SaveEnt.index(eventPlayer)] # must always be last because its the index itself
 
 def MakeSave():
-    @Name "SUB | Make Save"
+    @Name "General | SUB Make Save"
     SaveName.append(eventPlayer[0].split([]))
     SaveCp.append(eventPlayer.checkpoint_current)
     SaveTimer.append(eventPlayer.timer_normal)
@@ -108,28 +108,28 @@ def MakeSave():
     SavePauseEnabled.append(false)
 
 def StartPauseTimer():
-    @Name "SUB | Start Pause Timer"
+    @Name "General | SUB Start Pause Timer"
     chase(eventPlayer.timer_pause, Math.INFINITY, rate=1, ChaseReeval.NONE)
     SaveTimer[SaveEnt.index(eventPlayer)] = eventPlayer.timer_normal
     SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
     SavePauseEnabled[SaveEnt.index(eventPlayer)] = true
 
 def StopPauseTimer():
-    @Name "SUB | Stop Pause Timer"
+    @Name "General | SUB Stop Pause Timer"
     stopChasingVariable(eventPlayer.timer_pause)
     SavePauseTime[SaveEnt.index(eventPlayer)] = eventPlayer.timer_pause
     eventPlayer.timer_pause = 0
     SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
 
 def CreateLeaderboard():
-    @Name "SUB | Leaderboard HUD"
+    @Name "General | SUB Leaderboard HUD"
     # turns into global rule so it doesnt delete when player leaves
     LeaderBoardRemake = true
     wait()
     LeaderBoardRemake = null
 
 def LeaderboardUpdate():
-    @Name "SUB | Leaderboard Update"
+    @Name "General | SUB Leaderboard Update"
     # [i[0] for i in var1]   list of first element of each in var 1
     # [ [name, seconds, prettytime] ]
     if eventPlayer[0].split([]) in [i[0] for i in LeaderBoardFull]: # you already have a time
@@ -148,7 +148,7 @@ def LeaderboardUpdate():
                 CreateLeaderboard()
 
 def CheckpointFailReset():
-    @Name "SUB | Checkpoint Fail"
+    @Name "General | SUB Checkpoint Fail"
     eventPlayer.timer_split = eventPlayer.timer_practice if eventPlayer.toggle_practice else eventPlayer.timer_normal
     eventPlayer.cache_collectedLocks = []
     eventPlayer.cancelPrimaryAction()
@@ -185,7 +185,7 @@ def CheckpointFailReset():
     AddonCustomLoadAndReset()
 
 def StartGame():
-    @Name "SUB | Start Game"
+    @Name "General | SUB Start Game"
     if CompMode and (CompTime < 1 or eventPlayer.comp_done):
         eventPlayer.toggle_leaderboard = true
         eventPlayer.comp_done = true
@@ -231,10 +231,7 @@ def StartGame():
     eventPlayer.checkpoint_moved = true
     # eventPlayer.lockState = false
 
-rule "<tx0C00000000001344> General Rules <tx0C00000000001344>":
-    @Delimiter
-
-rule "Setup and Variables":
+rule "General | Setup & Variables":
     disableInspector()
     disableGamemodeCompletion()
     disableScoring()
@@ -365,7 +362,7 @@ rule "Setup and Variables":
     RebuildBounceOrbs()
     RebuildPortals()
 
-rule "Match time":
+rule "General | Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
         wait()#0.25
         setMatchTime(false)#1
@@ -401,7 +398,7 @@ rule "Match time":
     declarePlayerVictory(hostPlayer)
     declareTeamVictory(hostPlayer.getTeam())
 
-rule "Player Initialize":
+rule "General | Player Initialize":
     @Event playerJoined
     @Condition eventPlayer.isDummy() == false
     eventPlayer.setDamageReceived(0)
@@ -453,7 +450,7 @@ rule "Player Initialize":
     wait()
     StartGame()  # initialization of the game
 
-rule "Arrive | Ground reset | traces":
+rule "General | Ground: Traces, Arrive, & Reset":
     @Event eachPlayer
     @Condition eventPlayer.isDummy() == false
     @Condition eventPlayer.isOnGround()
@@ -565,7 +562,7 @@ rule "Arrive | Ground reset | traces":
     if RULE_CONDITION:
         goto RULE_START
 
-rule "Kill Orb | Activate":
+rule "General | Kill Orb":
     @Event eachPlayer
     @Condition eventPlayer.cache_killPosition != []
     @Condition eventPlayer.toggle_invincible == false
@@ -573,7 +570,7 @@ rule "Kill Orb | Activate":
     @Condition (any([distance(i, eventPlayer) <= eventPlayer.cache_killRadii[eventPlayer.cache_killPosition.index(i)] for i in eventPlayer.cache_killPosition]))
     CheckpointFailReset()
 
-rule "Bounce Ball / Orb | Activate":
+rule "General | Bounce Ball / Orb":
     @Event eachPlayer
     @Condition eventPlayer.cache_bouncePosition != []
     #@Condition eventPlayer.checkpoint_notLast # disabled coz editor
@@ -633,7 +630,7 @@ without wait it can crash server
 with wait it feels bad
 this waituntil contrusction gives higher delay without relying on a variable count
 */
-rule "Death Reset":
+rule "General | Death Reset":
     @Event playerDied
     @Condition eventPlayer.isDummy() == false
     @Condition eventPlayer.toggle_spectate == false
@@ -664,7 +661,7 @@ rule "Death Reset":
                 eventPlayer.respawn()
                 CheckpointFailReset()
 
-rule "Player Leaves":
+rule "General | Player Leaves":
     @Event playerLeft
     if SaveCp[SaveEnt.index(eventPlayer)]:
        if SaveCp[SaveEnt.index(eventPlayer)] < len(CheckpointPositions) - 1 and not SavePauseEnabled[SaveEnt.index(eventPlayer)]:
@@ -675,7 +672,7 @@ rule "Player Leaves":
     else: # delete if player didnt do first cp
         DeleteSave()
 
-rule "AFK timer":
+rule "General | AFK timer":
     @Event eachPlayer
     @Condition eventPlayer.isMoving() == false
     @Condition eventPlayer.isAlive()

@@ -7,7 +7,7 @@ huds outside this file:
     - editor huds ( editor)
 
 */
-rule "<tx0C00000000001344> Text & Effects <tx0C00000000001344>":
+rule "<tx0C00000000001344> Texts & Effects <tx0C00000000001344>":
     @Delimiter
 
 rule "Huds | Global Localplayer":
@@ -572,14 +572,14 @@ rule "Huds | Each Player":
         )
 
 def UpdateTitle():
-    @Name "Huds | Update Title"
+    @Name "Huds | SUB Update Title"
     if not TitleData or CompMode or eventPlayer.toggle_practice or eventPlayer.editor_on or not eventPlayer.checkpoint_current in TitleData[0]:
         return
     destroyInWorldText(eventPlayer.cache_titleHud)
     createInWorldText(localPlayer if not eventPlayer.toggle_invisible else null,TitleData[1][TitleData[0].index(eventPlayer.checkpoint_current)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData[2][TitleData[0].index(eventPlayer.checkpoint_current)], SpecVisibility.DEFAULT)
     eventPlayer.cache_titleHud = getLastCreatedText()
 
-rule "Huds | Addon":
+rule "Huds | Addons":
     waitUntil(getNumberOfPlayers(Team.ALL) > 0, Math.INFINITY)
     wait()
     if getAllPlayers().addon_toggle3rdPov <= true:
