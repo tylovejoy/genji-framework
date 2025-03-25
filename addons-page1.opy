@@ -8,6 +8,33 @@ this should be parts of addons that get toggled with a workshop toggle
 rule "<tx0C00000000001344> Addon Functions <tx0C00000000001344>":
     @Delimiter
 
+rule "Addon | AFK timer":
+    @Event eachPlayer
+    @Condition eventPlayer.isMoving() == false
+    @Condition eventPlayer.isAlive()
+    @Condition eventPlayer.isCommunicatingEmote() == false
+    @Condition eventPlayer.editor_on == false
+    wait(300, Wait.ABORT_WHEN_FALSE)
+    if eventPlayer.addon_toggle3rdPov:
+        eventPlayer.addon_toggle3rdPov = false
+    eventPlayer.setStatusEffect(null, Status.ASLEEP, Math.INFINITY)
+        # raycast to prevent camera stuck on low wall
+    eventPlayer.startCamera(
+        eventPlayer.getPosition() +
+        Vector.UP * (distance(eventPlayer.getPosition(), raycast(eventPlayer.getPosition(), eventPlayer.getPosition() + 4 * Vector.UP, null, null, false).getHitPosition()) - 1),
+        eventPlayer.getPosition(), 10)
+    # cancel it after jumping or not sleep, reset cures sleep
+    wait(1)
+    waitUntil(eventPlayer.isHoldingButton(Button.JUMP) or not eventPlayer.hasStatusEffect(Status.ASLEEP), Math.INFINITY)
+    eventPlayer.clearStatusEffect(Status.ASLEEP)
+    eventPlayer.stopCamera()
+
+    if eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
+        CheckpointFailReset()
+
+    if RULE_CONDITION:
+        goto RULE_START
+
 rule "Addon | Pre-set control map portal - toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
