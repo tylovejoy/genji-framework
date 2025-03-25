@@ -3,8 +3,6 @@
 rule "<tx0C0000000000D297><fg00FFFFFF> Map Data - 数据录入 <---- INSERT HERE / 在这输入":
     @Delimiter
 
-editorordata
-
 # note: Don't change defaults only here.
 # If you change this, also change it in the name/credit construciton in the huds
 # The old default should always be included to make old data valid
