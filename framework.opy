@@ -66,7 +66,7 @@ rule FILLER:
 rule "MAP DATA - 地图数据":
     @NewPage FILLER # padding to make rest of rules go on page 2
 
-editorordata
+testData
 ###############################################################################
 #!include "customize.opy"
 ###############################################################################
