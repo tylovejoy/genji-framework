@@ -494,3 +494,6 @@ fixed:
   * To re-enable Dash Start when upgrading existing maps, Map data must include: `DashExploitToggle = false`
   * Dash Start if re-enabled, will affect all checkpoints - Not just checkpoint 0.
   * Deprecated due to refactoring to a single reset function.
+
+`@Framework Patch Notes`
+# 1.10.3
