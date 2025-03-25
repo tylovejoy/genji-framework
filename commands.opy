@@ -1,4 +1,4 @@
-#!mainFile "genji.opy"
+#!mainFile "framework.opy"
 
 rule "<tx0C00000000001344> Commands <tx0C00000000001344>":
     @Delimiter
@@ -184,7 +184,7 @@ rule "Command | Spectate (Hold Interact)":
         elif eventPlayer.checkpoint_notLast:
             chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
             StopPauseTimer()
-        checkpointFailReset()
+        CheckpointFailReset()
     else:
         smallMessage(eventPlayer, "   再次长按互动键关闭观战模式" checkCN "   Hold Interact again to turn off spectate mode")
         eventPlayer.toggle_invincible = false
@@ -219,7 +219,7 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
             bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
             chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
             StopPauseTimer()
-        checkpointFailReset()
+        CheckpointFailReset()
     else:
         bigMessage(eventPlayer,"探点模式" checkCN "Invincible mode")
         StartPauseTimer()
@@ -255,7 +255,7 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
             chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
             StopPauseTimer()
         UpdateCache()
-        checkpointFailReset()
+        CheckpointFailReset()
     else:
         bigMessage(eventPlayer,"练习模式" checkCN "Practice mode")
         eventPlayer.checkpoint_practice = eventPlayer.checkpoint_current
@@ -268,7 +268,7 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
         chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)
         if eventPlayer.toggle_invincible:
             eventPlayer.toggle_invincible = false
-            checkpointFailReset()
+            CheckpointFailReset()
     #wait(0.2)
     #eventPlayer.allowButton(Button.ABILITY_1)
     eventPlayer.toggle_practice = not eventPlayer.toggle_practice
@@ -300,7 +300,7 @@ rule "Command | Restart Practice (Hold Interact)":
     eventPlayer.timer_split = 0
     eventPlayer.checkpoint_current = eventPlayer.checkpoint_practice
     UpdateCache()
-    checkpointFailReset()
+    CheckpointFailReset()
 
 rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
     @Event eachPlayer
@@ -336,7 +336,7 @@ rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
     wait(0.064)
     eventPlayer.checkpoint_moved = true
     UpdateCache()
-    checkpointFailReset()
+    CheckpointFailReset()
     eventPlayer.lockState = false
     wait()
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.28) # faster if you spam button
@@ -352,7 +352,7 @@ rule "Command | Quick Reset (Reload | Hold Reload to Enable)":
     if eventPlayer.toggle_quickRestart:
         if eventPlayer.editor_fly:
             eventPlayer.editor_fly = CheckpointPositions[eventPlayer.checkpoint_current].last()
-        checkpointFailReset()
+        CheckpointFailReset()
         wait(0.32)
     wait(1, Wait.ABORT_WHEN_FALSE)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)

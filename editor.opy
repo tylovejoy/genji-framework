@@ -1,4 +1,4 @@
-#!mainFile "genji.opy"
+#!mainFile "framework.opy"
 rule "<tx0C00000000001344> Parkour Editor <tx0C00000000001344>":
     @Delimiter
 

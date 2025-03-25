@@ -1,4 +1,3 @@
-#!mainFile "../genji.opy"
 rule "<tx0C0000000000D297><fg00FFFFFF> Map Data - 数据录入 <---- INSERT HERE / 在这输入":
     A = [
 vect(-19.5, 0, 19.5), vect(-10, 0, 19.5), [vect(-2, 0, 19.5), vect(6, 0, 19.5)], vect(14, 0, 19.5),

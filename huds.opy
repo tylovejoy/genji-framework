@@ -1,4 +1,4 @@
-#!mainFile "genji.opy"
+#!mainFile "framework.opy"
 
 /*
 huds outside this file:

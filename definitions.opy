@@ -1,46 +1,4 @@
-#!mainFile "genji.opy"
-
-######################################## Settings ####################
-#!define versionhere "v1.10.3♨A"
-#♨ Dev Build Icon
-
-#!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
-# Disable via double ## at include, not the define because the define needs to exist
-#!define testToggle ##!include "test-scripts.opy"
-
-# Debug force CN mode on
-##!define checkCN if true else
-
-# Enable Invis Command (Invis Command cant be pasted in CN client die to null and none translating to same symbol)
-#!define enableInvisCommand true
-
-# Limit on how many orbs can be made
-#!define fxLimit 193
-
-#!define portalDistance 1.3
-
-# Default circle radius: 1.4
-#!define cpcircleradius 1.4
-
-# Default fx: 1
-#!define cpCirkleFx 1
-
-# distance range for player - orb 1.4
-#!define bounceorbdistance 1.4
-
-# height added to player for orb detection. inludes the +
-#!define bounceoffset + Vector.UP * 0.7
-
-#!define usePerks false
-
-#!define cpCheat false
-
-# defaults: off, attempt:5, 120 min, restart:false
-#!define compModeToggle false
-#!define attemptCount 5
-#!define compTimeLimit 120
-#!define compRestartLimit false
+#!mainFile "framework.opy"
 
 ######################################## Macro Tools ##########################
 ##!define RestartTimer(timeInMinutes) "{0} Hours and {1} Minutes".format(floor(timeInMinutes / 60 / 60), "{0}{1}".format(floor(timeInMinutes % 60 / 10), floor(timeInMinutes % 60 - floor(timeInMinutes % 60 / 10) * 10)))
@@ -71,15 +29,6 @@ arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in array
     (eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z * (vect(1, not eventPlayer.isHoldingButton(Button.ABILITY_1), 1))+ \
     worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION) + \
     Vector.UP * (eventPlayer.isHoldingButton(Button.ABILITY_2) - eventPlayer.isHoldingButton(Button.ULTIMATE))))
-
-###############################################################################
-#!optimizeForSize
-# Supress warning for emote
-#!suppressWarnings w_ow2_communicate_bug
-#disable overpy map detection (command removed by zezy after fix by blizzard)
-# #!disableMapDetectionFix
-
-#!include "settings.opy"
 
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
@@ -332,11 +281,13 @@ playervar addon_enableDoubleChecks
 subroutine StartGame
 subroutine EffectsCreate
 subroutine LeaderboardUpdate # fishos
+subroutine CheckpointFailReset
 subroutine CreateLeaderboard
 subroutine UpdateTitle
 subroutine DashUltGive
 subroutine CheckUlt
 subroutine CheckDash
+subroutine UpdateCache
 subroutine DeleteSave
 subroutine MakeSave
 subroutine StartPauseTimer

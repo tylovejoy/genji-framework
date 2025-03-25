@@ -1,17 +1,6 @@
-#!include "definitions.opy"
+#!mainFile "framework.opy"
 
-rule versionhere:
-    @Delimiter
-    #◀ The Official Genji Parkour Editor ▶
-    #Discord: dsc.gg/genjiparkour
-    #Code: 54CRY
-    #Adapted by: LulledLion, FishoFire, Nebula
-    return
-
-rule FILLER:
-    @Delimiter
-
-rule "<tx0C00000000001344> General Functions <tx0C00000000001344>":
+rule "<tx0C00000000001344> General Subroutines <tx0C00000000001344>":
     @Delimiter
 
 def UpdateCache():
@@ -158,7 +147,7 @@ def LeaderboardUpdate():
                 LeaderBoardFull.append([[eventPlayer[0].split([]),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]] )
                 CreateLeaderboard()
 
-def checkpointFailReset():
+def CheckpointFailReset():
     @Name "SUB | Checkpoint Fail"
     eventPlayer.timer_split = eventPlayer.timer_practice if eventPlayer.toggle_practice else eventPlayer.timer_normal
     eventPlayer.cache_collectedLocks = []
@@ -235,20 +224,12 @@ def StartGame():
 
     chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
     UpdateCache()
-    checkpointFailReset()
+    CheckpointFailReset()
     #eventPlayer.enableRespawn()
     eventPlayer.toggle_invincible = false
     eventPlayer.toggle_spectate = false
     eventPlayer.checkpoint_moved = true
     # eventPlayer.lockState = false
-
-################################################################################
-
-#!include "editor.opy"
-
-#!include "commands.opy"
-
-################################################################################
 
 rule "<tx0C00000000001344> General Rules <tx0C00000000001344>":
     @Delimiter
@@ -501,21 +482,21 @@ rule "Arrive | Ground reset | traces":
                 waitUntil(not eventPlayer.isUsingAbility1(), 1)
             smallMessage(eventPlayer, "   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[customize.orb_lock]))
             #kill(eventPlayer, null)
-            checkpointFailReset()
+            CheckpointFailReset()
             goto lbl_a
         if eventPlayer.ban_climb and eventPlayer.skill_usedClimb:
             smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
-            checkpointFailReset()
+            CheckpointFailReset()
             goto lbl_a
 
         if eventPlayer.ban_bhop and eventPlayer.skill_usedBhop:
             smallMessage(eventPlayer, "   ≥ 留小跳进点!" checkCN "   ≥ Must have a bhop to complete!")
-            checkpointFailReset()
+            CheckpointFailReset()
             goto lbl_a
 
         if eventPlayer.ban_djump and eventPlayer.skill_usedDouble:
             smallMessage(eventPlayer, "   » 留二段跳!" checkCN "   » Must have a double jump to complete!")
-            checkpointFailReset()
+            CheckpointFailReset()
             goto lbl_a
 
         #eventPlayer.cache_collectedLocks = []
@@ -525,7 +506,7 @@ rule "Arrive | Ground reset | traces":
         #if eventPlayer.isUsingUltimate() and not eventPlayer.checkpoint_current in BladeEnabledCheckpoints:
         #    kill(eventPlayer, null)
         if len(CheckpointPositions[eventPlayer.checkpoint_current]) > 1:# teleport cps
-            checkpointFailReset()/*
+            CheckpointFailReset()/*
             eventPlayer.startForcingPosition( CheckpointPositions[eventPlayer.checkpoint_current].last() ,false)
             eventPlayer.editor_fly = null
             wait(0.1)
@@ -575,7 +556,7 @@ rule "Arrive | Ground reset | traces":
             DeleteSave()
             MakeSave()
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpcircleradius:
-        checkpointFailReset()
+        CheckpointFailReset()
 
     lbl_a:
     eventPlayer.cache_collectedLocks = []
@@ -590,17 +571,17 @@ rule "Kill Orb | Activate":
     @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.checkpoint_notLast
     @Condition (any([distance(i, eventPlayer) <= eventPlayer.cache_killRadii[eventPlayer.cache_killPosition.index(i)] for i in eventPlayer.cache_killPosition]))
-    checkpointFailReset()
+    CheckpointFailReset()
 
 rule "Bounce Ball / Orb | Activate":
     @Event eachPlayer
     @Condition eventPlayer.cache_bouncePosition != []
     #@Condition eventPlayer.checkpoint_notLast # disabled coz editor
-    @Condition (any([distance(i, eventPlayer.getPosition() bounceoffset) < bounceorbdistance for i in eventPlayer.cache_bouncePosition]))
+    @Condition (any([distance(i, eventPlayer.getPosition() + Vector.UP * bounceoffset) < bounceorbdistance for i in eventPlayer.cache_bouncePosition]))
 
     eventPlayer.cache_bounceTouched = eventPlayer.cache_bouncePosition.index( # cashe the touched bouncepad number
         sorted(
-            [i for i in eventPlayer.cache_bouncePosition if distance(eventPlayer bounceoffset, i ) < bounceorbdistance and not (i in eventPlayer.cache_collectedLocks) ],
+            [i for i in eventPlayer.cache_bouncePosition if distance(eventPlayer + Vector.UP * bounceoffset, i ) < bounceorbdistance and not (i in eventPlayer.cache_collectedLocks) ],
             lambda x: distance(eventPlayer, x)
             )[0]
         )
@@ -661,7 +642,7 @@ rule "Death Reset":
         eventPlayer.resurrect()
     else:
         eventPlayer.respawn()
-    checkpointFailReset()
+    CheckpointFailReset()
     # rest is to prevent dead spamming from crashing server
     # but doing waits only when needed
     waitUntil(eventPlayer.isAlive(), 1)
@@ -669,19 +650,19 @@ rule "Death Reset":
     if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):
         wait(0.16)
         eventPlayer.resurrect()
-        checkpointFailReset()
+        CheckpointFailReset()
         waitUntil(eventPlayer.isAlive(), 1)
         waitUntil(eventPlayer.isDead(), 1)
         if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):
             wait(0.44)
             eventPlayer.resurrect()
-            checkpointFailReset()
+            CheckpointFailReset()
             waitUntil(eventPlayer.isAlive(), 1)
             waitUntil(eventPlayer.isDead(), 1)
             if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):
                 wait(0.64)
                 eventPlayer.respawn()
-                checkpointFailReset()
+                CheckpointFailReset()
 
 rule "Player Leaves":
     @Event playerLeft
@@ -717,118 +698,7 @@ rule "AFK timer":
     eventPlayer.stopCamera()
 
     if eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
-        checkpointFailReset()
+        CheckpointFailReset()
 
     if RULE_CONDITION:
         goto RULE_START
-
-################################################################################
-
-#!include "huds.opy"
-
-#!include "mechanics.opy"
-
-#!include "addons-page1.opy"
-
-################################################################################
-
-# padding to make rest of rules go on page 2
-rule "MAP DATA - 地图数据":
-    @NewPage FILLER
-
-rule "<tx0C0000000000D297><fg00FFFFFF> Map Data - 数据录入 <---- INSERT HERE / 在这输入":
-    @Delimiter
-
-editorordata
-
-# note: Don't change defaults only here.
-# If you change this, also change it in the name/credit construciton in the huds
-# The old default should always be included to make old data valid
-rule "<tx0C00000000044B55><fg0FFFFFFF> Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这输入 ":
-    #Filling this in adds it to the inspector pasta after next restart.
-    #You can fill in again to overwrite.
-    #修改的内容 在重新开始 比赛后生效
-    #您可以反复 修改字符串 中的内容
-    Name = "Name Here - 作者"
-    Code = "Code Here - 代码"
-    #
-    #+++++  +++++  +++++  +++++  +++++  +++++
-    #color customization below / 自定义 颜色(实体、HUD)
-    #+++++  +++++  +++++  +++++  +++++  +++++
-    #
-    #credit hud name   -   作者HUD
-    ColorConfig[customize.credit_name] = Color.VIOLET
-    #credit hud code   -   代码HUD
-    ColorConfig[customize.credit_code] = Color.SKY_BLUE
-    #dsc.gg/genjiparkour
-    ColorConfig[customize.dsc] = Color.AQUA
-    #server time hud   -   房间倒计时
-    ColorConfig[customize.servertime] = Color.RED
-    #time  hud   -   单关用时HUD
-    ColorConfig[customize.time] = Color.WHITE
-    #level hud   -   关卡HUD
-    ColorConfig[customize.level] = Color.WHITE
-    #command hud   -   指令HUD
-    ColorConfig[customize.command_normal] = Color.WHITE
-    #command hud highlight   -   指令HUD高亮
-    ColorConfig[customize.command_highlight] = Color.GREEN
-    #bhop/climb available   -   小跳/爬墙未用HUD
-    ColorConfig[customize.bhopclimb_available] = Color.GREEN
-    #bhop/climb used (cant be same as available)   -   小跳/爬墙已用HUD
-    ColorConfig[customize.bhopclimb_used] = Color.RED
-
-    #current checkpoint ring   -   当前检查点光圈
-    ColorConfig[customize.ring_current] =  Color.SKY_BLUE
-    #next checkpoint ring   -   下一关检查点光圈
-    ColorConfig[customize.ring_next] = Color.LIME_GREEN
-    #next checkpoint light shaft   -   下一关检查点光柱
-    ColorConfig[customize.shaft] = Color.WHITE
-    #next checkpoint icon   -   下一关检查点图标
-    ColorConfig[customize.nexticon_color] = Color.SKY_BLUE
-    #"come here" text   -   到这里来" 文本
-    ColorConfig[customize.cometext] = Color.WHITE
-    #kill orbs   -   击杀球
-    ColorConfig[customize.killorb] = Color.BLUE
-    #normal orbs   -   弹球
-    ColorConfig[customize.orb_normal] = Color.GREEN
-    #lock orbs (overwritten if its same as normal)
-    #收集球 (与普通弹 球相同时将 自动覆写)
-    ColorConfig[customize.orb_lock] = Color.ORANGE
-    #portals   -   自定义 传送门
-    ColorConfig[customize.portal] = Color.WHITE
-
-rule "Instructions for Depricated Rules (ban / portal / dash /ult) - 旧版编辑器中已弃用规则指引 (单关封禁 / 传送门 / 给刀给S)":
-    @Delimiter
-    # The following rules should now be handled with the ingame editor
-    #- Ban per checkpoint
-    #- Dash/Ult per checkpoint
-    #- Custom portals
-    return
-    # When updating old maps, these things should be added to your map data.
-    # This is done with the instructions below
-    return
-    #step 1) Open the old rule
-    #step 2) Select the variables and press copy
-    #      (do not select waits or workshop toggles, only select variables)
-    #step 3) Go to map data rule and paste this the variables
-    return
-    #以下规则现在 要用游戏内置 编辑器编辑
-	#	- 单关 封禁(卡小、蹭留等)
-	#	- 检查点给 刀给S
-	#	- 自定义 传送门
-    return
-	#	当更新旧 图数据 时，以上 这些东西 应该放 到地图 数据里
-    #	以下是一 些更新旧 图数据 指引:
-    return
-	#	步骤 1) 找到旧图 数据的 规则
-	#	步骤 2) 选中旧图 数据的 全局变 量并复制
-	#		  (不要复制含 等待 地图工坊设置 的指令, 只要 全局变量 的数据)
-	#	步骤 3) 将全局变 量数据粘 贴到新版 编辑器的 地图数 据规则
-    return
-
-################################################################################
-
-#!include "addons-page2.opy"
-
-# enable/disable the include via defines
-testToggle

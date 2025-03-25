@@ -1,4 +1,4 @@
-#!mainFile "genji.opy"
+#!mainFile "framework.opy"
 
 rule "<tx0C00000000001344> Mechanics | Checks <tx0C00000000001344>":
     @Delimiter
@@ -105,7 +105,7 @@ rule "Mechanics | Using Emote":
         if eventPlayer.toggle_invincible: return
         smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
         wait()
-        checkpointFailReset()
+        CheckpointFailReset()
 
 rule "Mechanics | Bhop":
     @Event eachPlayer
@@ -122,7 +122,7 @@ rule "Mechanics | Bhop count for stand ban":
     eventPlayer.skill_countBhops++
     if eventPlayer.skill_countBhops > 1 and not eventPlayer.toggle_invincible:   
         smallMessage(eventPlayer, "   站卡 ♠ 已禁用!" checkCN "   Stand createBhop ♠ is banned!")
-        checkpointFailReset()
+        CheckpointFailReset()
         return
 
 rule "Mechanics | Create Bhop":
@@ -140,7 +140,7 @@ rule "Mechanics | Create Bhop":
 
     if eventPlayer.ban_create and not eventPlayer.toggle_invincible:
         smallMessage(eventPlayer, "   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!")
-        checkpointFailReset()
+        CheckpointFailReset()
         return
     
     if eventPlayer.ban_standcreate and eventPlayer.skill_countBhops > null:
@@ -203,7 +203,7 @@ rule "Mechanics | Multiclimb":
     else:
         if eventPlayer.ban_multi and eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
             smallMessage(eventPlayer, "    蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
-            checkpointFailReset() 
+            CheckpointFailReset() 
         else:
             eventPlayer.skill_countMulti += 1
 
@@ -213,7 +213,7 @@ rule "Mechanics | Ban Wallclimb - Message":
     @Condition eventPlayer.ban_climb
     @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.skill_usedClimb
-    #checkpointFailReset()
+    #CheckpointFailReset()
     #eventPlayer.setStatusEffect(null,Status.BURNING, 0.1)
     smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
 
@@ -239,4 +239,4 @@ rule "Mechanics | Ban Save Double - 封禁二段跳":
         #This can give a false negative, but advantage is small
         if eventPlayer.skill_usedBhop: return
     smallMessage(eventPlayer, "   延二段跳已禁用!" checkCN "   save double banned!")
-    checkpointFailReset()
+    CheckpointFailReset()
