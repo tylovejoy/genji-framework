@@ -163,7 +163,6 @@ globalvar CpIwtColor 79
 globalvar BanTriple 80                      # legacy
 globalvar BanMulti 81
 globalvar BanCreate 82
-#!define deathjump BanDead
 globalvar BanDead 83
 globalvar BanEmote 84
 globalvar BanClimb 85
