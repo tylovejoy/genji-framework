@@ -14,8 +14,8 @@ def UpdateCache():
     eventPlayer.cache_bounceMaxLocks = len([i for i in eventPlayer.cache_bounceLocks if i])
     eventPlayer.cache_killPosition = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.checkpoint_current]
     eventPlayer.cache_killRadii = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_portalStart = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] == Math.INFINITY]
-    eventPlayer.cache_portalEnd = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] == Math.INFINITY]
+    eventPlayer.cache_portalStart = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] < 0]
+    eventPlayer.cache_portalEnd = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] < 0]
     eventPlayer.checkpoint_notLast = (eventPlayer.checkpoint_current < len(CheckpointPositions) - 1 and len(CheckpointPositions) > 1)
     eventPlayer.toggle_hints = false
     eventPlayer.banString = []
@@ -316,7 +316,7 @@ rule "General | Setup & Variables":
     BanDjump = BanDjump if len(BanDjump) else []
 
     #Check if old map forces ban off
-    if DashExploitToggle != [] and not DashExploitToggle:
+    if DashExploitToggle != [] and not DashExploitToggle: #$$ len(dashexploittoggle)
         #DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
         DashExploitToggle = null
 
@@ -352,7 +352,7 @@ rule "General | Setup & Variables":
                 PortalLoc[evalOnce(TempIterator1)] + Vector.UP,
                 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
             )
-    waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]),Math.INFINITY)
+    waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]), Math.INFINITY)
     wait(1)
     if not [i for i in getAllPlayers() if not i.isDummy()][0].editor_on:
         EffectsCreate()
@@ -446,9 +446,19 @@ rule "General | Player Initialize":
         if eventPlayer.comp_countAttempts == (-1) or CompTime < 1:
             eventPlayer.comp_done = true
 
-
     wait()
     StartGame()  # initialization of the game
+
+rule "General | Player Leaves":
+    @Event playerLeft
+    if SaveCp[SaveEnt.index(eventPlayer)]:
+       if SaveCp[SaveEnt.index(eventPlayer)] < len(CheckpointPositions) - 1 and not SavePauseEnabled[SaveEnt.index(eventPlayer)]:
+            SaveTimer[SaveEnt.index(eventPlayer)] = (
+                getTotalTimeElapsed() - SaveElapsed[SaveEnt.index(eventPlayer)] - SavePauseTime[SaveEnt.index(eventPlayer)] + SaveTimer[SaveEnt.index(eventPlayer)])
+        SavePauseTime[SaveEnt.index(eventPlayer)] = 0
+        SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
+    else: # delete if player didnt do first cp
+        DeleteSave()
 
 rule "General | Ground: Traces, Arrive, & Reset":
     @Event eachPlayer
@@ -580,8 +590,7 @@ rule "General | Bounce Ball / Orb":
         sorted(
             [i for i in eventPlayer.cache_bouncePosition if distance(eventPlayer + Vector.UP * bounceoffset, i ) < bounceorbdistance and not (i in eventPlayer.cache_collectedLocks) ],
             lambda x: distance(eventPlayer, x)
-            )[0]
-        )
+            )[0])
 
     if eventPlayer.cache_bounceTouched == eventPlayer.cache_bounceLastTouched: # prevent same one trigering twice in a row
         wait(0.24)
@@ -660,14 +669,3 @@ rule "General | Death Reset":
                 wait(0.64)
                 eventPlayer.respawn()
                 CheckpointFailReset()
-
-rule "General | Player Leaves":
-    @Event playerLeft
-    if SaveCp[SaveEnt.index(eventPlayer)]:
-       if SaveCp[SaveEnt.index(eventPlayer)] < len(CheckpointPositions) - 1 and not SavePauseEnabled[SaveEnt.index(eventPlayer)]:
-            SaveTimer[SaveEnt.index(eventPlayer)] = (
-                getTotalTimeElapsed() - SaveElapsed[SaveEnt.index(eventPlayer)] - SavePauseTime[SaveEnt.index(eventPlayer)] + SaveTimer[SaveEnt.index(eventPlayer)])
-        SavePauseTime[SaveEnt.index(eventPlayer)] = 0
-        SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
-    else: # delete if player didnt do first cp
-        DeleteSave()

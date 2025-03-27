@@ -2,9 +2,9 @@
 
 /*
 huds outside this file:
-    - custom diffiuclty (map data)
-    - display world record (addons p2)
-    - editor huds ( editor)
+    - custom difficulty (map data)
+    - display author time (addons pg2)
+    - editor huds (editor)
 
 */
 rule "<tx0C00000000001344> Texts & Effects <tx0C00000000001344>":
@@ -376,7 +376,7 @@ def EffectsCreate():
     if CustomPortalStart:
         for TempIterator1 in range(len(CustomPortalStart)):
             createEffect(
-                [i for i in getAllPlayers() if i.checkpoint_current == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == Math.INFINITY],
+                [i for i in getAllPlayers() if i.checkpoint_current == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == -1],
                 Effect.GOOD_AURA, ColorConfig[customize.portal],
                 CustomPortalStart[evalOnce(TempIterator1)],
                 0.6,
@@ -402,15 +402,13 @@ def EffectsCreate():
                 EffectReeval.VISIBILITY
             )
             wait()
-
-    createEffect( # portal preview
-        localPlayer
-            if
+    # End portal preview
+    createEffect(
+        localPlayer if
             localPlayer.preview_i >= len(localPlayer.cache_bouncePosition) + 1 and
             localPlayer.preview_i > 0 and
             localPlayer.preview_array2[localPlayer.preview_i][0] == 1
-        else null
-        ,
+            else null,
         Effect.SPARKLES,
         Color.PURPLE,
         localPlayer.preview_array1[localPlayer.preview_i],

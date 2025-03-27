@@ -37,7 +37,7 @@ def RebuildPortals():
     if len(CustomPortalCP):
         for TempIterator1 in range(0, len(CustomPortalCP)):
             createEffect(
-                [i for i in getAllPlayers() if i.checkpoint_current == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == Math.INFINITY],
+                [i for i in getAllPlayers() if i.checkpoint_current == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] < 0],
                 Effect.GOOD_AURA,
                 ColorConfig[customize.portal],
                 CustomPortalStart[evalOnce(TempIterator1)],
@@ -598,8 +598,8 @@ rule "Editor | Hud and Effects":
                 " 应用关卡: {} \n".format(
                 CustomPortalStart[EditSelected],
                 CustomPortalEndpoint[EditSelected],
-                "所有" if CustomPortalCP[EditSelected] == Math.INFINITY else hostPlayer.checkpoint_current)
-            if hostPlayer.editor_modeSelect == 4 and CustomPortalCP[EditSelected] in [hostPlayer.checkpoint_current, Math.INFINITY] and len(CustomPortalCP) else
+                "所有" if CustomPortalCP[EditSelected] < 0 else hostPlayer.checkpoint_current)
+            if hostPlayer.editor_modeSelect == 4 and CustomPortalCP[EditSelected] in [hostPlayer.checkpoint_current, -1] and len(CustomPortalCP) else
             "\n   当前无数据选中   \n"
         ) checkCN
         (
@@ -642,8 +642,8 @@ rule "Editor | Hud and Effects":
                 " CP: {} \n".format(
                 CustomPortalStart[EditSelected],
                 CustomPortalEndpoint[EditSelected],
-                "All" if CustomPortalCP[EditSelected] == Math.INFINITY else hostPlayer.checkpoint_current)
-            if hostPlayer.editor_modeSelect == 4 and CustomPortalCP[EditSelected] in [hostPlayer.checkpoint_current, Math.INFINITY] and len(CustomPortalCP) > 0 else
+                "All" if CustomPortalCP[EditSelected] < 0 else hostPlayer.checkpoint_current)
+            if hostPlayer.editor_modeSelect == 4 and CustomPortalCP[EditSelected] in [hostPlayer.checkpoint_current, -1] and len(CustomPortalCP) else
             "\n   No data selected   \n"
         )
         , null, null, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
@@ -751,7 +751,7 @@ def EditUpdateSelectedIds():
         EditSelectIdArray = [ i for i in EditSelectIdArray if BouncePadCheckpoints[i] == hostPlayer.checkpoint_current ]
     elif hostPlayer.editor_modeSelect == 4:
         EditSelectIdArray  = [i for _, i in CustomPortalCP]
-        EditSelectIdArray = [i for i in EditSelectIdArray if CustomPortalCP[i] == Math.INFINITY or CustomPortalCP[i] == hostPlayer.checkpoint_current]
+        EditSelectIdArray = [i for i in EditSelectIdArray if CustomPortalCP[i] < 0 or CustomPortalCP[i] == hostPlayer.checkpoint_current]
     else:
         EditSelectIdArray  = []
 
@@ -859,7 +859,7 @@ rule "Editor | create cp/orb":
         EditUpdateSelectedIds()
         EditorSelectLast()
         createEffect(
-            [i for i in getAllPlayers() if i.checkpoint_current == CustomPortalCP[evalOnce(EditSelected)] or CustomPortalCP[evalOnce(EditSelected)] == Math.INFINITY],
+            [i for i in getAllPlayers() if i.checkpoint_current == CustomPortalCP[evalOnce(EditSelected)] or CustomPortalCP[evalOnce(EditSelected)] < 0],
             Effect.GOOD_AURA, ColorConfig[customize.portal], CustomPortalStart[evalOnce(EditSelected)], 0.6,  EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
         PortalEffects.append(getLastCreatedEntity())
@@ -1211,7 +1211,7 @@ rule "Editor | portal cp change":
     #@Condition EditorMoveItem == false
     @Condition eventPlayer.editor_lock == false
 
-    CustomPortalCP[EditSelected] = eventPlayer.checkpoint_current if CustomPortalCP[EditSelected] == Math.INFINITY else Math.INFINITY
+    CustomPortalCP[EditSelected] = eventPlayer.checkpoint_current if CustomPortalCP[EditSelected] < 0 else -1
     wait(0.3)
 
 
