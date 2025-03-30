@@ -376,6 +376,7 @@ def EffectsCreate():
     if CustomPortalStart:
         for TempIterator1 in range(len(CustomPortalStart)):
             createEffect(
+                #localSpectator(localPlayer.checkpoint_current == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == -1), #$$ Testing
                 [i for i in getAllPlayers() if i.checkpoint_current == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == -1],
                 Effect.GOOD_AURA, ColorConfig[customize.portal],
                 CustomPortalStart[evalOnce(TempIterator1)],
@@ -387,14 +388,18 @@ def EffectsCreate():
 
     if KillBallPositions != []:
         for TempIterator1 in range(0, len(KillBallPositions)):
-            createEffect([x for x in getAllPlayers().concat(null) if x.checkpoint_current == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, ColorConfig[customize.killorb] , KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
+            createEffect(
+                #localSpectator(localPlayer.checkpoint_current == KillballCheckpoints[evalOnce(TempIterator1)]), #$$ Testing
+                [x for x in getAllPlayers() if x.checkpoint_current == KillballCheckpoints[evalOnce(TempIterator1)]],
+                Effect.SPHERE, ColorConfig[customize.killorb] , KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
             wait()
         wait(0.5)
 
     if BouncePositions != []:
         for TempIterator1 in range(0, len(BouncePositions)):
             createEffect(
-                [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.cache_collectedLocks],
+                #localSpectator(localPlayer.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in localPlayer.cache_collectedLocks), #$$ Testing
+                [x for x in getAllPlayers().concat(0) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.cache_collectedLocks],
                 Effect.ORB,
                 ColorConfig[customize.orb_lock] if BounceToggleLock[TempIterator1] else ColorConfig[customize.orb_normal] ,
                 BouncePositions[evalOnce(TempIterator1)],

@@ -1,6 +1,8 @@
 #!mainFile "framework.opy"
 
 ######################################## Macro Tools ##########################
+#!define localSpectator(condition) (true if condition else (localPlayer.toggle_spectate or localPlayer.getSlot() < null))
+
 ##!define RestartTimer(timeInMinutes) "{0} Hours and {1} Minutes".format(floor(timeInMinutes / 60 / 60), "{0}{1}".format(floor(timeInMinutes % 60 / 10), floor(timeInMinutes % 60 - floor(timeInMinutes % 60 / 10) * 10)))
 ##!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format([] if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
 ##!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
@@ -10,7 +12,7 @@
 #!define insert(insert_array, insert_index, insert_value)\
 insert_array.append(insert_value)\
 insert_array = [elementhere if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for elementhere, i in insert_array]
-
+#$$ i != eventPlayer.checkpoint_current → i-eventPlayer.checkpoint_current
 #!define toggleCpInArray(baninput)\
 if eventPlayer.checkpoint_current in baninput:\
     baninput = [i for i in baninput if i != eventPlayer.checkpoint_current]\
