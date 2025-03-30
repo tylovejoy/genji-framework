@@ -2,7 +2,7 @@
 # Supress warning for emote
 #!suppressWarnings w_ow2_communicate_bug
 ###############################################################################
-#!define versionhere "v1.10.3♨B"
+#!define versionhere "v1.10.3♨C"
 #♨ Dev Build Icon
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers

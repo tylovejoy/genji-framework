@@ -701,7 +701,7 @@ rule "Editor |  Fly/Noclip Toggle":
     eventPlayer.disallowButton(Button.ULTIMATE)
     waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_1), 1)
 
-    while eventPlayer.isAlive() and eventPlayer.editor_fly != null and not eventPlayer.isHoldingButton(Button.ABILITY_1):
+    while eventPlayer.isAlive() and eventPlayer.editor_fly and not eventPlayer.isHoldingButton(Button.ABILITY_1):
         if not (eventPlayer == hostPlayer and EditorMoveItem):
             eventPlayer.editor_fly += flyMovementDelta
         wait()

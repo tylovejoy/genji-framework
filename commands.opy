@@ -310,7 +310,7 @@ rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
     @Condition hostPlayer.editor_on or eventPlayer.toggle_practice
     @Condition eventPlayer.lockState == false
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) )
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) != (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) )
     #@Condition hostPlayer.editor_on or ( eventPlayer.toggle_practice and eventPlayer.isHoldingButton(Button.ABILITY_1) )
 
     eventPlayer.lockState = true
@@ -339,7 +339,7 @@ rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
     CheckpointFailReset()
     eventPlayer.lockState = false
     wait()
-    waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.28) # faster if you spam button
+    waitUntil(eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.28) # faster if you spam button
     if RULE_CONDITION:
         goto RULE_START
 
