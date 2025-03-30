@@ -718,11 +718,22 @@ rule "Editor | change mode":
     @Condition hostPlayer.editor_on
     @Condition eventPlayer == hostPlayer
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) != eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer.editor_lock == false
 
     eventPlayer.editor_lock = true
     EditorMoveItem = false
+
+    if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
+        eventPlayer.editor_modeSelect += (5 - 1)
+    else:
+        eventPlayer.editor_modeSelect += 1
+    eventPlayer.editor_modeSelect %= 5
+    wait(0.1, Wait.RESTART_WHEN_TRUE)
+    if eventPlayer.isHoldingButton(Button.MELEE) and (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) != eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
+        goto RULE_START
+
+/*
     if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
         while eventPlayer.isHoldingButton(Button.MELEE) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             eventPlayer.editor_modeSelect = eventPlayer.editor_modeSelect - 1 if eventPlayer.editor_modeSelect > 0 else 4
@@ -733,7 +744,7 @@ rule "Editor | change mode":
             eventPlayer.editor_modeSelect = (eventPlayer.editor_modeSelect  + 1) % 5
             waitUntil(not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.1)
             wait(0.1)
-
+*/
     wait()
     EditUpdateSelectedIds()
     EditorSelectLast()
