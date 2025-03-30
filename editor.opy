@@ -729,9 +729,7 @@ rule "Editor | change mode":
     else:
         eventPlayer.editor_modeSelect += 1
     eventPlayer.editor_modeSelect %= 5
-    wait(0.1, Wait.RESTART_WHEN_TRUE)
-    if eventPlayer.isHoldingButton(Button.MELEE) and (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) != eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
-        goto RULE_START
+    waitUntil(not (eventPlayer.isHoldingButton(Button.MELEE) and (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) != eventPlayer.isHoldingButton(Button.SECONDARY_FIRE))), 0.1)
 
 /*
     if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
