@@ -951,12 +951,11 @@ rule "Editor | delete cp/orb/portal":
         del CheckpointPositions[hostPlayer.checkpoint_current]
         del CheckpointRings_Editing[hostPlayer.checkpoint_current]
 
-        if hostPlayer.checkpoint_current < 1 and len(CheckpointPositions) or CheckpointPositions == []: #$$ remove checkpointposition checks?
+        if hostPlayer.checkpoint_current < 1:
             hostPlayer.checkpoint_current = 0
-            goto lbl_a
+        else:
+            hostPlayer.checkpoint_current -= 1
 
-        hostPlayer.checkpoint_current -= 1
-        lbl_a:
         RebuildKillOrbs()
         RebuildBounceOrbs()
         RebuildPortals()
