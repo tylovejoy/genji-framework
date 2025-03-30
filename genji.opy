@@ -316,7 +316,7 @@ rule "General | Setup & Variables":
     BanDjump = BanDjump if len(BanDjump) else []
 
     #Check if old map forces ban off
-    if DashExploitToggle != [] and not DashExploitToggle: #$$ len(dashexploittoggle)
+    if len(DashExploitToggle):
         #DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
         DashExploitToggle = null
 
@@ -339,7 +339,7 @@ rule "General | Setup & Variables":
     if len(PortalDest): # pre set control map portals. not in portal rule because shared I variable
         for TempIterator1 in range(len(PortalLoc)):
             createEffect(
-                [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast],
+                [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast], #$$ localspectate()
                 Effect.BAD_AURA,
                 Color.AQUA if evalOnce(TempIterator1) % 2 == 1 else Color.ORANGE,
                 PortalLoc[evalOnce(TempIterator1)],
@@ -347,7 +347,7 @@ rule "General | Setup & Variables":
                 EffectReeval.VISIBILITY
             )
             createInWorldText(
-                [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast],
+                [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast], #$$ localspectate()
                 "{0}".format(PortalNames[evalOnce(TempIterator1)]), #$$ skip string conversion?
                 PortalLoc[evalOnce(TempIterator1)] + Vector.UP,
                 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
