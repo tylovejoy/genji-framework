@@ -1,6 +1,7 @@
 #!optimizeForSize
 # Supress warning for emote
 #!suppressWarnings w_ow2_communicate_bug
+#!suppressWarnings w_tags #Workshop Settings
 ###############################################################################
 #!define versionhere "v1.10.3♨C"
 #♨ Dev Build Icon
