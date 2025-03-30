@@ -729,24 +729,11 @@ rule "Editor | change mode":
     else:
         eventPlayer.editor_modeSelect += 1
     eventPlayer.editor_modeSelect %= 5
-    waitUntil(not (eventPlayer.isHoldingButton(Button.MELEE) and (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) != eventPlayer.isHoldingButton(Button.SECONDARY_FIRE))), 0.1)
 
-/*
-    if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
-        while eventPlayer.isHoldingButton(Button.MELEE) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
-            eventPlayer.editor_modeSelect = eventPlayer.editor_modeSelect - 1 if eventPlayer.editor_modeSelect > 0 else 4
-            waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 0.1)
-            wait(0.1)
-    else:
-        while eventPlayer.isHoldingButton(Button.MELEE) and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-            eventPlayer.editor_modeSelect = (eventPlayer.editor_modeSelect  + 1) % 5
-            waitUntil(not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.1)
-            wait(0.1)
-*/
-    wait()
     EditUpdateSelectedIds()
     EditorSelectLast()
     wait()
+    waitUntil(eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.1)
     eventPlayer.editor_lock = false
 
 def EditUpdateSelectedIds():
