@@ -181,7 +181,6 @@ rule "Editor | Clear Excess Data to Save Map":
 
 rule "Editor | Hud and Effects":
     waitUntil(hostPlayer.hasSpawned(), 90)  # cant be condition because host player can leaves, removing the rule fx
-    EditorMoveItem = false
     wait(1)
     if not hostPlayer.editor_on:
         # clear variables if not in editor mode
@@ -722,7 +721,6 @@ rule "Editor | change mode":
     @Condition eventPlayer.editor_lock == false
 
     eventPlayer.editor_lock = true
-    EditorMoveItem = false
 
     if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
         eventPlayer.editor_modeSelect += (5 - 1)
@@ -1284,7 +1282,7 @@ rule "Editor | move object":
     eventPlayer.clearStatusEffect(Status.HACKED)
     eventPlayer.stopCamera()
     eventPlayer.stopForcingPosition()
-    EditorMoveItem = false
+    EditorMoveItem = null
     UpdateCache()
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE),1)
     eventPlayer.editor_lock = false
