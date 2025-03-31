@@ -206,7 +206,6 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
-    #@Condition eventPlayer.isUsingAbility1() == false
 
     eventPlayer.lockState = true
     eventPlayer.cache_collectedLocks = []
@@ -241,7 +240,6 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
-    #@Condition eventPlayer.isUsingAbility1() == false
 
     eventPlayer.lockState = true
     #eventPlayer.disallowButton(Button.ABILITY_1)
@@ -316,32 +314,17 @@ rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
     eventPlayer.lockState = true
     eventPlayer.timer_split = 0
     eventPlayer.timer_practice = 0
-    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-        #eventPlayer.lockState = true
-        if eventPlayer.checkpoint_current < 1:
-            eventPlayer.checkpoint_current = len(CheckpointPositions) - 1
-        elif (len(CheckpointPositions[eventPlayer.checkpoint_current -1]) > 1 and distance(CheckpointPositions[eventPlayer.checkpoint_current][0], CheckpointPositions[eventPlayer.checkpoint_current - 1][1]) < cpcircleradius):
-            # if last cp is an instant complete teleport cp, go back further
-            eventPlayer.checkpoint_current -= 2
-        else:
-            eventPlayer.checkpoint_current -= 1
-    else:
-        #eventPlayer.lockState = true
-
-        if eventPlayer.checkpoint_current >= len(CheckpointPositions) - 1:
-            eventPlayer.checkpoint_current = 0
-        else:
-            eventPlayer.checkpoint_current += 1
-
-    wait(0.064)
+    eventPlayer.checkpoint_current += len(CheckpointPositions) - 1 if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) else true
+    eventPlayer.checkpoint_current %= len(CheckpointPositions)
     eventPlayer.checkpoint_moved = true
+
     UpdateCache()
     CheckpointFailReset()
-    eventPlayer.lockState = false
     wait()
-    waitUntil(eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.28) # faster if you spam button
-    if RULE_CONDITION:
-        goto RULE_START
+    waitUntil(eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.256) # faster if you spam button
+    if RULE_CONDITION: goto RULE_START
+    # After loop to prevent instant teleports
+    eventPlayer.lockState = false
 
 rule "Command | Quick Reset (Reload | Hold Reload to Enable)":
     @Event eachPlayer
@@ -376,8 +359,7 @@ rule "Command | Toggle Hud (Hold Secondary)":
     smallMessage(eventPlayer,
         ("   HUD已开启" if eventPlayer.toggle_guide else  "HUD已隐藏")
         checkCN
-        ("   Hud is now open" if eventPlayer.toggle_guide else "   Hud is now hidden")
-    )
+        ("   Hud is now open" if eventPlayer.toggle_guide else "   Hud is now hidden"))
     eventPlayer.toggle_guide = not eventPlayer.toggle_guide
 
 rule "Command | Toggle Hints (Melee + Deflect)":
