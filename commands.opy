@@ -82,12 +82,12 @@ rule "Command | Preview Orbs & Portals (Hold Primary)":
     eventPlayer.disallowButton(Button.JUMP)
     while eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.isAlive() and not eventPlayer.lockState:
         if eventPlayer.getThrottle().x < -0.5:
-            eventPlayer.preview_i = 0 if eventPlayer.preview_i + 1 >= len(eventPlayer.preview_array1) else eventPlayer.preview_i + 1
-            waitUntil(eventPlayer.getThrottle().x > -0.5, 1)
+            eventPlayer.preview_i += 1
         elif eventPlayer.getThrottle().x > 0.5:
-            eventPlayer.preview_i = len(eventPlayer.preview_array1) -1  if not eventPlayer.preview_i else  eventPlayer.preview_i - 1
-            waitUntil(eventPlayer.getThrottle().x < 0.5, 1)
+            eventPlayer.preview_i += len(eventPlayer.preview_array1) - true
+        eventPlayer.preview_i %= len(eventPlayer.preview_array1)
         wait()
+        waitUntil(abs(eventPlayer.getThrottle().x) < 0.5, 1)
     eventPlayer.setPrimaryFireEnabled(true)
     eventPlayer.setSecondaryFireEnabled(true)
     eventPlayer.allowButton(Button.ABILITY_1)
@@ -151,18 +151,13 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
         DeleteSave()
 
     if eventPlayer.isDead():
-        eventPlayer.resurrect()
-        #eventPlayer.respawn()
+        eventPlayer.resurrect() #eventPlayer.respawn()
 
     StartGame()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
-    wait()
+    wait(CompMode)
     #eventPlayer.allowButton(Button.ABILITY_1)
     eventPlayer.lockState = false
-    if CompMode:
-        wait(1)
-    else:
-        wait()
 
 rule "Command | Spectate (Hold Interact)":
     @Event eachPlayer
@@ -206,7 +201,7 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
-
+    
     eventPlayer.lockState = true
     eventPlayer.cache_collectedLocks = []
 
