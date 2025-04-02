@@ -164,10 +164,10 @@ rule "Command | Spectate (Hold Interact)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
-    @Condition eventPlayer.editor_on and (
+    @Condition (eventPlayer.editor_on and (
         eventPlayer.isHoldingButton(Button.MELEE) or
         eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or
-        eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)) == false
+        eventPlayer.isHoldingButton(Button.SECONDARY_FIRE))) == false
     #@Condition editoron == false
     wait(1, Wait.ABORT_WHEN_FALSE)
     if eventPlayer.editor_on: # editor has interact combos
