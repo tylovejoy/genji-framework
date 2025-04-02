@@ -108,12 +108,13 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
     #@Condition eventPlayer.isUsingAbility1() == false
 
     eventPlayer.lockState = true
+    /* #$$ remove ???
     # prevent 0.02 time bug with next 2 checks
     if eventPlayer.checkpoint_current == len(CheckpointPositions) - 2 and eventPlayer.getAltitude() < 3:
         waitUntil(eventPlayer.isOnGround(), 3)
         wait(0.42) # 0.64
     if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1:
-        wait(0.42)
+        wait(0.42)*/
 
     if CompMode:
         wait()
@@ -163,8 +164,10 @@ rule "Command | Spectate (Hold Interact)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
-    @Condition not (eventPlayer.editor_on and eventPlayer.isHoldingButton(Button.MELEE))
-    @Condition not eventPlayer.editor_on or not(eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE))
+    @Condition eventPlayer.editor_on and (
+        eventPlayer.isHoldingButton(Button.MELEE) or
+        eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or
+        eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)) == false
     #@Condition editoron == false
     wait(1, Wait.ABORT_WHEN_FALSE)
     if eventPlayer.editor_on: # editor has interact combos
@@ -195,7 +198,7 @@ rule "Command | Spectate (Hold Interact)":
 
 rule "Command | Toggle Invincible Mode (Melee + Reload)":
     @Event eachPlayer
-    @Condition not (CompMode and eventPlayer.comp_done)
+    @Condition (CompMode and eventPlayer.comp_done) == false
     @Condition eventPlayer.lockState == false
     @Condition eventPlayer.isAlive()
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
@@ -266,7 +269,7 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
     #eventPlayer.allowButton(Button.ABILITY_1)
     eventPlayer.toggle_practice = not eventPlayer.toggle_practice
     eventPlayer.lockState = false
-    wait(0.1)
+    wait()
 
 rule "Command | Restart Practice (Hold Interact)":
     @Event eachPlayer
@@ -333,8 +336,8 @@ rule "Command | Quick Reset (Reload | Hold Reload to Enable)":
         CheckpointFailReset()
         wait(0.32)
     wait(1, Wait.ABORT_WHEN_FALSE)
-    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     eventPlayer.toggle_quickRestart = not eventPlayer.toggle_quickRestart
+    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     bigMessage(eventPlayer,
         ("快速回点已启用" if eventPlayer.toggle_quickRestart else "快速回点已关闭")
         checkCN
@@ -344,18 +347,18 @@ rule "Command | Quick Reset (Reload | Hold Reload to Enable)":
 rule "Command | Toggle Hud (Hold Secondary)":
     @Event eachPlayer
     @Condition EditorMoveItem == false
-    @Condition not (eventPlayer.editor_on and eventPlayer == hostPlayer and eventPlayer.isHoldingButton(Button.MELEE))
+    @Condition (eventPlayer.editor_on and eventPlayer == hostPlayer and eventPlayer.isHoldingButton(Button.MELEE)) == false
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false
-    @Condition not (eventPlayer.isHoldingButton(Button.CROUCH) and eventPlayer.isHoldingButton(Button.ABILITY_1)) # don't trigger during skipping
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == false # don't trigger during skipping
 
     wait(1.5, Wait.ABORT_WHEN_FALSE)
+    eventPlayer.toggle_guide = not eventPlayer.toggle_guide
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
     smallMessage(eventPlayer,
-        ("   HUD已开启" if eventPlayer.toggle_guide else  "HUD已隐藏")
+        ("   HUD已隐藏" if eventPlayer.toggle_guide else  "   HUD已开启")
         checkCN
-        ("   Hud is now open" if eventPlayer.toggle_guide else "   Hud is now hidden"))
-    eventPlayer.toggle_guide = not eventPlayer.toggle_guide
+        ("   Hud is now hidden" if eventPlayer.toggle_guide else "   Hud is now shown"))
 
 rule "Command | Toggle Hints (Melee + Deflect)":
     @Event eachPlayer
