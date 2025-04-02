@@ -34,14 +34,14 @@ rule "Huds | Global Localplayer":
     #  if Code != "code here - 代码" or not Cachedcredits[1]:
 
 
-    hudSubtext(localPlayer,
+    hudSubtext(true[0],
         "作者: {}".format( Cachedcredits[0] )
         checkCN
         "Made by: {}".format( Cachedcredits[0] )
         , HudPosition.LEFT, HO.data_name, ColorConfig[customize.credit_name] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
-    hudSubtext(localPlayer,
+    hudSubtext(true[0],
         "代码: {}".format( Cachedcredits[1] )
         checkCN
         "Map code: {}".format( Cachedcredits[1] )
@@ -51,7 +51,7 @@ rule "Huds | Global Localplayer":
     hudSubtext(localPlayer.toggle_guide, "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, ColorConfig[customize.dsc], HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
     # global huds
-    hudSubheader(localPlayer,
+    hudSubheader(true[0],
         "房间将在 {0} 分钟后重启 - {1}{2}".format(
             TimeRemaining, versionhere,
             "\n错误: 已达到最大HUD数量上限" if getNumberOfTextIds() >= 128 else []
@@ -80,7 +80,7 @@ rule "Huds | Global Localplayer":
         "{0} + {1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.toggle_invincible else [])
         ,HudPosition.RIGHT, HO.com_invincible, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.toggle_invincible else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
-    hudText(localPlayer,
+    hudText(true[0],
         null,
         "{0}{1}{2}".format(
             abilityIconString(Hero.BAPTISTE, Button.ABILITY_2) if localPlayer.toggle_invincible else [],
@@ -121,7 +121,7 @@ rule "Huds | Global Localplayer":
 
     CreateLeaderboard()
 
-    if CpHudText != null: # text per checkpoint  text per cp each
+    if len(CpHudText): # text per checkpoint  text per cp each
         hudText(localPlayer,
             CpHudText[CpHudCp.index(localPlayer.checkpoint_current)]
             if localPlayer.checkpoint_current in CpHudCp and localPlayer.toggle_guide else [],
@@ -132,7 +132,7 @@ rule "Huds | Global Localplayer":
             , HudPosition.TOP, HO.add_custommsg1, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
         )
 
-    if CpIwtText != null:
+    if len(CpIwtText):
         createInWorldText(
             localPlayer,
             CpIwtText[CpIwtCp.index(localPlayer.checkpoint_current)]
@@ -173,8 +173,7 @@ rule "Huds | Global Localplayer":
         if InstructionText[3]:
             hudSubtext([i for i in getAllPlayers() if i.comp_instructionHud], InstructionText[3], HudPosition.TOP, HO.comp_instruct4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         hudHeader([i for i in getAllPlayers() if i.comp_instructionHud],"                                   Press {0} to start                                ".format(buttonString(Button.INTERACT)), HudPosition.TOP, HO.comp_instructbottom, Color.WHITE, HudReeval.VISIBILITY_AND_STRING,SpecVisibility.DEFAULT)
-
-    elif not CompMode:
+    else:
         hudSubtext(localPlayer.toggle_guide,
             "长按 {0} | 观战模式{1}".format(buttonString(Button.INTERACT)," | 启用" if localPlayer.toggle_spectate else [])
             checkCN
@@ -250,7 +249,7 @@ rule "Huds | Leaderboard": # for global instead of tied to player
 
     # top 5
     if LeaderBoardFull[0]:
-        hudSubtext(localPlayer,
+        hudSubtext(true[0],
             " \n{0} 排名前5 {0}".format(iconString(Icon.FLAG))
             checkCN
             " \n{0} Top 5 {0}".format(iconString(Icon.FLAG))
