@@ -169,9 +169,7 @@ rule "Addon | Stall enhancer - 增强系統跳的判定":
     @Condition (eventPlayer.getVerticalSpeed() >= -0.2 and eventPlayer.getVerticalSpeed() <= 0.05) == true
     @Condition eventPlayer.getHorizontalSpeed() <= 1.3
     @Condition eventPlayer.isInAir() == true
-    @Condition eventPlayer.isOnWall() == false
-    @Condition eventPlayer.isOnGround() == false
-    @Condition not (eventPlayer.editor_on and eventPlayer.editor_fly)
+    @Condition eventPlayer.editor_on and eventPlayer.editor_fly == false
     #@Condition createWorkshopSetting(bool, "map settings \n地图设置"," Autobounce enhancer - 增强系統跳的判定", false, 3)
 
     wait(0.25, Wait.ABORT_WHEN_FALSE)
