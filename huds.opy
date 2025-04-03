@@ -57,7 +57,7 @@ rule "Huds | Global Localplayer":
             "\n错误: 已达到最大HUD数量上限" if getNumberOfTextIds() >= 128 else []
         )
         checkCN
-        "Server Restarts In {0} Min - {1}{2}".format(
+        "Server Restart in {0} Min - {1}{2}".format(
             TimeRemaining, versionhere,
             "\nerror: max hud count reached" if getNumberOfTextIds() >= 128 else []
         )
@@ -474,23 +474,24 @@ rule "Huds | Each Player":
 
             eventPlayer.preview_i + 1,
             len(eventPlayer.preview_array1)
-        ) if eventPlayer.preview_array1 else []
-        ,
+        ) if eventPlayer.preview_array1 else [],
+        
+        [] if eventPlayer.preview_array1 else "{0}{1} {2} / {3}".format(
+            eventPlayer.banString,
+            "关卡" checkCN "Level",
+            eventPlayer.checkpoint_current,
+            len(CheckpointPositions) - 1
+        ),
+
         "{0}{1} {2} / {3}".format(
             ColorConfig[customize.orb_lock],
             "球" checkCN " orbs",
             len(eventPlayer.cache_collectedLocks),
             eventPlayer.cache_bounceMaxLocks
             #"收集球" checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
-        ) if eventPlayer.cache_bounceMaxLocks and not eventPlayer.preview_array1 else []
-        ,
-        "{0}{1} {2} / {3}".format(
-            eventPlayer.banString,
-            "关卡" checkCN "Level",
-            eventPlayer.checkpoint_current,
-            len(CheckpointPositions) - 1
-        ) if not eventPlayer.preview_array1 else [],
-        HudPosition.TOP, HO.game_level_orb, ColorConfig[customize.level], ColorConfig[customize.orb_lock], ColorConfig[customize.level], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        ) if eventPlayer.cache_bounceMaxLocks and not eventPlayer.preview_array1 else [],
+
+        HudPosition.TOP, HO.game_level_orb, ColorConfig[customize.level], ColorConfig[customize.level], ColorConfig[customize.orb_lock], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     hudSubtext(eventPlayer,"{0}{1}{2}\n{3}{4}{5}".format(
