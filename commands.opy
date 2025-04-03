@@ -57,7 +57,7 @@ rule "Command | Preview Orbs & Portals (Hold Primary)":
     eventPlayer.preview_array1 = CheckpointPositions[eventPlayer.checkpoint_current + 1]
 
     if len(BouncePadCheckpoints):
-        eventPlayer.preview_array1.append([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.checkpoint_current])
+        eventPlayer.preview_array1.append([_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current])
         # first entry is checkpoint itself, -1 would overlap with -1 in some orbs
         eventPlayer.preview_array2 = [i for i in [i for _, i in BouncePadCheckpoints].concat(-2) if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current or i == -2]
 
