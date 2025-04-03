@@ -56,6 +56,9 @@ def UpdateCache():
         eventPlayer.ban_djump = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require djump available - 留二段跳 ", false, 9) or eventPlayer.checkpoint_current in BanDjump
         if eventPlayer.ban_djump:
             eventPlayer.banString = "» {}".format(eventPlayer.banString) # ≥  √ ▼ ↓ ︽
+
+        if eventPlayer.banString:
+            eventPlayer.banString = "{}\n".format(eventPlayer.banString)
     else:
         eventPlayer.ban_multi = false
         eventPlayer.ban_create = false
