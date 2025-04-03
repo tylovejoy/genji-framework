@@ -446,6 +446,7 @@ rule "Huds | Each Player":
     #$$ not eventPlayer.preview_i
     #$$ eventPlayer.preview_i < len(eventPlayer.cache_bouncePosition) + 1
     #$$ eventPlayer.preview_i > 0
+    #$$ information wrong
     hudText(
         eventPlayer if not eventPlayer.toggle_leaderboard else null,
         " {0} ({2}/{3})\n―――――――――――\n {1}\n".format(
@@ -465,7 +466,6 @@ rule "Huds | Each Player":
                 if not eventPlayer.preview_array2[eventPlayer.preview_i][0] else
                 "传送门 {} 出口 ".format( eventPlayer.preview_array2[eventPlayer.preview_i][1])
                 ) checkCN
-
                 "portal {} start ".format(eventPlayer.preview_array2[eventPlayer.preview_i][1])
                 if not eventPlayer.preview_array2[eventPlayer.preview_i][0] else
                 "portal {} destination ".format(eventPlayer.preview_array2[eventPlayer.preview_i][1])
@@ -483,12 +483,11 @@ rule "Huds | Each Player":
             #"收集球" checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
         ) if eventPlayer.cache_bounceMaxLocks and not eventPlayer.preview_array1 else []
         ,
-        "{3}{2}{4} {0} / {1}".format(
+        "{0}{1} {2} / {3}".format(
+            eventPlayer.banString,
+            "关卡" checkCN "Level",
             eventPlayer.checkpoint_current,
-            len(CheckpointPositions) - 1,
-            "\n" if eventPlayer.banString else [],
-            eventPlayer.banString if eventPlayer.banString else [],
-            "关卡" checkCN "Level"
+            len(CheckpointPositions) - 1
         ) if not eventPlayer.preview_array1 else [],
         HudPosition.TOP, HO.game_level_orb, ColorConfig[customize.level], ColorConfig[customize.orb_lock], ColorConfig[customize.level], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
