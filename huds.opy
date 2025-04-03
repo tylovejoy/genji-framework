@@ -476,10 +476,11 @@ rule "Huds | Each Player":
             len(eventPlayer.preview_array1)
         ) if eventPlayer.preview_array1 else []
         ,
-        "{2} {0} / {1}".format(
+        "{0}{1} {2} / {3}".format(
+            ColorConfig[customize.orb_lock],
+            "球" checkCN " orbs",
             len(eventPlayer.cache_collectedLocks),
-            eventPlayer.cache_bounceMaxLocks,
-            "{0}球".format(ColorConfig[customize.orb_lock]) checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
+            eventPlayer.cache_bounceMaxLocks
             #"收集球" checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
         ) if eventPlayer.cache_bounceMaxLocks and not eventPlayer.preview_array1 else []
         ,
