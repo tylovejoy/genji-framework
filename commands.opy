@@ -54,7 +54,7 @@ rule "Command | Preview Orbs & Portals (Hold Primary)":
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     #wait(0.9, Wait.ABORT_WHEN_FALSE)
     wait(0.45, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.preview_array1 = [CheckpointPositions[eventPlayer.checkpoint_current + 1]]
+    eventPlayer.preview_array1 = CheckpointPositions[eventPlayer.checkpoint_current + 1]
 
     if len(BouncePadCheckpoints):
         eventPlayer.preview_array1.append([i for i in BouncePositions if BouncePadCheckpoints[BouncePositions.index(i)] == eventPlayer.checkpoint_current])
@@ -69,13 +69,13 @@ rule "Command | Preview Orbs & Portals (Hold Primary)":
             wait()
 
     wait(0.1)
+    eventPlayer.preview_i = 0
     if eventPlayer.addon_toggle3rdPov:
         eventPlayer.addon_toggle3rdPov = false
-    eventPlayer.setMoveSpeed(0)
-    eventPlayer.preview_i = 0
     eventPlayer.startCamera(
         eventPlayer.preview_array1[eventPlayer.preview_i] + Vector.UP - (3.5 - 3 * eventPlayer.getThrottle().z) * eventPlayer.getFacingDirection(),
         eventPlayer.preview_array1[eventPlayer.preview_i] + Vector.UP, 15)
+    eventPlayer.setMoveSpeed(0)
     eventPlayer.setPrimaryFireEnabled(false)
     eventPlayer.setSecondaryFireEnabled(false)
     eventPlayer.disallowButton(Button.ABILITY_1)
@@ -86,8 +86,8 @@ rule "Command | Preview Orbs & Portals (Hold Primary)":
         elif eventPlayer.getThrottle().x > 0.5:
             eventPlayer.preview_i += len(eventPlayer.preview_array1) - true
         eventPlayer.preview_i %= len(eventPlayer.preview_array1)
-        wait()
         waitUntil(abs(eventPlayer.getThrottle().x) < 0.5, 1)
+        wait()
     eventPlayer.setPrimaryFireEnabled(true)
     eventPlayer.setSecondaryFireEnabled(true)
     eventPlayer.allowButton(Button.ABILITY_1)
