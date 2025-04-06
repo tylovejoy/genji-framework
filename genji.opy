@@ -253,6 +253,7 @@ rule "General | Setup & Variables":
     SavePauseEnabled = []
     SaveElapsed = []
 
+    #$$
     if not BladeEnabledCheckpoints and len(BladeEnabledCheckpoints) == 1:
         BladeEnabledCheckpoints = [0]
     else:
@@ -432,7 +433,7 @@ rule "General | Player Initialize":
             waitUntil(eventPlayer.isHoldingButton(Button.INTERACT) or CompTime < 1, Math.INFINITY)
             eventPlayer.setMoveSpeed(100)
             eventPlayer.comp_instructionHud = false
-        if eventPlayer.comp_countAttempts == (-1) or CompTime < 1:
+        if eventPlayer.comp_countAttempts < 0 or CompTime < 1:
             eventPlayer.comp_done = true
 
     wait()
@@ -536,7 +537,7 @@ rule "General | Ground: Traces, Arrive, & Reset":
 
             DeleteSave()
             LeaderboardUpdate()
-            if CompMode and CompAtmpNum > 0:
+            if CompMode and CompAtmpNum:
                 if eventPlayer.comp_countAttempts == CompAtmpNum:
                     CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = -1
                     eventPlayer.comp_countAttempts = -1
