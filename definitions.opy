@@ -155,7 +155,7 @@ globalvar ColorConfig 69                    # [colors]                  --- conf
 
 globalvar Name 70
 globalvar Code 71
-globalvar Cachedcredits 73
+globalvar Cachedcredits 73                  # [string, string]          --- Legacy
 
 # per cp iwt or hud
 globalvar CpHudText 74
