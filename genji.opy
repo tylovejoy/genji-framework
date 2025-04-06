@@ -196,7 +196,6 @@ def StartGame():
         return
 
     if len(CheckpointPositions):
-        destroyInWorldText(eventPlayer.cache_titleHud) # restarting reset title even if non on cp 0
         if eventPlayer[0].split([]) in SaveName: # load saved progres
             SaveEnt[SaveName.index(eventPlayer[0].split([]))] = eventPlayer
             eventPlayer.checkpoint_current = SaveCp[SaveEnt.index(eventPlayer)]
@@ -204,23 +203,13 @@ def StartGame():
             SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
             SavePauseTime[SaveEnt.index(eventPlayer)] = 0
             SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
-            if TitleData != null and  any([i for i in TitleData[0] if i <= eventPlayer.checkpoint_current]) and (not eventPlayer.editor_on ): # if any title data, find last cp
-                createInWorldText(
-                    localPlayer if not eventPlayer.toggle_invisible else null,
-                    TitleData[1][TitleData[0].index(
-                    sorted([i for i in TitleData[0] if i <= eventPlayer.checkpoint_current], lambda i:i*-1)[0])],
-                    eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION,
-                    TitleData[2][TitleData[0].index(sorted([i for i in TitleData[0] if i <= eventPlayer.checkpoint_current], lambda i:i*-1)[0])],
-                    SpecVisibility.DEFAULT
-                )
-                eventPlayer.cache_titleHud = getLastCreatedText()
         else:
             eventPlayer.checkpoint_current = 0
             eventPlayer.timer_normal = 0
             stopChasingVariable(eventPlayer.timer_pause)
             eventPlayer.timer_pause = 0
             MakeSave()
-            UpdateTitle()
+        UpdateTitle()
 
     chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
     UpdateCache()
