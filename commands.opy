@@ -45,7 +45,7 @@ previewarray = list of all vectors to be displayed
 previewarray2 = stored item ID to be used to preview abilities etc
 a few huds show/hides when reviewarray is not null !!!!!!!!!!!!!!!!!
 */
-rule "Command | Preview Orbs & Portals (Hold Primary)":
+rule "Command | Preview Orbs & Portals (Hold Primary & Secondary)":
     @Event eachPlayer
     @Condition eventPlayer.editor_on == false
     @Condition eventPlayer.lockState == false
@@ -54,18 +54,16 @@ rule "Command | Preview Orbs & Portals (Hold Primary)":
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     #wait(0.9, Wait.ABORT_WHEN_FALSE)
     wait(0.45, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.preview_array1 = CheckpointPositions[eventPlayer.checkpoint_current + 1]
-
+    eventPlayer.preview_array1 = CheckpointPositions[eventPlayer.checkpoint_current + 1][0]
     if len(BouncePadCheckpoints):
-        eventPlayer.preview_array1.append([_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current])
-        # first entry is checkpoint itself, -1 would overlap with -1 in some orbs
-        eventPlayer.preview_array2 = [i for i in [i for _, i in BouncePadCheckpoints].concat(-2) if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current or i == -2]
+        eventPlayer.preview_array1.append([_ for _ , i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current])
+        eventPlayer.preview_array2.append([_ for _ in [i for _, i in BouncePadCheckpoints] if BouncePadCheckpoints[_] == eventPlayer.checkpoint_current])
 
     if len(CustomPortalStart):
         #eventPlayer.preview_array1.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.checkpoint_current] )
         for eventPlayer.preview_i in range(len(eventPlayer.cache_portalStart)):
-            eventPlayer.preview_array1.append([eventPlayer.cache_portalStart[eventPlayer.preview_i ],eventPlayer.cache_portalEnd[eventPlayer.preview_i ]])
-            eventPlayer.preview_array2.append([[0,eventPlayer.preview_i],[1,eventPlayer.preview_i]])
+            eventPlayer.preview_array1.append([eventPlayer.cache_portalStart[eventPlayer.preview_i],eventPlayer.cache_portalEnd[eventPlayer.preview_i]])
+            eventPlayer.preview_array2.append([[eventPlayer.preview_i, false],[eventPlayer.preview_i, true]])
             wait()
 
     wait(0.1)

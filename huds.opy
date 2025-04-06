@@ -409,9 +409,9 @@ def EffectsCreate():
     # End portal preview
     createEffect(
         localPlayer if
-            localPlayer.preview_i >= len(localPlayer.cache_bouncePosition) + 1 and
-            localPlayer.preview_i > 0 and
-            localPlayer.preview_array2[localPlayer.preview_i][0] == 1
+            localPlayer.preview_i and
+            localPlayer.preview_i > len(localPlayer.cache_bouncePosition) and
+            localPlayer.preview_array2[localPlayer.preview_i].last()
             else null,
         Effect.SPARKLES,
         Color.PURPLE,
@@ -449,39 +449,34 @@ rule "Huds | Each Player":
     #$$ information wrong
     hudText(
         eventPlayer if not eventPlayer.toggle_leaderboard else null,
-        " {0} ({2}/{3})\n―――――――――――\n {1}\n".format(
-            ("检查点" if not eventPlayer.preview_i else "弹球" if eventPlayer.preview_i < len(eventPlayer.cache_bouncePosition) + 1  else "自定义传送门") checkCN
-            "checkpoint" if not eventPlayer.preview_i else "orb" if eventPlayer.preview_i < len(eventPlayer.cache_bouncePosition) + 1  else "portal",
-            "{} {} {} {}".format(
+        " {0} ({1}/{2})\n―――――――――――\n {3}\n".format(
+            (("检查点" if not eventPlayer.preview_i else "弹球" if eventPlayer.preview_i <= len(eventPlayer.cache_bouncePosition)  else "自定义传送门") checkCN
+            "checkpoint" if not eventPlayer.preview_i else "orb" if eventPlayer.preview_i <= len(eventPlayer.cache_bouncePosition)  else "portal"),
+            eventPlayer.preview_i + 1,
+            len(eventPlayer.preview_array1),
+            ("{} {} {} {}".format(
                 abilityIconString(Hero.GENJI, Button.ULTIMATE) if BounceToggleUlt[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
                 abilityIconString(Hero.GENJI, Button.ABILITY_1) if BounceToggleDash[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
                 iconString(Icon.WARNING) if BounceToggleLock[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
                 iconString(Icon.ARROW_UP) if BounceStrength[eventPlayer.preview_array2[eventPlayer.preview_i]] > 0 else
-                iconString(Icon.ARROW_DOWN) if BounceStrength[eventPlayer.preview_array2[eventPlayer.preview_i]] < 0 else []
-            #) if eventPlayer.preview_i < len(eventPlayer.cache_bouncePosition) + 1 and eventPlayer.preview_i > 0 else [], # [0:cp, 1-x:bounce, x-y:portal]
-            ) if eventPlayer.preview_i < len(eventPlayer.cache_bouncePosition) + 1 and eventPlayer.preview_i > 0 else
+                iconString(Icon.ARROW_DOWN) if BounceStrength[eventPlayer.preview_array2[eventPlayer.preview_i]] < 0 else [])
+            if eventPlayer.preview_i <= len(eventPlayer.cache_bouncePosition) and eventPlayer.preview_i else
 
-            (
-                ("传送门 {} 入口 ".format(eventPlayer.preview_array2[eventPlayer.preview_i][1])
-                if not eventPlayer.preview_array2[eventPlayer.preview_i][0] else
-                "传送门 {} 出口 ".format( eventPlayer.preview_array2[eventPlayer.preview_i][1])
-                ) checkCN
-                "portal {} start ".format(eventPlayer.preview_array2[eventPlayer.preview_i][1])
-                if not eventPlayer.preview_array2[eventPlayer.preview_i][0] else
-                "portal {} destination ".format(eventPlayer.preview_array2[eventPlayer.preview_i][1])
-            )
-            if eventPlayer.preview_i >= len(eventPlayer.cache_bouncePosition) + 1 and eventPlayer.preview_i > 0 else [],
-
-            eventPlayer.preview_i + 1,
-            len(eventPlayer.preview_array1)
+            (("传送门 {} 出口 ".format(eventPlayer.preview_array2[eventPlayer.preview_i])
+            if eventPlayer.preview_array2[eventPlayer.preview_i].last() else
+            "传送门 {} 入口 ".format(eventPlayer.preview_array2[eventPlayer.preview_i])
+            ) checkCN
+            "portal {} destination ".format(eventPlayer.preview_array2[eventPlayer.preview_i])
+            if eventPlayer.preview_array2[eventPlayer.preview_i].last() else
+            "portal {} start ".format(eventPlayer.preview_array2[eventPlayer.preview_i]))
+            if eventPlayer.preview_i else eventPlayer.banString)
         ) if eventPlayer.preview_array1 else [],
         
-        [] if eventPlayer.preview_array1 else "{0}{1} {2} / {3}".format(
-            eventPlayer.banString,
+        "{} {} / {}".format(
+            #eventPlayer.banString,
             "关卡" checkCN "Level",
             eventPlayer.checkpoint_current,
-            len(CheckpointPositions) - 1
-        ),
+            len(CheckpointPositions) - 1),
 
         "{0}{1} {2} / {3}".format(
             ColorConfig[customize.orb_lock],
