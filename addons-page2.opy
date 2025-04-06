@@ -36,7 +36,7 @@ rule "Addon | Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / �
     #2) 勾选此规则 点击上方的 开启/关闭 开启此规则
     #3) 修改下面的 创建hud文本 中的“enter custom difficulty here”
     hudText(localPlayer,
-        ("游戏测试" checkCN "Playtest") if Difficultyhud[1] else [],
+        ("游戏测试" checkCN "Playtest") if Difficultyhud.last() else [],
         "enter custom difficulty here",
         null,
         HudPosition.TOP, HO.data_dif,
@@ -218,7 +218,7 @@ rule "Addon | Fake Ledge Dash - 超级跳":
         wait()
 
     if eventPlayer.addon_ledgeDash[0] >= 5: #and eventPlayer.addon_ledgeDash[0] <= 12: # ledge dash execute
-        eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash[1], eventPlayer.addon_ledgeDash[2], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+        eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash[1], eventPlayer.addon_ledgeDash.last(), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
     # above 12 - climbed to long
     # below 5 - dashed into object
 

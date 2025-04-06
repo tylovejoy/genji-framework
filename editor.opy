@@ -175,7 +175,7 @@ rule "Editor | Clear Excess Data to Save Map":
     waitUntil(eventPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
     destroyHudText(eventPlayer.editor_saveHud[0])
     destroyHudText(eventPlayer.editor_saveHud[1])
-    destroyHudText(eventPlayer.editor_saveHud[2])
+    destroyHudText(eventPlayer.editor_saveHud.last())
     eventPlayer.editor_saveHud = null
     eventPlayer.editor_lock = false
 
