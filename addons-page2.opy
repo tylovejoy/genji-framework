@@ -187,7 +187,7 @@ rule "Addon | Stall enhancer - 增强系統跳的判定":
     #wait(3)
     eventPlayer.setGravity(100)
     eventPlayer.setMoveSpeed(100)
-    if not eventPlayer.editor_fly and eventPlayer.isAlive() and not eventPlayer.isHoldingButton(Button.RELOAD):
+    if eventPlayer.isAlive() and not (eventPlayer.editor_fly or eventPlayer.isHoldingButton(Button.RELOAD)):
         eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
         if RULE_CONDITION:
             goto RULE_START
