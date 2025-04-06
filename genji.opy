@@ -347,7 +347,7 @@ rule "General | Setup & Variables":
     if not [i for i in getAllPlayers() if not i.isDummy()][0].editor_on:
         EffectsCreate()
         return
-
+    #$$
     RebuildKillOrbs()
     RebuildBounceOrbs()
     RebuildPortals()
