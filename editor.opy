@@ -207,7 +207,7 @@ rule "Editor | Hud and Effects":
     # huds ==========================================================================================================================================================================
 
     # restart without leaderboard (old one deleted)
-    hudSubtext(localPlayer if localPlayer.toggle_guide else null,  # restart without leadwerboard
+    hudSubtext(localPlayer.toggle_guide,  # restart without leadwerboard
         "{0}+{1}+{2} | 重新开始".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT))
         checkCN
         "{0}+{1}+{2} | Restart".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT))
