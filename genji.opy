@@ -134,19 +134,16 @@ def LeaderboardUpdate():
     # [i[0] for i in var1]   list of first element of each in var 1
     # [ [name, seconds, prettytime] ]
     if eventPlayer[0].split([]) in [i[0] for i in LeaderBoardFull]: # you already have a time
-        # new time better
         if eventPlayer.timer_normal >= [i for i in LeaderBoardFull if i[0] == eventPlayer[0].split([])][0].last():
-            return
+            return #Time too slow
         LeaderBoardFull.remove([i for i in LeaderBoardFull if i[0] == eventPlayer[0].split([])])
-        goto lbl_a
     elif len(LeaderBoardFull) < 20 or eventPlayer.timer_normal < LeaderBoardFull[19].last():
         # you are not in list yet
         # board has room for more
         # your time lower then last entry
         del LeaderBoardFull[19]
-        goto lbl_a
-    return #Time too slow
-    lbl_a:
+    else:
+        return #Full & time too slow
     LeaderBoardFull.append([[eventPlayer[0].split([]), eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]])
     LeaderBoardRemake = true #CreateLeaderboard()
 
