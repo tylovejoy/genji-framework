@@ -45,7 +45,7 @@ previewarray = list of all vectors to be displayed
 previewarray2 = stored item ID to be used to preview abilities etc
 a few huds show/hides when reviewarray is not null !!!!!!!!!!!!!!!!!
 */
-rule "Command | Preview Orbs & Portals (Hold Primary & Secondary)":
+rule "Command | Preview Orbs & Portals (Hold Primary + Secondary)":
     @Event eachPlayer
     @Condition eventPlayer.editor_on == false
     @Condition eventPlayer.lockState == false
