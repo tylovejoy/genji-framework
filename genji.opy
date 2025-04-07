@@ -368,8 +368,7 @@ rule "General | Match time":
     pauseMatchTime()
     wait()
     TimeRemaining = 265
-
-    while TimeRemaining > 0 or hostPlayer.editor_saveHud:
+    while TimeRemaining or hostPlayer.editor_saveHud:
         wait(60)
         if not hostPlayer.editor_saveHud:
             TimeRemaining--
@@ -385,7 +384,7 @@ rule "General | Match time":
                     #wait(0.032)
                     #LeaderBoardRemake = true #async(CreateLeaderboard(), AsyncBehavior.RESTART)
 
-    bigMessage(true[0], "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time expired, restarting")
+    bigMessage(true[0], "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time elapsed, restarting")
     wait(5)
     #Prevent crash during POTG and closing lobby
     getAllPlayers().lockState = true
