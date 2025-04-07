@@ -121,12 +121,13 @@ def StopPauseTimer():
     eventPlayer.timer_pause = 0
     SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
 
+/* Deprecate
 def CreateLeaderboard():
     @Name "General | SUB Leaderboard HUD"
     # turns into global rule so it doesnt delete when player leaves
     LeaderBoardRemake = true
     wait()
-    LeaderBoardRemake = null
+    LeaderBoardRemake = null*/
 
 def LeaderboardUpdate():
     @Name "General | SUB Leaderboard Update"
@@ -147,7 +148,7 @@ def LeaderboardUpdate():
     return #Time too slow
     lbl_a:
     LeaderBoardFull.append([[eventPlayer[0].split([]), eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]])
-    CreateLeaderboard()
+    LeaderBoardRemake = true #CreateLeaderboard()
 
 def CheckpointFailReset():
     @Name "General | SUB Checkpoint Fail"
@@ -381,7 +382,7 @@ rule "General | Match time":
                 getAllPlayers().setDamageReceived(100)
                 kill(getAllPlayers(), null)
                 wait(0.032)
-                async(CreateLeaderboard(), AsyncBehavior.RESTART)
+                LeaderBoardRemake = true #async(CreateLeaderboard(), AsyncBehavior.RESTART)
 
     bigMessage(true[0], "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time expired, restarting")
     wait(5)

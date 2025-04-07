@@ -282,11 +282,11 @@ playervar addon_enableDoubleChecks
 #subroutine KillBall
 #subroutine PinBall
 #subroutine PortalCreate
+#subroutine CreateLeaderboard
 subroutine StartGame
 subroutine EffectsCreate
 subroutine LeaderboardUpdate # fishos
 subroutine CheckpointFailReset
-subroutine CreateLeaderboard
 subroutine UpdateTitle
 subroutine DashUltGive
 subroutine CheckUlt

@@ -110,7 +110,7 @@ rule "Huds | Global Localplayer":
     )
     HudStoreEdit.append(getLastCreatedText())
 
-    CreateLeaderboard()
+    LeaderBoardRemake = true #CreateLeaderboard()
 
     if len(CpHudText): # text per checkpoint  text per cp each
         hudText(localPlayer,
@@ -229,6 +229,7 @@ rule "Huds | Global Localplayer":
 rule "Huds | Leaderboard": # for global instead of tied to player
     @Condition LeaderBoardRemake
     wait() # account for delay in completion
+    LeaderBoardRemake = null
     LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
 
     while len(LeaderBoardHuds):
