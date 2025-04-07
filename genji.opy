@@ -133,19 +133,21 @@ def LeaderboardUpdate():
     # [i[0] for i in var1]   list of first element of each in var 1
     # [ [name, seconds, prettytime] ]
     if eventPlayer[0].split([]) in [i[0] for i in LeaderBoardFull]: # you already have a time
-        if eventPlayer.timer_normal < [i for i in LeaderBoardFull if i[0] == eventPlayer[0].split([])][0][1]: # new time better
-            LeaderBoardFull.remove([i for i in LeaderBoardFull if i[0] == eventPlayer[0].split([])])
-            LeaderBoardFull.append([[eventPlayer[0].split([]),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]] )
-            CreateLeaderboard()
-    else: # you are not in list yet
-        if len(LeaderBoardFull) < 20: # board has room for more
-            LeaderBoardFull.append([[eventPlayer[0].split([]),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)] ])
-            CreateLeaderboard()
-        else: # 20 entries already
-            if eventPlayer.timer_normal < LeaderBoardFull[19][1]:  # your time lower then last entry
-                del LeaderBoardFull[19]
-                LeaderBoardFull.append([[eventPlayer[0].split([]),eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]] )
-                CreateLeaderboard()
+        # new time better
+        if eventPlayer.timer_normal >= [i for i in LeaderBoardFull if i[0] == eventPlayer[0].split([])][0].last():
+            return
+        LeaderBoardFull.remove([i for i in LeaderBoardFull if i[0] == eventPlayer[0].split([])])
+        goto lbl_a
+    elif len(LeaderBoardFull) < 20 or eventPlayer.timer_normal < LeaderBoardFull[19].last():
+        # you are not in list yet
+        # board has room for more
+        # your time lower then last entry
+        del LeaderBoardFull[19]
+        goto lbl_a
+    return #Time too slow
+    lbl_a:
+    LeaderBoardFull.append([[eventPlayer[0].split([]), eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]])
+    CreateLeaderboard()
 
 def CheckpointFailReset():
     @Name "General | SUB Checkpoint Fail"
