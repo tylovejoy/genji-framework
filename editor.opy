@@ -58,7 +58,8 @@ rule "Editor | Clear Excess Data to Save Map":
     #@Condition eventPlayer.editor_lock == false # !!! don't lock. always be sure data can be exported incase of a perma lock situation
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.editor_lock = true # doesnt matter thats its in pasta's because it wil be fixed on spawning
-    async(AddonCheckMap, AsyncBehavior.NOOP)
+    eventPlayer.editor_saveHud = TimeRemaining
+    TimeRemaining = null
     CheckpointRings_Editing = null
     KillBallEffects = null
     TempIterator1 = null
@@ -90,6 +91,7 @@ rule "Editor | Clear Excess Data to Save Map":
     PortalDest  = null
     PortalEffects = null
 
+    async(AddonCheckMap, AsyncBehavior.NOOP)
     hudText(eventPlayer,
         " ",
         null,
@@ -147,7 +149,7 @@ rule "Editor | Clear Excess Data to Save Map":
         " UPLOAD TO EXISTING CODE → PASTE THE CODE YOU CREATED IN STEP 4",
        HudPosition.TOP, HO.edit_clearec1, Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT
     )
-    eventPlayer.editor_saveHud = getLastCreatedText()
+    eventPlayer.editor_saveHud.append(getLastCreatedText())
 
     hudHeader(eventPlayer,
         "    > 按互动键关闭当前窗口 <    "
@@ -160,8 +162,8 @@ rule "Editor | Clear Excess Data to Save Map":
     disableInspector()
     waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
     waitUntil(eventPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
-    destroyHudText(eventPlayer.editor_saveHud[0])
-    #destroyHudText(eventPlayer.editor_saveHud[1])
+    TimeRemaining = eventPlayer.editor_saveHud[0]
+    destroyHudText(eventPlayer.editor_saveHud[1])
     destroyHudText(eventPlayer.editor_saveHud.last())
     eventPlayer.editor_saveHud = null
     eventPlayer.editor_lock = false

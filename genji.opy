@@ -369,20 +369,21 @@ rule "General | Match time":
     wait()
     TimeRemaining = 265
 
-    while TimeRemaining > 0:
+    while TimeRemaining > 0 or hostPlayer.editor_saveHud:
         wait(60)
-        TimeRemaining--
-        if CompMode:
-            CompTime--
-            if not CompTime:
-                bigMessage(true[0],"时间到了" checkCN "time's up")
-                getAllPlayers().comp_done = true
-                stopChasingVariable(getAllPlayers().timer_normal)
-                #getAllPlayers().disableRespawn()
-                getAllPlayers().setDamageReceived(100)
-                kill(getAllPlayers(), null)
-                wait(0.032)
-                LeaderBoardRemake = true #async(CreateLeaderboard(), AsyncBehavior.RESTART)
+        if not hostPlayer.editor_saveHud:
+            TimeRemaining--
+            if CompMode:
+                CompTime--
+                if not CompTime:
+                    bigMessage(true[0],"时间到了" checkCN "time's up")
+                    getAllPlayers().comp_done = true
+                    stopChasingVariable(getAllPlayers().timer_normal)
+                    #getAllPlayers().disableRespawn()
+                    getAllPlayers().setDamageReceived(100)
+                    kill(getAllPlayers(), null)
+                    #wait(0.032)
+                    #LeaderBoardRemake = true #async(CreateLeaderboard(), AsyncBehavior.RESTART)
 
     bigMessage(true[0], "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time expired, restarting")
     wait(5)
