@@ -101,7 +101,7 @@ rule "Editor | Clear Excess Data to Save Map":
         " 点击窗口下方图标 (X) 复制作图数据\n\n"
 
         "   2. 录入数据:\n"
-        " Esc → 打开地图工坊编辑器 → 规则第(2/2)页 → 展开规则'Map Data - 数据录入'\n"
+        " Esc → 打开地图工坊编辑器 → 规则第(2/2)页 → 展开规则'数据录入 <---- 在这输入'\n"
         " 点击'动作'一栏右侧橙色粘贴图标 录入数据\n\n"
 
         "   3. 地图工坊设置:\n"
@@ -121,14 +121,14 @@ rule "Editor | Clear Excess Data to Save Map":
         " 上传至现有代码 → 粘贴步骤4中获得的代码"
         checkCN
         "   0. clear excess data:\n"
-        " Automatically done when opening this window\n\n"
+        " Already done when opening this window\n\n"
 
         "   1. Copy data:\n"
         " Open Workshop Inspector → Set variable target as global\n"
         " click the [x]\n\n"
 
         "   2. Insert data:\n"
-        " Paste the data into rule named 'Map Data - 数据录入'\n\n"
+        " Paste the data into rule named 'Map Data <---- INSERT HERE'\n\n"
 
         "   3. Workshop settings:\n"
         " ESC → SHOW LOBBY → SETTINGS → workshop settings →\n"
