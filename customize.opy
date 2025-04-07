@@ -8,8 +8,8 @@ rule "<tx0C00000000044B55><fg0FFFFFFF> Credits and Colors here - 作者代码HUD
     #You can fill in again to overwrite.
     #修改的内容 在重新开始 比赛后生效
     #您可以反复 修改字符串 中的内容
-    Name = "Name Here - 作者"
-    Code = "Code Here - 代码"
+    Name = "name here - 作者"
+    Code = "code here - 代码"
     #
     #+++++  +++++  +++++  +++++  +++++  +++++
     #color customization below / 自定义 颜色(实体、HUD)

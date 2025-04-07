@@ -90,7 +90,8 @@ rule "Editor | Clear Excess Data to Save Map":
     PortalLoc = null
     PortalDest  = null
     PortalEffects = null
-
+    if Name == "name here - 作者":
+        Name = "{}".format(eventPlayer)
     async(AddonCheckMap, AsyncBehavior.NOOP)
     hudText(eventPlayer,
         " ",
