@@ -93,7 +93,6 @@ rule "Editor | Clear Excess Data to Save Map":
     hudText(eventPlayer,
         " ",
         null,
-        "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
         "   0. 清理无用数据:\n"
         " (此窗口打开时将自动完成)\n\n"
 
@@ -102,36 +101,13 @@ rule "Editor | Clear Excess Data to Save Map":
         " 点击窗口下方图标 (X) 复制作图数据\n\n"
 
         "   2. 录入数据:\n"
-        " Esc → 打开地图工坊编辑器 → 规则第(2/2)页 → 展开规则'Map data - 数据录入'\n"
+        " Esc → 打开地图工坊编辑器 → 规则第(2/2)页 → 展开规则'Map Data - 数据录入'\n"
         " 点击'动作'一栏右侧橙色粘贴图标 录入数据\n\n"
 
         "   3. 地图工坊设置:\n"
         " ESC → 显示大厅 → 设置 → 地图工坊设置→\n"
-        " 拉至底部 关闭'作图模式'\n 选择地图难度\n"
-        checkCN
-        "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
-        "   0. clear excess data:\n"
-        " Automatically done when opening this window\n\n"
+        " 拉至底部 关闭'作图模式'\n 选择地图难度\n\n"
 
-        "   1. Copy data:\n"
-        " Open Workshop Inspector → Set variable target as global\n"
-        " click the [x]\n\n"
-
-        "   2. Insert data:\n"
-        " Paste the data in the rule named 'map data pasta' (first rule)\n\n"
-
-        "   3. Workshop settings:\n"
-        " ESC→SHOW LOBBY→SETTINGS→ workshop settings →\n"
-        " toggle 'Editor mode' off\n"
-        " Select display difficulty\n",
-       HudPosition.TOP, HO.edit_clearec1, Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT
-    )
-    eventPlayer.editor_saveHud[0] = getLastCreatedText()
-
-    hudText(eventPlayer,
-        " ",
-        null,
-        "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
         "   4. 创建初始地图代码:\n"
         " Esc → 显示大厅 → 设置 → 分享代码 →\n"
         " 创建新的代码 → 复制并记下代码\n\n"
@@ -142,39 +118,50 @@ rule "Editor | Clear Excess Data to Save Map":
 
         "   6. 更新地图及作者信息:\n"
         " Esc → 显示大厅 → 设置 → 共享代码 →\n"
-        " 上传至现有代码 → 粘贴步骤4中获得的代码\n"
-
+        " 上传至现有代码 → 粘贴步骤4中获得的代码"
         checkCN
-        "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　\n"
+        "   0. clear excess data:\n"
+        " Automatically done when opening this window\n\n"
+
+        "   1. Copy data:\n"
+        " Open Workshop Inspector → Set variable target as global\n"
+        " click the [x]\n\n"
+
+        "   2. Insert data:\n"
+        " Paste the data into rule named 'Map Data - 数据录入'\n\n"
+
+        "   3. Workshop settings:\n"
+        " ESC → SHOW LOBBY → SETTINGS → workshop settings →\n"
+        " toggle 'Editor mode' off\n"
+        " Select display difficulty\n\n"
+        
         "   4. Create initial sharecode:\n"
-        " ESC→SHOW LOBBY→SETTINGS→SHARE CODE→\n"
-        " CREATE NEW CODE→COPY CODE\n\n"
+        " ESC → SHOW LOBBY → SETTINGS → SHARE CODE →\n"
+        " CREATE NEW CODE → COPY CODE\n\n"
 
         "   5. Add credits:\n"
-        " Enter your name & map code in the 'Credits here' rule\n"
-        " (second rule) \n\n"
+        " Enter your name & map code in the 'Credits here' rule\n\n"
 
         "   6. Update for credits:\n"
-        " ESC→SHOW LOBBY→SETTINGS→SHARE CODE→\n"
-        " UPLOAD TO EXISTING CODE→ PASTE THE CODE YOU CREATED IN STEP 4\n",
-        HudPosition.TOP, HO.edit_clearec2, Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT
+        " ESC → SHOW LOBBY → SETTINGS → SHARE CODE →\n"
+        " UPLOAD TO EXISTING CODE → PASTE THE CODE YOU CREATED IN STEP 4",
+       HudPosition.TOP, HO.edit_clearec1, Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT
     )
-    eventPlayer.editor_saveHud[1] = getLastCreatedText()
+    eventPlayer.editor_saveHud = getLastCreatedText()
 
     hudHeader(eventPlayer,
         "    > 按互动键关闭当前窗口 <    "
         checkCN
         "    > Press Interact to close this window <    "
-        , HudPosition.TOP, HO.edit_clearec3, Color.LIME_GREEN, HudReeval.STRING
-    )
-    eventPlayer.editor_saveHud[2] = getLastCreatedText()
+        , HudPosition.TOP, HO.edit_clearec3, Color.LIME_GREEN, HudReeval.STRING)
+    eventPlayer.editor_saveHud.append(getLastCreatedText())
 
     enableInspector()
     disableInspector()
     waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
     waitUntil(eventPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
     destroyHudText(eventPlayer.editor_saveHud[0])
-    destroyHudText(eventPlayer.editor_saveHud[1])
+    #destroyHudText(eventPlayer.editor_saveHud[1])
     destroyHudText(eventPlayer.editor_saveHud.last())
     eventPlayer.editor_saveHud = null
     eventPlayer.editor_lock = false
