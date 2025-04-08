@@ -4,10 +4,11 @@
 ###############################################################################
 #!define versionhere "v1.10.3♨E"
 #♨ Dev Build Icon
+###############################################################################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
-# Disable via double ## at include, not the define because the define needs to exist
-#!define testToggle ##!include "test-scripts.opy"
+###############################################################################
+
 ###############################################################################
 # Debug force CN mode on
 ##!define checkCN if true else
@@ -76,10 +77,10 @@ rule "MAP DATA - 地图数据":
     @NewPage FILLER # padding to make rest of rules go on page 2
 ###############################################################################
 #!include "customize.opy"
-
+###############################################################################
 testData
 ###############################################################################
 #!include "addons-page2.opy"
 ###############################################################################
-# enable/disable the include via defines
-testToggle
+# Enable/disable the include
+##!include "test-scripts.opy"
