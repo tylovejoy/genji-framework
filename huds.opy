@@ -362,7 +362,7 @@ def EffectsCreate():
         for TempIterator1 in range(len(CustomPortalStart)):
             createEffect(
                 #localSpectator(localPlayer.checkpoint_current == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == -1), #$$ Testing
-                [i for i in getAllPlayers() if i.checkpoint_current == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == -2],
+                [i for i in getAllPlayers() if i.checkpoint_current == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] < 0],
                 Effect.GOOD_AURA, ColorConfig[customize.portal],
                 CustomPortalStart[evalOnce(TempIterator1)],
                 0.6,
