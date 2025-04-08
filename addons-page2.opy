@@ -259,7 +259,7 @@ rule "Addon | Group Up":
     @Condition eventPlayer.toggle_invincible == false
     # replace vector 0,0,0 with orb position
     # 3.5 is the radius
-    @Condition distance(eventPlayer,  vect(0,0,0)) < 3.5
+    @Condition distance(eventPlayer, vect(0,0,0)) < 3.5
 
     smallMessage(eventPlayer, "   stay in the bubble")
     wait(1, Wait.ABORT_WHEN_FALSE)
@@ -282,11 +282,9 @@ rule "Addon | Group Up":
     smallMessage(eventPlayer, "   1")
     wait(1, Wait.ABORT_WHEN_FALSE)
 
-    eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.checkpoint_current +1] + vect(0,0.1,0), true)
+    eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.checkpoint_current + 1] + 0.1 * Vector.UP, false)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.3)
-    eventPlayer.cancelPrimaryAction()
-    eventPlayer.skill_usedDouble = null
-    wait(0.16)
+    wait()
     eventPlayer.stopForcingPosition()
 
 def AddonCustomLoadAndReset():
@@ -409,9 +407,9 @@ rule "Addon | Save Double - enable rule - 二段跳":
     @Condition eventPlayer.skill_usedDouble == false
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
 
-    waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
+    waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
     if not RULE_CONDITION: return
-    waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble or not eventPlayer.isHoldingButton(Button.JUMP), 100000000)
+    waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
     if not RULE_CONDITION: return
     eventPlayer.cancelPrimaryAction()
     if RULE_CONDITION: goto RULE_START
