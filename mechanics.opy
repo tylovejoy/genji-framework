@@ -177,7 +177,7 @@ rule "Mechanic | Double Jump":
     @Condition eventPlayer.isAlive()
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.ban_djump or eventPlayer.ban_savedouble or eventPlayer.addon_enableDoubleChecks
-    #Saved Double Jump
+    #Save drop
     waitUntil(eventPlayer.isOnGround() or eventPlayer.isJumping() or eventPlayer.isHoldingButton(Button.JUMP), 0.096)
     if not RULE_CONDITION: return
     while true:
