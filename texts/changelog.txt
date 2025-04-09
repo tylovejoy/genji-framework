@@ -367,7 +367,7 @@ fixes
 - it had stand ban, but intergrated in normal create ban, no other 1.9.3a features
 
 1.9.3a - x-1-2024
-aditions:
+additions:
 - added portals to samoa
 - stand create ban, sort off. This ban triggers when you bhop a second time. If create is not banned, the bhop counter will reset when creating. Theoretically this bans only standcreate.
 thanks to @junior for making this ban.
@@ -497,3 +497,14 @@ fixed:
 
 `@Framework Patch Notes`
 # 1.10.3
+### General
+ - Preview Mode:
+  * Ban icons for levels moved to here
+  * Be able to switch views faster
+ - Practice Mode able to switch levels faster
+ - Spectate leaderboard & server time missing
+  * Found by `@D A R K` +5xp
+### Editor
+ - Fixed global portals from becoming uneditable
+  * Found by `@Hello` +5xp
+### Addons

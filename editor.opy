@@ -8,7 +8,7 @@ def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place 
     BounceEffects = []
     for TempIterator1 in range(0, len(BouncePadCheckpoints)):
         createEffect(
-            [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not BouncePositions[evalOnce(TempIterator1)] in x.cache_collectedLocks],
+            [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not (evalOnce(TempIterator1) in x.cache_collectedLocks)],
             Effect.ORB,
             ColorConfig[customize.orb_lock] if BounceToggleLock[evalOnce(TempIterator1)] else ColorConfig[customize.orb_normal],
             BouncePositions[evalOnce(TempIterator1)],
@@ -825,7 +825,7 @@ rule "Editor | create cp/orb":
         EditUpdateSelectedIds()
         EditorSelectLast()
         createEffect(
-            [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(EditSelected)] and not BouncePositions[evalOnce(EditSelected)]  in x.cache_collectedLocks],
+            [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(EditSelected)] and not (evalOnce(EditSelected) in x.cache_collectedLocks)],
             Effect.ORB, ColorConfig[customize.orb_lock] if BounceToggleLock[evalOnce(EditSelected)] else ColorConfig[customize.orb_normal],
             BouncePositions[evalOnce(EditSelected)], 1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )

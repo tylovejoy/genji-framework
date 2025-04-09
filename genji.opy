@@ -576,59 +576,45 @@ rule "General | Bounce Ball / Orb":
     #@Condition eventPlayer.checkpoint_notLast # disabled coz editor
     @Condition (any([distance(i, eventPlayer.getPosition() + Vector.UP * bounceoffset) < bounceorbdistance for i in eventPlayer.cache_bouncePosition]))
 
-    eventPlayer.cache_bounceTouched = eventPlayer.cache_bouncePosition.index( # cashe the touched bouncepad number
-        sorted(
-            [i for i in eventPlayer.cache_bouncePosition if distance(eventPlayer + Vector.UP * bounceoffset, i ) < bounceorbdistance and not (i in eventPlayer.cache_collectedLocks) ],
-            lambda x: distance(eventPlayer, x)
-            )[0])
+    eventPlayer.cache_bounceTouched = eventPlayer.cache_bouncePosition.index(sorted([pos for pos, i in eventPlayer.cache_bouncePosition if
+        distance(eventPlayer + Vector.UP * bounceoffset, pos) < bounceorbdistance and i != eventPlayer.cache_bounceLastTouched and not (i in eventPlayer.cache_collectedLocks)], lambda x: distance(eventPlayer, x))[0])
 
-    if eventPlayer.cache_bounceTouched == eventPlayer.cache_bounceLastTouched: # prevent same one trigering twice in a row
-        wait(0.24)
+    if eventPlayer.cache_bounceTouched < 0: # prevent same one trigering twice in a row
         eventPlayer.cache_bounceLastTouched = -1 # -1 because null becomes 0 and thats a legit index
-        if RULE_CONDITION:
-            goto RULE_START
-        return #only return if no others in radius
+    else:
+        eventPlayer.cache_bounceLastTouched = eventPlayer.cache_bounceTouched
 
-    eventPlayer.cache_bounceLastTouched = eventPlayer.cache_bounceTouched
+        if eventPlayer.cache_bounceLocks[eventPlayer.cache_bounceTouched]:
+            #eventPlayer.cache_collectedLocks.append(eventPlayer.cache_bouncePosition[eventPlayer.cache_bounceTouched])
+            eventPlayer.cache_collectedLocks.append(eventPlayer.cache_bounceTouched)
+            smallMessage(eventPlayer, "   弹球已收集" checkCN "   orb has been collected")
 
-    if eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched] > 0:
-        eventPlayer.applyImpulse(Vector.UP, eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
-    elif eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched] < 0:
-        eventPlayer.cancelPrimaryAction()
-        eventPlayer.skill_usedDouble = null
-        smallMessage(eventPlayer, "   二段跳已就绪" checkCN "   Double Jump is Reset")
+        if eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched] > 0:
+            eventPlayer.applyImpulse(Vector.UP, eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+        ##$$ Possibly remove double jump reset?
+        elif eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched] < 0:
+            eventPlayer.cancelPrimaryAction()
+            eventPlayer.skill_usedDouble = null
+            smallMessage(eventPlayer, "   二段跳已就绪" checkCN "   Double Jump is Reset")
 
-    if eventPlayer.cache_bounceUlt[eventPlayer.cache_bounceTouched]:
-        eventPlayer.setUltEnabled(true)
-        eventPlayer.setUltCharge(100)
-        smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"#终极技能已就绪" checkCN "Ultimate is ready"))
+        if eventPlayer.cache_bounceUlt[eventPlayer.cache_bounceTouched]:
+            eventPlayer.setUltEnabled(true)
+            eventPlayer.setUltCharge(100)
+            smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"#终极技能已就绪" checkCN "Ultimate is ready"))
 
-    if eventPlayer.cache_bounceLocks[eventPlayer.cache_bounceTouched]:
-        eventPlayer.cache_collectedLocks.append(eventPlayer.cache_bouncePosition[eventPlayer.cache_bounceTouched])
-        smallMessage(eventPlayer, "   弹球已收集" checkCN "   orb has been collected")
+        if eventPlayer.cache_bounceDash[eventPlayer.cache_bounceTouched]:
+            if eventPlayer.isUsingAbility1():
+                waitUntil(not eventPlayer.isUsingAbility1(), 1)
+                wait(0.032) # wait til set false by check
+            eventPlayer.setAbility1Enabled(true)
+            smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready"))
 
-    if eventPlayer.cache_bounceDash[eventPlayer.cache_bounceTouched]:
-        if eventPlayer.isUsingAbility1():
-            waitUntil(not eventPlayer.isUsingAbility1(), 1)
-            wait(0.032) # wait til set false by check
-        eventPlayer.setAbility1Enabled(true)
-        smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready"))
-
-    playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
-    
-    wait()
-    eventPlayer.cache_bounceTouched = -1
+        playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
     wait(0.24)
     if RULE_CONDITION: goto RULE_START
-
     eventPlayer.cache_bounceLastTouched = -1
+    eventPlayer.cache_bounceTouched = -1
 
-/*
-death rule notes ( not death note)
-without wait it can crash server
-with wait it feels bad
-this waituntil contrusction gives higher delay without relying on a variable count
-*/
 rule "General | Death Reset":
     @Event playerDied
     @Condition eventPlayer.isDummy() == false
@@ -640,7 +626,7 @@ rule "General | Death Reset":
         eventPlayer.respawn()
     CheckpointFailReset()
     # rest is to prevent dead spamming from crashing server
-    # but doing waits only when needed
+    # but doing waits only when needed without relying on a variable count
     waitUntil(eventPlayer.isAlive(), 1)
     waitUntil(eventPlayer.isDead(), 1)
     if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):

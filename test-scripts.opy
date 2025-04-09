@@ -226,7 +226,7 @@ rule "leaderboard test ai":
     eventPlayer.checkpoint_current = len(CheckpointPositions) - 2
     CheckpointFailReset()
     wait(1)
-    eventPlayer.cache_collectedLocks = eventPlayer.cache_bouncePosition
+    eventPlayer.cache_collectedLocks = eventPlayer.cache_bouncePosition #cache_collectedLocks uses indices instead of positions
     eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current+1]+ vect(0,3,0)) # teleport not needed
 
 
