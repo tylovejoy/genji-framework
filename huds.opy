@@ -384,9 +384,9 @@ rule "Huds | Each Player":
     hudText(
         null if eventPlayer.toggle_leaderboard else eventPlayer,
         " {0} ({1}/{2})\n―――――――――――\n {3}\n".format(
-            (("弹球" if eventPlayer.preview_i <= len(eventPlayer.cache_bouncePosition) else "自定义传送门" if eventPlayer.preview_i else "检查点")
+            ((("弹球" if eventPlayer.preview_i <= len(eventPlayer.cache_bouncePosition) else "自定义传送门") if eventPlayer.preview_i else "检查点")
             checkCN
-            "orb" if eventPlayer.preview_i <= len(eventPlayer.cache_bouncePosition) else "portal" if eventPlayer.preview_i else "checkpoint"),
+            ("orb" if eventPlayer.preview_i <= len(eventPlayer.cache_bouncePosition) else "portal") if eventPlayer.preview_i else "checkpoint"),
             eventPlayer.preview_i + 1,
             len(eventPlayer.preview_array1),
             ("{} {} {} {}".format(
@@ -406,9 +406,8 @@ rule "Huds | Each Player":
             "portal {} start ".format(eventPlayer.preview_array2[eventPlayer.preview_i]))
             if eventPlayer.preview_i else eventPlayer.banString)
         ) if eventPlayer.preview_array1 else [],
-        
-        "{} {} / {}".format(
-            #eventPlayer.banString,
+
+        [] if eventPlayer.preview_array1 else "{} {} / {}".format(
             "关卡" checkCN "Level",
             eventPlayer.checkpoint_current,
             len(CheckpointPositions) - 1),
