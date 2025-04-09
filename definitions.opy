@@ -235,7 +235,7 @@ playervar ban_standcreate                   # bans on second hop
 playervar ban_djump
 playervar ban_savedouble
 
-playervar cache_collectedLocks                     # number                    --- amount collected lock this cp
+playervar cache_collectedLocks                     # [int]                    --- amount collected lock this cp
 playervar cache_bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
 playervar cache_bounceLastTouched
 playervar cache_portalStart
