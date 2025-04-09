@@ -2,52 +2,6 @@
 rule "<tx0C00000000001344> Editor <tx0C00000000001344>":
     @Delimiter
 
-def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Bounce Ball Effects"
-    @Name "Editor | SUB Rebuild Bounce Orbs"
-    destroyEffect(BounceEffects)
-    BounceEffects = []
-    for TempIterator1 in range(0, len(BouncePadCheckpoints)):
-        createEffect(
-            [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not (evalOnce(TempIterator1) in x.cache_collectedLocks)],
-            Effect.ORB,
-            ColorConfig[customize.orb_lock] if BounceToggleLock[evalOnce(TempIterator1)] else ColorConfig[customize.orb_normal],
-            BouncePositions[evalOnce(TempIterator1)],
-            1,
-            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
-        )
-        BounceEffects.append(getLastCreatedEntity())
-        #wait()
-        if not (TempIterator1 % 5):
-            wait()
-
-def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Kill Orb Effects"
-    @Name "Editor | SUB Rebuild Kill Orbs"
-    destroyEffect(KillBallEffects)
-    KillBallEffects = []
-    for TempIterator1 in range(0, len(KillballCheckpoints)):
-        createEffect([x for x in getAllPlayers().concat(null) if x.checkpoint_current == KillballCheckpoints[evalOnce(TempIterator1)]], Effect.SPHERE, ColorConfig[customize.killorb], KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-        KillBallEffects.append(getLastCreatedEntity())
-        if not (TempIterator1 % 5):
-            wait()
-
-def RebuildPortals():
-    @Name "Editor | SUB Rebuild Portals"
-    destroyEffect(PortalEffects)
-    PortalEffects = []
-    if len(CustomPortalCP):
-        for TempIterator1 in range(0, len(CustomPortalCP)):
-            createEffect(
-                [i for i in getAllPlayers() if i.checkpoint_current == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] < 0],
-                Effect.GOOD_AURA,
-                ColorConfig[customize.portal],
-                CustomPortalStart[evalOnce(TempIterator1)],
-                0.6,
-                EffectReeval.VISIBILITY_POSITION_AND_RADIUS
-            )
-            PortalEffects.append(getLastCreatedEntity())
-            if not (TempIterator1 % 5):
-                wait()
-
 rule "Editor | Clear Excess Data to Save Map":
     @Event eachPlayer
     @Condition hostPlayer.editor_on
@@ -170,7 +124,7 @@ rule "Editor | Clear Excess Data to Save Map":
     eventPlayer.editor_lock = false
 
 rule "Editor | Hud and Effects":
-    waitUntil(hostPlayer.hasSpawned(), 90)  # cant be condition because host player can leaves, removing the rule fx
+    waitUntil(entityExists(hostPlayer), Math.INFINITY)  # cant be condition because host player can leaves, removing the rule fx
     wait(1)
     if not hostPlayer.editor_on:
         # clear variables if not in editor mode
@@ -804,7 +758,7 @@ rule "Editor | create cp/orb":
             [i for i in getAllPlayers() if i.checkpoint_current == KillballCheckpoints[evalOnce(EditSelected)]],
             Effect.SPHERE, ColorConfig[customize.killorb],
             KillBallPositions[evalOnce(EditSelected)],
-            KillBallRadii[evalOnce(EditSelected)],
+            abs(KillBallRadii[evalOnce(EditSelected)]),
             EffectReeval.VISIBILITY_POSITION_AND_RADIUS
         )
         KillBallEffects.append(getLastCreatedEntity())
@@ -1222,7 +1176,7 @@ rule "Editor | move object":
 
     if eventPlayer.editor_modeSelect == 1:
         eventPlayer.startCamera(
-            KillBallPositions[EditSelected] + eventPlayer.getFacingDirection() * ((KillBallRadii[EditSelected]) * -1.5),
+            KillBallPositions[EditSelected] + eventPlayer.getFacingDirection() * (abs(KillBallRadii[EditSelected]) * -1.5),
             KillBallPositions[EditSelected],
             30)
 

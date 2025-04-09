@@ -6,7 +6,7 @@ huds outside this file:
     - display author time (addons pg2)
     - editor huds (editor)
 */
-rule "<tx0C00000000001344> Texts & Effects <tx0C00000000001344>":
+rule "<tx0C00000000001344> Huds <tx0C00000000001344>":
     @Delimiter
 
 rule "Huds | Global Localplayer":
@@ -355,57 +355,6 @@ rule "Huds | Leaderboard": # for global instead of tied to player
             ),HudPosition.TOP, HO.board_display4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
         )
         LeaderBoardHuds.append(getLastCreatedText())
-
-def EffectsCreate():
-    @Name "Huds | Create Object Effects"
-    if len(CustomPortalStart):
-        for TempIterator1 in range(len(CustomPortalStart)):
-            createEffect(
-                #localSpectator(localPlayer.checkpoint_current == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == -1), #$$ Testing
-                [i for i in getAllPlayers() if i.checkpoint_current == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] < 0],
-                Effect.GOOD_AURA, ColorConfig[customize.portal],
-                CustomPortalStart[evalOnce(TempIterator1)],
-                0.6,
-                EffectReeval.VISIBILITY
-            )
-            wait()
-        wait(0.5)
-
-    if len(KillBallPositions):
-        for TempIterator1 in range(0, len(KillBallPositions)):
-            createEffect(
-                #localSpectator(localPlayer.checkpoint_current == KillballCheckpoints[evalOnce(TempIterator1)]), #$$ Testing
-                [x for x in getAllPlayers() if x.checkpoint_current == KillballCheckpoints[evalOnce(TempIterator1)]],
-                Effect.SPHERE, ColorConfig[customize.killorb] , KillBallPositions[evalOnce(TempIterator1)], KillBallRadii[evalOnce(TempIterator1)], EffectReeval.VISIBILITY)
-            wait()
-        wait(0.5)
-
-    if len(BouncePositions):
-        for TempIterator1 in range(0, len(BouncePositions)):
-            createEffect(
-                #localSpectator(localPlayer.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not (evalOnce(TempIterator1) in x.cache_collectedLocks)), #$$ Testing
-                [x for x in getAllPlayers().concat(0) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not (evalOnce(TempIterator1) in x.cache_collectedLocks)],
-                Effect.ORB,
-                ColorConfig[customize.orb_lock] if BounceToggleLock[TempIterator1] else ColorConfig[customize.orb_normal] ,
-                BouncePositions[evalOnce(TempIterator1)],
-                1,
-                EffectReeval.VISIBILITY
-            )
-            wait()
-    # End portal preview
-    createEffect(
-        localPlayer if
-            localPlayer.preview_i and
-            localPlayer.preview_i > len(localPlayer.cache_bouncePosition) and
-            localPlayer.preview_array2[localPlayer.preview_i].last()
-            else null,
-        Effect.SPARKLES,
-        Color.PURPLE,
-        localPlayer.preview_array1[localPlayer.preview_i],
-        0.5, EffectReeval.VISIBILITY_POSITION_AND_RADIUS
-    )
-
-##############################################################################
 
 rule "Huds | Each Player":
     @Event playerJoined

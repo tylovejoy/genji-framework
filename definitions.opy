@@ -284,7 +284,6 @@ playervar addon_enableDoubleChecks
 #subroutine PortalCreate
 #subroutine CreateLeaderboard
 subroutine StartGame
-subroutine EffectsCreate
 subroutine LeaderboardUpdate # fishos
 subroutine CheckpointFailReset
 subroutine UpdateTitle
@@ -301,6 +300,10 @@ subroutine EditorSelectLast
 subroutine AddonCustomLoadAndReset
 subroutine AddonCheckMap
 subroutine Addon3rdPerson
+subroutine EffectsCreate
+subroutine RebuildKillOrbs
+subroutine RebuildPortals
+subroutine RebuildBounceOrbs
 
 ######################################## Enums ################################
 enum HO:
