@@ -343,14 +343,13 @@ rule "General | Setup & Variables":
                 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
             )
     waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]), Math.INFINITY)
-    wait(1)
-    if not [i for i in getAllPlayers() if not i.isDummy()][0].editor_on:
-        EffectsCreate()
+    wait()
+    if [i for i in getAllPlayers() if not i.isDummy()][0].editor_on:
+        RebuildKillOrbs()
+        RebuildBounceOrbs()
+        RebuildPortals()
         return
-    #$$
-    RebuildKillOrbs()
-    RebuildBounceOrbs()
-    RebuildPortals()
+    EffectsCreate()
 
 rule "General | Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
@@ -409,9 +408,9 @@ rule "General | Player Initialize":
     eventPlayer.disableRespawn()
     #eventPlayer.setRespawnTime(1)
     createEffect(eventPlayer, Effect.RING, ColorConfig[customize.ring_current], CheckpointPositions[eventPlayer.checkpoint_current].last(), cpCirkleFx, EffectReeval.POSITION_AND_RADIUS)
-    createEffect(eventPlayer if eventPlayer.checkpoint_notLast  else null, Effect.RING, ColorConfig[customize.ring_next] , CheckpointPositions[eventPlayer.checkpoint_current + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createEffect(eventPlayer if eventPlayer.checkpoint_notLast  else null, Effect.LIGHT_SHAFT, ColorConfig[customize.shaft], CheckpointPositions[eventPlayer.checkpoint_current + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createIcon(eventPlayer if eventPlayer.checkpoint_notLast  else null, CheckpointPositions[eventPlayer.checkpoint_current + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, ColorConfig[customize.nexticon_color], true)
+    createEffect(eventPlayer if eventPlayer.checkpoint_notLast else null, Effect.RING, ColorConfig[customize.ring_next], CheckpointPositions[eventPlayer.checkpoint_current + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.checkpoint_notLast else null, Effect.LIGHT_SHAFT, ColorConfig[customize.shaft], CheckpointPositions[eventPlayer.checkpoint_current + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createIcon(eventPlayer if eventPlayer.checkpoint_notLast else null, CheckpointPositions[eventPlayer.checkpoint_current + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, ColorConfig[customize.nexticon_color], true)
 
     waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
     eventPlayer.editor_lock = false
