@@ -38,8 +38,8 @@ rule "Addon | AFK timer":
 rule "Addon | Pre-set control map portal - toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
-    @Condition eventPlayer.toggle_invincible or not eventPlayer.checkpoint_notLast
     @Condition len(PortalLoc) != null
+    @Condition eventPlayer.toggle_invincible or not eventPlayer.checkpoint_notLast
     @Condition any([distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance for i in PortalLoc])
     eventPlayer.teleport(sorted([i for i in PortalDest], lambda e, i: distance(eventPlayer, PortalLoc[i]))[0])
 
@@ -185,7 +185,7 @@ rule "Addon | Little destructo - fence breaker":
         [getFlagPosition(Team.1), getFlagPosition(Team.2)] if getCurrentGamemode() == Gamemode.CTF else
         getSpawnPoints(Team.ALL)[0] if getCurrentGamemode() in [Gamemode.TDM, Gamemode.FFA] else
         getPayloadPosition() if getPayloadPosition()[0] and not (getObjectivePosition(1) + getObjectivePosition(2)) else
-        [getObjectivePosition(0),getObjectivePosition(1),getObjectivePosition(2)])
+        [getObjectivePosition(0), getObjectivePosition(1), getObjectivePosition(2)])
     # explode in a grid around the selected points
     while len(MapVectorArray) > 1:
         MapVectorArray[0] = 0
