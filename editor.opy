@@ -506,11 +506,19 @@ rule "Editor | Hud and Effects":
                 [] if len(CheckpointPositions[hostPlayer.checkpoint_current]) < 2 else
                 "\n 传送点: {0}".format(CheckpointPositions[hostPlayer.checkpoint_current][1]))
             if not hostPlayer.editor_modeSelect and len(CheckpointPositions) else
-            "\n 选中的击杀球 \n 矢量: {1} \n 半径: {0} \n".format(
-                KillBallRadii[EditSelected],
-                KillBallPositions[EditSelected])
+            "\n 选中的击杀球"
+            "\n 矢量: {}"
+            "\n 半径: {}"
+            "\n  + 進不去"
+            "\n  - 出不來"
+            "\n".format(
+                KillBallPositions[EditSelected],
+                KillBallRadii[EditSelected])
             if hostPlayer.editor_modeSelect == 1 and len(hostPlayer.editor_killIndex) else
-            "\n 选中的弹球 \n 矢量: {1} \n 弹力: {0} \n 序号: {2} \n".format(
+            "\n 选中的弹球"
+            "\n 矢量: {1}"
+            "\n 弹力: {0}"
+            "\n 序号: {2}\n".format(
                 BounceStrength[EditSelected],
                 BouncePositions[EditSelected],
                 EditSelected)
@@ -536,9 +544,9 @@ rule "Editor | Hud and Effects":
                 "√" if hostPlayer.checkpoint_current in BanBhop else []
             )
             if hostPlayer.editor_modeSelect == 3 else
-                "\n 入口矢量: {} \n"
-                " 出口矢量: {} \n"
-                " 应用关卡: {} \n".format(
+                "\n 入口矢量: {}\n"
+                " 出口矢量: {}\n"
+                " 应用关卡: {}\n".format(
                 CustomPortalStart[EditSelected],
                 CustomPortalEndpoint[EditSelected],
                 "所有" if CustomPortalCP[EditSelected] < 0 else hostPlayer.checkpoint_current)
@@ -546,16 +554,18 @@ rule "Editor | Hud and Effects":
             "\n   当前无数据选中   \n"
         ) checkCN
         (
-            "\n Selected Checkpoint \n Vector: {0}{1} \n".format(
+            "\n Selected Checkpoint\n Vector: {0}{1} \n".format(
                 CheckpointPositions[hostPlayer.checkpoint_current],
                 [] if len(CheckpointPositions[hostPlayer.checkpoint_current]) < 2 else
                 "\n Teleport: {0}".format(CheckpointPositions[hostPlayer.checkpoint_current][1]))
             if not hostPlayer.editor_modeSelect and len(CheckpointPositions) else
-            "\n Selected Kill Orb \n Vector: {1} \n radius: {0} \n".format(
-                KillBallRadii[EditSelected],
-                KillBallPositions[EditSelected])
+            "\n Selected Kill Orb"
+            "\n Vector: {}"
+            "\n radius: {}"
+            "\n  + keep out"
+            "\n  - stay in\n".format(KillBallPositions[EditSelected], KillBallRadii[EditSelected])
             if hostPlayer.editor_modeSelect == 1 and len(hostPlayer.editor_killIndex) else
-            "\n Selected Bounce Orb \n Vector: {1} \n strength: {0} \n ID: {2} \n".format(
+            "\n Selected Bounce Orb\n Vector: {1}\n strength: {0} \n ID: {2}\n".format(
                 BounceStrength[EditSelected],
                 BouncePositions[EditSelected],
                 EditSelected)
