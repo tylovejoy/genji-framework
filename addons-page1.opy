@@ -40,22 +40,14 @@ rule "Addon | Pre-set control map portal - toggled via workshop":
     @Condition PortalOn
     @Condition eventPlayer.toggle_invincible or not eventPlayer.checkpoint_notLast
     @Condition len(PortalLoc) != null
-    @Condition any([distance(eventPlayer.getPosition() + 0.2 * Vector.UP,i) < 1.4 for i in PortalLoc])
-    if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])]:
-        eventPlayer.teleport(
-            PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])]
-        )
+    @Condition any([distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance for i in PortalLoc])
+    eventPlayer.teleport(sorted([i for i in PortalDest], lambda e, i: distance(eventPlayer, PortalLoc[i]))[0])
 
 rule "Addon | Custom portals":
     @Event eachPlayer
-    @Condition len(eventPlayer.cache_portalStart) > 0
-    @Condition [i for i in eventPlayer.cache_portalStart if distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance]
-    #@Condition any([distance(eventPlayer.getPosition() + 0.2 * Vector.UP, ent) < portalDistance for ent in eventPlayer.cache_portalStart]) == true
-
-    eventPlayer.teleport(
-        eventPlayer.cache_portalEnd[eventPlayer.cache_portalStart.index(sorted([i for i in eventPlayer.cache_portalStart],lambda x: distance(eventPlayer,x))[0])
-        ]
-    )
+    @Condition eventPlayer.cache_portalStart != []
+    @Condition any([distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance for i in eventPlayer.cache_portalStart])
+    eventPlayer.teleport(sorted([i for i in eventPlayer.cache_portalEnd], lambda e, i: distance(eventPlayer, eventPlayer.cache_portalStart[i]))[0])
     wait(0.4)
 
 rule "Addon | Pre-set control map portal - toggled on via workshop settings":
@@ -100,12 +92,6 @@ rule "Addon | Pre-set control map portal - toggled on via workshop settings":
         PortalNames = ["beach","volcano", "downtown", "volcano", "beach","downtown"  ]
         PortalLoc = [vect(231.98, 7.23, -262.84), vect(236.78, 7.23, -262.75), vect(-327.59, 3.6, -108.69), vect(-332.71, 3.6, -108.59), vect(25.4, 341, 354.38), vect( 30, 341, 354.34)     ]
         PortalDest = [vect(-329.86, 3.05, -103.4), vect(27.59, 339.76, 348.77), vect( 234.07, 6.12, -266.88), vect(27.59, 339.76, 348.77), vect(-329.86, 3.05, -103.4), vect( 234.07, 6.12, -266.88)   ]
-
-    else:
-        PortalDest = null
-        PortalLoc = null
-        PortalNames = null
-        return
 
 /*
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
