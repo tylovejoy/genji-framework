@@ -17,9 +17,6 @@ rule "test data":
     LeaderBoardHuds = []
     LeaderBoardRemake = true
     DashExploitToggle = true
-    PortalNames = []
-    PortalLoc = []
-    PortalDest = []
     PortalOn = false
     CustomPortalStart = []
     CustomPortalEndpoint = []
