@@ -505,6 +505,9 @@ fixed:
  - Spectate leaderboard & server time missing
   * Found by `@D A R K` +5xp
 ### Editor
+ - Lava orbs can now be used as internal boundaries
+  * Positive radius to keep players out
+  * Negative radius to have players stay in
  - Fixed global portals from becoming uneditable
   * Found by `@Hello` +5xp
 ### Addons
