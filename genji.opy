@@ -284,9 +284,6 @@ rule "General | Setup & Variables":
 
     LeaderBoardFull = []
     TitleData = null
-    PortalNames = []
-    PortalLoc = []
-    PortalDest  = []
 
     HintCp = []
     HintText = []
