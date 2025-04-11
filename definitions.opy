@@ -352,9 +352,9 @@ enum HO:
 
     board_header,
     board_display1,
-    board_display2,
-    board_display3,
-    board_display4,
+    #board_display2,
+    #board_display3,
+    #board_display4,
 
     fillermain, # push skirmish etc down
     topend,

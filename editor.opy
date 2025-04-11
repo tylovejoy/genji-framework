@@ -408,7 +408,7 @@ rule "Editor | Hud and Effects":
     )
 
     hudText(
-        localPlayer,
+        true[0],
         null,  # original part of the one ontop of it
         ("{0} + 射击 | 切换作图模式".format(buttonString(Button.MELEE)) if localPlayer == hostPlayer else
         "房主/编辑者 {0}".format(hostPlayer))
