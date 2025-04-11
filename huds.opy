@@ -110,8 +110,6 @@ rule "Huds | Global Localplayer":
     )
     HudStoreEdit.append(getLastCreatedText())
 
-    LeaderBoardRemake = true #CreateLeaderboard()
-
     if len(CpHudText): # text per checkpoint  text per cp each
         hudText(localPlayer,
             CpHudText[CpHudCp.index(localPlayer.checkpoint_current)]
@@ -229,32 +227,36 @@ rule "Huds | Global Localplayer":
 rule "Huds | Leaderboard": # for global instead of tied to player
     @Condition LeaderBoardRemake
     wait() # account for delay in completion
-    LeaderBoardRemake = null
-
     while len(LeaderBoardHuds):
         destroyHudText(LeaderBoardHuds[0])
         del LeaderBoardHuds[0]
 
     # top 5
     LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
-    if LeaderBoardFull[0]:
-        hudSubtext(true[0], " \n{0} 排名前5 {0}".format(iconString(Icon.FLAG)) checkCN " \n{0} Top 5 {0}".format(iconString(Icon.FLAG)),
-            HudPosition.RIGHT, HO.board_top5, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    LeaderBoardRemake = "　　　　　　　　　　　　　　　　　　"
+    LeaderBoardHuds = ["　 {}:　{} - {}".format(i+1, e[0], e.last()) for e, i in LeaderBoardFull]
+    while len(LeaderBoardHuds):
+        LeaderBoardRemake = "{}\n{}".format(LeaderBoardRemake, LeaderBoardHuds[0])
+        del LeaderBoardHuds[0]
+    LeaderBoardRemake = "{}\n".format(LeaderBoardRemake)
+
+    #if LeaderBoardFull[0]:
+    hudSubtext(true[0], " \n{0} 排名前5 {0}".format(iconString(Icon.FLAG)) checkCN " \n{0} Top 5 {0}".format(iconString(Icon.FLAG)), HudPosition.RIGHT, HO.board_top5, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    LeaderBoardHuds = getLastCreatedText()
+    hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0].last(), HudPosition.RIGHT, HO.board_top5+1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    LeaderBoardHuds.append(getLastCreatedText())
+    if LeaderBoardFull[1]:
+        hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[1][0], LeaderBoardFull[1].last(), HudPosition.RIGHT, HO.board_top5+2, Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         LeaderBoardHuds.append(getLastCreatedText())
-        hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0].last(), HudPosition.RIGHT, HO.board_top5+1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        LeaderBoardHuds.append(getLastCreatedText())
-        if LeaderBoardFull[1]:
-            hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[1][0], LeaderBoardFull[1].last(), HudPosition.RIGHT, HO.board_top5+2, Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        if LeaderBoardFull[2]:
+            hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[2][0], LeaderBoardFull[2].last(), HudPosition.RIGHT, HO.board_top5+3, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
             LeaderBoardHuds.append(getLastCreatedText())
-            if LeaderBoardFull[2]:
-                hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[2][0], LeaderBoardFull[2].last(), HudPosition.RIGHT, HO.board_top5+3, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+            if LeaderBoardFull[3]:
+                hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[3][0], LeaderBoardFull[3].last(), HudPosition.RIGHT, HO.board_top5+4, Color.LIME_GREEN, Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
                 LeaderBoardHuds.append(getLastCreatedText())
-                if LeaderBoardFull[3]:
-                    hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[3][0], LeaderBoardFull[3].last(), HudPosition.RIGHT, HO.board_top5+4, Color.LIME_GREEN, Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+                if LeaderBoardFull[4]:
+                    hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4].last(), HudPosition.RIGHT, HO.board_top5+5, Color.GREEN, Color.GREEN, Color.GREEN,HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
                     LeaderBoardHuds.append(getLastCreatedText())
-                    if LeaderBoardFull[4]:
-                        hudText(localPlayer, heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4].last(), HudPosition.RIGHT, HO.board_top5+5, Color.GREEN, Color.GREEN, Color.GREEN,HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-                        LeaderBoardHuds.append(getLastCreatedText())
 
     hudHeader(localPlayer if evalOnce(CompMode and not CompTime) else localPlayer.toggle_leaderboard,
         "　　　　 {0} {1} {0} 　　　".format(iconString(Icon.FLAG), "成绩排名" checkCN "Leaderboard"),
@@ -263,6 +265,8 @@ rule "Huds | Leaderboard": # for global instead of tied to player
 
     hudHeader(
         localPlayer if evalOnce(CompMode and not CompTime) else localPlayer.toggle_leaderboard,
+        LeaderBoardRemake,
+        /*
         "　　　　　　　　　　　　　　　　　　\n"
         "　 1:　{0} - {5}　\n"
         "　 2:　{1} - {6}　\n"
@@ -279,11 +283,12 @@ rule "Huds | Leaderboard": # for global instead of tied to player
         LeaderBoardFull[1].last() if LeaderBoardFull[1] else [],
         LeaderBoardFull[2].last() if LeaderBoardFull[2] else [],
         LeaderBoardFull[3].last() if LeaderBoardFull[3] else [],
-        LeaderBoardFull[4].last() if LeaderBoardFull[4] else []
-        ),HudPosition.TOP, HO.board_display1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
+        LeaderBoardFull[4].last() if LeaderBoardFull[4] else []),
+        */
+        HudPosition.TOP, HO.board_display1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
     )
     LeaderBoardHuds.append(getLastCreatedText())
-
+    /*
     if LeaderBoardFull[5]:
         hudHeader(
             localPlayer if evalOnce(CompMode and not CompTime) else localPlayer.toggle_leaderboard,
@@ -355,6 +360,9 @@ rule "Huds | Leaderboard": # for global instead of tied to player
             ),HudPosition.TOP, HO.board_display4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT
         )
         LeaderBoardHuds.append(getLastCreatedText())
+    */
+    LeaderBoardRemake = null
+    wait()
 
 rule "Huds | Each Player":
     @Event playerJoined
@@ -377,10 +385,6 @@ rule "Huds | Each Player":
         HudPosition.LEFT, HO.game_timer, ColorConfig[customize.time], Color.GRAY, ColorConfig[customize.time], HudReeval.STRING, SpecVisibility.DEFAULT
     )
 
-    #$$ not eventPlayer.preview_i
-    #$$ eventPlayer.preview_i < len(eventPlayer.cache_bouncePosition) + 1
-    #$$ eventPlayer.preview_i > 0
-    #$$ information wrong
     hudText(
         null if eventPlayer.toggle_leaderboard else eventPlayer,
         " {0} ({1}/{2})\n―――――――――――\n {3}\n".format(
