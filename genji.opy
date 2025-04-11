@@ -558,7 +558,7 @@ rule "General | Ground: Traces, Arrive, & Reset":
     if RULE_CONDITION:
         goto RULE_START
 
-rule "General | Kill Orb":
+rule "General | Boundary Sphere":
     @Event eachPlayer
     @Condition eventPlayer.cache_killPosition != []
     @Condition eventPlayer.toggle_invincible == false

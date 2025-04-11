@@ -61,7 +61,7 @@ def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place 
             wait()
 
 def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Kill Orb Effects"
-    @Name "Effects | SUB Rebuild Kill Orbs"
+    @Name "Effects | SUB Rebuild boundary spheres"
     destroyEffect(KillBallEffects)
     KillBallEffects = []
     for TempIterator1 in range(0, len(KillballCheckpoints)):

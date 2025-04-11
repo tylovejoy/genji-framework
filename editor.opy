@@ -386,9 +386,9 @@ rule "Editor | Hud and Effects":
         if localPlayer == hostPlayer else
             " {0} 源氏 编辑者 {0} ".format( iconString(Icon.BOLT))
         ) checkCN
-            "{0} Checkpoints\n"
-            "{1} Kills orbs\n"
-            "{2} Function orbs\n"
+            "{0} checkpoints\n"
+            "{1} boundary spheres\n"
+            "{2} function orbs\n"
             "{3} gameplay bans\n"
             "{4} portals".format(
                 iconString(Icon.ARROW_RIGHT) if not hostPlayer.editor_modeSelect else "     ",
@@ -398,7 +398,7 @@ rule "Editor | Hud and Effects":
                 iconString(Icon.ARROW_RIGHT) if hostPlayer.editor_modeSelect == 4 else "     ")
         if hostPlayer.isHoldingButton(Button.MELEE) else
             " {1} {0} ".format(
-                ["Checkpoints" ,"Kill orbs","Function Orbs","gameplay bans","portals"][ hostPlayer.editor_modeSelect],
+                ["checkpoints" ,"boundary sphere","function orbs","gameplay bans","portals"][ hostPlayer.editor_modeSelect],
                 [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][ hostPlayer.editor_modeSelect])
         if localPlayer == hostPlayer else
             " {0} Genji editor {0} ".format(iconString(Icon.BOLT)),
@@ -559,7 +559,7 @@ rule "Editor | Hud and Effects":
                 [] if len(CheckpointPositions[hostPlayer.checkpoint_current]) < 2 else
                 "\n Teleport: {0}".format(CheckpointPositions[hostPlayer.checkpoint_current][1]))
             if not hostPlayer.editor_modeSelect and len(CheckpointPositions) else
-            "\n Selected Kill Orb"
+            "\n Selected boundary sphere"
             "\n Vector: {}"
             "\n radius: {}"
             "\n  + keep out"
@@ -772,7 +772,7 @@ rule "Editor | create cp/orb":
             EffectReeval.VISIBILITY_POSITION_AND_RADIUS
         )
         KillBallEffects.append(getLastCreatedEntity())
-        bigMessage(true[0], "{1} {0}".format(eventPlayer.checkpoint_current, "新击杀球已创建! \n仅生效于检查点" checkCN "New Kill Orb has been created! \nOnly valid for this checkpoint"))
+        bigMessage(true[0], "{1} {0}".format(eventPlayer.checkpoint_current, "新击杀球已创建! \n仅生效于检查点" checkCN "New boundary sphere has been created! \nOnly valid for this checkpoint"))
         waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)), 1)
         #EditUpdateSelectedIds() # to arrow during the placement properly
         while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
