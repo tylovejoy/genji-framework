@@ -137,11 +137,11 @@ def LeaderboardUpdate():
         if eventPlayer.timer_normal >= [i for i in LeaderBoardFull if i[0] == eventPlayer[0].split([])][0].last():
             return #Time too slow
         LeaderBoardFull.remove([i for i in LeaderBoardFull if i[0] == eventPlayer[0].split([])])
-    elif len(LeaderBoardFull) < 20 or eventPlayer.timer_normal < LeaderBoardFull[19].last():
+    elif len(LeaderBoardFull) < 25 or eventPlayer.timer_normal < LeaderBoardFull[19].last():
         # you are not in list yet
         # board has room for more
         # your time lower then last entry
-        del LeaderBoardFull[19]
+        del LeaderBoardFull[24]
     else:
         return #Full & time too slow
     LeaderBoardFull.append([[eventPlayer[0].split([]), eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]])
@@ -328,15 +328,15 @@ rule "General | Setup & Variables":
             createEffect(
                 [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast], #$$ localspectate()
                 Effect.BAD_AURA,
-                Color.AQUA if evalOnce(TempIterator1) % 2 == 1 else Color.ORANGE,
-                PortalLoc[evalOnce(TempIterator1)],
+                Color.AQUA if TempIterator1 % 2 else Color.ORANGE,
+                PortalLoc[TempIterator1],
                 0.6,
                 EffectReeval.VISIBILITY
             )
             createInWorldText(
                 [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast], #$$ localspectate()
-                "{0}".format(PortalNames[evalOnce(TempIterator1)]), #$$ skip string conversion?
-                PortalLoc[evalOnce(TempIterator1)] + Vector.UP,
+                PortalNames[TempIterator1],
+                PortalLoc[TempIterator1] + Vector.UP,
                 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
             )
     waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]), Math.INFINITY)
