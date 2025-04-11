@@ -5,6 +5,7 @@ rule "<tx0C00000000001344> Commands <tx0C00000000001344>":
 
 rule "Command | Toggle Leaderboard (Hold Melee)":
     @Event eachPlayer
+    @Condition len(LeaderBoardFull) > 0
     @Condition eventPlayer.editor_on == false
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     wait(1, Wait.ABORT_WHEN_FALSE)
