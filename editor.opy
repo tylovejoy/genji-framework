@@ -393,8 +393,8 @@ rule "Editor | Hud and Effects":
             "{3} skill bans\n"
             "{4} portals".format(
                 iconString(Icon.ARROW_RIGHT) if EditorMode.checkpoint else "     ",
-                iconString(Icon.ARROW_RIGHT) if EditorMode.functionOrb else "     ",
                 iconString(Icon.ARROW_RIGHT) if EditorMode.killBall else "     ",
+                iconString(Icon.ARROW_RIGHT) if EditorMode.functionOrb else "     ",
                 iconString(Icon.ARROW_RIGHT) if EditorMode.skillBan else "     ",
                 iconString(Icon.ARROW_RIGHT) if EditorMode.portal else "     ")
         if hostPlayer.isHoldingButton(Button.MELEE) else
