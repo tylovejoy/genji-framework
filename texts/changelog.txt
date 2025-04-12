@@ -521,5 +521,9 @@ fixed:
    * Will export host as map creator when no creator attributed
 
 `@Framework Patch Notes`
-# 1.10.4
- -
+# 1.10.3A
+ - Fix exported data from overwriting customization settings
+   * Found by `@Nitroh`
+ - Increased reset hop timing window to 0.096s
+   * Found by `@CoralMage`
+   * Replication example by `@bioslet`
