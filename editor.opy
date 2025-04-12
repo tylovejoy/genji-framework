@@ -46,6 +46,7 @@ rule "Editor | Clear Excess Data to Save Map":
     PortalEffects = null
     if Name == "name here - 作者":
         Name = "{}".format(eventPlayer)
+    Cachedcredits = [Name, Code]
     async(AddonCheckMap, AsyncBehavior.NOOP)
     hudText(eventPlayer,
         "­",

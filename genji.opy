@@ -159,7 +159,7 @@ def CheckpointFailReset():
         eventPlayer.timer_split = 0
 
     if len(CheckpointPositions):
-        eventPlayer.setStatusEffect(null, Status.ROOTED, false)
+        #eventPlayer.setStatusEffect(null, Status.ROOTED, false)
         if eventPlayer.isUsingAbility1() and DashExploitToggle:
             #smallMessage(eventPlayer,"   0关卡Shift已禁用!" checkCN "   Dash Start is banned!")
             eventPlayer.startForcingPosition(eventPlayer, false)
