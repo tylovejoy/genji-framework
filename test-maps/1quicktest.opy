@@ -18,9 +18,6 @@ rule "quicktest data":
     LeaderBoardHuds = []
     LeaderBoardRemake = true
     DashExploitToggle = true
-    PortalNames = []
-    PortalLoc = []
-    PortalDest = []
     PortalOn = false
     Difficultyhud = [0, false]
     CustomPortalStart = []
@@ -62,9 +59,6 @@ rule "quicktest data":
     LeaderBoardHuds = []
     LeaderBoardRemake = true
     DashExploitToggle = true
-    PortalNames = []
-    PortalLoc = []
-    PortalDest = []
     PortalOn = false
     Difficultyhud = [17, false]
     CustomPortalStart = []
@@ -106,9 +100,6 @@ rule "quicktest data":
     LeaderBoardHuds = []
     LeaderBoardRemake = true
     DashExploitToggle = true
-    PortalNames = []
-    PortalLoc = []
-    PortalDest = []
     PortalOn = false
     Difficultyhud = [17, false]
     CustomPortalStart = []
@@ -150,9 +141,6 @@ rule "quicktest data":
     LeaderBoardHuds = []
     LeaderBoardRemake = true
     DashExploitToggle = true
-    PortalNames = []
-    PortalLoc = []
-    PortalDest = []
     PortalOn = false
     Difficultyhud = [17, false]
     CustomPortalStart = []
@@ -195,9 +183,6 @@ rule "quicktest data":
     LeaderBoardHuds = []
     LeaderBoardRemake = true
     DashExploitToggle = true
-    PortalNames = []
-    PortalLoc = []
-    PortalDest = []
     PortalOn = false
     Difficultyhud = [17, false]
     CustomPortalStart = []
@@ -240,9 +225,6 @@ rule "quicktest data":
     LeaderBoardHuds = []
     LeaderBoardRemake = true
     DashExploitToggle = true
-    PortalNames = []
-    PortalLoc = []
-    PortalDest = []
     PortalOn = false
     Difficultyhud = [17, false]
     CustomPortalStart = []

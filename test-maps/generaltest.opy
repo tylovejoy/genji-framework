@@ -19,9 +19,6 @@ rule "general test data":
     LeaderBoardHuds = []
     LeaderBoardRemake = true
     DashExploitToggle = true
-    PortalNames = []
-    PortalLoc = []
-    PortalDest = []
     PortalOn = false
     Difficultyhud = [0, false]
     CustomPortalStart = [vect(-16.351, 0.84, 12.607), vect(-1.693, 0.42, -14.003), vect(5.346, 0.48, 0.799), vect(15.256, 0.51, 0.353), vect(13.603, 0, -10.641), vect(2.081, 0, -15.366)]

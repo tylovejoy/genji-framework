@@ -1,6 +1,5 @@
-
 if (x == 0){
-    x = `#!define editorordata #\n #!define selectedmap "workshopChamber"\n#!define editoron true\n`
+    x = '#!define testData #\n #!define selectedmap "workshopChamber"\n#!define editoron true\n'
 
 } else {
     datafiles = {
@@ -26,7 +25,7 @@ if (x == 0){
     20: "test-maps/rialtofisho.opy", // my rialto
     21: "test-maps/2cpmulti.opy", // 2 cp multi
     22: "test-maps/generaltest.opy",
-    23: "test-maps/bandoublejump.opy"
+    23: "test-maps/bandoublejump.opy" // lulledlion's map
     }[x]
 
     selectedmap = {
@@ -55,7 +54,6 @@ if (x == 0){
     23: "lijiangNightMarket"
     }[x]
 
-    x = '#!define editorordata #!include "'+ datafiles + '"\n #!define selectedmap "' + selectedmap + '"' + '\n #!define editoron false\n'
-
+    x = '#!define testData #!include "'+ datafiles + '"\n #!define selectedmap "' + selectedmap + '"' + '\n #!define editoron false\n'
 }
 

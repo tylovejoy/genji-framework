@@ -367,7 +367,7 @@ fixes
 - it had stand ban, but intergrated in normal create ban, no other 1.9.3a features
 
 1.9.3a - x-1-2024
-aditions:
+additions:
 - added portals to samoa
 - stand create ban, sort off. This ban triggers when you bhop a second time. If create is not banned, the bhop counter will reset when creating. Theoretically this bans only standcreate.
 thanks to @junior for making this ban.
@@ -494,3 +494,26 @@ fixed:
   * To re-enable Dash Start when upgrading existing maps, Map data must include: `DashExploitToggle = false`
   * Dash Start if re-enabled, will affect all checkpoints - Not just checkpoint 0.
   * Deprecated due to refactoring to a single reset function.
+
+`@Framework Patch Notes`
+# 1.10.3
+### General
+ - Preview Mode:
+   * Ban icons for levels moved to here
+   * Be able to switch views faster
+   * Fixed mismatched descriptions
+ - Leaderboard
+   * Display 25 players (previously 20)
+   * Displays in a single hud
+ - Practice Mode able to switch levels faster
+ - Spectate missing huds
+   * Found by `@D A R K` +5xp
+### Editor
+ - Boundary Spheres
+   * Fomerly named "Kill Orbs"
+   * Can now be used for internal boundaries
+   * Positive radius to keep players out
+   * Negative radius to have players stay in
+ - Fixed global portals from becoming uneditable
+   * Found by `@Hello` +5xp
+ - Export instructions display in single hud

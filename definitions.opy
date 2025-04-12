@@ -1,48 +1,11 @@
-#!mainFile "genji.opy"
-
-######################################## Settings ####################
-#!define versionhere "v1.10.2"
-#♨ Dev Build Icon
-
-#!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(0) # 0 is editor, rest is numbers
-# Disable via double ## at include, not the define because the define needs to exist
-#!define testToggle ##!include "test-scripts.opy"
-
-# Debug force CN mode on
-##!define checkCN if true else
-
-# Enable Invis Command (Invis Command cant be pasted in CN client die to null and none translating to same symbol)
-#!define enableInvisCommand true
-
-# Limit on how many orbs can be made
-#!define fxLimit 193
-
-#!define portalDistance 1.3
-
-# Default circle radius: 1.4
-#!define cpcircleradius 1.4
-
-# Default fx: 1
-#!define cpCirkleFx 1
-
-# distance range for player - orb 1.4
-#!define bounceorbdistance 1.4
-
-# height added to player for orb detection. inludes the +
-#!define bounceoffset + Vector.UP * 0.7
-
-#!define usePerks false
-
-#!define cpCheat false
-
-# defaults: off, attempt:5, 120 min, restart:false
-#!define compModeToggle false
-#!define attemptCount 5
-#!define compTimeLimit 120
-#!define compRestartLimit false
+#!mainFile "framework.opy"
 
 ######################################## Macro Tools ##########################
+#!define localSpectator(condition) (true if condition else (localPlayer.toggle_spectate or localPlayer.getSlot() < null))
+
+##!define filtered(array, condition) [current_element for current_element, current_index in array if (condition)]
+##!define mapped(array, mapping) [(mapping) for current_element, current_index in array]
+
 ##!define RestartTimer(timeInMinutes) "{0} Hours and {1} Minutes".format(floor(timeInMinutes / 60 / 60), "{0}{1}".format(floor(timeInMinutes % 60 / 10), floor(timeInMinutes % 60 - floor(timeInMinutes % 60 / 10) * 10)))
 ##!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format([] if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
 ##!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
@@ -52,7 +15,7 @@ editortoggle(0) # 0 is editor, rest is numbers
 #!define insert(insert_array, insert_index, insert_value)\
 insert_array.append(insert_value)\
 insert_array = [elementhere if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for elementhere, i in insert_array]
-
+#$$ i != eventPlayer.checkpoint_current → i-eventPlayer.checkpoint_current
 #!define toggleCpInArray(baninput)\
 if eventPlayer.checkpoint_current in baninput:\
     baninput = [i for i in baninput if i != eventPlayer.checkpoint_current]\
@@ -65,21 +28,12 @@ arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in array
 
 #!define checkCN if l"Oof" == "噢" else
 
-#!define FILLER "<tx0C000000000207B5><fgFFFF00FF> Map Data & Addon Settings Are on Page 2 - 地图数据和附加组件的设置在第2页"
+#!define FILLER "<tx0C000000000207B5><fgFFFF00FF> Map Data & Addon Settings Are On Page 2 - 地图数据和附加组件的设置在第2页"
 
 #!define flyMovementDelta ((0.096 + 0.192 * eventPlayer.isHoldingButton(Button.JUMP) - 0.048 * eventPlayer.isHoldingButton(Button.CROUCH)) * \
     (eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z * (vect(1, not eventPlayer.isHoldingButton(Button.ABILITY_1), 1))+ \
     worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION) + \
     Vector.UP * (eventPlayer.isHoldingButton(Button.ABILITY_2) - eventPlayer.isHoldingButton(Button.ULTIMATE))))
-
-###############################################################################
-#!optimizeForSize
-# Supress warning for emote
-#!suppressWarnings w_ow2_communicate_bug
-#disable overpy map detection (command removed by zezy after fix by blizzard)
-# #!disableMapDetectionFix
-
-#!include "settings.opy"
 
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
@@ -201,7 +155,7 @@ globalvar ColorConfig 69                    # [colors]                  --- conf
 
 globalvar Name 70
 globalvar Code 71
-globalvar Cachedcredits 73
+globalvar Cachedcredits 73                  # [string, string]          --- Legacy
 
 # per cp iwt or hud
 globalvar CpHudText 74
@@ -214,7 +168,6 @@ globalvar CpIwtColor 79
 globalvar BanTriple 80                      # legacy
 globalvar BanMulti 81
 globalvar BanCreate 82
-#!define deathjump BanDead
 globalvar BanDead 83
 globalvar BanEmote 84
 globalvar BanClimb 85
@@ -282,7 +235,7 @@ playervar ban_standcreate                   # bans on second hop
 playervar ban_djump
 playervar ban_savedouble
 
-playervar cache_collectedLocks                     # number                    --- amount collected lock this cp
+playervar cache_collectedLocks                     # [int]                    --- amount collected lock this cp
 playervar cache_bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
 playervar cache_bounceLastTouched
 playervar cache_portalStart
@@ -329,14 +282,15 @@ playervar addon_enableDoubleChecks
 #subroutine KillBall
 #subroutine PinBall
 #subroutine PortalCreate
+#subroutine CreateLeaderboard
 subroutine StartGame
-subroutine EffectsCreate
 subroutine LeaderboardUpdate # fishos
-subroutine CreateLeaderboard
+subroutine CheckpointFailReset
 subroutine UpdateTitle
 subroutine DashUltGive
 subroutine CheckUlt
 subroutine CheckDash
+subroutine UpdateCache
 subroutine DeleteSave
 subroutine MakeSave
 subroutine StartPauseTimer
@@ -346,6 +300,10 @@ subroutine EditorSelectLast
 subroutine AddonCustomLoadAndReset
 subroutine AddonCheckMap
 subroutine Addon3rdPerson
+subroutine EffectsCreate
+subroutine RebuildKillOrbs
+subroutine RebuildPortals
+subroutine RebuildBounceOrbs
 
 ######################################## Enums ################################
 enum HO:
@@ -394,9 +352,9 @@ enum HO:
 
     board_header,
     board_display1,
-    board_display2,
-    board_display3,
-    board_display4,
+    #board_display2,
+    #board_display3,
+    #board_display4,
 
     fillermain, # push skirmish etc down
     topend,

@@ -1,4 +1,4 @@
-#!mainFile "genji.opy"
+#!mainFile "framework.opy"
 
 /*
 this gets put on page 1
@@ -8,30 +8,49 @@ this should be parts of addons that get toggled with a workshop toggle
 rule "<tx0C00000000001344> Addon Functions <tx0C00000000001344>":
     @Delimiter
 
-rule "Pre-set control map portal | function | toggled via workshop":
+rule "Addon | AFK timer":
+    @Event eachPlayer
+    @Condition eventPlayer.isMoving() == false
+    @Condition eventPlayer.isAlive()
+    @Condition eventPlayer.isCommunicatingEmote() == false
+    @Condition eventPlayer.editor_on == false
+    wait(300, Wait.ABORT_WHEN_FALSE)
+    if eventPlayer.addon_toggle3rdPov:
+        eventPlayer.addon_toggle3rdPov = false
+    eventPlayer.setStatusEffect(null, Status.ASLEEP, Math.INFINITY)
+        # raycast to prevent camera stuck on low wall
+    eventPlayer.startCamera(
+        eventPlayer.getPosition() +
+        Vector.UP * (distance(eventPlayer.getPosition(), raycast(eventPlayer.getPosition(), eventPlayer.getPosition() + 4 * Vector.UP, null, null, false).getHitPosition()) - 1),
+        eventPlayer.getPosition(), 10)
+    # cancel it after jumping or not sleep, reset cures sleep
+    wait(1)
+    waitUntil(eventPlayer.isHoldingButton(Button.JUMP) or not eventPlayer.hasStatusEffect(Status.ASLEEP), Math.INFINITY)
+    eventPlayer.clearStatusEffect(Status.ASLEEP)
+    eventPlayer.stopCamera()
+
+    if eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
+        CheckpointFailReset()
+
+    if RULE_CONDITION:
+        goto RULE_START
+
+rule "Addon | Pre-set control map portal - toggled via workshop":
     @Event eachPlayer
     @Condition PortalOn
-    @Condition eventPlayer.toggle_invincible or not eventPlayer.checkpoint_notLast
     @Condition len(PortalLoc) != null
-    @Condition any([distance(eventPlayer.getPosition() + 0.2 * Vector.UP,i) < 1.4 for i in PortalLoc])
-    if PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])]:
-        eventPlayer.teleport(
-            PortalDest[PortalLoc.index(sorted(PortalLoc, lambda i: distance(eventPlayer, i))[0])]
-        )
+    @Condition eventPlayer.toggle_invincible or not eventPlayer.checkpoint_notLast
+    @Condition any([distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance for i in PortalLoc])
+    eventPlayer.teleport(sorted([i for i in PortalDest], lambda e, i: distance(eventPlayer, PortalLoc[i]))[0])
 
-rule "Custom portals | function":
+rule "Addon | Custom portals":
     @Event eachPlayer
-    @Condition len(eventPlayer.cache_portalStart) > 0
-    @Condition [i for i in eventPlayer.cache_portalStart if distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance]
-    #@Condition any([distance(eventPlayer.getPosition() + 0.2 * Vector.UP, ent) < portalDistance for ent in eventPlayer.cache_portalStart]) == true
-
-    eventPlayer.teleport(
-        eventPlayer.cache_portalEnd[eventPlayer.cache_portalStart.index(sorted([i for i in eventPlayer.cache_portalStart],lambda x: distance(eventPlayer,x))[0])
-        ]
-    )
+    @Condition eventPlayer.cache_portalStart != []
+    @Condition any([distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance for i in eventPlayer.cache_portalStart])
+    eventPlayer.teleport(sorted([i for i in eventPlayer.cache_portalEnd], lambda e, i: distance(eventPlayer, eventPlayer.cache_portalStart[i]))[0])
     wait(0.4)
 
-rule "Pre-set control map portal | toggled on via workshop settings":
+rule "Addon | Pre-set control map portal - toggled on via workshop settings":
     @Condition PortalOn
     wait(0.5, Wait.ABORT_WHEN_FALSE) # overwrite pasta
     if getCurrentMap() == Map.BUSAN:
@@ -73,12 +92,6 @@ rule "Pre-set control map portal | toggled on via workshop settings":
         PortalNames = ["beach","volcano", "downtown", "volcano", "beach","downtown"  ]
         PortalLoc = [vect(231.98, 7.23, -262.84), vect(236.78, 7.23, -262.75), vect(-327.59, 3.6, -108.69), vect(-332.71, 3.6, -108.59), vect(25.4, 341, 354.38), vect( 30, 341, 354.34)     ]
         PortalDest = [vect(-329.86, 3.05, -103.4), vect(27.59, 339.76, 348.77), vect( 234.07, 6.12, -266.88), vect(27.59, 339.76, 348.77), vect(-329.86, 3.05, -103.4), vect( 234.07, 6.12, -266.88)   ]
-
-    else:
-        PortalDest = null
-        PortalLoc = null
-        PortalNames = null
-        return
 
 /*
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
@@ -156,9 +169,9 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
 # calculation to find the side of the map
 #!define fence_offset vect( (fence_grid*fence_proj_size)/2, 0, (fence_grid*fence_proj_size)/2 )
 # calculation for next explosion
-#!define fence_position  MapVectorArray[1] - fence_offset + ( MapVectorArray[0] % fence_grid ) * vect(fence_proj_size,00,00) + floor( MapVectorArray[0] / fence_grid ) * vect(00,00,fence_proj_size)
+#!define fence_position  MapVectorArray[1] - fence_offset + ( MapVectorArray[0] % fence_grid ) * (Vector.LEFT * fence_proj_size) + floor( MapVectorArray[0] / fence_grid ) * (Vector.FORWARD * fence_proj_size)
 
-rule "Little destructo - fence breaker":
+rule "Addon | Little destructo - fence breaker":
     # Made by FishoFire version 1.0
     # wait to overwrite any from copy pastas
 	wait(0.032)
@@ -171,9 +184,8 @@ rule "Little destructo - fence breaker":
     MapVectorArray.append(
         [getFlagPosition(Team.1), getFlagPosition(Team.2)] if getCurrentGamemode() == Gamemode.CTF else
         getSpawnPoints(Team.ALL)[0] if getCurrentGamemode() in [Gamemode.TDM, Gamemode.FFA] else
-        getPayloadPosition() if getPayloadPosition() != null and getObjectivePosition(1) == vect(0,0,0) and getObjectivePosition(2) == vect(0,0,0) else
-        [getObjectivePosition(0),getObjectivePosition(1),getObjectivePosition(2)]
-    )
+        getPayloadPosition() if getPayloadPosition()[0] and not (getObjectivePosition(1) + getObjectivePosition(2)) else
+        [getObjectivePosition(0), getObjectivePosition(1), getObjectivePosition(2)])
     # explode in a grid around the selected points
     while len(MapVectorArray) > 1:
         MapVectorArray[0] = 0
@@ -181,22 +193,21 @@ rule "Little destructo - fence breaker":
             createProjectile(
                 Projectile.ORB,  # the only orb available without fx extension
                 null,
-                fence_position ,
+                fence_position,
                 Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
                 DynamicEffect.GOOD_EXPLOSION, # possible without extensions: bad, good, ring
                 DynamicEffect.EXPLOSION_SOUND, # possible without extensions: explosion sound, buf sound, ring explosion sound
-                1, 1, 0, 0, 0, 0
-            )
+                1, 1, 0, 0, 0, 0)
 
             MapVectorArray[0] ++
-            if MapVectorArray[0] % fence_delay == 0: # use modulo to only wait every x orbs keep the 0 change the other number
+            if not (MapVectorArray[0] % fence_delay): # use modulo to only wait every x orbs keep the 0 change the other number
                 wait()
 
         del MapVectorArray[1]
 
     # handle exceptions (looking at you new queen street)
     MapVectorArray = [vect(8.276, 4.113, 15.261), vect(-8.319, 2.624, 14.245), vect(0.006, 4.821, 18.513)]
-    while len(MapVectorArray) > 0:
+    while len(MapVectorArray):
         # same as other projectile before
         createProjectile(
             Projectile.ORB,
@@ -205,21 +216,19 @@ rule "Little destructo - fence breaker":
             Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
             DynamicEffect.GOOD_EXPLOSION,
             DynamicEffect.EXPLOSION_SOUND,
-            1, 1, 0, 0, 0, 0
-        )
+            1, 1, 0, 0, 0, 0)
         del MapVectorArray[0]
         wait()
-
     MapVectorArray = null
 
-rule "Cache jump & crouch inputs for spectators":
+rule "Addon | Cache jump & crouch inputs for spectators":
     @Event playerJoined
     wait()
     eventPlayer.cache_inputs = vect(eventPlayer.isHoldingButton(Button.JUMP), eventPlayer.isHoldingButton(Button.CROUCH), false)
     goto RULE_START
 
 def AddonCheckMap():
-    @Name "SUB | Basic Map Validator"
+    @Name "Addon | SUB Basic Map Validator"
     if len(CheckpointPositions) <= 1: return
     createDummy(Hero.ANA, Team.1 if getNumberOfSlots(Team.1) < getNumberOfSlots(Team.2) else Team.2, -1, CheckpointPositions[0], null)
     MapChecker = getLastCreatedEntity()
@@ -261,7 +270,7 @@ def AddonCheckMap():
     disableInspector()
 
 def Addon3rdPerson():
-    @Name "SUB | 3rd Person Camera"
+    @Name "Addon | SUB 3rd Person Camera"
     if eventPlayer.addon_toggle3rdPov:
         eventPlayer.startCamera(updateEveryTick(
             raycast(0.5 * Vector.UP + eventPlayer.getEyePosition(),
