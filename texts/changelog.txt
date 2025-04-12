@@ -516,4 +516,6 @@ fixed:
    * Negative radius to have players stay in
  - Fixed global portals from becoming uneditable
    * Found by `@Hello` +5xp
- - Export instructions display in single hud
+ - Export
+   * Instructions display in single hud
+   * Will export host as map creator when no creator attributed
