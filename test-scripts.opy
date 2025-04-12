@@ -1,4 +1,4 @@
-#!mainFile "genji.opy"
+#!mainFile "framework.opy"
 
 ##### general #####
      #!define multipurposehud true
@@ -124,7 +124,7 @@ rule "Avrg Seconds":
 
     AvrgSecDisplay = 0
     LastTimePeak = 0
-    while len(AvrgSecStore) > 0:
+    while len(AvrgSecStore):
         LastTimePeak = max(LastTimePeak,AvrgSecStore[0] )
         AvrgSecDisplay += AvrgSecStore[0]
         del AvrgSecStore[0]
@@ -141,7 +141,7 @@ rule "Avrg Seconds":
     AvrgMinStoreTemp = AvrgMinStore
     AvrgMinStore = []
     AvrgMinStoreLen = len(AvrgMinStoreTemp)
-    while len(AvrgMinStoreTemp) > 0:
+    while len(AvrgMinStoreTemp):
         AvrgMinDisplay += AvrgMinStoreTemp[0]
         del AvrgMinStoreTemp[0]
 
@@ -180,12 +180,12 @@ rule "orbradiustest": # show player orb hit detection
     @Condition orb_visialon
     @Event eachPlayer
     if show_orbradius:
-        createEffect(localPlayer, Effect.SPHERE, Color.RED, updateEveryTick( eventPlayer.getPosition() bounceoffset), 0.1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
-        createEffect(localPlayer, Effect.SPHERE, Color.ORANGE, updateEveryTick( eventPlayer.getPosition() bounceoffset), 0.03, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
+        createEffect(localPlayer, Effect.SPHERE, Color.RED, updateEveryTick( eventPlayer.getPosition() + Vector.UP * bounceoffset), 0.1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
+        createEffect(localPlayer, Effect.SPHERE, Color.ORANGE, updateEveryTick( eventPlayer.getPosition() + Vector.UP * bounceoffset), 0.03, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
 
     if show_playerradius:
         # own orb radius
-        createEffect(localPlayer, Effect.SPHERE, Color.YELLOW, updateEveryTick( eventPlayer.getPosition() bounceoffset), bounceorbdistance, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
+        createEffect(localPlayer, Effect.SPHERE, Color.YELLOW, updateEveryTick( eventPlayer.getPosition() + Vector.UP * bounceoffset), bounceorbdistance, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
 
 
 # AI - leaderboard ######################################################################################################################################################
@@ -224,9 +224,9 @@ rule "leaderboard test ai":
         wait(1)
 
     eventPlayer.checkpoint_current = len(CheckpointPositions) - 2
-    checkpointFailReset()
+    CheckpointFailReset()
     wait(1)
-    eventPlayer.cache_collectedLocks = eventPlayer.cache_bouncePosition
+    eventPlayer.cache_collectedLocks = eventPlayer.cache_bouncePosition #cache_collectedLocks uses indices instead of positions
     eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current+1]+ vect(0,3,0)) # teleport not needed
 
 
@@ -248,7 +248,7 @@ rule "action test ai":
     UpdateCache()
 
     wait()
-    checkpointFailReset()
+    CheckpointFailReset()
 
     wait()
     eventPlayer.teleport(CheckpointPositions[2] + vect(0,10,0) )

@@ -10,7 +10,7 @@ rule "Checkpoint | Position <---------------------------------------------------
     TQ6 = [false, false, false, false, false, false]
     killballnumber = [1, 1, 1, 1, 2, 2, 3, 4, 6, 6, 8, 7, 8, 7, 6]
     pinballnumber = [1, 4, 6, 3, 9, 5]
-    deathjump = true
+    BanDead = true
     MsDestructo = []
     kaxiaotiao = true
 

@@ -10,7 +10,7 @@ rule "test map data - dash start":
     BounceToggleLock = []
     killballnumber = []
     pinballnumber = []
-    deathjump = true
+    BanDead = true
     LeaderBoardFull = []
     DashExploitToggle = true
     PortalOn = false
