@@ -2,7 +2,7 @@
 ##!suppressWarnings w_ow2_communicate_bug
 ##!suppressWarnings w_tags #Workshop Settings
 ###############################################################################
-#!define versionhere "v1.10.3"
+#!define versionhere "v1.10.4♨A"
 #♨ Dev Build Icon
 ###############################################################################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
