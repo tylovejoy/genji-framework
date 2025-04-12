@@ -30,17 +30,17 @@ rule "Huds | Global Localplayer":
         "作者: {}".format(Name)
         checkCN
         "Made by: {}".format(Name)
-        , HudPosition.LEFT, HO.data_name, ColorConfig[customize.credit_name] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        , HudPosition.LEFT, HO.data_name, ColorConfig[Customize.credit_name] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
     hudSubtext(true[0],
         "代码: {}".format(Code)
         checkCN
         "Map code: {}".format(Code)
-        , HudPosition.LEFT, HO.data_code, ColorConfig[customize.credit_code] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        , HudPosition.LEFT, HO.data_code, ColorConfig[Customize.credit_code] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
-    hudSubtext(localPlayer.toggle_guide, "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, ColorConfig[customize.dsc], HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(localPlayer.toggle_guide, "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, ColorConfig[Customize.dsc], HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
     # global huds
     hudSubheader(true[0],
@@ -53,7 +53,7 @@ rule "Huds | Global Localplayer":
             TimeRemaining, versionhere,
             "\nerror: max hud count reached" if getNumberOfTextIds() >= 128 else []
         )
-        , HudPosition.RIGHT, HO.data_remaingtime, ColorConfig[customize.servertime] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS
+        , HudPosition.RIGHT, HO.data_remaingtime, ColorConfig[Customize.servertime] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS
     )
 
     # padding for custom hud display
@@ -63,14 +63,14 @@ rule "Huds | Global Localplayer":
         "{0} {1} | {2}快速回点".format([] if localPlayer.toggle_quickRestart else "长按",buttonString(Button.RELOAD),[] if localPlayer.toggle_quickRestart else "启用")
         checkCN
         "{0} {1} |{2} quick reset".format([] if localPlayer.toggle_quickRestart else "Hold", buttonString(Button.RELOAD), [] if localPlayer.toggle_quickRestart else " Enable")
-        , HudPosition.RIGHT, HO.com_quickres, ColorConfig[customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        , HudPosition.RIGHT, HO.com_quickres, ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     hudSubtext(localPlayer.toggle_guide,
         "{0} + {1} | 探点模式{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | 启用" if localPlayer.toggle_invincible else [])
         checkCN
         "{0} + {1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.toggle_invincible else [])
-        ,HudPosition.RIGHT, HO.com_invincible, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.toggle_invincible else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        ,HudPosition.RIGHT, HO.com_invincible, evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.toggle_invincible else evalOnce(ColorConfig[Customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     hudText(true[0],
         null,
@@ -81,14 +81,14 @@ rule "Huds | Global Localplayer":
         "长按 {0} | 切换显示HUD".format(buttonString(Button.SECONDARY_FIRE))
         checkCN
         "Hold {0} | toggle hud".format(buttonString(Button.SECONDARY_FIRE))
-        ,HudPosition.RIGHT, HO.com_displaytoggle, ColorConfig[customize.command_normal], ColorConfig[customize.command_normal], ColorConfig[customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        ,HudPosition.RIGHT, HO.com_displaytoggle, ColorConfig[Customize.command_normal], ColorConfig[Customize.command_normal], ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     hudSubtext(localPlayer.toggle_guide,
         "长按 {0} + {1} | 预览关卡".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
         checkCN
         "Hold {0} + {1} | Preview cp".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
-        ,HudPosition.RIGHT, HO.com_preview, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.preview_array1 else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+        ,HudPosition.RIGHT, HO.com_preview, evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.preview_array1 else evalOnce(ColorConfig[Customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
 
@@ -96,7 +96,7 @@ rule "Huds | Global Localplayer":
         "移动键 ◀ ▶ | 预览其他\n移动键 ◀ ▶ | 修改间距 \n视角移动 | 调整浏览视角"
         checkCN
         "Walk ◀ ▶ | preview others\nWalk ▲ ▼ | modify zoom\nAim | change preview angle"
-        ,HudPosition.TOP, HO.com_previewsub, ColorConfig[customize.command_highlight], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        ,HudPosition.TOP, HO.com_previewsub, ColorConfig[Customize.command_highlight], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
 
@@ -106,7 +106,7 @@ rule "Huds | Global Localplayer":
             ("单关用时 {0}".format(localPlayer.timer_splitDisplay)
             checkCN
             "Split: {0}".format(localPlayer.timer_splitDisplay))),
-        HudPosition.LEFT, HO.game_split_display, ColorConfig[customize.time], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        HudPosition.LEFT, HO.game_split_display, ColorConfig[Customize.time], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
 
@@ -144,7 +144,7 @@ rule "Huds | Global Localplayer":
             Color.BLUE,
             Color.GREEN if localPlayer.toggle_hints else
             Color.ORANGE,
-            evalOnce(ColorConfig[customize.command_normal]) if localPlayer.checkpoint_current in HintCp else Color.GRAY,
+            evalOnce(ColorConfig[Customize.command_normal]) if localPlayer.checkpoint_current in HintCp else Color.GRAY,
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         HudStoreEdit.append(getLastCreatedText())
@@ -165,13 +165,13 @@ rule "Huds | Global Localplayer":
             "长按 {0} | 观战模式{1}".format(buttonString(Button.INTERACT)," | 启用" if localPlayer.toggle_spectate else [])
             checkCN
             "Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | ON" if localPlayer.toggle_spectate else [])
-            , HudPosition.RIGHT, HO.com_spec, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.toggle_spectate else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+            , HudPosition.RIGHT, HO.com_spec, evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.toggle_spectate else evalOnce(ColorConfig[Customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         hudSubtext(localPlayer.toggle_guide,
             "长按 {0} | 隐身模式{1}".format(buttonString(Button.ABILITY_2)," | 启用" if localPlayer.toggle_invisible else [])
             checkCN
             "Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | ON" if localPlayer.toggle_invisible else [])
-            , HudPosition.RIGHT, HO.com_invis, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.toggle_invisible else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+            , HudPosition.RIGHT, HO.com_invis, evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.toggle_invisible else evalOnce(ColorConfig[Customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         HudStoreEdit.append(getLastCreatedText())
 
@@ -179,7 +179,7 @@ rule "Huds | Global Localplayer":
             "{0} + {1} | 练习模式{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.checkpoint_practice) if localPlayer.toggle_practice else [])
             checkCN
             "{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.checkpoint_practice) if localPlayer.toggle_practice else [])
-            ,HudPosition.RIGHT, HO.com_practice, evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.toggle_practice else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+            ,HudPosition.RIGHT, HO.com_practice, evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.toggle_practice else evalOnce(ColorConfig[Customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         HudStoreEdit.append(getLastCreatedText())
 
@@ -189,7 +189,7 @@ rule "Huds | Global Localplayer":
             checkCN
             "{0} + {1} | Next level\n{0} + {2} | Previous level\n{3} | Start from practice cp ".format(
                 buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT) )
-            , HudPosition.RIGHT, HO.com_practicesub, evalOnce(ColorConfig[customize.command_highlight]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+            , HudPosition.RIGHT, HO.com_practicesub, evalOnce(ColorConfig[Customize.command_highlight]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         HudStoreEdit.append(getLastCreatedText())
 
@@ -218,7 +218,7 @@ rule "Huds | Global Localplayer":
         "{0} + {1} + {2} | 重新开始\n长按 {3} | 完整成绩排名".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE))
         checkCN
         "{0} + {1} + {2} | Restart\nHold {3} | leaderboard".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE))
-        , HudPosition.RIGHT, HO.com_restart_n_board, ColorConfig[customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        , HudPosition.RIGHT, HO.com_restart_n_board, ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
     #else:
@@ -382,7 +382,7 @@ rule "Huds | Each Player":
         #"用时 {0}".format(prettyTime(eventPlayer.timer_normal))
         #checkCN
         #"Time {0}".format(prettyTime(eventPlayer.timer_normal)) ,
-        HudPosition.LEFT, HO.game_timer, ColorConfig[customize.time], Color.GRAY, ColorConfig[customize.time], HudReeval.STRING, SpecVisibility.DEFAULT
+        HudPosition.LEFT, HO.game_timer, ColorConfig[Customize.time], Color.GRAY, ColorConfig[Customize.time], HudReeval.STRING, SpecVisibility.DEFAULT
     )
 
     hudText(
@@ -417,14 +417,14 @@ rule "Huds | Each Player":
             len(CheckpointPositions) - 1),
 
         "{0}{1} {2} / {3}".format(
-            ColorConfig[customize.orb_lock],
+            ColorConfig[Customize.orb_lock],
             "球" checkCN " orbs",
             len(eventPlayer.cache_collectedLocks),
             eventPlayer.cache_bounceMaxLocks
-            #"收集球" checkCN "{0} orbs".format(ColorConfig[customize.orb_lock])
+            #"收集球" checkCN "{0} orbs".format(ColorConfig[Customize.orb_lock])
         ) if eventPlayer.cache_bounceMaxLocks and not eventPlayer.preview_array1 else [],
 
-        HudPosition.TOP, HO.game_level_orb, ColorConfig[customize.level], ColorConfig[customize.level], ColorConfig[customize.orb_lock], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        HudPosition.TOP, HO.game_level_orb, ColorConfig[Customize.level], ColorConfig[Customize.level], ColorConfig[Customize.orb_lock], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     hudSubtext(eventPlayer,"{0}{1}{2}\n{3}{4}{5}".format(
@@ -434,7 +434,7 @@ rule "Huds | Each Player":
         "◀" if eventPlayer.getThrottle().x > null else "◁",
         "▼" if eventPlayer.getThrottle().z < null else "∇",
         "▶" if eventPlayer.getThrottle().x < null else "▷"),
-        HudPosition.LEFT, HO.game_input, evalOnce(ColorConfig[customize.time]),HudReeval.STRING, SpecVisibility.DEFAULT)
+        HudPosition.LEFT, HO.game_input, evalOnce(ColorConfig[Customize.time]),HudReeval.STRING, SpecVisibility.DEFAULT)
 
     # climb/bhop indicators
     hudHeader(eventPlayer,
@@ -444,7 +444,7 @@ rule "Huds | Each Player":
         checkCN
         "Climb{0}".format(" ({0})".format(eventPlayer.skill_countMulti) if eventPlayer.skill_countMulti else [])
         , HudPosition.LEFT, HO.game_climb,
-        evalOnce(ColorConfig[customize.bhopclimb_used]) if eventPlayer.skill_usedClimb else evalOnce(ColorConfig[customize.bhopclimb_available]),
+        evalOnce(ColorConfig[Customize.bhopclimb_used]) if eventPlayer.skill_usedClimb else evalOnce(ColorConfig[Customize.bhopclimb_available]),
         HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
     hudHeader(eventPlayer,
@@ -455,7 +455,7 @@ rule "Huds | Each Player":
         checkCN
         "Bhop{0}".format(" ({0})".format(eventPlayer.skill_countCreates) if eventPlayer.skill_countCreates else [])
         , HudPosition.LEFT, HO.game_bhop,
-        evalOnce(ColorConfig[customize.bhopclimb_used]) if eventPlayer.skill_usedBhop else evalOnce(ColorConfig[customize.bhopclimb_available]),
+        evalOnce(ColorConfig[Customize.bhopclimb_used]) if eventPlayer.skill_usedBhop else evalOnce(ColorConfig[Customize.bhopclimb_available]),
         HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT
     )
 
@@ -468,7 +468,7 @@ rule "Huds | Each Player":
         ) if eventPlayer.cache_bounceMaxLocks and len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks else
         "到这里来" checkCN "come here",
         CheckpointPositions[eventPlayer.checkpoint_current + 1],
-        1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING,  ColorConfig[customize.cometext], SpecVisibility.DEFAULT
+        1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING,  ColorConfig[Customize.cometext], SpecVisibility.DEFAULT
     )
 
     wait(2.5)
@@ -514,4 +514,4 @@ rule "Huds | Addons":
             "长按 {0} + {1} | 第三人称{2}".format(buttonString(Button.CROUCH), buttonString(Button.JUMP)," | 启用" if localPlayer.addon_toggle3rdPov else [])
             checkCN
             "Hold {0} + {1} | 3rd Person{2}".format(buttonString(Button.CROUCH), buttonString(Button.JUMP)," | ON" if localPlayer.addon_toggle3rdPov else []),
-            HudPosition.RIGHT,HO.com_3rd,evalOnce(ColorConfig[customize.command_highlight]) if localPlayer.addon_toggle3rdPov else evalOnce(ColorConfig[customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+            HudPosition.RIGHT,HO.com_3rd,evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.addon_toggle3rdPov else evalOnce(ColorConfig[Customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)

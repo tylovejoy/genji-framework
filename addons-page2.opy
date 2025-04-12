@@ -354,7 +354,7 @@ rule "Addon | fisho cp cheat for overpy toggle":
     @Event eachPlayer
     @Condition cpCheat
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
-    @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.checkpoint_notLast) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.checkpoint_current != 0)
+    @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.checkpoint_notLast) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.checkpoint_current)
     @Condition eventPlayer.editor_on == false
     @Condition eventPlayer.toggle_practice == false
 
