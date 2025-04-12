@@ -523,7 +523,8 @@ fixed:
 `@Framework Patch Notes`
 # 1.10.3A
  - Fix exported data from overwriting customization settings
-   * Found by `@Nitroh`
+   * Found by `@Nitroh` +5xp
  - Increased reset hop timing window to 0.096s
-   * Found by `@CoralMage`
-   * Replication example by `@bioslet`
+   * Found by `@CoralMage` +5xp
+   * Replication example by `@bioslet` +5xp
+ - Fix swapped current editor mode arrow
