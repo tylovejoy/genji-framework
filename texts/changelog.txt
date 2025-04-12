@@ -527,3 +527,4 @@ fixed:
  - Increased reset hop timing window to 0.096s
    * Found by `@CoralMage` +5xp
    * Replication example by `@bioslet` +5xp
+ - Fix swapped current editor mode arrow
