@@ -418,8 +418,8 @@ enum EditorMode:
     portal = (hostPlayer.editor_modeSelect == 4),
 
 enum LoadOrder:
-    mapData,
-    customize,
+    mapData     = -1,
+    customize   = 0,
     destructo   = 0.016 * 2,
     setup       = 0.016 * 15,
     portal      = 0.016 * 32,
