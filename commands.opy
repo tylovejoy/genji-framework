@@ -22,8 +22,8 @@ rule "Command | Split hide (Hold Dash + Primary + Secondary)":
     #smallMessage(eventPlayer, "   split display off" if eventPlayer.timer_splitDisplay != -Math.INFINITY else "   split display on")
     eventPlayer.timer_splitDisplay = 0 if eventPlayer.timer_splitDisplay == -Math.INFINITY else -Math.INFINITY
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
-    wait(0.32)
     smallMessage(eventPlayer, "   split display off" if eventPlayer.timer_splitDisplay == -Math.INFINITY else "   split display on")
+    wait(0.32)
 
 rule "Command | Toggle Invisible (Hold Deflect)":
     @Condition enableInvisCommand

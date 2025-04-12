@@ -159,7 +159,6 @@ def CheckpointFailReset():
         eventPlayer.timer_split = 0
 
     if len(CheckpointPositions):
-        eventPlayer.setStatusEffect(null, Status.ROOTED, false)
         if eventPlayer.isUsingAbility1() and DashExploitToggle:
             #smallMessage(eventPlayer,"   0关卡Shift已禁用!" checkCN "   Dash Start is banned!")
             eventPlayer.startForcingPosition(eventPlayer, false)
@@ -171,8 +170,12 @@ def CheckpointFailReset():
 
         # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
         #if eventPlayer.ban_dead or eventPlayer.ban_emote and eventPlayer.isHoldingButton(Button.JUMP):
-        if eventPlayer.ban_dead and eventPlayer.isHoldingButton(Button.JUMP):
-            eventPlayer.forceButtonPress(Button.JUMP)
+        if eventPlayer.ban_dead:
+            if eventPlayer.isHoldingButton(Button.JUMP):
+                eventPlayer.forceButtonPress(Button.JUMP)
+        else:
+            #Reset Hop
+            eventPlayer.setStatusEffect(null, Status.ROOTED, 0.096)
 
         if eventPlayer.isUsingUltimate():
             eventPlayer.setDamageReceived(100)
@@ -229,21 +232,21 @@ rule "General | Setup & Variables":
     startForcingSpawn(Team.ALL,  0)
     startForcingSpawn(Team.ALL,  1)
     startForcingSpawn(Team.ALL,  2)
-    wait(0.024) # wait for map data rule
+    wait(LoadOrder.setup) # wait for map data rule
 
     # fix team because of naming
-    if ColorConfig[customize.orb_lock] == Color.TEAM_1:
-        ColorConfig[customize.orb_lock] = Color.BLUE
-    elif ColorConfig[customize.orb_lock] == Color.TEAM_2:
-        ColorConfig[customize.orb_lock] = Color.RED
+    if ColorConfig[Customize.orb_lock] == Color.TEAM_1:
+        ColorConfig[Customize.orb_lock] = Color.BLUE
+    elif ColorConfig[Customize.orb_lock] == Color.TEAM_2:
+        ColorConfig[Customize.orb_lock] = Color.RED
 
     # prevent same color lock orbs
-    if ColorConfig[customize.orb_normal] == ColorConfig[customize.orb_lock]:
-        ColorConfig[customize.orb_lock] = Color.GREEN  if ColorConfig[customize.orb_normal] == Color.ORANGE else Color.ORANGE
+    if ColorConfig[Customize.orb_normal] == ColorConfig[Customize.orb_lock]:
+        ColorConfig[Customize.orb_lock] = Color.GREEN  if ColorConfig[Customize.orb_normal] == Color.ORANGE else Color.ORANGE
 
     # prevent same color bhop/climb used/unused
-    if ColorConfig[customize.bhopclimb_available] == ColorConfig[customize.bhopclimb_used]:
-        ColorConfig[customize.bhopclimb_used] = Color.ORANGE if ColorConfig[customize.bhopclimb_available] == Color.RED else Color.RED
+    if ColorConfig[Customize.bhopclimb_available] == ColorConfig[Customize.bhopclimb_used]:
+        ColorConfig[Customize.bhopclimb_used] = Color.ORANGE if ColorConfig[Customize.bhopclimb_available] == Color.RED else Color.RED
 
     SaveName = []
     SaveCp = []
@@ -284,11 +287,10 @@ rule "General | Setup & Variables":
 
     LeaderBoardFull = []
     TitleData = null
-
     HintCp = []
     HintText = []
 
-    wait(1)
+    wait()
 
     # clean out -1's after the ban has loaded
     BanBhop = [i for i in BanBhop if i + false >= 0] if len(BanBhop) else []
@@ -321,7 +323,7 @@ rule "General | Setup & Variables":
     else:
         InstructionText = null
 
-    wait(1) # add back to below wait if removed
+    wait() # add back to below wait if removed
 
     if len(PortalDest): # pre set control map portals. not in portal rule because shared I variable
         for TempIterator1 in range(len(PortalLoc)):
@@ -404,10 +406,10 @@ rule "General | Player Initialize":
     wait(1)
     eventPlayer.disableRespawn()
     #eventPlayer.setRespawnTime(1)
-    createEffect(eventPlayer, Effect.RING, ColorConfig[customize.ring_current], CheckpointPositions[eventPlayer.checkpoint_current].last(), cpCirkleFx, EffectReeval.POSITION_AND_RADIUS)
-    createEffect(eventPlayer if eventPlayer.checkpoint_notLast else null, Effect.RING, ColorConfig[customize.ring_next], CheckpointPositions[eventPlayer.checkpoint_current + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createEffect(eventPlayer if eventPlayer.checkpoint_notLast else null, Effect.LIGHT_SHAFT, ColorConfig[customize.shaft], CheckpointPositions[eventPlayer.checkpoint_current + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createIcon(eventPlayer if eventPlayer.checkpoint_notLast else null, CheckpointPositions[eventPlayer.checkpoint_current + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, ColorConfig[customize.nexticon_color], true)
+    createEffect(eventPlayer, Effect.RING, ColorConfig[Customize.ring_current], CheckpointPositions[eventPlayer.checkpoint_current].last(), cpCirkleFx, EffectReeval.POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.checkpoint_notLast else null, Effect.RING, ColorConfig[Customize.ring_next], CheckpointPositions[eventPlayer.checkpoint_current + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(eventPlayer if eventPlayer.checkpoint_notLast else null, Effect.LIGHT_SHAFT, ColorConfig[Customize.shaft], CheckpointPositions[eventPlayer.checkpoint_current + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createIcon(eventPlayer if eventPlayer.checkpoint_notLast else null, CheckpointPositions[eventPlayer.checkpoint_current + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, ColorConfig[Customize.nexticon_color], true)
 
     waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
     eventPlayer.editor_lock = false
@@ -473,7 +475,7 @@ rule "General | Ground: Traces, Arrive, & Reset":
         if eventPlayer.cache_bounceMaxLocks and len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks: # kill player if not colleted the locks
             if eventPlayer.isUsingAbility1():
                 waitUntil(not eventPlayer.isUsingAbility1(), 1)
-            smallMessage(eventPlayer, "   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[customize.orb_lock]))
+            smallMessage(eventPlayer, "   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[Customize.orb_lock]))
             #kill(eventPlayer, null)
             CheckpointFailReset()
             goto lbl_a
