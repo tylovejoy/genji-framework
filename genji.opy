@@ -159,7 +159,6 @@ def CheckpointFailReset():
         eventPlayer.timer_split = 0
 
     if len(CheckpointPositions):
-        eventPlayer.setStatusEffect(null, Status.ROOTED, 0.096)
         if eventPlayer.isUsingAbility1() and DashExploitToggle:
             #smallMessage(eventPlayer,"   0关卡Shift已禁用!" checkCN "   Dash Start is banned!")
             eventPlayer.startForcingPosition(eventPlayer, false)
@@ -171,8 +170,12 @@ def CheckpointFailReset():
 
         # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
         #if eventPlayer.ban_dead or eventPlayer.ban_emote and eventPlayer.isHoldingButton(Button.JUMP):
-        if eventPlayer.ban_dead and eventPlayer.isHoldingButton(Button.JUMP):
-            eventPlayer.forceButtonPress(Button.JUMP)
+        if eventPlayer.ban_dead:
+            if eventPlayer.isHoldingButton(Button.JUMP):
+                eventPlayer.forceButtonPress(Button.JUMP)
+        else:
+            #Reset Hop
+            eventPlayer.setStatusEffect(null, Status.ROOTED, 0.096)
 
         if eventPlayer.isUsingUltimate():
             eventPlayer.setDamageReceived(100)
