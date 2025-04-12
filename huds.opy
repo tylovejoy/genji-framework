@@ -10,7 +10,7 @@ rule "<tx0C00000000001344> Huds <tx0C00000000001344>":
     @Delimiter
 
 rule "Huds | Global Localplayer":
-    wait(1)
+    wait(LoadOrder.hudsGlobal)
 
     # name/credit construction
     # note on changing default name/credit
@@ -366,7 +366,7 @@ rule "Huds | Leaderboard": # for global instead of tied to player
 
 rule "Huds | Each Player":
     @Event playerJoined
-    wait(0.5)
+    wait(LoadOrder.hudsPlayer)
 
     hudText(eventPlayer, null,
         /*

@@ -229,7 +229,7 @@ rule "General | Setup & Variables":
     startForcingSpawn(Team.ALL,  0)
     startForcingSpawn(Team.ALL,  1)
     startForcingSpawn(Team.ALL,  2)
-    wait(0.024) # wait for map data rule
+    wait(LoadOrder.setup) # wait for map data rule
 
     # fix team because of naming
     if ColorConfig[Customize.orb_lock] == Color.TEAM_1:
@@ -284,11 +284,10 @@ rule "General | Setup & Variables":
 
     LeaderBoardFull = []
     TitleData = null
-
     HintCp = []
     HintText = []
 
-    wait(1)
+    wait()
 
     # clean out -1's after the ban has loaded
     BanBhop = [i for i in BanBhop if i + false >= 0] if len(BanBhop) else []
@@ -321,7 +320,7 @@ rule "General | Setup & Variables":
     else:
         InstructionText = null
 
-    wait(1) # add back to below wait if removed
+    wait() # add back to below wait if removed
 
     if len(PortalDest): # pre set control map portals. not in portal rule because shared I variable
         for TempIterator1 in range(len(PortalLoc)):

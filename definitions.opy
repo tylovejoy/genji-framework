@@ -416,3 +416,18 @@ enum EditorMode:
     functionOrb = (hostPlayer.editor_modeSelect == 2),
     skillBan = (hostPlayer.editor_modeSelect == 3),
     portal = (hostPlayer.editor_modeSelect == 4),
+
+enum LoadOrder:
+    mapData,
+    customize,
+    destructo   = 0.016 * 2,
+    setup       = 0.016 * 15,
+    portal      = 0.016 * 32,
+    hudsPlayer  = 0.016 * 32,
+    hudsGlobal  = 0.016 * 62.5,
+    addon_title = 0.016 * 62.5,
+    addon_hud   = 0.016 * 62.5,
+    addon_iwt   = 0.016 * 62.5,
+    addon_hint  = 0.016 * 62.5,
+
+
