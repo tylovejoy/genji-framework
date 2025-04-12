@@ -501,12 +501,12 @@ fixed:
  - Preview Mode:
   * Ban icons for levels moved to here
   * Be able to switch views faster
-  * Fixed descriptions
+  * Fixed mismatched descriptions
  - Leaderboard
-  * Will display 25 players (previously 20)
+  * Display 25 players (previously 20)
   * Displays in a single hud
  - Practice Mode able to switch levels faster
- - Spectate leaderboard & server time missing
+ - Spectate missing huds
   * Found by `@D A R K` +5xp
 ### Editor
  - Boundary Spheres
