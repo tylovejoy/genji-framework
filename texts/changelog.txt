@@ -498,7 +498,7 @@ fixed:
 `@Framework Patch Notes`
 # 1.10.3
 ### General
- - Preview Mode:
+ - Preview Mode
    * Ban icons for levels moved to here
    * Be able to switch views faster
    * Fixed mismatched descriptions
@@ -519,3 +519,7 @@ fixed:
  - Export
    * Instructions display in single hud
    * Will export host as map creator when no creator attributed
+
+`@Framework Patch Notes`
+# 1.10.4
+ -
