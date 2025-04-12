@@ -507,7 +507,7 @@ fixed:
    * Displays in a single hud
  - Practice Mode able to switch levels faster
  - Spectate missing huds
-   * Found by `@D A R K` +5xp
+   * Found by `@Kackspn` +5xp
 ### Editor
  - Boundary Spheres
    * Fomerly named "Kill Orbs"
