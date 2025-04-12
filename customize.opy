@@ -1,9 +1,13 @@
 #!mainFile "framework.opy"
 
+rule "<tx0C0000000000D297><fg00FFFFFF> Map Data - 数据录入 <---- INSERT HERE / 在这输入":
+    @Delimiter
+
 # note: Don't change defaults only here.
 # If you change this, also change it in the name/credit construciton in the huds
 # The old default should always be included to make old data valid
 rule "<tx0C00000000044B55><fg0FFFFFFF> Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这输入 ":
+    wait(LoadOrder.customize)
     #Filling this in adds it to the inspector pasta after next restart.
     #You can fill in again to overwrite.
     #修改的内容 在重新开始 比赛后生效
@@ -16,48 +20,45 @@ rule "<tx0C00000000044B55><fg0FFFFFFF> Credits and Colors here - 作者代码HUD
     #+++++  +++++  +++++  +++++  +++++  +++++
     #
     #credit hud name   -   作者HUD
-    ColorConfig[customize.credit_name] = Color.VIOLET
+    ColorConfig[Customize.credit_name] = Color.VIOLET
     #credit hud code   -   代码HUD
-    ColorConfig[customize.credit_code] = Color.SKY_BLUE
+    ColorConfig[Customize.credit_code] = Color.SKY_BLUE
     #dsc.gg/genjiparkour
-    ColorConfig[customize.dsc] = Color.AQUA
+    ColorConfig[Customize.dsc] = Color.AQUA
     #server time hud   -   房间倒计时
-    ColorConfig[customize.servertime] = Color.RED
+    ColorConfig[Customize.servertime] = Color.RED
     #time  hud   -   单关用时HUD
-    ColorConfig[customize.time] = Color.WHITE
+    ColorConfig[Customize.time] = Color.WHITE
     #level hud   -   关卡HUD
-    ColorConfig[customize.level] = Color.WHITE
+    ColorConfig[Customize.level] = Color.WHITE
     #command hud   -   指令HUD
-    ColorConfig[customize.command_normal] = Color.WHITE
+    ColorConfig[Customize.command_normal] = Color.WHITE
     #command hud highlight   -   指令HUD高亮
-    ColorConfig[customize.command_highlight] = Color.GREEN
+    ColorConfig[Customize.command_highlight] = Color.GREEN
     #bhop/climb available   -   小跳/爬墙未用HUD
-    ColorConfig[customize.bhopclimb_available] = Color.GREEN
+    ColorConfig[Customize.bhopclimb_available] = Color.GREEN
     #bhop/climb used (cant be same as available)   -   小跳/爬墙已用HUD
-    ColorConfig[customize.bhopclimb_used] = Color.RED
+    ColorConfig[Customize.bhopclimb_used] = Color.RED
 
     #current checkpoint ring   -   当前检查点光圈
-    ColorConfig[customize.ring_current] =  Color.SKY_BLUE
+    ColorConfig[Customize.ring_current] =  Color.SKY_BLUE
     #next checkpoint ring   -   下一关检查点光圈
-    ColorConfig[customize.ring_next] = Color.LIME_GREEN
+    ColorConfig[Customize.ring_next] = Color.LIME_GREEN
     #next checkpoint light shaft   -   下一关检查点光柱
-    ColorConfig[customize.shaft] = Color.WHITE
+    ColorConfig[Customize.shaft] = Color.WHITE
     #next checkpoint icon   -   下一关检查点图标
-    ColorConfig[customize.nexticon_color] = Color.SKY_BLUE
+    ColorConfig[Customize.nexticon_color] = Color.SKY_BLUE
     #"come here" text   -   到这里来" 文本
-    ColorConfig[customize.cometext] = Color.WHITE
+    ColorConfig[Customize.cometext] = Color.WHITE
     #kill orbs   -   击杀球
-    ColorConfig[customize.killorb] = Color.BLUE
+    ColorConfig[Customize.killorb] = Color.BLUE
     #normal orbs   -   弹球
-    ColorConfig[customize.orb_normal] = Color.GREEN
+    ColorConfig[Customize.orb_normal] = Color.GREEN
     #lock orbs (overwritten if its same as normal)
     #收集球 (与普通弹 球相同时将 自动覆写)
-    ColorConfig[customize.orb_lock] = Color.ORANGE
+    ColorConfig[Customize.orb_lock] = Color.ORANGE
     #portals   -   自定义 传送门
-    ColorConfig[customize.portal] = Color.WHITE
-
-rule "<tx0C0000000000D297><fg00FFFFFF> Map Data - 数据录入 <---- INSERT HERE / 在这输入":
-    @Delimiter
+    ColorConfig[Customize.portal] = Color.WHITE
 
 rule "Instructions for Depricated Rules (ban / portal / dash /ult) - 旧版编辑器中已弃用规则指引 (单关封禁 / 传送门 / 给刀给S)":
     @Delimiter

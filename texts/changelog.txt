@@ -498,7 +498,7 @@ fixed:
 `@Framework Patch Notes`
 # 1.10.3
 ### General
- - Preview Mode:
+ - Preview Mode
    * Ban icons for levels moved to here
    * Be able to switch views faster
    * Fixed mismatched descriptions
@@ -507,7 +507,7 @@ fixed:
    * Displays in a single hud
  - Practice Mode able to switch levels faster
  - Spectate missing huds
-   * Found by `@D A R K` +5xp
+   * Found by `@Kackspn` +5xp
 ### Editor
  - Boundary Spheres
    * Fomerly named "Kill Orbs"
@@ -519,3 +519,11 @@ fixed:
  - Export
    * Instructions display in single hud
    * Will export host as map creator when no creator attributed
+
+`@Framework Patch Notes`
+# 1.10.3A
+ - Fix exported data from overwriting customization settings
+   * Found by `@Nitroh`
+ - Increased reset hop timing window to 0.096s
+   * Found by `@CoralMage`
+   * Replication example by `@bioslet`

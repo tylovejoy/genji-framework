@@ -52,7 +52,7 @@ rule "Addon | Custom portals":
 
 rule "Addon | Pre-set control map portal - toggled on via workshop settings":
     @Condition PortalOn
-    wait(0.5, Wait.ABORT_WHEN_FALSE) # overwrite pasta
+    wait(LoadOrder.portal, Wait.ABORT_WHEN_FALSE) # overwrite pasta
     if getCurrentMap() == Map.BUSAN:
         #"down > sanc","down > meka","sanc > down","sanc > meka","meka > sanc","meka > down"
         PortalNames = ["Sanctuary","MEKA base","Downtown","MEKA base","Sanctuary","Downtown"]
@@ -174,7 +174,7 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
 rule "Addon | Little destructo - fence breaker":
     # Made by FishoFire version 1.0
     # wait to overwrite any from copy pastas
-	wait(0.032)
+	wait(LoadOrder.destructo)
     # first entry will act as index, rest is the points themselves
     MapVectorArray = [0]
     # flag mode = both flag points, just incase

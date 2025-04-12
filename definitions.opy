@@ -387,7 +387,7 @@ enum HO:
     rightend,
     # End #####################
 
-enum customize: # always add new options on end so previously configured colors dont mess up
+enum Customize: # always add new options on end so previously configured colors dont mess up
     credit_name,
     credit_code,
     servertime,
@@ -408,3 +408,26 @@ enum customize: # always add new options on end so previously configured colors 
     orb_lock,
     portal,
     dsc,
+
+enum EditorMode:
+    current = (hostPlayer.editor_modeSelect),
+    checkpoint = (not hostPlayer.editor_modeSelect),
+    killBall = (hostPlayer.editor_modeSelect == 1),
+    functionOrb = (hostPlayer.editor_modeSelect == 2),
+    skillBan = (hostPlayer.editor_modeSelect == 3),
+    portal = (hostPlayer.editor_modeSelect == 4),
+
+enum LoadOrder:
+    mapData     = -1,
+    customize   = 0,
+    destructo   = 0.016 * 2,
+    setup       = 0.016 * 15,
+    portal      = 0.016 * 32,
+    hudsPlayer  = 0.016 * 32,
+    hudsGlobal  = 0.016 * 62.5,
+    addon_title = 0.016 * 62.5,
+    addon_hud   = 0.016 * 62.5,
+    addon_iwt   = 0.016 * 62.5,
+    addon_hint  = 0.016 * 62.5,
+
+
