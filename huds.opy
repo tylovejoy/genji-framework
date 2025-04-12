@@ -474,8 +474,7 @@ rule "Huds | Each Player":
     wait(2.5)
     if CompMode:
         hudText(
-            eventPlayer,
-            " ",
+            eventPlayer, null,
             (
                 "! 比赛结束 !" if not CompTime else
                 "剩余时间: {0} 分钟{1}".format(

@@ -48,7 +48,7 @@ rule "Editor | Clear Excess Data to Save Map":
         Name = "{}".format(eventPlayer)
     async(AddonCheckMap, AsyncBehavior.NOOP)
     hudText(eventPlayer,
-        " ",
+        "­",
         null,
         "   0. 清理无用数据:\n"
         " (此窗口打开时将自动完成)\n\n"
