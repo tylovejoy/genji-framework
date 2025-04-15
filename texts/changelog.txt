@@ -531,3 +531,11 @@ fixed:
 `@Framework Patch Notes`
 # 1.10.3B
  - Fix swapped current editor mode arrow
+
+`@Framework Patch Notes`
+# 1.10.3C
+### Practice Mode
+ - Fixed toggle state issue
+ - Fixed cache invalidation issue
+ - Fixed timer always resuming when invincible
+   * Found by `@TPS` +5xp
