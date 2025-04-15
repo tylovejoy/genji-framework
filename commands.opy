@@ -203,30 +203,30 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     @Condition eventPlayer.isHoldingButton(Button.RELOAD)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
-    
+
     eventPlayer.lockState = true
+    eventPlayer.toggle_invincible = not eventPlayer.toggle_invincible
     eventPlayer.cache_collectedLocks = []
 
     if eventPlayer.toggle_invincible:
-        if eventPlayer.toggle_practice:
-            bigMessage(eventPlayer, "练习模式" checkCN "Practice mode")
-            chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)
-        elif eventPlayer.checkpoint_notLast:
-            bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
-            chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
-            StopPauseTimer()
-        CheckpointFailReset()
-    else:
         bigMessage(eventPlayer,"探点模式" checkCN "Invincible mode")
         StartPauseTimer()
         stopChasingVariable(eventPlayer.timer_normal)
         stopChasingVariable(eventPlayer.timer_practice)
         async(CheckUlt(), AsyncBehavior.RESTART)
         async(CheckDash(), AsyncBehavior.RESTART)
-
-    eventPlayer.toggle_invincible = not eventPlayer.toggle_invincible
+    else:
+        if eventPlayer.toggle_practice:
+            bigMessage(eventPlayer, "练习模式" checkCN "Practice mode")
+            chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)
+            CheckpointFailReset()
+        elif eventPlayer.checkpoint_notLast:
+            bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
+            chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
+            StopPauseTimer()
+            CheckpointFailReset()
     eventPlayer.lockState = false
-    wait()
+    wait(0.032)
 
 rule "Command | Toggle Practice Mode (Melee + Ultimate)":
     @Event eachPlayer
@@ -239,19 +239,8 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
 
     eventPlayer.lockState = true
-    #eventPlayer.disallowButton(Button.ABILITY_1)
-
+    eventPlayer.toggle_practice = not eventPlayer.toggle_practice
     if eventPlayer.toggle_practice:
-        bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
-        eventPlayer.checkpoint_current = eventPlayer.checkpoint_practice
-        stopChasingVariable(eventPlayer.timer_practice)
-        if eventPlayer.checkpoint_notLast or eventPlayer.toggle_invincible:
-            eventPlayer.timer_split = eventPlayer.timer_normal
-            chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
-            StopPauseTimer()
-        UpdateCache()
-        CheckpointFailReset()
-    else:
         bigMessage(eventPlayer,"练习模式" checkCN "Practice mode")
         eventPlayer.checkpoint_practice = eventPlayer.checkpoint_current
         stopChasingVariable(eventPlayer.timer_normal)
@@ -264,11 +253,18 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
         if eventPlayer.toggle_invincible:
             eventPlayer.toggle_invincible = false
             CheckpointFailReset()
-    #wait(0.2)
-    #eventPlayer.allowButton(Button.ABILITY_1)
-    eventPlayer.toggle_practice = not eventPlayer.toggle_practice
+    else:
+        bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
+        stopChasingVariable(eventPlayer.timer_practice)
+        eventPlayer.checkpoint_current = eventPlayer.checkpoint_practice
+        UpdateCache()
+        if eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
+            eventPlayer.timer_split = eventPlayer.timer_normal
+            chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
+            StopPauseTimer()
+            CheckpointFailReset()
     eventPlayer.lockState = false
-    wait()
+    wait(0.032)
 
 rule "Command | Restart Practice (Hold Interact)":
     @Event eachPlayer
