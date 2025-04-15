@@ -198,7 +198,7 @@ playervar checkpoint_moved
 playervar checkpoint_notLast                       # bool                      --- false if you are noton the last cp or level below 2 cps
 
 playervar timer_normal                             # float                     --- Timer, chased.
-playervar timer_pause                        # float                     --- time in spectate/invincible, chased
+#playervar timer_pause                        # float                     --- time in spectate/invincible, chased
 playervar timer_practice
 playervar timer_split                         # int                       --- stored time that the split compares to
 playervar timer_splitDisplay                      # int                       --- displayed split value
@@ -293,8 +293,8 @@ subroutine CheckDash
 subroutine UpdateCache
 subroutine DeleteSave
 subroutine MakeSave
-subroutine StartPauseTimer
-subroutine StopPauseTimer
+subroutine TimerPause
+subroutine TimerResume
 subroutine EditUpdateSelectedIds
 subroutine EditorSelectLast
 subroutine AddonCustomLoadAndReset

@@ -93,45 +93,30 @@ def DeleteSave():
     del SaveCp[SaveEnt.index(eventPlayer)]
     del SaveTimer[SaveEnt.index(eventPlayer)]
     del SaveElapsed[SaveEnt.index(eventPlayer)]
-    #del SavePauseTime[SaveEnt.index(eventPlayer)]
-    del SavePauseEnabled[SaveEnt.index(eventPlayer)]
+    #del SavePauseEnabled[SaveEnt.index(eventPlayer)]
     del SaveEnt[SaveEnt.index(eventPlayer)] # must always be last because its the index itself
 
 def MakeSave():
     @Name "General | SUB Make Save"
+    SaveEnt.append(eventPlayer)
     SaveName.append(eventPlayer[0].split([]))
     SaveCp.append(eventPlayer.checkpoint_current)
     SaveTimer.append(eventPlayer.timer_normal)
-    SaveEnt.append(eventPlayer)
     SaveElapsed.append(getTotalTimeElapsed())
-    #SavePauseTime.append(0)
-    SavePauseEnabled.append(false)
+    #SavePauseEnabled.append(false)
 
-def StartPauseTimer():
-    @Name "General | SUB Start Pause Timer"
-    #chase(eventPlayer.timer_pause, Math.INFINITY, rate=1, ChaseReeval.NONE)
-    #eventPlayer.timer_pause = getTotalTimeElapsed()
+def TimerPause():
+    @Name "General | SUB Timer Pause"
+    stopChasingVariable(eventPlayer.timer_normal)
     SaveTimer[SaveEnt.index(eventPlayer)] = eventPlayer.timer_normal
-    #SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
-    #SavePauseTime[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
-    SavePauseEnabled[SaveEnt.index(eventPlayer)] = true
+    SaveElapsed[SaveEnt.index(eventPlayer)] = null
+    #SavePauseEnabled[SaveEnt.index(eventPlayer)] = true
 
-def StopPauseTimer():
-    @Name "General | SUB Stop Pause Timer"
-    #stopChasingVariable(eventPlayer.timer_pause)
-    #SavePauseTime[SaveEnt.index(eventPlayer)] = eventPlayer.timer_pause
-    #SavePauseTime[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed() - eventPlayer.timer_pause
-    #eventPlayer.timer_pause = 0
+def TimerResume():
+    @Name "General | SUB Timer Resume"
+    chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
     SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
-    SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
-
-/* Deprecate
-def CreateLeaderboard():
-    @Name "General | SUB Leaderboard HUD"
-    # turns into global rule so it doesnt delete when player leaves
-    LeaderBoardRemake = true
-    wait()
-    LeaderBoardRemake = null*/
+    #SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
 
 def LeaderboardUpdate():
     @Name "General | SUB Leaderboard Update"
@@ -207,18 +192,12 @@ def StartGame():
             SaveEnt[SaveName.index(eventPlayer[0].split([]))] = eventPlayer
             eventPlayer.checkpoint_current = SaveCp[SaveEnt.index(eventPlayer)]
             eventPlayer.timer_normal = SaveTimer[SaveEnt.index(eventPlayer)]
-            #SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
-            #SavePauseTime[SaveEnt.index(eventPlayer)] = 0
-            SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
         else:
             eventPlayer.checkpoint_current = 0
             eventPlayer.timer_normal = 0
-            #stopChasingVariable(eventPlayer.timer_pause)
-            eventPlayer.timer_pause = 0
             MakeSave()
         UpdateTitle()
-
-    chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
+        TimerResume()
     UpdateCache()
     CheckpointFailReset()
     #eventPlayer.enableRespawn()
@@ -257,7 +236,7 @@ rule "General | Setup & Variables":
     SaveTimer = []
     SaveEnt = []
     #SavePauseTime = []
-    SavePauseEnabled = []
+    #SavePauseEnabled = []
     SaveElapsed = []
 
     #$$
@@ -444,10 +423,8 @@ rule "General | Player Initialize":
 rule "General | Player Leaves":
     @Event playerLeft
     if SaveCp[SaveEnt.index(eventPlayer)]:
-        if SaveCp[SaveEnt.index(eventPlayer)] < len(CheckpointPositions) - 1 and not SavePauseEnabled[SaveEnt.index(eventPlayer)]:
+        if SaveCp[SaveEnt.index(eventPlayer)] < len(CheckpointPositions) - 1 and SaveElapsed[SaveEnt.index(eventPlayer)]:
             SaveTimer[SaveEnt.index(eventPlayer)] = (getTotalTimeElapsed() - SaveElapsed[SaveEnt.index(eventPlayer)]) + SaveTimer[SaveEnt.index(eventPlayer)]
-        #SavePauseTime[SaveEnt.index(eventPlayer)] = 0
-        SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
     else: # delete if player didnt do first cp
         DeleteSave()
 

@@ -140,7 +140,6 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
             eventPlayer.comp_countAttempts++
             CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts
 
-
     eventPlayer.editor_fly = null
     eventPlayer.checkpoint_current = 0
     eventPlayer.toggle_practice = false
@@ -179,16 +178,13 @@ rule "Command | Spectate (Hold Interact)":
         if eventPlayer.toggle_practice:
             chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)
         elif eventPlayer.checkpoint_notLast:
-            chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
-            StopPauseTimer()
+            TimerResume()
         CheckpointFailReset()
     else:
         smallMessage(eventPlayer, "   再次长按互动键关闭观战模式" checkCN "   Hold Interact again to turn off spectate mode")
         eventPlayer.toggle_invincible = false
-        if eventPlayer.checkpoint_notLast:
-            StartPauseTimer()
+        TimerPause()
         stopChasingVariable(eventPlayer.timer_practice)
-        stopChasingVariable(eventPlayer.timer_normal)
         #eventPlayer.disableRespawn()
         eventPlayer.setDamageReceived(100)
         kill(eventPlayer, null)
@@ -210,8 +206,7 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
 
     if eventPlayer.toggle_invincible:
         bigMessage(eventPlayer,"探点模式" checkCN "Invincible mode")
-        StartPauseTimer()
-        stopChasingVariable(eventPlayer.timer_normal)
+        TimerPause()
         stopChasingVariable(eventPlayer.timer_practice)
         async(CheckUlt(), AsyncBehavior.RESTART)
         async(CheckDash(), AsyncBehavior.RESTART)
@@ -222,8 +217,7 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
             CheckpointFailReset()
         elif eventPlayer.checkpoint_notLast:
             bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
-            chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
-            StopPauseTimer()
+            TimerResume()
             CheckpointFailReset()
     eventPlayer.lockState = false
     wait(0.032)
@@ -245,7 +239,7 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
         eventPlayer.checkpoint_practice = eventPlayer.checkpoint_current
         stopChasingVariable(eventPlayer.timer_normal)
         if eventPlayer.checkpoint_notLast:
-            StartPauseTimer()
+            TimerPause()
         eventPlayer.timer_splitDisplay = -Math.INFINITY if eventPlayer.timer_splitDisplay == -Math.INFINITY else 0 #$$ -Math.INFINITY * (eventPlayer.timer_splitDisplay == -Math.INFINITY)
         eventPlayer.timer_split = 0
         eventPlayer.timer_practice = 0
@@ -260,8 +254,7 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
         UpdateCache()
         if eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
             eventPlayer.timer_split = eventPlayer.timer_normal
-            chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
-            StopPauseTimer()
+            TimerResume()
             CheckpointFailReset()
     eventPlayer.lockState = false
     wait(0.032)

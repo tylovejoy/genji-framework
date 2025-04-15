@@ -24,7 +24,7 @@ rule "Editor | Clear Excess Data to Save Map":
     SaveTimer = null
     SaveEnt = null
     #SavePauseTime = null
-    SavePauseEnabled = null
+    #SavePauseEnabled = null
     SaveElapsed = null
 
     CompMode = null
