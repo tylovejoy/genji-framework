@@ -236,10 +236,8 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
     eventPlayer.toggle_practice = not eventPlayer.toggle_practice
     if eventPlayer.toggle_practice:
         bigMessage(eventPlayer,"练习模式" checkCN "Practice mode")
+        TimerPause()
         eventPlayer.checkpoint_practice = eventPlayer.checkpoint_current
-        stopChasingVariable(eventPlayer.timer_normal)
-        if eventPlayer.checkpoint_notLast:
-            TimerPause()
         eventPlayer.timer_splitDisplay = -Math.INFINITY if eventPlayer.timer_splitDisplay == -Math.INFINITY else 0 #$$ -Math.INFINITY * (eventPlayer.timer_splitDisplay == -Math.INFINITY)
         eventPlayer.timer_split = 0
         eventPlayer.timer_practice = 0

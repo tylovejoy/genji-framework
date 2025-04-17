@@ -93,7 +93,6 @@ def DeleteSave():
     del SaveCp[SaveEnt.index(eventPlayer)]
     del SaveTimer[SaveEnt.index(eventPlayer)]
     del SaveElapsed[SaveEnt.index(eventPlayer)]
-    #del SavePauseEnabled[SaveEnt.index(eventPlayer)]
     del SaveEnt[SaveEnt.index(eventPlayer)] # must always be last because its the index itself
 
 def MakeSave():
@@ -103,20 +102,18 @@ def MakeSave():
     SaveCp.append(eventPlayer.checkpoint_current)
     SaveTimer.append(eventPlayer.timer_normal)
     SaveElapsed.append(getTotalTimeElapsed())
-    #SavePauseEnabled.append(false)
 
 def TimerPause():
     @Name "General | SUB Timer Pause"
     stopChasingVariable(eventPlayer.timer_normal)
+    if not eventPlayer in SaveEnt: return
     SaveTimer[SaveEnt.index(eventPlayer)] = eventPlayer.timer_normal
     SaveElapsed[SaveEnt.index(eventPlayer)] = null
-    #SavePauseEnabled[SaveEnt.index(eventPlayer)] = true
 
 def TimerResume():
     @Name "General | SUB Timer Resume"
     chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
     SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
-    #SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
 
 def LeaderboardUpdate():
     @Name "General | SUB Leaderboard Update"
@@ -438,15 +435,19 @@ rule "General | Ground: Traces, Arrive, & Reset":
             # traces ----------------------------------------------------------------------------------------------------
             eventPlayer.cache_rainbow = [Color.RED, Color.ORANGE, Color.YELLOW, Color.LIME_GREEN, Color.GREEN, Color.TURQUOISE, Color.BLUE, Color.PURPLE, Color.VIOLET, Color.ROSE][(floor(getTotalTimeElapsed()*2))%10]
             #eventPlayer.cache_rainbow =  rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255)
-            wait(0.16)
             # 1.6 - 0.2 in 0.2 steps
-            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1.4)
-            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1.2)
-            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1)
-            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 0.8)
-            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 0.6)
             playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 0.4)
-            wait(0.128)
+            wait(0.048)
+            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 0.6)
+            wait(0.048)
+            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 0.8)
+            wait(0.048)
+            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1)
+            wait(0.048)
+            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1.2)
+            wait(0.048)
+            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1.4)
+            wait(0.048)
     elif eventPlayer.toggle_invincible or (CompMode and not CompTime) or eventPlayer.lockState:
         # Do nothing
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpcircleradius:
@@ -474,7 +475,6 @@ rule "General | Ground: Traces, Arrive, & Reset":
             CheckpointFailReset()
             goto lbl_a
 
-        #eventPlayer.cache_collectedLocks = []
         eventPlayer.checkpoint_current += 1
         UpdateCache()
         # remove ult feature disabled for speedruning purposes
@@ -504,32 +504,28 @@ rule "General | Ground: Traces, Arrive, & Reset":
 
         if eventPlayer.toggle_practice:
             eventPlayer.timer_split = eventPlayer.timer_practice
-            goto lbl_a
-
-        eventPlayer.timer_split = eventPlayer.timer_normal
-        if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and (not eventPlayer.editor_on) and (not eventPlayer.toggle_practice): # complete lvl
-            stopChasingVariable(eventPlayer.timer_normal)
-            stopChasingVariable(eventPlayer.timer_practice)
-            wait()
-            bigMessage(true[0], "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.timer_normal),"已通关! 用时" checkCN "Mission complete! Time"))
-
+        else:
+            eventPlayer.timer_split = eventPlayer.timer_normal
             DeleteSave()
-            LeaderboardUpdate()
-            if CompMode and CompAtmpNum:
-                if eventPlayer.comp_countAttempts == CompAtmpNum:
-                    CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = -1
-                    eventPlayer.comp_countAttempts = -1
-                    eventPlayer.comp_done = true
-                    eventPlayer.toggle_leaderboard = true
-                    #eventPlayer.disableRespawn()
-                    eventPlayer.setDamageReceived(100)
-                    kill(eventPlayer,null)
-                    eventPlayer.setDamageReceived(0)
-                else:
-                    CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts + 1
-        else: # update save
-            DeleteSave()
-            MakeSave()
+            if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and not eventPlayer.editor_on: # complete lvl
+                stopChasingVariable(eventPlayer.timer_normal)
+                wait()
+                bigMessage(true[0], "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.timer_normal), "已通关! 用时" checkCN "Mission complete! Time"))
+                LeaderboardUpdate()
+                if CompMode and CompAtmpNum:
+                    if eventPlayer.comp_countAttempts == CompAtmpNum:
+                        CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = -1
+                        eventPlayer.comp_countAttempts = -1
+                        eventPlayer.comp_done = true
+                        eventPlayer.toggle_leaderboard = true
+                        #eventPlayer.disableRespawn()
+                        eventPlayer.setDamageReceived(100)
+                        kill(eventPlayer,null)
+                        eventPlayer.setDamageReceived(0)
+                    else:
+                        CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts + 1
+            else: # update save
+                MakeSave()
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpcircleradius:
         CheckpointFailReset()
 
