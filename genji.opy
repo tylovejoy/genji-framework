@@ -479,17 +479,9 @@ rule "General | Ground: Traces, Arrive, & Reset":
         UpdateCache()
         # remove ult feature disabled for speedruning purposes
         #if eventPlayer.isUsingUltimate() and not eventPlayer.checkpoint_current in BladeEnabledCheckpoints:
-        #    kill(eventPlayer, null)
+        #    CheckpointFailReset()
         if len(CheckpointPositions[eventPlayer.checkpoint_current]) > 1:# teleport cps
-            CheckpointFailReset()/*
-            eventPlayer.startForcingPosition( CheckpointPositions[eventPlayer.checkpoint_current].last() ,false)
-            eventPlayer.editor_fly = null
-            wait(0.1)
-            eventPlayer.stopForcingPosition()
-            # position wasnt ready when check cache ran
-            async(CheckUlt(), AsyncBehavior.RESTART)
-            async(CheckDash(), AsyncBehavior.RESTART)*/
-
+            CheckpointFailReset()
 
         if eventPlayer.timer_splitDisplay != -Math.INFINITY:
             eventPlayer.timer_splitDisplay =  (eventPlayer.timer_practice if eventPlayer.toggle_practice else eventPlayer.timer_normal) - eventPlayer.timer_split
