@@ -539,3 +539,9 @@ fixed:
  - Fixed cache invalidation issue
  - Fixed timer always resuming when invincible
    * Found by `@TPS` +5xp
+
+`@Framework Patch Notes`
+# 1.10.
+### Portals
+ - Fixed invisible portals
+   * Found by `@bioslet` +5xp
