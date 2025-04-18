@@ -24,35 +24,27 @@ def UpdateCache():
         eventPlayer.ban_multi = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Multiclimb - 封禁蹭留", false, 1) or eventPlayer.checkpoint_current in BanMulti
         if eventPlayer.ban_multi:
             eventPlayer.banString = "∞ {}".format(eventPlayer.banString)
-
         eventPlayer.ban_create = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Createbhop - 封禁卡小", false, 2) or eventPlayer.checkpoint_current in BanCreate
         if eventPlayer.ban_create:
             eventPlayer.banString = "♂ {}".format(eventPlayer.banString)
-
         eventPlayer.ban_standcreate = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","ban standcreate - 封禁站卡", false, 3) or eventPlayer.checkpoint_current in BanStand
         if eventPlayer.ban_standcreate:
             eventPlayer.banString = "♠ {}".format(eventPlayer.banString) # ≥  √ ▼ ↓
-
         eventPlayer.ban_dead = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Deathbhop - 封禁死小", false, 4) or eventPlayer.checkpoint_current in BanDead
         if eventPlayer.ban_dead:
             eventPlayer.banString = "X {}".format(eventPlayer.banString)
-
         eventPlayer.ban_emote = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Emote Savehop - 封禁表情留小", false, 5) or eventPlayer.checkpoint_current in BanEmote
         if eventPlayer.ban_emote:
             eventPlayer.banString = "♥ {}".format(eventPlayer.banString)
-
         eventPlayer.ban_climb = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Wallclimb - 封禁爬墙", false, 6) or eventPlayer.checkpoint_current in BanClimb
         if eventPlayer.ban_climb:
             eventPlayer.banString = "↑ {}".format(eventPlayer.banString)
-
         eventPlayer.ban_savedouble = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban save double - 封禁延二段跳", false, 7) or eventPlayer.checkpoint_current in BanSaveDouble
         if eventPlayer.ban_savedouble:
             eventPlayer.banString = "△ {}".format(eventPlayer.banString)
-
         eventPlayer.ban_bhop = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require bhop available - 留小跳进点 ", false, 8) or eventPlayer.checkpoint_current in BanBhop
         if eventPlayer.ban_bhop:
             eventPlayer.banString = "≥ {}".format(eventPlayer.banString) # ≥  √ ▼ ↓
-
         eventPlayer.ban_djump = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require djump available - 留二段跳 ", false, 9) or eventPlayer.checkpoint_current in BanDjump
         if eventPlayer.ban_djump:
             eventPlayer.banString = "» {}".format(eventPlayer.banString) # ≥  √ ▼ ↓ ︽
@@ -71,18 +63,14 @@ def UpdateCache():
     async(CheckDash(), AsyncBehavior.RESTART)
 
     if not eventPlayer.editor_on: return
-
     EditUpdateSelectedIds()
-
     destroyEffect(eventPlayer.editor_hitboxEffect)
     createEffect(eventPlayer if eventPlayer.editor_hitboxToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.checkpoint_current], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.editor_hitboxEffect = getLastCreatedEntity()
     createEffect(eventPlayer if eventPlayer.editor_hitboxToggle and eventPlayer.checkpoint_notLast else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.checkpoint_current + 1], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.editor_hitboxEffect.append(getLastCreatedEntity())
-
     eventPlayer.editor_bounceIndex = [e for e in [(i if e2 == eventPlayer.checkpoint_current else -1) for e2, i in BouncePadCheckpoints] if e >=0]
     eventPlayer.editor_killIndex = [e for e in [(i if e2 == eventPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if e >=0]
-
     if eventPlayer.checkpoint_moved and eventPlayer == hostPlayer:
         EditorSelectLast()
         eventPlayer.checkpoint_moved = false
@@ -302,33 +290,6 @@ rule "General | Setup & Variables":
         CompRestartLimit = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","disable restart during run - 竞赛中禁用重新开始" , compRestartLimit , 103)
     else:
         InstructionText = null
-
-    wait() # add back to below wait if removed
-
-    if len(PortalDest): # pre set control map portals. not in portal rule because shared I variable
-        for TempIterator1 in range(len(PortalLoc)):
-            createEffect(
-                [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast], #$$ localspectate()
-                Effect.BAD_AURA,
-                Color.AQUA if TempIterator1 % 2 else Color.ORANGE,
-                PortalLoc[TempIterator1],
-                0.6,
-                EffectReeval.VISIBILITY
-            )
-            createInWorldText(
-                [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast], #$$ localspectate()
-                PortalNames[TempIterator1],
-                PortalLoc[TempIterator1] + Vector.UP,
-                1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
-            )
-    waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]), Math.INFINITY)
-    wait()
-    if [i for i in getAllPlayers() if not i.isDummy()][0].editor_on:
-        RebuildKillOrbs()
-        RebuildBounceOrbs()
-        RebuildPortals()
-        return
-    EffectsCreate()
 
 rule "General | Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:

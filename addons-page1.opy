@@ -52,7 +52,7 @@ rule "Addon | Custom portals":
 
 rule "Addon | Pre-set control map portal - toggled on via workshop settings":
     @Condition PortalOn
-    wait(LoadOrder.portal, Wait.ABORT_WHEN_FALSE) # overwrite pasta
+    wait(LoadOrder.portal) # overwrite pasta
     if getCurrentMap() == Map.BUSAN:
         #"down > sanc","down > meka","sanc > down","sanc > meka","meka > sanc","meka > down"
         PortalNames = ["Sanctuary","MEKA base","Downtown","MEKA base","Sanctuary","Downtown"]
