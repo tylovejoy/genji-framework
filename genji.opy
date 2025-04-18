@@ -183,8 +183,8 @@ def StartGame():
             MakeSave()
         UpdateTitle()
         TimerResume()
-    UpdateCache()
-    CheckpointFailReset()
+        UpdateCache()
+        CheckpointFailReset()
     #eventPlayer.enableRespawn()
     eventPlayer.toggle_invincible = false
     eventPlayer.toggle_spectate = false
@@ -257,8 +257,6 @@ rule "General | Setup & Variables":
     TitleData = null
     HintCp = []
     HintText = []
-
-    wait()
 
     # clean out -1's after the ban has loaded
     BanBhop = [i for i in BanBhop if i + false >= 0] if len(BanBhop) else []
