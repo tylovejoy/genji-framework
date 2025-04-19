@@ -239,7 +239,8 @@ rule "Editor | Hud and Effects":
             "{0} + {1} | 选择上一个弹球\n"
             "{0} + {2} | 选择下一个弹球\n".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
 
-            "{0} + {1} | 爬墙\n".format(buttonString(Button.INTERACT), buttonString(Button.JUMP)),
+            "{0} + {1} | 爬墙\n"
+            "{0} + {2} | 延二段跳".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
 
             "{0} + {1} | 选择下一个传送门\n"
             "{0} + {2} | 选择上一个传送门\n".format(buttonString(Button.INTERACT), buttonString(Button.JUMP), buttonString(Button.CROUCH))
@@ -258,7 +259,8 @@ rule "Editor | Hud and Effects":
             "{0} + {1} | Select previous\n"
             "{0} + {2} | Select next\n".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
 
-            "{0} + {1} | wallclimb\n".format(buttonString(Button.INTERACT), buttonString(Button.JUMP)),
+            "{0} + {1} | wallclimb\n"
+            "{0} + {2} | save double".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
 
             "{0} + {1} | select next\n"
             "{0} + {2} | select previous\n".format(buttonString(Button.INTERACT), buttonString(Button.JUMP), buttonString(Button.CROUCH))
@@ -364,7 +366,7 @@ rule "Editor | Hud and Effects":
     hudSubheader(hostPlayer if hostPlayer.toggle_guide else null,
         "保存地图长按 {0} + {1} + {2} 后按弹出窗口的提示进行操作".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD))
         checkCN
-        "to save map hold {0} + {1} + {2} and follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
+        "to save map, hold {0} + {1} + {2} then follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
         HudPosition.LEFT, HO.edit_savemap, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
@@ -526,22 +528,22 @@ rule "Editor | Hud and Effects":
             if EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex) else
             "\n 封禁(单关)\n"
             "――――――――――――\n"
-            " {} 蹭留\n"
-            " {} 卡小\n"
-            " {} 站卡\n"
-            " {} 爬墙\n"
-            " {} 死小\n"
-            " {} 表情留小\n"
+            " {} 蹭留 ∞\n"
+            " {} 卡小 ♂\n"
+            " {} 站卡 ♠\n"
+            " {} 爬墙 ↑\n"
+            " {} 死小 X\n"
+            " {} 表情留小 ♥\n"
+            " {} 延二段跳 △\n"
             "――――――――――――\n"
-            #" {} 延二段跳\n"
-            " {} 留小跳进点\n".format(
+            " {} 留小跳进点 ≥\n".format(
                 "√" if hostPlayer.checkpoint_current in BanMulti else [],
                 "√" if hostPlayer.checkpoint_current in BanCreate else [],
                 "√" if hostPlayer.checkpoint_current in BanStand else [],
                 "√" if hostPlayer.checkpoint_current in BanClimb else [],
                 "√" if hostPlayer.checkpoint_current in BanDead else [],
                 "√" if hostPlayer.checkpoint_current in BanEmote else [],
-                #"√" if hostPlayer.checkpoint_current in BanSaveDouble else [],
+                "√" if hostPlayer.checkpoint_current in BanSaveDouble else [],
                 "√" if hostPlayer.checkpoint_current in BanBhop else []
             )
             if EditorMode.skillBan else
@@ -573,22 +575,22 @@ rule "Editor | Hud and Effects":
             if EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex)  else
             "\n skill bans\n"
             "――――――――――――\n"
-            " {} multi-climb\n"
-            " {} create\n"
-            " {} stand\n"
-            " {} climb\n"
-            " {} dead\n"
-            " {} emote\n"
+            " {} multi-climb ∞\n"
+            " {} create ♂\n"
+            " {} stand ♠\n"
+            " {} climb ↑\n"
+            " {} dead X\n"
+            " {} emote ♥\n"
+            " {} save double △\n"
             "――――――――――――\n"
-            #" {} save double\n"
-            " {} require bhop\n".format(
+            " {} require bhop ≥\n".format(
                 "√" if hostPlayer.checkpoint_current in BanMulti else [],
                 "√" if hostPlayer.checkpoint_current in BanCreate else [],
                 "√" if hostPlayer.checkpoint_current in BanStand else [],
                 "√" if hostPlayer.checkpoint_current in BanClimb else [],
                 "√" if hostPlayer.checkpoint_current in BanDead else [],
                 "√" if hostPlayer.checkpoint_current in BanEmote else [],
-                #"√" if hostPlayer.checkpoint_current in BanSaveDouble else [],
+                "√" if hostPlayer.checkpoint_current in BanSaveDouble else [],
                 "√" if hostPlayer.checkpoint_current in BanBhop else [])
             if EditorMode.skillBan else
                 "\n Start: {} \n"
@@ -982,7 +984,7 @@ rule "Editor | orb radi/strength":
     @Condition EditorMode.current in [1,2]
     @Condition len(EditSelectIdArray) > 0
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
-    @Condition eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isHoldingButton(Button.CROUCH)
+    @Condition eventPlayer.isHoldingButton(Button.JUMP) != eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
     @Condition eventPlayer.editor_lock == false
 
@@ -1100,7 +1102,7 @@ rule "Editor | add ult/dash":
     @Condition eventPlayer == hostPlayer
     @Condition EditorMode.current == 0
     @Condition len(CheckpointPositions) > 0
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) != eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE)
     @Condition eventPlayer.editor_lock == false
 
@@ -1109,7 +1111,6 @@ rule "Editor | add ult/dash":
     else:
         toggleCpInArray(DashEnabledCheckpoints)
     wait()
-
 
 rule "Editor | toggle bans":
     @Event eachPlayer
@@ -1127,8 +1128,10 @@ rule "Editor | toggle bans":
             toggleCpInArray(BanMulti)
         elif eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
             toggleCpInArray(BanCreate)
-        else:
+        elif eventPlayer.isHoldingButton(Button.CROUCH):
             toggleCpInArray(BanClimb)
+        else:
+            toggleCpInArray(BanSaveDouble)
 
     else:
         if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
