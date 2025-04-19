@@ -545,3 +545,6 @@ fixed:
 ### Portals
  - Fixed invisible portals
    * Found by `@bioslet` +5xp
+### Commands
+ - Fix restart command spam when held
+   * Found by `@bioslet`

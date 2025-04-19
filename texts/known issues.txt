@@ -42,3 +42,11 @@ triple jump ban doesnt work on workshop maps anymore
         - on ws maps, the jumpcount doesnt go to 1 for a split second when triple jumping, unlike normal maps
         - the rules for jumpcount shouldnt be affected but they are
         - jumpcount tracks +- if a player has been in the air for a moment
+
+# 1.10.3x
+ - Lock orbs don't disappear when collected
+   * Not yet replicated
+   * Reported by `CoralMage`
+ - Leaderboard updates player time to a worse time
+   * Not yet replicated
+   * Reported by `@lostje` & `@bioslet`
