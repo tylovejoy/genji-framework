@@ -547,4 +547,7 @@ fixed:
    * Found by `@bioslet` +5xp
 ### Commands
  - Fix restart command spam when held
-   * Found by `@bioslet`
+   * Found by `@bioslet` +5xp
+### Leaderboard
+ - Prevented updating player best time to last completion
+   * Found by `@lostje` & `@bioslet` +5xp
