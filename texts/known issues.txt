@@ -44,6 +44,17 @@ triple jump ban doesnt work on workshop maps anymore
         - jumpcount tracks +- if a player has been in the air for a moment
 
 # 1.10.3x
+### Bug Reports
+ - Exported data overwriting customization settings [FIXED]
+   * Reported by `Nitroh`
+ - Timer run-on after completion [FIXED]
+   * Reported by `@TPS`
+ - Invisible global portals [FIXED]
+   * Reported by `@bioslet`
+ - Restart spam when command is held [FIXED]
+   * Reported by `@bioslet`
  - Lock orbs don't disappear when collected
-   * Not yet replicated
+   * Not replicated
    * Reported by `CoralMage`
+ - Leaderboard updates player time to a worse time [FIXED]
+   * Reported by `@lostje` & `@bioslet`
