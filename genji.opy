@@ -105,19 +105,18 @@ def TimerResume():
 
 def LeaderboardUpdate():
     @Name "General | SUB Leaderboard Update"
-    # [i[0] for i in var1]   list of first element of each in var 1
-    # [ [name, seconds, prettytime] ]
-    if eventPlayer[0].split([]) in [i[0] for i in LeaderBoardFull]: # you already have a time
-        if eventPlayer.timer_normal >= [i for i in LeaderBoardFull if i[0] == eventPlayer[0].split([])][0].last():
+    # [[name, seconds, prettytime]]
+    if eventPlayer[0].split([]) in [e[0] for e in LeaderBoardFull]: # you already have a time
+        if eventPlayer.timer_normal >= [e for e in LeaderBoardFull if e[0] == eventPlayer[0].split([])][0][1]:
             return #Time too slow
-        LeaderBoardFull.remove([i for i in LeaderBoardFull if i[0] == eventPlayer[0].split([])])
+        LeaderBoardFull = [e for e in LeaderBoardFull if e[0] != eventPlayer[0].split([])]
     elif len(LeaderBoardFull) < 25 or eventPlayer.timer_normal < LeaderBoardFull[19].last():
         # you are not in list yet
         # board has room for more
         # your time lower then last entry
         del LeaderBoardFull[24]
     else:
-        return #Full or time too slow
+        return #Full and time too slow
     LeaderBoardFull.append([[eventPlayer[0].split([]), eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]])
     LeaderBoardRemake = true #CreateLeaderboard()
 
