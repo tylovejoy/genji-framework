@@ -140,7 +140,7 @@ def CheckpointFailReset():
             eventPlayer.stopForcingPosition()
         eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current].last())
         #After teleport incase stopForcingPosition launches the player
-        eventPlayer.applyImpulse(-1 * eventPlayer.getVelocity(), 0.0001, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+        eventPlayer.applyImpulse(-1 * eventPlayer.getVelocity(), Math.EPSILON, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
         # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
         #if eventPlayer.ban_dead or eventPlayer.ban_emote and eventPlayer.isHoldingButton(Button.JUMP):
