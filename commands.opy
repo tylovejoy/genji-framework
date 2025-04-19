@@ -104,17 +104,8 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
-    #@Condition eventPlayer.isUsingAbility1() == false
 
     eventPlayer.lockState = true
-    /* #$$ remove ???
-    # prevent 0.02 time bug with next 2 checks
-    if eventPlayer.checkpoint_current == len(CheckpointPositions) - 2 and eventPlayer.getAltitude() < 3:
-        waitUntil(eventPlayer.isOnGround(), 3)
-        wait(0.42) # 0.64
-    if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1:
-        wait(0.42)*/
-
     if CompMode:
         wait()
         if CompTime < 1:
@@ -139,24 +130,22 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
                 return
             eventPlayer.comp_countAttempts++
             CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts
-
     eventPlayer.editor_fly = null
     eventPlayer.checkpoint_current = 0
-    eventPlayer.toggle_practice = false
-    stopChasingVariable(eventPlayer.timer_practice)
-    eventPlayer.timer_practice = 0
     eventPlayer.timer_splitDisplay = -Math.INFINITY if eventPlayer.timer_splitDisplay == -Math.INFINITY else 0 #$$ -Math.INFINITY * (eventPlayer.timer_splitDisplay == -Math.INFINITY)
+    eventPlayer.toggle_practice = false
+    eventPlayer.timer_practice = 0
+    stopChasingVariable(eventPlayer.timer_practice)
     if eventPlayer in SaveEnt:
         DeleteSave()
-
     if eventPlayer.isDead():
         eventPlayer.resurrect() #eventPlayer.respawn()
-
     StartGame()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
     wait(CompMode)
     #eventPlayer.allowButton(Button.ABILITY_1)
     eventPlayer.lockState = false
+    wait(0.032)
 
 rule "Command | Spectate (Hold Interact)":
     @Event eachPlayer
