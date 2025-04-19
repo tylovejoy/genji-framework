@@ -117,7 +117,7 @@ def LeaderboardUpdate():
         # your time lower then last entry
         del LeaderBoardFull[24]
     else:
-        return #Full & time too slow
+        return #Full or time too slow
     LeaderBoardFull.append([[eventPlayer[0].split([]), eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]])
     LeaderBoardRemake = true #CreateLeaderboard()
 
@@ -328,28 +328,23 @@ rule "General | Match time":
 rule "General | Player Initialize":
     @Event playerJoined
     @Condition eventPlayer.isDummy() == false
+    eventPlayer.enableDeathSpectateAllPlayers()
+    eventPlayer.enableDeathSpectateTargetHud()
+    eventPlayer.disableGamemodeHud()
+    eventPlayer.disablePlayerCollision()
+    eventPlayer.disableRespawn()
+    eventPlayer.preloadHero(Hero.GENJI)
     eventPlayer.setDamageReceived(0)
     eventPlayer.editor_on = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
     eventPlayer.editor_lock = true
-    eventPlayer.preloadHero(Hero.GENJI)
     eventPlayer.toggle_guide = true
-    eventPlayer.disableGamemodeHud()
-    eventPlayer.enableDeathSpectateAllPlayers()
-    eventPlayer.enableDeathSpectateTargetHud()
-    eventPlayer.disablePlayerCollision()
-    #eventPlayer.skill_usedClimb = false #Climbing the wall prompts the HUD
-    #eventPlayer.JumpCount = 0
     eventPlayer.cache_bounceLastTouched = -1
     eventPlayer.cache_bounceTouched = -1
-    #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
-    wait(1)
-    eventPlayer.disableRespawn()
-    #eventPlayer.setRespawnTime(1)
+    wait(1) #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
     createEffect(eventPlayer, Effect.RING, ColorConfig[Customize.ring_current], CheckpointPositions[eventPlayer.checkpoint_current].last(), cpCirkleFx, EffectReeval.POSITION_AND_RADIUS)
     createEffect(eventPlayer if eventPlayer.checkpoint_notLast else null, Effect.RING, ColorConfig[Customize.ring_next], CheckpointPositions[eventPlayer.checkpoint_current + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createEffect(eventPlayer if eventPlayer.checkpoint_notLast else null, Effect.LIGHT_SHAFT, ColorConfig[Customize.shaft], CheckpointPositions[eventPlayer.checkpoint_current + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createIcon(eventPlayer if eventPlayer.checkpoint_notLast else null, CheckpointPositions[eventPlayer.checkpoint_current + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, ColorConfig[Customize.nexticon_color], true)
-
     waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
     eventPlayer.editor_lock = false
 
