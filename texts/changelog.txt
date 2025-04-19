@@ -546,8 +546,13 @@ fixed:
  - Fixed invisible portals
    * Found by `@bioslet` +5xp
 ### Commands
- - Fix restart command spam when held
+ - Fixed restart command spam when held
    * Found by `@bioslet` +5xp
 ### Leaderboard
- - Prevented updating player best time to last completion
+ - Prevented updating player best time as last completion
    * Found by `@lostje` & `@bioslet` +5xp
+### Editor
+ - Bans
+   * List includes Save Double
+ - Abilities
+   * Only host has Dash and Ultimate always available.
