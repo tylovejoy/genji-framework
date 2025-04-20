@@ -511,16 +511,15 @@ rule "General | Bounce Ball / Orb":
 
         if eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched] > 0:
             eventPlayer.applyImpulse(Vector.UP, eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
-        ##$$ Possibly remove double jump reset?
         elif eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched] < 0:
             eventPlayer.cancelPrimaryAction()
             eventPlayer.skill_usedDouble = null
-            smallMessage(eventPlayer, "   二段跳已就绪" checkCN "   Double Jump is Reset")
+            smallMessage(eventPlayer, "   二段跳已就绪" checkCN "   Double Jump is ready")
 
         if eventPlayer.cache_bounceUlt[eventPlayer.cache_bounceTouched]:
             eventPlayer.setUltEnabled(true)
             eventPlayer.setUltCharge(100)
-            smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"#终极技能已就绪" checkCN "Ultimate is ready"))
+            smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"终极技能已就绪" checkCN "Ultimate is ready"))
 
         if eventPlayer.cache_bounceDash[eventPlayer.cache_bounceTouched]:
             if eventPlayer.isUsingAbility1():
