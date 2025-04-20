@@ -26,6 +26,11 @@ else:\
 arrayname = [i for i in arrayname if i != hostPlayer.checkpoint_current]\
 arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in arrayname]
 
+#!define LeftAlign32 "                                "
+#!define LeftAlign64 "                                                                "
+#!define LeftAlign96 "                                                                                                "
+#!define LeftAlign128 "                                                                                                                                "
+
 #!define checkCN if l"Oof" == "噢" else
 
 #!define FILLER "<tx0C000000000207B5><fgFFFF00FF> Map Data & Addon Settings Are On Page 2 - 地图数据和附加组件的设置在第2页"

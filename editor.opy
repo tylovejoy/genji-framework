@@ -364,9 +364,9 @@ rule "Editor | Hud and Effects":
     )
 
     hudSubheader(hostPlayer if hostPlayer.toggle_guide else null,
-        "保存地图长按 {0} + {1} + {2} 后按弹出窗口的提示进行操作".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD))
+        "保存地图长按 {0} + {1} + {2} 后按弹出窗口的提示进行操作" LeftAlign96.format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD))
         checkCN
-        "to save map, hold {0} + {1} + {2} then follow instructions".format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
+        "to save map, hold {0} + {1} + {2} then follow instructions" LeftAlign96.format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
         HudPosition.LEFT, HO.edit_savemap, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
@@ -428,7 +428,7 @@ rule "Editor | Hud and Effects":
     )
 
     hudSubtext(hostPlayer if hostPlayer.toggle_guide and (EditorMode.checkpoint or EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex)) else null, #if EditorMode.checkpoint or EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
-        "{0} + {1} | {4} {3} | {2}".format(
+        "{0} + {1} | {4} {3} | {2}" LeftAlign96.format(
             buttonString(Button.ULTIMATE),
             buttonString(Button.PRIMARY_FIRE),
             ("启用" if BounceToggleUlt[EditSelected] != 0 else "关闭") if EditorMode.functionOrb else
@@ -437,7 +437,7 @@ rule "Editor | Hud and Effects":
             "检查点给刀"  if EditorMode.checkpoint else "弹球给刀"
         )
         checkCN
-        "{0} + {1} | {4} give ult {3} | {2}".format(
+        "{0} + {1} | {4} give ult {3} | {2}" LeftAlign96.format(
             buttonString(Button.ULTIMATE),
             buttonString(Button.PRIMARY_FIRE),
             ("on" if BounceToggleUlt[EditSelected] != 0 else "off") if EditorMode.functionOrb else
@@ -453,7 +453,7 @@ rule "Editor | Hud and Effects":
     )
 
     hudSubtext(hostPlayer if hostPlayer.toggle_guide and (EditorMode.checkpoint or EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex)) else null, #if EditorMode.checkpoint or EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
-        "{0} + {1} | {4} {3} | {2}".format(
+        "{0} + {1} | {4} {3} | {2}" LeftAlign96.format(
             buttonString(Button.ULTIMATE),
             buttonString(Button.SECONDARY_FIRE),
             ("启用" if BounceToggleDash[EditSelected] != 0 else "关闭") if EditorMode.functionOrb else
@@ -462,7 +462,7 @@ rule "Editor | Hud and Effects":
            "检查点给Shift" if EditorMode.checkpoint else "弹球给Shift"
         )
         checkCN
-        "{0} + {1} | {4} give dash {3} | {2}".format(
+        "{0} + {1} | {4} give dash {3} | {2}" LeftAlign96.format(
             buttonString(Button.ULTIMATE),
             buttonString(Button.SECONDARY_FIRE),
             ("on" if BounceToggleDash[EditSelected] != 0 else "off") if EditorMode.functionOrb else
@@ -478,14 +478,14 @@ rule "Editor | Hud and Effects":
     )
 
     hudSubtext(hostPlayer if EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
-        "{0} + {1} |  收集球(进点前必须集齐) {3} | {2}\n".format(
+        "{0} + {1} |  收集球(进点前必须集齐) {3} | {2}\n" LeftAlign96.format(
             buttonString(Button.ULTIMATE),
             buttonString(Button.ABILITY_2),
             "启用" if BounceToggleLock[EditSelected] != 0 else "关闭",
             iconString(Icon.ASTERISK)
         )
         checkCN
-        "{0} + {1} | unlocks checkpoint {3} | {2}\n".format(
+        "{0} + {1} | unlocks checkpoint {3} | {2}\n" LeftAlign96.format(
             buttonString(Button.ULTIMATE),
             buttonString(Button.ABILITY_2),
             "on" if BounceToggleLock[EditSelected] != 0 else "off",
@@ -498,7 +498,7 @@ rule "Editor | Hud and Effects":
         "球体/传送门上限: {0}/{1} ".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart), fxLimit)
         checkCN
         "orb/portal limit: {0}/{1} ".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart), fxLimit),
-        null, null, HudPosition.LEFT, HO.edit_orblimit, Color.BLUE, Color.SKY_BLUE,Color.SKY_BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        null, LeftAlign128, HudPosition.LEFT, HO.edit_orblimit, Color.BLUE, null, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     # display selected cc/orb info
@@ -602,7 +602,7 @@ rule "Editor | Hud and Effects":
             if EditorMode.portal and CustomPortalCP[EditSelected] in [hostPlayer.checkpoint_current, -1] and len(CustomPortalCP) else
             "\n   No data selected   \n"
         )
-        , null, null, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        , null, LeftAlign128, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
 
     wait(1)

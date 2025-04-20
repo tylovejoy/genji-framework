@@ -1,5 +1,4 @@
 #!mainFile "framework.opy"
-
 /*
 huds outside this file:
     - custom difficulty (map data)
@@ -27,20 +26,20 @@ rule "Huds | Global Localplayer":
     Cachedcredits = null
 
     hudSubtext(true[0],
-        "作者: {}".format(Name)
+        "作者: {}" LeftAlign96.format(Name)
         checkCN
-        "Made by: {}".format(Name)
+        "Made by: {}" LeftAlign96.format(Name)
         , HudPosition.LEFT, HO.data_name, ColorConfig[Customize.credit_name] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
     hudSubtext(true[0],
-        "代码: {}".format(Code)
+        "代码: {}" LeftAlign96.format(Code)
         checkCN
-        "Map code: {}".format(Code)
+        "Map code: {}" LeftAlign96.format(Code)
         , HudPosition.LEFT, HO.data_code, ColorConfig[Customize.credit_code] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
-    hudSubtext(localPlayer.toggle_guide, "Discord: dsc.gg/genjiparkour", HudPosition.LEFT, HO.data_dsc, ColorConfig[Customize.dsc], HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudSubtext(localPlayer.toggle_guide, "Discord: dsc.gg/genjiparkour" LeftAlign96, HudPosition.LEFT, HO.data_dsc, ColorConfig[Customize.dsc], HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
     # global huds
     hudSubheader(true[0],
@@ -98,9 +97,9 @@ rule "Huds | Global Localplayer":
 
     hudSubtext(localPlayer,
         [] if localPlayer.timer_splitDisplay == -Math.INFINITY or localPlayer.toggle_spectate else(
-            ("单关用时 {0}".format(localPlayer.timer_splitDisplay)
+            ("单关用时 {0}" LeftAlign96.format(localPlayer.timer_splitDisplay)
             checkCN
-            "Split: {0}".format(localPlayer.timer_splitDisplay))),
+            "Split: {0}" LeftAlign96.format(localPlayer.timer_splitDisplay))),
         HudPosition.LEFT, HO.game_split_display, ColorConfig[Customize.time], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
@@ -268,8 +267,8 @@ rule "Huds | Each Player":
     wait(LoadOrder.hudsPlayer)
 
     hudText(eventPlayer, null,
-        "{} {}".format("练习用时" checkCN "Practice Time",prettyTime(eventPlayer.timer_practice)) if eventPlayer.toggle_practice else [],
-        "{} {}".format("用时" checkCN "Time", prettyTime(eventPlayer.timer_normal)),
+        "{} {}".format("练习用时" checkCN "Practice Time:",prettyTime(eventPlayer.timer_practice)) if eventPlayer.toggle_practice else [],
+        "{} {}" LeftAlign96.format("用时" checkCN "Time:", prettyTime(eventPlayer.timer_normal)),
         HudPosition.LEFT, HO.game_timer, ColorConfig[Customize.time], Color.GRAY, ColorConfig[Customize.time], HudReeval.STRING, SpecVisibility.DEFAULT)
 
     hudText(
@@ -309,7 +308,7 @@ rule "Huds | Each Player":
         ) if eventPlayer.cache_bounceMaxLocks and not eventPlayer.preview_array1 else [],
         HudPosition.TOP, HO.game_level_orb, ColorConfig[Customize.level], ColorConfig[Customize.level], ColorConfig[Customize.orb_lock], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-    hudSubtext(eventPlayer,"{0}{1}{2}\n{3}{4}{5}".format(
+    hudSubtext(eventPlayer,"{0}{1}{2}\n{3}{4}{5}" LeftAlign96.format(
         "■" if eventPlayer.cache_inputs.x else "□",
         "▲" if eventPlayer.getThrottle().z > null else "△",
         "●" if eventPlayer.cache_inputs.y else "○",
@@ -319,26 +318,26 @@ rule "Huds | Each Player":
         HudPosition.LEFT, HO.game_input, evalOnce(ColorConfig[Customize.time]),HudReeval.STRING, SpecVisibility.DEFAULT)
 
     # climb/bhop indicators
-    hudHeader(eventPlayer,
+    hudText(eventPlayer,
         #"爬墙已用{0}".format([] if eventPlayer.skill_countMulti < 1 else " ({0})".format(eventPlayer.skill_countMulti))
         "{1}{0}".format(" ({0})".format(eventPlayer.skill_countMulti) if eventPlayer.skill_countMulti else [],
             "爬墙已用" if eventPlayer.skill_usedClimb else "爬墙未用") # cn version text updates to say the status, unlike en
         checkCN
-        "Climb{0}".format(" ({0})".format(eventPlayer.skill_countMulti) if eventPlayer.skill_countMulti else [])
-        , HudPosition.LEFT, HO.game_climb,
+        "Climb{0}".format(" ({0})".format(eventPlayer.skill_countMulti) if eventPlayer.skill_countMulti else []),
+        null, LeftAlign128, HudPosition.LEFT, HO.game_climb,
         evalOnce(ColorConfig[Customize.bhopclimb_used]) if eventPlayer.skill_usedClimb else evalOnce(ColorConfig[Customize.bhopclimb_available]),
-        HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT)
+        null, null, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
-    hudHeader(eventPlayer,
+    hudText(eventPlayer,
         # cn version text updates to say the status, unlike en version
         ("{0}{1}".format(
             "小跳已用" if eventPlayer.skill_usedBhop else "小跳未用",
             " ({0})".format(eventPlayer.skill_countCreates) if eventPlayer.skill_countCreates else []))
         checkCN
-        "Bhop{0}".format(" ({0})".format(eventPlayer.skill_countCreates) if eventPlayer.skill_countCreates else [])
-        , HudPosition.LEFT, HO.game_bhop,
+        "Bhop{0}".format(" ({0})".format(eventPlayer.skill_countCreates) if eventPlayer.skill_countCreates else []),
+        null, LeftAlign128, HudPosition.LEFT, HO.game_bhop,
         evalOnce(ColorConfig[Customize.bhopclimb_used]) if eventPlayer.skill_usedBhop else evalOnce(ColorConfig[Customize.bhopclimb_available]),
-        HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT)
+        null, null, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
     createInWorldText(
         #eventPlayer if eventPlayer.checkpoint_notLast else null,
