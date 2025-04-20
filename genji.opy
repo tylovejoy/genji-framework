@@ -181,9 +181,10 @@ def StartGame():
             eventPlayer.timer_normal = 0
             MakeSave()
         UpdateTitle()
-        TimerResume()
         UpdateCache()
         CheckpointFailReset()
+        waitUntil(isGameInProgress(), Math.INFINITY) # FFA
+        TimerResume()
     #eventPlayer.enableRespawn()
     eventPlayer.toggle_invincible = false
     eventPlayer.toggle_spectate = false
@@ -227,12 +228,12 @@ rule "General | Setup & Variables":
     if not BladeEnabledCheckpoints and len(BladeEnabledCheckpoints) == 1:
         BladeEnabledCheckpoints = [0]
     else:
-        BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints != null else []
+        BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints else []
 
     if not DashEnabledCheckpoints and len(DashEnabledCheckpoints) == 1:
         DashEnabledCheckpoints = [0]
     else:
-        DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints != null  else  []
+        DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints else  []
 
     BouncePadCheckpoints = BouncePadCheckpoints if len(BouncePadCheckpoints) else []
     CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
