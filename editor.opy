@@ -26,7 +26,7 @@ rule "Editor | Clear Excess Data to Save Map":
     #SavePauseTime = null
     #SavePauseEnabled = null
     SaveElapsed = null
-
+    ColorConfig = null
     CompMode = null
     LeaderBoardFull = null
     LeaderBoardHuds = null
@@ -47,6 +47,8 @@ rule "Editor | Clear Excess Data to Save Map":
     if Name == "name here - 作者":
         Name = "{}".format(eventPlayer)
     Cachedcredits = [Name, Code]
+    Name = null
+    Code = null
     async(AddonCheckMap, AsyncBehavior.NOOP)
     hudText(eventPlayer,
         "­",
