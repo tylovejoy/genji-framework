@@ -539,3 +539,22 @@ fixed:
  - Fixed cache invalidation issue
  - Fixed timer always resuming when invincible
    * Found by `@TPS` +5xp
+
+`@Framework Patch Notes`
+# 1.10.3D
+### Objects
+ - Fixed invisible portals
+   * Found by `@bioslet` +5xp
+ - Fixed lock orbs from staying visible after collected
+   * Found by `@Shade` & `@CoralMage` +5xp
+### Commands
+ - Fixed restart command spam when held
+   * Found by `@bioslet` +5xp
+### Leaderboard
+ - Fixed updating last completion from always being new best time
+   * Found by `@lostje` & `@bioslet` +5xp
+### Editor
+ - Bans
+   * List includes Save Double
+ - Abilities
+   * Only host has Dash and Ultimate always available.

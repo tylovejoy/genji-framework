@@ -45,14 +45,14 @@ rule "Addon | Pre-set control map portal - toggled via workshop":
 
 rule "Addon | Custom portals":
     @Event eachPlayer
-    @Condition eventPlayer.cache_portalStart != []
+    @Condition len(eventPlayer.cache_portalStart) != null
     @Condition any([distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance for i in eventPlayer.cache_portalStart])
     eventPlayer.teleport(sorted([i for i in eventPlayer.cache_portalEnd], lambda e, i: distance(eventPlayer, eventPlayer.cache_portalStart[i]))[0])
     wait(0.4)
 
 rule "Addon | Pre-set control map portal - toggled on via workshop settings":
     @Condition PortalOn
-    wait(LoadOrder.portal, Wait.ABORT_WHEN_FALSE) # overwrite pasta
+    wait(LoadOrder.portal) # overwrite pasta
     if getCurrentMap() == Map.BUSAN:
         #"down > sanc","down > meka","sanc > down","sanc > meka","meka > sanc","meka > down"
         PortalNames = ["Sanctuary","MEKA base","Downtown","MEKA base","Sanctuary","Downtown"]
