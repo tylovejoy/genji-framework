@@ -2,6 +2,31 @@
 rule "<tx0C00000000001344> Effects <tx0C00000000001344>":
     @Delimiter
 
+rule "Effects | Setup Effects":
+    wait(LoadOrder.effects) # add back to below wait if removed
+    if len(PortalDest): # pre set control map portals. not in portal rule because shared I variable
+        for TempIterator1 in range(len(PortalLoc)):
+            createEffect(
+                [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast], #$$ localspectate()
+                Effect.BAD_AURA,
+                Color.AQUA if TempIterator1 % 2 else Color.ORANGE,
+                PortalLoc[TempIterator1],
+                0.6,
+                EffectReeval.VISIBILITY)
+            createInWorldText(
+                [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast], #$$ localspectate()
+                PortalNames[TempIterator1],
+                PortalLoc[TempIterator1] + Vector.UP,
+                1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT)
+    waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]), Math.INFINITY)
+    wait()
+    if [i for i in getAllPlayers() if not i.isDummy()][0].editor_on:
+        RebuildKillOrbs()
+        RebuildBounceOrbs()
+        RebuildPortals()
+    else:
+        EffectsCreate()
+
 def EffectsCreate():
     @Name "Effects | SUB Create Object Effects"
     if len(CustomPortalStart):

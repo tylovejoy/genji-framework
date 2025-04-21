@@ -7,11 +7,12 @@ def UpdateCache():
     @Name "General | SUB Update Effect Cache"
     # note: if adding cp pos to cache, make sure to also adjust editor things like move and teleport
     eventPlayer.cache_bouncePosition = [_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_bounceStrength = [_ for _, i in BounceStrength if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_bounceUlt = [_ for _, i in BounceToggleUlt if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_bounceDash = [_ for _, i in BounceToggleDash if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_bounceLocks = [_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_bounceMaxLocks = len([i for i in eventPlayer.cache_bounceLocks if i])
+    #eventPlayer.cache_bounceStrength = [_ for _, i in BounceStrength if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
+    #eventPlayer.cache_bounceUlt = [_ for _, i in BounceToggleUlt if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
+    #eventPlayer.cache_bounceDash = [_ for _, i in BounceToggleDash if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
+    #eventPlayer.cache_bounceLocks = [_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and _]
+    #eventPlayer.cache_bounceMaxLocks = len([_ for _ in eventPlayer.cache_bounceLocks if _])
+    eventPlayer.cache_bounceMaxLocks = len([_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and _])
     eventPlayer.cache_killPosition = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.checkpoint_current]
     eventPlayer.cache_killRadii = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.checkpoint_current]
     eventPlayer.cache_portalStart = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] < 0]
@@ -24,35 +25,27 @@ def UpdateCache():
         eventPlayer.ban_multi = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Multiclimb - 封禁蹭留", false, 1) or eventPlayer.checkpoint_current in BanMulti
         if eventPlayer.ban_multi:
             eventPlayer.banString = "∞ {}".format(eventPlayer.banString)
-
         eventPlayer.ban_create = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Createbhop - 封禁卡小", false, 2) or eventPlayer.checkpoint_current in BanCreate
         if eventPlayer.ban_create:
             eventPlayer.banString = "♂ {}".format(eventPlayer.banString)
-
         eventPlayer.ban_standcreate = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","ban standcreate - 封禁站卡", false, 3) or eventPlayer.checkpoint_current in BanStand
         if eventPlayer.ban_standcreate:
             eventPlayer.banString = "♠ {}".format(eventPlayer.banString) # ≥  √ ▼ ↓
-
         eventPlayer.ban_dead = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Deathbhop - 封禁死小", false, 4) or eventPlayer.checkpoint_current in BanDead
         if eventPlayer.ban_dead:
             eventPlayer.banString = "X {}".format(eventPlayer.banString)
-
         eventPlayer.ban_emote = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Emote Savehop - 封禁表情留小", false, 5) or eventPlayer.checkpoint_current in BanEmote
         if eventPlayer.ban_emote:
             eventPlayer.banString = "♥ {}".format(eventPlayer.banString)
-
         eventPlayer.ban_climb = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Wallclimb - 封禁爬墙", false, 6) or eventPlayer.checkpoint_current in BanClimb
         if eventPlayer.ban_climb:
             eventPlayer.banString = "↑ {}".format(eventPlayer.banString)
-
         eventPlayer.ban_savedouble = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban save double - 封禁延二段跳", false, 7) or eventPlayer.checkpoint_current in BanSaveDouble
         if eventPlayer.ban_savedouble:
             eventPlayer.banString = "△ {}".format(eventPlayer.banString)
-
         eventPlayer.ban_bhop = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require bhop available - 留小跳进点 ", false, 8) or eventPlayer.checkpoint_current in BanBhop
         if eventPlayer.ban_bhop:
             eventPlayer.banString = "≥ {}".format(eventPlayer.banString) # ≥  √ ▼ ↓
-
         eventPlayer.ban_djump = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require djump available - 留二段跳 ", false, 9) or eventPlayer.checkpoint_current in BanDjump
         if eventPlayer.ban_djump:
             eventPlayer.banString = "» {}".format(eventPlayer.banString) # ≥  √ ▼ ↓ ︽
@@ -71,18 +64,14 @@ def UpdateCache():
     async(CheckDash(), AsyncBehavior.RESTART)
 
     if not eventPlayer.editor_on: return
-
     EditUpdateSelectedIds()
-
     destroyEffect(eventPlayer.editor_hitboxEffect)
     createEffect(eventPlayer if eventPlayer.editor_hitboxToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.checkpoint_current], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.editor_hitboxEffect = getLastCreatedEntity()
     createEffect(eventPlayer if eventPlayer.editor_hitboxToggle and eventPlayer.checkpoint_notLast else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.checkpoint_current + 1], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     eventPlayer.editor_hitboxEffect.append(getLastCreatedEntity())
-
     eventPlayer.editor_bounceIndex = [e for e in [(i if e2 == eventPlayer.checkpoint_current else -1) for e2, i in BouncePadCheckpoints] if e >=0]
     eventPlayer.editor_killIndex = [e for e in [(i if e2 == eventPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if e >=0]
-
     if eventPlayer.checkpoint_moved and eventPlayer == hostPlayer:
         EditorSelectLast()
         eventPlayer.checkpoint_moved = false
@@ -93,57 +82,42 @@ def DeleteSave():
     del SaveCp[SaveEnt.index(eventPlayer)]
     del SaveTimer[SaveEnt.index(eventPlayer)]
     del SaveElapsed[SaveEnt.index(eventPlayer)]
-    del SavePauseTime[SaveEnt.index(eventPlayer)]
-    del SavePauseEnabled[SaveEnt.index(eventPlayer)]
     del SaveEnt[SaveEnt.index(eventPlayer)] # must always be last because its the index itself
 
 def MakeSave():
     @Name "General | SUB Make Save"
+    SaveEnt.append(eventPlayer)
     SaveName.append(eventPlayer[0].split([]))
     SaveCp.append(eventPlayer.checkpoint_current)
     SaveTimer.append(eventPlayer.timer_normal)
-    SaveEnt.append(eventPlayer)
     SaveElapsed.append(getTotalTimeElapsed())
-    SavePauseTime.append(0)
-    SavePauseEnabled.append(false)
 
-def StartPauseTimer():
-    @Name "General | SUB Start Pause Timer"
-    chase(eventPlayer.timer_pause, Math.INFINITY, rate=1, ChaseReeval.NONE)
+def TimerPause():
+    @Name "General | SUB Timer Pause"
+    stopChasingVariable(eventPlayer.timer_normal)
+    if not eventPlayer in SaveEnt: return
     SaveTimer[SaveEnt.index(eventPlayer)] = eventPlayer.timer_normal
+    SaveElapsed[SaveEnt.index(eventPlayer)] = null
+
+def TimerResume():
+    @Name "General | SUB Timer Resume"
+    chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
     SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
-    SavePauseEnabled[SaveEnt.index(eventPlayer)] = true
-
-def StopPauseTimer():
-    @Name "General | SUB Stop Pause Timer"
-    stopChasingVariable(eventPlayer.timer_pause)
-    SavePauseTime[SaveEnt.index(eventPlayer)] = eventPlayer.timer_pause
-    eventPlayer.timer_pause = 0
-    SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
-
-/* Deprecate
-def CreateLeaderboard():
-    @Name "General | SUB Leaderboard HUD"
-    # turns into global rule so it doesnt delete when player leaves
-    LeaderBoardRemake = true
-    wait()
-    LeaderBoardRemake = null*/
 
 def LeaderboardUpdate():
     @Name "General | SUB Leaderboard Update"
-    # [i[0] for i in var1]   list of first element of each in var 1
-    # [ [name, seconds, prettytime] ]
-    if eventPlayer[0].split([]) in [i[0] for i in LeaderBoardFull]: # you already have a time
-        if eventPlayer.timer_normal >= [i for i in LeaderBoardFull if i[0] == eventPlayer[0].split([])][0].last():
+    # [[name, seconds, prettytime]]
+    if eventPlayer[0].split([]) in [e[0] for e in LeaderBoardFull]: # you already have a time
+        if eventPlayer.timer_normal >= [e for e in LeaderBoardFull if e[0] == eventPlayer[0].split([])][0][1]:
             return #Time too slow
-        LeaderBoardFull.remove([i for i in LeaderBoardFull if i[0] == eventPlayer[0].split([])])
+        LeaderBoardFull = [e for e in LeaderBoardFull if e[0] != eventPlayer[0].split([])]
     elif len(LeaderBoardFull) < 25 or eventPlayer.timer_normal < LeaderBoardFull[19].last():
         # you are not in list yet
         # board has room for more
         # your time lower then last entry
         del LeaderBoardFull[24]
     else:
-        return #Full & time too slow
+        return #Full and time too slow
     LeaderBoardFull.append([[eventPlayer[0].split([]), eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]])
     LeaderBoardRemake = true #CreateLeaderboard()
 
@@ -166,7 +140,7 @@ def CheckpointFailReset():
             eventPlayer.stopForcingPosition()
         eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current].last())
         #After teleport incase stopForcingPosition launches the player
-        eventPlayer.applyImpulse(-1 * eventPlayer.getVelocity(), 0.0001, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+        eventPlayer.applyImpulse(-1 * eventPlayer.getVelocity(), Math.EPSILON, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
         # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
         #if eventPlayer.ban_dead or eventPlayer.ban_emote and eventPlayer.isHoldingButton(Button.JUMP):
@@ -203,20 +177,15 @@ def StartGame():
             SaveEnt[SaveName.index(eventPlayer[0].split([]))] = eventPlayer
             eventPlayer.checkpoint_current = SaveCp[SaveEnt.index(eventPlayer)]
             eventPlayer.timer_normal = SaveTimer[SaveEnt.index(eventPlayer)]
-            SaveElapsed[SaveEnt.index(eventPlayer)] = getTotalTimeElapsed()
-            SavePauseTime[SaveEnt.index(eventPlayer)] = 0
-            SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
         else:
             eventPlayer.checkpoint_current = 0
             eventPlayer.timer_normal = 0
-            stopChasingVariable(eventPlayer.timer_pause)
-            eventPlayer.timer_pause = 0
             MakeSave()
         UpdateTitle()
-
-    chase(eventPlayer.timer_normal, Math.INFINITY, rate=1, ChaseReeval.NONE)
-    UpdateCache()
-    CheckpointFailReset()
+        UpdateCache()
+        CheckpointFailReset()
+        waitUntil(isGameInProgress(), Math.INFINITY) # FFA
+        TimerResume()
     #eventPlayer.enableRespawn()
     eventPlayer.toggle_invincible = false
     eventPlayer.toggle_spectate = false
@@ -252,20 +221,20 @@ rule "General | Setup & Variables":
     SaveCp = []
     SaveTimer = []
     SaveEnt = []
-    SavePauseTime = []
-    SavePauseEnabled = []
+    #SavePauseTime = []
+    #SavePauseEnabled = []
     SaveElapsed = []
 
     #$$
     if not BladeEnabledCheckpoints and len(BladeEnabledCheckpoints) == 1:
         BladeEnabledCheckpoints = [0]
     else:
-        BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints != null else []
+        BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints else []
 
     if not DashEnabledCheckpoints and len(DashEnabledCheckpoints) == 1:
         DashEnabledCheckpoints = [0]
     else:
-        DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints != null  else  []
+        DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints else  []
 
     BouncePadCheckpoints = BouncePadCheckpoints if len(BouncePadCheckpoints) else []
     CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
@@ -289,8 +258,6 @@ rule "General | Setup & Variables":
     TitleData = null
     HintCp = []
     HintText = []
-
-    wait()
 
     # clean out -1's after the ban has loaded
     BanBhop = [i for i in BanBhop if i + false >= 0] if len(BanBhop) else []
@@ -322,33 +289,6 @@ rule "General | Setup & Variables":
         CompRestartLimit = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","disable restart during run - 竞赛中禁用重新开始" , compRestartLimit , 103)
     else:
         InstructionText = null
-
-    wait() # add back to below wait if removed
-
-    if len(PortalDest): # pre set control map portals. not in portal rule because shared I variable
-        for TempIterator1 in range(len(PortalLoc)):
-            createEffect(
-                [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast], #$$ localspectate()
-                Effect.BAD_AURA,
-                Color.AQUA if TempIterator1 % 2 else Color.ORANGE,
-                PortalLoc[TempIterator1],
-                0.6,
-                EffectReeval.VISIBILITY
-            )
-            createInWorldText(
-                [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast], #$$ localspectate()
-                PortalNames[TempIterator1],
-                PortalLoc[TempIterator1] + Vector.UP,
-                1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT
-            )
-    waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]), Math.INFINITY)
-    wait()
-    if [i for i in getAllPlayers() if not i.isDummy()][0].editor_on:
-        RebuildKillOrbs()
-        RebuildBounceOrbs()
-        RebuildPortals()
-        return
-    EffectsCreate()
 
 rule "General | Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
@@ -389,28 +329,22 @@ rule "General | Match time":
 rule "General | Player Initialize":
     @Event playerJoined
     @Condition eventPlayer.isDummy() == false
+    eventPlayer.enableDeathSpectateAllPlayers()
+    eventPlayer.enableDeathSpectateTargetHud()
+    eventPlayer.disableGamemodeHud()
+    eventPlayer.disablePlayerCollision()
+    eventPlayer.disableRespawn()
+    eventPlayer.preloadHero(Hero.GENJI)
     eventPlayer.setDamageReceived(0)
     eventPlayer.editor_on = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
     eventPlayer.editor_lock = true
-    eventPlayer.preloadHero(Hero.GENJI)
     eventPlayer.toggle_guide = true
-    eventPlayer.disableGamemodeHud()
-    eventPlayer.enableDeathSpectateAllPlayers()
-    eventPlayer.enableDeathSpectateTargetHud()
-    eventPlayer.disablePlayerCollision()
-    #eventPlayer.skill_usedClimb = false #Climbing the wall prompts the HUD
-    #eventPlayer.JumpCount = 0
-    eventPlayer.cache_bounceLastTouched = -1
     eventPlayer.cache_bounceTouched = -1
-    #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
-    wait(1)
-    eventPlayer.disableRespawn()
-    #eventPlayer.setRespawnTime(1)
+    wait(1) #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
     createEffect(eventPlayer, Effect.RING, ColorConfig[Customize.ring_current], CheckpointPositions[eventPlayer.checkpoint_current].last(), cpCirkleFx, EffectReeval.POSITION_AND_RADIUS)
     createEffect(eventPlayer if eventPlayer.checkpoint_notLast else null, Effect.RING, ColorConfig[Customize.ring_next], CheckpointPositions[eventPlayer.checkpoint_current + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createEffect(eventPlayer if eventPlayer.checkpoint_notLast else null, Effect.LIGHT_SHAFT, ColorConfig[Customize.shaft], CheckpointPositions[eventPlayer.checkpoint_current + 1], cpCirkleFx, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createIcon(eventPlayer if eventPlayer.checkpoint_notLast else null, CheckpointPositions[eventPlayer.checkpoint_current + 1] + Vector.UP, Icon.ARROW_DOWN, IconReeval.VISIBILITY_AND_POSITION, ColorConfig[Customize.nexticon_color], true)
-
     waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
     eventPlayer.editor_lock = false
 
@@ -440,11 +374,8 @@ rule "General | Player Initialize":
 rule "General | Player Leaves":
     @Event playerLeft
     if SaveCp[SaveEnt.index(eventPlayer)]:
-       if SaveCp[SaveEnt.index(eventPlayer)] < len(CheckpointPositions) - 1 and not SavePauseEnabled[SaveEnt.index(eventPlayer)]:
-            SaveTimer[SaveEnt.index(eventPlayer)] = (
-                getTotalTimeElapsed() - SaveElapsed[SaveEnt.index(eventPlayer)] - SavePauseTime[SaveEnt.index(eventPlayer)] + SaveTimer[SaveEnt.index(eventPlayer)])
-        SavePauseTime[SaveEnt.index(eventPlayer)] = 0
-        SavePauseEnabled[SaveEnt.index(eventPlayer)] = false
+        if SaveCp[SaveEnt.index(eventPlayer)] < len(CheckpointPositions) - 1 and SaveElapsed[SaveEnt.index(eventPlayer)]:
+            SaveTimer[SaveEnt.index(eventPlayer)] = (getTotalTimeElapsed() - SaveElapsed[SaveEnt.index(eventPlayer)]) + SaveTimer[SaveEnt.index(eventPlayer)]
     else: # delete if player didnt do first cp
         DeleteSave()
 
@@ -458,21 +389,25 @@ rule "General | Ground: Traces, Arrive, & Reset":
             # traces ----------------------------------------------------------------------------------------------------
             eventPlayer.cache_rainbow = [Color.RED, Color.ORANGE, Color.YELLOW, Color.LIME_GREEN, Color.GREEN, Color.TURQUOISE, Color.BLUE, Color.PURPLE, Color.VIOLET, Color.ROSE][(floor(getTotalTimeElapsed()*2))%10]
             #eventPlayer.cache_rainbow =  rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255)
-            wait(0.16)
             # 1.6 - 0.2 in 0.2 steps
-            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1.4)
-            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1.2)
-            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1)
-            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 0.8)
-            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 0.6)
             playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 0.4)
-            wait(0.128)
+            wait(0.048)
+            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 0.6)
+            wait(0.048)
+            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 0.8)
+            wait(0.048)
+            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1)
+            wait(0.048)
+            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1.2)
+            wait(0.048)
+            playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1.4)
+            wait(0.048)
     elif eventPlayer.toggle_invincible or (CompMode and not CompTime) or eventPlayer.lockState:
         # Do nothing
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpcircleradius:
         # arrived ----------------------------------------------------------------------------------------------------
         eventPlayer.checkpoint_moved = true
-        if eventPlayer.cache_bounceMaxLocks and len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks: # kill player if not colleted the locks
+        if len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks: # kill player if not colleted the locks
             if eventPlayer.isUsingAbility1():
                 waitUntil(not eventPlayer.isUsingAbility1(), 1)
             smallMessage(eventPlayer, "   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[Customize.orb_lock]))
@@ -494,22 +429,13 @@ rule "General | Ground: Traces, Arrive, & Reset":
             CheckpointFailReset()
             goto lbl_a
 
-        #eventPlayer.cache_collectedLocks = []
         eventPlayer.checkpoint_current += 1
         UpdateCache()
         # remove ult feature disabled for speedruning purposes
         #if eventPlayer.isUsingUltimate() and not eventPlayer.checkpoint_current in BladeEnabledCheckpoints:
-        #    kill(eventPlayer, null)
+        #    CheckpointFailReset()
         if len(CheckpointPositions[eventPlayer.checkpoint_current]) > 1:# teleport cps
-            CheckpointFailReset()/*
-            eventPlayer.startForcingPosition( CheckpointPositions[eventPlayer.checkpoint_current].last() ,false)
-            eventPlayer.editor_fly = null
-            wait(0.1)
-            eventPlayer.stopForcingPosition()
-            # position wasnt ready when check cache ran
-            async(CheckUlt(), AsyncBehavior.RESTART)
-            async(CheckDash(), AsyncBehavior.RESTART)*/
-
+            CheckpointFailReset()
 
         if eventPlayer.timer_splitDisplay != -Math.INFINITY:
             eventPlayer.timer_splitDisplay =  (eventPlayer.timer_practice if eventPlayer.toggle_practice else eventPlayer.timer_normal) - eventPlayer.timer_split
@@ -524,32 +450,28 @@ rule "General | Ground: Traces, Arrive, & Reset":
 
         if eventPlayer.toggle_practice:
             eventPlayer.timer_split = eventPlayer.timer_practice
-            goto lbl_a
-
-        eventPlayer.timer_split = eventPlayer.timer_normal
-        if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and (not eventPlayer.editor_on) and (not eventPlayer.toggle_practice): # complete lvl
-            stopChasingVariable(eventPlayer.timer_normal)
-            stopChasingVariable(eventPlayer.timer_practice)
-            wait()
-            bigMessage(true[0], "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.timer_normal),"已通关! 用时" checkCN "Mission complete! Time"))
-
+        else:
+            eventPlayer.timer_split = eventPlayer.timer_normal
             DeleteSave()
-            LeaderboardUpdate()
-            if CompMode and CompAtmpNum:
-                if eventPlayer.comp_countAttempts == CompAtmpNum:
-                    CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = -1
-                    eventPlayer.comp_countAttempts = -1
-                    eventPlayer.comp_done = true
-                    eventPlayer.toggle_leaderboard = true
-                    #eventPlayer.disableRespawn()
-                    eventPlayer.setDamageReceived(100)
-                    kill(eventPlayer,null)
-                    eventPlayer.setDamageReceived(0)
-                else:
-                    CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts + 1
-        else: # update save
-            DeleteSave()
-            MakeSave()
+            if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and not eventPlayer.editor_on: # complete lvl
+                stopChasingVariable(eventPlayer.timer_normal)
+                wait()
+                bigMessage(true[0], "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.timer_normal), "已通关! 用时" checkCN "Mission complete! Time"))
+                LeaderboardUpdate()
+                if CompMode and CompAtmpNum:
+                    if eventPlayer.comp_countAttempts == CompAtmpNum:
+                        CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = -1
+                        eventPlayer.comp_countAttempts = -1
+                        eventPlayer.comp_done = true
+                        eventPlayer.toggle_leaderboard = true
+                        #eventPlayer.disableRespawn()
+                        eventPlayer.setDamageReceived(100)
+                        kill(eventPlayer,null)
+                        eventPlayer.setDamageReceived(0)
+                    else:
+                        CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts + 1
+            else: # update save
+                MakeSave()
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpcircleradius:
         CheckpointFailReset()
 
@@ -572,35 +494,33 @@ rule "General | Bounce Ball / Orb":
     @Event eachPlayer
     @Condition eventPlayer.cache_bouncePosition != []
     #@Condition eventPlayer.checkpoint_notLast # disabled coz editor
-    @Condition (any([distance(i, eventPlayer.getPosition() + Vector.UP * bounceoffset) < bounceorbdistance for i in eventPlayer.cache_bouncePosition]))
+    @Condition (any([distance(pos, eventPlayer.getPosition() + Vector.UP * bounceoffset) < bounceorbdistance for pos in eventPlayer.cache_bouncePosition]))
 
-    eventPlayer.cache_bounceTouched = eventPlayer.cache_bouncePosition.index(sorted([pos for pos, i in eventPlayer.cache_bouncePosition if
-        distance(eventPlayer + Vector.UP * bounceoffset, pos) < bounceorbdistance and i != eventPlayer.cache_bounceLastTouched and not (i in eventPlayer.cache_collectedLocks)], lambda x: distance(eventPlayer, x))[0])
+    eventPlayer.cache_bounceTouched = BouncePositions.index([pos for pos, i in BouncePositions if
+        BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and
+        i != eventPlayer.cache_bounceTouched and
+        not (i in eventPlayer.cache_collectedLocks) and
+        distance(eventPlayer + Vector.UP * bounceoffset, pos) < bounceorbdistance])
 
-    if eventPlayer.cache_bounceTouched < 0: # prevent same one trigering twice in a row
-        eventPlayer.cache_bounceLastTouched = -1 # -1 because null becomes 0 and thats a legit index
-    else:
-        eventPlayer.cache_bounceLastTouched = eventPlayer.cache_bounceTouched
-
-        if eventPlayer.cache_bounceLocks[eventPlayer.cache_bounceTouched]:
+    if eventPlayer.cache_bounceTouched >= 0: # prevent same one trigering twice in a row
+        if BounceToggleLock[eventPlayer.cache_bounceTouched]:
             #eventPlayer.cache_collectedLocks.append(eventPlayer.cache_bouncePosition[eventPlayer.cache_bounceTouched])
             eventPlayer.cache_collectedLocks.append(eventPlayer.cache_bounceTouched)
             smallMessage(eventPlayer, "   弹球已收集" checkCN "   orb has been collected")
 
-        if eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched] > 0:
-            eventPlayer.applyImpulse(Vector.UP, eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
-        ##$$ Possibly remove double jump reset?
-        elif eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched] < 0:
+        if BounceStrength[eventPlayer.cache_bounceTouched] > 0:
+            eventPlayer.applyImpulse(Vector.UP, BounceStrength[eventPlayer.cache_bounceTouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+        elif BounceStrength[eventPlayer.cache_bounceTouched] < 0:
             eventPlayer.cancelPrimaryAction()
             eventPlayer.skill_usedDouble = null
-            smallMessage(eventPlayer, "   二段跳已就绪" checkCN "   Double Jump is Reset")
+            smallMessage(eventPlayer, "   二段跳已就绪" checkCN "   Double Jump is ready")
 
-        if eventPlayer.cache_bounceUlt[eventPlayer.cache_bounceTouched]:
+        if BounceToggleUlt[eventPlayer.cache_bounceTouched]:
             eventPlayer.setUltEnabled(true)
             eventPlayer.setUltCharge(100)
-            smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"#终极技能已就绪" checkCN "Ultimate is ready"))
+            smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"终极技能已就绪" checkCN "Ultimate is ready"))
 
-        if eventPlayer.cache_bounceDash[eventPlayer.cache_bounceTouched]:
+        if BounceToggleDash[eventPlayer.cache_bounceTouched]:
             if eventPlayer.isUsingAbility1():
                 waitUntil(not eventPlayer.isUsingAbility1(), 1)
                 wait(0.032) # wait til set false by check
@@ -610,7 +530,6 @@ rule "General | Bounce Ball / Orb":
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
     wait(0.24)
     if RULE_CONDITION: goto RULE_START
-    eventPlayer.cache_bounceLastTouched = -1
     eventPlayer.cache_bounceTouched = -1
 
 rule "General | Death Reset":

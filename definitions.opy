@@ -26,6 +26,11 @@ else:\
 arrayname = [i for i in arrayname if i != hostPlayer.checkpoint_current]\
 arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in arrayname]
 
+#!define LeftAlign32 "                                "
+#!define LeftAlign64 "                                                                "
+#!define LeftAlign96 "                                                                                                "
+#!define LeftAlign128 "                                                                                                                                "
+
 #!define checkCN if l"Oof" == "噢" else
 
 #!define FILLER "<tx0C000000000207B5><fgFFFF00FF> Map Data & Addon Settings Are On Page 2 - 地图数据和附加组件的设置在第2页"
@@ -198,7 +203,7 @@ playervar checkpoint_moved
 playervar checkpoint_notLast                       # bool                      --- false if you are noton the last cp or level below 2 cps
 
 playervar timer_normal                             # float                     --- Timer, chased.
-playervar timer_pause                        # float                     --- time in spectate/invincible, chased
+#playervar timer_pause                        # float                     --- time in spectate/invincible, chased
 playervar timer_practice
 playervar timer_split                         # int                       --- stored time that the split compares to
 playervar timer_splitDisplay                      # int                       --- displayed split value
@@ -237,17 +242,17 @@ playervar ban_savedouble
 
 playervar cache_collectedLocks                     # [int]                    --- amount collected lock this cp
 playervar cache_bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
-playervar cache_bounceLastTouched
+#playervar cache_bounceLastTouched
 playervar cache_portalStart
 playervar cache_portalEnd
 playervar cache_bounceMaxLocks
 playervar cache_killPosition
 playervar cache_killRadii
 playervar cache_bouncePosition
-playervar cache_bounceStrength
-playervar cache_bounceUlt
-playervar cache_bounceDash
-playervar cache_bounceLocks
+#playervar cache_bounceStrength
+#playervar cache_bounceUlt
+#playervar cache_bounceDash
+#playervar cache_bounceLocks
 playervar cache_inputs
 playervar cache_rainbow                     # color                     --- color of fx after finish the map
 playervar cache_titleHud                        # textid                    --- store curent  title textid
@@ -293,8 +298,8 @@ subroutine CheckDash
 subroutine UpdateCache
 subroutine DeleteSave
 subroutine MakeSave
-subroutine StartPauseTimer
-subroutine StopPauseTimer
+subroutine TimerPause
+subroutine TimerResume
 subroutine EditUpdateSelectedIds
 subroutine EditorSelectLast
 subroutine AddonCustomLoadAndReset
@@ -422,7 +427,8 @@ enum LoadOrder:
     customize   = 0,
     destructo   = 0.016 * 2,
     setup       = 0.016 * 15,
-    portal      = 0.016 * 32,
+    portal      = LoadOrder.setup + 0.016 * 32,
+    effects     = LoadOrder.portal + 0.016 * 32,
     hudsPlayer  = 0.016 * 32,
     hudsGlobal  = 0.016 * 62.5,
     addon_title = 0.016 * 62.5,
