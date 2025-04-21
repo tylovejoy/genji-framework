@@ -81,7 +81,7 @@ rule "multi purpose hud":
         localPlayer.checkpoint_notLast,
         EditorMoveItem,
         localPlayer.cache_bounceTouched,
-        localPlayer.cache_bounceLastTouched
+        #localPlayer.cache_bounceLastTouched
         )
         , HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
     )

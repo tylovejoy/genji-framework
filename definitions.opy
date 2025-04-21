@@ -242,17 +242,17 @@ playervar ban_savedouble
 
 playervar cache_collectedLocks                     # [int]                    --- amount collected lock this cp
 playervar cache_bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
-playervar cache_bounceLastTouched
+#playervar cache_bounceLastTouched
 playervar cache_portalStart
 playervar cache_portalEnd
 playervar cache_bounceMaxLocks
 playervar cache_killPosition
 playervar cache_killRadii
 playervar cache_bouncePosition
-playervar cache_bounceStrength
-playervar cache_bounceUlt
-playervar cache_bounceDash
-playervar cache_bounceLocks
+#playervar cache_bounceStrength
+#playervar cache_bounceUlt
+#playervar cache_bounceDash
+#playervar cache_bounceLocks
 playervar cache_inputs
 playervar cache_rainbow                     # color                     --- color of fx after finish the map
 playervar cache_titleHud                        # textid                    --- store curent  title textid
