@@ -7,11 +7,12 @@ def UpdateCache():
     @Name "General | SUB Update Effect Cache"
     # note: if adding cp pos to cache, make sure to also adjust editor things like move and teleport
     eventPlayer.cache_bouncePosition = [_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_bounceStrength = [_ for _, i in BounceStrength if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_bounceUlt = [_ for _, i in BounceToggleUlt if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_bounceDash = [_ for _, i in BounceToggleDash if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_bounceLocks = [_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_bounceMaxLocks = len([i for i in eventPlayer.cache_bounceLocks if i])
+    #eventPlayer.cache_bounceStrength = [_ for _, i in BounceStrength if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
+    #eventPlayer.cache_bounceUlt = [_ for _, i in BounceToggleUlt if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
+    #eventPlayer.cache_bounceDash = [_ for _, i in BounceToggleDash if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
+    #eventPlayer.cache_bounceLocks = [_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and _]
+    #eventPlayer.cache_bounceMaxLocks = len([_ for _ in eventPlayer.cache_bounceLocks if _])
+    eventPlayer.cache_bounceMaxLocks = len([_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and _])
     eventPlayer.cache_killPosition = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.checkpoint_current]
     eventPlayer.cache_killRadii = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.checkpoint_current]
     eventPlayer.cache_portalStart = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] < 0]
@@ -338,7 +339,6 @@ rule "General | Player Initialize":
     eventPlayer.editor_on = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
     eventPlayer.editor_lock = true
     eventPlayer.toggle_guide = true
-    eventPlayer.cache_bounceLastTouched = -1
     eventPlayer.cache_bounceTouched = -1
     wait(1) #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
     createEffect(eventPlayer, Effect.RING, ColorConfig[Customize.ring_current], CheckpointPositions[eventPlayer.checkpoint_current].last(), cpCirkleFx, EffectReeval.POSITION_AND_RADIUS)
@@ -407,7 +407,7 @@ rule "General | Ground: Traces, Arrive, & Reset":
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpcircleradius:
         # arrived ----------------------------------------------------------------------------------------------------
         eventPlayer.checkpoint_moved = true
-        if eventPlayer.cache_bounceMaxLocks and len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks: # kill player if not colleted the locks
+        if len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks: # kill player if not colleted the locks
             if eventPlayer.isUsingAbility1():
                 waitUntil(not eventPlayer.isUsingAbility1(), 1)
             smallMessage(eventPlayer, "   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[Customize.orb_lock]))
@@ -494,34 +494,33 @@ rule "General | Bounce Ball / Orb":
     @Event eachPlayer
     @Condition eventPlayer.cache_bouncePosition != []
     #@Condition eventPlayer.checkpoint_notLast # disabled coz editor
-    @Condition (any([distance(i, eventPlayer.getPosition() + Vector.UP * bounceoffset) < bounceorbdistance for i in eventPlayer.cache_bouncePosition]))
+    @Condition (any([distance(pos, eventPlayer.getPosition() + Vector.UP * bounceoffset) < bounceorbdistance for pos in eventPlayer.cache_bouncePosition]))
 
-    eventPlayer.cache_bounceTouched = eventPlayer.cache_bouncePosition.index(sorted([pos for pos, i in eventPlayer.cache_bouncePosition if
-        distance(eventPlayer + Vector.UP * bounceoffset, pos) < bounceorbdistance and i != eventPlayer.cache_bounceLastTouched and not (i in eventPlayer.cache_collectedLocks)], lambda x: distance(eventPlayer, x))[0])
+    eventPlayer.cache_bounceTouched = BouncePositions.index([pos for pos, i in BouncePositions if
+        BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and
+        distance(eventPlayer + Vector.UP * bounceoffset, pos) < bounceorbdistance and
+        i != eventPlayer.cache_bounceTouched and
+        not (i in eventPlayer.cache_collectedLocks)])
 
-    if eventPlayer.cache_bounceTouched < 0: # prevent same one trigering twice in a row
-        eventPlayer.cache_bounceLastTouched = -1 # -1 because null becomes 0 and thats a legit index
-    else:
-        eventPlayer.cache_bounceLastTouched = eventPlayer.cache_bounceTouched
-
-        if eventPlayer.cache_bounceLocks[eventPlayer.cache_bounceTouched]:
+    if eventPlayer.cache_bounceTouched >= 0: # prevent same one trigering twice in a row
+        if BounceToggleLock[eventPlayer.cache_bounceTouched]:
             #eventPlayer.cache_collectedLocks.append(eventPlayer.cache_bouncePosition[eventPlayer.cache_bounceTouched])
             eventPlayer.cache_collectedLocks.append(eventPlayer.cache_bounceTouched)
             smallMessage(eventPlayer, "   弹球已收集" checkCN "   orb has been collected")
 
-        if eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched] > 0:
-            eventPlayer.applyImpulse(Vector.UP, eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
-        elif eventPlayer.cache_bounceStrength[eventPlayer.cache_bounceTouched] < 0:
+        if BounceStrength[eventPlayer.cache_bounceTouched] > 0:
+            eventPlayer.applyImpulse(Vector.UP, BounceStrength[eventPlayer.cache_bounceTouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+        elif BounceStrength[eventPlayer.cache_bounceTouched] < 0:
             eventPlayer.cancelPrimaryAction()
             eventPlayer.skill_usedDouble = null
             smallMessage(eventPlayer, "   二段跳已就绪" checkCN "   Double Jump is ready")
 
-        if eventPlayer.cache_bounceUlt[eventPlayer.cache_bounceTouched]:
+        if BounceToggleUlt[eventPlayer.cache_bounceTouched]:
             eventPlayer.setUltEnabled(true)
             eventPlayer.setUltCharge(100)
             smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"终极技能已就绪" checkCN "Ultimate is ready"))
 
-        if eventPlayer.cache_bounceDash[eventPlayer.cache_bounceTouched]:
+        if BounceToggleDash[eventPlayer.cache_bounceTouched]:
             if eventPlayer.isUsingAbility1():
                 waitUntil(not eventPlayer.isUsingAbility1(), 1)
                 wait(0.032) # wait til set false by check
@@ -531,7 +530,6 @@ rule "General | Bounce Ball / Orb":
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
     wait(0.24)
     if RULE_CONDITION: goto RULE_START
-    eventPlayer.cache_bounceLastTouched = -1
     eventPlayer.cache_bounceTouched = -1
 
 rule "General | Death Reset":
