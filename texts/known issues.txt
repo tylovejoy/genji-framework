@@ -53,8 +53,7 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@bioslet`
  - Restart spam when command is held [FIXED]
    * Reported by `@bioslet`
- - Lock orbs don't disappear when collected
-   * EENGJ
+ - Lock orbs don't disappear when collected [FIXED]
    * Reported by `@Shade` & `@CoralMage`
  - Leaderboard updates player time to a worse time [FIXED]
    * Reported by `@lostje` & `@bioslet`
