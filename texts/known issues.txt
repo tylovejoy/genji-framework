@@ -45,8 +45,10 @@ triple jump ban doesnt work on workshop maps anymore
 
 # 1.10.3x
 ### Bug Reports
+ - Corrupt Map Object Data [FIXED]
+   * Reported by `@hello_5702`
  - Exported data overwriting customization settings [FIXED]
-   * Reported by `Nitroh`
+   * Reported by `@n1troh`
  - Timer run-on after completion [FIXED]
    * Reported by `@TPS`
  - Invisible global portals [FIXED]

@@ -520,7 +520,6 @@ fixed:
    * Instructions display in single hud
    * Will export host as map creator when no creator attributed
 
-`@Framework Patch Notes`
 # 1.10.3A
  - Fix exported data from overwriting customization settings
    * Found by `@Nitroh` +5xp
@@ -528,11 +527,9 @@ fixed:
    * Found by `@CoralMage` +5xp
    * Replication example by `@bioslet` +5xp
 
-`@Framework Patch Notes`
 # 1.10.3B
  - Fix swapped current editor mode arrow
 
-`@Framework Patch Notes`
 # 1.10.3C
 ### Practice Mode
  - Fixed toggle state issue
@@ -540,7 +537,6 @@ fixed:
  - Fixed timer always resuming when invincible
    * Found by `@TPS` +5xp
 
-`@Framework Patch Notes`
 # 1.10.3D
 ### Objects
  - Fixed invisible portals
@@ -558,3 +554,8 @@ fixed:
    * List includes Save Double
  - Abilities
    * Only host has Dash and Ultimate always available.
+
+# 1.10.3E
+### Objects
+ - Fixed cancel placement from corrupting map object data
+   * Found by `@hello_5702` & `@bioslet` +5xp
