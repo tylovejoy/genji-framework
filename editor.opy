@@ -1140,7 +1140,6 @@ rule "Editor | portal cp change":
     CustomPortalCP[EditSelected] = eventPlayer.checkpoint_current if CustomPortalCP[EditSelected] < 0 else -1
     wait(0.3)
 
-
 rule "Editor | move object":
     @Event eachPlayer
     @Condition hostPlayer.editor_on
@@ -1155,59 +1154,67 @@ rule "Editor | move object":
     if eventPlayer.addon_toggle3rdPov:
         eventPlayer.addon_toggle3rdPov = false
     eventPlayer.editor_fly = null
-    eventPlayer.editor_undo = [KillBallPositions[EditSelected], BouncePositions[EditSelected], CustomPortalStart[EditSelected], CustomPortalEndpoint[EditSelected]]
 
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 1)
-    eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
     #eventPlayer.disallowButton(Button.ULTIMATE)
     #eventPlayer.disallowButton(Button.JUMP)
     eventPlayer.setStatusEffect(null, Status.HACKED, Math.INFINITY)
-
+    eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
+    
     if EditorMode.killBall:
-        eventPlayer.startCamera(
-            KillBallPositions[EditSelected] + eventPlayer.getFacingDirection() * (abs(KillBallRadii[EditSelected]) * -1.5),
-            KillBallPositions[EditSelected],
-            30)
-
+        eventPlayer.editor_undo = KillBallPositions[EditSelected]
+        eventPlayer.startCamera(KillBallPositions[EditSelected] + eventPlayer.getFacingDirection() * (abs(KillBallRadii[EditSelected]) * -1.5),
+            KillBallPositions[EditSelected], 30)
         while not (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
             KillBallPositions[EditSelected] += flyMovementDelta
             wait()
 
     elif EditorMode.functionOrb:
-        eventPlayer.startCamera(
-            BouncePositions[EditSelected] + eventPlayer.getFacingDirection() * -4,
-            BouncePositions[EditSelected],
-            30)
+        eventPlayer.editor_undo = BouncePositions[EditSelected]
+        eventPlayer.startCamera(BouncePositions[EditSelected] + eventPlayer.getFacingDirection() * -4,
+            BouncePositions[EditSelected], 30)
         while not (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
             BouncePositions[EditSelected] += flyMovementDelta
             wait()
 
     elif EditorMode.portal:
+        eventPlayer.editor_undo = [CustomPortalStart[EditSelected], CustomPortalEndpoint[EditSelected]]
         # move start position
-        eventPlayer.startCamera(
-            CustomPortalStart[EditSelected] + eventPlayer.getFacingDirection() * -4,
-            CustomPortalStart[EditSelected],
-            30)
-
+        eventPlayer.startCamera(CustomPortalStart[EditSelected] + eventPlayer.getFacingDirection() * -4,
+            CustomPortalStart[EditSelected], 30)
         while not (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
             CustomPortalStart[EditSelected] += flyMovementDelta
             wait()
 
         # move destination
-        eventPlayer.startCamera(
-            CustomPortalEndpoint[EditSelected] + eventPlayer.getFacingDirection() * -4,
-            CustomPortalEndpoint[EditSelected],
-            30)
+        eventPlayer.startCamera(CustomPortalEndpoint[EditSelected] + eventPlayer.getFacingDirection() * -4,
+            CustomPortalEndpoint[EditSelected], 30)
         waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 1)
         while not (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
             CustomPortalEndpoint[EditSelected] += flyMovementDelta
             wait()
 
-    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
+  /*if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         KillBallPositions[EditSelected] = eventPlayer.editor_undo[0]
+    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         BouncePositions[EditSelected] = eventPlayer.editor_undo[1]
+    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         CustomPortalStart[EditSelected] = eventPlayer.editor_undo[2]
-        CustomPortalEndpoint[EditSelected] = eventPlayer.editor_undo[3]
+        if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
+        CustomPortalEndpoint[EditSelected] = eventPlayer.editor_undo[3]*/
+    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
+        goto loc + 2 * EditorMode.current
+    else:
+    else:
+        KillBallPositions[EditSelected] = eventPlayer.editor_undo
+    else:
+        BouncePositions[EditSelected] = eventPlayer.editor_undo
+    else:
+    else:
+    else:
+        CustomPortalStart[EditSelected] = eventPlayer.editor_undo[0]
+        CustomPortalEndpoint[EditSelected] = eventPlayer.editor_undo.last()
+    
     eventPlayer.editor_undo = null
     #eventPlayer.allowButton(Button.ULTIMATE)
     #eventPlayer.allowButton(Button.JUMP)
