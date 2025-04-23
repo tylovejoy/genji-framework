@@ -43,18 +43,18 @@ settings {
             ],
             "enableSelfInitiatedRespawn": false
         },
-        "assault": {
+        /*"assault": {
             "enabled": usePerks,
             "enablePerks": false
-        },
+        },*/
         "bountyHunter": {
             "enabled": usePerks,
             "enablePerks": false
         },
-        "clash": {
+        /*"clash": {
             "enabled": usePerks,
             "enablePerks": false
-        },
+        },*/
         "ctf": {
             "enabled": usePerks,
             "enablePerks": false
@@ -63,18 +63,18 @@ settings {
             "enabled": usePerks,
             "enablePerks": false
         },*/
-        "escort": {
+        /*"escort": {
             "enabled": usePerks,
             "enablePerks": false
-        },
+        },*/
         "elimination": {
             "enabled": usePerks,
             "enablePerks": false
         },
-        "flashpoint": {
+        /*"flashpoint": {
             "enabled": usePerks,
             "enablePerks": false
-        },
+        },*/
         /*"hybrid": {
             "enabled": usePerks,
             "enablePerks": false
