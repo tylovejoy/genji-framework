@@ -228,24 +228,24 @@ rule "Huds | Leaderboard": # for global instead of tied to player
     LeaderBoardRemake = "{}\n".format(LeaderBoardRemake)
 
     #if LeaderBoardFull[0]:
-    hudSubheader(true[0], " \n{0} 排名前5 {0}".format(iconString(Icon.FLAG)) checkCN " \n{0} Top 5 {0}".format(iconString(Icon.FLAG)), HudPosition.RIGHT, HO.board_top5, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    hudSubheader(localPlayer.toggle_guide, " \n{0} 排名前5 {0}".format(iconString(Icon.FLAG)) checkCN " \n{0} Top 5 {0}".format(iconString(Icon.FLAG)), HudPosition.RIGHT, HO.board_top5, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     LeaderBoardHuds = getLastCreatedText()
-    hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0].last(), HudPosition.RIGHT, HO.board_top5+1, Color.RED, Color.RED, Color.RED, HudReeval.NONE, SpecVisibility.DEFAULT)
+    hudText(localPlayer.toggle_guide, heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0].last(), HudPosition.RIGHT, HO.board_top5+1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
     LeaderBoardHuds.append(getLastCreatedText())
     if LeaderBoardFull[1]:
-        hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[1][0], LeaderBoardFull[1].last(), HudPosition.RIGHT, HO.board_top5+2, Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.NONE, SpecVisibility.DEFAULT)
+        hudText(localPlayer.toggle_guide, heroIcon(Hero.GENJI), LeaderBoardFull[1][0], LeaderBoardFull[1].last(), HudPosition.RIGHT, HO.board_top5+2, Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
         LeaderBoardHuds.append(getLastCreatedText())
         if LeaderBoardFull[2]:
-            hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[2][0], LeaderBoardFull[2].last(), HudPosition.RIGHT, HO.board_top5+3, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.NONE, SpecVisibility.DEFAULT)
+            hudText(localPlayer.toggle_guide, heroIcon(Hero.GENJI), LeaderBoardFull[2][0], LeaderBoardFull[2].last(), HudPosition.RIGHT, HO.board_top5+3, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
             LeaderBoardHuds.append(getLastCreatedText())
             if LeaderBoardFull[3]:
-                hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[3][0], LeaderBoardFull[3].last(), HudPosition.RIGHT, HO.board_top5+4, Color.LIME_GREEN, Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.NONE, SpecVisibility.DEFAULT)
+                hudText(localPlayer.toggle_guide, heroIcon(Hero.GENJI), LeaderBoardFull[3][0], LeaderBoardFull[3].last(), HudPosition.RIGHT, HO.board_top5+4, Color.LIME_GREEN, Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
                 LeaderBoardHuds.append(getLastCreatedText())
                 if LeaderBoardFull[4]:
-                    hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4].last(), HudPosition.RIGHT, HO.board_top5+5, Color.GREEN, Color.GREEN, Color.GREEN, HudReeval.NONE, SpecVisibility.DEFAULT)
+                    hudText(localPlayer.toggle_guide, heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4].last(), HudPosition.RIGHT, HO.board_top5+5, Color.GREEN, Color.GREEN, Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
                     LeaderBoardHuds.append(getLastCreatedText())
 
-    hudHeader(localPlayer if evalOnce(CompMode and not CompTime) else localPlayer.toggle_leaderboard,
+    hudHeader(true if evalOnce(CompMode and not CompTime) else localPlayer.toggle_leaderboard,
         "　　　　 {0} {1} {0} 　　　　\n　　　　　　　　　　　　　　　　　　{2}".format(iconString(Icon.FLAG), "成绩排名" checkCN "Leaderboard", evalOnce(LeaderBoardRemake)),
         HudPosition.TOP, HO.board_display1, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     LeaderBoardHuds.append(getLastCreatedText())
