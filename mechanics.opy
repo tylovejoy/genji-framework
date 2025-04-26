@@ -11,7 +11,7 @@ def CheckUlt(): # checks if ult should be turned on
     eventPlayer.disallowButton(Button.ULTIMATE) # make sure the button cant be pressed until the entire rule ends even if it restarts
     #if eventPlayer.ult_cd_global > 0: # global cooldown construction that works even when rule is reset
     if eventPlayer.skill_ultCd > getTotalTimeElapsed():
-        #waitUntil(not eventPlayer.ult_cd_global, 1)
+        #waitUntil(not eventPlayer.ult_cd_global, true)
         wait(eventPlayer.skill_ultCd - getTotalTimeElapsed())
     else:
         #eventPlayer.ult_cd_global = 1 # this number doesnt matter because its a duration chase

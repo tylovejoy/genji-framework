@@ -85,7 +85,7 @@ rule "Command | Preview Orbs & Portals (Hold Primary + Secondary)":
         elif eventPlayer.getThrottle().x > 0.5:
             eventPlayer.preview_i += len(eventPlayer.preview_array1) - true
         eventPlayer.preview_i %= len(eventPlayer.preview_array1)
-        waitUntil(abs(eventPlayer.getThrottle().x) < 0.5, 1)
+        waitUntil(abs(eventPlayer.getThrottle().x) < 0.5, true)
         wait()
     eventPlayer.setPrimaryFireEnabled(true)
     eventPlayer.setSecondaryFireEnabled(true)

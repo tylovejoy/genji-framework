@@ -631,7 +631,7 @@ rule "Editor |  Fly/Noclip Toggle":
     eventPlayer.startForcingPosition(eventPlayer.editor_fly, true)
     eventPlayer.disableEnvironmentCollision(true)
     eventPlayer.disallowButton(Button.ULTIMATE)
-    waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_1), 1)
+    waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_1), true)
 
     while eventPlayer.isAlive() and eventPlayer.editor_fly and not eventPlayer.isHoldingButton(Button.ABILITY_1):
         if not (eventPlayer == hostPlayer and EditorMoveItem):
@@ -751,7 +751,7 @@ rule "Editor | create cp/orb":
         )
         KillBallEffects.append(getLastCreatedEntity())
         bigMessage(true[0], "{1} {0}".format(eventPlayer.checkpoint_current, "新击杀球已创建! \n仅生效于检查点" checkCN "New boundary sphere has been created! \nOnly valid for this checkpoint"))
-        waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)), 1)
+        waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)), true)
         #EditUpdateSelectedIds() # to arrow during the placement properly
         while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             KillBallPositions[EditSelected] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 8, null, null, false).getHitPosition()
@@ -773,7 +773,7 @@ rule "Editor | create cp/orb":
         )
         BounceEffects.append(getLastCreatedEntity())
         bigMessage(true[0], "{1} {0}".format(eventPlayer.checkpoint_current, "新弹球已创建! \n仅生效于检查点" checkCN "New Bounce Orb has been created! \nOnly valid for this checkpoint"))
-        waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)), 1)
+        waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)), true)
         while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             BouncePositions[EditSelected] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 7, null, null, false).getHitPosition()
             wait()
@@ -790,7 +790,7 @@ rule "Editor | create cp/orb":
         )
         PortalEffects.append(getLastCreatedEntity())
         EditSelected = len(CustomPortalStart) - 1
-        waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)), 1)
+        waitUntil(not (eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)), true)
         #EditUpdateSelectedIds()
         while eventPlayer.isHoldingButton(Button.INTERACT) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             CustomPortalStart[EditSelected] = raycast(eventPlayer.getEyePosition(), eventPlayer.getEyePosition()+eventPlayer.getFacingDirection() * 6, null, null, false).getHitPosition()
@@ -1014,7 +1014,7 @@ rule "Editor | cp add/remove teleport":
     @Condition len(CheckpointPositions) > 1
     @Condition EditorMode.current == 0
     @Condition hostPlayer.editor_lock == false
-    waitUntil(hostPlayer.isHoldingButton(Button.MELEE) or not (hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.RELOAD)), 1) # prevent overlap with save map
+    waitUntil(hostPlayer.isHoldingButton(Button.MELEE) or not (hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.RELOAD)), true) # prevent overlap with save map
     if hostPlayer.isHoldingButton(Button.MELEE) or hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.RELOAD):
       return
 
@@ -1155,7 +1155,7 @@ rule "Editor | move object":
         eventPlayer.addon_toggle3rdPov = false
     eventPlayer.editor_fly = null
 
-    waitUntil(not (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isHoldingButton(Button.ABILITY_2)), 1)
+    waitUntil(not (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isHoldingButton(Button.ABILITY_2)), true)
     #eventPlayer.disallowButton(Button.ULTIMATE)
     #eventPlayer.disallowButton(Button.JUMP)
     eventPlayer.setStatusEffect(null, Status.HACKED, Math.INFINITY)
@@ -1189,7 +1189,7 @@ rule "Editor | move object":
         # move destination
         eventPlayer.startCamera(CustomPortalEndpoint[EditSelected] + eventPlayer.getFacingDirection() * -4,
             CustomPortalEndpoint[EditSelected], 30)
-        waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 1)
+        waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), true)
         while not (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
             CustomPortalEndpoint[EditSelected] += flyMovementDelta
             wait()
@@ -1223,5 +1223,5 @@ rule "Editor | move object":
     eventPlayer.stopForcingPosition()
     EditorMoveItem = null
     UpdateCache()
-    waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE),1)
+    waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), true)
     eventPlayer.editor_lock = false
