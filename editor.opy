@@ -1155,7 +1155,7 @@ rule "Editor | move object":
         eventPlayer.addon_toggle3rdPov = false
     eventPlayer.editor_fly = null
 
-    waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 1)
+    waitUntil(not (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isHoldingButton(Button.ABILITY_2)), 1)
     #eventPlayer.disallowButton(Button.ULTIMATE)
     #eventPlayer.disallowButton(Button.JUMP)
     eventPlayer.setStatusEffect(null, Status.HACKED, Math.INFINITY)
