@@ -406,7 +406,6 @@ rule "General | Ground: Traces, Arrive, & Reset":
         # Do nothing
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpcircleradius:
         # arrived ----------------------------------------------------------------------------------------------------
-        eventPlayer.checkpoint_moved = true
         if len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks: # kill player if not colleted the locks
             if eventPlayer.isUsingAbility1():
                 waitUntil(not eventPlayer.isUsingAbility1(), 1)
@@ -429,6 +428,7 @@ rule "General | Ground: Traces, Arrive, & Reset":
             CheckpointFailReset()
             goto lbl_a
 
+        eventPlayer.checkpoint_moved = true
         eventPlayer.checkpoint_current += 1
         UpdateCache()
         # remove ult feature disabled for speedruning purposes
