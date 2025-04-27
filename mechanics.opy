@@ -11,7 +11,7 @@ def CheckUlt(): # checks if ult should be turned on
     eventPlayer.disallowButton(Button.ULTIMATE) # make sure the button cant be pressed until the entire rule ends even if it restarts
     #if eventPlayer.ult_cd_global > 0: # global cooldown construction that works even when rule is reset
     if eventPlayer.skill_ultCd > getTotalTimeElapsed():
-        #waitUntil(not eventPlayer.ult_cd_global, 1)
+        #waitUntil(not eventPlayer.ult_cd_global, true)
         wait(eventPlayer.skill_ultCd - getTotalTimeElapsed())
     else:
         #eventPlayer.ult_cd_global = 1 # this number doesnt matter because its a duration chase
@@ -40,7 +40,7 @@ def CheckUlt(): # checks if ult should be turned on
 
 def CheckDash(): # checks if dash should be  turned on
     @Name "Mechanic | SUB Check Dash"
-    waitUntil(not eventPlayer.isUsingAbility1(), 2)
+    waitUntil(not eventPlayer.isUsingAbility1(), true)
     if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and eventPlayer.editor_on) or (not eventPlayer.checkpoint_notLast):
         goto lbl_a #skip msg if these
     elif eventPlayer.checkpoint_current in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= cpcircleradius: 

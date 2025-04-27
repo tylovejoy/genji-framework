@@ -1,8 +1,9 @@
 #!optimizeForSize
 ##!suppressWarnings w_ow2_communicate_bug
 ##!suppressWarnings w_tags #Workshop Settings
+#!suppressWarnings w_lone_else
 ###############################################################################
-#!define versionhere "v1.10.3D"
+#!define versionhere "v1.10.3E"
 #♨ Dev Build Icon
 ###############################################################################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
