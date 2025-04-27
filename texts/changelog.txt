@@ -433,7 +433,7 @@ fixed:
 - Enable new bans to readjust CP values upon creation & deletion of a CP
 - Removed checks that prevented climb from being reset for non-Genjis
 - Removed an exploit allowing climbing with climb ban enabled
-  * Found by `@Sumpin` +100xp
+  * Reported by `@Sumpin` +100xp
 
 `@Framework Patch Notes`
 # 1.10.2
@@ -449,7 +449,7 @@ fixed:
   * Ex. Quick, AFK, Spectate, etc
 - Emoting is not reset immediately for ban emote hop ♥
 - Faster unlimited dashes
-  * `@Kackspn` +1xp
+  * Reported by `@Kackspn` +1xp
 ### Editor
 - Move Checkpoint
   * Hold Primary for normal speed modifier
@@ -481,13 +481,13 @@ fixed:
 - Ban death hop would not prevent early climb when checkpoint was set too high
 - Ban bhop would not trigger when ColorConfig[bhopclimb_used] was set to Color.GREEN
 - Save Double ban was persisting when Invincible or on last point
-  * Found by `@bioslet` +5xp
+  * Reported by `@bioslet` +5xp
 - Rainbow finish rings was not displaying
-  * Found by `@Sumpin` +5xp
+  * Reported by `@Sumpin` +5xp
 - Invincibility Mode was resuming timer
-  * Found by `@Sumpin` +5xp
+  * Reported by `@Sumpin` +5xp
 - Spray would disappear upon returning from spectator
-  * Found by `@Shade Yato`
+  * Reported by `@Shade Yato`
 ### Obsoleting
 - Dash Start
   * Setting `ban Dash Start - 0关卡Shift` has been removed.
@@ -507,7 +507,7 @@ fixed:
    * Displays in a single hud
  - Practice Mode able to switch levels faster
  - Spectate missing huds
-   * Found by `@Kackspn` +5xp
+   * Reported by `@Kackspn` +5xp
 ### Editor
  - Boundary Spheres
    * Fomerly named "Kill Orbs"
@@ -515,46 +515,54 @@ fixed:
    * Positive radius to keep players out
    * Negative radius to have players stay in
  - Fixed global portals from becoming uneditable
-   * Found by `@Hello` +5xp
+   * Reported by `@Hello` +5xp
  - Export
    * Instructions display in single hud
    * Will export host as map creator when no creator attributed
 
-`@Framework Patch Notes`
 # 1.10.3A
  - Fix exported data from overwriting customization settings
-   * Found by `@Nitroh` +5xp
+   * Reported by `@Nitroh` +5xp
  - Increased reset hop timing window to 0.096s
-   * Found by `@CoralMage` +5xp
+   * Reported by `@CoralMage` +5xp
    * Replication example by `@bioslet` +5xp
 
-`@Framework Patch Notes`
 # 1.10.3B
  - Fix swapped current editor mode arrow
 
-`@Framework Patch Notes`
 # 1.10.3C
 ### Practice Mode
  - Fixed toggle state issue
  - Fixed cache invalidation issue
  - Fixed timer always resuming when invincible
-   * Found by `@TPS` +5xp
+   * Reported by `@TPS` +5xp
 
-`@Framework Patch Notes`
 # 1.10.3D
 ### Objects
  - Fixed invisible portals
-   * Found by `@bioslet` +5xp
+   * Reported by `@bioslet` +5xp
  - Fixed lock orbs from staying visible after collected
-   * Found by `@Shade` & `@CoralMage` +5xp
+   * Reported by `@Shade` & `@CoralMage` +5xp
 ### Commands
  - Fixed restart command spam when held
-   * Found by `@bioslet` +5xp
+   * Reported by `@bioslet` +5xp
 ### Leaderboard
  - Fixed updating last completion from always being new best time
-   * Found by `@lostje` & `@bioslet` +5xp
+   * Reported by `@lostje` & `@bioslet` +5xp
 ### Editor
  - Bans
    * List includes Save Double
  - Abilities
    * Only host has Dash and Ultimate always available.
+
+# 1.10.3E
+### HUDS
+ - Ban icons
+   * Readded above level
+   * Can be hidden with toggle HUD
+ - Top 5 leaderboard
+   * Can be hidden with toggle HUD
+### Objects
+ - Fixed cancel placement from corrupting map object data
+   * Reported by `@hello_5702` & `@bioslet` +5xp
+ - Prevent immediate upwards movement of objects

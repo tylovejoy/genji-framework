@@ -361,7 +361,7 @@ rule "General | Player Initialize":
             eventPlayer.setMoveSpeed(0)
             eventPlayer.setAbility1Enabled(false)
             eventPlayer.setUltEnabled(false)
-            waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT),1)
+            waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), true)
             waitUntil(eventPlayer.isHoldingButton(Button.INTERACT) or CompTime < 1, Math.INFINITY)
             eventPlayer.setMoveSpeed(100)
             eventPlayer.comp_instructionHud = false
@@ -406,10 +406,7 @@ rule "General | Ground: Traces, Arrive, & Reset":
         # Do nothing
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpcircleradius:
         # arrived ----------------------------------------------------------------------------------------------------
-        eventPlayer.checkpoint_moved = true
         if len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks: # kill player if not colleted the locks
-            if eventPlayer.isUsingAbility1():
-                waitUntil(not eventPlayer.isUsingAbility1(), 1)
             smallMessage(eventPlayer, "   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[Customize.orb_lock]))
             #kill(eventPlayer, null)
             CheckpointFailReset()
@@ -429,6 +426,7 @@ rule "General | Ground: Traces, Arrive, & Reset":
             CheckpointFailReset()
             goto lbl_a
 
+        eventPlayer.checkpoint_moved = true
         eventPlayer.checkpoint_current += 1
         UpdateCache()
         # remove ult feature disabled for speedruning purposes
@@ -522,8 +520,8 @@ rule "General | Bounce Ball / Orb":
 
         if BounceToggleDash[eventPlayer.cache_bounceTouched]:
             if eventPlayer.isUsingAbility1():
-                waitUntil(not eventPlayer.isUsingAbility1(), 1)
-                wait(0.032) # wait til set false by check
+                waitUntil(not eventPlayer.isUsingAbility1(), true)
+                wait()
             eventPlayer.setAbility1Enabled(true)
             smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready"))
 
@@ -544,20 +542,20 @@ rule "General | Death Reset":
     CheckpointFailReset()
     # rest is to prevent dead spamming from crashing server
     # but doing waits only when needed without relying on a variable count
-    waitUntil(eventPlayer.isAlive(), 1)
-    waitUntil(eventPlayer.isDead(), 1)
+    waitUntil(eventPlayer.isAlive(), true)
+    waitUntil(eventPlayer.isDead(), true)
     if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):
         wait(0.16)
         eventPlayer.resurrect()
         CheckpointFailReset()
-        waitUntil(eventPlayer.isAlive(), 1)
-        waitUntil(eventPlayer.isDead(), 1)
+        waitUntil(eventPlayer.isAlive(), true)
+        waitUntil(eventPlayer.isDead(), true)
         if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):
             wait(0.44)
             eventPlayer.resurrect()
             CheckpointFailReset()
-            waitUntil(eventPlayer.isAlive(), 1)
-            waitUntil(eventPlayer.isDead(), 1)
+            waitUntil(eventPlayer.isAlive(), true)
+            waitUntil(eventPlayer.isDead(), true)
             if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):
                 wait(0.64)
                 eventPlayer.respawn()
