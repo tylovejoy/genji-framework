@@ -65,9 +65,8 @@ rule "Command | Preview Orbs & Portals (Hold Primary + Secondary)":
         for eventPlayer.preview_i in range(len(eventPlayer.cache_portalStart)):
             eventPlayer.preview_array1.append([eventPlayer.cache_portalStart[eventPlayer.preview_i],eventPlayer.cache_portalEnd[eventPlayer.preview_i]])
             eventPlayer.preview_array2.append([[eventPlayer.preview_i, false],[eventPlayer.preview_i, true]])
-            wait()
 
-    wait(0.1)
+    wait()
     eventPlayer.preview_i = 0
     if eventPlayer.addon_toggle3rdPov:
         eventPlayer.addon_toggle3rdPov = false
