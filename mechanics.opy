@@ -40,7 +40,7 @@ def CheckUlt(): # checks if ult should be turned on
 
 def CheckDash(): # checks if dash should be  turned on
     @Name "Mechanic | SUB Check Dash"
-    waitUntil(not eventPlayer.isUsingAbility1(), 2)
+    waitUntil(not eventPlayer.isUsingAbility1(), true)
     if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and eventPlayer.editor_on) or (not eventPlayer.checkpoint_notLast):
         goto lbl_a #skip msg if these
     elif eventPlayer.checkpoint_current in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= cpcircleradius: 
