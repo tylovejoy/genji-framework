@@ -566,3 +566,8 @@ fixed:
  - Fixed cancel placement from corrupting map object data
    * Reported by `@hello_5702` & `@bioslet` +5xp
  - Prevent immediate upwards movement of objects
+
+ # 1.10.
+### Objects
+ - Fixed upwards movement prevention from forcing moving up objects
+   * Reported by `@n1troh`
