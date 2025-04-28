@@ -386,7 +386,7 @@ rule "Editor | Hud and Effects":
                 iconString(Icon.ARROW_RIGHT) if EditorMode.portal else "     ")
         if hostPlayer.isHoldingButton(Button.MELEE) else
             " {1} {0} ".format(
-                ["checkpoints" ,"boundary sphere","function orbs","skill bans","portals"][EditorMode.current],
+                ["checkpoints" ,"boundary spheres","function orbs","skill bans","portals"][EditorMode.current],
                 [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][EditorMode.current])
         if localPlayer == hostPlayer else
             " {0} Genji editor {0} ".format(iconString(Icon.BOLT)),
@@ -668,18 +668,18 @@ rule "Editor | change mode":
 
 def EditUpdateSelectedIds():
     @Name "Editor | update selected id"
-
+    #$$
     if EditorMode.killBall:
-        EditSelectIdArray  = [i for _, i in KillballCheckpoints]
-        EditSelectIdArray = [ i for i in EditSelectIdArray if KillballCheckpoints[i] == hostPlayer.checkpoint_current ]
+        EditSelectIdArray = [i for _, i in KillballCheckpoints]
+        EditSelectIdArray = [i for i in EditSelectIdArray if KillballCheckpoints[i] == hostPlayer.checkpoint_current ]
     elif EditorMode.functionOrb:
-        EditSelectIdArray  = [i for _, i in BouncePadCheckpoints]
-        EditSelectIdArray = [ i for i in EditSelectIdArray if BouncePadCheckpoints[i] == hostPlayer.checkpoint_current ]
+        EditSelectIdArray = [i for _, i in BouncePadCheckpoints]
+        EditSelectIdArray = [i for i in EditSelectIdArray if BouncePadCheckpoints[i] == hostPlayer.checkpoint_current ]
     elif EditorMode.portal:
-        EditSelectIdArray  = [i for _, i in CustomPortalCP]
+        EditSelectIdArray = [i for _, i in CustomPortalCP]
         EditSelectIdArray = [i for i in EditSelectIdArray if CustomPortalCP[i] < 0 or CustomPortalCP[i] == hostPlayer.checkpoint_current]
     else:
-        EditSelectIdArray  = []
+        EditSelectIdArray = []
 
 def EditorSelectLast():
     @Name "Editor | select last"
@@ -1155,7 +1155,7 @@ rule "Editor | move object":
         eventPlayer.addon_toggle3rdPov = false
     eventPlayer.editor_fly = null
 
-    waitUntil(not (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.isHoldingButton(Button.ABILITY_2)), true)
+    waitUntil(not (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.ABILITY_2)), true)
     #eventPlayer.disallowButton(Button.ULTIMATE)
     #eventPlayer.disallowButton(Button.JUMP)
     eventPlayer.setStatusEffect(null, Status.HACKED, Math.INFINITY)
