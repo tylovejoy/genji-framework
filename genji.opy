@@ -303,9 +303,9 @@ rule "General | Match time":
     pauseMatchTime()
     wait()
     TimeRemaining = 265
-    while TimeRemaining or hostPlayer.editor_saveHud:
+    while TimeRemaining or hostPlayer.editor_saveCache:
         wait(60)
-        if not hostPlayer.editor_saveHud:
+        if not hostPlayer.editor_saveCache:
             TimeRemaining--
             if CompMode:
                 CompTime--

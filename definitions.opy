@@ -264,7 +264,7 @@ playervar preview_i                         # int                       --- prev
 playervar editor_on                          # bool                      --- on all players, but only gets checked from host player
 playervar editor_modeSelect                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
 playervar editor_fly                         # vector/null               --- null if not flying, else vector position, added by fisho
-playervar editor_saveHud                        # array                     --- array of save map hud ids
+playervar editor_saveCache                        # array                     --- array of save map hud ids
 playervar editor_undo
 playervar editor_lock                        # bool                      --- ensure only 1 editor command can go of at the time
 playervar editor_hitboxEffect

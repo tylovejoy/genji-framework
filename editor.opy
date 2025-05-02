@@ -12,8 +12,11 @@ rule "Editor | Clear Excess Data to Save Map":
     #@Condition eventPlayer.editor_lock == false # !!! don't lock. always be sure data can be exported incase of a perma lock situation
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.editor_lock = true # doesnt matter thats its in pasta's because it wil be fixed on spawning
-    eventPlayer.editor_saveHud = TimeRemaining
+    eventPlayer.editor_saveCache[0] = TimeRemaining
     TimeRemaining = null
+    eventPlayer.editor_saveCache[1] = ColorConfig
+    ColorConfig = null
+
     CheckpointRings_Editing = null
     KillBallEffects = null
     TempIterator1 = null
@@ -26,7 +29,6 @@ rule "Editor | Clear Excess Data to Save Map":
     #SavePauseTime = null
     #SavePauseEnabled = null
     SaveElapsed = null
-    ColorConfig = null
     CompMode = null
     LeaderBoardFull = null
     LeaderBoardHuds = null
@@ -106,23 +108,24 @@ rule "Editor | Clear Excess Data to Save Map":
         " ESC → SHOW LOBBY → SETTINGS → SHARE CODE →\n"
         " UPLOAD TO EXISTING CODE → PASTE THE CODE YOU CREATED IN STEP 4",
        HudPosition.TOP, HO.edit_clearec1, Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT)
-    eventPlayer.editor_saveHud.append(getLastCreatedText())
+    eventPlayer.editor_saveCache[2]=getLastCreatedText()
 
     hudHeader(eventPlayer,
         "    > 按互动键关闭当前窗口 <    "
         checkCN
         "    > Press Interact to close this window <    "
         , HudPosition.TOP, HO.edit_clearec3, Color.LIME_GREEN, HudReeval.STRING)
-    eventPlayer.editor_saveHud.append(getLastCreatedText())
+    eventPlayer.editor_saveCache[3]=getLastCreatedText()
 
     enableInspector()
     disableInspector()
     waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
     waitUntil(eventPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
-    TimeRemaining = eventPlayer.editor_saveHud[0]
-    destroyHudText(eventPlayer.editor_saveHud[1])
-    destroyHudText(eventPlayer.editor_saveHud.last())
-    eventPlayer.editor_saveHud = null
+    TimeRemaining = eventPlayer.editor_saveCache[0]
+    ColorConfig = eventPlayer.editor_saveCache[1]
+    destroyHudText(eventPlayer.editor_saveCache[2])
+    destroyHudText(eventPlayer.editor_saveCache.last())
+    eventPlayer.editor_saveCache = null
     eventPlayer.editor_lock = false
 
 rule "Editor | Hud and Effects":
@@ -356,7 +359,7 @@ rule "Editor | Hud and Effects":
         "to save map, hold {0} + {1} + {2} then follow instructions" LeftAlign96.format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
         HudPosition.LEFT, HO.edit_savemap, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-    hudText(localPlayer if not localPlayer.editor_saveHud else null,
+    hudText(localPlayer if not localPlayer.editor_saveCache else null,
         (   "{0} 检查点模式\n"
             "{1} 击杀球模式\n"
             "{2} 弹球模式\n"
