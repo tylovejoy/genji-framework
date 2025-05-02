@@ -637,7 +637,7 @@ rule "Editor |  Fly/Noclip Toggle":
     waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_1), true)
 
     while eventPlayer.isAlive() and eventPlayer.editor_fly and not eventPlayer.isHoldingButton(Button.ABILITY_1):
-        if not (eventPlayer == hostPlayer and EditorMoveItem):
+        if not (eventPlayer == hostPlayer and eventPlayer.editor_lock):
             eventPlayer.editor_fly += flyMovementDelta
         wait()
     
@@ -1068,7 +1068,7 @@ rule "Editor | moving checkpoint":
 
     eventPlayer.stopCamera()
     eventPlayer.setMoveSpeed(100)
-    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
+    if eventPlayer.isHoldingButton(Button.ABILITY_2):
         CheckpointPositions[eventPlayer.checkpoint_current] = eventPlayer.editor_undo
         waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_2), Math.INFINITY)
 
@@ -1156,13 +1156,14 @@ rule "Editor | move object":
     EditorMoveItem = true
     if eventPlayer.addon_toggle3rdPov:
         eventPlayer.addon_toggle3rdPov = false
-    eventPlayer.editor_fly = null
+    #eventPlayer.editor_fly = null
 
     waitUntil(not (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or eventPlayer.isHoldingButton(Button.ABILITY_2)), true)
     #eventPlayer.disallowButton(Button.ULTIMATE)
     #eventPlayer.disallowButton(Button.JUMP)
     eventPlayer.setStatusEffect(null, Status.HACKED, Math.INFINITY)
-    eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
+    eventPlayer.setMoveSpeed(false)
+    #eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
     
     if EditorMode.killBall:
         eventPlayer.editor_undo = KillBallPositions[EditSelected]
@@ -1223,7 +1224,8 @@ rule "Editor | move object":
     #eventPlayer.allowButton(Button.JUMP)
     eventPlayer.clearStatusEffect(Status.HACKED)
     eventPlayer.stopCamera()
-    eventPlayer.stopForcingPosition()
+    eventPlayer.setMoveSpeed(100)
+    #eventPlayer.stopForcingPosition()
     EditorMoveItem = null
     UpdateCache()
     waitUntil(not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), true)
