@@ -59,5 +59,12 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@Shade` & `@CoralMage`
  - Leaderboard updates player time to a worse time [FIXED]
    * Reported by `@lostje` & `@bioslet`
- - Move Orb move up prevention forcing move up
+ - Move Orb move up prevention forcing move up [FIXED]
    * Reported by `@n1troh`
+ - Colors revert to blue upon export [FIXED]
+   * Reported by `@CoralMage`
+ - Group Up addon causes weird impulse
+   * Reported by `@bioslet`
+ - Missing huds [USER ERROR]
+   * Reported by `@hello_5702`
+   * Skill issue
