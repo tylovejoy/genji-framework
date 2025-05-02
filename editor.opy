@@ -637,8 +637,14 @@ rule "Editor |  Fly/Noclip Toggle":
     waitUntil(not eventPlayer.isHoldingButton(Button.ABILITY_1), true)
 
     while eventPlayer.isAlive() and eventPlayer.editor_fly and not eventPlayer.isHoldingButton(Button.ABILITY_1):
-        if not (eventPlayer == hostPlayer and eventPlayer.editor_lock):
+        if eventPlayer != hostPlayer or not eventPlayer.editor_lock:
             eventPlayer.editor_fly += flyMovementDelta
+        elif EditorMode.checkpoint:
+            #$$ Due to moving checkpoint holding Ability 2
+            eventPlayer.editor_fly += ((0.00288 + 0.09312 * eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)) * \
+                (eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z + \
+                worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION) + \
+                Vector.UP * (eventPlayer.isHoldingButton(Button.JUMP) - eventPlayer.isHoldingButton(Button.CROUCH))))
         wait()
     
     eventPlayer.allowButton(Button.ULTIMATE)
