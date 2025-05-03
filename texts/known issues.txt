@@ -63,7 +63,7 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@n1troh`
  - Colors revert to blue upon export [FIXED]
    * Reported by `@CoralMage`
- - Group Up addon causes weird impulse
+ - Group Up addon causing extra movement [FIXED]
    * Reported by `@bioslet`
  - Missing huds [USER ERROR]
    * Reported by `@hello_5702`
