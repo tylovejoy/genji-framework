@@ -278,7 +278,7 @@ rule "Addon | Group Up":
 
     eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.checkpoint_current + 1] + 0.1 * Vector.UP, false)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.3)
-    wait()
+    wait(7 * 0.016)
     eventPlayer.stopForcingPosition()
 
 def AddonCustomLoadAndReset():
@@ -323,26 +323,21 @@ rule "Addon | Fake Triple Jump - 假三段跳":
     @Disabled
     @Event eachPlayer
     @Hero genji
-    #Method D
-    #Updated Script by LulledLion 9-1-24
     @Condition BanTriple == false
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.skill_usedDouble == false #Double cannot be used already
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false #Don't trigger on reset
     eventPlayer.addon_enableDoubleChecks = true #Enable checking double jump
     wait()
-    if RULE_CONDITION:
-        goto RULE_START
-    if eventPlayer.skill_usedDouble:
+    if RULE_CONDITION: goto RULE_START
+    if eventPlayer.skill_usedDouble or eventPlayer.isHoldingButton(Button.RELOAD):
         return
     #Input window to Triple
-    waitUntil(eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD), 0.048)
-    #Cancel Triple
-    if eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD) or eventPlayer.hasStatusEffect(Status.ROOTED):
-        return
-    #Apply fake triple jump
+    waitUntil(eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP), 0.048)
     if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping():
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+    else:
+        if RULE_CONDITION: goto RULE_START
 
 rule "Addon | fisho cp cheat for overpy toggle":
     @Event eachPlayer
@@ -353,11 +348,10 @@ rule "Addon | fisho cp cheat for overpy toggle":
     @Condition eventPlayer.toggle_practice == false
 
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current - 1])
         eventPlayer.checkpoint_current -= 1
     else:
         eventPlayer.checkpoint_current += 1
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current])
+    CheckpointFailReset()
 
 rule "Addon | Ledge Grab Patch v1.5":
     # Obsolete for OW v2.12
