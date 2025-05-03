@@ -567,7 +567,19 @@ fixed:
    * Reported by `@hello_5702` & `@bioslet` +5xp
  - Prevent immediate upwards movement of objects
 
- # 1.10.
-### Objects
- - Fixed upwards movement prevention from forcing moving up objects
-   * Reported by `@n1troh`
+# 1.10.3F
+### Editor
+ - Fixed objects colors upon exporting
+   * Reported by `@CoralMage` +5xp
+ - Fixed objects upwards movement prevention
+   * Reported by `@n1troh` +5xp
+ - Fly mode
+   * Movement disabled when changes being made
+     - Move checkpoint control scheme
+       * Press Jump to move Up
+       * Press Crouch to move Down
+   * Reported by `@bioslet` +5xp
+### Addon
+ - Fixed Group Up from causing extra movement
+   * Reported by `@bioslet` +5xp
+ - Fixed Triple Jump to restart when climbing or dashing after landing
