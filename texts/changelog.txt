@@ -571,7 +571,7 @@ fixed:
 ### Editor
  - Fixed objects colors upon exporting
    * Reported by `@CoralMage` +5xp
- - Fixed objects upwards movement prevention
+ - Fixed prevention for objects upwards movement
    * Reported by `@n1troh` +5xp
  - Fly mode
    * Movement disabled when changes being made
