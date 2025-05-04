@@ -305,7 +305,6 @@ subroutine EditorSelectLast
 subroutine AddonCustomLoadAndReset
 subroutine AddonCheckMap
 subroutine Addon3rdPerson
-subroutine EffectsCreate
 subroutine RebuildKillOrbs
 subroutine RebuildPortals
 subroutine RebuildBounceOrbs
