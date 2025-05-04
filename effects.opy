@@ -71,7 +71,7 @@ def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place 
             Effect.ORB,
             ColorConfig[Customize.orb_lock] if BounceToggleLock[evalOnce(TempIterator1)] else ColorConfig[Customize.orb_normal],
             BouncePositions[evalOnce(TempIterator1)],
-            true,
+            1,
             EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
         BounceEffects.append(getLastCreatedEntity())
         #wait()
