@@ -372,10 +372,11 @@ rule "Huds | Each Player":
 
 def UpdateTitle():
     @Name "Huds | SUB Update Title"
-    if CompMode or eventPlayer.editor_on or not (len(TitleData) and eventPlayer.checkpoint_current in TitleData[0]) or eventPlayer.toggle_practice:
+    if CompMode or eventPlayer.editor_on or not (len(TitleData) and eventPlayer.checkpoint_current in TitleData[0]):# or eventPlayer.toggle_practice:
         return
     destroyInWorldText(eventPlayer.cache_titleHud)
-    createInWorldText((not eventPlayer.toggle_invisible)[0],TitleData[1][TitleData[0].index(eventPlayer.checkpoint_current)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData.last()[TitleData[0].index(eventPlayer.checkpoint_current)], SpecVisibility.DEFAULT)
+    createInWorldText((not eventPlayer.toggle_invisible)[0],TitleData[1][TitleData[0].index(eventPlayer.checkpoint_current)], eventPlayer, 1.1,
+        Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData.last()[TitleData[0].index(eventPlayer.checkpoint_current)], SpecVisibility.DEFAULT)
     eventPlayer.cache_titleHud = getLastCreatedText()
 
 rule "Huds | Addons":
