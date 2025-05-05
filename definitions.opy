@@ -14,20 +14,18 @@
 
 #!define insert(insert_array, insert_index, insert_value)\
 insert_array.append(insert_value)\
-insert_array = [elementhere if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for elementhere, i in insert_array]
-#$$ i != eventPlayer.checkpoint_current → i-eventPlayer.checkpoint_current
+insert_array = [e if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for e, i in insert_array]
+
 #!define toggleCpInArray(baninput)\
 if eventPlayer.checkpoint_current in baninput:\
-    baninput = [i for i in baninput if i != eventPlayer.checkpoint_current]\
+    baninput.remove(eventPlayer.checkpoint_current)\
 else:\
     baninput.append(eventPlayer.checkpoint_current)
 
 #!define removeCPandLower(arrayname)\
-arrayname = [i for i in arrayname if i != hostPlayer.checkpoint_current]\
+arrayname.remove(hostPlayer.checkpoint_current)\
 arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in arrayname]
 
-#!define LeftAlign32 "                                "
-#!define LeftAlign64 "                                                                "
 #!define LeftAlign96 "                                                                                                "
 #!define LeftAlign128 "                                                                                                                                "
 
