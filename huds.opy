@@ -92,7 +92,7 @@ rule "Huds | Global Localplayer":
 
 
     hudSubtext(localPlayer,
-        [] if localPlayer.timer_splitDisplay == -Math.INFINITY or localPlayer.toggle_spectate else(
+        [] if localPlayer.timer_splitDisplay <= -Math.INFINITY or localPlayer.toggle_spectate else(
             ("单关用时 {0}" LeftAlign96.format(localPlayer.timer_splitDisplay)
             checkCN
             "Split: {0}" LeftAlign96.format(localPlayer.timer_splitDisplay))),

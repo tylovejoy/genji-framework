@@ -20,9 +20,9 @@ rule "Command | Split hide (Hold Dash + Primary + Secondary)":
     wait(1, Wait.ABORT_WHEN_FALSE)
 
     #smallMessage(eventPlayer, "   split display off" if eventPlayer.timer_splitDisplay != -Math.INFINITY else "   split display on")
-    eventPlayer.timer_splitDisplay = 0 if eventPlayer.timer_splitDisplay == -Math.INFINITY else -Math.INFINITY
+    eventPlayer.timer_splitDisplay = 0 if eventPlayer.timer_splitDisplay <= -Math.INFINITY else -Math.INFINITY
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
-    smallMessage(eventPlayer, "   split display off" if eventPlayer.timer_splitDisplay == -Math.INFINITY else "   split display on")
+    smallMessage(eventPlayer, "   split display off" if eventPlayer.timer_splitDisplay <= -Math.INFINITY else "   split display on")
     wait(0.32)
 
 rule "Command | Toggle Invisible (Hold Deflect)":
@@ -131,7 +131,7 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
             CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts
     eventPlayer.editor_fly = null
     eventPlayer.checkpoint_current = 0
-    eventPlayer.timer_splitDisplay = -Math.INFINITY if eventPlayer.timer_splitDisplay == -Math.INFINITY else 0 #$$ -Math.INFINITY * (eventPlayer.timer_splitDisplay == -Math.INFINITY)
+    eventPlayer.timer_splitDisplay = -Math.INFINITY * (eventPlayer.timer_splitDisplay <= -Math.INFINITY)
     eventPlayer.toggle_practice = false
     eventPlayer.timer_practice = 0
     stopChasingVariable(eventPlayer.timer_practice)
@@ -226,7 +226,7 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
         bigMessage(eventPlayer,"练习模式" checkCN "Practice mode")
         TimerPause()
         eventPlayer.checkpoint_practice = eventPlayer.checkpoint_current
-        eventPlayer.timer_splitDisplay = -Math.INFINITY if eventPlayer.timer_splitDisplay == -Math.INFINITY else 0 #$$ -Math.INFINITY * (eventPlayer.timer_splitDisplay == -Math.INFINITY)
+        eventPlayer.timer_splitDisplay = -Math.INFINITY * (eventPlayer.timer_splitDisplay <= -Math.INFINITY)
         eventPlayer.timer_split = 0
         eventPlayer.timer_practice = 0
         chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)
