@@ -18,9 +18,9 @@ rule "Effects | Setup Effects":
                 PortalNames[TempIterator1],
                 PortalLoc[TempIterator1] + Vector.UP,
                 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT)
-    waitUntil(entityExists([i for i in getAllPlayers() if not i.isDummy()]), Math.INFINITY)
+    waitUntil(entityExists(getAllPlayers()), Math.INFINITY)
     wait()
-    if [i for i in getAllPlayers() if not i.isDummy()][0].editor_on:
+    if getAllPlayers()[0].editor_on:
         RebuildKillOrbs()
         RebuildBounceOrbs()
         RebuildPortals()
