@@ -48,7 +48,8 @@ a few huds show/hides when reviewarray is not null !!!!!!!!!!!!!!!!!
 */
 rule "Command | Preview Orbs & Portals (Hold Primary + Secondary)":
     @Event eachPlayer
-    @Condition eventPlayer.editor_on == false
+    #@Condition eventPlayer.editor_on == false
+    @Condition eventPlayer.lockState == false
     @Condition eventPlayer.lockState == false
     @Condition eventPlayer.checkpoint_notLast
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)

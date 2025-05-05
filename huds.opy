@@ -81,14 +81,14 @@ rule "Huds | Global Localplayer":
         checkCN
         "Hold {0} + {1} | Preview cp".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE)),
         HudPosition.RIGHT, HO.com_preview, evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.preview_array1 else evalOnce(ColorConfig[Customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-    HudStoreEdit.append(getLastCreatedText())
+    #HudStoreEdit.append(getLastCreatedText())
 
-    hudSubheader(localPlayer if localPlayer.preview_array1 and localPlayer.toggle_guide else null,
+    hudSubheader(true if localPlayer.preview_array1 and localPlayer.toggle_guide else null,
         "移动键 ◀ ▶ | 预览其他\n移动键 ◀ ▶ | 修改间距 \n视角移动 | 调整浏览视角"
         checkCN
         "Walk ◀ ▶ | preview others\nWalk ▲ ▼ | modify zoom\nAim | change preview angle",
         HudPosition.TOP, HO.com_previewsub, ColorConfig[Customize.command_highlight], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    HudStoreEdit.append(getLastCreatedText())
+    #HudStoreEdit.append(getLastCreatedText())
 
 
     hudSubtext(localPlayer,
