@@ -320,15 +320,17 @@ rule "General | Match time":
 
 rule "General | Player Initialize":
     @Event playerJoined
-    @Condition eventPlayer.isDummy() == false
-    eventPlayer.enableDeathSpectateAllPlayers()
-    eventPlayer.enableDeathSpectateTargetHud()
+    eventPlayer.editor_on = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
     eventPlayer.disableGamemodeHud()
     eventPlayer.disablePlayerCollision()
+    eventPlayer.setDamageReceived(0)
+    eventPlayer.lockState = true
+    if eventPlayer.isDummy(): return
+
+    eventPlayer.enableDeathSpectateAllPlayers()
+    eventPlayer.enableDeathSpectateTargetHud()
     eventPlayer.disableRespawn()
     eventPlayer.preloadHero(Hero.GENJI)
-    eventPlayer.setDamageReceived(0)
-    eventPlayer.editor_on = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
     eventPlayer.editor_lock = true
     eventPlayer.toggle_guide = true
     eventPlayer.cache_bounceTouched = -1
@@ -362,6 +364,7 @@ rule "General | Player Initialize":
 
     wait()
     StartGame()  # initialization of the game
+    eventPlayer.lockState = false
 
 rule "General | Player Leaves":
     @Event playerLeft
@@ -373,7 +376,7 @@ rule "General | Player Leaves":
 
 rule "General | Ground: Traces, Arrive, & Reset":
     @Event eachPlayer
-    @Condition eventPlayer.isDummy() == false
+    @Condition eventPlayer.lockState == false
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isAlive()
     if not eventPlayer.checkpoint_notLast:
@@ -394,7 +397,7 @@ rule "General | Ground: Traces, Arrive, & Reset":
             wait(0.048)
             playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1.4)
             wait(0.048)
-    elif eventPlayer.toggle_invincible or (CompMode and not CompTime) or eventPlayer.lockState:
+    elif eventPlayer.toggle_invincible or (CompMode and not CompTime):# or eventPlayer.lockState:
         # Do nothing
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpcircleradius:
         # arrived ----------------------------------------------------------------------------------------------------
@@ -402,75 +405,66 @@ rule "General | Ground: Traces, Arrive, & Reset":
             smallMessage(eventPlayer, "   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[Customize.orb_lock]))
             #kill(eventPlayer, null)
             CheckpointFailReset()
-            goto lbl_a
-        if eventPlayer.ban_climb and eventPlayer.skill_usedClimb:
+        elif eventPlayer.ban_climb and eventPlayer.skill_usedClimb:
             smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
             CheckpointFailReset()
-            goto lbl_a
-
-        if eventPlayer.ban_bhop and eventPlayer.skill_usedBhop:
+        elif eventPlayer.ban_bhop and eventPlayer.skill_usedBhop:
             smallMessage(eventPlayer, "   ≥ 留小跳进点!" checkCN "   ≥ Must have a bhop to complete!")
             CheckpointFailReset()
-            goto lbl_a
-
-        if eventPlayer.ban_djump and eventPlayer.skill_usedDouble:
+        elif eventPlayer.ban_djump and eventPlayer.skill_usedDouble:
             smallMessage(eventPlayer, "   » 留二段跳!" checkCN "   » Must have a double jump to complete!")
             CheckpointFailReset()
-            goto lbl_a
-
-        eventPlayer.checkpoint_moved = true
-        eventPlayer.checkpoint_current += 1
-        UpdateCache()
-        # remove ult feature disabled for speedruning purposes
-        #if eventPlayer.isUsingUltimate() and not eventPlayer.checkpoint_current in BladeEnabledCheckpoints:
-        #    CheckpointFailReset()
-        if len(CheckpointPositions[eventPlayer.checkpoint_current]) > 1:# teleport cps
-            CheckpointFailReset()
-
-        if eventPlayer.timer_splitDisplay > -Math.INFINITY:
-            eventPlayer.timer_splitDisplay = (eventPlayer.timer_practice if eventPlayer.toggle_practice else eventPlayer.timer_normal) - eventPlayer.timer_split
-        wait()
-        playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
-        playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.checkpoint_current] + vect(0, 1.5, 0), 4)
-        # msg disabled due to annoying new sound
-        #bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.checkpoint_current, "抵达检查点" checkCN "Arrived at level")   )
-        wait()
-        UpdateTitle()
-        AddonCustomLoadAndReset()
-
-        if eventPlayer.toggle_practice:
-            eventPlayer.timer_split = eventPlayer.timer_practice
         else:
-            eventPlayer.timer_split = eventPlayer.timer_normal
-            DeleteSave()
-            if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and not eventPlayer.editor_on: # complete lvl
-                stopChasingVariable(eventPlayer.timer_normal)
-                wait()
-                bigMessage(true[0], "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.timer_normal), "已通关! 用时" checkCN "Mission complete! Time"))
-                LeaderboardUpdate()
-                if CompMode and CompAtmpNum:
-                    if eventPlayer.comp_countAttempts == CompAtmpNum:
-                        CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = -1
-                        eventPlayer.comp_countAttempts = -1
-                        eventPlayer.comp_done = true
-                        eventPlayer.toggle_leaderboard = true
-                        #eventPlayer.disableRespawn()
-                        eventPlayer.setDamageReceived(100)
-                        kill(eventPlayer,null)
-                        eventPlayer.setDamageReceived(0)
-                    else:
-                        CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts + 1
-            else: # update save
-                MakeSave()
+            eventPlayer.checkpoint_moved = true
+            eventPlayer.checkpoint_current += 1
+            UpdateCache()
+            # remove ult feature disabled for speedruning purposes
+            #if eventPlayer.isUsingUltimate() and not eventPlayer.checkpoint_current in BladeEnabledCheckpoints:
+            #    CheckpointFailReset()
+            if len(CheckpointPositions[eventPlayer.checkpoint_current]) > 1:# teleport cps
+                CheckpointFailReset()
+
+            if eventPlayer.timer_splitDisplay > -Math.INFINITY:
+                eventPlayer.timer_splitDisplay = (eventPlayer.timer_practice if eventPlayer.toggle_practice else eventPlayer.timer_normal) - eventPlayer.timer_split
+            wait()
+            playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
+            playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.checkpoint_current] + vect(0, 1.5, 0), 4)
+            # msg disabled due to annoying new sound
+            #bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.checkpoint_current, "抵达检查点" checkCN "Arrived at level")   )
+            wait()
+            AddonCustomLoadAndReset()
+
+            if eventPlayer.toggle_practice:
+                eventPlayer.timer_split = eventPlayer.timer_practice
+            else:
+                UpdateTitle()
+                eventPlayer.timer_split = eventPlayer.timer_normal
+                DeleteSave()
+                if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and not eventPlayer.editor_on: # complete lvl
+                    stopChasingVariable(eventPlayer.timer_normal)
+                    wait()
+                    bigMessage(true[0], "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.timer_normal), "已通关! 用时" checkCN "Mission complete! Time"))
+                    LeaderboardUpdate()
+                    if CompMode and CompAtmpNum:
+                        if eventPlayer.comp_countAttempts == CompAtmpNum:
+                            CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = -1
+                            eventPlayer.comp_countAttempts = -1
+                            eventPlayer.comp_done = true
+                            eventPlayer.toggle_leaderboard = true
+                            #eventPlayer.disableRespawn()
+                            eventPlayer.setDamageReceived(100)
+                            kill(eventPlayer,null)
+                            eventPlayer.setDamageReceived(0)
+                        else:
+                            CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts + 1
+                else: # update save
+                    MakeSave()
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpcircleradius:
         CheckpointFailReset()
 
-    lbl_a:
     eventPlayer.cache_collectedLocks = []
     wait(0.048)
-
-    if RULE_CONDITION:
-        goto RULE_START
+    if RULE_CONDITION: goto RULE_START
 
 rule "General | Boundary Sphere":
     @Event eachPlayer
