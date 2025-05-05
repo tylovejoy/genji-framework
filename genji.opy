@@ -211,7 +211,7 @@ rule "General | Setup & Variables":
 
     # prevent same color lock orbs
     if ColorConfig[Customize.orb_normal] == ColorConfig[Customize.orb_lock]:
-        ColorConfig[Customize.orb_lock] = Color.GREEN  if ColorConfig[Customize.orb_normal] == Color.ORANGE else Color.ORANGE
+        ColorConfig[Customize.orb_lock] = Color.GREEN if ColorConfig[Customize.orb_normal] == Color.ORANGE else Color.ORANGE
 
     # prevent same color bhop/climb used/unused
     if ColorConfig[Customize.bhopclimb_available] == ColorConfig[Customize.bhopclimb_used]:
@@ -225,16 +225,8 @@ rule "General | Setup & Variables":
     #SavePauseEnabled = []
     SaveElapsed = []
 
-    #$$
-    if not BladeEnabledCheckpoints and len(BladeEnabledCheckpoints) == 1:
-        BladeEnabledCheckpoints = [0]
-    else:
-        BladeEnabledCheckpoints = BladeEnabledCheckpoints if len([i for i in BladeEnabledCheckpoints if i != -1 and i != [] ]) and BladeEnabledCheckpoints else []
-
-    if not DashEnabledCheckpoints and len(DashEnabledCheckpoints) == 1:
-        DashEnabledCheckpoints = [0]
-    else:
-        DashEnabledCheckpoints =  DashEnabledCheckpoints if len([i for i in DashEnabledCheckpoints if i != -1 and i != [] ]) and DashEnabledCheckpoints else  []
+    BladeEnabledCheckpoints = [i for i in BladeEnabledCheckpoints if i + false >= 0] if len(BladeEnabledCheckpoints) else []
+    DashEnabledCheckpoints = [i for i in DashEnabledCheckpoints if i + false >= 0] if len(DashEnabledCheckpoints) else []
 
     BouncePadCheckpoints = BouncePadCheckpoints if len(BouncePadCheckpoints) else []
     CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
