@@ -586,30 +586,28 @@ rule "Editor | Hud and Effects":
     wait(1)
     # effects ==========================================================================================================================================================================
     createInWorldText(
-        localPlayer if len(EditSelectIdArray) else null,
+        true if len(EditSelectIdArray) else null,
         "选中的实体" checkCN "selected",
         KillBallPositions[EditSelected] if EditorMode.killBall else
         BouncePositions[EditSelected] if EditorMode.functionOrb else
         CustomPortalStart[EditSelected] if EditorMode.portal else
         null,
-        1.2, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT
-    )
+        1.2, Clip.NONE, WorldTextReeval.VISIBILITY_AND_POSITION, Color.ORANGE, SpecVisibility.DEFAULT)
 
     createIcon(
-        localPlayer if len(EditSelectIdArray) else null,
+        true if len(EditSelectIdArray) else null,
         KillBallPositions[EditSelected] if EditorMode.killBall else
         BouncePositions[EditSelected] if EditorMode.functionOrb else
         CustomPortalStart[EditSelected] if EditorMode.portal else
         null,
         Icon.ARROW_DOWN,
-        IconReeval.VISIBILITY_AND_POSITION, Color.WHITE, true
-    )
+        IconReeval.VISIBILITY_AND_POSITION, Color.WHITE, true)
 
     # Purple sphere for teleport location
-    createEffect(localPlayer if len(CheckpointPositions[hostPlayer.checkpoint_current] ) > 1 and EditorMode.checkpoint else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[hostPlayer.checkpoint_current][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(true if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1 and EditorMode.checkpoint else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[hostPlayer.checkpoint_current][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
 
     # Teleport text
-    createInWorldText(localPlayer if len(CheckpointPositions[hostPlayer.checkpoint_current] ) > 1 and EditorMode.checkpoint else null, "传送点位置" checkCN "teleporter location", CheckpointPositions[hostPlayer.checkpoint_current][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+    createInWorldText(true if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1 and EditorMode.checkpoint else null, "传送点位置" checkCN "teleporter location", CheckpointPositions[hostPlayer.checkpoint_current][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
 
     # normal cp if teleport
     createEffect(hostPlayer if CheckpointPositions[hostPlayer.checkpoint_current][1] and EditorMode.checkpoint else null, Effect.RING, Color.ORANGE, CheckpointPositions[hostPlayer.checkpoint_current][0], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
@@ -662,13 +660,11 @@ rule "Editor | change mode":
     @Condition eventPlayer.editor_lock == false
 
     eventPlayer.editor_lock = true
-
     if eventPlayer.isHoldingButton(Button.PRIMARY_FIRE):
         eventPlayer.editor_modeSelect += (5 - 1)
     else:
         eventPlayer.editor_modeSelect += 1
     eventPlayer.editor_modeSelect %= 5
-
     EditUpdateSelectedIds()
     EditorSelectLast()
     wait()
@@ -677,7 +673,6 @@ rule "Editor | change mode":
 
 def EditUpdateSelectedIds():
     @Name "Editor | update selected id"
-    #$$
     if EditorMode.killBall:
         EditSelectIdArray = [i for _, i in KillballCheckpoints]
         EditSelectIdArray = [i for i in EditSelectIdArray if KillballCheckpoints[i] == hostPlayer.checkpoint_current ]
