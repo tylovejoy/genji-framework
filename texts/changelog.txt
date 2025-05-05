@@ -579,6 +579,8 @@ fixed:
        * Press Jump to move Up
        * Press Crouch to move Down
    * Reported by `@bioslet` +5xp
+### Commands
+ - Fixed hiding Split Display
 ### Addon
  - Fixed Group Up from causing extra movement
    * Reported by `@bioslet` +5xp
