@@ -32,8 +32,7 @@ rule "Addon | AFK timer":
     if eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
         CheckpointFailReset()
 
-    if RULE_CONDITION:
-        goto RULE_START
+    if RULE_CONDITION: goto RULE_START
 
 rule "Addon | Pre-set control map portal - toggled via workshop":
     @Event eachPlayer

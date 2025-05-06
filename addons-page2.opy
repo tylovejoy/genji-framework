@@ -189,8 +189,7 @@ rule "Addon | Stall enhancer - 增强系統跳的判定":
     eventPlayer.setMoveSpeed(100)
     if eventPlayer.isAlive() and not (eventPlayer.editor_fly or eventPlayer.isHoldingButton(Button.RELOAD)):
         eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
-        if RULE_CONDITION:
-            goto RULE_START
+        if RULE_CONDITION: goto RULE_START
 
 # dash after ledge grab
 # stores speed and launches you after dash if you done it during climb
