@@ -56,7 +56,7 @@ rule "Command | Preview Orbs & Portals (Hold Primary + Secondary)":
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     #wait(0.9, Wait.ABORT_WHEN_FALSE)
     wait(0.45, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.preview_array1 = CheckpointPositions[eventPlayer.checkpoint_current + 1][0]
+    eventPlayer.preview_array1 = [CheckpointPositions[eventPlayer.checkpoint_current + 1][0]]
     if len(BouncePadCheckpoints):
         eventPlayer.preview_array1.append([_ for _ , i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current])
         eventPlayer.preview_array2.append([_ for _ in [i for _, i in BouncePadCheckpoints] if BouncePadCheckpoints[_] == eventPlayer.checkpoint_current])
