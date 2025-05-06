@@ -68,3 +68,5 @@ triple jump ban doesnt work on workshop maps anymore
  - Missing huds [USER ERROR]
    * Reported by `@hello_5702`
    * Skill issue
+ - Missing Addon Texts [FIXED]
+   * Reported by `@kuma0997`
