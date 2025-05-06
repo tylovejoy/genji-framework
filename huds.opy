@@ -83,7 +83,7 @@ rule "Huds | Global Localplayer":
         HudPosition.RIGHT, HO.com_preview, evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.preview_array1 else evalOnce(ColorConfig[Customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
     #HudStoreEdit.append(getLastCreatedText())
 
-    hudSubheader(true if localPlayer.preview_array1 and localPlayer.toggle_guide else null,
+    hudSubheader((localPlayer.preview_array1 and localPlayer.toggle_guide)[0],
         "移动键 ◀ ▶ | 预览其他\n移动键 ◀ ▶ | 修改间距 \n视角移动 | 调整浏览视角"
         checkCN
         "Walk ◀ ▶ | preview others\nWalk ▲ ▼ | modify zoom\nAim | change preview angle",
@@ -100,18 +100,14 @@ rule "Huds | Global Localplayer":
     HudStoreEdit.append(getLastCreatedText())
 
     if len(CpHudText): # text per checkpoint  text per cp each
-        hudText(localPlayer,
-            CpHudText[CpHudCp.index(localPlayer.checkpoint_current)]
-            if localPlayer.checkpoint_current in CpHudCp and localPlayer.toggle_guide else [],
-            ("(文本已隐藏)" checkCN "(text hidden)" if localPlayer.checkpoint_current in CpHudCp and not localPlayer.toggle_guide else []),
-            null,
+        hudText((localPlayer.checkpoint_current in CpHudCp and localPlayer.toggle_guide)[0],
+            CpHudText[CpHudCp.index(localPlayer.checkpoint_current)],
+            null, null,
             HudPosition.TOP, HO.add_custommsg1, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
     if len(CpIwtText):
-        createInWorldText(
-            localPlayer,
-            CpIwtText[CpIwtCp.index(localPlayer.checkpoint_current)]
-            if localPlayer.checkpoint_current in CpIwtCp else [],
+        createInWorldText(localPlayer.checkpoint_current in CpIwtCp,
+            CpIwtText[CpIwtCp.index(localPlayer.checkpoint_current)],
             CpIwtPos[CpIwtCp.index(localPlayer.checkpoint_current)],
             2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, CpIwtColor, SpecVisibility.DEFAULT)
 
