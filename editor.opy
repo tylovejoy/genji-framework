@@ -3,8 +3,8 @@ rule "<tx0C00000000001344> Editor <tx0C00000000001344>":
     @Delimiter
 
 rule "Editor | Clear Excess Data to Save Map":
-    @Event eachPlayer
-    @Condition eventPlayer == hostPlayer
+    #@Event eachPlayer
+    #@Condition eventPlayer == hostPlayer
     @Condition hostPlayer.editor_on
     @Condition hostPlayer.isHoldingButton(Button.MELEE)
     @Condition hostPlayer.isHoldingButton(Button.INTERACT)
@@ -12,9 +12,8 @@ rule "Editor | Clear Excess Data to Save Map":
     #@Condition hostPlayer.editor_lock == false # !!! don't lock. always be sure data can be exported incase of a perma lock situation
     wait(1, Wait.ABORT_WHEN_FALSE)
     hostPlayer.editor_lock = true # doesnt matter thats its in pasta's because it wil be fixed on spawning
-    hostPlayer.editor_saveCache[0] = TimeRemaining
+    hostPlayer.editor_saveCache = [TimeRemaining, ColorConfig]
     TimeRemaining = null
-    hostPlayer.editor_saveCache[1] = ColorConfig
     ColorConfig = null
 
     CheckpointRings_Editing = null
@@ -135,7 +134,7 @@ rule "Editor | Hud and Effects":
         # clear variables if not in editor mode
         HudStoreEdit = null
         return
-    wait(2)
+    wait(1)
     #hostPlayer.editor_lock = true
     while len(HudStoreEdit): # remove unnesesary huds
         destroyHudText(HudStoreEdit[0])
@@ -622,7 +621,7 @@ rule "Editor |  Fly/Noclip Toggle":
     @Condition eventPlayer.editor_on
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
     @Condition eventPlayer.editor_fly == null
-    @Condition EditorMoveItem == false
+    @Condition (EditorMoveItem and eventPlayer == hostPlayer) == false
     waitUntil(eventPlayer.isHoldingButton(Button.RELOAD) or not eventPlayer.isHoldingButton(Button.ABILITY_1), 0.7)
     if eventPlayer.isHoldingButton(Button.RELOAD) or not eventPlayer.isHoldingButton(Button.ABILITY_1):
         wait()
@@ -652,8 +651,8 @@ rule "Editor |  Fly/Noclip Toggle":
     wait(1)
 
 rule "Editor | change mode":
-    @Event eachPlayer
-    @Condition eventPlayer == hostPlayer
+    #@Event eachPlayer
+    #@Condition eventPlayer == hostPlayer
     @Condition hostPlayer.editor_on
     @Condition hostPlayer.editor_lock == false
     @Condition hostPlayer.isHoldingButton(Button.MELEE)
@@ -691,7 +690,7 @@ def EditorSelectLast():
 
 rule "Editor | create cp/orb":
     @Event eachPlayer
-    @Condition eventPlayer == hostPlayer
+    @Condition eventPlayer == hostPlayer #Required for UpdateCache()
     @Condition hostPlayer.editor_on
     @Condition hostPlayer.editor_lock == false
     @Condition EditorMode.current in [0,1,2,4]
@@ -802,7 +801,7 @@ rule "Editor | create cp/orb":
 
 rule "Editor | delete cp/orb/portal":
     @Event eachPlayer
-    @Condition eventPlayer == hostPlayer
+    @Condition eventPlayer == hostPlayer #Required for UpdateCache()
     @Condition hostPlayer.editor_on
     @Condition hostPlayer.editor_lock == false
     @Condition hostPlayer.isHoldingButton(Button.INTERACT)
@@ -923,7 +922,7 @@ rule "Editor | delete cp/orb/portal":
 
 rule "Editor | toggle orb functions":
     @Event eachPlayer
-    @Condition eventPlayer == hostPlayer
+    @Condition eventPlayer == hostPlayer #Required for UpdateCache()
     @Condition hostPlayer.editor_on
     @Condition EditorMode.functionOrb
     @Condition hostPlayer.editor_lock == false
@@ -946,7 +945,7 @@ rule "Editor | toggle orb functions":
 
 rule "Editor | orb radi/strength":
     @Event eachPlayer
-    @Condition eventPlayer == hostPlayer
+    @Condition eventPlayer == hostPlayer #Required for UpdateCache()
     @Condition hostPlayer.editor_on
     @Condition EditorMode.current in [1,2]
     @Condition hostPlayer.editor_lock == false
@@ -966,8 +965,8 @@ rule "Editor | orb radi/strength":
     hostPlayer.editor_lock = false
 
 rule "Editor | select orb/portal":
-    @Event eachPlayer
-    @Condition eventPlayer == hostPlayer
+    #@Event eachPlayer
+    #@Condition eventPlayer == hostPlayer
     @Condition hostPlayer.editor_on
     @Condition EditorMode.current in [1,2,4]
     @Condition hostPlayer.editor_lock == false
@@ -987,8 +986,8 @@ rule "Editor | select orb/portal":
 # checkpoint functions ==============================================================
 
 rule "Editor | cp size hitbox display":
-    @Event eachPlayer
-    @Condition eventPlayer == hostPlayer
+    #@Event eachPlayer
+    #@Condition eventPlayer == hostPlayer
     @Condition hostPlayer.editor_on
     @Condition EditorMode.current == 0
     @Condition hostPlayer.isHoldingButton(Button.INTERACT)
@@ -1029,8 +1028,8 @@ rule "Editor | cp add/remove teleport":
     wait()
 
 rule "Editor | moving checkpoint":
-    @Event eachPlayer
-    @Condition eventPlayer == hostPlayer
+    #@Event eachPlayer
+    #@Condition eventPlayer == hostPlayer
     @Condition hostPlayer.editor_on
     @Condition EditorMode.current == 0
     @Condition hostPlayer.editor_lock == false
@@ -1081,7 +1080,7 @@ rule "Editor | add ult/dash":
 
 rule "Editor | toggle bans":
     @Event eachPlayer
-    @Condition eventPlayer == hostPlayer
+    @Condition eventPlayer == hostPlayer #Required for UpdateCache()
     @Condition hostPlayer.editor_on
     @Condition EditorMode.skillBan
     @Condition hostPlayer.editor_lock == false
@@ -1116,8 +1115,8 @@ rule "Editor | toggle bans":
     hostPlayer.editor_lock = false
 
 rule "Editor | portal cp change":
-    @Event eachPlayer
-    @Condition eventPlayer == hostPlayer
+    #@Event eachPlayer
+    #@Condition eventPlayer == hostPlayer
     @Condition hostPlayer.editor_on
     @Condition EditorMode.portal
     @Condition hostPlayer.editor_lock == false
@@ -1130,7 +1129,7 @@ rule "Editor | portal cp change":
 
 rule "Editor | move object":
     @Event eachPlayer
-    @Condition eventPlayer == hostPlayer
+    @Condition eventPlayer == hostPlayer #Required for UpdateCache()
     @Condition hostPlayer.editor_on
     @Condition EditorMode.current in [1, 2, 4]
     @Condition hostPlayer.editor_lock == false
