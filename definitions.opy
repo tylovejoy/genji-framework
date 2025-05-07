@@ -17,10 +17,10 @@ insert_array.append(insert_value)\
 insert_array = [e if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for e, i in insert_array]
 
 #!define toggleCpInArray(baninput)\
-if eventPlayer.checkpoint_current in baninput:\
-    baninput.remove(eventPlayer.checkpoint_current)\
+if hostPlayer.checkpoint_current in baninput:\
+    baninput.remove(hostPlayer.checkpoint_current)\
 else:\
-    baninput.append(eventPlayer.checkpoint_current)
+    baninput.append(hostPlayer.checkpoint_current)
 
 #!define removeCPandLower(arrayname)\
 arrayname.remove(hostPlayer.checkpoint_current)\
