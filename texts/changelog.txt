@@ -586,5 +586,5 @@ fixed:
  - Fixed Group Up from causing extra movement
    * Reported by `@bioslet` +5xp
  - Fixed Triple Jump to restart when climbing or dashing after landing
- - Missing Addon Texts [FIXED]
+ - Fixed missing Addon Texts
    * Reported by `@kuma0997` +5xp
