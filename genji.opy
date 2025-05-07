@@ -63,7 +63,7 @@ def UpdateCache():
     async(CheckUlt(), AsyncBehavior.RESTART)
     async(CheckDash(), AsyncBehavior.RESTART)
 
-    if not eventPlayer.editor_on: return
+    if eventPlayer != hostPlayer or not eventPlayer.editor_on: return
     EditUpdateSelectedIds()
     destroyEffect(eventPlayer.editor_hitboxEffect)
     createEffect(eventPlayer if eventPlayer.editor_hitboxToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.checkpoint_current], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
@@ -72,7 +72,7 @@ def UpdateCache():
     eventPlayer.editor_hitboxEffect.append(getLastCreatedEntity())
     eventPlayer.editor_bounceIndex = [e for e in [(i if e2 == eventPlayer.checkpoint_current else -1) for e2, i in BouncePadCheckpoints] if e >=0]
     eventPlayer.editor_killIndex = [e for e in [(i if e2 == eventPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if e >=0]
-    if eventPlayer.checkpoint_moved and eventPlayer == hostPlayer:
+    if eventPlayer.checkpoint_moved:
         EditorSelectLast()
         eventPlayer.checkpoint_moved = false
 
@@ -295,21 +295,20 @@ rule "General | Match time":
     pauseMatchTime()
     wait()
     TimeRemaining = 265
-    while TimeRemaining or hostPlayer.editor_saveCache:
+    while TimeRemaining or hostPlayer.editor_on:
         wait(60)
-        if not hostPlayer.editor_saveCache:
-            TimeRemaining--
-            if CompMode:
-                CompTime--
-                if not CompTime:
-                    bigMessage(true[0],"时间到了" checkCN "time's up")
-                    getAllPlayers().comp_done = true
-                    stopChasingVariable(getAllPlayers().timer_normal)
-                    #getAllPlayers().disableRespawn()
-                    getAllPlayers().setDamageReceived(100)
-                    kill(getAllPlayers(), null)
-                    #wait(0.032)
-                    #LeaderBoardRemake = true #async(CreateLeaderboard(), AsyncBehavior.RESTART)
+        TimeRemaining--
+        if CompMode:
+            CompTime--
+            if not CompTime:
+                bigMessage(true[0],"时间到了" checkCN "time's up")
+                getAllPlayers().comp_done = true
+                stopChasingVariable(getAllPlayers().timer_normal)
+                #getAllPlayers().disableRespawn()
+                getAllPlayers().setDamageReceived(100)
+                kill(getAllPlayers(), null)
+                #wait(0.032)
+                #LeaderBoardRemake = true #async(CreateLeaderboard(), AsyncBehavior.RESTART)
 
     bigMessage(true[0], "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time elapsed, restarting")
     wait(5)
