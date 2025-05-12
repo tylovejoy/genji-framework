@@ -873,11 +873,7 @@ rule "Editor | delete cp/orb/portal":
         # Remove specified checkpoint =====================
         del CheckpointPositions[hostPlayer.checkpoint_current]
         del CheckpointRings_Editing[hostPlayer.checkpoint_current]
-
-        if hostPlayer.checkpoint_current < 1:
-            hostPlayer.checkpoint_current = 0
-        else:
-            hostPlayer.checkpoint_current -= 1
+        hostPlayer.checkpoint_current = max(hostPlayer.checkpoint_current - 1, 0)
 
         RebuildKillOrbs()
         RebuildBounceOrbs()
@@ -916,7 +912,7 @@ rule "Editor | delete cp/orb/portal":
     UpdateCache()
     EditorSelectLast()
     hostPlayer.editor_lock = false
-    wait(0.16 + (getNumberOfEntityIds()*0.007))
+    wait(0.16 + (getNumberOfEntityIds() * 0.007))
 
 # orb functions ==============================================================
 
@@ -937,7 +933,7 @@ rule "Editor | toggle orb functions":
         BounceToggleDash[EditSelected] = not BounceToggleDash[EditSelected]
     else:
         BounceToggleLock[EditSelected] = not BounceToggleLock[EditSelected]
-        BounceStrength[EditSelected] = 0 if BounceToggleLock[EditSelected] else 10
+        BounceStrength[EditSelected] = 10 * BounceToggleLock[EditSelected]
 
     UpdateCache()
     hostPlayer.editor_lock = false
@@ -959,7 +955,7 @@ rule "Editor | orb radi/strength":
         if EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex):
             BounceStrength[EditSelected] += 0.1 if hostPlayer.isHoldingButton(Button.JUMP) else -0.1
         elif EditorMode.killBall and len(hostPlayer.editor_killIndex):
-            KillBallRadii[EditSelected] +=  0.1 if hostPlayer.isHoldingButton(Button.JUMP) else -0.1
+            KillBallRadii[EditSelected] += 0.1 if hostPlayer.isHoldingButton(Button.JUMP) else -0.1
         wait(0.1)
     UpdateCache()
     hostPlayer.editor_lock = false
@@ -976,7 +972,7 @@ rule "Editor | select orb/portal":
 
     hostPlayer.editor_lock = true
     if hostPlayer.isHoldingButton(Button.CROUCH):
-        EditSelected = EditSelectIdArray.last() if EditSelectIdArray.index(EditSelected) == 0 else EditSelectIdArray[EditSelectIdArray.index(EditSelected) - 1]
+        EditSelected = EditSelectIdArray.last() if not EditSelectIdArray.index(EditSelected) else EditSelectIdArray[EditSelectIdArray.index(EditSelected) - 1]
     else:
         EditSelected = EditSelectIdArray[0] if EditSelectIdArray.index(EditSelected) == len(EditSelectIdArray) - 1 else EditSelectIdArray[EditSelectIdArray.index(EditSelected) + 1]
     wait()
@@ -1020,8 +1016,7 @@ rule "Editor | cp add/remove teleport":
     else: # add
         CheckpointPositions[hostPlayer.checkpoint_current] = [
             CheckpointPositions[hostPlayer.checkpoint_current][0] if len(CheckpointPositions[hostPlayer.checkpoint_current]) else CheckpointPositions[hostPlayer.checkpoint_current],
-            hostPlayer.getPosition()
-        ]
+            hostPlayer.getPosition()]
         smallMessage(hostPlayer, "{1} {0}".format(hostPlayer.checkpoint_current,"   传送点已添加到当前关卡" checkCN "   Teleport has been added for level"))
 
     hostPlayer.editor_lock = false
