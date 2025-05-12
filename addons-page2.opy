@@ -322,7 +322,7 @@ rule "Addon | Fake Triple Jump - 假三段跳":
     @Disabled
     @Event eachPlayer
     @Hero genji
-    @Condition BanTriple == false
+    #@Condition BanTriple == false
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.skill_usedDouble == false #Double cannot be used already
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false #Don't trigger on reset
