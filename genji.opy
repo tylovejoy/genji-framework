@@ -65,16 +65,16 @@ def UpdateCache():
 
     if eventPlayer != hostPlayer or not eventPlayer.editor_on: return
     EditUpdateSelectedIds()
-    destroyEffect(eventPlayer.editor_hitboxEffect)
-    createEffect(eventPlayer if eventPlayer.editor_hitboxToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.checkpoint_current], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    eventPlayer.editor_hitboxEffect = getLastCreatedEntity()
-    createEffect(eventPlayer if eventPlayer.editor_hitboxToggle and eventPlayer.checkpoint_notLast else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[eventPlayer.checkpoint_current + 1], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    eventPlayer.editor_hitboxEffect.append(getLastCreatedEntity())
-    eventPlayer.editor_bounceIndex = [e for e in [(i if e2 == eventPlayer.checkpoint_current else -1) for e2, i in BouncePadCheckpoints] if e >=0]
-    eventPlayer.editor_killIndex = [e for e in [(i if e2 == eventPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if e >=0]
-    if eventPlayer.checkpoint_moved:
+    destroyEffect(hostPlayer.editor_hitboxEffect)
+    createEffect(hostPlayer if hostPlayer.editor_hitboxToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[hostPlayer.checkpoint_current], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    hostPlayer.editor_hitboxEffect = getLastCreatedEntity()
+    createEffect(hostPlayer if hostPlayer.editor_hitboxToggle and hostPlayer.checkpoint_notLast else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[hostPlayer.checkpoint_current + 1], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    hostPlayer.editor_hitboxEffect.append(getLastCreatedEntity())
+    hostPlayer.editor_bounceIndex = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in BouncePadCheckpoints] if e >=0]
+    hostPlayer.editor_killIndex = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if e >=0]
+    if hostPlayer.checkpoint_moved:
         EditorSelectLast()
-        eventPlayer.checkpoint_moved = false
+        hostPlayer.checkpoint_moved = false
 
 def DeleteSave():
     @Name "General | SUB Delete Save"
@@ -258,7 +258,7 @@ rule "General | Setup & Variables":
     BanDead = [i for i in BanDead if i + false >= 0] if len(BanDead) else []
     BanCreate = [i for i in BanCreate if i + false >= 0] if len(BanCreate) else []
     BanMulti = [i for i in BanMulti if i + false >= 0] if len(BanMulti) else []
-    BanTriple = null #[i for i in BanTriple if i + false >= 0] if len(BanTriple) > 0 else [] # legacy code, now auto sets it to null to save space
+    #BanTriple = [i for i in BanTriple if i + false >= 0] if len(BanTriple) else [] # legacy code, now auto sets it to null to save space
     BanStand = [i for i in BanStand if i + false >= 0] if len(BanStand) else []
     BanSaveDouble = BanSaveDouble if len(BanSaveDouble) else []
     BanDjump = BanDjump if len(BanDjump) else []
