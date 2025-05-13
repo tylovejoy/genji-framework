@@ -9,14 +9,10 @@ def CheckUlt(): # checks if ult should be turned on
         eventPlayer.setUltCharge(0) # for dash start etc you can be away from cp so the keep charge triggers
     
     eventPlayer.disallowButton(Button.ULTIMATE) # make sure the button cant be pressed until the entire rule ends even if it restarts
-    #if eventPlayer.ult_cd_global > 0: # global cooldown construction that works even when rule is reset
-    if eventPlayer.skill_ultCd > getTotalTimeElapsed():
-        #waitUntil(not eventPlayer.ult_cd_global, true)
+    if eventPlayer.skill_ultCd > getTotalTimeElapsed(): # global cooldown that works even when rule is reset
         wait(eventPlayer.skill_ultCd - getTotalTimeElapsed())
     else:
-        #eventPlayer.ult_cd_global = 1 # this number doesnt matter because its a duration chase
-        #chase(eventPlayer.ult_cd_global, 0, duration=0.36, ChaseReeval.NONE) # duration = the cooldown
-        eventPlayer.skill_ultCd = getTotalTimeElapsed() + 0.36
+        eventPlayer.skill_ultCd = getTotalTimeElapsed() + 0.36 # Set cooldown
 
     if eventPlayer.isUsingUltimate():
         waitUntil(not eventPlayer.isUsingUltimate(), 2)
@@ -32,7 +28,7 @@ def CheckUlt(): # checks if ult should be turned on
         wait()        
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
-    elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last() ) <= 2 or eventPlayer.getUltCharge() < 100: # used to be just else, but have to deal with multi ult orbs
+    elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= 2 or eventPlayer.getUltCharge() < 100: # used to be just else, but have to deal with multi ult orbs
         eventPlayer.setUltEnabled(false)
         eventPlayer.setUltCharge(0)
 
