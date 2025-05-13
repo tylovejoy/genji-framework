@@ -48,7 +48,7 @@ rule "Addon | Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
     @Disabled
     # enable this rule and fill in the title data below.
     # 启用此规则 并填写下面 的标题数据
-    wait(LoadOrder.addon_title)
+    wait(LoadOrder.addon)
     # checkpoint number
     # 每关数量
     TitleData[0] = [
@@ -110,7 +110,7 @@ rule "Addon | HUD text for certain Checkpoints - 特定关卡显示的HUD文本 
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的hud文本
-    wait(LoadOrder.addon_hud)
+    wait(LoadOrder.addon)
     # in CpHudText fill in text
     # 修改字符串 “CpHudText” 为顶部显示 的hud文本
     CpHudText = ["text cp 1","text cp 3"]
@@ -122,7 +122,7 @@ rule "Addon | Inworld text for certain Checkpoints - 特定关卡显示的地图
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的地图文本
-    wait(LoadOrder.addon_iwt)
+    wait(LoadOrder.addon)
     # in CpIwtText fill in text
     # 修改字符串 “CpIwtText” 为关卡显示 的地图文本
     CpIwtText = ["text cp 1","text cp 3"]
@@ -140,7 +140,7 @@ rule "Addon | Hint text for certain Checkpoints - 特定关卡的提示文本 <-
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的提示文本
-    wait(LoadOrder.addon_hint)
+    wait(LoadOrder.addon)
     # in HintText fill in text
     # 修改字符串 “HintText” 为关卡显示 的提示文本
     HintText = ["text cp 1","text cp 3"]
