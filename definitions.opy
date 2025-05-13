@@ -427,10 +427,7 @@ enum LoadOrder:
     portal      = LoadOrder.setup + 0.016 * 32,
     effects     = LoadOrder.portal + 0.016 * 32,
     hudsPlayer  = 0.016 * 32,
-    addon_title = 0.016 * 48,
-    addon_hud   = 0.016 * 48,
-    addon_iwt   = 0.016 * 48,
-    addon_hint  = 0.016 * 48,
-    hudsGlobal  = 0.016 * 63,
-
+    addon       = 0.016 * 48,
+    hudsGlobal  = 0.016 * 50,
+    hudsEditor  = 0.016 * 52,
 
