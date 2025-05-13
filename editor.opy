@@ -128,492 +128,482 @@ rule "Editor | Clear Excess Data to Save Map":
     hostPlayer.editor_lock = false
 
 rule "Editor | Hud and Effects":
-    waitUntil(entityExists(hostPlayer), Math.INFINITY)  # cant be condition because host player can leaves, removing the rule fx
-    wait(1)
-    if not hostPlayer.editor_on:
-        # clear variables if not in editor mode
-        HudStoreEdit = null
-        return
-    wait(1)
-    #hostPlayer.editor_lock = true
-    while len(HudStoreEdit): # remove unnesesary huds
-        destroyHudText(HudStoreEdit[0])
-        destroyInWorldText(HudStoreEdit[0])
-        del HudStoreEdit[0]
-    wait()
+    wait(LoadOrder.hudsEditor)
+    waitUntil(entityExists(getAllPlayers()), Math.INFINITY)  # cant be condition because host player can leaves, removing the rule fx
+    if getAllPlayers().editor_on:
+        #hostPlayer.editor_lock = true
+        while len(HudStoreEdit): # remove unnesesary huds
+            destroyHudText(HudStoreEdit[0])
+            destroyInWorldText(HudStoreEdit[0])
+            del HudStoreEdit[0]
+        wait()
+        if CompMode: # infinite time and attempts
+            CompAtmpNum = null
+            CompTime = Math.INFINITY
+            getAllPlayers().comp_countAttempts = null
+            getAllPlayers().comp_done = false
+        #CustomPortalStart = CustomPortalStart if len(CustomPortalStart) else []
+        #CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) else []
+        #CustomPortalCP = CustomPortalCP if len(CustomPortalCP) else []
+        # huds ==========================================================================================================================================================================
 
-    if CompMode: # infinite time and attempts
-        CompAtmpNum = null
-        CompTime = Math.INFINITY
-        getAllPlayers().comp_countAttempts = null
-        getAllPlayers().comp_done = false
+        # restart without leaderboard (old one deleted)
+        hudSubtext(localPlayer.toggle_guide,  # restart without leadwerboard
+            "{0}+{1}+{2} | 重新开始".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT))
+            checkCN
+            "{0}+{1}+{2} | Restart".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT)),
+            HudPosition.RIGHT, HO.com_restart_n_board, ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-    #CustomPortalStart = CustomPortalStart if len(CustomPortalStart) else []
-    #CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) else []
-    #CustomPortalCP = CustomPortalCP if len(CustomPortalCP) else []
+        # hud 1
+        hudSubtext(hostPlayer if hostPlayer.toggle_guide else null,
+            ([  "{0} + {1} | 新建检查点\n"
+                "{0} + {2} | 删除选中的检查点".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE)),
 
-    # huds ==========================================================================================================================================================================
+                "{0} + {1} | 新建击杀球\n"
+                "{0} + {1} (长按) | 在准心位置新建".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE)),
 
-    # restart without leaderboard (old one deleted)
-    hudSubtext(localPlayer.toggle_guide,  # restart without leadwerboard
-        "{0}+{1}+{2} | 重新开始".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT))
-        checkCN
-        "{0}+{1}+{2} | Restart".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT)),
-        HudPosition.RIGHT, HO.com_restart_n_board, ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+                "{0} + {1} | 新建弹球\n"
+                "{0} + {1} (长按) | 在准心位置新建".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE)),
 
-    # hud 1
-    hudSubtext(hostPlayer if hostPlayer.toggle_guide else null,
-        ([  "{0} + {1} | 新建检查点\n"
-            "{0} + {2} | 删除选中的检查点".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE)),
+                "{0} + {1} | 蹭留\n"
+                "{0} + {2} | 卡小".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE)),
 
-            "{0} + {1} | 新建击杀球\n"
-            "{0} + {1} (长按) | 在准心位置新建".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE)),
+                "{0} + {1} | 新建传送门\n"
+                "{0} + {1} (长按) | 在准心位置新建".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE)),
+            ][EditorMode.current] if not EditorMoveItem else
+                "方向键 | 移动实体 \n"
+                "{0} | 向上移动 \n"
+                "{1} | 向下移动 \n"
+                "{2} (长按) | 快速移动".format(buttonString(Button.ABILITY_2), buttonString(Button.ULTIMATE),  buttonString(Button.JUMP))
+            ) checkCN
+            ([
+                "{0} + {1} | Create New\n"
+                "{0} + {2} | Delete selected".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE)),
 
-            "{0} + {1} | 新建弹球\n"
-            "{0} + {1} (长按) | 在准心位置新建".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE)),
+                "{0} + {1} | Create new\n"
+                "{0} + {1} (hold)| raycast new".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE)),
 
-            "{0} + {1} | 蹭留\n"
-            "{0} + {2} | 卡小".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE)),
+                "{0} + {1} | Create new\n"
+                "{0} + {1} (hold)| raycast new".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE)),
 
-            "{0} + {1} | 新建传送门\n"
-            "{0} + {1} (长按) | 在准心位置新建".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE)),
-        ][EditorMode.current] if not EditorMoveItem else
-            "方向键 | 移动实体 \n"
-            "{0} | 向上移动 \n"
-            "{1} | 向下移动 \n"
-            "{2} (长按) | 快速移动".format(buttonString(Button.ABILITY_2), buttonString(Button.ULTIMATE),  buttonString(Button.JUMP))
-        ) checkCN
+                "{0} + {1} | multiclimb\n"
+                "{0} + {2} | createbhop".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE)
+                ),
+                "{0} + {1} | create new\n"
+                "{0} + {1} (hold)| raycast new".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE)),
+            ][EditorMode.current] if not EditorMoveItem else
+                "walk | move selected\n"
+                "{0} | move up\n"
+                "{1} | move down\n"
+                "{2} (hold) | move faster".format(buttonString(Button.ABILITY_2), buttonString(Button.ULTIMATE), buttonString(Button.JUMP))),
+            HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+
+        # hud 1-5
+        hudSubtext(hostPlayer if hostPlayer.toggle_guide and not EditorMoveItem else null,
+            ([
+                [],
+                "{0} + {1} | 删除选中的击杀球".format(buttonString(Button.INTERACT), buttonString(Button.SECONDARY_FIRE)),
+                "{0} + {1} | 删除选中的弹球".format(buttonString(Button.INTERACT), buttonString(Button.SECONDARY_FIRE)),
+                [],
+                "{0} + {1} | 删除选中的传送门".format(buttonString(Button.INTERACT), buttonString(Button.SECONDARY_FIRE))
+            ][EditorMode.current]
+            ) checkCN
+            ([
+                [],
+                "{0} + {1} | delete selected".format(buttonString(Button.INTERACT),  buttonString(Button.SECONDARY_FIRE)),
+                "{0} + {1} | delete selected".format(buttonString(Button.INTERACT),  buttonString(Button.SECONDARY_FIRE)),
+                [],
+                "{0} + {1} | delete selected".format(buttonString(Button.INTERACT), buttonString(Button.SECONDARY_FIRE)),
+            ][EditorMode.current]),
+            HudPosition.RIGHT, HO.edit_instructions_edit1, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+
+        # hud 2
+        hudSubtext(hostPlayer if hostPlayer.toggle_guide else null,
         ([
-            "{0} + {1} | Create New\n"
-            "{0} + {2} | Delete selected".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE)),
+                "{0} + {1} | 移除/新建传送点\n"
+                "{0} + {2} | 检查点碰撞模型\n".format(buttonString(Button.INTERACT) , buttonString(Button.RELOAD), buttonString(Button.ABILITY_1)),
 
-            "{0} + {1} | Create new\n"
-            "{0} + {1} (hold)| raycast new".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE)),
+                "{0} + {1} | 选择上一个击杀球\n"
+                "{0} + {2} | 选择下一个击杀球\n".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
 
-            "{0} + {1} | Create new\n"
-            "{0} + {1} (hold)| raycast new".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE)),
+                "{0} + {1} | 选择上一个弹球\n"
+                "{0} + {2} | 选择下一个弹球\n".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
 
-            "{0} + {1} | multiclimb\n"
-            "{0} + {2} | createbhop".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE)
-            ),
-            "{0} + {1} | create new\n"
-            "{0} + {1} (hold)| raycast new".format(buttonString(Button.INTERACT), buttonString(Button.PRIMARY_FIRE)),
-        ][EditorMode.current] if not EditorMoveItem else
-            "walk | move selected\n"
-            "{0} | move up\n"
-            "{1} | move down\n"
-            "{2} (hold) | move faster".format(buttonString(Button.ABILITY_2), buttonString(Button.ULTIMATE), buttonString(Button.JUMP))),
-        HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+                "{0} + {1} | 爬墙\n"
+                "{0} + {2} | 延二段跳".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
 
-    # hud 1-5
-    hudSubtext(hostPlayer if hostPlayer.toggle_guide and not EditorMoveItem else null,
-        ([
-            [],
-            "{0} + {1} | 删除选中的击杀球".format(buttonString(Button.INTERACT), buttonString(Button.SECONDARY_FIRE)),
-            "{0} + {1} | 删除选中的弹球".format(buttonString(Button.INTERACT), buttonString(Button.SECONDARY_FIRE)),
-            [],
-            "{0} + {1} | 删除选中的传送门".format(buttonString(Button.INTERACT), buttonString(Button.SECONDARY_FIRE))
-        ][EditorMode.current]
-        ) checkCN
-        ([
-            [],
-            "{0} + {1} | delete selected".format(buttonString(Button.INTERACT),  buttonString(Button.SECONDARY_FIRE)),
-            "{0} + {1} | delete selected".format(buttonString(Button.INTERACT),  buttonString(Button.SECONDARY_FIRE)),
-            [],
-            "{0} + {1} | delete selected".format(buttonString(Button.INTERACT), buttonString(Button.SECONDARY_FIRE)),
-        ][EditorMode.current]),
-        HudPosition.RIGHT, HO.edit_instructions_edit1, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+                "{0} + {1} | 选择下一个传送门\n"
+                "{0} + {2} | 选择上一个传送门\n".format(buttonString(Button.INTERACT), buttonString(Button.JUMP), buttonString(Button.CROUCH))
+            ][EditorMode.current] if not EditorMoveItem else
+                #"{0} (长按) | 快速移动"
+                "{0} | 放置实体"
+                "{1} | cancel placement\n".format(buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE))
+            ) checkCN
+            ([
+                "{0} + {1} | Remove/Add teleport\n"
+                "{0} + {2} | Toggle Hitbox\n".format(buttonString(Button.INTERACT) , buttonString(Button.RELOAD), buttonString(Button.ABILITY_1)),
 
-    # hud 2
-    hudSubtext(hostPlayer if hostPlayer.toggle_guide else null,
-      ([
-            "{0} + {1} | 移除/新建传送点\n"
-            "{0} + {2} | 检查点碰撞模型\n".format(buttonString(Button.INTERACT) , buttonString(Button.RELOAD), buttonString(Button.ABILITY_1)),
+                "{0} + {1} | Select previous\n"
+                "{0} + {2} | Select next\n".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
 
-            "{0} + {1} | 选择上一个击杀球\n"
-            "{0} + {2} | 选择下一个击杀球\n".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
+                "{0} + {1} | Select previous\n"
+                "{0} + {2} | Select next\n".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
 
-            "{0} + {1} | 选择上一个弹球\n"
-            "{0} + {2} | 选择下一个弹球\n".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
+                "{0} + {1} | wallclimb\n"
+                "{0} + {2} | save double".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
 
-            "{0} + {1} | 爬墙\n"
-            "{0} + {2} | 延二段跳".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
+                "{0} + {1} | select next\n"
+                "{0} + {2} | select previous\n".format(buttonString(Button.INTERACT), buttonString(Button.JUMP), buttonString(Button.CROUCH))
+            ][EditorMode.current] if not EditorMoveItem else
+                "{0} | confirm placement\n"
+                "{1} | cancel placement".format(buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE))),
+            HudPosition.RIGHT, HO.edit_instructions_edit2, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-            "{0} + {1} | 选择下一个传送门\n"
-            "{0} + {2} | 选择上一个传送门\n".format(buttonString(Button.INTERACT), buttonString(Button.JUMP), buttonString(Button.CROUCH))
-        ][EditorMode.current] if not EditorMoveItem else
-            #"{0} (长按) | 快速移动"
-            "{0} | 放置实体"
-            "{1} | cancel placement\n".format(buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE))
-        ) checkCN
-        ([
-            "{0} + {1} | Remove/Add teleport\n"
-            "{0} + {2} | Toggle Hitbox\n".format(buttonString(Button.INTERACT) , buttonString(Button.RELOAD), buttonString(Button.ABILITY_1)),
+        # hud3
+        hudSubtext(hostPlayer if hostPlayer.toggle_guide and not EditorMoveItem else null,
+            ([
+                "{0} (长按) | 移动检查点".format(buttonString(Button.ABILITY_2)),
+                "{0} + {1} | 增大击杀球\n"
+                "{0} + {2} | 缩小击杀球".format(buttonString(Button.ABILITY_2), buttonString(Button.JUMP), buttonString(Button.CROUCH)),
 
-            "{0} + {1} | Select previous\n"
-            "{0} + {2} | Select next\n".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
+                "{0} + {1} | 增加弹球弹力\n"
+                "{0} + {2} | 减少弹球弹力".format(buttonString(Button.ABILITY_2), buttonString(Button.JUMP),buttonString(Button.CROUCH)),
 
-            "{0} + {1} | Select previous\n"
-            "{0} + {2} | Select next\n".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
+                "{0} + {1} | 死小\n"
+                "{0} + {2} | 表情留小".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE)),
 
-            "{0} + {1} | wallclimb\n"
-            "{0} + {2} | save double".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
+                "{0} + {1} | 移动选中的实体\n"
+                "{0} + {2} | 应用到当前/所有关卡(开关)".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.JUMP))
+            ][EditorMode.current]
+            ) checkCN
+            ([
+                "{0} (hold) | Move".format(buttonString(Button.ABILITY_2)),
+                "{0} + {1} | Increase size\n"
+                "{0} + {2} | Decrease size".format(buttonString(Button.ABILITY_2), buttonString(Button.JUMP), buttonString(Button.CROUCH)),
 
-            "{0} + {1} | select next\n"
-            "{0} + {2} | select previous\n".format(buttonString(Button.INTERACT), buttonString(Button.JUMP), buttonString(Button.CROUCH))
-        ][EditorMode.current] if not EditorMoveItem else
-            "{0} | confirm placement\n"
-            "{1} | cancel placement".format(buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE))),
-        HudPosition.RIGHT, HO.edit_instructions_edit2, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+                "{0} + {1} | Increase strength\n"
+                "{0} + {2} | Decrease strength".format(buttonString(Button.ABILITY_2), buttonString(Button.JUMP),buttonString(Button.CROUCH)),
 
-    # hud3
-    hudSubtext(hostPlayer if hostPlayer.toggle_guide and not EditorMoveItem else null,
-        ([
-            "{0} (长按) | 移动检查点".format(buttonString(Button.ABILITY_2)),
-            "{0} + {1} | 增大击杀球\n"
-            "{0} + {2} | 缩小击杀球".format(buttonString(Button.ABILITY_2), buttonString(Button.JUMP), buttonString(Button.CROUCH)),
+                "{0} + {1} | death hop\n"
+                "{0} + {2} | emote".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE)),
 
-            "{0} + {1} | 增加弹球弹力\n"
-            "{0} + {2} | 减少弹球弹力".format(buttonString(Button.ABILITY_2), buttonString(Button.JUMP),buttonString(Button.CROUCH)),
-
-            "{0} + {1} | 死小\n"
-            "{0} + {2} | 表情留小".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE)),
-
-            "{0} + {1} | 移动选中的实体\n"
-            "{0} + {2} | 应用到当前/所有关卡(开关)".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.JUMP))
-        ][EditorMode.current]
-        ) checkCN
-        ([
-            "{0} (hold) | Move".format(buttonString(Button.ABILITY_2)),
-            "{0} + {1} | Increase size\n"
-            "{0} + {2} | Decrease size".format(buttonString(Button.ABILITY_2), buttonString(Button.JUMP), buttonString(Button.CROUCH)),
-
-            "{0} + {1} | Increase strength\n"
-            "{0} + {2} | Decrease strength".format(buttonString(Button.ABILITY_2), buttonString(Button.JUMP),buttonString(Button.CROUCH)),
-
-            "{0} + {1} | death hop\n"
-            "{0} + {2} | emote".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE)),
-
-            "{0} + {1} | move\n"
-            "{0} + {2} | cp/map (toggle)".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.JUMP))
-        ][EditorMode.current]),
-        HudPosition.RIGHT, HO.edit_instructions_edit3, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    # hud4
-    hudSubtext(hostPlayer if hostPlayer.toggle_guide and not EditorMoveItem else null,
-        ([
-            [],
-            "{0} + {1} | 移动选中的实体".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)),
-            "{0} + {1} | 移动选中的实体".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)),
-            "{0} + {1} | 留小跳进点\n"
-            "{0} + {2} | 站卡".format(buttonString(Button.ABILITY_2) , buttonString(Button.JUMP), buttonString(Button.CROUCH)),
-            []
-        ][EditorMode.current]
-        ) checkCN
-        ([
-            [],
-            "{0} + {1} | Move".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)  ),
-            "{0} + {1} | Move".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE) ),
-            "{0} + {1} | require bhop\n"
-            "{0} + {2} | stand create".format(buttonString(Button.ABILITY_2) , buttonString(Button.JUMP), buttonString(Button.CROUCH)),
-            []
-        ][EditorMode.current]),
-        HudPosition.RIGHT, HO.edit_instructions_edit4, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    # ==
-    /*
-    hudSubtext(
-        hostPlayer if hostPlayer.toggle_guide else null,
-        " \n{0} + {1} | 下一关\n"
-        "{0} + {2} | 上一关\n"
-        "{3} (长按) | 飞行\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1))
-        checkCN
-        " \n{0} + {1} | Next checkpoint\n"
-        "{0} + {2} | Prev checkpoint\n"
-        "{3} (hold)| Fly\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1))
-        ,HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.toggle_guide else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
-    )
-    */
-    hudSubtext(
-        hostPlayer if hostPlayer.toggle_guide else null,
-        " \n{0} + {1} | 下一关".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE))
-        #"{0} + {2} | 上一关"
-        checkCN
-        " \n{0} + {1} | Next checkpoint".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE)),
-        #"{0} + {2} | Prev checkpoint"
-        HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.toggle_guide else Color.ORANGE,
-        HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-
-    hudSubtext(
-        hostPlayer if hostPlayer.toggle_guide else null,
-        "{1} + {2} | 上一关\n"
-        "{0} (长按) | 飞行\n".format(buttonString(Button.ABILITY_1), buttonString(Button.CROUCH),buttonString(Button.SECONDARY_FIRE))
-        checkCN
-        "{1} + {2} | Prev checkpoint\n"
-        "{0} (hold)| Fly\n".format(buttonString(Button.ABILITY_1), buttonString(Button.CROUCH),buttonString(Button.SECONDARY_FIRE)),
-        HudPosition.RIGHT, HO.edit_instructions_general1, Color.GREEN if hostPlayer.toggle_guide else Color.ORANGE,
-        HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-
-    hudSubheader(hostPlayer if hostPlayer.toggle_guide else null,
-        "保存地图长按 {0} + {1} + {2} 后按弹出窗口的提示进行操作" LeftAlign96.format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD))
-        checkCN
-        "to save map, hold {0} + {1} + {2} then follow instructions" LeftAlign96.format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
-        HudPosition.LEFT, HO.edit_savemap, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-
-    hudText(localPlayer if not localPlayer.editor_saveCache else null,
-        (   "{0} 检查点模式\n"
-            "{1} 击杀球模式\n"
-            "{2} 弹球模式\n"
-            "{3} 封禁(单关)\n"
-            "{4} 自定义传送门 ".format(
-                iconString(Icon.ARROW_RIGHT) if EditorMode.checkpoint else "     ",
-                iconString(Icon.ARROW_RIGHT) if EditorMode.killBall else "     ",
-                iconString(Icon.ARROW_RIGHT) if EditorMode.functionOrb else "     ",
-                iconString(Icon.ARROW_RIGHT) if EditorMode.skillBan else "     ",
-                iconString(Icon.ARROW_RIGHT) if EditorMode.portal else "     ")
-        if hostPlayer.isHoldingButton(Button.MELEE) else
-            " {1} {0} ".format(
-                ["检查点模式" ,"击杀球模式","弹球模式","封禁(单关)","自定义传送门"][EditorMode.current],
-                [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP), iconString(Icon.SPIRAL)][EditorMode.current])
-        if localPlayer == hostPlayer else
-            " {0} 源氏 编辑者 {0} ".format( iconString(Icon.BOLT))
-        ) checkCN
-            "{0} checkpoints\n"
-            "{1} boundary spheres\n"
-            "{2} function orbs\n"
-            "{3} skill bans\n"
-            "{4} portals".format(
-                iconString(Icon.ARROW_RIGHT) if EditorMode.checkpoint else "     ",
-                iconString(Icon.ARROW_RIGHT) if EditorMode.killBall else "     ",
-                iconString(Icon.ARROW_RIGHT) if EditorMode.functionOrb else "     ",
-                iconString(Icon.ARROW_RIGHT) if EditorMode.skillBan else "     ",
-                iconString(Icon.ARROW_RIGHT) if EditorMode.portal else "     ")
-        if hostPlayer.isHoldingButton(Button.MELEE) else
-            " {1} {0} ".format(
-                ["checkpoints" ,"boundary spheres","function orbs","skill bans","portals"][EditorMode.current],
-                [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][EditorMode.current])
-        if localPlayer == hostPlayer else
-            " {0} Genji editor {0} ".format(iconString(Icon.BOLT)),
-        null,
-        null,
-        HudPosition.TOP, HO.edit_host_mode, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-
-    hudText(true[0],
-        null,  # original part of the one ontop of it
-        ("{0} + 射击 | 切换作图模式".format(buttonString(Button.MELEE)) if localPlayer == hostPlayer else
-        "房主/编辑者 {0}".format(hostPlayer))
-        checkCN
-        ("{0} + shoot | change mode".format(buttonString(Button.MELEE)) if localPlayer == hostPlayer else
-        "Current host/editor: {0}".format(hostPlayer)),
-        null,
-        HudPosition.TOP,
-        HO.edit_changemode,
-        Color.SKY_BLUE,
-        Color.GRAY if localPlayer.editor_lock else Color.WHITE,
-        Color.WHITE,
-        HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-
-    hudSubtext(hostPlayer if hostPlayer.toggle_guide and (EditorMode.checkpoint or EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex)) else null, #if EditorMode.checkpoint or EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
-        "{0} + {1} | {4} {3} | {2}" LeftAlign96.format(
-            buttonString(Button.ULTIMATE),
-            buttonString(Button.PRIMARY_FIRE),
-            (BounceToggleUlt[EditSelected]) if EditorMode.functionOrb else
-            (hostPlayer.checkpoint_current in BladeEnabledCheckpoints),
-            abilityIconString(Hero.GENJI, Button.ULTIMATE),
-            "检查点给刀"  if EditorMode.checkpoint else "弹球给刀"
+                "{0} + {1} | move\n"
+                "{0} + {2} | cp/map (toggle)".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE), buttonString(Button.JUMP))
+            ][EditorMode.current]),
+            HudPosition.RIGHT, HO.edit_instructions_edit3, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+        # hud4
+        hudSubtext(hostPlayer if hostPlayer.toggle_guide and not EditorMoveItem else null,
+            ([
+                [],
+                "{0} + {1} | 移动选中的实体".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)),
+                "{0} + {1} | 移动选中的实体".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)),
+                "{0} + {1} | 留小跳进点\n"
+                "{0} + {2} | 站卡".format(buttonString(Button.ABILITY_2) , buttonString(Button.JUMP), buttonString(Button.CROUCH)),
+                []
+            ][EditorMode.current]
+            ) checkCN
+            ([
+                [],
+                "{0} + {1} | Move".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)  ),
+                "{0} + {1} | Move".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE) ),
+                "{0} + {1} | require bhop\n"
+                "{0} + {2} | stand create".format(buttonString(Button.ABILITY_2) , buttonString(Button.JUMP), buttonString(Button.CROUCH)),
+                []
+            ][EditorMode.current]),
+            HudPosition.RIGHT, HO.edit_instructions_edit4, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+        # ==
+        /*
+        hudSubtext(
+            hostPlayer if hostPlayer.toggle_guide else null,
+            " \n{0} + {1} | 下一关\n"
+            "{0} + {2} | 上一关\n"
+            "{3} (长按) | 飞行\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1))
+            checkCN
+            " \n{0} + {1} | Next checkpoint\n"
+            "{0} + {2} | Prev checkpoint\n"
+            "{3} (hold)| Fly\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1))
+            ,HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.toggle_guide else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
-        checkCN
-        "{0} + {1} | {4} give ult {3} | {2}" LeftAlign96.format(
-            buttonString(Button.ULTIMATE),
-            buttonString(Button.PRIMARY_FIRE),
-            (BounceToggleUlt[EditSelected]) if EditorMode.functionOrb else
-            (hostPlayer.checkpoint_current in BladeEnabledCheckpoints),
-            abilityIconString(Hero.GENJI, Button.ULTIMATE),
-            "Level" if EditorMode.checkpoint  else "Orb"),
-        HudPosition.LEFT, HO.edit_orb_ult,
-        Color.GREEN if BounceToggleUlt[EditSelected] and EditorMode.functionOrb else
-        Color.GREEN if hostPlayer.checkpoint_current in BladeEnabledCheckpoints and EditorMode.checkpoint else Color.ORANGE,
-        HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
-    )
+        */
+        hudSubtext(
+            hostPlayer if hostPlayer.toggle_guide else null,
+            " \n{0} + {1} | 下一关".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE))
+            #"{0} + {2} | 上一关"
+            checkCN
+            " \n{0} + {1} | Next checkpoint".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE)),
+            #"{0} + {2} | Prev checkpoint"
+            HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.toggle_guide else Color.ORANGE,
+            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
-    hudSubtext(hostPlayer if hostPlayer.toggle_guide and (EditorMode.checkpoint or EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex)) else null, #if EditorMode.checkpoint or EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
-        "{0} + {1} | {4} {3} | {2}" LeftAlign96.format(
-            buttonString(Button.ULTIMATE),
-            buttonString(Button.SECONDARY_FIRE),
-            BounceToggleDash[EditSelected] if EditorMode.functionOrb else
-            hostPlayer.checkpoint_current in DashEnabledCheckpoints,
-            abilityIconString(Hero.GENJI, Button.ABILITY_1),
-           "检查点给Shift" if EditorMode.checkpoint else "弹球给Shift")
-        checkCN
-        "{0} + {1} | {4} give dash {3} | {2}" LeftAlign96.format(
-            buttonString(Button.ULTIMATE),
-            buttonString(Button.SECONDARY_FIRE),
-            BounceToggleDash[EditSelected] if EditorMode.functionOrb else
-            hostPlayer.checkpoint_current in DashEnabledCheckpoints,
-            abilityIconString(Hero.GENJI, Button.ABILITY_1),
-            "Level" if EditorMode.checkpoint else "Orb")
-        , HudPosition.LEFT, HO.edit_orb_dash,
-        Color.GREEN if BounceToggleDash[EditSelected] and EditorMode.functionOrb else
-        Color.GREEN if hostPlayer.checkpoint_current in DashEnabledCheckpoints and EditorMode.checkpoint else Color.ORANGE,
-        HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
-    )
+        hudSubtext(
+            hostPlayer if hostPlayer.toggle_guide else null,
+            "{1} + {2} | 上一关\n"
+            "{0} (长按) | 飞行\n".format(buttonString(Button.ABILITY_1), buttonString(Button.CROUCH),buttonString(Button.SECONDARY_FIRE))
+            checkCN
+            "{1} + {2} | Prev checkpoint\n"
+            "{0} (hold)| Fly\n".format(buttonString(Button.ABILITY_1), buttonString(Button.CROUCH),buttonString(Button.SECONDARY_FIRE)),
+            HudPosition.RIGHT, HO.edit_instructions_general1, Color.GREEN if hostPlayer.toggle_guide else Color.ORANGE,
+            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
-    hudSubtext(hostPlayer if EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
-        "{0} + {1} |  收集球(进点前必须集齐) {3} | {2}\n" LeftAlign96.format(
-            buttonString(Button.ULTIMATE),
-            buttonString(Button.ABILITY_2),
-            BounceToggleLock[EditSelected],
-            iconString(Icon.ASTERISK))
-        checkCN
-        "{0} + {1} | unlocks checkpoint {3} | {2}\n" LeftAlign96.format(
-            buttonString(Button.ULTIMATE),
-            buttonString(Button.ABILITY_2),
-            BounceToggleLock[EditSelected],
-            iconString(Icon.ASTERISK)),
-        HudPosition.LEFT, HO.edit_orb_lock, Color.GREEN if BounceToggleLock[EditSelected] else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
-    )
+        hudSubheader(hostPlayer if hostPlayer.toggle_guide else null,
+            "保存地图长按 {0} + {1} + {2} 后按弹出窗口的提示进行操作" LeftAlign96.format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD))
+            checkCN
+            "to save map, hold {0} + {1} + {2} then follow instructions" LeftAlign96.format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
+            HudPosition.LEFT, HO.edit_savemap, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-    hudText(hostPlayer if hostPlayer.toggle_guide else null,
-        "球体/传送门上限: {0}/{1} ".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart), fxLimit)
-        checkCN
-        "orb/portal limit: {0}/{1} ".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart), fxLimit),
-        null, LeftAlign128, HudPosition.LEFT, HO.edit_orblimit, Color.BLUE, null, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
-    )
+        hudText(localPlayer if not localPlayer.editor_saveCache else null,
+            (   "{0} 检查点模式\n"
+                "{1} 击杀球模式\n"
+                "{2} 弹球模式\n"
+                "{3} 封禁(单关)\n"
+                "{4} 自定义传送门 ".format(
+                    iconString(Icon.ARROW_RIGHT) if EditorMode.checkpoint else "     ",
+                    iconString(Icon.ARROW_RIGHT) if EditorMode.killBall else "     ",
+                    iconString(Icon.ARROW_RIGHT) if EditorMode.functionOrb else "     ",
+                    iconString(Icon.ARROW_RIGHT) if EditorMode.skillBan else "     ",
+                    iconString(Icon.ARROW_RIGHT) if EditorMode.portal else "     ")
+            if hostPlayer.isHoldingButton(Button.MELEE) else
+                " {1} {0} ".format(
+                    ["检查点模式" ,"击杀球模式","弹球模式","封禁(单关)","自定义传送门"][EditorMode.current],
+                    [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP), iconString(Icon.SPIRAL)][EditorMode.current])
+            if localPlayer == hostPlayer else
+                " {0} 源氏 编辑者 {0} ".format( iconString(Icon.BOLT))
+            ) checkCN
+                "{0} checkpoints\n"
+                "{1} boundary spheres\n"
+                "{2} function orbs\n"
+                "{3} skill bans\n"
+                "{4} portals".format(
+                    iconString(Icon.ARROW_RIGHT) if EditorMode.checkpoint else "     ",
+                    iconString(Icon.ARROW_RIGHT) if EditorMode.killBall else "     ",
+                    iconString(Icon.ARROW_RIGHT) if EditorMode.functionOrb else "     ",
+                    iconString(Icon.ARROW_RIGHT) if EditorMode.skillBan else "     ",
+                    iconString(Icon.ARROW_RIGHT) if EditorMode.portal else "     ")
+            if hostPlayer.isHoldingButton(Button.MELEE) else
+                " {1} {0} ".format(
+                    ["checkpoints" ,"boundary spheres","function orbs","skill bans","portals"][EditorMode.current],
+                    [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][EditorMode.current])
+            if localPlayer == hostPlayer else
+                " {0} Genji editor {0} ".format(iconString(Icon.BOLT)),
+            null,
+            null,
+            HudPosition.TOP, HO.edit_host_mode, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-    # display selected cc/orb info
-    hudText(hostPlayer if hostPlayer.toggle_guide else null,
-        (
-            "\n 选中的检查点 \n 矢量: {0}{1} \n".format(
-                CheckpointPositions[hostPlayer.checkpoint_current],
-                [] if len(CheckpointPositions[hostPlayer.checkpoint_current]) < 2 else
-                "\n 传送点: {0}".format(CheckpointPositions[hostPlayer.checkpoint_current][1]))
-            if EditorMode.checkpoint and len(CheckpointPositions) else
-            "\n 选中的击杀球"
-            "\n 矢量: {}"
-            "\n 半径: {}"
-            "\n  + 進不去"
-            "\n  - 出不來"
-            "\n".format(
-                KillBallPositions[EditSelected],
-                KillBallRadii[EditSelected])
-            if EditorMode.killBall and len(hostPlayer.editor_killIndex) else
-            "\n 选中的弹球"
-            "\n 矢量: {1}"
-            "\n 弹力: {0}"
-            "\n 序号: {2}\n".format(
-                BounceStrength[EditSelected],
-                BouncePositions[EditSelected],
-                EditSelected)
-            if EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex) else
-            "\n 封禁(单关)\n"
-            "――――――――――――\n"
-            " {} 蹭留 ∞\n"
-            " {} 卡小 ♂\n"
-            " {} 站卡 ♠\n"
-            " {} 爬墙 ↑\n"
-            " {} 死小 X\n"
-            " {} 表情留小 ♥\n"
-            " {} 延二段跳 △\n"
-            "――――――――――――\n"
-            " {} 留小跳进点 ≥\n".format(
-                "√" if hostPlayer.checkpoint_current in BanMulti else [],
-                "√" if hostPlayer.checkpoint_current in BanCreate else [],
-                "√" if hostPlayer.checkpoint_current in BanStand else [],
-                "√" if hostPlayer.checkpoint_current in BanClimb else [],
-                "√" if hostPlayer.checkpoint_current in BanDead else [],
-                "√" if hostPlayer.checkpoint_current in BanEmote else [],
-                "√" if hostPlayer.checkpoint_current in BanSaveDouble else [],
-                "√" if hostPlayer.checkpoint_current in BanBhop else []
+        hudText(true[0],
+            null,  # original part of the one ontop of it
+            ("{0} + 射击 | 切换作图模式".format(buttonString(Button.MELEE)) if localPlayer == hostPlayer else
+            "房主/编辑者 {0}".format(hostPlayer))
+            checkCN
+            ("{0} + shoot | change mode".format(buttonString(Button.MELEE)) if localPlayer == hostPlayer else
+            "Current host/editor: {0}".format(hostPlayer)),
+            null,
+            HudPosition.TOP,
+            HO.edit_changemode,
+            Color.SKY_BLUE,
+            Color.GRAY if localPlayer.editor_lock else Color.WHITE,
+            Color.WHITE,
+            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+
+        hudSubtext(hostPlayer if hostPlayer.toggle_guide and (EditorMode.checkpoint or EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex)) else null, #if EditorMode.checkpoint or EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
+            "{0} + {1} | {4} {3} | {2}" LeftAlign96.format(
+                buttonString(Button.ULTIMATE),
+                buttonString(Button.PRIMARY_FIRE),
+                (BounceToggleUlt[EditSelected]) if EditorMode.functionOrb else
+                (hostPlayer.checkpoint_current in BladeEnabledCheckpoints),
+                abilityIconString(Hero.GENJI, Button.ULTIMATE),
+                "检查点给刀"  if EditorMode.checkpoint else "弹球给刀"
             )
-            if EditorMode.skillBan else
-                "\n 入口矢量: {}\n"
-                " 出口矢量: {}\n"
-                " 应用关卡: {}\n".format(
-                CustomPortalStart[EditSelected],
-                CustomPortalEndpoint[EditSelected],
-                "所有" if CustomPortalCP[EditSelected] < 0 else hostPlayer.checkpoint_current)
-            if EditorMode.portal and CustomPortalCP[EditSelected] in [hostPlayer.checkpoint_current, -1] and len(CustomPortalCP) else
-            "\n   当前无数据选中   \n"
-        ) checkCN
-        (
-            "\n Selected Checkpoint\n Vector: {0}{1} \n".format(
-                CheckpointPositions[hostPlayer.checkpoint_current],
-                [] if len(CheckpointPositions[hostPlayer.checkpoint_current]) < 2 else
-                "\n Teleport: {0}".format(CheckpointPositions[hostPlayer.checkpoint_current][1]))
-            if EditorMode.checkpoint and len(CheckpointPositions) else
-            "\n Selected boundary sphere"
-            "\n Vector: {}"
-            "\n radius: {}"
-            "\n  + keep out"
-            "\n  - stay in\n".format(KillBallPositions[EditSelected], KillBallRadii[EditSelected])
-            if EditorMode.killBall and len(hostPlayer.editor_killIndex) else
-            "\n Selected Bounce Orb\n Vector: {1}\n strength: {0} \n ID: {2}\n".format(
-                BounceStrength[EditSelected],
-                BouncePositions[EditSelected],
-                EditSelected)
-            if EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex)  else
-            "\n skill bans\n"
-            "――――――――――――\n"
-            " {} multi-climb ∞\n"
-            " {} create ♂\n"
-            " {} stand ♠\n"
-            " {} climb ↑\n"
-            " {} dead X\n"
-            " {} emote ♥\n"
-            " {} save double △\n"
-            "――――――――――――\n"
-            " {} require bhop ≥\n".format(
-                "√" if hostPlayer.checkpoint_current in BanMulti else [],
-                "√" if hostPlayer.checkpoint_current in BanCreate else [],
-                "√" if hostPlayer.checkpoint_current in BanStand else [],
-                "√" if hostPlayer.checkpoint_current in BanClimb else [],
-                "√" if hostPlayer.checkpoint_current in BanDead else [],
-                "√" if hostPlayer.checkpoint_current in BanEmote else [],
-                "√" if hostPlayer.checkpoint_current in BanSaveDouble else [],
-                "√" if hostPlayer.checkpoint_current in BanBhop else [])
-            if EditorMode.skillBan else
-                "\n Start: {} \n"
-                " End: {} \n"
-                " CP: {} \n".format(
-                CustomPortalStart[EditSelected],
-                CustomPortalEndpoint[EditSelected],
-                "All" if CustomPortalCP[EditSelected] < 0 else hostPlayer.checkpoint_current)
-            if EditorMode.portal and CustomPortalCP[EditSelected] in [hostPlayer.checkpoint_current, -1] and len(CustomPortalCP) else
-            "\n   No data selected   \n"
-        )
-        , null, LeftAlign128, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
-    )
+            checkCN
+            "{0} + {1} | {4} give ult {3} | {2}" LeftAlign96.format(
+                buttonString(Button.ULTIMATE),
+                buttonString(Button.PRIMARY_FIRE),
+                (BounceToggleUlt[EditSelected]) if EditorMode.functionOrb else
+                (hostPlayer.checkpoint_current in BladeEnabledCheckpoints),
+                abilityIconString(Hero.GENJI, Button.ULTIMATE),
+                "Level" if EditorMode.checkpoint  else "Orb"),
+            HudPosition.LEFT, HO.edit_orb_ult,
+            Color.GREEN if BounceToggleUlt[EditSelected] and EditorMode.functionOrb else
+            Color.GREEN if hostPlayer.checkpoint_current in BladeEnabledCheckpoints and EditorMode.checkpoint else Color.ORANGE,
+            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
-    wait(1)
-    # effects ==========================================================================================================================================================================
-    createInWorldText(
-        true if len(EditSelectIdArray) else null,
-        "选中的实体" checkCN "selected",
-        KillBallPositions[EditSelected] if EditorMode.killBall else
-        BouncePositions[EditSelected] if EditorMode.functionOrb else
-        CustomPortalStart[EditSelected] if EditorMode.portal else
-        null,
-        1.2, Clip.NONE, WorldTextReeval.VISIBILITY_AND_POSITION, Color.ORANGE, SpecVisibility.DEFAULT)
+        hudSubtext(hostPlayer if hostPlayer.toggle_guide and (EditorMode.checkpoint or EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex)) else null, #if EditorMode.checkpoint or EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
+            "{0} + {1} | {4} {3} | {2}" LeftAlign96.format(
+                buttonString(Button.ULTIMATE),
+                buttonString(Button.SECONDARY_FIRE),
+                BounceToggleDash[EditSelected] if EditorMode.functionOrb else
+                hostPlayer.checkpoint_current in DashEnabledCheckpoints,
+                abilityIconString(Hero.GENJI, Button.ABILITY_1),
+            "检查点给Shift" if EditorMode.checkpoint else "弹球给Shift")
+            checkCN
+            "{0} + {1} | {4} give dash {3} | {2}" LeftAlign96.format(
+                buttonString(Button.ULTIMATE),
+                buttonString(Button.SECONDARY_FIRE),
+                BounceToggleDash[EditSelected] if EditorMode.functionOrb else
+                hostPlayer.checkpoint_current in DashEnabledCheckpoints,
+                abilityIconString(Hero.GENJI, Button.ABILITY_1),
+                "Level" if EditorMode.checkpoint else "Orb")
+            , HudPosition.LEFT, HO.edit_orb_dash,
+            Color.GREEN if BounceToggleDash[EditSelected] and EditorMode.functionOrb else
+            Color.GREEN if hostPlayer.checkpoint_current in DashEnabledCheckpoints and EditorMode.checkpoint else Color.ORANGE,
+            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
-    createIcon(
-        true if len(EditSelectIdArray) else null,
-        KillBallPositions[EditSelected] if EditorMode.killBall else
-        BouncePositions[EditSelected] if EditorMode.functionOrb else
-        CustomPortalStart[EditSelected] if EditorMode.portal else
-        null,
-        Icon.ARROW_DOWN,
-        IconReeval.VISIBILITY_AND_POSITION, Color.WHITE, true)
+        hudSubtext(hostPlayer if EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
+            "{0} + {1} |  收集球(进点前必须集齐) {3} | {2}\n" LeftAlign96.format(
+                buttonString(Button.ULTIMATE),
+                buttonString(Button.ABILITY_2),
+                BounceToggleLock[EditSelected],
+                iconString(Icon.ASTERISK))
+            checkCN
+            "{0} + {1} | unlocks checkpoint {3} | {2}\n" LeftAlign96.format(
+                buttonString(Button.ULTIMATE),
+                buttonString(Button.ABILITY_2),
+                BounceToggleLock[EditSelected],
+                iconString(Icon.ASTERISK)),
+            HudPosition.LEFT, HO.edit_orb_lock, Color.GREEN if BounceToggleLock[EditSelected] else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
-    # Purple sphere for teleport location
-    createEffect(true if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1 and EditorMode.checkpoint else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[hostPlayer.checkpoint_current][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        hudText(hostPlayer if hostPlayer.toggle_guide else null,
+            "球体/传送门上限: {0}/{1} ".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart), fxLimit)
+            checkCN
+            "orb/portal limit: {0}/{1} ".format(len(BouncePositions) + len(KillBallPositions) + len(CustomPortalStart), fxLimit),
+            null, LeftAlign128, HudPosition.LEFT, HO.edit_orblimit, Color.BLUE, null, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-    # Teleport text
-    createInWorldText(true if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1 and EditorMode.checkpoint else null, "传送点位置" checkCN "teleporter location", CheckpointPositions[hostPlayer.checkpoint_current][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+        # display selected cc/orb info
+        hudText(hostPlayer if hostPlayer.toggle_guide else null,
+            (
+                "\n 选中的检查点 \n 矢量: {0}{1} \n".format(
+                    CheckpointPositions[hostPlayer.checkpoint_current],
+                    [] if len(CheckpointPositions[hostPlayer.checkpoint_current]) < 2 else
+                    "\n 传送点: {0}".format(CheckpointPositions[hostPlayer.checkpoint_current][1]))
+                if EditorMode.checkpoint and len(CheckpointPositions) else
+                "\n 选中的击杀球"
+                "\n 矢量: {}"
+                "\n 半径: {}"
+                "\n  + 進不去"
+                "\n  - 出不來"
+                "\n".format(
+                    KillBallPositions[EditSelected],
+                    KillBallRadii[EditSelected])
+                if EditorMode.killBall and len(hostPlayer.editor_killIndex) else
+                "\n 选中的弹球"
+                "\n 矢量: {1}"
+                "\n 弹力: {0}"
+                "\n 序号: {2}\n".format(
+                    BounceStrength[EditSelected],
+                    BouncePositions[EditSelected],
+                    EditSelected)
+                if EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex) else
+                "\n 封禁(单关)\n"
+                "――――――――――――\n"
+                " {} 蹭留 ∞\n"
+                " {} 卡小 ♂\n"
+                " {} 站卡 ♠\n"
+                " {} 爬墙 ↑\n"
+                " {} 死小 X\n"
+                " {} 表情留小 ♥\n"
+                " {} 延二段跳 △\n"
+                "――――――――――――\n"
+                " {} 留小跳进点 ≥\n".format(
+                    "√" if hostPlayer.checkpoint_current in BanMulti else [],
+                    "√" if hostPlayer.checkpoint_current in BanCreate else [],
+                    "√" if hostPlayer.checkpoint_current in BanStand else [],
+                    "√" if hostPlayer.checkpoint_current in BanClimb else [],
+                    "√" if hostPlayer.checkpoint_current in BanDead else [],
+                    "√" if hostPlayer.checkpoint_current in BanEmote else [],
+                    "√" if hostPlayer.checkpoint_current in BanSaveDouble else [],
+                    "√" if hostPlayer.checkpoint_current in BanBhop else []
+                )
+                if EditorMode.skillBan else
+                    "\n 入口矢量: {}\n"
+                    " 出口矢量: {}\n"
+                    " 应用关卡: {}\n".format(
+                    CustomPortalStart[EditSelected],
+                    CustomPortalEndpoint[EditSelected],
+                    "所有" if CustomPortalCP[EditSelected] < 0 else hostPlayer.checkpoint_current)
+                if EditorMode.portal and CustomPortalCP[EditSelected] in [hostPlayer.checkpoint_current, -1] and len(CustomPortalCP) else
+                "\n   当前无数据选中   \n"
+            ) checkCN
+            (
+                "\n Selected Checkpoint\n Vector: {0}{1} \n".format(
+                    CheckpointPositions[hostPlayer.checkpoint_current],
+                    [] if len(CheckpointPositions[hostPlayer.checkpoint_current]) < 2 else
+                    "\n Teleport: {0}".format(CheckpointPositions[hostPlayer.checkpoint_current][1]))
+                if EditorMode.checkpoint and len(CheckpointPositions) else
+                "\n Selected boundary sphere"
+                "\n Vector: {}"
+                "\n radius: {}"
+                "\n  + keep out"
+                "\n  - stay in\n".format(KillBallPositions[EditSelected], KillBallRadii[EditSelected])
+                if EditorMode.killBall and len(hostPlayer.editor_killIndex) else
+                "\n Selected Bounce Orb\n Vector: {1}\n strength: {0} \n ID: {2}\n".format(
+                    BounceStrength[EditSelected],
+                    BouncePositions[EditSelected],
+                    EditSelected)
+                if EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex)  else
+                "\n skill bans\n"
+                "――――――――――――\n"
+                " {} multi-climb ∞\n"
+                " {} create ♂\n"
+                " {} stand ♠\n"
+                " {} climb ↑\n"
+                " {} dead X\n"
+                " {} emote ♥\n"
+                " {} save double △\n"
+                "――――――――――――\n"
+                " {} require bhop ≥\n".format(
+                    "√" if hostPlayer.checkpoint_current in BanMulti else [],
+                    "√" if hostPlayer.checkpoint_current in BanCreate else [],
+                    "√" if hostPlayer.checkpoint_current in BanStand else [],
+                    "√" if hostPlayer.checkpoint_current in BanClimb else [],
+                    "√" if hostPlayer.checkpoint_current in BanDead else [],
+                    "√" if hostPlayer.checkpoint_current in BanEmote else [],
+                    "√" if hostPlayer.checkpoint_current in BanSaveDouble else [],
+                    "√" if hostPlayer.checkpoint_current in BanBhop else [])
+                if EditorMode.skillBan else
+                    "\n Start: {} \n"
+                    " End: {} \n"
+                    " CP: {} \n".format(
+                    CustomPortalStart[EditSelected],
+                    CustomPortalEndpoint[EditSelected],
+                    "All" if CustomPortalCP[EditSelected] < 0 else hostPlayer.checkpoint_current)
+                if EditorMode.portal and CustomPortalCP[EditSelected] in [hostPlayer.checkpoint_current, -1] and len(CustomPortalCP) else
+                "\n   No data selected   \n"
+            ),
+            null, LeftAlign128, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-    # normal cp if teleport
-    createEffect(hostPlayer if CheckpointPositions[hostPlayer.checkpoint_current][1] and EditorMode.checkpoint else null, Effect.RING, Color.ORANGE, CheckpointPositions[hostPlayer.checkpoint_current][0], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createInWorldText(hostPlayer if CheckpointPositions[hostPlayer.checkpoint_current][1] and EditorMode.checkpoint else null, "检查点位置" checkCN "level location", CheckpointPositions[hostPlayer.checkpoint_current][0], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+        wait(1)
+        # effects ==========================================================================================================================================================================
+        createInWorldText(
+            true if len(EditSelectIdArray) else null,
+            "选中的实体" checkCN "selected",
+            KillBallPositions[EditSelected] if EditorMode.killBall else
+            BouncePositions[EditSelected] if EditorMode.functionOrb else
+            CustomPortalStart[EditSelected] if EditorMode.portal else
+            null,
+            1.2, Clip.NONE, WorldTextReeval.VISIBILITY_AND_POSITION, Color.ORANGE, SpecVisibility.DEFAULT)
 
-    # portal fx
-    createEffect(hostPlayer if len(EditSelectIdArray) and EditorMode.portal else null, Effect.SPARKLES, Color.PURPLE, CustomPortalEndpoint[EditSelected], 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        createIcon(
+            true if len(EditSelectIdArray) else null,
+            KillBallPositions[EditSelected] if EditorMode.killBall else
+            BouncePositions[EditSelected] if EditorMode.functionOrb else
+            CustomPortalStart[EditSelected] if EditorMode.portal else
+            null,
+            Icon.ARROW_DOWN,
+            IconReeval.VISIBILITY_AND_POSITION, Color.WHITE, true)
+
+        # Purple sphere for teleport location
+        createEffect(true if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1 and EditorMode.checkpoint else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[hostPlayer.checkpoint_current][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+
+        # Teleport text
+        createInWorldText(true if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1 and EditorMode.checkpoint else null, "传送点位置" checkCN "teleporter location", CheckpointPositions[hostPlayer.checkpoint_current][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+
+        # normal cp if teleport
+        createEffect(hostPlayer if CheckpointPositions[hostPlayer.checkpoint_current][1] and EditorMode.checkpoint else null, Effect.RING, Color.ORANGE, CheckpointPositions[hostPlayer.checkpoint_current][0], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        createInWorldText(hostPlayer if CheckpointPositions[hostPlayer.checkpoint_current][1] and EditorMode.checkpoint else null, "检查点位置" checkCN "level location", CheckpointPositions[hostPlayer.checkpoint_current][0], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+
+        # portal fx
+        createEffect(hostPlayer if len(EditSelectIdArray) and EditorMode.portal else null, Effect.SPARKLES, Color.PURPLE, CustomPortalEndpoint[EditSelected], 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    else: #Editor Off
+        HudStoreEdit = null # clear variables if not in editor mode
 
 # global functions ==============================================================
 rule "Editor |  Fly/Noclip Toggle":
