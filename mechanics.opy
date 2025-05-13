@@ -67,14 +67,14 @@ rule "Mechanic | Dash":
     @Condition eventPlayer.isUsingAbility1()
     async(CheckDash(), AsyncBehavior.RESTART)
 
-rule "Mechanic | Player on the wall":
+rule "Mechanic | On Wall":
     @Event eachPlayer
     #This rule is also linked to the determination of wall climbing, please do not close/delete
     @Condition eventPlayer.isOnWall()
     @Condition eventPlayer.isHoldingButton(Button.JUMP)
     eventPlayer.skill_usedClimb = true
 
-rule "Mechanic | Using Emote":
+rule "Mechanic | Emote":
     @Event eachPlayer
     @Condition eventPlayer.isCommunicatingEmote() == true
     eventPlayer.skill_usedBhop = false
@@ -98,7 +98,7 @@ rule "Mechanic | Jump":
     else: #Hop
         eventPlayer.skill_usedHop = true
 
-rule "Mechanic | Before Bhop":
+rule "Mechanic | No Jump":
     @Event eachPlayer
     @Condition eventPlayer.skill_usedHop == null
     @Condition eventPlayer.isOnGround() == false
