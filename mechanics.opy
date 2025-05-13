@@ -93,16 +93,16 @@ rule "Mechanic | Jump":
     #@Condition eventPlayer.skill_usedBhop == false
     @Condition eventPlayer.isJumping()
     eventPlayer.skill_usedBhop = true
-    if eventPlayer.skill_countJumps: #Bhop
+    if eventPlayer.skill_usedHop: #Bhop
         smallMessage(eventPlayer,"   小跳已用" checkCN "   Bhop")
     else: #Hop
-        eventPlayer.skill_countJumps = true
+        eventPlayer.skill_usedHop = true
 
 rule "Mechanic | Before Bhop":
     @Event eachPlayer
-    @Condition eventPlayer.skill_countJumps == null
+    @Condition eventPlayer.skill_usedHop == null
     @Condition eventPlayer.isOnGround() == false
-    eventPlayer.skill_countJumps = true
+    eventPlayer.skill_usedHop = true
 
 rule "Mechanic | Bhop count for stand ban":
     @Event eachPlayer
@@ -136,7 +136,7 @@ rule "Mechanic | Create Bhop":
 rule "Mechanic | Ground Reset":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround()
-    eventPlayer.skill_countJumps = null
+    eventPlayer.skill_usedHop = null
     eventPlayer.skill_usedClimb = false
     eventPlayer.skill_countMulti = null
     eventPlayer.skill_countCreates = null

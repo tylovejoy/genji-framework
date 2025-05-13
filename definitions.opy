@@ -217,7 +217,7 @@ playervar toggle_invisible                             # bool                   
 playervar toggle_hints
 
 playervar skill_countBhops                         # int                       --- counts bhops used for stand create ban
-playervar skill_countJumps                         # int                       --- jump tracking count, 0, 1, 2
+playervar skill_usedHop                         # int                       --- jump tracking count, 0, 1, 2
 playervar skill_countCreates
 playervar skill_countMulti                   # int                       --- climb count # for HUD
 playervar skill_usedClimb                     # bool                      --- turned into bool
