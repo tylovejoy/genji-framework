@@ -131,7 +131,7 @@ rule "Addon | Inworld text for certain Checkpoints - 特定关卡显示的地图
     CpIwtCp = [1, 3]
     # in CpIwtPos fill in the vector
     # 修改数组 “CpIwtPos” 为地图文本 的矢量位置
-    CpIwtPos = [vect(0,0,0), vect(0,0,0)]
+    CpIwtPos = [vect(1,1,1), vect(1,1,1)]
     # color applies to all
     # 选择应用到 所有地图文 本的颜色
     CpIwtColor = Color.LIME_GREEN
@@ -228,19 +228,13 @@ rule "Addon | Group up - Map Data":
         [i for i in getAllPlayers() if i.checkpoint_current == 777],
         "{0} {1} {0}".format(
             abilityIconString(Hero.GENJI, Button.ULTIMATE),
-            "待在这里" checkCN "group up"
-            ),
-        vect(0,0,0),
-        1.5,
-        Clip.NONE, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT
-    )
+            "待在这里" checkCN "group up"),
+        vect(1,1,1), 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
     # replace 777 with checkpoint number
     # replace vector 0,0,0 with orb position
     # 3.5 is the radius
-    createEffect(
-        [i for i in getAllPlayers() if i.checkpoint_current == 777],
-        Effect.SPHERE, Color.ORANGE, vect(0,0,0),  3.5, EffectReeval.VISIBILITY
-    )
+    createEffect([i for i in getAllPlayers() if i.checkpoint_current == 777],
+        Effect.SPHERE, Color.ORANGE, vect(1,1,1),  3.5, EffectReeval.VISIBILITY)
 
 rule "Addon | Group Up":
     @Disabled
@@ -252,7 +246,7 @@ rule "Addon | Group Up":
     @Condition eventPlayer.toggle_invincible == false
     # replace vector 0,0,0 with orb position
     # 3.5 is the radius
-    @Condition distance(eventPlayer, vect(0,0,0)) < 3.5
+    @Condition distance(eventPlayer, vect(1,1,1)) < 3.5
 
     smallMessage(eventPlayer, "   stay in the bubble")
     wait(1, Wait.ABORT_WHEN_FALSE)
