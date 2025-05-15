@@ -375,8 +375,8 @@ rule "Addon | Ledge Grab Patch v1.5":
             eventPlayer.startForcingButton(Button.JUMP)
             wait(false)
             eventPlayer.stopForcingButton(Button.JUMP)
-        waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
-        waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
+        waitUntil(not eventPlayer.isInAir() or eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
+        waitUntil(not (eventPlayer.isInAir() and eventPlayer.isHoldingButton(Button.JUMP)), Math.INFINITY)
         #Create cBhop
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)
 
