@@ -579,9 +579,11 @@ fixed:
        * Press Jump to move Up
        * Press Crouch to move Down
    * Reported by `@bioslet` +5xp
+ - Fixed flipped bounce values on toggle
+   * Reported by `@n1troh` +5xp
 ### Commands
  - Fixed hiding Split Display
- - Fixed 1/0 in preview
+ - Fixed 1/0 in Preview
 ### Addon
  - Fixed Group Up from causing extra movement
    * Reported by `@bioslet` +5xp

@@ -70,3 +70,5 @@ triple jump ban doesnt work on workshop maps anymore
    * Skill issue
  - Missing Addon Texts [FIXED]
    * Reported by `@kuma0997`
+ - Flipped editor bounce values
+   * Reported by `@n1troh`
