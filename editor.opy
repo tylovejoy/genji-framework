@@ -923,7 +923,7 @@ rule "Editor | toggle orb functions":
         BounceToggleDash[EditSelected] = not BounceToggleDash[EditSelected]
     else:
         BounceToggleLock[EditSelected] = not BounceToggleLock[EditSelected]
-        BounceStrength[EditSelected] = 10 * BounceToggleLock[EditSelected]
+        BounceStrength[EditSelected] = 10 * not BounceToggleLock[EditSelected]
 
     UpdateCache()
     hostPlayer.editor_lock = false
