@@ -590,3 +590,5 @@ fixed:
  - Fixed Triple Jump to restart when climbing or dashing after landing
  - Fixed missing Addon Texts
    * Reported by `@kuma0997` +5xp
+### Other
+ - Fixed bhop message for jumping when jump is double pressed
