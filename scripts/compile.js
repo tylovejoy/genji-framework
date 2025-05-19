@@ -5,7 +5,7 @@ const overpy = require("./overpy_standalone");
 const OUTPUT_DIR = path.resolve(__dirname, "../dist");
 
 // Get entrypoint file from CLI or fallback to ./main.opy
-const entryPath = path.resolve(process.argv[2] || path.resolve(__dirname, "../main.opy"));
+const entryPath = path.resolve(process.argv[2] || path.resolve(__dirname, "../framework.opy"));
 
 async function ensureOutputDir() {
   try {
