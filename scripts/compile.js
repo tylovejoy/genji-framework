@@ -27,7 +27,7 @@ async function main() {
       source,
       "en-US",                              // language
       path.dirname(entryPath),              // _rootPath for resolving imports
-      path.basename(entryPath)              // mainFileName3
+      'framework.opy '             // mainFileName3
     );
 
     await ensureOutputDir();
