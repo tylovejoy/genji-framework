@@ -5,7 +5,7 @@ const overpy = require("./overpy_standalone");
 const OUTPUT_DIR = path.resolve(__dirname, "../dist");
 
 // Get entrypoint file from CLI or default
-const entryFile = process.argv[2] || path.resolve(__dirname, "../main.opy");
+const entryFile = process.argv[2] || path.resolve(__dirname, "../framework.opy");
 
 function ensureOutputDir() {
   if (!fs.existsSync(OUTPUT_DIR)) {
