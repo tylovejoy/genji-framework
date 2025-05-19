@@ -15,21 +15,13 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Compile .opy script to .ow
+        uses: your-username/overpy-compile-action@v1
         with:
-          node-version: 18
-
-      - name: Download OverPy standalone
-        run: |
-          mkdir -p overpy
-          curl -L -o overpy/overpy_standalone.js https://raw.githubusercontent.com/Zezombye/overpy/master/out/overpy_standalone.js
-
-      - name: Copy OverPy into scripts
-        run: cp overpy/overpy_standalone.js scripts/
-
-      - name: Compile .opy files
-        run: node scripts/compile.js
+          entrypoint: src/framework.opy
+          output_dir: dist
+          language: en-US
+          out_file_type: .ow
 
       - name: Upload compiled .ow files as artifact
         uses: actions/upload-artifact@v4
