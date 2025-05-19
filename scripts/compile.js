@@ -21,13 +21,8 @@ async function main() {
 
     console.log(`Compiling: ${entryPath}`);
 
-    // Call the async compile function
-    const compiled = await overpy.compile(
-      source,
-      "en-US",
-      path.dirname(entryPath),
-      'framework.opy'
-    );
+    await readyPromise;
+    compiled = (await overpy.compile(source, "en-US", path.dirname(entryPath), 'framework.opy')).result;
 
     await ensureOutputDir();
 
