@@ -1,7 +1,8 @@
 #!optimizeForSize
 ##!suppressWarnings w_ow2_communicate_bug
-##!suppressWarnings w_tags #Workshop Settings
+##!suppressWarnings w_tags
 #!suppressWarnings w_lone_else
+#!suppressWarnings w_enum_constant
 ###############################################################################
 #!define versionhere "v1.10.3F"
 #♨ Dev Build Icon
