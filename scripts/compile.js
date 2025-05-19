@@ -1,34 +1,44 @@
-const fs = require("fs");
+const fs = require("fs/promises");
 const path = require("path");
 const overpy = require("./overpy_standalone");
 
 const OUTPUT_DIR = path.resolve(__dirname, "../dist");
 
-// Get entrypoint file from CLI or default
-const entryFile = process.argv[2] || path.resolve(__dirname, "../framework.opy");
+// Get entrypoint file from CLI or fallback to ./main.opy
+const entryPath = path.resolve(process.argv[2] || path.resolve(__dirname, "../main.opy"));
 
-function ensureOutputDir() {
-  if (!fs.existsSync(OUTPUT_DIR)) {
-    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+async function ensureOutputDir() {
+  try {
+    await fs.mkdir(OUTPUT_DIR, { recursive: true });
+  } catch (e) {
+    console.error(`❌ Failed to create output directory: ${e.message}`);
+    process.exit(1);
   }
 }
 
-function main() {
-  if (!fs.existsSync(entryFile)) {
-    console.error(`❌ Entry file not found: ${entryFile}`);
-    process.exit(1);
-  }
-
-  console.log(`📦 Compiling entrypoint: ${entryFile}`);
+async function main() {
   try {
-    const compiled = overpy.compileFile(entryFile);  // compileFile is correct here for standalone
-    ensureOutputDir();
+    const source = await fs.readFile(entryPath, "utf-8");
 
-    const baseName = path.basename(entryFile, ".opy");
-    const outputPath = path.join(OUTPUT_DIR, `${baseName}.ow`);
-    fs.writeFileSync(outputPath, compiled);
+    console.log(`📦 Compiling: ${entryPath}`);
 
-    console.log(`✅ Output written to ${outputPath}`);
+    // Call the async compile function
+    const compiled = await overpy.compile(
+      source,
+      "en-US",                              // language
+      path.dirname(entryPath),              // _rootPath for resolving imports
+      path.basename(entryPath)              // mainFileName3
+    );
+
+    await ensureOutputDir();
+
+    const outPath = path.join(
+      OUTPUT_DIR,
+      path.basename(entryPath, ".opy") + ".ow"
+    );
+
+    await fs.writeFile(outPath, compiled);
+    console.log(`✅ Output written to ${outPath}`);
   } catch (err) {
     console.error(`❌ Compilation failed: ${err.message}`);
     process.exit(1);
