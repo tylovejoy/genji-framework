@@ -1,0 +1,46 @@
+name: Compile and Upload Overwatch Script
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+  push:
+    branches: [main]  # Or your test branch
+
+jobs:
+  compile-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Download OverPy standalone
+        run: |
+          mkdir -p overpy
+          curl -L -o overpy/overpy_standalone.js https://raw.githubusercontent.com/Zezombye/overpy/master/out/overpy_standalone.js
+
+      - name: Copy OverPy into scripts
+        run: cp overpy/overpy_standalone.js scripts/
+
+      - name: Compile .opy files
+        run: node scripts/compile.js
+
+      - name: Upload compiled .ow files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-overpy
+          path: "*.ow"
+
+      - name: Upload compiled files to release (only on release)
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "*.ow"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
