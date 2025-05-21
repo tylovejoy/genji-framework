@@ -29,8 +29,8 @@ rule "Editor | Clear Excess Data to Save Map":
     #SavePauseEnabled = null
     SaveElapsed = null
     CompMode = null
-    LeaderBoardFull = null
-    LeaderBoardHuds = null
+    #LeaderBoardFull = null
+    #LeaderBoardHuds = null
     PortalOn = null
     TitleData = null
     CpHudText = null
