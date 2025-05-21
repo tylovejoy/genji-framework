@@ -72,3 +72,5 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@kuma0997`
  - Flipped editor bounce values
    * Reported by `@n1troh`
+ - Null player completion with old map data [FIXED]
+   * Reported by `@zxzpkcxcc`
