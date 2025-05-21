@@ -593,4 +593,4 @@ fixed:
 ### Other
  - Fixed bhop message for jumping when jump is double pressed
  - Fixed Null player completion with old map data
-   * Reported by `@zxzpkcxcc`
+   * Reported by `@zxzpkcxcc` +5xp
