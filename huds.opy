@@ -209,6 +209,7 @@ rule "Huds | Global Localplayer":
 
 rule "Huds | Leaderboard": # for global instead of tied to player
     @Condition LeaderBoardRemake
+    @Condition LeaderBoardFull != []
     wait() # account for delay in completion
     while len(LeaderBoardHuds):
         destroyHudText(LeaderBoardHuds[0])

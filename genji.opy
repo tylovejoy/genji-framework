@@ -247,7 +247,6 @@ rule "General | Setup & Variables":
     CustomPortalCP = CustomPortalCP if len(CustomPortalCP) else []
 
     LeaderBoardFull = []
-    LeaderBoardRemake = false
     TitleData = null
     HintCp = []
     HintText = []
