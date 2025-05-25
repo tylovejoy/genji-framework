@@ -44,48 +44,48 @@ settings {
             "enableSelfInitiatedRespawn": false
         },
         /*"assault": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },*/
         "bountyHunter": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },
         /*"clash": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },*/
         "ctf": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },
         /*"control": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },*/
         /*"escort": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },*/
         "elimination": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },
         /*"flashpoint": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },*/
         /*"hybrid": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },*/
         "practiceRange": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },
         /*"push": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },*/
     },
     "heroes": {
