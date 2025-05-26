@@ -130,6 +130,7 @@ rule "Editor | Clear Excess Data to Save Map":
 rule "Editor | Hud and Effects":
     wait(LoadOrder.hudsEditor)
     waitUntil(entityExists(getAllPlayers()), Math.INFINITY)  # cant be condition because host player can leaves, removing the rule fx
+    wait()
     if getAllPlayers().editor_on:
         #hostPlayer.editor_lock = true
         while len(HudStoreEdit): # remove unnesesary huds
@@ -570,7 +571,6 @@ rule "Editor | Hud and Effects":
             ),
             null, LeftAlign128, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-        wait(1)
         # effects ==========================================================================================================================================================================
         createInWorldText(
             true if len(EditSelectIdArray) else null,
