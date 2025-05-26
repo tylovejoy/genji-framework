@@ -74,3 +74,8 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@n1troh`
  - Null player completion with old map data [FIXED]
    * Reported by `@zxzpkcxcc`
+ - Ultimate data not exporting
+   * Reported by `@CoralMage`
+   * Cannot Replicate
+ - Editor Huds not loading [FIXED]
+   * Reported by `@n1troh` & `@bioslet`

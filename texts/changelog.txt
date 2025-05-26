@@ -581,6 +581,8 @@ fixed:
    * Reported by `@bioslet` +5xp
  - Fixed flipped bounce values on toggle
    * Reported by `@n1troh` +5xp
+ - Editor Huds not loading
+   * Reported by `@n1troh` & `@bioslet` +5xp
 ### Commands
  - Fixed hiding Split Display
  - Fixed 1/0 in Preview
