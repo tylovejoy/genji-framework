@@ -12,32 +12,32 @@ editortoggle(0) # 0 is editor, rest is numbers
 ###############################################################################
 
 ###############################################################################
+macro COMPILE_FOR_CHINESE = false
+# Enable Invis Command (Invis Command cant be pasted in CN client die to null and none translating to same symbol)
 # Debug force CN mode on
 ##!define checkCN if true else
-
-# Enable Invis Command (Invis Command cant be pasted in CN client die to null and none translating to same symbol)
-#!define enableInvisCommand true
+###############################################################################
 # Max orbs can be made
-#!define fxLimit 193
+macro fxLimit = 193
 # Portal distance: 1.3
-#!define portalDistance 1.3
+macro portalDistance = 1.3
 # Circle radius: 1.4
-#!define cpcircleradius 1.4
+macro cpcircleradius = 1.4
 # Default fx: 1
-#!define cpCirkleFx 1
+macro cpCirkleFx = 1
 # Orb range for player: 1.4
-#!define bounceorbdistance 1.4
+macro bounceorbdistance = 1.4
 # Height added to player for orb detection: 0.7
-#!define bounceoffset 0.7
+macro bounceoffset = 0.7
 # Enable perks: false
-#!define usePerks false
+macro usePerks = false
 # non-practice cheat mode: false
-#!define cpCheat false
+macro cpCheat = false
 # defaults: off, attempt:5, 120 min, restart:false
-#!define compModeToggle false
-#!define attemptCount 5
-#!define compTimeLimit 120
-#!define compRestartLimit false
+macro compModeToggle = false
+macro attemptCount = 5
+macro compTimeLimit = 120
+macro compRestartLimit = false
 ###############################################################################
 #!include "settings.opy"
 ###############################################################################

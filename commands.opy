@@ -26,7 +26,6 @@ rule "Command | Split hide (Hold Dash + Primary + Secondary)":
     wait(0.32)
 
 rule "Command | Toggle Invisible (Hold Deflect)":
-    @Condition enableInvisCommand
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition eventPlayer.editor_on == false
@@ -34,7 +33,7 @@ rule "Command | Toggle Invisible (Hold Deflect)":
     wait(1, Wait.ABORT_WHEN_FALSE)
 
     eventPlayer.toggle_invisible = not eventPlayer.toggle_invisible
-    eventPlayer.setInvisibility(Invis.NONE)
+    eventPlayer.setInvisibility(INVIS)
     if eventPlayer.toggle_invisible:
         eventPlayer.setInvisibility(Invis.ALL)
 
