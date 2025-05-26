@@ -14,20 +14,18 @@
 
 #!define insert(insert_array, insert_index, insert_value)\
 insert_array.append(insert_value)\
-insert_array = [elementhere if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for elementhere, i in insert_array]
-#$$ i != eventPlayer.checkpoint_current → i-eventPlayer.checkpoint_current
+insert_array = [e if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for e, i in insert_array]
+
 #!define toggleCpInArray(baninput)\
-if eventPlayer.checkpoint_current in baninput:\
-    baninput = [i for i in baninput if i != eventPlayer.checkpoint_current]\
+if hostPlayer.checkpoint_current in baninput:\
+    baninput.remove(hostPlayer.checkpoint_current)\
 else:\
-    baninput.append(eventPlayer.checkpoint_current)
+    baninput.append(hostPlayer.checkpoint_current)
 
 #!define removeCPandLower(arrayname)\
-arrayname = [i for i in arrayname if i != hostPlayer.checkpoint_current]\
+arrayname.remove(hostPlayer.checkpoint_current)\
 arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in arrayname]
 
-#!define LeftAlign32 "                                "
-#!define LeftAlign64 "                                                                "
 #!define LeftAlign96 "                                                                                                "
 #!define LeftAlign128 "                                                                                                                                "
 
@@ -219,7 +217,7 @@ playervar toggle_invisible                             # bool                   
 playervar toggle_hints
 
 playervar skill_countBhops                         # int                       --- counts bhops used for stand create ban
-playervar skill_countJumps                         # int                       --- jump tracking count, 0, 1, 2
+playervar skill_usedHop                         # int                       --- jump tracking count, 0, 1, 2
 playervar skill_countCreates
 playervar skill_countMulti                   # int                       --- climb count # for HUD
 playervar skill_usedClimb                     # bool                      --- turned into bool
@@ -264,7 +262,7 @@ playervar preview_i                         # int                       --- prev
 playervar editor_on                          # bool                      --- on all players, but only gets checked from host player
 playervar editor_modeSelect                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
 playervar editor_fly                         # vector/null               --- null if not flying, else vector position, added by fisho
-playervar editor_saveHud                        # array                     --- array of save map hud ids
+playervar editor_saveCache                        # array                     --- array of save map hud ids
 playervar editor_undo
 playervar editor_lock                        # bool                      --- ensure only 1 editor command can go of at the time
 playervar editor_hitboxEffect
@@ -305,7 +303,6 @@ subroutine EditorSelectLast
 subroutine AddonCustomLoadAndReset
 subroutine AddonCheckMap
 subroutine Addon3rdPerson
-subroutine EffectsCreate
 subroutine RebuildKillOrbs
 subroutine RebuildPortals
 subroutine RebuildBounceOrbs
@@ -430,10 +427,7 @@ enum LoadOrder:
     portal      = LoadOrder.setup + 0.016 * 32,
     effects     = LoadOrder.portal + 0.016 * 32,
     hudsPlayer  = 0.016 * 32,
-    hudsGlobal  = 0.016 * 62.5,
-    addon_title = 0.016 * 62.5,
-    addon_hud   = 0.016 * 62.5,
-    addon_iwt   = 0.016 * 62.5,
-    addon_hint  = 0.016 * 62.5,
-
+    addon       = 0.016 * 48,
+    hudsGlobal  = 0.016 * 50,
+    hudsEditor  = 0.016 * 52,
 
