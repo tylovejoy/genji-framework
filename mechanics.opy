@@ -9,14 +9,10 @@ def CheckUlt(): # checks if ult should be turned on
         eventPlayer.setUltCharge(0) # for dash start etc you can be away from cp so the keep charge triggers
     
     eventPlayer.disallowButton(Button.ULTIMATE) # make sure the button cant be pressed until the entire rule ends even if it restarts
-    #if eventPlayer.ult_cd_global > 0: # global cooldown construction that works even when rule is reset
-    if eventPlayer.skill_ultCd > getTotalTimeElapsed():
-        #waitUntil(not eventPlayer.ult_cd_global, true)
+    if eventPlayer.skill_ultCd > getTotalTimeElapsed(): # global cooldown that works even when rule is reset
         wait(eventPlayer.skill_ultCd - getTotalTimeElapsed())
     else:
-        #eventPlayer.ult_cd_global = 1 # this number doesnt matter because its a duration chase
-        #chase(eventPlayer.ult_cd_global, 0, duration=0.36, ChaseReeval.NONE) # duration = the cooldown
-        eventPlayer.skill_ultCd = getTotalTimeElapsed() + 0.36
+        eventPlayer.skill_ultCd = getTotalTimeElapsed() + 0.36 # Set cooldown
 
     if eventPlayer.isUsingUltimate():
         waitUntil(not eventPlayer.isUsingUltimate(), 2)
@@ -32,7 +28,7 @@ def CheckUlt(): # checks if ult should be turned on
         wait()        
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
-    elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last() ) <= 2 or eventPlayer.getUltCharge() < 100: # used to be just else, but have to deal with multi ult orbs
+    elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= 2 or eventPlayer.getUltCharge() < 100: # used to be just else, but have to deal with multi ult orbs
         eventPlayer.setUltEnabled(false)
         eventPlayer.setUltCharge(0)
 
@@ -67,35 +63,14 @@ rule "Mechanic | Dash":
     @Condition eventPlayer.isUsingAbility1()
     async(CheckDash(), AsyncBehavior.RESTART)
 
-rule "Mechanic | Jump":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.JUMP)
-    @Condition eventPlayer.skill_countJumps != 2
-    eventPlayer.skill_countJumps += 1
-
-rule "Mechanic | In the air":
-    @Event eachPlayer
-    @Condition eventPlayer.skill_countJumps == null
-    @Condition eventPlayer.isInAir() 
-    eventPlayer.skill_countJumps = 1
-
-/* Remove this rule? */
-rule "Mechanic | Triple jump":
-    @Event eachPlayer
-    @Condition eventPlayer.skill_countJumps == 1
-    # actually just checks if you been in the air for at least 0.1 seconds
-    wait(0.1, Wait.ABORT_WHEN_FALSE)
-    eventPlayer.skill_countJumps = 2
-
-rule "Mechanic | Player on the wall":
+rule "Mechanic | On Wall":
     @Event eachPlayer
     #This rule is also linked to the determination of wall climbing, please do not close/delete
     @Condition eventPlayer.isOnWall()
     @Condition eventPlayer.isHoldingButton(Button.JUMP)
-    eventPlayer.skill_countJumps = 2
     eventPlayer.skill_usedClimb = true
 
-rule "Mechanic | Using Emote":
+rule "Mechanic | Emote":
     @Event eachPlayer
     @Condition eventPlayer.isCommunicatingEmote() == true
     eventPlayer.skill_usedBhop = false
@@ -109,13 +84,21 @@ rule "Mechanic | Using Emote":
         wait()
         CheckpointFailReset()
 
-rule "Mechanic | Bhop":
+rule "Mechanic | Jump":
     @Event eachPlayer
-    @Condition eventPlayer.skill_usedBhop == false
+    #@Condition eventPlayer.skill_usedBhop == false
     @Condition eventPlayer.isJumping()
     eventPlayer.skill_usedBhop = true
-    if eventPlayer.skill_countJumps > 1:
+    if eventPlayer.skill_usedHop: #Bhop
         smallMessage(eventPlayer,"   小跳已用" checkCN "   Bhop")
+    else: #Hop
+        eventPlayer.skill_usedHop = true
+
+rule "Mechanic | No Jump":
+    @Event eachPlayer
+    @Condition eventPlayer.skill_usedHop == null
+    @Condition eventPlayer.isOnGround() == false
+    eventPlayer.skill_usedHop = true
 
 rule "Mechanic | Bhop count for stand ban":
     @Event eachPlayer
@@ -125,7 +108,6 @@ rule "Mechanic | Bhop count for stand ban":
     if eventPlayer.skill_countBhops > 1 and not eventPlayer.toggle_invincible:   
         smallMessage(eventPlayer, "   站卡 ♠ 已禁用!" checkCN "   Stand createBhop ♠ is banned!")
         CheckpointFailReset()
-        return
 
 rule "Mechanic | Create Bhop":
     # Credit: Githuboy#5249
@@ -135,35 +117,32 @@ rule "Mechanic | Create Bhop":
     @Condition eventPlayer.isInAir()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     @Condition eventPlayer.isJumping() == false
-    
     eventPlayer.skill_usedBhop = false
-    if eventPlayer.lockState: # prevent restart from giving messsage, but stil allow it to become green
-        return
+    if eventPlayer.lockState: return # prevent restart from giving messsage, but stil allow it to become green
 
     if eventPlayer.ban_create and not eventPlayer.toggle_invincible:
         smallMessage(eventPlayer, "   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!")
         CheckpointFailReset()
-        return
-    
-    if eventPlayer.ban_standcreate and eventPlayer.skill_countBhops > null:
-        eventPlayer.skill_countBhops--
-
-    eventPlayer.skill_countCreates++
-    smallMessage(eventPlayer, "   success!" checkCN "   Bhop has been created!")    
+    else:
+        if eventPlayer.ban_standcreate and eventPlayer.skill_countBhops > null:
+            eventPlayer.skill_countBhops--
+        eventPlayer.skill_countCreates++
+        smallMessage(eventPlayer, "   success!" checkCN "   Bhop has been created!")    
 
 rule "Mechanic | Ground Reset":
     @Event eachPlayer
     @Condition eventPlayer.isOnGround()
-    eventPlayer.skill_countJumps = null
+    eventPlayer.skill_usedHop = null
     eventPlayer.skill_usedClimb = false
     eventPlayer.skill_countMulti = null
     eventPlayer.skill_countCreates = null
     eventPlayer.skill_countBhops = null
     eventPlayer.skill_usedDouble = null
+    /*
     wait()
-    if (eventPlayer.skill_countJumps or eventPlayer.skill_usedClimb) and eventPlayer.isOnGround():
-        goto RULE_START
-    #eventPlayer.skill_usedBhop = true
+    if RULE_CONDITION: goto RULE_START
+    #if (eventPlayer.skill_countJumps or eventPlayer.skill_usedClimb) and eventPlayer.isOnGround(): goto RULE_START
+    #eventPlayer.skill_usedBhop = true*/
 
 rule "Mechanic | Bhop Reset":
     @Event eachPlayer
@@ -197,14 +176,13 @@ rule "Mechanic | Multiclimb":
     @Condition eventPlayer.isOnWall()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
     @Condition eventPlayer.skill_usedClimb == false
-    
     wait()
     if eventPlayer.isOnWall() and not eventPlayer.isHoldingButton(Button.JUMP):
-        eventPlayer.skill_countJumps = 2
+        #AutoClimb used
         eventPlayer.skill_usedClimb = true
     else:
         if eventPlayer.ban_multi and eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
-            smallMessage(eventPlayer, "    蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
+            smallMessage(eventPlayer, "   蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
             CheckpointFailReset() 
         else:
             eventPlayer.skill_countMulti += 1

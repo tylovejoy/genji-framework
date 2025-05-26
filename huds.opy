@@ -81,18 +81,18 @@ rule "Huds | Global Localplayer":
         checkCN
         "Hold {0} + {1} | Preview cp".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE)),
         HudPosition.RIGHT, HO.com_preview, evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.preview_array1 else evalOnce(ColorConfig[Customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-    HudStoreEdit.append(getLastCreatedText())
+    #HudStoreEdit.append(getLastCreatedText())
 
-    hudSubheader(localPlayer if localPlayer.preview_array1 and localPlayer.toggle_guide else null,
+    hudSubheader((localPlayer.preview_array1 and localPlayer.toggle_guide)[0],
         "移动键 ◀ ▶ | 预览其他\n移动键 ◀ ▶ | 修改间距 \n视角移动 | 调整浏览视角"
         checkCN
         "Walk ◀ ▶ | preview others\nWalk ▲ ▼ | modify zoom\nAim | change preview angle",
-        HudPosition.TOP, HO.com_previewsub, ColorConfig[Customize.command_highlight], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    HudStoreEdit.append(getLastCreatedText())
+        HudPosition.TOP, HO.com_previewsub, ColorConfig[Customize.command_highlight], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.NEVER)
+    #HudStoreEdit.append(getLastCreatedText())
 
 
     hudSubtext(localPlayer,
-        [] if localPlayer.timer_splitDisplay == -Math.INFINITY or localPlayer.toggle_spectate else(
+        [] if localPlayer.timer_splitDisplay <= -Math.INFINITY or localPlayer.toggle_spectate else(
             ("单关用时 {0}" LeftAlign96.format(localPlayer.timer_splitDisplay)
             checkCN
             "Split: {0}" LeftAlign96.format(localPlayer.timer_splitDisplay))),
@@ -100,18 +100,14 @@ rule "Huds | Global Localplayer":
     HudStoreEdit.append(getLastCreatedText())
 
     if len(CpHudText): # text per checkpoint  text per cp each
-        hudText(localPlayer,
-            CpHudText[CpHudCp.index(localPlayer.checkpoint_current)]
-            if localPlayer.checkpoint_current in CpHudCp and localPlayer.toggle_guide else [],
-            ("(文本已隐藏)" checkCN "(text hidden)" if localPlayer.checkpoint_current in CpHudCp and not localPlayer.toggle_guide else []),
-            null,
+        hudText((localPlayer.checkpoint_current in CpHudCp and localPlayer.toggle_guide)[0],
+            CpHudText[CpHudCp.index(localPlayer.checkpoint_current)],
+            null, null,
             HudPosition.TOP, HO.add_custommsg1, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
     if len(CpIwtText):
-        createInWorldText(
-            localPlayer,
-            CpIwtText[CpIwtCp.index(localPlayer.checkpoint_current)]
-            if localPlayer.checkpoint_current in CpIwtCp else [],
+        createInWorldText(localPlayer.checkpoint_current in CpIwtCp,
+            CpIwtText[CpIwtCp.index(localPlayer.checkpoint_current)],
             CpIwtPos[CpIwtCp.index(localPlayer.checkpoint_current)],
             2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, CpIwtColor, SpecVisibility.DEFAULT)
 
@@ -213,6 +209,7 @@ rule "Huds | Global Localplayer":
 
 rule "Huds | Leaderboard": # for global instead of tied to player
     @Condition LeaderBoardRemake
+    @Condition LeaderBoardFull != []
     wait() # account for delay in completion
     while len(LeaderBoardHuds):
         destroyHudText(LeaderBoardHuds[0])
@@ -372,10 +369,11 @@ rule "Huds | Each Player":
 
 def UpdateTitle():
     @Name "Huds | SUB Update Title"
-    if CompMode or eventPlayer.editor_on or not (len(TitleData) and eventPlayer.checkpoint_current in TitleData[0]) or eventPlayer.toggle_practice:
+    if CompMode or eventPlayer.editor_on or not (len(TitleData) and eventPlayer.checkpoint_current in TitleData[0]):# or eventPlayer.toggle_practice:
         return
     destroyInWorldText(eventPlayer.cache_titleHud)
-    createInWorldText((not eventPlayer.toggle_invisible)[0],TitleData[1][TitleData[0].index(eventPlayer.checkpoint_current)], eventPlayer,1.1,Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData.last()[TitleData[0].index(eventPlayer.checkpoint_current)], SpecVisibility.DEFAULT)
+    createInWorldText((not eventPlayer.toggle_invisible)[0],TitleData[1][TitleData[0].index(eventPlayer.checkpoint_current)], eventPlayer, 1.1,
+        Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_POSITION, TitleData.last()[TitleData[0].index(eventPlayer.checkpoint_current)], SpecVisibility.DEFAULT)
     eventPlayer.cache_titleHud = getLastCreatedText()
 
 rule "Huds | Addons":

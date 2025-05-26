@@ -32,8 +32,7 @@ rule "Addon | AFK timer":
     if eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
         CheckpointFailReset()
 
-    if RULE_CONDITION:
-        goto RULE_START
+    if RULE_CONDITION: goto RULE_START
 
 rule "Addon | Pre-set control map portal - toggled via workshop":
     @Event eachPlayer
@@ -233,7 +232,6 @@ def AddonCheckMap():
     createDummy(Hero.ANA, Team.1 if getNumberOfSlots(Team.1) < getNumberOfSlots(Team.2) else Team.2, -1, CheckpointPositions[0], null)
     MapChecker = getLastCreatedEntity()
     MapChecker.disableEnvironmentCollision(false)
-    MapChecker.disablePlayerCollision()
     MapChecker.setStatusEffect(null, Status.PHASED_OUT, Math.INFINITY)
     MapChecker.setInvisibility(Invis.ALL)
     MapChecker.startScalingSize(cpcircleradius / 0.45, false)

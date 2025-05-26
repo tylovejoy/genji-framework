@@ -2,8 +2,8 @@
 # code 代码
 settings {
     "main": {
-        "modeName": "Genji Parkour - 源氏跑酷 - " + versionhere,
-        "description": "\n◀ The Official Genji Parkour Editor ▶\nCode: 54CRY\nAdapted by: LulledLion, FishoFire, Nebula\n" + versionhere
+        "modeName": f"Genji Parkour - 源氏跑酷 - {versionhere}",
+        "description": f"\n\n\n◀ The Official Genji Parkour Editor ▶\nCode: 54CRY\nAdapted by: LulledLion, FishoFire, Nebula\n{versionhere}"
         #"description": "  ~ The Official Genji Parkour Editor ~\nCode: 54CRY\nAdapted by: LulledLion#1133 FishoFire#2431 nebula#11571",
     },
     "lobby": {
@@ -44,48 +44,48 @@ settings {
             "enableSelfInitiatedRespawn": false
         },
         /*"assault": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },*/
         "bountyHunter": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },
         /*"clash": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },*/
         "ctf": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },
         /*"control": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },*/
         /*"escort": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },*/
         "elimination": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },
         /*"flashpoint": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },*/
         /*"hybrid": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },*/
         "practiceRange": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },
         /*"push": {
-            "enabled": usePerks,
-            "enablePerks": false
+            "enabled": false,
+            "enablePerks": usePerks
         },*/
     },
     "heroes": {

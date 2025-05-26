@@ -48,7 +48,7 @@ rule "Addon | Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
     @Disabled
     # enable this rule and fill in the title data below.
     # 启用此规则 并填写下面 的标题数据
-    wait(LoadOrder.addon_title)
+    wait(LoadOrder.addon)
     # checkpoint number
     # 每关数量
     TitleData[0] = [
@@ -110,7 +110,7 @@ rule "Addon | HUD text for certain Checkpoints - 特定关卡显示的HUD文本 
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的hud文本
-    wait(LoadOrder.addon_hud)
+    wait(LoadOrder.addon)
     # in CpHudText fill in text
     # 修改字符串 “CpHudText” 为顶部显示 的hud文本
     CpHudText = ["text cp 1","text cp 3"]
@@ -122,7 +122,7 @@ rule "Addon | Inworld text for certain Checkpoints - 特定关卡显示的地图
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的地图文本
-    wait(LoadOrder.addon_iwt)
+    wait(LoadOrder.addon)
     # in CpIwtText fill in text
     # 修改字符串 “CpIwtText” 为关卡显示 的地图文本
     CpIwtText = ["text cp 1","text cp 3"]
@@ -131,7 +131,7 @@ rule "Addon | Inworld text for certain Checkpoints - 特定关卡显示的地图
     CpIwtCp = [1, 3]
     # in CpIwtPos fill in the vector
     # 修改数组 “CpIwtPos” 为地图文本 的矢量位置
-    CpIwtPos = [vect(0,0,0), vect(0,0,0)]
+    CpIwtPos = [vect(1,1,1), vect(1,1,1)]
     # color applies to all
     # 选择应用到 所有地图文 本的颜色
     CpIwtColor = Color.LIME_GREEN
@@ -140,7 +140,7 @@ rule "Addon | Hint text for certain Checkpoints - 特定关卡的提示文本 <-
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的提示文本
-    wait(LoadOrder.addon_hint)
+    wait(LoadOrder.addon)
     # in HintText fill in text
     # 修改字符串 “HintText” 为关卡显示 的提示文本
     HintText = ["text cp 1","text cp 3"]
@@ -189,8 +189,7 @@ rule "Addon | Stall enhancer - 增强系統跳的判定":
     eventPlayer.setMoveSpeed(100)
     if eventPlayer.isAlive() and not (eventPlayer.editor_fly or eventPlayer.isHoldingButton(Button.RELOAD)):
         eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
-        if RULE_CONDITION:
-            goto RULE_START
+        if RULE_CONDITION: goto RULE_START
 
 # dash after ledge grab
 # stores speed and launches you after dash if you done it during climb
@@ -204,28 +203,22 @@ rule "Addon | Fake Ledge Dash - 超级跳":
     #爬墙/扒 > 长按跳 > 抓住窗台 > SHIFT > 等待发射 > 释放跳跃
 
     eventPlayer.addon_ledgeDash[0] = 0
-    waitUntil(eventPlayer.getSpeed() >= 45, 0.4)
-
-    while eventPlayer.isUsingAbility1() and eventPlayer.addon_ledgeDash[0] <= 12:
-        eventPlayer.addon_ledgeDash[1] = eventPlayer.getFacingDirection()
-        eventPlayer.addon_ledgeDash[2] = eventPlayer.getSpeed()
+    waitUntil(eventPlayer.getSpeed() >= 45, 25 * 0.016)
+    while eventPlayer.isUsingAbility1() and eventPlayer.addon_ledgeDash[0] < 12: # stop storing, we keep this speed/direction
         if eventPlayer.getSpeed() < 45: # dashed into air or object = end
             goto lbl_a
-        else:
-            eventPlayer.addon_ledgeDash[0] ++
-        if eventPlayer.addon_ledgeDash[0] == 12: # stop storing, we keep this speed/direction
-            waitUntil(eventPlayer.getSpeed() < 40, 0.4) # wait for dash to finish to execute
+        eventPlayer.addon_ledgeDash[0] ++
+        eventPlayer.addon_ledgeDash[1] = eventPlayer.getFacingDirection()
+        eventPlayer.addon_ledgeDash[2] = eventPlayer.getSpeed()
         wait()
-
+    waitUntil(eventPlayer.getSpeed() < 40, 25 * 0.016) # wait for dash to finish to execute
     if eventPlayer.addon_ledgeDash[0] >= 5: #and eventPlayer.addon_ledgeDash[0] <= 12: # ledge dash execute
         eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash[1], eventPlayer.addon_ledgeDash.last(), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
     # above 12 - climbed to long
     # below 5 - dashed into object
 
     lbl_a:
-    eventPlayer.addon_ledgeDash[0] = null
-    eventPlayer.addon_ledgeDash[1] = null
-    eventPlayer.addon_ledgeDash[2] = null
+    eventPlayer.addon_ledgeDash = null
 
 rule "Addon | Group up - Map Data":
     @Disabled
@@ -235,19 +228,13 @@ rule "Addon | Group up - Map Data":
         [i for i in getAllPlayers() if i.checkpoint_current == 777],
         "{0} {1} {0}".format(
             abilityIconString(Hero.GENJI, Button.ULTIMATE),
-            "待在这里" checkCN "group up"
-            ),
-        vect(0,0,0),
-        1.5,
-        Clip.NONE, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT
-    )
+            "待在这里" checkCN "group up"),
+        vect(1,1,1), 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
     # replace 777 with checkpoint number
     # replace vector 0,0,0 with orb position
     # 3.5 is the radius
-    createEffect(
-        [i for i in getAllPlayers() if i.checkpoint_current == 777],
-        Effect.SPHERE, Color.ORANGE, vect(0,0,0),  3.5, EffectReeval.VISIBILITY
-    )
+    createEffect([i for i in getAllPlayers() if i.checkpoint_current == 777],
+        Effect.SPHERE, Color.ORANGE, vect(1,1,1),  3.5, EffectReeval.VISIBILITY)
 
 rule "Addon | Group Up":
     @Disabled
@@ -259,7 +246,7 @@ rule "Addon | Group Up":
     @Condition eventPlayer.toggle_invincible == false
     # replace vector 0,0,0 with orb position
     # 3.5 is the radius
-    @Condition distance(eventPlayer, vect(0,0,0)) < 3.5
+    @Condition distance(eventPlayer, vect(1,1,1)) < 3.5
 
     smallMessage(eventPlayer, "   stay in the bubble")
     wait(1, Wait.ABORT_WHEN_FALSE)
@@ -284,7 +271,7 @@ rule "Addon | Group Up":
 
     eventPlayer.startForcingPosition(CheckpointPositions[eventPlayer.checkpoint_current + 1] + 0.1 * Vector.UP, false)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.3)
-    wait()
+    wait(7 * 0.016)
     eventPlayer.stopForcingPosition()
 
 def AddonCustomLoadAndReset():
@@ -329,26 +316,21 @@ rule "Addon | Fake Triple Jump - 假三段跳":
     @Disabled
     @Event eachPlayer
     @Hero genji
-    #Method D
-    #Updated Script by LulledLion 9-1-24
-    @Condition BanTriple == false
+    #@Condition BanTriple == false
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.skill_usedDouble == false #Double cannot be used already
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false #Don't trigger on reset
     eventPlayer.addon_enableDoubleChecks = true #Enable checking double jump
     wait()
-    if RULE_CONDITION:
-        goto RULE_START
-    if eventPlayer.skill_usedDouble:
+    if RULE_CONDITION: goto RULE_START
+    if eventPlayer.skill_usedDouble or eventPlayer.isHoldingButton(Button.RELOAD):
         return
     #Input window to Triple
-    waitUntil(eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP) or eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD), 0.048)
-    #Cancel Triple
-    if eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD) or eventPlayer.hasStatusEffect(Status.ROOTED):
-        return
-    #Apply fake triple jump
+    waitUntil(eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP), 0.048)
     if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping():
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+    else:
+        if RULE_CONDITION: goto RULE_START
 
 rule "Addon | fisho cp cheat for overpy toggle":
     @Event eachPlayer
@@ -359,11 +341,10 @@ rule "Addon | fisho cp cheat for overpy toggle":
     @Condition eventPlayer.toggle_practice == false
 
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current - 1])
         eventPlayer.checkpoint_current -= 1
     else:
         eventPlayer.checkpoint_current += 1
-        eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current])
+    CheckpointFailReset()
 
 rule "Addon | Ledge Grab Patch v1.5":
     # Obsolete for OW v2.12
@@ -394,8 +375,8 @@ rule "Addon | Ledge Grab Patch v1.5":
             eventPlayer.startForcingButton(Button.JUMP)
             wait(false)
             eventPlayer.stopForcingButton(Button.JUMP)
-        waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
-        waitUntil(eventPlayer.isOnGround() or eventPlayer.isOnWall() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
+        waitUntil(not eventPlayer.isInAir() or eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
+        waitUntil(not (eventPlayer.isInAir() and eventPlayer.isHoldingButton(Button.JUMP)), Math.INFINITY)
         #Create cBhop
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)
 

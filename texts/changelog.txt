@@ -566,3 +566,31 @@ fixed:
  - Fixed cancel placement from corrupting map object data
    * Reported by `@hello_5702` & `@bioslet` +5xp
  - Prevent immediate upwards movement of objects
+
+# 1.10.3F
+### Editor
+ - Fixed objects colors upon exporting
+   * Reported by `@CoralMage` +5xp
+ - Fixed prevention for objects upwards movement
+   * Reported by `@n1troh` +5xp
+ - Fly mode
+   * Movement disabled when changes being made
+     - Move checkpoint control scheme
+       * Press Jump to move Up
+       * Press Crouch to move Down
+   * Reported by `@bioslet` +5xp
+ - Fixed flipped bounce values on toggle
+   * Reported by `@n1troh` +5xp
+### Commands
+ - Fixed hiding Split Display
+ - Fixed 1/0 in Preview
+### Addon
+ - Fixed Group Up from causing extra movement
+   * Reported by `@bioslet` +5xp
+ - Fixed Triple Jump to restart when climbing or dashing after landing
+ - Fixed missing Addon Texts
+   * Reported by `@kuma0997` +5xp
+### Other
+ - Fixed bhop message for jumping when jump is double pressed
+ - Fixed Null player completion with old map data
+   * Reported by `@zxzpkcxcc` +5xp
