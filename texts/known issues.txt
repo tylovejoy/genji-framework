@@ -79,3 +79,5 @@ triple jump ban doesnt work on workshop maps anymore
    * Cannot Replicate
  - Editor Huds not loading [FIXED]
    * Reported by `@n1troh` & `@bioslet`
+ - Fixed custom orb scripts from getting Ids
+   * Reported by `@zxzpkcxcc` +5xp

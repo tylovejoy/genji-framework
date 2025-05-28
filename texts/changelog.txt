@@ -596,3 +596,8 @@ fixed:
  - Fixed bhop message for jumping when jump is double pressed
  - Fixed Null player completion with old map data
    * Reported by `@zxzpkcxcc` +5xp
+
+# 1.10.3F
+### Addon
+ - Fixed custom orb scripts from getting Ids
+   * Reported by `@zxzpkcxcc` +5xp
