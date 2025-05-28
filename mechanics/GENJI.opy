@@ -1,3 +1,4 @@
 
 rule "Hello":
-    A="World"
+    @Condition false
+    A = 1

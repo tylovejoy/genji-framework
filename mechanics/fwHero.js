@@ -1,9 +1,9 @@
 var Hero;
 var Result;
 if (Array.isArray(Hero)){
-    Result = Hero.map(i => '#!include "' + i).join('.opy"\n');
+    Result = Hero.map(i => '#!include "mechanics/' + i).join('.opy"\n');
 }
 else{
-    Result = '#!include "' + Hero + '.opy"\n'
+    Result = '#!include "mechanics/' + Hero + '.opy"\n'
 }
 Hero = Result

@@ -10,11 +10,11 @@
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
 ###############################################################################
-
+#!define importHero(Hero) __script__('mechanics/fwHero.js')
 ###############################################################################
 macro COMPILE_FOR_CHINESE = false
 # Enable Invis Command (Invis Command cant be pasted in CN client die to null and none translating to same symbol)
-# Debug force CN mode on
+# Debug force CN mode on (No longers works)
 ##!define checkCN if true else
 ###############################################################################
 # Max orbs can be made
@@ -58,7 +58,7 @@ rule FILLER "    </fg>" versionhere:
 #!include "commands.opy"
 ###############################################################################
 #$$ Rename file to parkour.opy
-#!include "genji.opy"
+#!include "parkour.opy"
 ###############################################################################
 #!include "huds.opy"
 ###############################################################################
@@ -66,14 +66,9 @@ rule FILLER "    </fg>" versionhere:
 ###############################################################################
 #!include "mechanics.opy"
 ###############################################################################
-#$$ TODO hero support
-##!include "genji.opy"
-
-##!include "hanzo.opy"
-
-##!include "kiriko.opy"
-
-##!include "hazard.opy"
+#$$ TODO multi-hero support
+# "HANZO", "HAZARD", "KIRIKO"
+importHero(["GENJI", "HANZO", "HAZARD", "KIRIKO"][0])
 ###############################################################################
 #!include "addons-page1.opy"
 ###############################################################################
