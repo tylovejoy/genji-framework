@@ -285,32 +285,32 @@ def AddonCustomLoadAndReset():
 rule "Addon | Custom Orb Script":
     @Disabled
     @Event eachPlayer
-    #don't edit this condition !!!!!!!!!!!!!!!!!
-    @Condition eventPlayer.cache_bounceTouched > -1
+    #Do not edit this condition !!!!!!!!!!!!!!!!!
+    @Condition eventPlayer.cache_bounceTouched >= null
     #Enable this rule and find the ID number of the bounce orbs via the editor display.
     #Note that the ID can change if you place or delete orbs infront of that orb.
-    #Do NOT edit the next 2 actions.
-    eventPlayer.addon_bounceId = [i for i in [i for _, i in BouncePadCheckpoints] if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and  BouncePositions[i] == eventPlayer.cache_bouncePosition[eventPlayer.cache_bounceTouched]][0]
-    #Add the desired ID numbers for the bounces in the array
+    #Add the desired ID numbers for the orb in the array
     #add the script after it
     #you can use the trigger sub above this rule to reset the effects
-    if eventPlayer.addon_bounceId in [2]:
+    if eventPlayer.cache_bounceTouched in [2]:
         # example gravity (should be reset to 100 in trigger on fail)
         eventPlayer.setGravity(25)
         smallMessage(eventPlayer," you feel light")
         wait(2)
         eventPlayer.setGravity(100)
 
-    if eventPlayer.addon_bounceId in [2,3]:
+    if eventPlayer.cache_bounceTouched in [2,3]:
        # example canceling primary makes double jump recover
        eventPlayer.cancelPrimaryAction()
        eventPlayer.skill_usedDouble = null
        smallMessage(eventPlayer," double jump recovered")
 
-    if eventPlayer.addon_bounceId in [4]:
+    if eventPlayer.cache_bounceTouched in [4]:
         # example move speed
         eventPlayer.setMoveSpeed(250)
         smallMessage(eventPlayer," zooom")
+        wait(2)
+        eventPlayer.setMoveSpeed(100)
 
 rule "Addon | Fake Triple Jump - 假三段跳":
     @Disabled

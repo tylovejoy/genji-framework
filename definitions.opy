@@ -238,7 +238,6 @@ playervar comp_countAttempts                      # int                       --
 playervar comp_instructionHud
 playervar addon_toggle3rdPov
 playervar addon_ledgeDash
-playervar addon_bounceId
 playervar addon_enableDoubleChecks
 
 #playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
