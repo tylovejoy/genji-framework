@@ -253,7 +253,7 @@ subroutine CheckpointFailReset
 subroutine UpdateTitle
 subroutine DashUltGive
 subroutine CheckUlt
-subroutine CheckDash
+subroutine CheckAbility1
 subroutine UpdateCache
 subroutine DeleteSave
 subroutine MakeSave

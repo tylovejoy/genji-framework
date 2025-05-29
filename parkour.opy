@@ -61,7 +61,7 @@ def UpdateCache():
         eventPlayer.ban_djump = false
     wait()
     async(CheckUlt(), AsyncBehavior.RESTART)
-    async(CheckDash(), AsyncBehavior.RESTART)
+    async(CheckAbility1(), AsyncBehavior.RESTART)
 
     if eventPlayer != hostPlayer or not eventPlayer.editor_on: return
     EditUpdateSelectedIds()
@@ -158,7 +158,7 @@ def CheckpointFailReset():
             wait()
 
     async(CheckUlt(), AsyncBehavior.RESTART)
-    async(CheckDash(), AsyncBehavior.RESTART)
+    async(CheckAbility1(), AsyncBehavior.RESTART)
     AddonCustomLoadAndReset()
 
 def StartGame():
