@@ -66,7 +66,7 @@ rule FILLER "    </fg>" versionhere:
 ###############################################################################
 #!include "mechanics.opy"
 ###############################################################################
-#!include "mechanics/hero.opy"
+#!include "mechanics/all.opy"
 #$$ TODO multi-hero support
 # "HANZO", "HAZARD", "KIRIKO"
 importHero(["GENJI", "HANZO", "HAZARD", "KIRIKO"][0])
