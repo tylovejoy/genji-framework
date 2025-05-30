@@ -1,4 +1,7 @@
 #!mainFile "../framework.opy"
+/*
+Generalized mechanics for climber heroes here
+*/
 
 rule "Mechanic | Climbers | On Wall":
     @Event eachPlayer

@@ -1,11 +1,11 @@
 #!mainFile "../framework.opy"
 /*
-Generalized Hero Mechanics Here
+Generalized mechanics for all heroes here
 */
 rule "<tx0C00000000001344> Mechanics | Checks <tx0C00000000001344>":
     @Delimiter
 
-rule "Mechanic | All |Jump":
+rule "Mechanic | All | Jump":
     @Event eachPlayer
     @Condition eventPlayer.isJumping()
     eventPlayer.skill_usedBhop = true
