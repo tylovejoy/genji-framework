@@ -1,5 +1,7 @@
 #!mainFile "../framework.opy"
 
+#!include "climbers.opy"
+
 rule "Mechanic | Genji | Double Jump":
     @Event eachPlayer
     @Condition eventPlayer.isAlive()
