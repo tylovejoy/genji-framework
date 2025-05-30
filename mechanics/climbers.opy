@@ -1,13 +1,13 @@
 #!mainFile "../framework.opy"
 
-rule "Mechanic | On Wall":
+rule "Mechanic | Climbers | On Wall":
     @Event eachPlayer
     #This rule is also linked to the determination of wall climbing, please do not close/delete
     @Condition eventPlayer.isOnWall()
     @Condition eventPlayer.isHoldingButton(Button.JUMP)
     eventPlayer.skill_usedClimb = true
 
-rule "Mechanic | Bhop count for stand ban":
+rule "Mechanic | Climbers | Bhop count for stand ban":
     @Event eachPlayer
     @Condition eventPlayer.isJumping()
     @Condition eventPlayer.ban_standcreate
@@ -16,7 +16,7 @@ rule "Mechanic | Bhop count for stand ban":
         smallMessage(eventPlayer, "   站卡 ♠ 已禁用!" checkCN "   Stand createBhop ♠ is banned!")
         CheckpointFailReset()
 
-rule "Mechanic | Create Bhop":
+rule "Mechanic | Climbers | Create Bhop":
     # Credit: Githuboy#5249
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
@@ -36,7 +36,7 @@ rule "Mechanic | Create Bhop":
         eventPlayer.skill_countCreates++
         smallMessage(eventPlayer, "   success!" checkCN "   Bhop has been created!")
 
-rule "Mechanic | Multiclimb":
+rule "Mechanic | Climbers | Multiclimb":
     @Event eachPlayer
     @Condition eventPlayer.isOnWall()
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
@@ -52,7 +52,7 @@ rule "Mechanic | Multiclimb":
         else:
             eventPlayer.skill_countMulti += 1
 
-rule "Mechanic | Ban Wallclimb - Message":
+rule "Mechanic | Climbers | Ban Wallclimb - Message":
     # Credit: TITANXPASCAL#5554
     @Event eachPlayer
     @Condition eventPlayer.ban_climb
