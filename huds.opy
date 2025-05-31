@@ -65,7 +65,8 @@ rule "Huds | Global Localplayer":
         checkCN
         "{0} + {1} | Invincible{2}".format(buttonString(Button.RELOAD), buttonString(Button.MELEE)," | ON" if localPlayer.toggle_invincible else []),
         HudPosition.RIGHT, HO.com_invincible, evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.toggle_invincible else evalOnce(ColorConfig[Customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-        hudText(true[0],
+
+    hudText(true[0],
         null,
         [] if localPlayer.toggle_guide else "{0}{1}{2}".format(
             abilityIconString(Hero.BAPTISTE, Button.ABILITY_2) if localPlayer.toggle_invincible else [],
@@ -74,7 +75,7 @@ rule "Huds | Global Localplayer":
         "长按 {0} | 切换显示HUD".format(buttonString(Button.SECONDARY_FIRE))
         checkCN
         "Hold {0} | toggle hud".format(buttonString(Button.SECONDARY_FIRE)),
-        HudPosition.RIGHT, HO.com_displaytoggle, ColorConfig[Customize.command_normal], ColorConfig[Customize.command_normal], ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+        HudPosition.RIGHT, HO.com_displaytoggle, null, ColorConfig[Customize.command_normal], ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
     hudSubtext(localPlayer.toggle_guide,
         "长按 {0} + {1} | 预览关卡".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
@@ -103,7 +104,7 @@ rule "Huds | Global Localplayer":
         hudText((localPlayer.checkpoint_current in CpHudCp and localPlayer.toggle_guide)[0],
             CpHudText[CpHudCp.index(localPlayer.checkpoint_current)],
             null, null,
-            HudPosition.TOP, HO.add_custommsg1, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+            HudPosition.TOP, HO.add_custommsg1, Color.BLUE, null, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
     if len(CpIwtText):
         createInWorldText(localPlayer.checkpoint_current in CpIwtCp,
@@ -112,7 +113,8 @@ rule "Huds | Global Localplayer":
             2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, CpIwtColor, SpecVisibility.DEFAULT)
 
     if len(HintText): #Remove no hints - visual and element bloat
-        hudText((localPlayer.toggle_guide and localPlayer.checkpoint_current in HintCp)[0], null,
+        hudText((localPlayer.toggle_guide and localPlayer.checkpoint_current in HintCp)[0],
+            null,
             ("― ― ― ― ― 提示 ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)])
             if localPlayer.toggle_hints else "――――――  有可用提示 ――――――")
             checkCN
@@ -121,19 +123,17 @@ rule "Huds | Global Localplayer":
             "{} + {} | {}".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE),
                 ("隐藏提示" if localPlayer.toggle_hints else "获取提示")
                 checkCN
-                "hide hint" if localPlayer.toggle_hints else "show hint")
+                "hide hint" if localPlayer.toggle_hints else "show hint"),
             #"{} + {} | hide hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE)) if localPlayer.toggle_hints else
             #"{} + {} | show hint".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE))
-            , HudPosition.RIGHT, HO.com_hints,
-            Color.BLUE,
-            Color.GREEN if localPlayer.toggle_hints else
-            Color.ORANGE,
-            evalOnce(ColorConfig[Customize.command_normal]) if localPlayer.checkpoint_current in HintCp else Color.GRAY,
+            HudPosition.RIGHT, HO.com_hints,
+            null, Color.GREEN if localPlayer.toggle_hints else Color.ORANGE, evalOnce(ColorConfig[Customize.command_normal]) if localPlayer.checkpoint_current in HintCp else Color.GRAY,
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
         HudStoreEdit.append(getLastCreatedText())
 
     if CompMode:
-        hudHeader([i for i in getAllPlayers() if i.comp_instructionHud],"                                                                                                                           ", HudPosition.TOP, HO.comp_instructtop, Color.WHITE, HudReeval.VISIBILITY,SpecVisibility.DEFAULT)
+        hudHeader([i for i in getAllPlayers() if i.comp_instructionHud],"                                                                                                                           ",
+            HudPosition.TOP, HO.comp_instructtop, Color.WHITE, HudReeval.VISIBILITY,SpecVisibility.DEFAULT)
         if InstructionText[0]:
             hudSubtext([i for i in getAllPlayers() if i.comp_instructionHud], InstructionText[0], HudPosition.TOP, HO.comp_instruct1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         if InstructionText[1]:
@@ -179,18 +179,19 @@ rule "Huds | Global Localplayer":
     #if not hostPlayer.editor_on:
         # find the value
     Difficultyhud = [
-        createWorkshopSetting(enum[ "<fg27AAFFFF>playtest - 游戏测试", "<fgA0E81BFF>easy-", "<fgA0E81BFF>easy", "<fgA0E81BFF>easy+", "<fge0e000FF>medium-", "<fge0e000FF>medium", "<fge0e000FF>medium+", "<fgEC9900FF>hard-", "<fgEC9900FF>hard", "<fgEC9900FF>hard+", "<fgFF4500FF>very hard-", "<fgFF4500FF>very hard", "<fgFF4500FF>very hard+", "<fgC80013FF>extreme-", "<fgC80013FF>extreme", "<fgC80013FF>extreme+", "<fg960000FF>hell", "don't display - 不显示"],"map settings \n地图设置","difficulty (display hud) - 难度 (顶部hud)",0, 0),
+        createWorkshopSetting(enum["<fg27AAFFFF>playtest - 游戏测试", "<fgA0E81BFF>easy-", "<fgA0E81BFF>easy", "<fgA0E81BFF>easy+", "<fge0e000FF>medium-", "<fge0e000FF>medium", "<fge0e000FF>medium+", "<fgEC9900FF>hard-", "<fgEC9900FF>hard", "<fgEC9900FF>hard+", "<fgFF4500FF>very hard-", "<fgFF4500FF>very hard", "<fgFF4500FF>very hard+", "<fgC80013FF>extreme-", "<fgC80013FF>extreme", "<fgC80013FF>extreme+", "<fg960000FF>hell", "don't display - 不显示"],
+            "map settings \n地图设置","difficulty (display hud) - 难度 (顶部hud)",0, 0),
         createWorkshopSetting(bool,"map settings \n地图设置","Playtest display - 游戏测试", false, 1)]
     # display
     if Difficultyhud[0] != 17: # 17th entry is 'dont display'
-        hudText(localPlayer if localPlayer.toggle_guide and not localPlayer.toggle_leaderboard else null,
+        hudText(localPlayer.toggle_guide and not localPlayer.toggle_leaderboard,
             ("游戏测试" checkCN "Playtest") if Difficultyhud.last() else [],
             ["playtest", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell",null][Difficultyhud[0]],
             null,
             HudPosition.TOP, HO.data_dif,
             Color.BLUE,
-            [Color.BLUE,Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN,Color.YELLOW,Color.YELLOW,Color.YELLOW, Color.ORANGE,Color.ORANGE,Color.ORANGE,rgb(255, 69, 0), rgb(255, 69, 0), rgb(255, 69, 0), Color.RED, Color.RED, Color.RED, rgb(150, 0, 0),null][Difficultyhud[0]],
-            Color.BLUE,
+            [Color.BLUE, Color.LIME_GREEN, Color.LIME_GREEN, Color.LIME_GREEN, Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.ORANGE, Color.ORANGE, Color.ORANGE, rgb(255, 69, 0), rgb(255, 69, 0), rgb(255, 69, 0), Color.RED, Color.RED, Color.RED, rgb(150, 0, 0), null][Difficultyhud[0]],
+            null,
             HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
         )
         HudStoreEdit.append(getLastCreatedText())
@@ -200,8 +201,8 @@ rule "Huds | Global Localplayer":
     hudSubtext(localPlayer.toggle_guide,
         "{0} + {1} + {2} | 重新开始\n长按 {3} | 完整成绩排名".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE))
         checkCN
-        "{0} + {1} + {2} | Restart\nHold {3} | leaderboard".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE))
-        , HudPosition.RIGHT, HO.com_restart_n_board, ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        "{0} + {1} + {2} | Restart\nHold {3} | leaderboard".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)),
+        HudPosition.RIGHT, HO.com_restart_n_board, ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
     #else:
@@ -256,7 +257,7 @@ rule "Huds | Each Player":
     hudText(eventPlayer, null,
         "{} {}".format("练习用时" checkCN "Practice Time:",prettyTime(eventPlayer.timer_practice)) if eventPlayer.toggle_practice else [],
         "{} {}" LeftAlign96.format("用时" checkCN "Time:", prettyTime(eventPlayer.timer_normal)),
-        HudPosition.LEFT, HO.game_timer, ColorConfig[Customize.time], Color.GRAY, ColorConfig[Customize.time], HudReeval.STRING, SpecVisibility.DEFAULT)
+        HudPosition.LEFT, HO.game_timer, null, Color.GRAY, ColorConfig[Customize.time], HudReeval.STRING, SpecVisibility.DEFAULT)
 
     hudText(
         null if eventPlayer.toggle_leaderboard else eventPlayer,
@@ -343,29 +344,22 @@ rule "Huds | Each Player":
 
     wait(2.5)
     if CompMode:
-        hudText(
-            eventPlayer, null,
-            (
-                "! 比赛结束 !" if not CompTime else
-                "剩余时间: {0} 分钟{1}".format(
-                    CompTime,
-                    "\n你没有尝试过" if eventPlayer.comp_countAttempts < 0 else
-                    "\n尝试 {0} / {1}".format(eventPlayer.comp_countAttempts, CompAtmpNum) if CompAtmpNum else []
-                )
-            )
-            checkCN
-            (
-                "! competition is over !" if not CompTime else
-                "time left: {0} min{1}".format(
-                    CompTime,
-                    "\nYou are out of attempts" if eventPlayer.comp_countAttempts < 0 else
-                    "\nAttempt {0} / {1}".format(eventPlayer.comp_countAttempts, CompAtmpNum) if CompAtmpNum else []
-                )
-            ),
+        hudText(eventPlayer, null,
+            ("! 比赛结束 !" if not CompTime else
+            "剩余时间: {0} 分钟{1}".format(
+                CompTime,
+                "\n你没有尝试过" if eventPlayer.comp_countAttempts < 0 else
+                "\n尝试 {0} / {1}".format(eventPlayer.comp_countAttempts, CompAtmpNum) if CompAtmpNum else [])
+            ) checkCN (
+            "! competition is over !" if not CompTime else
+            "time left: {0} min{1}".format(
+                CompTime,
+                "\nYou are out of attempts" if eventPlayer.comp_countAttempts < 0 else
+                "\nAttempt {0} / {1}".format(eventPlayer.comp_countAttempts, CompAtmpNum) if CompAtmpNum else [])),
             ("竞赛模式" if CompTime else "竞赛模式\n\n\n")
             checkCN
-            ("competitive mode" if CompTime else "competitive mode\n\n\n")
-            , HudPosition.TOP, HO.comp_info, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.STRING, SpecVisibility.DEFAULT)
+            ("competitive mode" if CompTime else "competitive mode\n\n\n"),
+            HudPosition.TOP, HO.comp_info, null, Color.YELLOW, Color.YELLOW, HudReeval.STRING, SpecVisibility.DEFAULT)
 
 def UpdateTitle():
     @Name "Huds | SUB Update Title"

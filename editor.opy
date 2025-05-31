@@ -106,7 +106,7 @@ rule "Editor | Clear Excess Data to Save Map":
         "   6. Update for credits:\n"
         " ESC → SHOW LOBBY → SETTINGS → SHARE CODE →\n"
         " UPLOAD TO EXISTING CODE → PASTE THE CODE YOU CREATED IN STEP 4",
-       HudPosition.TOP, HO.edit_clearec1, Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT)
+       HudPosition.TOP, HO.edit_clearec1, null, null, Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT)
     hostPlayer.editor_saveCache[2]=getLastCreatedText()
 
     hudHeader(hostPlayer,
@@ -388,7 +388,7 @@ rule "Editor | Hud and Effects":
                 " {0} Genji editor {0} ".format(iconString(Icon.BOLT)),
             null,
             null,
-            HudPosition.TOP, HO.edit_host_mode, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+            HudPosition.TOP, HO.edit_host_mode, Color.BLUE, null, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
         hudText(true[0],
             null,  # original part of the one ontop of it
@@ -400,9 +400,9 @@ rule "Editor | Hud and Effects":
             null,
             HudPosition.TOP,
             HO.edit_changemode,
-            Color.SKY_BLUE,
+            null,
             Color.GRAY if localPlayer.editor_lock else Color.WHITE,
-            Color.WHITE,
+            null,
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
         hudSubtext(hostPlayer if hostPlayer.toggle_guide and (EditorMode.checkpoint or EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex)) else null, #if EditorMode.checkpoint or EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
@@ -522,8 +522,7 @@ rule "Editor | Hud and Effects":
                     "所有" if CustomPortalCP[EditSelected] < 0 else hostPlayer.checkpoint_current)
                 if EditorMode.portal and CustomPortalCP[EditSelected] in [hostPlayer.checkpoint_current, -1] and len(CustomPortalCP) else
                 "\n   当前无数据选中   \n"
-            ) checkCN
-            (
+            ) checkCN (
                 "\n Selected Checkpoint\n Vector: {0}{1} \n".format(
                     CheckpointPositions[hostPlayer.checkpoint_current],
                     [] if len(CheckpointPositions[hostPlayer.checkpoint_current]) < 2 else
@@ -567,9 +566,9 @@ rule "Editor | Hud and Effects":
                     CustomPortalEndpoint[EditSelected],
                     "All" if CustomPortalCP[EditSelected] < 0 else hostPlayer.checkpoint_current)
                 if EditorMode.portal and CustomPortalCP[EditSelected] in [hostPlayer.checkpoint_current, -1] and len(CustomPortalCP) else
-                "\n   No data selected   \n"
-            ),
-            null, LeftAlign128, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+                "\n   No data selected   \n"),
+            null,
+            LeftAlign128, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, null, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
         # effects ==========================================================================================================================================================================
         createInWorldText(
@@ -967,7 +966,7 @@ rule "Editor | select orb/portal":
         EditSelected = EditSelectIdArray[0] if EditSelectIdArray.index(EditSelected) == len(EditSelectIdArray) - 1 else EditSelectIdArray[EditSelectIdArray.index(EditSelected) + 1]
     wait()
     hostPlayer.editor_lock = false
-    waitUntil(not hostPlayer.isHoldingButton(Button.INTERACT) or not (hostPlayer.isHoldingButton(Button.CROUCH) or hostPlayer.isHoldingButton(Button.JUMP)), 0.24)
+    waitUntil(not(hostPlayer.isHoldingButton(Button.INTERACT) and (hostPlayer.isHoldingButton(Button.CROUCH) or hostPlayer.isHoldingButton(Button.JUMP))), 0.24)
 
 # checkpoint functions ==============================================================
 

@@ -40,7 +40,7 @@ rule "Addon | Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / �
         "enter custom difficulty here",
         null,
         HudPosition.TOP, HO.data_dif,
-        Color.BLUE, Color.GREEN, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        Color.BLUE, Color.GREEN, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
 
@@ -103,7 +103,7 @@ rule "Addon | Display Author Time - 展示世界纪录 <---- EDIT ME / 在此处
     @Disabled
     # type your entry in the textfield that says "name and time here"
     # 在文本框 中输入“名称和时间”
-    hudText(true[0], null," \n{0} author time {0}".format(iconString(Icon.FIRE)),"name and time here", HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudText(true[0], null, " \n{0} author time {0}".format(iconString(Icon.FIRE)), "name and time here", HudPosition.RIGHT, HO.wr, null, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
 
 rule "Addon | HUD text for certain Checkpoints - 特定关卡显示的HUD文本 <---- EDIT ME / 在此处编辑":
