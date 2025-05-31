@@ -847,17 +847,17 @@ rule "Editor | delete cp/orb/portal":
         hostPlayer.editor_temp = null
 
         # ult/dash/ban remove and lower the cp number of rest
-        removeCPandLower(BladeEnabledCheckpoints)
-        removeCPandLower(DashEnabledCheckpoints)
-        removeCPandLower(BanMulti)
-        removeCPandLower(BanCreate)
-        removeCPandLower(BanStand)
-        removeCPandLower(BanDead)
-        removeCPandLower(BanEmote)
-        removeCPandLower(BanClimb)
-        removeCPandLower(BanSaveDouble)
-        removeCPandLower(BanBhop)
-        removeCPandLower(BanDjump)
+        removeCpAndShift(BladeEnabledCheckpoints)
+        removeCpAndShift(DashEnabledCheckpoints)
+        removeCpAndShift(BanMulti)
+        removeCpAndShift(BanCreate)
+        removeCpAndShift(BanStand)
+        removeCpAndShift(BanDead)
+        removeCpAndShift(BanEmote)
+        removeCpAndShift(BanClimb)
+        removeCpAndShift(BanSaveDouble)
+        removeCpAndShift(BanBhop)
+        removeCpAndShift(BanDjump)
 
         # Remove specified checkpoint =====================
         del CheckpointPositions[hostPlayer.checkpoint_current]
