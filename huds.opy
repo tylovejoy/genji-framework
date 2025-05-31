@@ -255,8 +255,8 @@ rule "Huds | Each Player":
     wait(LoadOrder.hudsPlayer)
 
     hudText(eventPlayer, null,
-        "{} {}".format("练习用时" checkCN "Practice Time:",prettyTime(eventPlayer.timer_practice)) if eventPlayer.toggle_practice else [],
-        "{} {}" LeftAlign96.format("用时" checkCN "Time:", prettyTime(eventPlayer.timer_normal)),
+        "{} {} sec".format("练习用时" checkCN "Practice Time:", eventPlayer.timer_practice) if eventPlayer.toggle_practice else [],
+        "{} {} sec" LeftAlign96.format("用时" checkCN "Time:", eventPlayer.timer_normal),
         HudPosition.LEFT, HO.game_timer, null, Color.GRAY, ColorConfig[Customize.time], HudReeval.STRING, SpecVisibility.DEFAULT)
 
     hudText(

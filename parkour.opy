@@ -118,7 +118,7 @@ def LeaderboardUpdate():
         del LeaderBoardFull[24]
     else:
         return #Full and time too slow
-    LeaderBoardFull.append([[eventPlayer[0].split([]), eventPlayer.timer_normal, prettyTime(eventPlayer.timer_normal)]])
+    LeaderBoardFull.append([[eventPlayer[0].split([]), eventPlayer.timer_normal, "{0} sec".format(eventPlayer.timer_normal)]])
     LeaderBoardRemake = true #CreateLeaderboard()
 
 def CheckpointFailReset():
@@ -442,7 +442,7 @@ rule "General | Ground: Traces, Arrive, & Reset":
                 if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and not eventPlayer.editor_on: # complete lvl
                     stopChasingVariable(eventPlayer.timer_normal)
                     wait()
-                    bigMessage(true[0], "{0} {2} {1}".format(eventPlayer, prettyTime(eventPlayer.timer_normal), "已通关! 用时" checkCN "Mission complete! Time"))
+                    bigMessage(true[0], "{0} {1} {2} sec".format(eventPlayer, "已通关! 用时" checkCN "Mission complete! Time", eventPlayer.timer_normal))
                     LeaderboardUpdate()
                     if CompMode and CompAtmpNum:
                         if eventPlayer.comp_countAttempts == CompAtmpNum:
