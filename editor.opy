@@ -571,6 +571,7 @@ rule "Editor | Hud and Effects":
             LeftAlign128, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, null, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
         # effects ==========================================================================================================================================================================
+        #$$ true if else null
         createInWorldText(
             true if len(EditSelectIdArray) else null,
             "选中的实体" checkCN "selected",
@@ -579,7 +580,7 @@ rule "Editor | Hud and Effects":
             CustomPortalStart[EditSelected] if EditorMode.portal else
             null,
             1.2, Clip.NONE, WorldTextReeval.VISIBILITY_AND_POSITION, Color.ORANGE, SpecVisibility.DEFAULT)
-
+        #$$ true if else null
         createIcon(
             true if len(EditSelectIdArray) else null,
             KillBallPositions[EditSelected] if EditorMode.killBall else
@@ -589,11 +590,12 @@ rule "Editor | Hud and Effects":
             Icon.ARROW_DOWN,
             IconReeval.VISIBILITY_AND_POSITION, Color.WHITE, true)
 
+        #$$ true if else null
         # Purple sphere for teleport location
-        createEffect(true if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1 and EditorMode.checkpoint else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[hostPlayer.checkpoint_current][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        createEffect(hostPlayer if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1 and EditorMode.checkpoint else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[hostPlayer.checkpoint_current][1] - 0.1 * Vector.UP, 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
 
         # Teleport text
-        createInWorldText(true if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1 and EditorMode.checkpoint else null, "传送点位置" checkCN "teleporter location", CheckpointPositions[hostPlayer.checkpoint_current][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+        createInWorldText(hostPlayer if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1 and EditorMode.checkpoint else null, "传送点位置" checkCN "teleporter location", CheckpointPositions[hostPlayer.checkpoint_current][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
 
         # normal cp if teleport
         createEffect(hostPlayer if CheckpointPositions[hostPlayer.checkpoint_current][1] and EditorMode.checkpoint else null, Effect.RING, Color.ORANGE, CheckpointPositions[hostPlayer.checkpoint_current][0], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)

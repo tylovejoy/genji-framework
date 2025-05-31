@@ -287,6 +287,7 @@ rule "Addon | Custom Orb Script":
     @Event eachPlayer
     #Do not edit this condition !!!!!!!!!!!!!!!!!
     @Condition eventPlayer.cache_bounceTouched >= null
+    #!disableOptimizations
     #Enable this rule and find the ID number of the bounce orbs via the editor display.
     #Note that the ID can change if you place or delete orbs infront of that orb.
     #Add the desired ID numbers for the orb in the array

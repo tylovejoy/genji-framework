@@ -427,7 +427,7 @@ rule "General | Ground: Traces, Arrive, & Reset":
                 eventPlayer.timer_splitDisplay = (eventPlayer.timer_practice if eventPlayer.toggle_practice else eventPlayer.timer_normal) - eventPlayer.timer_split
             wait()
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
-            playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.checkpoint_current] + vect(0, 1.5, 0), 4)
+            playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.checkpoint_current] + 1.5 * Vector.UP, 4)
             # msg disabled due to annoying new sound
             #bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.checkpoint_current, "抵达检查点" checkCN "Arrived at level")   )
             wait()
