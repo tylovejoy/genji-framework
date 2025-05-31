@@ -324,7 +324,7 @@ rule "Command | Toggle Hud (Hold Secondary)":
     @Condition (eventPlayer.editor_on and eventPlayer == hostPlayer and eventPlayer.isHoldingButton(Button.MELEE)) == false
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == false # don't trigger during skipping
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == false # don't activate during skipping
 
     wait(1.5, Wait.ABORT_WHEN_FALSE)
     eventPlayer.toggle_guide = not eventPlayer.toggle_guide
