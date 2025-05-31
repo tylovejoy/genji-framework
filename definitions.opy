@@ -394,16 +394,15 @@ enum LoadOrder:
 
 ######################################## Macro Tools ##########################
 macro localSpectator(condition):
-    true if condition else (localPlayer.toggle_spectate or localPlayer.getSlot() < null)
+    true if (condition) else (localPlayer.toggle_spectate or localPlayer.getSlot() < null)
 
 macro filtered(array, condition):
-    [current_element for current_element, current_index in array if (condition)]
+    [current_element for current_element, current_index in (array) if (condition)]
 macro mapped(array, mapping):
-    [(mapping) for current_element, current_index in array]
+    [(mapping) for current_element, current_index in (array)]
 
 ##!define RestartTimer(timeInMinutes) "{0} Hours and {1} Minutes".format(floor(timeInMinutes / 60 / 60), "{0}{1}".format(floor(timeInMinutes % 60 / 10), floor(timeInMinutes % 60 - floor(timeInMinutes % 60 / 10) * 10)))
 ##!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format([] if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
-##!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
 ##!define prettyTime(timeInSeconds) "{0} {1}".format(timeInSeconds,"秒"  checkCN "sec")
 macro prettyTime(timeInSeconds):
     "{0} sec".format(timeInSeconds)
@@ -418,7 +417,7 @@ macro toggleCpInArray(baninput):
     else:
         baninput.append(hostPlayer.checkpoint_current)
 
-macro removeCPandLower(arrayname):
+macro removeCpAndShift(arrayname):
     arrayname.remove(hostPlayer.checkpoint_current)
     arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in arrayname]
 
