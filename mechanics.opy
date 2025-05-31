@@ -3,7 +3,7 @@
 def CheckUlt(): # checks if ult should be turned on
     @Name "Mechanic | SUB Check Ultimate"
     if eventPlayer.lockState:
-        eventPlayer.setUltCharge(0) # for dash start etc you can be away from cp so the keep charge triggers
+        eventPlayer.setUltCharge(0) # for dash start etc you can be away from cp so the keep charge activators
     
     eventPlayer.disallowButton(Button.ULTIMATE) # make sure the button cant be pressed until the entire rule ends even if it restarts
     if eventPlayer.skill_ultCd > getTotalTimeElapsed(): # global cooldown that works even when rule is reset
