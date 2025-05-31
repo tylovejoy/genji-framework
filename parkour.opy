@@ -485,7 +485,7 @@ rule "General | Bounce Ball / Orb":
         not (i in eventPlayer.cache_collectedLocks) and
         distance(eventPlayer + Vector.UP * bounceoffset, pos) < bounceorbdistance])
 
-    if eventPlayer.cache_bounceTouched >= 0: # prevent same one trigering twice in a row
+    if eventPlayer.cache_bounceTouched >= 0: # prevent same one activating twice in a row
         if BounceToggleLock[eventPlayer.cache_bounceTouched]:
             #eventPlayer.cache_collectedLocks.append(eventPlayer.cache_bouncePosition[eventPlayer.cache_bounceTouched])
             eventPlayer.cache_collectedLocks.append(eventPlayer.cache_bounceTouched)
