@@ -180,11 +180,11 @@ rule "Huds | Global Localplayer":
         # find the value
     Difficultyhud = [
         createWorkshopSetting(enum["<fg27AAFFFF>playtest - 游戏测试", "<fgA0E81BFF>easy-", "<fgA0E81BFF>easy", "<fgA0E81BFF>easy+", "<fge0e000FF>medium-", "<fge0e000FF>medium", "<fge0e000FF>medium+", "<fgEC9900FF>hard-", "<fgEC9900FF>hard", "<fgEC9900FF>hard+", "<fgFF4500FF>very hard-", "<fgFF4500FF>very hard", "<fgFF4500FF>very hard+", "<fgC80013FF>extreme-", "<fgC80013FF>extreme", "<fgC80013FF>extreme+", "<fg960000FF>hell", "don't display - 不显示"],
-            "map settings \n地图设置","difficulty (display hud) - 难度 (顶部hud)",0, 0),
+"map settings \n地图设置","difficulty (display hud) - 难度 (顶部hud)",0, 0),
         createWorkshopSetting(bool,"map settings \n地图设置","Playtest display - 游戏测试", false, 1)]
     # display
     if Difficultyhud[0] != 17: # 17th entry is 'dont display'
-        hudText(localPlayer.toggle_guide and not localPlayer.toggle_leaderboard,
+        hudText((localPlayer.toggle_guide and not localPlayer.toggle_leaderboard)[0],
             ("游戏测试" checkCN "Playtest") if Difficultyhud.last() else [],
             ["playtest", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell",null][Difficultyhud[0]],
             null,
