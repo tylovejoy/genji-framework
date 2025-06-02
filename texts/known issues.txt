@@ -83,3 +83,5 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@zxzpkcxcc` +5xp
  - Dash start bypass
    * Reported by `@`
+ - Bypass ban save double jump with auto climb [FIXED]
+   * Reported by `@zxzpkcxcc` +100xp

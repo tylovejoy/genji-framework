@@ -601,3 +601,8 @@ fixed:
 ### Addon
  - Fixed custom orb scripts from getting Ids
    * Reported by `@zxzpkcxcc` +5xp
+
+# 1.10.3G
+### Fixes
+ - Fixed bypass to ban save double jump
+   * Reported by `@zxzpkcxcc` +100xp
