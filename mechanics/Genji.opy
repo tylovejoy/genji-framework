@@ -28,10 +28,9 @@ rule "Mechanic | Genji | Ban Save Double - 封禁二段跳":
     @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.skill_usedDouble == false
-    @Condition eventPlayer.isHoldingButton(Button.JUMP)
-    waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
+    waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble, Math.INFINITY)
     if not RULE_CONDITION: return
-    waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
+    waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble, Math.INFINITY)
     if not RULE_CONDITION: return
     #Prevent false positives
     #Default climb speed is 7.8 and small slowdown upon mantling
@@ -42,5 +41,5 @@ rule "Mechanic | Genji | Ban Save Double - 封禁二段跳":
         wait(0.8, Wait.ABORT_WHEN_FALSE)
         #This can give a false negative, but advantage is small
         if eventPlayer.skill_usedBhop: return
-    smallMessage(eventPlayer, "   延二段跳已禁用!" checkCN "   save double banned!")
+    smallMessage(eventPlayer, "   延二段跳已禁用!" checkCN "  save double banned!")
     CheckpointFailReset()
