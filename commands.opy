@@ -144,7 +144,7 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
     wait(CompMode)
     #eventPlayer.allowButton(Button.ABILITY_1)
     eventPlayer.lockState = false
-    wait(0.032)
+    wait(0.096)
 
 rule "Command | Spectate (Hold Interact)":
     @Event eachPlayer
@@ -208,7 +208,7 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
             TimerResume()
             CheckpointFailReset()
     eventPlayer.lockState = false
-    wait(0.032)
+    wait(0.096)
 
 rule "Command | Toggle Practice Mode (Melee + Ultimate)":
     @Event eachPlayer
@@ -243,7 +243,7 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
             TimerResume()
             CheckpointFailReset()
     eventPlayer.lockState = false
-    wait(0.032)
+    wait(0.096)
 
 rule "Command | Restart Practice (Hold Interact)":
     @Event eachPlayer
