@@ -39,3 +39,16 @@ rule "Mechanic | All | Emote":
         smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
         wait()
         CheckpointFailReset()
+
+rule "Mechanic | All | Ground Reset":
+    @Event eachPlayer
+    @Condition eventPlayer.isOnGround()
+    #All
+    eventPlayer.skill_usedHop = null
+    eventPlayer.skill_countBhops = null
+    #$$ Climb
+    eventPlayer.skill_usedClimb = false
+    eventPlayer.skill_countMulti = null
+    eventPlayer.skill_countCreates = null
+    #$$ Genji
+    eventPlayer.skill_usedDouble = null
