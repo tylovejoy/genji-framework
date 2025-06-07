@@ -68,7 +68,8 @@ importHero(["GENJI" /*, "HANZO", "HAZARD", "KIRIKO"*/][0])
 #!include "addons-page1.opy"
 ###############################################################################
 rule "MAP DATA - 地图数据":
-    @NewPage FILLER # padding to make rest of rules go on page 2
+    @NewPage ("<tx0C000000000207B5><fgFFFF00FF> "
+    "Map Data & Addon Settings Are On Page 2 - 地图数据和附加组件的设置在第2页")
 ###############################################################################
 testData
 ###############################################################################

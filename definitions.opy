@@ -428,8 +428,6 @@ macro removeCpAndShift(arrayname):
 
 macro INVIS = Invis.ENEMIES if COMPILE_FOR_CHINESE else Invis.NONE
 
-#!define FILLER "<tx0C000000000207B5><fgFFFF00FF> Map Data & Addon Settings Are On Page 2 - 地图数据和附加组件的设置在第2页"
-
 macro flyMovementDelta = ((0.096 + 0.192 * eventPlayer.isHoldingButton(Button.JUMP) - 0.048 * eventPlayer.isHoldingButton(Button.CROUCH)) *
     (eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z * (vect(1, not eventPlayer.isHoldingButton(Button.ABILITY_1), 1))+
     worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION) +
