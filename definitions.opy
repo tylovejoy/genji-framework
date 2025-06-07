@@ -82,7 +82,7 @@ globalvar BhopBanToggle 35                  # bool                      --- Enab
 #!define TempIterator1 NANBA
 globalvar TempIterator1 38                  # int                       --- temp iterator
 
-globalvar DashExploitToggle 39
+#globalvar DashExploitToggle 39
 
 globalvar PortalNames 40                    # [str]                     --- display name of portals
 globalvar PortalLoc 41                      # [vect]                    --- portal position
