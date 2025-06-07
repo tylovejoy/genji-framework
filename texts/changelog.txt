@@ -603,6 +603,7 @@ fixed:
    * Reported by `@zxzpkcxcc` +5xp
 
 # 1.10.3G
-### Fixes
+### Bans
  - Fixed bypass to ban save double jump
    * Reported by `@zxzpkcxcc` +100xp
+ - 
