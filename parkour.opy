@@ -78,11 +78,6 @@ rule "Parkour | Setup & Variables":
     BanSaveDouble = BanSaveDouble if len(BanSaveDouble) else []
     BanDjump = BanDjump if len(BanDjump) else []
 
-    #Check if old map forces ban off
-    if len(DashExploitToggle):
-        #DashExploitToggle = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Dash Start - 0关卡Shift", true, 2)
-        DashExploitToggle = null
-
     if createWorkshopSetting(bool,"map settings \n地图设置","Basic Map Validator - 验证地图", true, 3):
         async(AddonCheckMap, AsyncBehavior.NOOP)
     PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用传送门 (占点地图)", true, 4)
@@ -491,10 +486,10 @@ def CheckpointFailReset():
         eventPlayer.timer_split = 0
 
     if len(CheckpointPositions):
-        if eventPlayer.isUsingAbility1() and DashExploitToggle:
-            #smallMessage(eventPlayer,"   0关卡Shift已禁用!" checkCN "   Dash Start is banned!")
+        if eventPlayer.isUsingAbility1():
             eventPlayer.startForcingPosition(eventPlayer, false)
-            waitUntil(not eventPlayer.isUsingAbility1(), DashExploitToggle)
+            waitUntil(not eventPlayer.isUsingAbility1(), true)
+            wait()
             eventPlayer.stopForcingPosition()
         eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current].last())
         #After teleport incase stopForcingPosition launches the player

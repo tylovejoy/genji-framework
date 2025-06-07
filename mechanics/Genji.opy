@@ -41,7 +41,6 @@ def CheckAbility1(): # checks if dash should be  turned on
     elif eventPlayer.checkpoint_current in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= cpcircleradius: 
         smallMessage(eventPlayer, "   {0} {1}".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready")) 
         lbl_a:
-        wait()        
         eventPlayer.setAbility1Enabled(true)
     else:
         eventPlayer.setAbility1Enabled(false)
@@ -60,7 +59,8 @@ rule "Mechanic | Genji | Ultimate":
 rule "Mechanic | Genji | Dash":
     @Event eachPlayer
     @Condition eventPlayer.isUsingAbility1()
-    async(CheckAbility1(), AsyncBehavior.RESTART)
+    #async(CheckAbility1(), AsyncBehavior.RESTART)
+    CheckAbility1()
 
 rule "Mechanic | Genji | Double Jump":
     @Event eachPlayer
