@@ -81,7 +81,7 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@n1troh` & `@bioslet`
  - Fixed custom orb scripts from getting Ids [FIXED]
    * Reported by `@zxzpkcxcc` +5xp
- - Dash start bypass
+ - Dash start on all levels [FIXED]
    * Reported by `@`
  - Bypass ban save double jump with auto climb [FIXED]
    * Reported by `@zxzpkcxcc` +100xp
