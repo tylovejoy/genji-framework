@@ -204,7 +204,7 @@ rule "Addon | Fake Ledge Dash - 超级跳":
 
     eventPlayer.addon_ledgeDash[0] = 0
     waitUntil(eventPlayer.getSpeed() >= 45, 25 * 0.016)
-    while eventPlayer.isUsingAbility1() and eventPlayer.addon_ledgeDash[0] < 12: # stop storing, we keep this speed/direction
+    while eventPlayer.isUsingAbility1() and eventPlayer.addon_ledgeDash[0] <= 12: # stop storing, we keep this speed/direction
         if eventPlayer.getSpeed() < 45: # dashed into air or object = end
             goto lbl_a
         eventPlayer.addon_ledgeDash[0] ++
@@ -212,12 +212,13 @@ rule "Addon | Fake Ledge Dash - 超级跳":
         eventPlayer.addon_ledgeDash[2] = eventPlayer.getSpeed()
         wait()
     waitUntil(eventPlayer.getSpeed() < 40, 25 * 0.016) # wait for dash to finish to execute
+    lbl_a:
     if eventPlayer.addon_ledgeDash[0] >= 5: #and eventPlayer.addon_ledgeDash[0] <= 12: # ledge dash execute
         eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash[1], eventPlayer.addon_ledgeDash.last(), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
     # above 12 - climbed to long
     # below 5 - dashed into object
 
-    lbl_a:
+    
     eventPlayer.addon_ledgeDash = null
 
 rule "Addon | Group up - Map Data":
