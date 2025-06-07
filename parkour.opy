@@ -226,33 +226,15 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
         else:
             eventPlayer.checkpoint_moved = true
             eventPlayer.checkpoint_current += 1
-            UpdateCache()
-            # remove ult feature disabled for speedruning purposes
-            #if eventPlayer.isUsingUltimate() and not eventPlayer.checkpoint_current in BladeEnabledCheckpoints:
-            #    CheckpointFailReset()
-            if len(CheckpointPositions[eventPlayer.checkpoint_current]) > 1:# teleport cps
-                CheckpointFailReset()
-
             if eventPlayer.timer_splitDisplay > -Math.INFINITY:
                 eventPlayer.timer_splitDisplay = (eventPlayer.timer_practice if eventPlayer.toggle_practice else eventPlayer.timer_normal) - eventPlayer.timer_split
-            wait()
-            playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
-            playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.checkpoint_current] + 1.5 * Vector.UP, 4)
-            # msg disabled due to annoying new sound
-            #bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.checkpoint_current, "抵达检查点" checkCN "Arrived at level")   )
-            wait()
-            AddonCustomLoadAndReset()
-
             if eventPlayer.toggle_practice:
                 eventPlayer.timer_split = eventPlayer.timer_practice
             else:
-                UpdateTitle()
                 eventPlayer.timer_split = eventPlayer.timer_normal
                 DeleteSave()
                 if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and not eventPlayer.editor_on: # complete lvl
                     stopChasingVariable(eventPlayer.timer_normal)
-                    wait()
-                    bigMessage(true[0], "{0} {1} {2} sec".format(eventPlayer, "已通关! 用时" checkCN "Mission complete! Time", eventPlayer.timer_normal))
                     LeaderboardUpdate()
                     if CompMode and CompAtmpNum:
                         if eventPlayer.comp_countAttempts == CompAtmpNum:
@@ -266,8 +248,21 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
                             eventPlayer.setDamageReceived(0)
                         else:
                             CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts + 1
+                    bigMessage(true[0], "{0} {1} {2} sec".format(eventPlayer, "已通关! 用时" checkCN "Mission complete! Time", eventPlayer.timer_normal))
+                    wait()
                 else: # update save
                     MakeSave()
+                UpdateTitle()
+            UpdateCache()
+            if len(CheckpointPositions[eventPlayer.checkpoint_current]) > 1:# teleport cps
+                CheckpointFailReset()
+            else:
+                AddonCustomLoadAndReset()
+            wait()
+            # msg disabled due to annoying new sound
+            #bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.checkpoint_current, "抵达检查点" checkCN "Arrived at level"))
+            playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
+            playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.checkpoint_current] + 1.5 * Vector.UP, 4)
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpcircleradius:
         CheckpointFailReset()
 
