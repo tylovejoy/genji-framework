@@ -51,10 +51,8 @@ macro compRestartLimit = false
 ###############################################################################
 #!include "parkour.opy"
 ###############################################################################
-#!include "mechanics.opy"
-###############################################################################
+#$$ TODO proper multi-hero support
 #!include "mechanics/all.opy"
-#$$ TODO multi-hero support
 importHero(["GENJI" /*, "HANZO", "HAZARD", "KIRIKO"*/][0])
 ###############################################################################
 #!include "editor.opy"
