@@ -30,17 +30,13 @@ settings {
         "skirmish": {
             "enabled": true,
             "enablePerks": usePerks,
-            "enabledMaps": [
-                #"workshopChamber"
-                selectedmap
-            ]
+             #"workshopChamber"
+            "enabledMaps": skirmishMap
         },
         "tdm": {
             "enabled": true,
             "enablePerks": usePerks,
-            "enabledMaps": [
-                selectedmap
-            ],
+            "enabledMaps": tdmMap,
             "enableSelfInitiatedRespawn": false
         },
         /*"assault": {

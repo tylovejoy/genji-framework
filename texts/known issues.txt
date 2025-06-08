@@ -67,10 +67,24 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@bioslet`
  - Missing huds [USER ERROR]
    * Reported by `@hello_5702`
-   * Skill issue
  - Missing Addon Texts [FIXED]
    * Reported by `@kuma0997`
  - Flipped editor bounce values
    * Reported by `@n1troh`
  - Null player completion with old map data [FIXED]
+   * Reported by `@zxzpkcxcc`
+ - Ultimate data not exporting
+   * Reported by `@CoralMage`
+   * Cannot Replicate
+ - Editor Huds not loading [FIXED]
+   * Reported by `@n1troh` & `@bioslet`
+ - Custom orb scripts not getting Ids [FIXED]
+   * Reported by `@zxzpkcxcc`
+ - Dash start on all levels [FIXED]
+   * Reported by `@`
+ - Ledge Dash addon always activated [REVERTED]
+   * Reported by `@zxzpkcxcc`
+ - Bypass ban save double jump with auto climb [FIXED]
+   * Reported by `@zxzpkcxcc`
+ - Instant completion time [FIXED]
    * Reported by `@zxzpkcxcc`

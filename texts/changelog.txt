@@ -581,6 +581,8 @@ fixed:
    * Reported by `@bioslet` +5xp
  - Fixed flipped bounce values on toggle
    * Reported by `@n1troh` +5xp
+ - Editor Huds not loading
+   * Reported by `@n1troh` & `@bioslet` +5xp
 ### Commands
  - Fixed hiding Split Display
  - Fixed 1/0 in Preview
@@ -594,3 +596,27 @@ fixed:
  - Fixed bhop message for jumping when jump is double pressed
  - Fixed Null player completion with old map data
    * Reported by `@zxzpkcxcc` +5xp
+
+# 1.10.3F
+### Addon
+ - Fixed custom orb scripts from getting Ids
+   * Reported by `@zxzpkcxcc` +5xp
+
+# 1.10.3G
+### Bans
+ - Fixed bypass to ban save double jump
+   * Reported by `@zxzpkcxcc` +100xp
+### Commands
+ - Fixed dash start
+   * Reported by unknown
+ - Fixed instant completion time
+   * Reported by `@zxzpkcxcc` +100xp
+### Addons
+ - Fake Ledge Dash
+   * Version 2
+     * Dash into edge/wall
+     * Release wall/edge before dash ends
+   * Reverted optimization & deprecating fake ledge dash v1
+     * Reported by `@zxzpkcxcc` +5xp
+### Framework
+ - Preparing code for multi-language support

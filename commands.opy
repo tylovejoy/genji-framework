@@ -26,7 +26,6 @@ rule "Command | Split hide (Hold Dash + Primary + Secondary)":
     wait(0.32)
 
 rule "Command | Toggle Invisible (Hold Deflect)":
-    @Condition enableInvisCommand
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition eventPlayer.editor_on == false
@@ -34,7 +33,7 @@ rule "Command | Toggle Invisible (Hold Deflect)":
     wait(1, Wait.ABORT_WHEN_FALSE)
 
     eventPlayer.toggle_invisible = not eventPlayer.toggle_invisible
-    eventPlayer.setInvisibility(Invis.NONE)
+    eventPlayer.setInvisibility(INVIS)
     if eventPlayer.toggle_invisible:
         eventPlayer.setInvisibility(Invis.ALL)
 
@@ -145,7 +144,7 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
     wait(CompMode)
     #eventPlayer.allowButton(Button.ABILITY_1)
     eventPlayer.lockState = false
-    wait(0.032)
+    wait(0.096) #Anti spam
 
 rule "Command | Spectate (Hold Interact)":
     @Event eachPlayer
@@ -198,7 +197,7 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
         TimerPause()
         stopChasingVariable(eventPlayer.timer_practice)
         async(CheckUlt(), AsyncBehavior.RESTART)
-        async(CheckDash(), AsyncBehavior.RESTART)
+        async(CheckAbility1(), AsyncBehavior.RESTART)
     else:
         if eventPlayer.toggle_practice:
             bigMessage(eventPlayer, "练习模式" checkCN "Practice mode")
@@ -209,7 +208,7 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
             TimerResume()
             CheckpointFailReset()
     eventPlayer.lockState = false
-    wait(0.032)
+    wait(0.096) #Anti spam
 
 rule "Command | Toggle Practice Mode (Melee + Ultimate)":
     @Event eachPlayer
@@ -244,7 +243,7 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
             TimerResume()
             CheckpointFailReset()
     eventPlayer.lockState = false
-    wait(0.032)
+    wait(0.096) #Anti spam
 
 rule "Command | Restart Practice (Hold Interact)":
     @Event eachPlayer
@@ -293,7 +292,7 @@ rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
 
     UpdateCache()
     CheckpointFailReset()
-    wait()
+    wait(0.064) #Anti spam
     waitUntil(eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.256) # faster if you spam button
     if RULE_CONDITION: goto RULE_START
     # After loop to prevent instant teleports
@@ -325,7 +324,7 @@ rule "Command | Toggle Hud (Hold Secondary)":
     @Condition (eventPlayer.editor_on and eventPlayer == hostPlayer and eventPlayer.isHoldingButton(Button.MELEE)) == false
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == false # don't trigger during skipping
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH) == false # don't activate during skipping
 
     wait(1.5, Wait.ABORT_WHEN_FALSE)
     eventPlayer.toggle_guide = not eventPlayer.toggle_guide

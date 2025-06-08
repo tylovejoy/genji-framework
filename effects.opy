@@ -61,7 +61,7 @@ rule "Effects | Setup Effects":
             Color.PURPLE,
             localPlayer.preview_array1[localPlayer.preview_i], 0.5, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     
-def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Bounce Ball Effects"
+def RebuildBounceOrbs(): # activates in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Bounce Ball Effects"
     @Name "Effects | SUB Rebuild Bounce Orbs"
     destroyEffect(BounceEffects)
     BounceEffects = []
@@ -78,7 +78,7 @@ def RebuildBounceOrbs(): # triggers in editor. delets the current orbs to place 
         if not (TempIterator1 % 5):
             wait()
 
-def RebuildKillOrbs(): # triggers in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Kill Orb Effects"
+def RebuildKillOrbs(): # activates in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Kill Orb Effects"
     @Name "Effects | SUB Rebuild boundary spheres"
     destroyEffect(KillBallEffects)
     KillBallEffects = []

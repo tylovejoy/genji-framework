@@ -106,7 +106,7 @@ rule "Editor | Clear Excess Data to Save Map":
         "   6. Update for credits:\n"
         " ESC → SHOW LOBBY → SETTINGS → SHARE CODE →\n"
         " UPLOAD TO EXISTING CODE → PASTE THE CODE YOU CREATED IN STEP 4",
-       HudPosition.TOP, HO.edit_clearec1, Color.LIME_GREEN,Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT)
+       HudPosition.TOP, HO.edit_clearec1, null, null, Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT)
     hostPlayer.editor_saveCache[2]=getLastCreatedText()
 
     hudHeader(hostPlayer,
@@ -130,6 +130,7 @@ rule "Editor | Clear Excess Data to Save Map":
 rule "Editor | Hud and Effects":
     wait(LoadOrder.hudsEditor)
     waitUntil(entityExists(getAllPlayers()), Math.INFINITY)  # cant be condition because host player can leaves, removing the rule fx
+    wait()
     if getAllPlayers().editor_on:
         #hostPlayer.editor_lock = true
         while len(HudStoreEdit): # remove unnesesary huds
@@ -387,7 +388,7 @@ rule "Editor | Hud and Effects":
                 " {0} Genji editor {0} ".format(iconString(Icon.BOLT)),
             null,
             null,
-            HudPosition.TOP, HO.edit_host_mode, Color.BLUE, Color.BLUE, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+            HudPosition.TOP, HO.edit_host_mode, Color.BLUE, null, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
         hudText(true[0],
             null,  # original part of the one ontop of it
@@ -399,9 +400,9 @@ rule "Editor | Hud and Effects":
             null,
             HudPosition.TOP,
             HO.edit_changemode,
-            Color.SKY_BLUE,
+            null,
             Color.GRAY if localPlayer.editor_lock else Color.WHITE,
-            Color.WHITE,
+            null,
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
         hudSubtext(hostPlayer if hostPlayer.toggle_guide and (EditorMode.checkpoint or EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex)) else null, #if EditorMode.checkpoint or EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
@@ -521,8 +522,7 @@ rule "Editor | Hud and Effects":
                     "所有" if CustomPortalCP[EditSelected] < 0 else hostPlayer.checkpoint_current)
                 if EditorMode.portal and CustomPortalCP[EditSelected] in [hostPlayer.checkpoint_current, -1] and len(CustomPortalCP) else
                 "\n   当前无数据选中   \n"
-            ) checkCN
-            (
+            ) checkCN (
                 "\n Selected Checkpoint\n Vector: {0}{1} \n".format(
                     CheckpointPositions[hostPlayer.checkpoint_current],
                     [] if len(CheckpointPositions[hostPlayer.checkpoint_current]) < 2 else
@@ -566,11 +566,10 @@ rule "Editor | Hud and Effects":
                     CustomPortalEndpoint[EditSelected],
                     "All" if CustomPortalCP[EditSelected] < 0 else hostPlayer.checkpoint_current)
                 if EditorMode.portal and CustomPortalCP[EditSelected] in [hostPlayer.checkpoint_current, -1] and len(CustomPortalCP) else
-                "\n   No data selected   \n"
-            ),
-            null, LeftAlign128, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, Color.ORANGE,Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+                "\n   No data selected   \n"),
+            null,
+            LeftAlign128, HudPosition.LEFT, HO.edit_selecteddata, Color.WHITE, null, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-        wait(1)
         # effects ==========================================================================================================================================================================
         createInWorldText(
             true if len(EditSelectIdArray) else null,
@@ -591,10 +590,10 @@ rule "Editor | Hud and Effects":
             IconReeval.VISIBILITY_AND_POSITION, Color.WHITE, true)
 
         # Purple sphere for teleport location
-        createEffect(true if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1 and EditorMode.checkpoint else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[hostPlayer.checkpoint_current][1]-vect(0,0.1,0), 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        createEffect(hostPlayer if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1 and EditorMode.checkpoint else null, Effect.SPHERE, Color.PURPLE, CheckpointPositions[hostPlayer.checkpoint_current][1] - 0.1 * Vector.UP, 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
 
         # Teleport text
-        createInWorldText(true if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1 and EditorMode.checkpoint else null, "传送点位置" checkCN "teleporter location", CheckpointPositions[hostPlayer.checkpoint_current][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
+        createInWorldText(hostPlayer if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1 and EditorMode.checkpoint else null, "传送点位置" checkCN "teleporter location", CheckpointPositions[hostPlayer.checkpoint_current][1], 1.6, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.SKY_BLUE, SpecVisibility.DEFAULT)
 
         # normal cp if teleport
         createEffect(hostPlayer if CheckpointPositions[hostPlayer.checkpoint_current][1] and EditorMode.checkpoint else null, Effect.RING, Color.ORANGE, CheckpointPositions[hostPlayer.checkpoint_current][0], 1, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
@@ -848,17 +847,17 @@ rule "Editor | delete cp/orb/portal":
         hostPlayer.editor_temp = null
 
         # ult/dash/ban remove and lower the cp number of rest
-        removeCPandLower(BladeEnabledCheckpoints)
-        removeCPandLower(DashEnabledCheckpoints)
-        removeCPandLower(BanMulti)
-        removeCPandLower(BanCreate)
-        removeCPandLower(BanStand)
-        removeCPandLower(BanDead)
-        removeCPandLower(BanEmote)
-        removeCPandLower(BanClimb)
-        removeCPandLower(BanSaveDouble)
-        removeCPandLower(BanBhop)
-        removeCPandLower(BanDjump)
+        removeCpAndShift(BladeEnabledCheckpoints)
+        removeCpAndShift(DashEnabledCheckpoints)
+        removeCpAndShift(BanMulti)
+        removeCpAndShift(BanCreate)
+        removeCpAndShift(BanStand)
+        removeCpAndShift(BanDead)
+        removeCpAndShift(BanEmote)
+        removeCpAndShift(BanClimb)
+        removeCpAndShift(BanSaveDouble)
+        removeCpAndShift(BanBhop)
+        removeCpAndShift(BanDjump)
 
         # Remove specified checkpoint =====================
         del CheckpointPositions[hostPlayer.checkpoint_current]
@@ -967,7 +966,7 @@ rule "Editor | select orb/portal":
         EditSelected = EditSelectIdArray[0] if EditSelectIdArray.index(EditSelected) == len(EditSelectIdArray) - 1 else EditSelectIdArray[EditSelectIdArray.index(EditSelected) + 1]
     wait()
     hostPlayer.editor_lock = false
-    waitUntil(not hostPlayer.isHoldingButton(Button.INTERACT) or not (hostPlayer.isHoldingButton(Button.CROUCH) or hostPlayer.isHoldingButton(Button.JUMP)), 0.24)
+    waitUntil(not(hostPlayer.isHoldingButton(Button.INTERACT) and (hostPlayer.isHoldingButton(Button.CROUCH) or hostPlayer.isHoldingButton(Button.JUMP))), 0.24)
 
 # checkpoint functions ==============================================================
 
@@ -1178,13 +1177,13 @@ rule "Editor | move object":
 */
     if hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         goto loc + 2 * EditorMode.current
-    else:
+        pass
     else:
         KillBallPositions[EditSelected] = hostPlayer.editor_undo
     else:
         BouncePositions[EditSelected] = hostPlayer.editor_undo
     else:
-    else:
+        pass
     else:
         CustomPortalStart[EditSelected] = hostPlayer.editor_undo[0]
         CustomPortalEndpoint[EditSelected] = hostPlayer.editor_undo.last()

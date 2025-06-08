@@ -40,7 +40,7 @@ rule "Addon | Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / �
         "enter custom difficulty here",
         null,
         HudPosition.TOP, HO.data_dif,
-        Color.BLUE, Color.GREEN, Color.BLUE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
+        Color.BLUE, Color.GREEN, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
     HudStoreEdit.append(getLastCreatedText())
 
@@ -103,7 +103,7 @@ rule "Addon | Display Author Time - 展示世界纪录 <---- EDIT ME / 在此处
     @Disabled
     # type your entry in the textfield that says "name and time here"
     # 在文本框 中输入“名称和时间”
-    hudText(true[0], null," \n{0} author time {0}".format(iconString(Icon.FIRE)),"name and time here", HudPosition.RIGHT, HO.wr, Color.ROSE, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudText(true[0], null, " \n{0} author time {0}".format(iconString(Icon.FIRE)), "name and time here", HudPosition.RIGHT, HO.wr, null, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
 
 rule "Addon | HUD text for certain Checkpoints - 特定关卡显示的HUD文本 <---- EDIT ME / 在此处编辑":
@@ -191,34 +191,20 @@ rule "Addon | Stall enhancer - 增强系統跳的判定":
         eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
         if RULE_CONDITION: goto RULE_START
 
-# dash after ledge grab
-# stores speed and launches you after dash if you done it during climb
-# LedgeDash var 0 count - 1 eventPlayer.addon_ledgeDash[1] 1 stored speed
-# based on code taken: wzr31 and S7DR0 and simplified
 rule "Addon | Fake Ledge Dash - 超级跳":
-    @Disabled
     @Event eachPlayer
+    @Disabled
+    #Version 2
     @Condition eventPlayer.isUsingAbility1()
-    #climb / ledge > hold jump > hands on the ledge > dash  > wait for launch > release jump
-    #爬墙/扒 > 长按跳 > 抓住窗台 > SHIFT > 等待发射 > 释放跳跃
-
-    eventPlayer.addon_ledgeDash[0] = 0
-    waitUntil(eventPlayer.getSpeed() >= 45, 25 * 0.016)
-    while eventPlayer.isUsingAbility1() and eventPlayer.addon_ledgeDash[0] < 12: # stop storing, we keep this speed/direction
-        if eventPlayer.getSpeed() < 45: # dashed into air or object = end
-            goto lbl_a
-        eventPlayer.addon_ledgeDash[0] ++
-        eventPlayer.addon_ledgeDash[1] = eventPlayer.getFacingDirection()
-        eventPlayer.addon_ledgeDash[2] = eventPlayer.getSpeed()
-        wait()
-    waitUntil(eventPlayer.getSpeed() < 40, 25 * 0.016) # wait for dash to finish to execute
-    if eventPlayer.addon_ledgeDash[0] >= 5: #and eventPlayer.addon_ledgeDash[0] <= 12: # ledge dash execute
-        eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash[1], eventPlayer.addon_ledgeDash.last(), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
-    # above 12 - climbed to long
-    # below 5 - dashed into object
-
-    lbl_a:
-    eventPlayer.addon_ledgeDash = null
+    @Condition eventPlayer.getSpeed() < 45
+    @Condition eventPlayer.getThrottle().z > null
+    @Condition abs(eventPlayer.getVerticalSpeed() - 7) < 0.8
+    # Dash into a wall/edge
+    # Release wall/edge before dash ends
+    eventPlayer.addon_ledgeDash = eventPlayer.getFacingDirection()
+    waitUntil(not eventPlayer.isUsingAbility1(), true) #25 * 0.016
+    if eventPlayer.isInAir():
+            eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash, 50, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
 rule "Addon | Group up - Map Data":
     @Disabled
@@ -277,7 +263,7 @@ rule "Addon | Group Up":
 def AddonCustomLoadAndReset():
     @Name "Addon | Custom checkpoint loading or resetting"
     @Disabled
-    # This subroutine triggers on failing, arriving, resetting, skipping etc
+    # This subroutine activates on failing, arriving, resetting, skipping etc
     # example: reset gravity and movespeed after being changed by custom orbs
     eventPlayer.setGravity(100)
     eventPlayer.setMoveSpeed(100)
@@ -285,32 +271,31 @@ def AddonCustomLoadAndReset():
 rule "Addon | Custom Orb Script":
     @Disabled
     @Event eachPlayer
-    #don't edit this condition !!!!!!!!!!!!!!!!!
-    @Condition eventPlayer.cache_bounceTouched > -1
+    #Do not edit this condition !!!!!!!!!!!!!!!!!
+    @Condition eventPlayer.cache_bounceTouched >= null
     #Enable this rule and find the ID number of the bounce orbs via the editor display.
     #Note that the ID can change if you place or delete orbs infront of that orb.
-    #Do NOT edit the next 2 actions.
-    eventPlayer.addon_bounceId = [i for i in [i for _, i in BouncePadCheckpoints] if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and  BouncePositions[i] == eventPlayer.cache_bouncePosition[eventPlayer.cache_bounceTouched]][0]
-    #Add the desired ID numbers for the bounces in the array
+    #Add the desired ID numbers for the orb in the array
     #add the script after it
-    #you can use the trigger sub above this rule to reset the effects
-    if eventPlayer.addon_bounceId in [2]:
-        # example gravity (should be reset to 100 in trigger on fail)
+    #you can use the activateed sub above this rule to reset the effects
+    if eventPlayer.cache_bounceTouched in [1, 2]:
+        # example gravity (should be reset to 100 in AddonCustomLoadAndReset)
         eventPlayer.setGravity(25)
         smallMessage(eventPlayer," you feel light")
         wait(2)
         eventPlayer.setGravity(100)
 
-    if eventPlayer.addon_bounceId in [2,3]:
+    if eventPlayer.cache_bounceTouched in [3, 4]:
        # example canceling primary makes double jump recover
        eventPlayer.cancelPrimaryAction()
        eventPlayer.skill_usedDouble = null
        smallMessage(eventPlayer," double jump recovered")
-
-    if eventPlayer.addon_bounceId in [4]:
+    if eventPlayer.cache_bounceTouched in [5, 6]:
         # example move speed
         eventPlayer.setMoveSpeed(250)
         smallMessage(eventPlayer," zooom")
+        wait(2)
+        eventPlayer.setMoveSpeed(100)
 
 rule "Addon | Fake Triple Jump - 假三段跳":
     @Disabled
@@ -319,7 +304,7 @@ rule "Addon | Fake Triple Jump - 假三段跳":
     #@Condition BanTriple == false
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.skill_usedDouble == false #Double cannot be used already
-    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false #Don't trigger on reset
+    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false #Don't activate on reset
     eventPlayer.addon_enableDoubleChecks = true #Enable checking double jump
     wait()
     if RULE_CONDITION: goto RULE_START
@@ -331,6 +316,8 @@ rule "Addon | Fake Triple Jump - 假三段跳":
         eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
     else:
         if RULE_CONDITION: goto RULE_START
+
+###############################################################################
 
 rule "Addon | fisho cp cheat for overpy toggle":
     @Event eachPlayer
@@ -345,6 +332,39 @@ rule "Addon | fisho cp cheat for overpy toggle":
     else:
         eventPlayer.checkpoint_current += 1
     CheckpointFailReset()
+
+rule "Fake Ledge Dash - 超级跳":
+    @Event eachPlayer
+    @Condition false
+    # based on code taken: wzr31 and S7DR0 and simplified
+    @Condition eventPlayer.isUsingAbility1()
+    #climb / ledge > hold jump > hands on the ledge > dash  > wait for launch > release jump
+    #爬墙/扒 > 长按跳 > 抓住窗台 > SHIFT > 等待发射 > 释放跳跃
+    eventPlayer.addon_ledgeDash[0] = 0
+    waitUntil(eventPlayer.getSpeed() >= 45, 0.4)
+
+    while eventPlayer.isUsingAbility1() and eventPlayer.addon_ledgeDash[0] <= 12:
+        eventPlayer.addon_ledgeDash[1] = eventPlayer.getFacingDirection()
+
+        eventPlayer.addon_ledgeDash[2] = eventPlayer.getSpeed()
+        if eventPlayer.getSpeed() < 45: # dashed into air or object = end
+            goto lbla
+        else:
+            eventPlayer.addon_ledgeDash[0] ++
+        if eventPlayer.addon_ledgeDash[0] == 12: # stop storing, we keep this speed/direction
+            waitUntil(eventPlayer.getSpeed() < 40, 0.4) # wait for dash to finish to execute
+        wait()
+    # dash after ledge grab
+    if eventPlayer.addon_ledgeDash[0] >= 5: #and eventPlayer.addon_ledgeDash[0] <= 12: # ledge dash execute
+        # stores speed and launches you after dash if you done it during climb
+        eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash[1], eventPlayer.addon_ledgeDash[2], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+    # above 12 - climbed to long
+    # below 5 - dashed into object
+
+    lbla:
+    eventPlayer.addon_ledgeDash[0] = null
+    eventPlayer.addon_ledgeDash[1] = null
+    eventPlayer.addon_ledgeDash[2] = null
 
 rule "Addon | Ledge Grab Patch v1.5":
     # Obsolete for OW v2.12
