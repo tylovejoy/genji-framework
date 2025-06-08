@@ -1177,13 +1177,13 @@ rule "Editor | move object":
 */
     if hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         goto loc + 2 * EditorMode.current
-        pass
+    else:
     else:
         KillBallPositions[EditSelected] = hostPlayer.editor_undo
     else:
         BouncePositions[EditSelected] = hostPlayer.editor_undo
     else:
-        pass
+    else:
     else:
         CustomPortalStart[EditSelected] = hostPlayer.editor_undo[0]
         CustomPortalEndpoint[EditSelected] = hostPlayer.editor_undo.last()
