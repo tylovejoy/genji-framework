@@ -199,6 +199,8 @@ rule "Addon | Fake Ledge Dash - 超级跳":
     @Condition eventPlayer.getSpeed() < 45
     @Condition eventPlayer.getThrottle().z > null
     @Condition abs(eventPlayer.getVerticalSpeed() - 7) < 0.8
+    # Dash into a wall/edge
+    # Release wall/edge before dash ends
     eventPlayer.addon_ledgeDash = eventPlayer.getFacingDirection()
     waitUntil(not eventPlayer.isUsingAbility1(), true) #25 * 0.016
     if eventPlayer.isInAir():
