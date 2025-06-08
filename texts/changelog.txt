@@ -618,3 +618,5 @@ fixed:
      * Release wall/edge before dash ends
    * Reverted optimization & deprecating fake ledge dash v1
      * Reported by `@zxzpkcxcc` +5xp
+### Framework
+ - Preparing code for multi-language support
