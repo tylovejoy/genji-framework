@@ -620,3 +620,6 @@ fixed:
      * Reported by `@zxzpkcxcc` +5xp
 ### Framework
  - Preparing code for multi-language support
+### Prelease
+ - Fixed always undoing moving Boundary Spheres
+   * Reported by `@n1troh` +5xp
