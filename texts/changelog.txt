@@ -606,5 +606,12 @@ fixed:
 ### Bans
  - Fixed bypass to ban save double jump
    * Reported by `@zxzpkcxcc` +100xp
+### Commands
  - Fixed dash start
-   * Reported by `@` +
+   * Reported by `@` +100xp
+ - Fixed instant completion time
+   * Reported by `@zxzpkcxcc` +100xp
+### Addons
+ - Ledge Dash v2
+   * Reverted refactor & deprecate for fake ledge dash v1
+     * Reported by `@zxzpkcxcc` +5xp

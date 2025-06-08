@@ -191,35 +191,18 @@ rule "Addon | Stall enhancer - 增强系統跳的判定":
         eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
         if RULE_CONDITION: goto RULE_START
 
-# dash after ledge grab
-# stores speed and launches you after dash if you done it during climb
-# LedgeDash var 0 count - 1 eventPlayer.addon_ledgeDash[1] 1 stored speed
-# based on code taken: wzr31 and S7DR0 and simplified
 rule "Addon | Fake Ledge Dash - 超级跳":
-    @Disabled
     @Event eachPlayer
+    @Disabled
+    #Version 2
     @Condition eventPlayer.isUsingAbility1()
-    #climb / ledge > hold jump > hands on the ledge > dash  > wait for launch > release jump
-    #爬墙/扒 > 长按跳 > 抓住窗台 > SHIFT > 等待发射 > 释放跳跃
-
-    eventPlayer.addon_ledgeDash[0] = 0
-    waitUntil(eventPlayer.getSpeed() >= 45, 25 * 0.016)
-    while eventPlayer.isUsingAbility1() and eventPlayer.addon_ledgeDash[0] <= 12: # stop storing, we keep this speed/direction
-        if eventPlayer.getSpeed() < 45: # dashed into air or object = end
-            goto lbl_a
-        eventPlayer.addon_ledgeDash[0] ++
-        eventPlayer.addon_ledgeDash[1] = eventPlayer.getFacingDirection()
-        eventPlayer.addon_ledgeDash[2] = eventPlayer.getSpeed()
-        wait()
-    waitUntil(eventPlayer.getSpeed() < 40, 25 * 0.016) # wait for dash to finish to execute
-    lbl_a:
-    if eventPlayer.addon_ledgeDash[0] >= 5: #and eventPlayer.addon_ledgeDash[0] <= 12: # ledge dash execute
-        eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash[1], eventPlayer.addon_ledgeDash.last(), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
-    # above 12 - climbed to long
-    # below 5 - dashed into object
-
-    
-    eventPlayer.addon_ledgeDash = null
+    @Condition eventPlayer.getSpeed() < 45
+    @Condition eventPlayer.getThrottle().z > null
+    @Condition abs(eventPlayer.getVerticalSpeed() - 7) < 0.8
+    eventPlayer.addon_ledgeDash = eventPlayer.getFacingDirection()
+    waitUntil(not eventPlayer.isUsingAbility1(), true) #25 * 0.016
+    if eventPlayer.isInAir():
+            eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash, 50, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
 rule "Addon | Group up - Map Data":
     @Disabled
@@ -332,6 +315,8 @@ rule "Addon | Fake Triple Jump - 假三段跳":
     else:
         if RULE_CONDITION: goto RULE_START
 
+###############################################################################
+
 rule "Addon | fisho cp cheat for overpy toggle":
     @Event eachPlayer
     @Condition cpCheat
@@ -345,6 +330,39 @@ rule "Addon | fisho cp cheat for overpy toggle":
     else:
         eventPlayer.checkpoint_current += 1
     CheckpointFailReset()
+
+rule "Fake Ledge Dash - 超级跳":
+    @Event eachPlayer
+    @Condition false
+    # based on code taken: wzr31 and S7DR0 and simplified
+    @Condition eventPlayer.isUsingAbility1()
+    #climb / ledge > hold jump > hands on the ledge > dash  > wait for launch > release jump
+    #爬墙/扒 > 长按跳 > 抓住窗台 > SHIFT > 等待发射 > 释放跳跃
+    eventPlayer.addon_ledgeDash[0] = 0
+    waitUntil(eventPlayer.getSpeed() >= 45, 0.4)
+
+    while eventPlayer.isUsingAbility1() and eventPlayer.addon_ledgeDash[0] <= 12:
+        eventPlayer.addon_ledgeDash[1] = eventPlayer.getFacingDirection()
+
+        eventPlayer.addon_ledgeDash[2] = eventPlayer.getSpeed()
+        if eventPlayer.getSpeed() < 45: # dashed into air or object = end
+            goto lbla
+        else:
+            eventPlayer.addon_ledgeDash[0] ++
+        if eventPlayer.addon_ledgeDash[0] == 12: # stop storing, we keep this speed/direction
+            waitUntil(eventPlayer.getSpeed() < 40, 0.4) # wait for dash to finish to execute
+        wait()
+    # dash after ledge grab
+    if eventPlayer.addon_ledgeDash[0] >= 5: #and eventPlayer.addon_ledgeDash[0] <= 12: # ledge dash execute
+        # stores speed and launches you after dash if you done it during climb
+        eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash[1], eventPlayer.addon_ledgeDash[2], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+    # above 12 - climbed to long
+    # below 5 - dashed into object
+
+    lbla:
+    eventPlayer.addon_ledgeDash[0] = null
+    eventPlayer.addon_ledgeDash[1] = null
+    eventPlayer.addon_ledgeDash[2] = null
 
 rule "Addon | Ledge Grab Patch v1.5":
     # Obsolete for OW v2.12
