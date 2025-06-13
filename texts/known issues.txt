@@ -90,3 +90,5 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@zxzpkcxcc`
  - Moving Boundary Spheres always undone [FIXED]
    * Reported by `@n1troh`
+ - Orbs always green in editor
+   * Reported by `@bioslet`
