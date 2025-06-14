@@ -28,7 +28,7 @@ rule "Huds | Global Localplayer":
     #hudSubtext(localPlayer.toggle_guide, "Discord: dsc.gg/genjiparkour" LeftAlign96, HudPosition.LEFT, HO.data_dsc, ColorConfig[Customize.dsc], HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
     hudText(true[0], null, "Discord: dsc.gg/genjiparkour" if localPlayer.toggle_guide else [],
-    #hudSubtext(true[0],
+        #tf"Made by: {Name}" LeftAlign96,
         "作者: {}" LeftAlign96.format(Name)
         checkCN
         "Made by: {}" LeftAlign96.format(Name),
@@ -36,6 +36,7 @@ rule "Huds | Global Localplayer":
     HudStoreEdit.append(getLastCreatedText())
 
     hudSubtext(true[0],
+        #tf"Map code: {Code}" LeftAlign96,
         "代码: {}" LeftAlign96.format(Code)
         checkCN
         "Map code: {}" LeftAlign96.format(Code),
@@ -44,6 +45,8 @@ rule "Huds | Global Localplayer":
 
     # global huds
     hudSubheader(true[0],
+        #"Server Restart in {0} Min - {1}{2}".format(
+        #    TimeRemaining, versionhere, "\nerror: max hud count reached" if getNumberOfTextIds() >= 128 else []),
         "房间将在 {0} 分钟后重启 - {1}{2}".format(
             TimeRemaining, versionhere, "\n错误: 已达到最大HUD数量上限" if getNumberOfTextIds() >= 128 else [])
         checkCN
@@ -228,19 +231,19 @@ rule "Huds | Leaderboard": # for global instead of tied to player
     #if LeaderBoardFull[0]:
     hudSubheader(localPlayer.toggle_guide, " \n{0} 排名前5 {0}".format(iconString(Icon.FLAG)) checkCN " \n{0} Top 5 {0}".format(iconString(Icon.FLAG)), HudPosition.RIGHT, HO.board_top5, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     LeaderBoardHuds = getLastCreatedText()
-    hudText(localPlayer.toggle_guide, heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0].last(), HudPosition.RIGHT, HO.board_top5+1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
+    hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0].last(), HudPosition.RIGHT, HO.board_top5+1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
     LeaderBoardHuds.append(getLastCreatedText())
     if LeaderBoardFull[1]:
-        hudText(localPlayer.toggle_guide, heroIcon(Hero.GENJI), LeaderBoardFull[1][0], LeaderBoardFull[1].last(), HudPosition.RIGHT, HO.board_top5+2, Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
+        hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[1][0], LeaderBoardFull[1].last(), HudPosition.RIGHT, HO.board_top5+2, Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
         LeaderBoardHuds.append(getLastCreatedText())
         if LeaderBoardFull[2]:
-            hudText(localPlayer.toggle_guide, heroIcon(Hero.GENJI), LeaderBoardFull[2][0], LeaderBoardFull[2].last(), HudPosition.RIGHT, HO.board_top5+3, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
+            hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[2][0], LeaderBoardFull[2].last(), HudPosition.RIGHT, HO.board_top5+3, Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
             LeaderBoardHuds.append(getLastCreatedText())
             if LeaderBoardFull[3]:
-                hudText(localPlayer.toggle_guide, heroIcon(Hero.GENJI), LeaderBoardFull[3][0], LeaderBoardFull[3].last(), HudPosition.RIGHT, HO.board_top5+4, Color.LIME_GREEN, Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
+                hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[3][0], LeaderBoardFull[3].last(), HudPosition.RIGHT, HO.board_top5+4, Color.LIME_GREEN, Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
                 LeaderBoardHuds.append(getLastCreatedText())
                 if LeaderBoardFull[4]:
-                    hudText(localPlayer.toggle_guide, heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4].last(), HudPosition.RIGHT, HO.board_top5+5, Color.GREEN, Color.GREEN, Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
+                    hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4].last(), HudPosition.RIGHT, HO.board_top5+5, Color.GREEN, Color.GREEN, Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
                     LeaderBoardHuds.append(getLastCreatedText())
 
     hudHeader(true if evalOnce(CompMode and not CompTime) else localPlayer.toggle_leaderboard,
@@ -371,11 +374,13 @@ def UpdateTitle():
     eventPlayer.cache_titleHud = getLastCreatedText()
 
 rule "Huds | Addons":
-    waitUntil(getNumberOfPlayers(Team.ALL) > 0, Math.INFINITY)
+    wait(LoadOrder.hudsGlobal)
+    waitUntil(entityExists(getAllPlayers()), Math.INFINITY)
     wait()
     if getAllPlayers().addon_toggle3rdPov <= true:
         hudSubtext(localPlayer.toggle_guide,
             "长按 {0} + {1} | 第三人称{2}".format(buttonString(Button.CROUCH), buttonString(Button.JUMP)," | 启用" if localPlayer.addon_toggle3rdPov else [])
             checkCN
             "Hold {0} + {1} | 3rd Person{2}".format(buttonString(Button.CROUCH), buttonString(Button.JUMP)," | ON" if localPlayer.addon_toggle3rdPov else []),
-            HudPosition.RIGHT,HO.com_3rd,evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.addon_toggle3rdPov else evalOnce(ColorConfig[Customize.command_normal]), HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+            HudPosition.RIGHT, HO.com_3rd,evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.addon_toggle3rdPov else evalOnce(ColorConfig[Customize.command_normal]),
+            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
