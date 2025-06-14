@@ -618,8 +618,12 @@ fixed:
      * Release wall/edge before dash ends
    * Reverted optimization & deprecating fake ledge dash v1
      * Reported by `@zxzpkcxcc` +5xp
-### Framework
- - Preparing code for multi-language support
-### Prelease
+ - Fixed 3rd person camera hud not displaying
+   * Reported by `@zxzpkcxcc` +5xp
+### Editor
  - Fixed always undoing moving Boundary Spheres
    * Reported by `@n1troh` +5xp
+ - Bounce/Lock Orbs unchanging color
+   * Reported by `@bioslet` +5xp
+### Framework
+ - Preparing code for multi-language support
