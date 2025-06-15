@@ -28,30 +28,29 @@ rule "Huds | Global Localplayer":
     #hudSubtext(localPlayer.toggle_guide, "Discord: dsc.gg/genjiparkour" LeftAlign96, HudPosition.LEFT, HO.data_dsc, ColorConfig[Customize.dsc], HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
     hudText(true[0], null, "Discord: dsc.gg/genjiparkour" if localPlayer.toggle_guide else [],
-        #tf"Made by: {Name}" LeftAlign96,
-        "作者: {}" LeftAlign96.format(Name)
-        checkCN
-        "Made by: {}" LeftAlign96.format(Name),
+        f"{t'Made by'}: {Name}{LeftAlign96}",
+        #"作者: {}" LeftAlign96.format(Name)
+        #checkCN
+        #"Made by: {}" LeftAlign96.format(Name),
         HudPosition.LEFT, HO.data_name, null, ColorConfig[Customize.dsc], ColorConfig[Customize.credit_name] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
 
     hudSubtext(true[0],
-        #tf"Map code: {Code}" LeftAlign96,
-        "代码: {}" LeftAlign96.format(Code)
-        checkCN
-        "Map code: {}" LeftAlign96.format(Code),
+        f"{t'Map code'}: {Code}{LeftAlign96}",
+        #"代码: {}" LeftAlign96.format(Code)
+        #checkCN
+        #"Map code: {}" LeftAlign96.format(Code),
         HudPosition.LEFT, HO.data_code, ColorConfig[Customize.credit_code] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
 
     # global huds
     hudSubheader(true[0],
+        f"{t'Server Restart in '}{TimeRemaining}{t' Min - '}{versionhere}{t'\nerror: max hud count reached' if getNumberOfTextIds() >= 128 else []}",
+        #"房间将在 {0} 分钟后重启 - {1}{2}".format(
+        #    TimeRemaining, versionhere, "\n错误: 已达到最大HUD数量上限" if getNumberOfTextIds() >= 128 else [])
+        #checkCN
         #"Server Restart in {0} Min - {1}{2}".format(
         #    TimeRemaining, versionhere, "\nerror: max hud count reached" if getNumberOfTextIds() >= 128 else []),
-        "房间将在 {0} 分钟后重启 - {1}{2}".format(
-            TimeRemaining, versionhere, "\n错误: 已达到最大HUD数量上限" if getNumberOfTextIds() >= 128 else [])
-        checkCN
-        "Server Restart in {0} Min - {1}{2}".format(
-            TimeRemaining, versionhere, "\nerror: max hud count reached" if getNumberOfTextIds() >= 128 else []),
         HudPosition.RIGHT, HO.data_remaingtime, ColorConfig[Customize.servertime] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
 
     # padding for custom hud display
@@ -60,7 +59,7 @@ rule "Huds | Global Localplayer":
     hudSubtext(localPlayer.toggle_guide,
         "{0} {1} | {2}快速回点".format([] if localPlayer.toggle_quickRestart else "长按",buttonString(Button.RELOAD),[] if localPlayer.toggle_quickRestart else "启用")
         checkCN
-        "{0} {1} |{2} quick reset".format([] if localPlayer.toggle_quickRestart else "Hold", buttonString(Button.RELOAD), [] if localPlayer.toggle_quickRestart else " Enable"),
+        "{0} {1} | {2} quick reset".format([] if localPlayer.toggle_quickRestart else "Hold", buttonString(Button.RELOAD), [] if localPlayer.toggle_quickRestart else " Enable"),
         HudPosition.RIGHT, HO.com_quickres, ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
     hudSubtext(localPlayer.toggle_guide,
@@ -97,9 +96,10 @@ rule "Huds | Global Localplayer":
 
     hudSubtext(localPlayer,
         [] if localPlayer.timer_splitDisplay <= -Math.INFINITY or localPlayer.toggle_spectate else(
-            ("单关用时 {0}" LeftAlign96.format(localPlayer.timer_splitDisplay)
-            checkCN
-            "Split: {0}" LeftAlign96.format(localPlayer.timer_splitDisplay))),
+            f"{t'Split: '}{localPlayer.timer_splitDisplay}{LeftAlign96}"),
+            #("单关用时 {0}" LeftAlign96.format(localPlayer.timer_splitDisplay)
+            #checkCN
+            #"Split: {0}" LeftAlign96.format(localPlayer.timer_splitDisplay))),
         HudPosition.LEFT, HO.game_split_display, ColorConfig[Customize.time], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
 
@@ -229,7 +229,10 @@ rule "Huds | Leaderboard": # for global instead of tied to player
     LeaderBoardRemake = "{}\n".format(LeaderBoardRemake)
 
     #if LeaderBoardFull[0]:
-    hudSubheader(localPlayer.toggle_guide, " \n{0} 排名前5 {0}".format(iconString(Icon.FLAG)) checkCN " \n{0} Top 5 {0}".format(iconString(Icon.FLAG)), HudPosition.RIGHT, HO.board_top5, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+    hudSubheader(localPlayer.toggle_guide,
+        f" \n{iconString(Icon.FLAG)} {t'Top 5'} {iconString(Icon.FLAG)}",
+        #" \n{0} 排名前5 {0}".format(iconString(Icon.FLAG)) checkCN " \n{0} Top 5 {0}".format(iconString(Icon.FLAG)),
+        HudPosition.RIGHT, HO.board_top5, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     LeaderBoardHuds = getLastCreatedText()
     hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0].last(), HudPosition.RIGHT, HO.board_top5+1, Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
     LeaderBoardHuds.append(getLastCreatedText())
@@ -247,7 +250,8 @@ rule "Huds | Leaderboard": # for global instead of tied to player
                     LeaderBoardHuds.append(getLastCreatedText())
 
     hudHeader(true if evalOnce(CompMode and not CompTime) else localPlayer.toggle_leaderboard,
-        "　　　　 {0} {1} {0} 　　　　\n　　　　　　　　　　　　　　　　　　{2}".format(iconString(Icon.FLAG), "成绩排名" checkCN "Leaderboard", evalOnce(LeaderBoardRemake)),
+        "　　　　 {0} {1} {0} 　　　　\n　　　　　　　　　　　　　　　　　　{2}".format(iconString(Icon.FLAG), t"Leaderboard", evalOnce(LeaderBoardRemake)),
+        #"　　　　 {0} {1} {0} 　　　　\n　　　　　　　　　　　　　　　　　　{2}".format(iconString(Icon.FLAG), "成绩排名" checkCN "Leaderboard", evalOnce(LeaderBoardRemake)),
         HudPosition.TOP, HO.board_display1, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     LeaderBoardHuds.append(getLastCreatedText())
     LeaderBoardRemake = null
@@ -258,8 +262,10 @@ rule "Huds | Each Player":
     wait(LoadOrder.hudsPlayer)
 
     hudText(eventPlayer, null,
-        "{} {} sec".format("练习用时" checkCN "Practice Time:", eventPlayer.timer_practice) if eventPlayer.toggle_practice else [],
-        "{} {} sec" LeftAlign96.format("用时" checkCN "Time:", eventPlayer.timer_normal),
+        "{0} {1} sec".format(t"Practice Time:", eventPlayer.timer_practice) if eventPlayer.toggle_practice else [],
+        #"{0} {1} sec".format("练习用时" checkCN "Practice Time:", eventPlayer.timer_practice) if eventPlayer.toggle_practice else [],
+        "{0} {1} sec" LeftAlign96.format(t"Time:", eventPlayer.timer_normal),
+        #"{0} {1} sec" LeftAlign96.format("用时" checkCN "Time:", eventPlayer.timer_normal),
         HudPosition.LEFT, HO.game_timer, null, Color.GRAY, ColorConfig[Customize.time], HudReeval.STRING, SpecVisibility.DEFAULT)
 
     hudText(
@@ -314,34 +320,38 @@ rule "Huds | Each Player":
 
     # climb/bhop indicators
     hudText(eventPlayer,
-        #"爬墙已用{0}".format([] if eventPlayer.skill_countMulti < 1 else " ({0})".format(eventPlayer.skill_countMulti))
-        "{1}{0}".format(" ({0})".format(eventPlayer.skill_countMulti) if eventPlayer.skill_countMulti else [],
-            "爬墙已用" if eventPlayer.skill_usedClimb else "爬墙未用") # cn version text updates to say the status, unlike en
-        checkCN
-        "Climb{0}".format(" ({0})".format(eventPlayer.skill_countMulti) if eventPlayer.skill_countMulti else []),
+        "{0}{1}".format(t"Climb"," ({0})".format(eventPlayer.skill_countMulti) if eventPlayer.skill_countMulti else []),
+        ##"爬墙已用{0}".format([] if eventPlayer.skill_countMulti < 1 else " ({0})".format(eventPlayer.skill_countMulti))
+        #"{1}{0}".format(" ({0})".format(eventPlayer.skill_countMulti) if eventPlayer.skill_countMulti else [],
+        #    "爬墙已用" if eventPlayer.skill_usedClimb else "爬墙未用") # cn version text updates to say the status, unlike en
+        #checkCN
+        #"Climb{0}".format(" ({0})".format(eventPlayer.skill_countMulti) if eventPlayer.skill_countMulti else []),
         null, LeftAlign128, HudPosition.LEFT, HO.game_climb,
         evalOnce(ColorConfig[Customize.bhopclimb_used]) if eventPlayer.skill_usedClimb else evalOnce(ColorConfig[Customize.bhopclimb_available]),
         null, null, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
     hudText(eventPlayer,
+        "{0}{1}".format(t"bhop"," ({0})".format(eventPlayer.skill_countCreates) if eventPlayer.skill_countCreates else []),
         # cn version text updates to say the status, unlike en version
-        ("{0}{1}".format(
-            "小跳已用" if eventPlayer.skill_usedBhop else "小跳未用",
-            " ({0})".format(eventPlayer.skill_countCreates) if eventPlayer.skill_countCreates else []))
-        checkCN
-        "Bhop{0}".format(" ({0})".format(eventPlayer.skill_countCreates) if eventPlayer.skill_countCreates else []),
+        #("{0}{1}".format(
+        #    "小跳已用" if eventPlayer.skill_usedBhop else "小跳未用",
+        #    " ({0})".format(eventPlayer.skill_countCreates) if eventPlayer.skill_countCreates else []))
+        #checkCN
+        #"Bhop{0}".format(" ({0})".format(eventPlayer.skill_countCreates) if eventPlayer.skill_countCreates else []),
         null, LeftAlign128, HudPosition.LEFT, HO.game_bhop,
         evalOnce(ColorConfig[Customize.bhopclimb_used]) if eventPlayer.skill_usedBhop else evalOnce(ColorConfig[Customize.bhopclimb_available]),
         null, null, HudReeval.STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
     createInWorldText(
-        #eventPlayer if eventPlayer.checkpoint_notLast else null,
         eventPlayer if eventPlayer.checkpoint_notLast and eventPlayer.toggle_guide else null,
-        "{0} {1}".format(
-            iconString(Icon.WARNING),
-            "先收集橙球" checkCN "collect orbs first"
-        ) if eventPlayer.cache_bounceMaxLocks and len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks else
-        "到这里来" checkCN "come here",
+        ft"{iconString(Icon.WARNING)}collect orbs first"
+        if eventPlayer.cache_bounceMaxLocks and len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks else
+        t"come here",
+        #"{0} {1}".format(
+        #    iconString(Icon.WARNING),
+        #    "先收集橙球" checkCN "collect orbs first"
+        #) if eventPlayer.cache_bounceMaxLocks and len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks else
+        #"到这里来" checkCN "come here",
         CheckpointPositions[eventPlayer.checkpoint_current + 1],
         1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING,  ColorConfig[Customize.cometext], SpecVisibility.DEFAULT)
 
@@ -379,8 +389,9 @@ rule "Huds | Addons":
     wait()
     if getAllPlayers().addon_toggle3rdPov <= true:
         hudSubtext(localPlayer.toggle_guide,
-            "长按 {0} + {1} | 第三人称{2}".format(buttonString(Button.CROUCH), buttonString(Button.JUMP)," | 启用" if localPlayer.addon_toggle3rdPov else [])
-            checkCN
-            "Hold {0} + {1} | 3rd Person{2}".format(buttonString(Button.CROUCH), buttonString(Button.JUMP)," | ON" if localPlayer.addon_toggle3rdPov else []),
+            f"{t'Hold'} {buttonString(Button.CROUCH)} + {buttonString(Button.JUMP)} | {t'3rd Person'}{t' | ON' if localPlayer.addon_toggle3rdPov else []}",
+            #"长按 {0} + {1} | 第三人称{2}".format(buttonString(Button.CROUCH), buttonString(Button.JUMP)," | 启用" if localPlayer.addon_toggle3rdPov else [])
+            #checkCN
+            #"Hold {0} + {1} | 3rd Person{2}".format(buttonString(Button.CROUCH), buttonString(Button.JUMP)," | ON" if localPlayer.addon_toggle3rdPov else []),
             HudPosition.RIGHT, HO.com_3rd,evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.addon_toggle3rdPov else evalOnce(ColorConfig[Customize.command_normal]),
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)

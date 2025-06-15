@@ -3,3 +3,71 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: ko\n"
 "X-Generator: OverPy\n"
+
+#. file huds.opy, line 31, rule "Huds | Global Localplayer"
+msgid "Made by"
+msgstr ""
+
+#. file huds.opy, line 39, rule "Huds | Global Localplayer"
+msgid "Map code"
+msgstr ""
+
+#. file huds.opy, line 48, rule "Huds | Global Localplayer"
+msgid "Server Restart in"
+msgstr ""
+
+#. file huds.opy, line 48, rule "Huds | Global Localplayer"
+msgid "Min -"
+msgstr ""
+
+#. file huds.opy, line 48, rule "Huds | Global Localplayer"
+msgid "error: max hud count reached"
+msgstr ""
+
+#. file huds.opy, line 99, rule "Huds | Global Localplayer"
+msgid "Split:"
+msgstr ""
+
+#. file huds.opy, line 233, rule "Huds | Leaderboard"
+msgid "Top 5"
+msgstr ""
+
+#. file huds.opy, line 253, rule "Huds | Leaderboard"
+msgid "Leaderboard"
+msgstr ""
+
+#. file huds.opy, line 265, rule "Huds | Each Player"
+msgid "Practice Time:"
+msgstr ""
+
+#. file huds.opy, line 267, rule "Huds | Each Player"
+msgid "Time:"
+msgstr ""
+
+#. file huds.opy, line 323, rule "Huds | Each Player"
+msgid "Climb"
+msgstr ""
+
+#. file huds.opy, line 334, rule "Huds | Each Player"
+msgid "bhop"
+msgstr ""
+
+#. file huds.opy, line 347, rule "Huds | Each Player"
+msgid "{0}collect orbs first"
+msgstr ""
+
+#. file huds.opy, line 349, rule "Huds | Each Player"
+msgid "come here"
+msgstr ""
+
+#. file huds.opy, line 392, rule "Huds | Addons"
+msgid "Hold"
+msgstr ""
+
+#. file huds.opy, line 392, rule "Huds | Addons"
+msgid "3rd Person"
+msgstr ""
+
+#. file huds.opy, line 392, rule "Huds | Addons"
+msgid "| ON"
+msgstr ""

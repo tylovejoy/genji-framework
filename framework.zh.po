@@ -3,3 +3,71 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: zh\n"
 "X-Generator: OverPy\n"
+
+#. file huds.opy, line 31, rule "Huds | Global Localplayer"
+msgid "Made by"
+msgstr "作者"
+
+#. file huds.opy, line 39, rule "Huds | Global Localplayer"
+msgid "Map code"
+msgstr "代码"
+
+#. file huds.opy, line 48, rule "Huds | Global Localplayer"
+msgid "Server Restart in"
+msgstr "房间将在"
+
+#. file huds.opy, line 48, rule "Huds | Global Localplayer"
+msgid "Min -"
+msgstr "分钟后重启 -"
+
+#. file huds.opy, line 48, rule "Huds | Global Localplayer"
+msgid "error: max hud count reached"
+msgstr "错误: 已达到最大HUD数量上限"
+
+#. file huds.opy, line 99, rule "Huds | Global Localplayer"
+msgid "Split:"
+msgstr "单关用时"
+
+#. file huds.opy, line 233, rule "Huds | Leaderboard"
+msgid "Top 5"
+msgstr "排名前5"
+
+#. file huds.opy, line 253, rule "Huds | Leaderboard"
+msgid "Leaderboard"
+msgstr "成绩排名"
+
+#. file huds.opy, line 265, rule "Huds | Each Player"
+msgid "Practice Time:"
+msgstr "练习用时"
+
+#. file huds.opy, line 267, rule "Huds | Each Player"
+msgid "Time:"
+msgstr "用时"
+
+#. file huds.opy, line 323, rule "Huds | Each Player"
+msgid "Climb"
+msgstr "爬墙"
+
+#. file huds.opy, line 334, rule "Huds | Each Player"
+msgid "bhop"
+msgstr "小跳"
+
+#. file huds.opy, line 347, rule "Huds | Each Player"
+msgid "{0}collect orbs first"
+msgstr "{0}先收集橙球"
+
+#. file huds.opy, line 349, rule "Huds | Each Player"
+msgid "come here"
+msgstr "到这里来"
+
+#. file huds.opy, line 392, rule "Huds | Addons"
+msgid "Hold"
+msgstr "长按"
+
+#. file huds.opy, line 392, rule "Huds | Addons"
+msgid "3rd Person"
+msgstr "第三人称"
+
+#. file huds.opy, line 392, rule "Huds | Addons"
+msgid "| ON"
+msgstr "| 启用"
