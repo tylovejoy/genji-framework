@@ -4,70 +4,160 @@ msgstr ""
 "Language: zh\n"
 "X-Generator: OverPy\n"
 
-#. file huds.opy, line 31, rule "Huds | Global Localplayer"
-msgid "Made by"
+#. file huds.opy, line 29, rule "Huds | Global Localplayer"
+msgid "Made By"
 msgstr "作者"
 
-#. file huds.opy, line 39, rule "Huds | Global Localplayer"
-msgid "Map code"
+#. file huds.opy, line 37, rule "Huds | Global Localplayer"
+msgid "Map Code"
 msgstr "代码"
 
-#. file huds.opy, line 48, rule "Huds | Global Localplayer"
-msgid "Server Restart in"
-msgstr "房间将在"
-
-#. file huds.opy, line 48, rule "Huds | Global Localplayer"
+#. file huds.opy, line 46, rule "Huds | Global Localplayer"
 msgid "Min -"
 msgstr "分钟后重启 -"
 
-#. file huds.opy, line 48, rule "Huds | Global Localplayer"
-msgid "error: max hud count reached"
+#. file huds.opy, line 46, rule "Huds | Global Localplayer"
+msgid "Server Restart In"
+msgstr "房间将在"
+
+#. file huds.opy, line 46, rule "Huds | Global Localplayer"
+msgid "Error: Max HUD Count Reached"
 msgstr "错误: 已达到最大HUD数量上限"
 
-#. file huds.opy, line 99, rule "Huds | Global Localplayer"
-msgid "Split:"
-msgstr "单关用时"
-
-#. file huds.opy, line 233, rule "Huds | Leaderboard"
-msgid "Top 5"
-msgstr "排名前5"
-
-#. file huds.opy, line 253, rule "Huds | Leaderboard"
-msgid "Leaderboard"
-msgstr "成绩排名"
-
-#. file huds.opy, line 265, rule "Huds | Each Player"
-msgid "Practice Time:"
-msgstr "练习用时"
-
-#. file huds.opy, line 267, rule "Huds | Each Player"
-msgid "Time:"
-msgstr "用时"
-
-#. file huds.opy, line 323, rule "Huds | Each Player"
-msgid "Climb"
-msgstr "爬墙"
-
-#. file huds.opy, line 334, rule "Huds | Each Player"
-msgid "bhop"
-msgstr "小跳"
-
-#. file huds.opy, line 347, rule "Huds | Each Player"
-msgid "{0}collect orbs first"
-msgstr "{0}先收集橙球"
-
-#. file huds.opy, line 349, rule "Huds | Each Player"
-msgid "come here"
-msgstr "到这里来"
-
-#. file huds.opy, line 392, rule "Huds | Addons"
+# TODO: check if all occurrences have the same translation
+#. 6 occurrences:
+#.  - file huds.opy, line 58, rule "Huds | Global Localplayer"
+#.  - file huds.opy, line 79, rule "Huds | Global Localplayer"
+#.  - file huds.opy, line 86, rule "Huds | Global Localplayer"
+#.  - file huds.opy, line 159, rule "Huds | Global Localplayer"
+#.  - file huds.opy, line 166, rule "Huds | Global Localplayer"
+#.  - file huds.opy, line 417, rule "Huds | Addons"
+#, hasMultipleOccurrencesNotification
 msgid "Hold"
 msgstr "长按"
 
-#. file huds.opy, line 392, rule "Huds | Addons"
+#. file huds.opy, line 58, rule "Huds | Global Localplayer"
+msgid "Enable"
+msgstr "启用"
+
+#. file huds.opy, line 58, rule "Huds | Global Localplayer"
+msgid "Quick Reset"
+msgstr "快速回点"
+
+#. file huds.opy, line 66, rule "Huds | Global Localplayer"
+msgid "Invincible"
+msgstr "探点模式"
+
+# TODO: check if all occurrences have the same translation
+#. 4 occurrences:
+#.  - file huds.opy, line 66, rule "Huds | Global Localplayer"
+#.  - file huds.opy, line 159, rule "Huds | Global Localplayer"
+#.  - file huds.opy, line 166, rule "Huds | Global Localplayer"
+#.  - file huds.opy, line 417, rule "Huds | Addons"
+#, hasMultipleOccurrencesNotification
+msgid "| On"
+msgstr "| 启用"
+
+#. file huds.opy, line 79, rule "Huds | Global Localplayer"
+msgid "Toggle"
+msgstr "切换显示"
+
+#. file huds.opy, line 86, rule "Huds | Global Localplayer"
+msgid "Preview CP"
+msgstr "预览关卡"
+
+#. file huds.opy, line 95, rule "Huds | Global Localplayer"
+msgid ""
+"Walk ◀ ▶ | Preview Others\n"
+"Walk ▲ ▼ | Modify Zoom\n"
+"Aim | Change Preview Angle"
+msgstr ""
+"移动键 ◀ ▶ | 预览其他\n"
+"移动键 ▲ ▼ | 修改间距 \n"
+"视角移动 | 调整浏览视角"
+
+#. file huds.opy, line 105, rule "Huds | Global Localplayer"
+msgid "Split:"
+msgstr "单关用时"
+
+#. file huds.opy, line 127, rule "Huds | Global Localplayer"
+msgid "― ― ― ― ― Hint ― ― ― ― ―"
+msgstr "― ― ― ― ― 提示 ― ― ― ― ―"
+
+#. file huds.opy, line 128, rule "Huds | Global Localplayer"
+msgid "― ― ― Hint Available ― ― ―"
+msgstr "― ― ― ― 有可用提示 ― ― ―  ―"
+
+#. file huds.opy, line 134, rule "Huds | Global Localplayer"
+msgid "Hide Hint"
+msgstr "隐藏提示"
+
+#. file huds.opy, line 134, rule "Huds | Global Localplayer"
+msgid "Show Hint"
+msgstr "获取提示"
+
+# TODO: check if all occurrences have the same translation
+#. file huds.opy, line 159, rule "Huds | Global Localplayer"
+#, hasMultipleOccurrencesNotification
+msgid "Spectate"
+msgstr "观战模式"
+
+#. file huds.opy, line 166, rule "Huds | Global Localplayer"
+msgid "Invisible"
+msgstr "隐身模式"
+
+#. file huds.opy, line 175, rule "Huds | Global Localplayer"
+msgid "Practice"
+msgstr "练习模式"
+
+#. file huds.opy, line 184, rule "Huds | Global Localplayer"
+msgid "Next Level"
+msgstr "下一关"
+
+#. file huds.opy, line 185, rule "Huds | Global Localplayer"
+msgid "Previous Level"
+msgstr "上一关"
+
+#. file huds.opy, line 186, rule "Huds | Global Localplayer"
+msgid "Restart Practice"
+msgstr "回到练习模式起点"
+
+#. file huds.opy, line 209, rule "Huds | Global Localplayer"
+msgid "Playtest"
+msgstr "游戏测试"
+
+#. file huds.opy, line 252, rule "Huds | Leaderboard"
+msgid "Top 5"
+msgstr "排名前5"
+
+#. file huds.opy, line 277, rule "Huds | Leaderboard"
+msgid "Leaderboard"
+msgstr "成绩排名"
+
+#. file huds.opy, line 289, rule "Huds | Each Player"
+msgid "Practice Time:"
+msgstr "练习用时"
+
+#. file huds.opy, line 291, rule "Huds | Each Player"
+msgid "Time:"
+msgstr "用时"
+
+#. file huds.opy, line 348, rule "Huds | Each Player"
+msgid "Climb"
+msgstr "爬墙"
+
+#. file huds.opy, line 359, rule "Huds | Each Player"
+msgid "Bhop"
+msgstr "小跳"
+
+#. file huds.opy, line 372, rule "Huds | Each Player"
+msgid "Collect Orbs First"
+msgstr "先收集橙球"
+
+#. file huds.opy, line 374, rule "Huds | Each Player"
+msgid "Come Here"
+msgstr "到这里来"
+
+#. file huds.opy, line 417, rule "Huds | Addons"
 msgid "3rd Person"
 msgstr "第三人称"
-
-#. file huds.opy, line 392, rule "Huds | Addons"
-msgid "| ON"
-msgstr "| 启用"
