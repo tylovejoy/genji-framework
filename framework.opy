@@ -8,7 +8,7 @@
 #♨ Dev Build Icon
 ###############################################################################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
-editortoggle(1) # 0 is editor, rest is numbers
+editortoggle(0) # 0 is editor, rest is numbers
 ###############################################################################
 #!define importHero(Hero) __script__('mechanics/fwHero.js')
 ###############################################################################
