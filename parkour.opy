@@ -135,13 +135,13 @@ rule "Parkour | Player Initialize":
     eventPlayer.setDamageReceived(0)
     eventPlayer.lockState = true
     if eventPlayer.isDummy(): return
-
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
     eventPlayer.disableRespawn()
     eventPlayer.preloadHero(Hero.GENJI)
     eventPlayer.editor_lock = true
     eventPlayer.toggle_guide = true
+    #eventPlayer.toggle_quickRestart = true
     eventPlayer.cache_bounceTouched = -1
     wait(1) #big waits first for about 1 second before loading, to make sure things like comp mode are fully loaded and configured, load fx in meanwhile
     createEffect(eventPlayer, Effect.RING, ColorConfig[Customize.ring_current], CheckpointPositions[eventPlayer.checkpoint_current].last(), cpCirkleFx, EffectReeval.POSITION_AND_RADIUS)
