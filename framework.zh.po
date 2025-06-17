@@ -4,6 +4,41 @@ msgstr ""
 "Language: zh\n"
 "X-Generator: OverPy\n"
 
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file commands.opy, line 36, rule "Command | Toggle Invisible (Hold Deflect)"
+#.  - file huds.opy, line 166, rule "Huds | Global Localplayer"
+#, hasMultipleOccurrencesNotification
+msgid "Invisible"
+msgstr "隐身模式"
+
+# TODO: check if all occurrences have the same translation
+#. 5 occurrences:
+#.  - file commands.opy, line 36, rule "Command | Toggle Invisible (Hold Deflect)"
+#.  - file huds.opy, line 66, rule "Huds | Global Localplayer"
+#.  - file huds.opy, line 159, rule "Huds | Global Localplayer"
+#.  - file huds.opy, line 166, rule "Huds | Global Localplayer"
+#.  - file huds.opy, line 418, rule "Huds | Addons"
+#, hasMultipleOccurrencesNotification
+msgid "| On"
+msgstr "| 启用"
+
+#. file commands.opy, line 36, rule "Command | Toggle Invisible (Hold Deflect)"
+msgid "| Off"
+msgstr "| 关闭"
+
+#. file commands.opy, line 169, rule "Command | Spectate (Hold Interact)"
+msgid "Hold Interact Again To Turn Off Spectate Mode"
+msgstr "再次长按互动键关闭观战模式"
+
+#. file commands.opy, line 330, rule "Command | Toggle Hud (Hold Secondary)"
+msgid "HUD Is Now Hidden"
+msgstr "HUD已隐藏"
+
+#. file commands.opy, line 330, rule "Command | Toggle Hud (Hold Secondary)"
+msgid "HUD Is Now Shown"
+msgstr "HUD已开启"
+
 #. file huds.opy, line 29, rule "Huds | Global Localplayer"
 msgid "Made By"
 msgstr "作者"
@@ -25,13 +60,14 @@ msgid "Error: Max HUD Count Reached"
 msgstr "错误: 已达到最大HUD数量上限"
 
 # TODO: check if all occurrences have the same translation
-#. 6 occurrences:
+#. 7 occurrences:
 #.  - file huds.opy, line 58, rule "Huds | Global Localplayer"
 #.  - file huds.opy, line 79, rule "Huds | Global Localplayer"
 #.  - file huds.opy, line 86, rule "Huds | Global Localplayer"
 #.  - file huds.opy, line 159, rule "Huds | Global Localplayer"
 #.  - file huds.opy, line 166, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 417, rule "Huds | Addons"
+#.  - file huds.opy, line 226, rule "Huds | Global Localplayer"
+#.  - file huds.opy, line 418, rule "Huds | Addons"
 #, hasMultipleOccurrencesNotification
 msgid "Hold"
 msgstr "长按"
@@ -47,16 +83,6 @@ msgstr "快速回点"
 #. file huds.opy, line 66, rule "Huds | Global Localplayer"
 msgid "Invincible"
 msgstr "探点模式"
-
-# TODO: check if all occurrences have the same translation
-#. 4 occurrences:
-#.  - file huds.opy, line 66, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 159, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 166, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 417, rule "Huds | Addons"
-#, hasMultipleOccurrencesNotification
-msgid "| On"
-msgstr "| 启用"
 
 #. file huds.opy, line 79, rule "Huds | Global Localplayer"
 msgid "Toggle"
@@ -102,10 +128,6 @@ msgstr "获取提示"
 msgid "Spectate"
 msgstr "观战模式"
 
-#. file huds.opy, line 166, rule "Huds | Global Localplayer"
-msgid "Invisible"
-msgstr "隐身模式"
-
 #. file huds.opy, line 175, rule "Huds | Global Localplayer"
 msgid "Practice"
 msgstr "练习模式"
@@ -126,38 +148,54 @@ msgstr "回到练习模式起点"
 msgid "Playtest"
 msgstr "游戏测试"
 
-#. file huds.opy, line 252, rule "Huds | Leaderboard"
-msgid "Top 5"
-msgstr "排名前5"
+#. file huds.opy, line 225, rule "Huds | Global Localplayer"
+msgid "Restart"
+msgstr "重新开始"
 
-#. file huds.opy, line 277, rule "Huds | Leaderboard"
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file huds.opy, line 226, rule "Huds | Global Localplayer"
+#.  - file huds.opy, line 279, rule "Huds | Leaderboard"
+#, hasMultipleOccurrencesNotification
 msgid "Leaderboard"
 msgstr "成绩排名"
 
-#. file huds.opy, line 289, rule "Huds | Each Player"
+#. file huds.opy, line 254, rule "Huds | Leaderboard"
+msgid "Top 5"
+msgstr "排名前5"
+
+#. file huds.opy, line 291, rule "Huds | Each Player"
 msgid "Practice Time:"
 msgstr "练习用时"
 
-#. file huds.opy, line 291, rule "Huds | Each Player"
+#. file huds.opy, line 293, rule "Huds | Each Player"
 msgid "Time:"
 msgstr "用时"
 
-#. file huds.opy, line 348, rule "Huds | Each Player"
+#. file huds.opy, line 324, rule "Huds | Each Player"
+msgid "Level"
+msgstr "关卡"
+
+#. file huds.opy, line 327, rule "Huds | Each Player"
+msgid "Orbs"
+msgstr "球"
+
+#. file huds.opy, line 349, rule "Huds | Each Player"
 msgid "Climb"
 msgstr "爬墙"
 
-#. file huds.opy, line 359, rule "Huds | Each Player"
+#. file huds.opy, line 360, rule "Huds | Each Player"
 msgid "Bhop"
 msgstr "小跳"
 
-#. file huds.opy, line 372, rule "Huds | Each Player"
+#. file huds.opy, line 373, rule "Huds | Each Player"
 msgid "Collect Orbs First"
 msgstr "先收集橙球"
 
-#. file huds.opy, line 374, rule "Huds | Each Player"
+#. file huds.opy, line 375, rule "Huds | Each Player"
 msgid "Come Here"
 msgstr "到这里来"
 
-#. file huds.opy, line 417, rule "Huds | Addons"
+#. file huds.opy, line 418, rule "Huds | Addons"
 msgid "3rd Person"
 msgstr "第三人称"

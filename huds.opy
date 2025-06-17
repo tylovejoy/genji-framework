@@ -222,9 +222,11 @@ rule "Huds | Global Localplayer":
     # restart + leaderboard
     # this is remade in editor to not include leaderboard
     hudSubtext(localPlayer.toggle_guide,
-        "{0} + {1} + {2} | 重新开始\n长按 {3} | 完整成绩排名".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE))
-        checkCN
-        "{0} + {1} + {2} | Restart\nHold {3} | leaderboard".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)),
+        f"{buttonString(Button.CROUCH)} + {buttonString(Button.ABILITY_2)} + {buttonString(Button.INTERACT)} | {t'Restart'}\n{
+        t'Hold'} {buttonString(Button.MELEE)} | {t'Leaderboard'}",
+        #"{0} + {1} + {2} | 重新开始\n长按 {3} | 完整成绩排名".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE))
+        #checkCN
+        #"{0} + {1} + {2} | Restart\nHold {3} | leaderboard".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)),
         HudPosition.RIGHT, HO.com_restart_n_board, ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     HudStoreEdit.append(getLastCreatedText())
     #else:
@@ -292,9 +294,8 @@ rule "Huds | Each Player":
         #"{0} {1} sec" LeftAlign96.format("用时" checkCN "Time:", eventPlayer.timer_normal),
         HudPosition.LEFT, HO.game_timer, null, Color.GRAY, ColorConfig[Customize.time], HudReeval.STRING, SpecVisibility.DEFAULT)
 
-    hudText(
-        null if eventPlayer.toggle_leaderboard else eventPlayer,
-        #Preview
+    hudText(null if eventPlayer.toggle_leaderboard else eventPlayer,
+        #Header: Preview
         " {0} ({1}/{2})\n―――――――――――\n {3}\n".format(
             ((("弹球" if eventPlayer.preview_i <= len(eventPlayer.cache_bouncePosition) else "自定义传送门") if eventPlayer.preview_i else "检查点")
             checkCN
@@ -316,21 +317,21 @@ rule "Huds | Each Player":
             if eventPlayer.preview_array2[eventPlayer.preview_i].last() else
             "portal {} start ".format(eventPlayer.preview_array2[eventPlayer.preview_i]))
             if eventPlayer.preview_i else eventPlayer.banString)
-        ) if eventPlayer.preview_array1 else [],
-        #Level
-        [] if eventPlayer.preview_array1 else "{}{} {} / {}".format(
-            "{}\n".format(eventPlayer.banString) if eventPlayer.toggle_guide and strLen(eventPlayer.banString) else [],
-            "关卡" checkCN "Level",
-            eventPlayer.checkpoint_current,
-            len(CheckpointPositions) - 1),
-        #Lock Orbs
-        "{0}{1} {2} / {3}".format(
-            ColorConfig[Customize.orb_lock],
-            "球" checkCN " orbs",
-            len(eventPlayer.cache_collectedLocks),
-            eventPlayer.cache_bounceMaxLocks
-            #"收集球" checkCN "{0} orbs".format(ColorConfig[Customize.orb_lock])
-        ) if eventPlayer.cache_bounceMaxLocks and not eventPlayer.preview_array1 else [],
+            ) if eventPlayer.preview_array1 else [],
+        #SubHeader: Level
+        [] if eventPlayer.preview_array1 else "{0}{1} {2} / {3}".format(
+            f"{eventPlayer.banString}\n" if eventPlayer.toggle_guide and eventPlayer.banString else [],
+            t"Level", eventPlayer.checkpoint_current, len(CheckpointPositions) - 1),
+            #"关卡" checkCN "Level",
+        #Text: Lock Orbs
+        f"{ColorConfig[Customize.orb_lock]} {t'Orbs'} {len(eventPlayer.cache_collectedLocks)} / {eventPlayer.cache_bounceMaxLocks}"
+        #"{0}{1} {2} / {3}".format(
+        #    ColorConfig[Customize.orb_lock],
+        #    "球" checkCN " orbs",
+        #    len(eventPlayer.cache_collectedLocks),
+        #    eventPlayer.cache_bounceMaxLocks
+        #    "收集球" checkCN "{0} orbs".format(ColorConfig[Customize.orb_lock]))
+        if eventPlayer.cache_bounceMaxLocks and not eventPlayer.preview_array1 else [],
         HudPosition.TOP, HO.game_level_orb, ColorConfig[Customize.level], ColorConfig[Customize.level], ColorConfig[Customize.orb_lock],
         HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 

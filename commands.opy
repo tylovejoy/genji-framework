@@ -9,7 +9,6 @@ rule "Command | Toggle Leaderboard (Hold Melee)":
     @Condition eventPlayer.editor_on == false
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     wait(1, Wait.ABORT_WHEN_FALSE)
-
     eventPlayer.toggle_leaderboard = not eventPlayer.toggle_leaderboard
 
 rule "Command | Split hide (Hold Dash + Primary + Secondary)":
@@ -18,10 +17,9 @@ rule "Command | Split hide (Hold Dash + Primary + Secondary)":
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     wait(1, Wait.ABORT_WHEN_FALSE)
-
-    #smallMessage(eventPlayer, "   split display off" if eventPlayer.timer_splitDisplay != -Math.INFINITY else "   split display on")
     eventPlayer.timer_splitDisplay = 0 if eventPlayer.timer_splitDisplay <= -Math.INFINITY else -Math.INFINITY
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
+    #$$ Language
     smallMessage(eventPlayer, "   split display off" if eventPlayer.timer_splitDisplay <= -Math.INFINITY else "   split display on")
     wait(0.32)
 
@@ -31,13 +29,12 @@ rule "Command | Toggle Invisible (Hold Deflect)":
     @Condition eventPlayer.editor_on == false
     @Condition CompMode == false
     wait(1, Wait.ABORT_WHEN_FALSE)
-
     eventPlayer.toggle_invisible = not eventPlayer.toggle_invisible
     eventPlayer.setInvisibility(INVIS)
     if eventPlayer.toggle_invisible:
         eventPlayer.setInvisibility(Invis.ALL)
-
-    smallMessage(eventPlayer, "   {1} {0}".format("on" if eventPlayer.toggle_invisible else "off","隐身模式" checkCN "Invisible"))
+    smallMessage(eventPlayer, f"  {t'Invisible'}{t' | On' if eventPlayer.toggle_invisible else t' | Off'}")
+        #"   {0} {1}".format("隐身模式" checkCN "Invisible", "On" if eventPlayer.toggle_invisible else "Off"))
     playEffect(eventPlayer, DynamicEffect.DEBUFF_IMPACT_SOUND, null, eventPlayer, 100)
 
 /*
@@ -169,7 +166,8 @@ rule "Command | Spectate (Hold Interact)":
             TimerResume()
         CheckpointFailReset()
     else:
-        smallMessage(eventPlayer, "   再次长按互动键关闭观战模式" checkCN "   Hold Interact again to turn off spectate mode")
+        smallMessage(eventPlayer, t"   Hold Interact Again To Turn Off Spectate Mode")
+            #"   再次长按互动键关闭观战模式" checkCN "   Hold Interact again to turn off spectate mode")
         eventPlayer.toggle_invincible = false
         TimerPause()
         stopChasingVariable(eventPlayer.timer_practice)
@@ -329,10 +327,10 @@ rule "Command | Toggle Hud (Hold Secondary)":
     wait(1.5, Wait.ABORT_WHEN_FALSE)
     eventPlayer.toggle_guide = not eventPlayer.toggle_guide
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
-    smallMessage(eventPlayer,
-        ("   HUD已隐藏" if eventPlayer.toggle_guide else  "   HUD已开启")
-        checkCN
-        ("   Hud is now hidden" if eventPlayer.toggle_guide else "   Hud is now shown"))
+    smallMessage(eventPlayer, t"   HUD Is Now Hidden" if eventPlayer.toggle_guide else t"   HUD Is Now Shown")
+        #("   HUD已隐藏" if eventPlayer.toggle_guide else  "   HUD已开启")
+        #checkCN
+        #("   Hud is now hidden" if eventPlayer.toggle_guide else "   Hud is now shown"))
 
 rule "Command | Toggle Hints (Melee + Deflect)":
     @Event eachPlayer
