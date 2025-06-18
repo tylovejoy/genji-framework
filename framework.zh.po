@@ -59,11 +59,39 @@ msgstr "| 关闭"
 msgid "Hold Interact Again To Turn Off Spectate Mode"
 msgstr "再次长按互动键关闭观战模式"
 
-#. file commands.opy, line 330, rule "Command | Toggle Hud (Hold Secondary)"
+#. file commands.opy, line 195, rule "Command | Toggle Invincible Mode (Melee + Reload)"
+msgid "Invincible Mode"
+msgstr "探点模式"
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file commands.opy, line 203, rule "Command | Toggle Invincible Mode (Melee + Reload)"
+#.  - file commands.opy, line 228, rule "Command | Toggle Practice Mode (Melee + Ultimate)"
+#, hasMultipleOccurrencesNotification
+msgid "Practice Mode"
+msgstr "练习模式"
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file commands.opy, line 208, rule "Command | Toggle Invincible Mode (Melee + Reload)"
+#.  - file commands.opy, line 240, rule "Command | Toggle Practice Mode (Melee + Ultimate)"
+#, hasMultipleOccurrencesNotification
+msgid "Normal Mode"
+msgstr "跑图模式"
+
+#. file commands.opy, line 320, rule "Command | Quick Reset (Reload | Hold Reload to Enable)"
+msgid "Quick Reset Is Enabled"
+msgstr "快速回点已启用"
+
+#. file commands.opy, line 320, rule "Command | Quick Reset (Reload | Hold Reload to Enable)"
+msgid "Quick Reset Is Disabled"
+msgstr "快速回点已关闭"
+
+#. file commands.opy, line 333, rule "Command | Toggle Hud (Hold Secondary)"
 msgid "HUD Is Now Hidden"
 msgstr "HUD已隐藏"
 
-#. file commands.opy, line 330, rule "Command | Toggle Hud (Hold Secondary)"
+#. file commands.opy, line 333, rule "Command | Toggle Hud (Hold Secondary)"
 msgid "HUD Is Now Shown"
 msgstr "HUD已开启"
 
@@ -228,6 +256,10 @@ msgstr "到这里来"
 msgid "3rd Person"
 msgstr "第三人称"
 
+#. file parkour.opy, line 123, rule "Parkour | Match time"
+msgid "Maximum Lobby Time Reached, Restarting"
+msgstr "房间已达最大持续时间, 即将重启"
+
 #. file parkour.opy, line 215, rule "Parkour | Ground: Traces, Arrive, & Reset"
 msgid "! Collect All Lock Orbs To Complete !"
 msgstr "! 进点前需集齐所有收集球 !"
@@ -248,17 +280,21 @@ msgstr "≥ 留小跳进点!"
 msgid "» Must Have A Double Jump To Complete!"
 msgstr "» 留二段跳!"
 
-#. file parkour.opy, line 301, rule "Parkour | Bounce Ball / Orb"
+#. file parkour.opy, line 255, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "Mission Complete! Time"
+msgstr "已通关! 用时"
+
+#. file parkour.opy, line 302, rule "Parkour | Bounce Ball / Orb"
 msgid "Collected Orb"
 msgstr "弹球已收集"
 
-#. file parkour.opy, line 309, rule "Parkour | Bounce Ball / Orb"
-msgid "Double Jump Is Ready"
-msgstr "二段跳已就绪"
+#. file parkour.opy, line 310, rule "Parkour | Bounce Ball / Orb"
+msgid "» Double Jump Is Ready"
+msgstr "» 二段跳已就绪"
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file parkour.opy, line 315, rule "Parkour | Bounce Ball / Orb"
+#.  - file parkour.opy, line 316, rule "Parkour | Bounce Ball / Orb"
 #.  - file GENJI.opy, line 26, rule "Subroutine CheckUlt"
 #, hasMultipleOccurrencesNotification
 msgid "Ultimate Is Ready"
@@ -266,7 +302,7 @@ msgstr "终极技能已就绪"
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file parkour.opy, line 323, rule "Parkour | Bounce Ball / Orb"
+#.  - file parkour.opy, line 324, rule "Parkour | Bounce Ball / Orb"
 #.  - file GENJI.opy, line 44, rule "Subroutine CheckAbility1"
 #, hasMultipleOccurrencesNotification
 msgid "Dash Is Ready"

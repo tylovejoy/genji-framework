@@ -111,7 +111,7 @@ rule "Parkour | Match time":
         if CompMode:
             CompTime--
             if not CompTime:
-                bigMessage(true[0],"时间到了" checkCN "time's up")
+                bigMessage(true[0], "时间到了" checkCN "Time's Up")
                 getAllPlayers().comp_done = true
                 stopChasingVariable(getAllPlayers().timer_normal)
                 #getAllPlayers().disableRespawn()
@@ -119,8 +119,8 @@ rule "Parkour | Match time":
                 kill(getAllPlayers(), null)
                 #wait(0.032)
                 #LeaderBoardRemake = true #async(CreateLeaderboard(), AsyncBehavior.RESTART)
-
-    bigMessage(true[0], "房间已达最大持续时间, 即将重启" checkCN "maximum lobby time elapsed, restarting")
+    #"房间已达最大持续时间, 即将重启" checkCN "Maximum Lobby Time Reached, Restarting"
+    bigMessage(true[0], t"Maximum Lobby Time Reached, Restarting")
     wait(5)
     #Prevent crash during POTG and closing lobby
     getAllPlayers().lockState = true
@@ -251,7 +251,8 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
                             eventPlayer.setDamageReceived(0)
                         else:
                             CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts + 1
-                    bigMessage(true[0], "{0} {1} {2} sec".format(eventPlayer, "已通关! 用时" checkCN "Mission complete! Time", eventPlayer.timer_normal))
+                    #"已通关! 用时" checkCN "Mission Complete! Time"
+                    bigMessage(true[0], f"{eventPlayer} {t'Mission Complete! Time'} {eventPlayer.timer_normal} Sec")
                     wait()
                 else: # update save
                     MakeSave()
@@ -264,8 +265,8 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             wait()
             # msg disabled due to annoying new sound
             #bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.checkpoint_current, "抵达检查点" checkCN "Arrived at level"))
-            playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
-            playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, CheckpointPositions[eventPlayer.checkpoint_current] + 1.5 * Vector.UP, 4)
+            playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, null, eventPlayer, 100)
+            playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, eventPlayer.getPosition(), 4)
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpcircleradius:
         CheckpointFailReset()
 
@@ -305,8 +306,8 @@ rule "Parkour | Bounce Ball / Orb":
         elif BounceStrength[eventPlayer.cache_bounceTouched] < 0:
             eventPlayer.cancelPrimaryAction()
             eventPlayer.skill_usedDouble = null
-            #"   二段跳已就绪" checkCN "   Double Jump is ready"
-            smallMessage(eventPlayer, t"   Double Jump Is Ready")
+            #"   二段跳已就绪" checkCN "   » Double Jump is ready"
+            smallMessage(eventPlayer, t"   » Double Jump Is Ready")
 
         if BounceToggleUlt[eventPlayer.cache_bounceTouched]:
             eventPlayer.setUltEnabled(true)
@@ -322,7 +323,7 @@ rule "Parkour | Bounce Ball / Orb":
             #"技能1影已就绪" checkCN "Dash is ready"
             smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ABILITY_1)} {t'Dash Is Ready'}")
 
-        playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
+        playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, null, eventPlayer, 75)
     wait(0.24)
     if RULE_CONDITION: goto RULE_START
     eventPlayer.cache_bounceTouched = -1

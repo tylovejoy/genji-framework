@@ -18,7 +18,7 @@ rule "Command | Split hide (Hold Dash + Primary + Secondary)":
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.timer_splitDisplay = 0 if eventPlayer.timer_splitDisplay <= -Math.INFINITY else -Math.INFINITY
-    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
+    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
     #$$ Language
     smallMessage(eventPlayer, "   split display off" if eventPlayer.timer_splitDisplay <= -Math.INFINITY else "   split display on")
     wait(0.32)
@@ -137,7 +137,7 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
     if eventPlayer.isDead():
         eventPlayer.resurrect() #eventPlayer.respawn()
     StartGame()
-    playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 100)
+    playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, null, eventPlayer, 100)
     wait(CompMode)
     #eventPlayer.allowButton(Button.ABILITY_1)
     eventPlayer.lockState = false
@@ -191,18 +191,21 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
     eventPlayer.cache_collectedLocks = []
 
     if eventPlayer.toggle_invincible:
-        bigMessage(eventPlayer,"探点模式" checkCN "Invincible mode")
+        #"探点模式" checkCN "Invincible mode"
+        bigMessage(eventPlayer, t"Invincible Mode")
         TimerPause()
         stopChasingVariable(eventPlayer.timer_practice)
         async(CheckUlt(), AsyncBehavior.RESTART)
         async(CheckAbility1(), AsyncBehavior.RESTART)
     else:
         if eventPlayer.toggle_practice:
-            bigMessage(eventPlayer, "练习模式" checkCN "Practice mode")
+            #"练习模式" checkCN "Practice mode"
+            bigMessage(eventPlayer, t"Practice Mode")
             chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)
             CheckpointFailReset()
         elif eventPlayer.checkpoint_notLast:
-            bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
+            #"跑图模式" checkCN "Normal mode"
+            bigMessage(eventPlayer, t"Normal Mode")
             TimerResume()
             CheckpointFailReset()
     eventPlayer.lockState = false
@@ -221,7 +224,8 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
     eventPlayer.lockState = true
     eventPlayer.toggle_practice = not eventPlayer.toggle_practice
     if eventPlayer.toggle_practice:
-        bigMessage(eventPlayer,"练习模式" checkCN "Practice mode")
+        #"练习模式" checkCN "Practice mode"
+        bigMessage(eventPlayer, t"Practice Mode")
         TimerPause()
         eventPlayer.checkpoint_practice = eventPlayer.checkpoint_current
         eventPlayer.timer_splitDisplay = -Math.INFINITY * (eventPlayer.timer_splitDisplay <= -Math.INFINITY)
@@ -232,7 +236,8 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
             eventPlayer.toggle_invincible = false
             CheckpointFailReset()
     else:
-        bigMessage(eventPlayer,"跑图模式" checkCN "Normal mode")
+        #"跑图模式" checkCN "Normal mode"
+        bigMessage(eventPlayer, t"Normal Mode")
         stopChasingVariable(eventPlayer.timer_practice)
         eventPlayer.checkpoint_current = eventPlayer.checkpoint_practice
         UpdateCache()
@@ -309,12 +314,10 @@ rule "Command | Quick Reset (Reload | Hold Reload to Enable)":
         wait(0.32)
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.toggle_quickRestart = not eventPlayer.toggle_quickRestart
-    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
-    bigMessage(eventPlayer,
-        ("快速回点已启用" if eventPlayer.toggle_quickRestart else "快速回点已关闭")
-        checkCN
-        "Quick reset is enabled" if eventPlayer.toggle_quickRestart else "Quick reset is disabled"
-    )
+    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
+    #("快速回点已启用" if eventPlayer.toggle_quickRestart else "快速回点已关闭") checkCN
+    #"Quick reset is enabled" if eventPlayer.toggle_quickRestart else "Quick reset is disabled"
+    bigMessage(eventPlayer, t"Quick Reset Is Enabled" if eventPlayer.toggle_quickRestart else t"Quick Reset Is Disabled")
 
 rule "Command | Toggle Hud (Hold Secondary)":
     @Event eachPlayer
@@ -326,7 +329,7 @@ rule "Command | Toggle Hud (Hold Secondary)":
 
     wait(1.5, Wait.ABORT_WHEN_FALSE)
     eventPlayer.toggle_guide = not eventPlayer.toggle_guide
-    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, Color.WHITE, eventPlayer, 100)
+    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
     smallMessage(eventPlayer, t"   HUD Is Now Hidden" if eventPlayer.toggle_guide else t"   HUD Is Now Shown")
         #("   HUD已隐藏" if eventPlayer.toggle_guide else  "   HUD已开启")
         #checkCN
