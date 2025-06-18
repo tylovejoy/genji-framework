@@ -22,7 +22,8 @@ def CheckUlt(): # checks if ult should be turned on
     if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and eventPlayer.editor_on) or (not eventPlayer.checkpoint_notLast):
         goto lbl_a #skip msg if these
     elif eventPlayer.checkpoint_current in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last() ) <= cpcircleradius: 
-        smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"终极技能已就绪" checkCN "Ultimate is ready")) 
+        #"终极技能已就绪" checkCN "Ultimate is ready"
+        smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
         lbl_a:
         wait()        
         eventPlayer.setUltEnabled(true)
@@ -39,7 +40,8 @@ def CheckAbility1(): # checks if dash should be  turned on
     if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and eventPlayer.editor_on) or (not eventPlayer.checkpoint_notLast):
         goto lbl_a #skip msg if these
     elif eventPlayer.checkpoint_current in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= cpcircleradius: 
-        smallMessage(eventPlayer, "   {0} {1}".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready")) 
+        #"技能1影已就绪" checkCN "Dash is ready"
+        smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ABILITY_1)} {t'Dash Is Ready'}")
         lbl_a:
         eventPlayer.setAbility1Enabled(true)
     else:
@@ -101,5 +103,6 @@ rule "Mechanic | Genji | Ban Save Double - 封禁二段跳":
         wait(0.8, Wait.ABORT_WHEN_FALSE)
         #This can give a false negative, but advantage is small
         if eventPlayer.skill_usedBhop: return
-    smallMessage(eventPlayer, "   延二段跳已禁用!" checkCN "  save double banned!")
+    #"   延二段跳已禁用!" checkCN "   save double banned!"
+    smallMessage(eventPlayer, t"   Save Double Banned!")
     CheckpointFailReset()

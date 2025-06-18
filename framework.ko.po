@@ -6,6 +6,34 @@ msgstr ""
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
+#.  - file all.opy, line 14, rule "Mechanic | All | Jump"
+#.  - file huds.opy, line 361, rule "Huds | Each Player"
+#, hasMultipleOccurrencesNotification
+msgid "Bhop"
+msgstr ""
+
+#. file all.opy, line 41, rule "Mechanic | All | Emote"
+msgid "Emote Savehop ♥ Is Banned!"
+msgstr ""
+
+#. file climbers.opy, line 20, rule "Mechanic | Climbers | Bhop count for stand ban"
+msgid "Stand Createbhop ♠ Is Banned!"
+msgstr ""
+
+#. file climbers.opy, line 36, rule "Mechanic | Climbers | Create Bhop"
+msgid "Create Bhop ♂ Is Banned!"
+msgstr ""
+
+#. file climbers.opy, line 43, rule "Mechanic | Climbers | Create Bhop"
+msgid "Bhop Created!"
+msgstr ""
+
+#. file climbers.opy, line 57, rule "Mechanic | Climbers | Multiclimb"
+msgid "Multiclimb ∞ Is Banned!"
+msgstr ""
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
 #.  - file commands.opy, line 36, rule "Command | Toggle Invisible (Hold Deflect)"
 #.  - file huds.opy, line 166, rule "Huds | Global Localplayer"
 #, hasMultipleOccurrencesNotification
@@ -18,7 +46,7 @@ msgstr ""
 #.  - file huds.opy, line 66, rule "Huds | Global Localplayer"
 #.  - file huds.opy, line 159, rule "Huds | Global Localplayer"
 #.  - file huds.opy, line 166, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 418, rule "Huds | Addons"
+#.  - file huds.opy, line 419, rule "Huds | Addons"
 #, hasMultipleOccurrencesNotification
 msgid "| On"
 msgstr ""
@@ -37,6 +65,10 @@ msgstr ""
 
 #. file commands.opy, line 330, rule "Command | Toggle Hud (Hold Secondary)"
 msgid "HUD Is Now Shown"
+msgstr ""
+
+#. file GENJI.opy, line 107, rule "Mechanic | Genji | Ban Save Double - 封禁二段跳"
+msgid "Save Double Banned!"
 msgstr ""
 
 #. file huds.opy, line 29, rule "Huds | Global Localplayer"
@@ -67,7 +99,7 @@ msgstr ""
 #.  - file huds.opy, line 159, rule "Huds | Global Localplayer"
 #.  - file huds.opy, line 166, rule "Huds | Global Localplayer"
 #.  - file huds.opy, line 226, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 418, rule "Huds | Addons"
+#.  - file huds.opy, line 419, rule "Huds | Addons"
 #, hasMultipleOccurrencesNotification
 msgid "Hold"
 msgstr ""
@@ -174,25 +206,65 @@ msgid "Level"
 msgstr ""
 
 #. file huds.opy, line 327, rule "Huds | Each Player"
-msgid "Orbs"
+msgid "{0} Orbs"
 msgstr ""
 
-#. file huds.opy, line 349, rule "Huds | Each Player"
+#. file huds.opy, line 350, rule "Huds | Each Player"
 msgid "Climb"
 msgstr ""
 
-#. file huds.opy, line 360, rule "Huds | Each Player"
-msgid "Bhop"
-msgstr ""
-
-#. file huds.opy, line 373, rule "Huds | Each Player"
+#. file huds.opy, line 374, rule "Huds | Each Player"
 msgid "Collect Orbs First"
 msgstr ""
 
-#. file huds.opy, line 375, rule "Huds | Each Player"
+#. file huds.opy, line 376, rule "Huds | Each Player"
 msgid "Come Here"
 msgstr ""
 
-#. file huds.opy, line 418, rule "Huds | Addons"
+#. file huds.opy, line 419, rule "Huds | Addons"
 msgid "3rd Person"
+msgstr ""
+
+#. file parkour.opy, line 215, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "! Collect All Lock Orbs To Complete !"
+msgstr ""
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file parkour.opy, line 219, rule "Parkour | Ground: Traces, Arrive, & Reset"
+#.  - file climbers.opy, line 70, rule "Mechanic | Climbers | Ban Wallclimb - Message"
+#, hasMultipleOccurrencesNotification
+msgid "Climb ↑ Is Banned!"
+msgstr ""
+
+#. file parkour.opy, line 223, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "≥ Must Have A Bhop To Complete!"
+msgstr ""
+
+#. file parkour.opy, line 227, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "» Must Have A Double Jump To Complete!"
+msgstr ""
+
+#. file parkour.opy, line 301, rule "Parkour | Bounce Ball / Orb"
+msgid "Collected Orb"
+msgstr ""
+
+#. file parkour.opy, line 309, rule "Parkour | Bounce Ball / Orb"
+msgid "Double Jump Is Ready"
+msgstr ""
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file parkour.opy, line 315, rule "Parkour | Bounce Ball / Orb"
+#.  - file GENJI.opy, line 26, rule "Subroutine CheckUlt"
+#, hasMultipleOccurrencesNotification
+msgid "Ultimate Is Ready"
+msgstr ""
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file parkour.opy, line 323, rule "Parkour | Bounce Ball / Orb"
+#.  - file GENJI.opy, line 44, rule "Subroutine CheckAbility1"
+#, hasMultipleOccurrencesNotification
+msgid "Dash Is Ready"
 msgstr ""

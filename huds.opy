@@ -324,7 +324,8 @@ rule "Huds | Each Player":
             t"Level", eventPlayer.checkpoint_current, len(CheckpointPositions) - 1),
             #"关卡" checkCN "Level",
         #Text: Lock Orbs
-        f"{ColorConfig[Customize.orb_lock]} {t'Orbs'} {len(eventPlayer.cache_collectedLocks)} / {eventPlayer.cache_bounceMaxLocks}"
+        "{0} {1} / {2}".format(ft"{ColorConfig[Customize.orb_lock]} Orbs", len(eventPlayer.cache_collectedLocks), eventPlayer.cache_bounceMaxLocks)
+        #f"{ColorConfig[Customize.orb_lock]} {t'{0} Orbs'} {len(eventPlayer.cache_collectedLocks)} / {eventPlayer.cache_bounceMaxLocks}"
         #"{0}{1} {2} / {3}".format(
         #    ColorConfig[Customize.orb_lock],
         #    "球" checkCN " orbs",

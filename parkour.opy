@@ -210,18 +210,21 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
         # Do nothing
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpcircleradius:
         # arrived ----------------------------------------------------------------------------------------------------
-        if len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks: # kill player if not colleted the locks
-            smallMessage(eventPlayer, "   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[Customize.orb_lock]))
-            #kill(eventPlayer, null)
-            CheckpointFailReset()
+        if len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks:
+            #"   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[Customize.orb_lock])
+            smallMessage(eventPlayer, t"   ! Collect All Lock Orbs To Complete !")  
+            CheckpointFailReset() # kill player if not colleted the locks
         elif eventPlayer.ban_climb and eventPlayer.skill_usedClimb:
-            smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
+            #"   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
+            smallMessage(eventPlayer, t"   Climb ↑ Is Banned!")
             CheckpointFailReset()
         elif eventPlayer.ban_bhop and eventPlayer.skill_usedBhop:
-            smallMessage(eventPlayer, "   ≥ 留小跳进点!" checkCN "   ≥ Must have a bhop to complete!")
+            #"   ≥ 留小跳进点!" checkCN "   ≥ Must Have A Bhop To Complete!!"
+            smallMessage(eventPlayer, t"   ≥ Must Have A Bhop To Complete!")
             CheckpointFailReset()
         elif eventPlayer.ban_djump and eventPlayer.skill_usedDouble:
-            smallMessage(eventPlayer, "   » 留二段跳!" checkCN "   » Must have a double jump to complete!")
+            #"   » 留二段跳!" checkCN "   » Must Have A Double Jump To Complete!"
+            smallMessage(eventPlayer, t"   » Must Have A Double Jump To Complete!")
             CheckpointFailReset()
         else:
             eventPlayer.checkpoint_moved = true
@@ -294,26 +297,30 @@ rule "Parkour | Bounce Ball / Orb":
         if BounceToggleLock[eventPlayer.cache_bounceTouched]:
             #eventPlayer.cache_collectedLocks.append(eventPlayer.cache_bouncePosition[eventPlayer.cache_bounceTouched])
             eventPlayer.cache_collectedLocks.append(eventPlayer.cache_bounceTouched)
-            smallMessage(eventPlayer, "   弹球已收集" checkCN "   orb has been collected")
+            #"   弹球已收集" checkCN "   orb has been collected"
+            smallMessage(eventPlayer, t"   Collected Orb")
 
         if BounceStrength[eventPlayer.cache_bounceTouched] > 0:
             eventPlayer.applyImpulse(Vector.UP, BounceStrength[eventPlayer.cache_bounceTouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
         elif BounceStrength[eventPlayer.cache_bounceTouched] < 0:
             eventPlayer.cancelPrimaryAction()
             eventPlayer.skill_usedDouble = null
-            smallMessage(eventPlayer, "   二段跳已就绪" checkCN "   Double Jump is ready")
+            #"   二段跳已就绪" checkCN "   Double Jump is ready"
+            smallMessage(eventPlayer, t"   Double Jump Is Ready")
 
         if BounceToggleUlt[eventPlayer.cache_bounceTouched]:
             eventPlayer.setUltEnabled(true)
             eventPlayer.setUltCharge(100)
-            smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"终极技能已就绪" checkCN "Ultimate is ready"))
+            #"终极技能已就绪" checkCN "Ultimate is ready"
+            smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
 
         if BounceToggleDash[eventPlayer.cache_bounceTouched]:
             if eventPlayer.isUsingAbility1():
                 waitUntil(not eventPlayer.isUsingAbility1(), true)
                 wait()
             eventPlayer.setAbility1Enabled(true)
-            smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready"))
+            #"技能1影已就绪" checkCN "Dash is ready"
+            smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ABILITY_1)} {t'Dash Is Ready'}")
 
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, Color.WHITE, eventPlayer, 75)
     wait(0.24)
