@@ -4,7 +4,7 @@
 #!suppressWarnings w_lone_else
 #!suppressWarnings w_enum_constant
 ###############################################################################
-#!define versionhere "v1.10.4"
+#!define versionhere "v1.10.4♨"
 #♨ Dev Build Icon
 ###############################################################################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
@@ -41,12 +41,12 @@ macro compRestartLimit = false
 ###############################################################################
 #!include "settings.opy"
 ###############################################################################
+##!excludeVariablesInCompilation
 #!include "definitions.opy"
 ###############################################################################
 #!globalvarInitRuleName "OverPy | Global Init"
 #!playervarInitRuleName "OverPy | Player Init"
 ###############################################################################
-#$$ TODO multi-lingual support
 #!translations en ko zh
 ###############################################################################
 #!include "parkour.opy"
