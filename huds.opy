@@ -297,25 +297,25 @@ rule "Huds | Each Player":
     hudText(null if eventPlayer.toggle_leaderboard else eventPlayer,
         #Header: Preview
         " {0} ({1}/{2})\n―――――――――――\n {3}\n".format(
-            ((("弹球" if eventPlayer.preview_i <= len(eventPlayer.cache_bouncePosition) else "自定义传送门") if eventPlayer.preview_i else "检查点")
-            checkCN
-            ("orb" if eventPlayer.preview_i <= len(eventPlayer.cache_bouncePosition) else "portal") if eventPlayer.preview_i else "checkpoint"),
-            eventPlayer.preview_i + 1,
-            len(eventPlayer.preview_array1),
-            ("{} {} {} {}".format(
+            #("弹球" if eventPlayer.preview_i <= len(eventPlayer.cache_bouncePosition) else "自定义传送门") if eventPlayer.preview_i else "检查点"
+            (t"Orb" if eventPlayer.preview_i <= len(eventPlayer.cache_bouncePosition) else t"Portal") if eventPlayer.preview_i else t"Checkpoint", #0
+            eventPlayer.preview_i + 1, #1
+            len(eventPlayer.preview_array1), #2
+            #3
+            ("{0} {1} {2} {3}".format(
                 abilityIconString(Hero.GENJI, Button.ULTIMATE) if BounceToggleUlt[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
                 abilityIconString(Hero.GENJI, Button.ABILITY_1) if BounceToggleDash[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
                 iconString(Icon.WARNING) if BounceToggleLock[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
                 iconString(Icon.ARROW_UP) if BounceStrength[eventPlayer.preview_array2[eventPlayer.preview_i]] > 0 else
                 iconString(Icon.ARROW_DOWN) if BounceStrength[eventPlayer.preview_array2[eventPlayer.preview_i]] < 0 else [])
             if eventPlayer.preview_i <= len(eventPlayer.cache_bouncePosition) and eventPlayer.preview_i else
-            (("传送门 {} 出口 ".format(eventPlayer.preview_array2[eventPlayer.preview_i])
+            (#(f"传送门 {eventPlayer.preview_array2[eventPlayer.preview_i]} 出口 "
+            #if eventPlayer.preview_array2[eventPlayer.preview_i].last() else
+            #f"传送门 {eventPlayer.preview_array2[eventPlayer.preview_i]} 入口 "
+            #) checkCN
+            f"{t'Portal Exit'} {eventPlayer.preview_array2[eventPlayer.preview_i]}"
             if eventPlayer.preview_array2[eventPlayer.preview_i].last() else
-            "传送门 {} 入口 ".format(eventPlayer.preview_array2[eventPlayer.preview_i])
-            ) checkCN
-            "portal {} destination ".format(eventPlayer.preview_array2[eventPlayer.preview_i])
-            if eventPlayer.preview_array2[eventPlayer.preview_i].last() else
-            "portal {} start ".format(eventPlayer.preview_array2[eventPlayer.preview_i]))
+            f"{t'Portal Start'} {eventPlayer.preview_array2[eventPlayer.preview_i]}")
             if eventPlayer.preview_i else eventPlayer.banString)
             ) if eventPlayer.preview_array1 else [],
         #SubHeader: Level

@@ -232,6 +232,26 @@ msgstr "练习用时"
 msgid "Time:"
 msgstr "用时"
 
+#. file huds.opy, line 301, rule "Huds | Each Player"
+msgid "Orb"
+msgstr "弹球"
+
+#. file huds.opy, line 301, rule "Huds | Each Player"
+msgid "Portal"
+msgstr "自定义传送门"
+
+#. file huds.opy, line 301, rule "Huds | Each Player"
+msgid "Checkpoint"
+msgstr "检查点"
+
+#. file huds.opy, line 316, rule "Huds | Each Player"
+msgid "Portal Exit"
+msgstr "传送门出口"
+
+#. file huds.opy, line 318, rule "Huds | Each Player"
+msgid "Portal Start"
+msgstr "传送门入口"
+
 #. file huds.opy, line 324, rule "Huds | Each Player"
 msgid "Level"
 msgstr "关卡"

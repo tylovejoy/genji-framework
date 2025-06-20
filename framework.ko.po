@@ -229,6 +229,26 @@ msgstr ""
 msgid "Time:"
 msgstr ""
 
+#. file huds.opy, line 301, rule "Huds | Each Player"
+msgid "Orb"
+msgstr ""
+
+#. file huds.opy, line 301, rule "Huds | Each Player"
+msgid "Portal"
+msgstr ""
+
+#. file huds.opy, line 301, rule "Huds | Each Player"
+msgid "Checkpoint"
+msgstr ""
+
+#. file huds.opy, line 316, rule "Huds | Each Player"
+msgid "Portal Exit"
+msgstr ""
+
+#. file huds.opy, line 318, rule "Huds | Each Player"
+msgid "Portal Start"
+msgstr ""
+
 #. file huds.opy, line 324, rule "Huds | Each Player"
 msgid "Level"
 msgstr ""
