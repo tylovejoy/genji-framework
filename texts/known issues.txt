@@ -43,7 +43,7 @@ triple jump ban doesnt work on workshop maps anymore
         - the rules for jumpcount shouldnt be affected but they are
         - jumpcount tracks +- if a player has been in the air for a moment
 
-# 1.10.3x
+# 1.10.X
 ### Bug Reports
  - Corrupt Map Object Data [Fixed]
    * Reported by `@hello_5702`
@@ -93,3 +93,5 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@bioslet`
  - 3rd person camera hud not displaying [Fixed]
    * Reported by `@zxzpkcxcc`
+ - Lose ultimate start of level
+   * Reported by `@.ohdark`

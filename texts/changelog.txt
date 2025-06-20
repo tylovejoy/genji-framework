@@ -627,3 +627,10 @@ fixed:
    * Reported by `@bioslet` +5xp
 ### Framework
  - Preparing code for multi-language support
+
+# 1.10.4
+### Languages
+ - English
+ - Chinese 中文
+ - Korean 한국어
+   * Editor not yet supported
