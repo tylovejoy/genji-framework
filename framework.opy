@@ -49,6 +49,7 @@ macro compRestartLimit = false
 #!playervarInitRuleName "OverPy | Player Init"
 ###############################################################################
 #!translations en ko zh
+##!keepUnusedTranslations
 ###############################################################################
 #!include "parkour.opy"
 ###############################################################################
