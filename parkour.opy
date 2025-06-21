@@ -8,7 +8,6 @@ rule "Parkour | Setup & Variables":
     #Discord: dsc.gg/genjiparkour
     #Code: 54CRY
     #Adapted by: LulledLion, FishoFire, Nebula
-    disableInspector()
     disableGamemodeCompletion()
     disableScoring()
     disableMusic()

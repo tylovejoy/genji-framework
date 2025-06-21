@@ -44,6 +44,7 @@ macro compRestartLimit = false
 ##!excludeVariablesInCompilation
 #!include "definitions.opy"
 ###############################################################################
+#!disableInspector
 #!globalvarInitRuleName "OverPy | Global Init"
 #!playervarInitRuleName "OverPy | Player Init"
 ###############################################################################
