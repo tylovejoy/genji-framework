@@ -4,81 +4,70 @@
 #!suppressWarnings w_lone_else
 #!suppressWarnings w_enum_constant
 ###############################################################################
-#!define versionhere "v1.10.3F"
+#!define versionhere "v1.10.3G"
 #♨ Dev Build Icon
 ###############################################################################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
 ###############################################################################
-
+#!define importHero(Hero) __script__('mechanics/fwHero.js')
 ###############################################################################
-# Debug force CN mode on
-##!define checkCN if true else
-
+macro COMPILE_FOR_CHINESE = false
 # Enable Invis Command (Invis Command cant be pasted in CN client die to null and none translating to same symbol)
-#!define enableInvisCommand true
+# Debug force CN mode on (No longers works)
+##!define checkCN if true else
+###############################################################################
 # Max orbs can be made
-#!define fxLimit 193
+macro fxLimit = 193
 # Portal distance: 1.3
-#!define portalDistance 1.3
+macro portalDistance = 1.3
 # Circle radius: 1.4
-#!define cpcircleradius 1.4
+macro cpcircleradius = 1.4
 # Default fx: 1
-#!define cpCirkleFx 1
+macro cpCirkleFx = 1
 # Orb range for player: 1.4
-#!define bounceorbdistance 1.4
+macro bounceorbdistance = 1.4
 # Height added to player for orb detection: 0.7
-#!define bounceoffset 0.7
+macro bounceoffset = 0.7
 # Enable perks: false
-#!define usePerks false
+macro usePerks = false
 # non-practice cheat mode: false
-#!define cpCheat false
+macro cpCheat = false
 # defaults: off, attempt:5, 120 min, restart:false
-#!define compModeToggle false
-#!define attemptCount 5
-#!define compTimeLimit 120
-#!define compRestartLimit false
+macro compModeToggle = false
+macro attemptCount = 5
+macro compTimeLimit = 120
+macro compRestartLimit = false
 ###############################################################################
 #!include "settings.opy"
 ###############################################################################
 #!include "definitions.opy"
 ###############################################################################
-##!include "language.opy"
+#!globalvarInitRuleName "OverPy | Global Init"
+#!playervarInitRuleName "OverPy | Player Init"
 ###############################################################################
-rule FILLER "    </fg>" versionhere:
-    @Delimiter
-    #◀ The Official Genji Parkour Editor ▶
-    #Discord: dsc.gg/genjiparkour
-    #Code: 54CRY
-    #Adapted by: LulledLion, FishoFire, Nebula
-    return
+#$$ TODO multi-lingual support
+##!translations en ko zh
+###############################################################################
+#!include "parkour.opy"
+###############################################################################
+#$$ TODO proper multi-hero support
+#!include "mechanics/all.opy"
+importHero(["GENJI" /*, "HANZO", "HAZARD", "KIRIKO"*/][0])
 ###############################################################################
 #!include "editor.opy"
 ###############################################################################
 #!include "commands.opy"
 ###############################################################################
-#$$ Rename file to parkour.opy
-#!include "genji.opy"
-###############################################################################
 #!include "huds.opy"
 ###############################################################################
 #!include "effects.opy"
 ###############################################################################
-#!include "mechanics.opy"
-###############################################################################
-#$$ TODO hero support
-##!include "genji.opy"
-
-##!include "hanzo.opy"
-
-##!include "kiriko.opy"
-
-##!include "hazard.opy"
-###############################################################################
 #!include "addons-page1.opy"
 ###############################################################################
 rule "MAP DATA - 地图数据":
-    @NewPage FILLER # padding to make rest of rules go on page 2
+    @NewPage ("<tx0C000000000207B5><fgFFFF00FF> "
+    "Map Data & Addon Settings Are On Page 2 - 地图数据和附加组件的设置在第2页")
 ###############################################################################
 testData
 ###############################################################################

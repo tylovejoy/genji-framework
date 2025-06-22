@@ -1,43 +1,5 @@
 #!mainFile "framework.opy"
 
-######################################## Macro Tools ##########################
-#!define localSpectator(condition) (true if condition else (localPlayer.toggle_spectate or localPlayer.getSlot() < null))
-
-##!define filtered(array, condition) [current_element for current_element, current_index in array if (condition)]
-##!define mapped(array, mapping) [(mapping) for current_element, current_index in array]
-
-##!define RestartTimer(timeInMinutes) "{0} Hours and {1} Minutes".format(floor(timeInMinutes / 60 / 60), "{0}{1}".format(floor(timeInMinutes % 60 / 10), floor(timeInMinutes % 60 - floor(timeInMinutes % 60 / 10) * 10)))
-##!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format([] if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
-##!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
-##!define prettyTime(timeInSeconds) "{0} {1}".format(timeInSeconds,"秒"  checkCN "sec")
-#!define prettyTime(timeInSeconds) "{0} sec".format(timeInSeconds)
-
-#!define insert(insert_array, insert_index, insert_value)\
-insert_array.append(insert_value)\
-insert_array = [e if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for e, i in insert_array]
-
-#!define toggleCpInArray(baninput)\
-if hostPlayer.checkpoint_current in baninput:\
-    baninput.remove(hostPlayer.checkpoint_current)\
-else:\
-    baninput.append(hostPlayer.checkpoint_current)
-
-#!define removeCPandLower(arrayname)\
-arrayname.remove(hostPlayer.checkpoint_current)\
-arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in arrayname]
-
-#!define LeftAlign96 "                                                                                                "
-#!define LeftAlign128 "                                                                                                                                "
-
-#!define checkCN if l"Oof" == "噢" else
-
-#!define FILLER "<tx0C000000000207B5><fgFFFF00FF> Map Data & Addon Settings Are On Page 2 - 地图数据和附加组件的设置在第2页"
-
-#!define flyMovementDelta ((0.096 + 0.192 * eventPlayer.isHoldingButton(Button.JUMP) - 0.048 * eventPlayer.isHoldingButton(Button.CROUCH)) * \
-    (eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z * (vect(1, not eventPlayer.isHoldingButton(Button.ABILITY_1), 1))+ \
-    worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION) + \
-    Vector.UP * (eventPlayer.isHoldingButton(Button.ABILITY_2) - eventPlayer.isHoldingButton(Button.ULTIMATE))))
-
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
@@ -120,7 +82,7 @@ globalvar BhopBanToggle 35                  # bool                      --- Enab
 #!define TempIterator1 NANBA
 globalvar TempIterator1 38                  # int                       --- temp iterator
 
-globalvar DashExploitToggle 39
+#globalvar DashExploitToggle 39
 
 globalvar PortalNames 40                    # [str]                     --- display name of portals
 globalvar PortalLoc 41                      # [vect]                    --- portal position
@@ -276,7 +238,6 @@ playervar comp_countAttempts                      # int                       --
 playervar comp_instructionHud
 playervar addon_toggle3rdPov
 playervar addon_ledgeDash
-playervar addon_bounceId
 playervar addon_enableDoubleChecks
 
 #playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
@@ -292,7 +253,7 @@ subroutine CheckpointFailReset
 subroutine UpdateTitle
 subroutine DashUltGive
 subroutine CheckUlt
-subroutine CheckDash
+subroutine CheckAbility1
 subroutine UpdateCache
 subroutine DeleteSave
 subroutine MakeSave
@@ -431,3 +392,43 @@ enum LoadOrder:
     hudsGlobal  = 0.016 * 50,
     hudsEditor  = 0.016 * 52,
 
+######################################## Macro Tools ##########################
+macro localSpectator(condition):
+    true if (condition) else (localPlayer.toggle_spectate or localPlayer.getSlot() < null)
+
+macro filtered(array, condition):
+    [current_element for current_element, current_index in (array) if (condition)]
+macro mapped(array, mapping):
+    [(mapping) for current_element, current_index in (array)]
+
+##!define RestartTimer(timeInMinutes) "{0} Hours and {1} Minutes".format(floor(timeInMinutes / 60 / 60), "{0}{1}".format(floor(timeInMinutes % 60 / 10), floor(timeInMinutes % 60 - floor(timeInMinutes % 60 / 10) * 10)))
+##!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format([] if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
+##!define prettyTime(timeInSeconds) "{0} {1}".format(timeInSeconds,"秒"  checkCN "sec")
+macro prettyTime(timeInSeconds):
+    "{0} sec".format(timeInSeconds)
+
+macro insert(insert_array, insert_index, insert_value):
+    insert_array.append(insert_value)
+    insert_array = [e if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for e, i in insert_array]
+
+macro toggleCpInArray(baninput):
+    if hostPlayer.checkpoint_current in baninput:
+        baninput.remove(hostPlayer.checkpoint_current)
+    else:
+        baninput.append(hostPlayer.checkpoint_current)
+
+macro removeCpAndShift(arrayname):
+    arrayname.remove(hostPlayer.checkpoint_current)
+    arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in arrayname]
+
+#!define LeftAlign96 "                                                                                                "
+#!define LeftAlign128 "                                                                                                                                "
+
+#!define checkCN if l"Oof" == "噢" else
+
+macro INVIS = Invis.ENEMIES if COMPILE_FOR_CHINESE else Invis.NONE
+
+macro flyMovementDelta = ((0.096 + 0.192 * eventPlayer.isHoldingButton(Button.JUMP) - 0.048 * eventPlayer.isHoldingButton(Button.CROUCH)) *
+    (eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z * (vect(1, not eventPlayer.isHoldingButton(Button.ABILITY_1), 1))+
+    worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION) +
+    Vector.UP * (eventPlayer.isHoldingButton(Button.ABILITY_2) - eventPlayer.isHoldingButton(Button.ULTIMATE))))

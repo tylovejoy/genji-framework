@@ -45,32 +45,51 @@ triple jump ban doesnt work on workshop maps anymore
 
 # 1.10.3x
 ### Bug Reports
- - Corrupt Map Object Data [FIXED]
+ - Corrupt Map Object Data [Fixed]
    * Reported by `@hello_5702`
- - Exported data overwriting customization settings [FIXED]
+ - Exported data overwriting customization settings [Fixed]
    * Reported by `@n1troh`
- - Timer run-on after completion [FIXED]
+ - Timer run-on after completion [Fixed]
    * Reported by `@TPS`
- - Invisible global portals [FIXED]
+ - Invisible global portals [Fixed]
    * Reported by `@bioslet`
- - Restart spam when command is held [FIXED]
+ - Restart spam when command is held [Fixed]
    * Reported by `@bioslet`
- - Lock orbs don't disappear when collected [FIXED]
+ - Lock orbs don't disappear when collected [Fixed]
    * Reported by `@Shade` & `@CoralMage`
- - Leaderboard updates player time to a worse time [FIXED]
+ - Leaderboard updates player time to a worse time [Fixed]
    * Reported by `@lostje` & `@bioslet`
- - Move Orb move up prevention forcing move up [FIXED]
+ - Move Orb move up prevention forcing move up [Fixed]
    * Reported by `@n1troh`
- - Colors revert to blue upon export [FIXED]
+ - Colors revert to blue upon export [Fixed]
    * Reported by `@CoralMage`
- - Group Up addon causing extra movement [FIXED]
+ - Group Up addon causing extra movement [Fixed]
    * Reported by `@bioslet`
  - Missing huds [USER ERROR]
    * Reported by `@hello_5702`
-   * Skill issue
- - Missing Addon Texts [FIXED]
+ - Missing Addon Texts [Fixed]
    * Reported by `@kuma0997`
- - Flipped editor bounce values
+ - Flipped editor bounce values [Fixed]
    * Reported by `@n1troh`
- - Null player completion with old map data [FIXED]
+ - Null player completion with old map data [Fixed]
+   * Reported by `@zxzpkcxcc`
+ - Ultimate data not exporting [Not Replicated]
+   * Reported by `@CoralMage`
+ - Editor Huds not loading [Fixed]
+   * Reported by `@n1troh` & `@bioslet`
+ - Custom orb scripts not getting Ids [Fixed]
+   * Reported by `@zxzpkcxcc`
+ - Dash start on all levels [Fixed]
+   * Reported by `@`
+ - Ledge Dash addon always activated [REVERTED]
+   * Reported by `@zxzpkcxcc`
+ - Bypass ban save double jump with auto climb [Fixed]
+   * Reported by `@zxzpkcxcc`
+ - Instant completion time [Fixed]
+   * Reported by `@zxzpkcxcc`
+ - Moving Boundary Spheres always undone [Fixed]
+   * Reported by `@n1troh`
+ - Bounce/Lock Orbs unchanging color in editor [Fixed]
+   * Reported by `@bioslet`
+ - 3rd person camera hud not displaying [Fixed]
    * Reported by `@zxzpkcxcc`
