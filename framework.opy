@@ -10,8 +10,6 @@
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
 ###############################################################################
-#!define importHero(Hero) __script__('mechanics/fwHero.js')
-###############################################################################
 macro COMPILE_FOR_CHINESE = false
 # Enable Invis Command (Invis Command cant be pasted in CN client die to null and none translating to same symbol)
 # Debug force CN mode on (No longers works)
@@ -39,6 +37,8 @@ macro attemptCount = 5
 macro compTimeLimit = 120
 macro compRestartLimit = false
 ###############################################################################
+#!define importHero(Hero) __script__('mechanics/fwHero.js')
+###############################################################################
 #!include "settings.opy"
 ###############################################################################
 ##!excludeVariablesInCompilation
@@ -49,6 +49,7 @@ macro compRestartLimit = false
 #!playervarInitRuleName "OverPy | Player Init"
 ###############################################################################
 #!translations en ko zh
+##!disableTranslationSourceLines
 ##!keepUnusedTranslations
 ###############################################################################
 #!include "parkour.opy"
