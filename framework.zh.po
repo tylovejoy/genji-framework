@@ -4,155 +4,207 @@ msgstr ""
 "Language: zh\n"
 "X-Generator: OverPy\n"
 
+#. file all.opy, rule "Mechanic | All | Emote"
+msgid "Emote Savehop ♥ Is Banned!"
+msgstr "表情留小 ♥ 已禁用!"
+
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file all.opy, line 14, rule "Mechanic | All | Jump"
-#.  - file huds.opy, line 361, rule "Huds | Each Player"
+#.  - file all.opy, rule "Mechanic | All | Jump"
+#.  - file huds.opy, rule "Huds | Each Player"
 #, hasMultipleOccurrencesNotification
 msgid "Bhop"
 msgstr "小跳"
 
-#. file all.opy, line 41, rule "Mechanic | All | Emote"
-msgid "Emote Savehop ♥ Is Banned!"
-msgstr "表情留小 ♥ 已禁用!"
-
-#. file climbers.opy, line 20, rule "Mechanic | Climbers | Bhop count for stand ban"
+#. file climbers.opy, rule "Mechanic | Climbers | Bhop count for stand ban"
 msgid "Stand Createbhop ♠ Is Banned!"
 msgstr "站卡 ♠ 已禁用!"
 
-#. file climbers.opy, line 36, rule "Mechanic | Climbers | Create Bhop"
+#. file climbers.opy, rule "Mechanic | Climbers | Create Bhop"
 msgid "Create Bhop ♂ Is Banned!"
 msgstr "卡小 ♂ 已禁用!"
 
-#. file climbers.opy, line 43, rule "Mechanic | Climbers | Create Bhop"
+#. file climbers.opy, rule "Mechanic | Climbers | Create Bhop"
 msgid "Bhop Created!"
 msgstr "卡小!"
 
-#. file climbers.opy, line 57, rule "Mechanic | Climbers | Multiclimb"
+#. file climbers.opy, rule "Mechanic | Climbers | Multiclimb"
 msgid "Multiclimb ∞ Is Banned!"
 msgstr "蹭留 ∞ 已禁用!"
 
-# TODO: check if all occurrences have the same translation
-#. 2 occurrences:
-#.  - file commands.opy, line 36, rule "Command | Toggle Invisible (Hold Deflect)"
-#.  - file huds.opy, line 166, rule "Huds | Global Localplayer"
-#, hasMultipleOccurrencesNotification
-msgid "Invisible"
-msgstr "隐身模式"
+#. file commands.opy, rule "Command | Quick Reset (Reload | Hold Reload to Enable)"
+msgid "Quick Reset Is Enabled"
+msgstr "快速回点已启用"
 
-# TODO: check if all occurrences have the same translation
-#. 5 occurrences:
-#.  - file commands.opy, line 36, rule "Command | Toggle Invisible (Hold Deflect)"
-#.  - file huds.opy, line 66, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 159, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 166, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 419, rule "Huds | Addons"
-#, hasMultipleOccurrencesNotification
-msgid "| On"
-msgstr "| 启用"
+#. file commands.opy, rule "Command | Quick Reset (Reload | Hold Reload to Enable)"
+msgid "Quick Reset Is Disabled"
+msgstr "快速回点已关闭"
 
-#. file commands.opy, line 36, rule "Command | Toggle Invisible (Hold Deflect)"
-msgid "| Off"
-msgstr "| 关闭"
-
-#. file commands.opy, line 169, rule "Command | Spectate (Hold Interact)"
+#. file commands.opy, rule "Command | Spectate (Hold Interact)"
 msgid "Hold Interact Again To Turn Off Spectate Mode"
 msgstr "再次长按互动键关闭观战模式"
 
-#. file commands.opy, line 195, rule "Command | Toggle Invincible Mode (Melee + Reload)"
+#. file commands.opy, rule "Command | Toggle Hud (Hold Secondary)"
+msgid "HUD Is Now Hidden"
+msgstr "HUD已隐藏"
+
+#. file commands.opy, rule "Command | Toggle Hud (Hold Secondary)"
+msgid "HUD Is Now Shown"
+msgstr "HUD已开启"
+
+#. file commands.opy, rule "Command | Toggle Invincible Mode (Melee + Reload)"
 msgid "Invincible Mode"
 msgstr "探点模式"
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file commands.opy, line 203, rule "Command | Toggle Invincible Mode (Melee + Reload)"
-#.  - file commands.opy, line 228, rule "Command | Toggle Practice Mode (Melee + Ultimate)"
+#.  - file commands.opy, rule "Command | Toggle Invincible Mode (Melee + Reload)"
+#.  - file commands.opy, rule "Command | Toggle Practice Mode (Melee + Ultimate)"
 #, hasMultipleOccurrencesNotification
 msgid "Practice Mode"
 msgstr "练习模式"
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file commands.opy, line 208, rule "Command | Toggle Invincible Mode (Melee + Reload)"
-#.  - file commands.opy, line 240, rule "Command | Toggle Practice Mode (Melee + Ultimate)"
+#.  - file commands.opy, rule "Command | Toggle Invincible Mode (Melee + Reload)"
+#.  - file commands.opy, rule "Command | Toggle Practice Mode (Melee + Ultimate)"
 #, hasMultipleOccurrencesNotification
 msgid "Normal Mode"
 msgstr "跑图模式"
 
-#. file commands.opy, line 320, rule "Command | Quick Reset (Reload | Hold Reload to Enable)"
-msgid "Quick Reset Is Enabled"
-msgstr "快速回点已启用"
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file commands.opy, rule "Command | Toggle Invisible (Hold Deflect)"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#, hasMultipleOccurrencesNotification
+msgid "Invisible"
+msgstr "隐身模式"
 
-#. file commands.opy, line 320, rule "Command | Quick Reset (Reload | Hold Reload to Enable)"
-msgid "Quick Reset Is Disabled"
-msgstr "快速回点已关闭"
+# TODO: check if all occurrences have the same translation
+#. 5 occurrences:
+#.  - file commands.opy, rule "Command | Toggle Invisible (Hold Deflect)"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Addons"
+#, hasMultipleOccurrencesNotification
+msgid "| On"
+msgstr "| 启用"
 
-#. file commands.opy, line 333, rule "Command | Toggle Hud (Hold Secondary)"
-msgid "HUD Is Now Hidden"
-msgstr "HUD已隐藏"
+#. file commands.opy, rule "Command | Toggle Invisible (Hold Deflect)"
+msgid "| Off"
+msgstr "| 关闭"
 
-#. file commands.opy, line 333, rule "Command | Toggle Hud (Hold Secondary)"
-msgid "HUD Is Now Shown"
-msgstr "HUD已开启"
-
-#. file GENJI.opy, line 107, rule "Mechanic | Genji | Ban Save Double - 封禁二段跳"
+#. file GENJI.opy, rule "Mechanic | Genji | Ban Save Double - 封禁二段跳"
 msgid "Save Double Banned!"
 msgstr "延二段跳已禁用!"
 
-#. file huds.opy, line 29, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Addons"
+msgid "3rd Person"
+msgstr "第三人称"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Practice Time:"
+msgstr "练习用时"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Time:"
+msgstr "用时"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Orb"
+msgstr "弹球"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Portal"
+msgstr "自定义传送门"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Checkpoint"
+msgstr "检查点"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Portal Exit"
+msgstr "传送门出口"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Portal Start"
+msgstr "传送门入口"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Level"
+msgstr "关卡"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "{0} Orbs"
+msgstr "{0}球"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Climb"
+msgstr "爬墙"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Collect Orbs First"
+msgstr "先收集橙球"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Come Here"
+msgstr "到这里来"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Made By"
 msgstr "作者"
 
-#. file huds.opy, line 37, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Map Code"
 msgstr "代码"
 
-#. file huds.opy, line 46, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Min -"
 msgstr "分钟后重启 -"
 
-#. file huds.opy, line 46, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Server Restart In"
 msgstr "房间将在"
 
-#. file huds.opy, line 46, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Error: Max HUD Count Reached"
 msgstr "错误: 已达到最大HUD数量上限"
 
 # TODO: check if all occurrences have the same translation
 #. 7 occurrences:
-#.  - file huds.opy, line 58, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 79, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 86, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 159, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 166, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 226, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 419, rule "Huds | Addons"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Addons"
 #, hasMultipleOccurrencesNotification
 msgid "Hold"
 msgstr "长按"
 
-#. file huds.opy, line 58, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Enable"
 msgstr "启用"
 
-#. file huds.opy, line 58, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Quick Reset"
 msgstr "快速回点"
 
-#. file huds.opy, line 66, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Invincible"
 msgstr "探点模式"
 
-#. file huds.opy, line 79, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Toggle"
 msgstr "切换显示"
 
-#. file huds.opy, line 86, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Preview CP"
 msgstr "预览关卡"
 
-#. file huds.opy, line 95, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid ""
 "Walk ◀ ▶ | Preview Others\n"
 "Walk ▲ ▼ | Modify Zoom\n"
@@ -162,168 +214,116 @@ msgstr ""
 "移动键 ▲ ▼ | 修改间距 \n"
 "视角移动 | 调整浏览视角"
 
-#. file huds.opy, line 105, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Split:"
 msgstr "单关用时"
 
-#. file huds.opy, line 127, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "― ― ― ― ― Hint ― ― ― ― ―"
 msgstr "― ― ― ― ― 提示 ― ― ― ― ―"
 
-#. file huds.opy, line 128, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "― ― ― Hint Available ― ― ―"
 msgstr "― ― ― ― 有可用提示 ― ― ―  ―"
 
-#. file huds.opy, line 134, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Hide Hint"
 msgstr "隐藏提示"
 
-#. file huds.opy, line 134, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Show Hint"
 msgstr "获取提示"
 
 # TODO: check if all occurrences have the same translation
-#. file huds.opy, line 159, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 #, hasMultipleOccurrencesNotification
 msgid "Spectate"
 msgstr "观战模式"
 
-#. file huds.opy, line 175, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Practice"
 msgstr "练习模式"
 
-#. file huds.opy, line 184, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Next Level"
 msgstr "下一关"
 
-#. file huds.opy, line 185, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Previous Level"
 msgstr "上一关"
 
-#. file huds.opy, line 186, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Restart Practice"
 msgstr "回到练习模式起点"
 
-#. file huds.opy, line 209, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Playtest"
 msgstr "游戏测试"
 
-#. file huds.opy, line 225, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Restart"
 msgstr "重新开始"
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file huds.opy, line 226, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 279, rule "Huds | Leaderboard"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Leaderboard"
 #, hasMultipleOccurrencesNotification
 msgid "Leaderboard"
 msgstr "成绩排名"
 
-#. file huds.opy, line 254, rule "Huds | Leaderboard"
+#. file huds.opy, rule "Huds | Leaderboard"
 msgid "Top 5"
 msgstr "排名前5"
 
-#. file huds.opy, line 291, rule "Huds | Each Player"
-msgid "Practice Time:"
-msgstr "练习用时"
-
-#. file huds.opy, line 293, rule "Huds | Each Player"
-msgid "Time:"
-msgstr "用时"
-
-#. file huds.opy, line 301, rule "Huds | Each Player"
-msgid "Orb"
-msgstr "弹球"
-
-#. file huds.opy, line 301, rule "Huds | Each Player"
-msgid "Portal"
-msgstr "自定义传送门"
-
-#. file huds.opy, line 301, rule "Huds | Each Player"
-msgid "Checkpoint"
-msgstr "检查点"
-
-#. file huds.opy, line 316, rule "Huds | Each Player"
-msgid "Portal Exit"
-msgstr "传送门出口"
-
-#. file huds.opy, line 318, rule "Huds | Each Player"
-msgid "Portal Start"
-msgstr "传送门入口"
-
-#. file huds.opy, line 324, rule "Huds | Each Player"
-msgid "Level"
-msgstr "关卡"
-
-#. file huds.opy, line 327, rule "Huds | Each Player"
-msgid "{0} Orbs"
-msgstr "{0}球"
-
-#. file huds.opy, line 350, rule "Huds | Each Player"
-msgid "Climb"
-msgstr "爬墙"
-
-#. file huds.opy, line 374, rule "Huds | Each Player"
-msgid "Collect Orbs First"
-msgstr "先收集橙球"
-
-#. file huds.opy, line 376, rule "Huds | Each Player"
-msgid "Come Here"
-msgstr "到这里来"
-
-#. file huds.opy, line 419, rule "Huds | Addons"
-msgid "3rd Person"
-msgstr "第三人称"
-
-#. file parkour.opy, line 123, rule "Parkour | Match time"
-msgid "Maximum Lobby Time Reached, Restarting"
-msgstr "房间已达最大持续时间, 即将重启"
-
-#. file parkour.opy, line 215, rule "Parkour | Ground: Traces, Arrive, & Reset"
-msgid "! Collect All Lock Orbs To Complete !"
-msgstr "! 进点前需集齐所有收集球 !"
-
-# TODO: check if all occurrences have the same translation
-#. 2 occurrences:
-#.  - file parkour.opy, line 219, rule "Parkour | Ground: Traces, Arrive, & Reset"
-#.  - file climbers.opy, line 70, rule "Mechanic | Climbers | Ban Wallclimb - Message"
-#, hasMultipleOccurrencesNotification
-msgid "Climb ↑ Is Banned!"
-msgstr "爬墙 ↑ 已禁用!"
-
-#. file parkour.opy, line 223, rule "Parkour | Ground: Traces, Arrive, & Reset"
-msgid "≥ Must Have A Bhop To Complete!"
-msgstr "≥ 留小跳进点!"
-
-#. file parkour.opy, line 227, rule "Parkour | Ground: Traces, Arrive, & Reset"
-msgid "» Must Have A Double Jump To Complete!"
-msgstr "» 留二段跳!"
-
-#. file parkour.opy, line 255, rule "Parkour | Ground: Traces, Arrive, & Reset"
-msgid "Mission Complete! Time"
-msgstr "已通关! 用时"
-
-#. file parkour.opy, line 302, rule "Parkour | Bounce Ball / Orb"
+#. file parkour.opy, rule "Parkour | Bounce Ball / Orb"
 msgid "Collected Orb"
 msgstr "弹球已收集"
 
-#. file parkour.opy, line 310, rule "Parkour | Bounce Ball / Orb"
+#. file parkour.opy, rule "Parkour | Bounce Ball / Orb"
 msgid "» Double Jump Is Ready"
 msgstr "» 二段跳已就绪"
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file parkour.opy, line 316, rule "Parkour | Bounce Ball / Orb"
-#.  - file GENJI.opy, line 26, rule "Subroutine CheckUlt"
+#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+#.  - file GENJI.opy, rule "Subroutine CheckUlt"
 #, hasMultipleOccurrencesNotification
 msgid "Ultimate Is Ready"
 msgstr "终极技能已就绪"
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file parkour.opy, line 324, rule "Parkour | Bounce Ball / Orb"
-#.  - file GENJI.opy, line 44, rule "Subroutine CheckAbility1"
+#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+#.  - file GENJI.opy, rule "Subroutine CheckAbility1"
 #, hasMultipleOccurrencesNotification
 msgid "Dash Is Ready"
 msgstr "技能1影已就绪"
+
+#. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "! Collect All Lock Orbs To Complete !"
+msgstr "! 进点前需集齐所有收集球 !"
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+#.  - file climbers.opy, rule "Mechanic | Climbers | Ban Wallclimb - Message"
+#, hasMultipleOccurrencesNotification
+msgid "Climb ↑ Is Banned!"
+msgstr "爬墙 ↑ 已禁用!"
+
+#. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "≥ Must Have A Bhop To Complete!"
+msgstr "≥ 留小跳进点!"
+
+#. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "» Must Have A Double Jump To Complete!"
+msgstr "» 留二段跳!"
+
+#. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "Mission Complete! Time"
+msgstr "已通关! 用时"
+
+#. file parkour.opy, rule "Parkour | Match time"
+msgid "Maximum Lobby Time Reached, Restarting"
+msgstr "房间已达最大持续时间, 即将重启"

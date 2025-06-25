@@ -4,323 +4,323 @@ msgstr ""
 "Language: ko\n"
 "X-Generator: OverPy\n"
 
+#. file all.opy, rule "Mechanic | All | Emote"
+msgid "Emote Savehop ♥ Is Banned!"
+msgstr ""
+
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file all.opy, line 14, rule "Mechanic | All | Jump"
-#.  - file huds.opy, line 361, rule "Huds | Each Player"
+#.  - file all.opy, rule "Mechanic | All | Jump"
+#.  - file huds.opy, rule "Huds | Each Player"
 #, hasMultipleOccurrencesNotification
 msgid "Bhop"
 msgstr ""
 
-#. file all.opy, line 41, rule "Mechanic | All | Emote"
-msgid "Emote Savehop ♥ Is Banned!"
-msgstr ""
-
-#. file climbers.opy, line 20, rule "Mechanic | Climbers | Bhop count for stand ban"
+#. file climbers.opy, rule "Mechanic | Climbers | Bhop count for stand ban"
 msgid "Stand Createbhop ♠ Is Banned!"
 msgstr ""
 
-#. file climbers.opy, line 36, rule "Mechanic | Climbers | Create Bhop"
+#. file climbers.opy, rule "Mechanic | Climbers | Create Bhop"
 msgid "Create Bhop ♂ Is Banned!"
 msgstr ""
 
-#. file climbers.opy, line 43, rule "Mechanic | Climbers | Create Bhop"
+#. file climbers.opy, rule "Mechanic | Climbers | Create Bhop"
 msgid "Bhop Created!"
 msgstr ""
 
-#. file climbers.opy, line 57, rule "Mechanic | Climbers | Multiclimb"
+#. file climbers.opy, rule "Mechanic | Climbers | Multiclimb"
 msgid "Multiclimb ∞ Is Banned!"
 msgstr ""
 
-# TODO: check if all occurrences have the same translation
-#. 2 occurrences:
-#.  - file commands.opy, line 36, rule "Command | Toggle Invisible (Hold Deflect)"
-#.  - file huds.opy, line 166, rule "Huds | Global Localplayer"
-#, hasMultipleOccurrencesNotification
-msgid "Invisible"
+#. file commands.opy, rule "Command | Quick Reset (Reload | Hold Reload to Enable)"
+msgid "Quick Reset Is Enabled"
 msgstr ""
 
-# TODO: check if all occurrences have the same translation
-#. 5 occurrences:
-#.  - file commands.opy, line 36, rule "Command | Toggle Invisible (Hold Deflect)"
-#.  - file huds.opy, line 66, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 159, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 166, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 419, rule "Huds | Addons"
-#, hasMultipleOccurrencesNotification
-msgid "| On"
+#. file commands.opy, rule "Command | Quick Reset (Reload | Hold Reload to Enable)"
+msgid "Quick Reset Is Disabled"
 msgstr ""
 
-#. file commands.opy, line 36, rule "Command | Toggle Invisible (Hold Deflect)"
-msgid "| Off"
-msgstr ""
-
-#. file commands.opy, line 169, rule "Command | Spectate (Hold Interact)"
+#. file commands.opy, rule "Command | Spectate (Hold Interact)"
 msgid "Hold Interact Again To Turn Off Spectate Mode"
 msgstr ""
 
-#. file commands.opy, line 195, rule "Command | Toggle Invincible Mode (Melee + Reload)"
+#. file commands.opy, rule "Command | Toggle Hud (Hold Secondary)"
+msgid "HUD Is Now Hidden"
+msgstr ""
+
+#. file commands.opy, rule "Command | Toggle Hud (Hold Secondary)"
+msgid "HUD Is Now Shown"
+msgstr ""
+
+#. file commands.opy, rule "Command | Toggle Invincible Mode (Melee + Reload)"
 msgid "Invincible Mode"
 msgstr ""
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file commands.opy, line 203, rule "Command | Toggle Invincible Mode (Melee + Reload)"
-#.  - file commands.opy, line 228, rule "Command | Toggle Practice Mode (Melee + Ultimate)"
+#.  - file commands.opy, rule "Command | Toggle Invincible Mode (Melee + Reload)"
+#.  - file commands.opy, rule "Command | Toggle Practice Mode (Melee + Ultimate)"
 #, hasMultipleOccurrencesNotification
 msgid "Practice Mode"
 msgstr ""
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file commands.opy, line 208, rule "Command | Toggle Invincible Mode (Melee + Reload)"
-#.  - file commands.opy, line 240, rule "Command | Toggle Practice Mode (Melee + Ultimate)"
+#.  - file commands.opy, rule "Command | Toggle Invincible Mode (Melee + Reload)"
+#.  - file commands.opy, rule "Command | Toggle Practice Mode (Melee + Ultimate)"
 #, hasMultipleOccurrencesNotification
 msgid "Normal Mode"
 msgstr ""
 
-#. file commands.opy, line 320, rule "Command | Quick Reset (Reload | Hold Reload to Enable)"
-msgid "Quick Reset Is Enabled"
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file commands.opy, rule "Command | Toggle Invisible (Hold Deflect)"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#, hasMultipleOccurrencesNotification
+msgid "Invisible"
 msgstr ""
 
-#. file commands.opy, line 320, rule "Command | Quick Reset (Reload | Hold Reload to Enable)"
-msgid "Quick Reset Is Disabled"
+# TODO: check if all occurrences have the same translation
+#. 5 occurrences:
+#.  - file commands.opy, rule "Command | Toggle Invisible (Hold Deflect)"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Addons"
+#, hasMultipleOccurrencesNotification
+msgid "| On"
 msgstr ""
 
-#. file commands.opy, line 333, rule "Command | Toggle Hud (Hold Secondary)"
-msgid "HUD Is Now Hidden"
+#. file commands.opy, rule "Command | Toggle Invisible (Hold Deflect)"
+msgid "| Off"
 msgstr ""
 
-#. file commands.opy, line 333, rule "Command | Toggle Hud (Hold Secondary)"
-msgid "HUD Is Now Shown"
-msgstr ""
-
-#. file GENJI.opy, line 107, rule "Mechanic | Genji | Ban Save Double - 封禁二段跳"
+#. file GENJI.opy, rule "Mechanic | Genji | Ban Save Double - 封禁二段跳"
 msgid "Save Double Banned!"
 msgstr ""
 
-#. file huds.opy, line 29, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Addons"
+msgid "3rd Person"
+msgstr ""
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Practice Time:"
+msgstr ""
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Time:"
+msgstr ""
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Orb"
+msgstr ""
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Portal"
+msgstr ""
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Checkpoint"
+msgstr ""
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Portal Exit"
+msgstr ""
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Portal Start"
+msgstr ""
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Level"
+msgstr ""
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "{0} Orbs"
+msgstr ""
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Climb"
+msgstr ""
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Collect Orbs First"
+msgstr ""
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Come Here"
+msgstr ""
+
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Made By"
 msgstr ""
 
-#. file huds.opy, line 37, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Map Code"
 msgstr ""
 
-#. file huds.opy, line 46, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Min -"
 msgstr ""
 
-#. file huds.opy, line 46, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Server Restart In"
 msgstr ""
 
-#. file huds.opy, line 46, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Error: Max HUD Count Reached"
 msgstr ""
 
 # TODO: check if all occurrences have the same translation
 #. 7 occurrences:
-#.  - file huds.opy, line 58, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 79, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 86, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 159, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 166, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 226, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 419, rule "Huds | Addons"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Addons"
 #, hasMultipleOccurrencesNotification
 msgid "Hold"
 msgstr ""
 
-#. file huds.opy, line 58, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Enable"
 msgstr ""
 
-#. file huds.opy, line 58, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Quick Reset"
 msgstr ""
 
-#. file huds.opy, line 66, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Invincible"
 msgstr ""
 
-#. file huds.opy, line 79, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Toggle"
 msgstr ""
 
-#. file huds.opy, line 86, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Preview CP"
 msgstr ""
 
-#. file huds.opy, line 95, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid ""
 "Walk ◀ ▶ | Preview Others\n"
 "Walk ▲ ▼ | Modify Zoom\n"
 "Aim | Change Preview Angle"
 msgstr ""
 
-#. file huds.opy, line 105, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Split:"
 msgstr ""
 
-#. file huds.opy, line 127, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "― ― ― ― ― Hint ― ― ― ― ―"
 msgstr ""
 
-#. file huds.opy, line 128, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "― ― ― Hint Available ― ― ―"
 msgstr ""
 
-#. file huds.opy, line 134, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Hide Hint"
 msgstr ""
 
-#. file huds.opy, line 134, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Show Hint"
 msgstr ""
 
 # TODO: check if all occurrences have the same translation
-#. file huds.opy, line 159, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 #, hasMultipleOccurrencesNotification
 msgid "Spectate"
 msgstr ""
 
-#. file huds.opy, line 175, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Practice"
 msgstr ""
 
-#. file huds.opy, line 184, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Next Level"
 msgstr ""
 
-#. file huds.opy, line 185, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Previous Level"
 msgstr ""
 
-#. file huds.opy, line 186, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Restart Practice"
 msgstr ""
 
-#. file huds.opy, line 209, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Playtest"
 msgstr ""
 
-#. file huds.opy, line 225, rule "Huds | Global Localplayer"
+#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Restart"
 msgstr ""
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file huds.opy, line 226, rule "Huds | Global Localplayer"
-#.  - file huds.opy, line 279, rule "Huds | Leaderboard"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Leaderboard"
 #, hasMultipleOccurrencesNotification
 msgid "Leaderboard"
 msgstr ""
 
-#. file huds.opy, line 254, rule "Huds | Leaderboard"
+#. file huds.opy, rule "Huds | Leaderboard"
 msgid "Top 5"
 msgstr ""
 
-#. file huds.opy, line 291, rule "Huds | Each Player"
-msgid "Practice Time:"
-msgstr ""
-
-#. file huds.opy, line 293, rule "Huds | Each Player"
-msgid "Time:"
-msgstr ""
-
-#. file huds.opy, line 301, rule "Huds | Each Player"
-msgid "Orb"
-msgstr ""
-
-#. file huds.opy, line 301, rule "Huds | Each Player"
-msgid "Portal"
-msgstr ""
-
-#. file huds.opy, line 301, rule "Huds | Each Player"
-msgid "Checkpoint"
-msgstr ""
-
-#. file huds.opy, line 316, rule "Huds | Each Player"
-msgid "Portal Exit"
-msgstr ""
-
-#. file huds.opy, line 318, rule "Huds | Each Player"
-msgid "Portal Start"
-msgstr ""
-
-#. file huds.opy, line 324, rule "Huds | Each Player"
-msgid "Level"
-msgstr ""
-
-#. file huds.opy, line 327, rule "Huds | Each Player"
-msgid "{0} Orbs"
-msgstr ""
-
-#. file huds.opy, line 350, rule "Huds | Each Player"
-msgid "Climb"
-msgstr ""
-
-#. file huds.opy, line 374, rule "Huds | Each Player"
-msgid "Collect Orbs First"
-msgstr ""
-
-#. file huds.opy, line 376, rule "Huds | Each Player"
-msgid "Come Here"
-msgstr ""
-
-#. file huds.opy, line 419, rule "Huds | Addons"
-msgid "3rd Person"
-msgstr ""
-
-#. file parkour.opy, line 123, rule "Parkour | Match time"
-msgid "Maximum Lobby Time Reached, Restarting"
-msgstr ""
-
-#. file parkour.opy, line 215, rule "Parkour | Ground: Traces, Arrive, & Reset"
-msgid "! Collect All Lock Orbs To Complete !"
-msgstr ""
-
-# TODO: check if all occurrences have the same translation
-#. 2 occurrences:
-#.  - file parkour.opy, line 219, rule "Parkour | Ground: Traces, Arrive, & Reset"
-#.  - file climbers.opy, line 70, rule "Mechanic | Climbers | Ban Wallclimb - Message"
-#, hasMultipleOccurrencesNotification
-msgid "Climb ↑ Is Banned!"
-msgstr ""
-
-#. file parkour.opy, line 223, rule "Parkour | Ground: Traces, Arrive, & Reset"
-msgid "≥ Must Have A Bhop To Complete!"
-msgstr ""
-
-#. file parkour.opy, line 227, rule "Parkour | Ground: Traces, Arrive, & Reset"
-msgid "» Must Have A Double Jump To Complete!"
-msgstr ""
-
-#. file parkour.opy, line 255, rule "Parkour | Ground: Traces, Arrive, & Reset"
-msgid "Mission Complete! Time"
-msgstr ""
-
-#. file parkour.opy, line 302, rule "Parkour | Bounce Ball / Orb"
+#. file parkour.opy, rule "Parkour | Bounce Ball / Orb"
 msgid "Collected Orb"
 msgstr ""
 
-#. file parkour.opy, line 310, rule "Parkour | Bounce Ball / Orb"
+#. file parkour.opy, rule "Parkour | Bounce Ball / Orb"
 msgid "» Double Jump Is Ready"
 msgstr ""
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file parkour.opy, line 316, rule "Parkour | Bounce Ball / Orb"
-#.  - file GENJI.opy, line 26, rule "Subroutine CheckUlt"
+#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+#.  - file GENJI.opy, rule "Subroutine CheckUlt"
 #, hasMultipleOccurrencesNotification
 msgid "Ultimate Is Ready"
 msgstr ""
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file parkour.opy, line 324, rule "Parkour | Bounce Ball / Orb"
-#.  - file GENJI.opy, line 44, rule "Subroutine CheckAbility1"
+#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+#.  - file GENJI.opy, rule "Subroutine CheckAbility1"
 #, hasMultipleOccurrencesNotification
 msgid "Dash Is Ready"
+msgstr ""
+
+#. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "! Collect All Lock Orbs To Complete !"
+msgstr ""
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+#.  - file climbers.opy, rule "Mechanic | Climbers | Ban Wallclimb - Message"
+#, hasMultipleOccurrencesNotification
+msgid "Climb ↑ Is Banned!"
+msgstr ""
+
+#. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "≥ Must Have A Bhop To Complete!"
+msgstr ""
+
+#. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "» Must Have A Double Jump To Complete!"
+msgstr ""
+
+#. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "Mission Complete! Time"
+msgstr ""
+
+#. file parkour.opy, rule "Parkour | Match time"
+msgid "Maximum Lobby Time Reached, Restarting"
 msgstr ""
