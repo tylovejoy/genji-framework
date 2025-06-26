@@ -8,10 +8,10 @@ def CheckUlt(): # checks if ult should be turned on
         eventPlayer.setUltCharge(0) # for dash start etc you can be away from cp so the keep charge activators
     
     eventPlayer.disallowButton(Button.ULTIMATE) # make sure the button cant be pressed until the entire rule ends even if it restarts
-    if eventPlayer.skill_ultCd > getTotalTimeElapsed(): # global cooldown that works even when rule is reset
-        wait(eventPlayer.skill_ultCd - getTotalTimeElapsed())
-    else:
-        eventPlayer.skill_ultCd = getTotalTimeElapsed() + 0.36 # Set cooldown
+    #if eventPlayer.skill_ultCd > getTotalTimeElapsed(): # global cooldown that works even when rule is reset
+    wait(eventPlayer.skill_ultCd - getTotalTimeElapsed())
+    #else:
+    eventPlayer.skill_ultCd = getTotalTimeElapsed() + 0.36 # Set cooldown
 
     if eventPlayer.isUsingUltimate():
         waitUntil(not eventPlayer.isUsingUltimate(), 2)
