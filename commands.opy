@@ -193,8 +193,8 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
         bigMessage(eventPlayer, t"Invincible Mode")
         TimerPause()
         stopChasingVariable(eventPlayer.timer_practice)
-        async(CheckUlt(), AsyncBehavior.RESTART)
-        async(CheckAbility1(), AsyncBehavior.RESTART)
+        async(CheckUlt(), AsyncBehavior.NOOP)
+        async(CheckAbility1(), AsyncBehavior.NOOP)
     else:
         if eventPlayer.toggle_practice:
             #"练习模式" checkCN "Practice mode"

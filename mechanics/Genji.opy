@@ -6,13 +6,13 @@ def CheckUlt(): # checks if ult should be turned on
     @Name "Mechanic | Genji | SUB Check Ultimate"
     if eventPlayer.lockState:
         eventPlayer.setUltCharge(0) # for dash start etc you can be away from cp so the keep charge activators
-    
+    /*
     eventPlayer.disallowButton(Button.ULTIMATE) # make sure the button cant be pressed until the entire rule ends even if it restarts
     #if eventPlayer.skill_ultCd > getTotalTimeElapsed(): # global cooldown that works even when rule is reset
-    wait(eventPlayer.skill_ultCd - getTotalTimeElapsed())
-    #else:
-    eventPlayer.skill_ultCd = getTotalTimeElapsed() + 0.36 # Set cooldown
-
+        wait(eventPlayer.skill_ultCd - getTotalTimeElapsed())
+    else:
+        eventPlayer.skill_ultCd = getTotalTimeElapsed() + 0.36 # Set cooldown
+    */
     if eventPlayer.isUsingUltimate():
         waitUntil(not eventPlayer.isUsingUltimate(), 2)
         wait()
@@ -31,8 +31,7 @@ def CheckUlt(): # checks if ult should be turned on
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= 2 or eventPlayer.getUltCharge() < 100: # used to be just else, but have to deal with multi ult orbs
         eventPlayer.setUltEnabled(false)
         eventPlayer.setUltCharge(0)
-
-    eventPlayer.allowButton(Button.ULTIMATE)
+    wait(0.36)
 
 def CheckAbility1(): # checks if dash should be  turned on
     @Name "Mechanic | Genji | SUB Check Dash"
@@ -56,12 +55,12 @@ rule "Mechanic | Genji | Ultimate":
     waitUntil(not eventPlayer.isUsingUltimate(), 2)
     wait()
     eventPlayer.allowButton(Button.PRIMARY_FIRE)
-    async(CheckUlt(), AsyncBehavior.RESTART) # sets ult charge back if done with map etc
+    async(CheckUlt(), AsyncBehavior.NOOP) # sets ult charge back if done with map etc
 
 rule "Mechanic | Genji | Dash":
     @Event eachPlayer
     @Condition eventPlayer.isUsingAbility1()
-    #async(CheckAbility1(), AsyncBehavior.RESTART)
+    #async(CheckAbility1(), AsyncBehavior.NOOP)
     CheckAbility1()
 
 rule "Mechanic | Genji | Double Jump":
