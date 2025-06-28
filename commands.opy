@@ -155,26 +155,24 @@ rule "Command | Spectate (Hold Interact)":
     wait(1, Wait.ABORT_WHEN_FALSE)
     if eventPlayer.editor_on: # editor has interact combos
         wait(1, Wait.ABORT_WHEN_FALSE)
-
+    eventPlayer.enableRespawn()
+    eventPlayer.disableRespawn()
     if eventPlayer.toggle_spectate:
-        #eventPlayer.enableRespawn()
         eventPlayer.resurrect()
-        #eventPlayer.respawn()
         if eventPlayer.toggle_practice:
             chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)
         elif eventPlayer.checkpoint_notLast:
             TimerResume()
         CheckpointFailReset()
     else:
-        smallMessage(eventPlayer, t"   Hold Interact Again To Turn Off Spectate Mode")
-            #"   再次长按互动键关闭观战模式" checkCN "   Hold Interact again to turn off spectate mode")
         eventPlayer.toggle_invincible = false
         TimerPause()
         stopChasingVariable(eventPlayer.timer_practice)
-        #eventPlayer.disableRespawn()
         eventPlayer.setDamageReceived(100)
         kill(eventPlayer, null)
         eventPlayer.setDamageReceived(0)
+        smallMessage(eventPlayer, t"   Hold Interact Again To Turn Off Spectate Mode")
+            #"   再次长按互动键关闭观战模式" checkCN "   Hold Interact again to turn off spectate mode")
     eventPlayer.toggle_spectate = not eventPlayer.toggle_spectate
 
 rule "Command | Toggle Invincible Mode (Melee + Reload)":
