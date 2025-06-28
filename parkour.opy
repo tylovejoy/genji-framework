@@ -205,7 +205,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             wait(0.048)
             playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1.4)
             wait(0.048)
-    elif eventPlayer.toggle_invincible or (CompMode and not CompTime):# or eventPlayer.lockState:
+    elif eventPlayer.toggle_invincible or eventPlayer.toggle_spectate or (CompMode and not CompTime):# or eventPlayer.lockState:
         # Do nothing
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpcircleradius:
         # arrived ----------------------------------------------------------------------------------------------------
