@@ -3,7 +3,7 @@
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
-# Current Named Unused Variables: 1,6,9,11,16,17,19,28,29,31,36,37,48,49,59,72,89,90
+# Current Named Unused Variables: 1,6,9,11,17,19,28,29,31,36,37,39,48,49,58,59,72,89,90
 #!define CheckpointPositions A
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 #!define SelectedCheckpoint_Editing B
@@ -102,7 +102,7 @@ globalvar CompRestartLimit 55               # bool                      --- rese
 #!define InstructionText instructiontext
 globalvar InstructionText 56                # [text]                    --- array of instructions
 globalvar TitleData 57                      # [[cp ,[title],[color]]    --- title addon
-globalvar HudStoreEdit 58                   # [textid]                  --- list of huds to delete if editormode is on
+#globalvar HudStoreEdit 58                   # [textid]                  --- list of huds to delete if editormode is on
 
 globalvar SaveName 60
 globalvar SaveCp 61

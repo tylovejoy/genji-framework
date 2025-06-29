@@ -20,7 +20,6 @@ rule "Editor | Clear Excess Data to Save Map":
     KillBallEffects = null
     TempIterator1 = null
     BounceEffects = null
-
     SaveName = null
     SaveCp = null
     SaveTimer = null
@@ -133,11 +132,6 @@ rule "Editor | Hud and Effects":
     #waitUntil(entityExists(getAllPlayers()), Math.INFINITY)  # cant be condition because host player can leaves, removing the rule fx
     #wait()
     if EditorOn:
-        while len(HudStoreEdit): # remove unnesesary huds
-            destroyHudText(HudStoreEdit[0])
-            destroyInWorldText(HudStoreEdit[0])
-            del HudStoreEdit[0]
-        wait()
         if CompMode: # infinite time and attempts
             CompAtmpNum = null
             CompTime = Math.INFINITY
@@ -601,8 +595,6 @@ rule "Editor | Hud and Effects":
 
         # portal fx
         createEffect(hostPlayer if len(EditSelectIdArray) and EditorMode.portal else null, Effect.SPARKLES, Color.PURPLE, CustomPortalEndpoint[EditSelected], 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    else: #Editor Off
-        HudStoreEdit = null # clear variables if not in editor mode
 
 # global functions ==============================================================
 rule "Editor |  Fly/Noclip Toggle":

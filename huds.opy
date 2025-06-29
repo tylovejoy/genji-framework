@@ -24,15 +24,14 @@ rule "Huds | Global Localplayer":
     if not Code:
         Code = "code here - 代码"
     Cachedcredits = null
-    if EditorOn:
-        
-    else:
+
+    if not EditorOn:
         hudText(true[0], null, "Discord: dsc.gg/genjiparkour" if localPlayer.toggle_guide else [],
             f"{t'Made By'}: {Name}{LeftAlign96}",
             #"作者: {}" LeftAlign96.format(Name)
             #checkCN
             #"Made by: {}" LeftAlign96.format(Name),
-            HudPosition.LEFT, HO.data_name, null, ColorConfig[Customize.dsc], ColorConfig[Customize.credit_name] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+            HudPosition.LEFT, HO.data_name, null, ColorConfig[Customize.dsc], ColorConfig[Customize.credit_name], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
         hudSubtext(true[0],
             f"{t'Map Code'}: {Code}{LeftAlign96}",
@@ -83,6 +82,38 @@ rule "Huds | Global Localplayer":
                 HudPosition.RIGHT, HO.com_hints,
                 null, Color.GREEN if localPlayer.toggle_hints else Color.ORANGE, evalOnce(ColorConfig[Customize.command_normal]) if localPlayer.checkpoint_current in HintCp else Color.GRAY,
                 HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+
+        # this is remade in editor to not include leaderboard
+        hudSubtext(localPlayer.toggle_guide,
+            f"{buttonString(Button.CROUCH)} + {buttonString(Button.ABILITY_2)} + {buttonString(Button.INTERACT)} | {t'Restart'}\n{
+            t'Hold'} {buttonString(Button.MELEE)} | {t'Leaderboard'}",
+            #"{0} + {1} + {2} | 重新开始\n长按 {3} | 完整成绩排名".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE))
+            #checkCN
+            #"{0} + {1} + {2} | Restart\nHold {3} | leaderboard".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)),
+            HudPosition.RIGHT, HO.com_restart_n_board, ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+        
+        Difficultyhud = [
+            createWorkshopSetting(enum[
+                "<fg27AAFFFF>playtest - 游戏测试", "<fgA0E81BFF>easy-", "<fgA0E81BFF>easy", "<fgA0E81BFF>easy+",
+                "<fge0e000FF>medium-", "<fge0e000FF>medium", "<fge0e000FF>medium+", "<fgEC9900FF>hard-", "<fgEC9900FF>hard",
+                "<fgEC9900FF>hard+", "<fgFF4500FF>very hard-", "<fgFF4500FF>very hard", "<fgFF4500FF>very hard+",
+                "<fgC80013FF>extreme-", "<fgC80013FF>extreme", "<fgC80013FF>extreme+", "<fg960000FF>hell", "don't display - 不显示"],
+                "map settings \n地图设置","difficulty (display hud) - 难度 (顶部hud)", 0, 0),
+            createWorkshopSetting(bool,"map settings \n地图设置","Playtest display - 游戏测试", false, 1)]
+        # display
+        if Difficultyhud[0] != 17: # 17th entry is 'dont display'
+            hudText((localPlayer.toggle_guide and not localPlayer.toggle_leaderboard)[0],
+                t"Playtest"
+                #("游戏测试" checkCN "Playtest")
+                if Difficultyhud.last() else [],
+                ["playtest", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell",null][Difficultyhud[0]],
+                null,
+                HudPosition.TOP, HO.data_dif,
+                Color.BLUE,
+                [Color.BLUE, Color.LIME_GREEN, Color.LIME_GREEN, Color.LIME_GREEN, Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.ORANGE, Color.ORANGE, Color.ORANGE,
+                rgb(255, 69, 0), rgb(255, 69, 0), rgb(255, 69, 0), Color.RED, Color.RED, Color.RED, rgb(150, 0, 0), null][Difficultyhud[0]],
+                null,
+                HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
     # global huds
     hudSubheader(true[0],
@@ -150,7 +181,7 @@ rule "Huds | Global Localplayer":
             hudSubtext([i for i in getAllPlayers() if i.comp_instructionHud], InstructionText[3], HudPosition.TOP, HO.comp_instruct4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         hudHeader([i for i in getAllPlayers() if i.comp_instructionHud],"                                   Press {0} to start                                ".format(buttonString(Button.INTERACT)),
             HudPosition.TOP, HO.comp_instructbottom, Color.WHITE, HudReeval.VISIBILITY_AND_STRING,SpecVisibility.DEFAULT)
-    else:
+    else if EditorOn:
         hudSubtext(localPlayer.toggle_guide,
             f"{t'Hold'} {buttonString(Button.INTERACT)} | {t'Spectate'}{t' | On' if localPlayer.toggle_spectate else []}",
             #"长按 {0} | 观战模式{1}".format(buttonString(Button.INTERACT)," | 启用" if localPlayer.toggle_spectate else [])
@@ -158,6 +189,7 @@ rule "Huds | Global Localplayer":
             #"Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | On" if localPlayer.toggle_spectate else []),
             HudPosition.RIGHT, HO.com_spec, evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.toggle_spectate else evalOnce(ColorConfig[Customize.command_normal]),
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+    else:
         hudSubtext(localPlayer.toggle_guide,
             f"{t'Hold'} {buttonString(Button.ABILITY_2)} | {t'Invisible'}{t' | On' if localPlayer.toggle_invisible else []}",
             #"长按 {0} | 隐身模式{1}".format(buttonString(Button.ABILITY_2)," | 启用" if localPlayer.toggle_invisible else [])
@@ -165,7 +197,6 @@ rule "Huds | Global Localplayer":
             #"Hold {0} | invisible{1}".format(buttonString(Button.ABILITY_2)," | On" if localPlayer.toggle_invisible else []),
             HudPosition.RIGHT, HO.com_invis, evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.toggle_invisible else evalOnce(ColorConfig[Customize.command_normal]),
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-        HudStoreEdit.append(getLastCreatedText())
 
         hudSubtext(localPlayer.toggle_guide,
             "{0} + {1} | {2}{3}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), t"Practice", f" | ({localPlayer.checkpoint_practice})" if localPlayer.toggle_practice else []),
@@ -174,7 +205,6 @@ rule "Huds | Global Localplayer":
             #"{0} + {1} | Practice{2}".format(buttonString(Button.ULTIMATE), buttonString(Button.MELEE), " | ({0})".format(localPlayer.checkpoint_practice) if localPlayer.toggle_practice else []),
             HudPosition.RIGHT, HO.com_practice, evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.toggle_practice else evalOnce(ColorConfig[Customize.command_normal]),
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-        HudStoreEdit.append(getLastCreatedText())
 
         hudSubheader((localPlayer.toggle_practice and localPlayer.toggle_guide)[0],
             f"{buttonString(Button.CROUCH)} + {buttonString(Button.PRIMARY_FIRE)} | {t'Next Level'}\n{
@@ -187,46 +217,6 @@ rule "Huds | Global Localplayer":
             #    buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT)),
             HudPosition.RIGHT, HO.com_practicesub, evalOnce(ColorConfig[Customize.command_highlight]),
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-        HudStoreEdit.append(getLastCreatedText())
-
-    #if not hostPlayer.editor_on:
-        # find the value
-    Difficultyhud = [
-        createWorkshopSetting(enum[
-            "<fg27AAFFFF>playtest - 游戏测试", "<fgA0E81BFF>easy-", "<fgA0E81BFF>easy", "<fgA0E81BFF>easy+",
-            "<fge0e000FF>medium-", "<fge0e000FF>medium", "<fge0e000FF>medium+", "<fgEC9900FF>hard-", "<fgEC9900FF>hard",
-            "<fgEC9900FF>hard+", "<fgFF4500FF>very hard-", "<fgFF4500FF>very hard", "<fgFF4500FF>very hard+",
-            "<fgC80013FF>extreme-", "<fgC80013FF>extreme", "<fgC80013FF>extreme+", "<fg960000FF>hell", "don't display - 不显示"],
-            "map settings \n地图设置","difficulty (display hud) - 难度 (顶部hud)", 0, 0),
-        createWorkshopSetting(bool,"map settings \n地图设置","Playtest display - 游戏测试", false, 1)]
-    # display
-    if Difficultyhud[0] != 17: # 17th entry is 'dont display'
-        hudText((localPlayer.toggle_guide and not localPlayer.toggle_leaderboard)[0],
-            t"Playtest"
-            #("游戏测试" checkCN "Playtest")
-            if Difficultyhud.last() else [],
-            ["playtest", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell",null][Difficultyhud[0]],
-            null,
-            HudPosition.TOP, HO.data_dif,
-            Color.BLUE,
-            [Color.BLUE, Color.LIME_GREEN, Color.LIME_GREEN, Color.LIME_GREEN, Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.ORANGE, Color.ORANGE, Color.ORANGE,
-             rgb(255, 69, 0), rgb(255, 69, 0), rgb(255, 69, 0), Color.RED, Color.RED, Color.RED, rgb(150, 0, 0), null][Difficultyhud[0]],
-            null,
-            HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-        HudStoreEdit.append(getLastCreatedText())
-
-    # restart + leaderboard
-    # this is remade in editor to not include leaderboard
-    hudSubtext(localPlayer.toggle_guide,
-        f"{buttonString(Button.CROUCH)} + {buttonString(Button.ABILITY_2)} + {buttonString(Button.INTERACT)} | {t'Restart'}\n{
-        t'Hold'} {buttonString(Button.MELEE)} | {t'Leaderboard'}",
-        #"{0} + {1} + {2} | 重新开始\n长按 {3} | 完整成绩排名".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE))
-        #checkCN
-        #"{0} + {1} + {2} | Restart\nHold {3} | leaderboard".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)),
-        HudPosition.RIGHT, HO.com_restart_n_board, ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    HudStoreEdit.append(getLastCreatedText())
-    #else:
-        # restart without leaderboard if editor on
 
 rule "Huds | Leaderboard": # for global instead of tied to player
     @Condition LeaderBoardRemake
