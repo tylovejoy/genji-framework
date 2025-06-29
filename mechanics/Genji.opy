@@ -19,7 +19,7 @@ def CheckUlt(): # checks if ult should be turned on
     if eventPlayer.isHoldingButton(Button.ULTIMATE): # incase spamming the button
         wait()
 
-    if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and eventPlayer.editor_on) or (not eventPlayer.checkpoint_notLast):
+    if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and EditorOn) or (not eventPlayer.checkpoint_notLast):
         goto lbl_a #skip msg if these
     elif eventPlayer.checkpoint_current in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last() ) <= cpcircleradius: 
         #"终极技能已就绪" checkCN "Ultimate is ready"
@@ -36,7 +36,7 @@ def CheckUlt(): # checks if ult should be turned on
 def CheckAbility1(): # checks if dash should be  turned on
     @Name "Mechanic | Genji | SUB Check Dash"
     waitUntil(not eventPlayer.isUsingAbility1(), true)
-    if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and eventPlayer.editor_on) or (not eventPlayer.checkpoint_notLast):
+    if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and EditorOn) or (not eventPlayer.checkpoint_notLast):
         goto lbl_a #skip msg if these
     elif eventPlayer.checkpoint_current in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= cpcircleradius: 
         #"技能1影已就绪" checkCN "Dash is ready"

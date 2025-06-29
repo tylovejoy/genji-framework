@@ -77,6 +77,7 @@ rule "Parkour | Setup & Variables":
     BanSaveDouble = BanSaveDouble if len(BanSaveDouble) else []
     BanDjump = BanDjump if len(BanDjump) else []
 
+    EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式", editoron , -1) # Turn Editor On
     if createWorkshopSetting(bool,"map settings \n地图设置","Basic Map Validator - 验证地图", true, 3):
         async(AddonCheckMap, AsyncBehavior.NOOP)
     PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用传送门 (占点地图)", true, 4)
@@ -104,7 +105,7 @@ rule "Parkour | Match time":
     pauseMatchTime()
     wait()
     TimeRemaining = 265
-    while TimeRemaining or hostPlayer.editor_on:
+    while TimeRemaining:
         wait(60)
         TimeRemaining--
         if CompMode:
@@ -128,7 +129,7 @@ rule "Parkour | Match time":
 
 rule "Parkour | Player Initialize":
     @Event playerJoined
-    eventPlayer.editor_on = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式" ,  editoron , -1) # Turn Editor On
+    #eventPlayer.editor_on = EditorOn
     eventPlayer.disableGamemodeHud()
     eventPlayer.disablePlayerCollision()
     eventPlayer.setDamageReceived(0)
@@ -188,7 +189,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isAlive()
     if not eventPlayer.checkpoint_notLast:
-        if (eventPlayer.isMoving() and not (eventPlayer.toggle_practice or eventPlayer.toggle_invisible or eventPlayer.editor_on or CompMode)):
+        if (eventPlayer.isMoving() and not (eventPlayer.toggle_practice or eventPlayer.toggle_invisible or EditorOn or CompMode)):
             # traces ----------------------------------------------------------------------------------------------------
             eventPlayer.cache_rainbow = [Color.RED, Color.ORANGE, Color.YELLOW, Color.LIME_GREEN, Color.GREEN, Color.TURQUOISE, Color.BLUE, Color.PURPLE, Color.VIOLET, Color.ROSE][(floor(getTotalTimeElapsed()*2))%10]
             #eventPlayer.cache_rainbow =  rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255)
@@ -235,7 +236,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             else:
                 eventPlayer.timer_split = eventPlayer.timer_normal
                 DeleteSave()
-                if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and not eventPlayer.editor_on: # complete lvl
+                if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and not EditorOn: # complete lvl
                     stopChasingVariable(eventPlayer.timer_normal)
                     LeaderboardUpdate()
                     if CompMode and CompAtmpNum:
@@ -418,7 +419,7 @@ def UpdateCache():
     async(CheckUlt(), AsyncBehavior.NOOP)
     async(CheckAbility1(), AsyncBehavior.NOOP)
 
-    if eventPlayer != hostPlayer or not eventPlayer.editor_on: return
+    if eventPlayer != hostPlayer or not EditorOn: return
     EditUpdateSelectedIds()
     destroyEffect(hostPlayer.editor_hitboxEffect)
     createEffect(hostPlayer if hostPlayer.editor_hitboxToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[hostPlayer.checkpoint_current], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)

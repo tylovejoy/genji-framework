@@ -403,7 +403,7 @@ rule "Huds | Each Player":
 
 def UpdateTitle():
     @Name "Huds | SUB Update Title"
-    if CompMode or eventPlayer.editor_on or not (len(TitleData) and eventPlayer.checkpoint_current in TitleData[0]):# or eventPlayer.toggle_practice:
+    if CompMode or EditorOn or not (len(TitleData) and eventPlayer.checkpoint_current in TitleData[0]):# or eventPlayer.toggle_practice:
         return
     destroyInWorldText(eventPlayer.cache_titleHud)
     createInWorldText((not eventPlayer.toggle_invisible)[0],TitleData[1][TitleData[0].index(eventPlayer.checkpoint_current)], eventPlayer, 1.1,

@@ -169,7 +169,7 @@ rule "Addon | Stall enhancer - 增强系統跳的判定":
     @Condition (eventPlayer.getVerticalSpeed() >= -0.2 and eventPlayer.getVerticalSpeed() <= 0.05) == true
     @Condition eventPlayer.getHorizontalSpeed() <= 1.3
     @Condition eventPlayer.isInAir() == true
-    @Condition eventPlayer.editor_on and eventPlayer.editor_fly == false
+    @Condition EditorOn and eventPlayer.editor_fly == false
     #@Condition createWorkshopSetting(bool, "map settings \n地图设置"," Autobounce enhancer - 增强系統跳的判定", false, 3)
 
     wait(0.25, Wait.ABORT_WHEN_FALSE)
@@ -324,7 +324,7 @@ rule "Addon | fisho cp cheat for overpy toggle":
     @Condition cpCheat
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.checkpoint_notLast) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.checkpoint_current)
-    @Condition eventPlayer.editor_on == false
+    @Condition EditorOn == false
     @Condition eventPlayer.toggle_practice == false
 
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):

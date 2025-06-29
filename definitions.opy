@@ -37,10 +37,9 @@ globalvar DashEnabledCheckpoints 13         # int                       --- dash
 #globalvar ListPlayersAtCheckpoints         # list[list[player]]        --- players at a specific checkpoint
 #!define ActivePlayers Q
 #globalvar ActivePlayers                    # list[player]              --- Active players, Non-saved, non-spectating active players
-#globalvar EditorOn                         # bool                      --- editor rules enabled?
 globalvar EditSelected 14
 globalvar EditSelectIdArray 15
-
+globalvar EditorOn 16                        # bool                      --- editor rules enabled?
 #globalvar EditorMoveItem                   # num                       --- used for moving a portal
 
 #Bounce Pad editing stuff
@@ -221,7 +220,7 @@ playervar preview_array1                     # array                     --- sto
 playervar preview_array2
 playervar preview_i                         # int                       --- preview itterator
 
-playervar editor_on                          # bool                      --- on all players, but only gets checked from host player
+#playervar editor_on                          # bool                      --- on all players, but only gets checked from host player
 playervar editor_modeSelect                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
 playervar editor_fly                         # vector/null               --- null if not flying, else vector position, added by fisho
 playervar editor_saveCache                        # array                     --- array of save map hud ids

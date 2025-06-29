@@ -6,7 +6,7 @@ rule "<tx0C00000000001344> Commands <tx0C00000000001344>":
 rule "Command | Toggle Leaderboard (Hold Melee)":
     @Event eachPlayer
     @Condition len(LeaderBoardFull) > 0
-    @Condition eventPlayer.editor_on == false
+    @Condition EditorOn == false
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.toggle_leaderboard = not eventPlayer.toggle_leaderboard
@@ -26,7 +26,7 @@ rule "Command | Split hide (Hold Dash + Primary + Secondary)":
 rule "Command | Toggle Invisible (Hold Deflect)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
-    @Condition eventPlayer.editor_on == false
+    @Condition EditorOn == false
     @Condition CompMode == false
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.toggle_invisible = not eventPlayer.toggle_invisible
@@ -44,8 +44,7 @@ a few huds show/hides when reviewarray is not null !!!!!!!!!!!!!!!!!
 */
 rule "Command | Preview Orbs & Portals (Hold Primary + Secondary)":
     @Event eachPlayer
-    #@Condition eventPlayer.editor_on == false
-    @Condition eventPlayer.lockState == false
+    #@Condition EditorOn == false
     @Condition eventPlayer.lockState == false
     @Condition eventPlayer.checkpoint_notLast
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
@@ -147,13 +146,13 @@ rule "Command | Spectate (Hold Interact)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
-    @Condition (eventPlayer.editor_on and (
+    @Condition (EditorOn and (
         eventPlayer.isHoldingButton(Button.MELEE) or
         eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) or
         eventPlayer.isHoldingButton(Button.SECONDARY_FIRE))) == false
     #@Condition editoron == false
     wait(1, Wait.ABORT_WHEN_FALSE)
-    if eventPlayer.editor_on: # editor has interact combos
+    if EditorOn: # editor has interact combos
         wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.enableRespawn()
     eventPlayer.disableRespawn()
@@ -211,7 +210,7 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
 
 rule "Command | Toggle Practice Mode (Melee + Ultimate)":
     @Event eachPlayer
-    @Condition eventPlayer.editor_on == false
+    @Condition EditorOn == false
     @Condition CompMode == false
     @Condition eventPlayer.lockState == false
     @Condition eventPlayer.isAlive()
@@ -248,7 +247,7 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
 
 rule "Command | Restart Practice (Hold Interact)":
     @Event eachPlayer
-    @Condition eventPlayer.editor_on == false
+    @Condition EditorOn == false
     @Condition eventPlayer.lockState == false
     @Condition eventPlayer.toggle_practice
     @Condition eventPlayer.isAlive() or eventPlayer.toggle_spectate
@@ -278,7 +277,7 @@ rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
     @Condition len(CheckpointPositions) > 1
     @Condition EditorMoveItem == false
     @Condition (eventPlayer.editor_lock and eventPlayer == hostPlayer) == false
-    @Condition hostPlayer.editor_on or eventPlayer.toggle_practice
+    @Condition EditorOn or eventPlayer.toggle_practice
     @Condition eventPlayer.lockState == false
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) != (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) )
@@ -320,7 +319,7 @@ rule "Command | Quick Reset (Reload | Hold Reload to Enable)":
 rule "Command | Toggle Hud (Hold Secondary)":
     @Event eachPlayer
     @Condition EditorMoveItem == false
-    @Condition (eventPlayer.editor_on and eventPlayer == hostPlayer and eventPlayer.isHoldingButton(Button.MELEE)) == false
+    @Condition (EditorOn and eventPlayer == hostPlayer and eventPlayer.isHoldingButton(Button.MELEE)) == false
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == false # don't activate during skipping
