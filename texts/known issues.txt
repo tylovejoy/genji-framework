@@ -45,6 +45,7 @@ triple jump ban doesnt work on workshop maps anymore
 
 # 1.10.X
 ### Bug Reports
+ - Unable to specatate from ult spam [Fixed]
  - Corrupt Map Object Data [Fixed]
    * Reported by `@hello_5702`
  - Exported data overwriting customization settings [Fixed]
@@ -81,7 +82,7 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@zxzpkcxcc`
  - Dash start on all levels [Fixed]
    * Reported by `@`
- - Ledge Dash addon always activated [REVERTED]
+ - Ledge Dash addon always activated [Reverted]
    * Reported by `@zxzpkcxcc`
  - Bypass ban save double jump with auto climb [Fixed]
    * Reported by `@zxzpkcxcc`
@@ -95,3 +96,5 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@zxzpkcxcc`
  - Lose ultimate start of level
    * Reported by `@.ohdark`
+ - Hide Hud text toggle reversed [Fixed]
+   * Reported by `@zxzpkcxcc`

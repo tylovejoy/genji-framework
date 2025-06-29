@@ -634,4 +634,11 @@ fixed:
  - English
  - Chinese 中文
  - Korean 한국어
-   * Editor not yet supported
+  Not yet supported features
+   * Workshop Settings
+   * Editor
+   * Competitive Mode
+### Other
+ - Fixed specate after spamming death
+ - Fixed Hide Hud text toggle reversed
+   * Reported by `@zxzpkcxcc` +5xp
