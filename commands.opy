@@ -20,7 +20,7 @@ rule "Command | Split hide (Hold Dash + Primary + Secondary)":
     eventPlayer.timer_splitDisplay = 0 if eventPlayer.timer_splitDisplay <= -Math.INFINITY else -Math.INFINITY
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
     #$$ Language
-    smallMessage(eventPlayer, "   split display off" if eventPlayer.timer_splitDisplay <= -Math.INFINITY else "   split display on")
+    smallMessage(eventPlayer, "   Split Display Off" if eventPlayer.timer_splitDisplay <= -Math.INFINITY else "   Split Display On")
     wait(0.32)
 
 rule "Command | Toggle Invisible (Hold Deflect)":
@@ -104,23 +104,23 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
     if CompMode:
         wait()
         if CompTime < 1:
-            smallMessage(eventPlayer, "   比赛结束" checkCN "   Competition is over"  )
+            smallMessage(eventPlayer, "   比赛结束" checkCN "   Competition Is Over"  )
             eventPlayer.lockState = false
             return
         elif eventPlayer.comp_done:
             eventPlayer.lockState = false
             return
         elif CompRestartLimit and eventPlayer.checkpoint_notLast:
-            smallMessage(eventPlayer, "   禁止在此比赛中运行期间重新启动" checkCN "   Restart during run is disabled for this competition")
+            smallMessage(eventPlayer, "   禁止在此比赛中运行期间重新启动" checkCN "   Restart During Run Is Disabled For This Competition")
             eventPlayer.lockState = false
             return
         elif CompAtmpNum:
             if eventPlayer.comp_countAttempts == CompAtmpNum:
-                smallMessage(eventPlayer, "   最后一次尝试" checkCN "   This is your final attempt"  )
+                smallMessage(eventPlayer, "   最后一次尝试" checkCN "   This Is Your Final Attempt"  )
                 eventPlayer.lockState = false
                 return
             if eventPlayer.comp_countAttempts < 0:
-                smallMessage(eventPlayer, "   你没有尝试过" checkCN "   You are out of attempts"  )
+                smallMessage(eventPlayer, "   你没有尝试过" checkCN "   You Are Out Of Attempts"  )
                 eventPlayer.lockState = false
                 return
             eventPlayer.comp_countAttempts++
@@ -326,11 +326,11 @@ rule "Command | Toggle Hud (Hold Secondary)":
 
     wait(1.5, Wait.ABORT_WHEN_FALSE)
     eventPlayer.toggle_guide = not eventPlayer.toggle_guide
-    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
-    smallMessage(eventPlayer, t"   HUD Is Now Hidden" if eventPlayer.toggle_guide else t"   HUD Is Now Shown")
+    smallMessage(eventPlayer, t"   HUD Is Now Shown" if eventPlayer.toggle_guide else t"   HUD Is Now Hidden")
         #("   HUD已隐藏" if eventPlayer.toggle_guide else  "   HUD已开启")
         #checkCN
         #("   Hud is now hidden" if eventPlayer.toggle_guide else "   Hud is now shown"))
+    playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
 
 rule "Command | Toggle Hints (Melee + Deflect)":
     @Event eachPlayer
