@@ -132,11 +132,6 @@ rule "Editor | Hud and Effects":
     #waitUntil(entityExists(getAllPlayers()), Math.INFINITY)  # cant be condition because host player can leaves, removing the rule fx
     #wait()
     if EditorOn:
-        if CompMode: # infinite time and attempts
-            CompAtmpNum = null
-            CompTime = Math.INFINITY
-            getAllPlayers().comp_countAttempts = null
-            getAllPlayers().comp_done = false
         #CustomPortalStart = CustomPortalStart if len(CustomPortalStart) else []
         #CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) else []
         #CustomPortalCP = CustomPortalCP if len(CustomPortalCP) else []
