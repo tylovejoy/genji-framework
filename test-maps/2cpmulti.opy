@@ -23,7 +23,6 @@ rule "test data":
     CustomPortalCP = []
     CompMode = false
     InstructionText = ["Change in Comp Mode instruction message hud 1", "Change in Comp Mode instruction message hud 2", "Change in Comp Mode instruction message hud 2", "Change in Comp Mode instruction message hud 2"]
-    HudStoreEdit = []
     SaveName = []
     SaveCp = []
     SaveEnt = []

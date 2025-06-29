@@ -24,22 +24,65 @@ rule "Huds | Global Localplayer":
     if not Code:
         Code = "code here - 代码"
     Cachedcredits = null
+    if EditorOn:
+        
+    else:
+        hudText(true[0], null, "Discord: dsc.gg/genjiparkour" if localPlayer.toggle_guide else [],
+            f"{t'Made By'}: {Name}{LeftAlign96}",
+            #"作者: {}" LeftAlign96.format(Name)
+            #checkCN
+            #"Made by: {}" LeftAlign96.format(Name),
+            HudPosition.LEFT, HO.data_name, null, ColorConfig[Customize.dsc], ColorConfig[Customize.credit_name] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-    hudText(true[0], null, "Discord: dsc.gg/genjiparkour" if localPlayer.toggle_guide else [],
-        f"{t'Made By'}: {Name}{LeftAlign96}",
-        #"作者: {}" LeftAlign96.format(Name)
-        #checkCN
-        #"Made by: {}" LeftAlign96.format(Name),
-        HudPosition.LEFT, HO.data_name, null, ColorConfig[Customize.dsc], ColorConfig[Customize.credit_name] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    HudStoreEdit.append(getLastCreatedText())
+        hudSubtext(true[0],
+            f"{t'Map Code'}: {Code}{LeftAlign96}",
+            #"代码: {}" LeftAlign96.format(Code)
+            #checkCN
+            #"Map code: {}" LeftAlign96.format(Code),
+            HudPosition.LEFT, HO.data_code, ColorConfig[Customize.credit_code] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-    hudSubtext(true[0],
-        f"{t'Map Code'}: {Code}{LeftAlign96}",
-        #"代码: {}" LeftAlign96.format(Code)
-        #checkCN
-        #"Map code: {}" LeftAlign96.format(Code),
-        HudPosition.LEFT, HO.data_code, ColorConfig[Customize.credit_code] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    HudStoreEdit.append(getLastCreatedText())
+        hudSubtext(localPlayer.toggle_guide,
+            f"{t'Hold'} {buttonString(Button.PRIMARY_FIRE)} + {buttonString(Button.SECONDARY_FIRE)} | {t'Preview CP'}",
+            #"长按 {0} + {1} | 预览关卡".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
+            #checkCN
+            #"Hold {0} + {1} | Preview cp".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE)),
+            HudPosition.RIGHT, HO.com_preview,
+            evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.preview_array1 else evalOnce(ColorConfig[Customize.command_normal]),
+            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+
+        hudSubheader((localPlayer.preview_array1 and localPlayer.toggle_guide)[0],
+            t"Walk ◀ ▶ | Preview Others\nWalk ▲ ▼ | Modify Zoom\nAim | Change Preview Angle",
+            #"移动键 ◀ ▶ | 预览其他\n移动键 ▲ ▼ | 修改间距 \n视角移动 | 调整浏览视角"
+            #checkCN
+            #"Walk ◀ ▶ | Preview Others\nWalk ▲ ▼ | Modify Zoom\nAim | Change Preview Angle",
+            HudPosition.TOP, HO.com_previewsub, ColorConfig[Customize.command_highlight], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.NEVER)
+
+        hudSubtext(localPlayer,
+            [] if localPlayer.timer_splitDisplay <= -Math.INFINITY or localPlayer.toggle_spectate else
+                f"{t'Split: '}{localPlayer.timer_splitDisplay}{LeftAlign96}",
+                #("单关用时 {0}" LeftAlign96.format(localPlayer.timer_splitDisplay)
+                #checkCN
+                #"Split: {0}" LeftAlign96.format(localPlayer.timer_splitDisplay))),
+            HudPosition.LEFT, HO.game_split_display, ColorConfig[Customize.time], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+
+        if len(HintText): #Remove no hints - visual and element bloat
+            hudText((localPlayer.toggle_guide and localPlayer.checkpoint_current in HintCp)[0],
+                null,
+                f"{t'― ― ― ― ― Hint ― ― ― ― ―\n' if localPlayer.toggle_hints else t'― ― ― Hint Available ― ― ―'}{
+                HintText[HintCp.index(localPlayer.checkpoint_current)] if localPlayer.toggle_hints else []}",
+                #("― ― ― ― ― 提示 ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)])
+                #if localPlayer.toggle_hints else "――――――  有可用提示 ――――――")
+                #checkCN
+                #("― ― ― ― ― Hint ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)])
+                #if localPlayer.toggle_hints else "― ― ― Hint Available ― ― ―"),
+                f"{buttonString(Button.ABILITY_2)} + {buttonString(Button.MELEE)} | {t'Hide Hint' if localPlayer.toggle_hints else t'Show Hint'}",
+                #"{} + {} | {}".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE),
+                #    ("隐藏提示" if localPlayer.toggle_hints else "获取提示")
+                #    checkCN
+                #    "Hide Hint" if localPlayer.toggle_hints else "Show Hint"),
+                HudPosition.RIGHT, HO.com_hints,
+                null, Color.GREEN if localPlayer.toggle_hints else Color.ORANGE, evalOnce(ColorConfig[Customize.command_normal]) if localPlayer.checkpoint_current in HintCp else Color.GRAY,
+                HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
     # global huds
     hudSubheader(true[0],
@@ -82,33 +125,6 @@ rule "Huds | Global Localplayer":
         #"Hold {0} | toggle hud".format(buttonString(Button.SECONDARY_FIRE)),
         HudPosition.RIGHT, HO.com_displaytoggle, null, ColorConfig[Customize.command_normal], ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-    hudSubtext(localPlayer.toggle_guide,
-        f"{t'Hold'} {buttonString(Button.PRIMARY_FIRE)} + {buttonString(Button.SECONDARY_FIRE)} | {t'Preview CP'}",
-        #"长按 {0} + {1} | 预览关卡".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE))
-        #checkCN
-        #"Hold {0} + {1} | Preview cp".format(buttonString(Button.PRIMARY_FIRE),buttonString(Button.SECONDARY_FIRE)),
-        HudPosition.RIGHT, HO.com_preview, evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.preview_array1 else evalOnce(ColorConfig[Customize.command_normal]),
-            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-    #HudStoreEdit.append(getLastCreatedText())
-
-    hudSubheader((localPlayer.preview_array1 and localPlayer.toggle_guide)[0],
-        t"Walk ◀ ▶ | Preview Others\nWalk ▲ ▼ | Modify Zoom\nAim | Change Preview Angle",
-        #"移动键 ◀ ▶ | 预览其他\n移动键 ▲ ▼ | 修改间距 \n视角移动 | 调整浏览视角"
-        #checkCN
-        #"Walk ◀ ▶ | Preview Others\nWalk ▲ ▼ | Modify Zoom\nAim | Change Preview Angle",
-        HudPosition.TOP, HO.com_previewsub, ColorConfig[Customize.command_highlight], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.NEVER)
-    #HudStoreEdit.append(getLastCreatedText())
-
-
-    hudSubtext(localPlayer,
-        [] if localPlayer.timer_splitDisplay <= -Math.INFINITY or localPlayer.toggle_spectate else
-            f"{t'Split: '}{localPlayer.timer_splitDisplay}{LeftAlign96}",
-            #("单关用时 {0}" LeftAlign96.format(localPlayer.timer_splitDisplay)
-            #checkCN
-            #"Split: {0}" LeftAlign96.format(localPlayer.timer_splitDisplay))),
-        HudPosition.LEFT, HO.game_split_display, ColorConfig[Customize.time], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    HudStoreEdit.append(getLastCreatedText())
-
     if len(CpHudText): # text per checkpoint  text per cp each
         hudText((localPlayer.checkpoint_current in CpHudCp and localPlayer.toggle_guide)[0],
             CpHudText[CpHudCp.index(localPlayer.checkpoint_current)],
@@ -120,26 +136,6 @@ rule "Huds | Global Localplayer":
             CpIwtText[CpIwtCp.index(localPlayer.checkpoint_current)],
             CpIwtPos[CpIwtCp.index(localPlayer.checkpoint_current)],
             2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, CpIwtColor, SpecVisibility.DEFAULT)
-
-    if len(HintText): #Remove no hints - visual and element bloat
-        hudText((localPlayer.toggle_guide and localPlayer.checkpoint_current in HintCp)[0],
-            null,
-            f"{t'― ― ― ― ― Hint ― ― ― ― ―\n' if localPlayer.toggle_hints else t'― ― ― Hint Available ― ― ―'}{
-            HintText[HintCp.index(localPlayer.checkpoint_current)] if localPlayer.toggle_hints else []}",
-            #("― ― ― ― ― 提示 ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)])
-            #if localPlayer.toggle_hints else "――――――  有可用提示 ――――――")
-            #checkCN
-            #("― ― ― ― ― Hint ― ― ― ― ―\n {} ".format(HintText[HintCp.index(localPlayer.checkpoint_current)])
-            #if localPlayer.toggle_hints else "― ― ― Hint Available ― ― ―"),
-            f"{buttonString(Button.ABILITY_2)} + {buttonString(Button.MELEE)} | {t'Hide Hint' if localPlayer.toggle_hints else t'Show Hint'}",
-            #"{} + {} | {}".format(buttonString(Button.ABILITY_2), buttonString(Button.MELEE),
-            #    ("隐藏提示" if localPlayer.toggle_hints else "获取提示")
-            #    checkCN
-            #    "Hide Hint" if localPlayer.toggle_hints else "Show Hint"),
-            HudPosition.RIGHT, HO.com_hints,
-            null, Color.GREEN if localPlayer.toggle_hints else Color.ORANGE, evalOnce(ColorConfig[Customize.command_normal]) if localPlayer.checkpoint_current in HintCp else Color.GRAY,
-            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-        HudStoreEdit.append(getLastCreatedText())
 
     if CompMode:
         hudHeader([i for i in getAllPlayers() if i.comp_instructionHud],"                                                                                                                           ",

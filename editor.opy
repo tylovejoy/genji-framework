@@ -133,7 +133,6 @@ rule "Editor | Hud and Effects":
     #waitUntil(entityExists(getAllPlayers()), Math.INFINITY)  # cant be condition because host player can leaves, removing the rule fx
     #wait()
     if EditorOn:
-        #hostPlayer.editor_lock = true
         while len(HudStoreEdit): # remove unnesesary huds
             destroyHudText(HudStoreEdit[0])
             destroyInWorldText(HudStoreEdit[0])

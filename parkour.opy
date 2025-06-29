@@ -12,9 +12,10 @@ rule "Parkour | Setup & Variables":
     disableScoring()
     disableMusic()
     disableAnnouncer()
-    startForcingSpawn(Team.ALL,  0)
-    startForcingSpawn(Team.ALL,  1)
-    startForcingSpawn(Team.ALL,  2)
+    startForcingSpawn(Team.ALL, 0)
+    startForcingSpawn(Team.ALL, 1)
+    startForcingSpawn(Team.ALL, 2)
+    EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式", editoron, -1) # Turn Editor On
     wait(LoadOrder.setup) # wait for map data rule
 
     # fix team because of naming
@@ -35,8 +36,6 @@ rule "Parkour | Setup & Variables":
     SaveCp = []
     SaveTimer = []
     SaveEnt = []
-    #SavePauseTime = []
-    #SavePauseEnabled = []
     SaveElapsed = []
 
     BladeEnabledCheckpoints = [i for i in BladeEnabledCheckpoints if i + false >= 0] if len(BladeEnabledCheckpoints) else []
@@ -77,29 +76,27 @@ rule "Parkour | Setup & Variables":
     BanSaveDouble = BanSaveDouble if len(BanSaveDouble) else []
     BanDjump = BanDjump if len(BanDjump) else []
 
-    EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式", editoron , -1) # Turn Editor On
     if createWorkshopSetting(bool,"map settings \n地图设置","Basic Map Validator - 验证地图", true, 3):
         async(AddonCheckMap, AsyncBehavior.NOOP)
     PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用传送门 (占点地图)", true, 4)
-    CompMode = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","Turn on competitive mode - 开启竞赛模式" , compModeToggle , 100)
+    CompMode = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","Turn on competitive mode - 开启竞赛模式", compModeToggle, 100)
     if CompMode:
         # -! comp minutes !-
         CompTime = createWorkshopSetting(int[1:240], "Competitive mode\n竞赛模式", "time limit (global) - 时间限制", compTimeLimit, 101) # 5-240
         # -! comp attempt count !-
         CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode\n竞赛模式", "attempt count - 尝试次数", attemptCount, 102)
         # -! comp restartlimiter !-
-        CompRestartLimit = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","disable restart during run - 竞赛中禁用重新开始" , compRestartLimit , 103)
+        CompRestartLimit = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","disable restart during run - 竞赛中禁用重新开始", compRestartLimit , 103)
     else:
         InstructionText = null
 
 rule "Parkour | Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
-        wait()#0.25
-        setMatchTime(false)#1
-        wait()#1.1
-        setMatchTime(false)#1
-        wait()#1.1
-        #wait(10)#10
+        wait()
+        setMatchTime(false)
+        wait()
+        setMatchTime(false)
+        wait()
 
     setMatchTime(70)
     pauseMatchTime()
@@ -114,7 +111,6 @@ rule "Parkour | Match time":
                 bigMessage(true[0], "时间到了" checkCN "Time's Up")
                 getAllPlayers().comp_done = true
                 stopChasingVariable(getAllPlayers().timer_normal)
-                #getAllPlayers().disableRespawn()
                 getAllPlayers().setDamageReceived(100)
                 kill(getAllPlayers(), null)
                 #wait(0.032)
@@ -129,7 +125,6 @@ rule "Parkour | Match time":
 
 rule "Parkour | Player Initialize":
     @Event playerJoined
-    #eventPlayer.editor_on = EditorOn
     eventPlayer.disableGamemodeHud()
     eventPlayer.disablePlayerCollision()
     eventPlayer.setDamageReceived(0)

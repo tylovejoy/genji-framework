@@ -27,7 +27,7 @@ rule "Addon | Comp Mode instruction message - 竞赛模式指引消息 <---- INS
 
 rule "Addon | Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled
-    @Delimiter
+    @Condition EditorOn == false
     #1) workshop settings > difficulty > set to "dont display"
     #2) enable this rule
     #3) type your difficulty in the hud below
@@ -42,7 +42,7 @@ rule "Addon | Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / �
         HudPosition.TOP, HO.data_dif,
         Color.BLUE, Color.GREEN, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
     )
-    HudStoreEdit.append(getLastCreatedText())
+    #HudStoreEdit.append(getLastCreatedText())
 
 rule "Addon | Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
     @Disabled
@@ -101,10 +101,11 @@ rule "Addon | Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)
 
 rule "Addon | Display Author Time - 展示世界纪录 <---- EDIT ME / 在此处编辑":
     @Disabled
+    @Condition EditorOn == false
     # type your entry in the textfield that says "name and time here"
     # 在文本框 中输入“名称和时间”
     hudText(true[0], null, " \n{0} author time {0}".format(iconString(Icon.FIRE)), "name and time here", HudPosition.RIGHT, HO.wr, null, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    HudStoreEdit.append(getLastCreatedText())
+    #HudStoreEdit.append(getLastCreatedText())
 
 rule "Addon | HUD text for certain Checkpoints - 特定关卡显示的HUD文本 <---- EDIT ME / 在此处编辑":
     @Disabled
