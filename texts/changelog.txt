@@ -632,12 +632,13 @@ fixed:
 # 1.10.4
 ### Languages
  - English
+   * Renamed 'Competitive Mode' to 'Tournament Mode'
  - Chinese 中文
  - Korean 한국어
   Not yet supported features
    * Workshop Settings
    * Editor
-   * Competitive Mode
+   * Tournament Mode
 ### Other
  - Fixed specate after spamming death
  - Fixed Hide Hud text toggle reversed
