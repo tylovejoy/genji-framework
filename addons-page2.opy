@@ -154,7 +154,7 @@ rule "<tx0C00000000001344> Addons Skills - 附加组件技能 <tx0C0000000000134
 
 # keeps you still shortly after getting in a stall
 # makes it much easier to get in one
-rule "Addon | Stall enhancer - 增强系統跳的判定":
+rule "Addon | Stall Enhancer - 增强系統跳的判定":
     @Event eachPlayer
     #原作：家里有妖怪#5202(国服)
     @Disabled
@@ -163,7 +163,7 @@ rule "Addon | Stall enhancer - 增强系統跳的判定":
     @Condition eventPlayer.getHorizontalSpeed() <= 1.3
     @Condition eventPlayer.isInAir() == true
     @Condition EditorOn and eventPlayer.editor_fly == false
-    #@Condition createWorkshopSetting(bool, "map settings \n地图设置"," Autobounce enhancer - 增强系統跳的判定", false, 3)
+    #@Condition createWorkshopSetting(bool, "Map Settings \n地图设置"," Autobounce Enhancer - 增强系統跳的判定", false, 3)
 
     wait(0.25, Wait.ABORT_WHEN_FALSE)
     eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)

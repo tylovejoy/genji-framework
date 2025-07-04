@@ -15,7 +15,7 @@ rule "Parkour | Setup & Variables":
     startForcingSpawn(Team.ALL, 0)
     startForcingSpawn(Team.ALL, 1)
     startForcingSpawn(Team.ALL, 2)
-    EditorOn = createWorkshopSetting(bool, "map settings \n地图设置","Editor mode - 作图模式", editoron, -1) # Turn Editor On
+    EditorOn = createWorkshopSetting(bool, "Map Settings \n地图设置","Editor Mode | 作图模式", editoron, -1) # Turn Editor On
     wait(LoadOrder.setup) # wait for map data rule
 
     # fix team because of naming
@@ -76,17 +76,17 @@ rule "Parkour | Setup & Variables":
     BanSaveDouble = BanSaveDouble if len(BanSaveDouble) else []
     BanDjump = BanDjump if len(BanDjump) else []
 
-    if createWorkshopSetting(bool,"map settings \n地图设置","Basic Map Validator - 验证地图", true, 3):
+    if createWorkshopSetting(bool,"Map Settings \n地图设置","Basic Map Validator | 验证地图", true, 3):
         async(AddonCheckMap, AsyncBehavior.NOOP)
-    PortalOn = createWorkshopSetting(bool, "map settings \n地图设置","enable portals (control maps) - 启用传送门 (占点地图)", true, 4)
-    CompMode = not EditorOn and createWorkshopSetting(bool, "Competitive mode\n竞赛模式","Turn on competitive mode - 开启竞赛模式", compModeToggle, 100)
+    PortalOn = createWorkshopSetting(bool, "Map Settings \n地图设置","Enable Portals (Control Maps) | 启用传送门 (占点地图)", true, 4)
+    CompMode = not EditorOn and createWorkshopSetting(bool, "Tournament Mode\n竞赛模式","Enable Tournament Mode | 开启竞赛模式", compModeToggle, 100)
     if CompMode:
         # -! comp minutes !-
-        CompTime = createWorkshopSetting(int[1:240], "Competitive mode\n竞赛模式", "time limit (global) - 时间限制", compTimeLimit, 101) # 5-240
+        CompTime = createWorkshopSetting(int[1:240], "Tournament Mode\n竞赛模式", "Time Limit (Global) | 时间限制", compTimeLimit, 101) # 5-240
         # -! comp attempt count !-
-        CompAtmpNum = createWorkshopSetting(int[0:500], "Competitive mode\n竞赛模式", "attempt count - 尝试次数", attemptCount, 102)
+        CompAtmpNum = createWorkshopSetting(int[0:500], "Tournament Mode\n竞赛模式", "Attempt Count | 尝试次数", attemptCount, 102)
         # -! comp restartlimiter !-
-        CompRestartLimit = createWorkshopSetting(bool, "Competitive mode\n竞赛模式","disable restart during run - 竞赛中禁用重新开始", compRestartLimit , 103)
+        CompRestartLimit = createWorkshopSetting(bool, "Tournament Mode\n竞赛模式","Disable Restart During Run | 竞赛中禁用重新开始", compRestartLimit , 103)
     else:
         InstructionText = null
 
@@ -373,31 +373,31 @@ def UpdateCache():
     eventPlayer.banString = []
     wait()
     if eventPlayer.checkpoint_notLast:
-        eventPlayer.ban_multi = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Multiclimb - 封禁蹭留", false, 1) or eventPlayer.checkpoint_current in BanMulti
+        eventPlayer.ban_multi = createWorkshopSetting(bool, "Ban (Applies To All Levels)\n封禁(应用于所有关卡)", "Ban Multiclimb | 封禁蹭留", false, 1) or eventPlayer.checkpoint_current in BanMulti
         if eventPlayer.ban_multi:
             eventPlayer.banString = "∞ {}".format(eventPlayer.banString)
-        eventPlayer.ban_create = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Createbhop - 封禁卡小", false, 2) or eventPlayer.checkpoint_current in BanCreate
+        eventPlayer.ban_create = createWorkshopSetting(bool, "Ban (Applies To All Levels)\n封禁(应用于所有关卡)", "Ban Createbhop | 封禁卡小", false, 2) or eventPlayer.checkpoint_current in BanCreate
         if eventPlayer.ban_create:
             eventPlayer.banString = "♂ {}".format(eventPlayer.banString)
-        eventPlayer.ban_standcreate = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","ban standcreate - 封禁站卡", false, 3) or eventPlayer.checkpoint_current in BanStand
+        eventPlayer.ban_standcreate = createWorkshopSetting(bool, "Ban (Applies To All Levels)\n封禁(应用于所有关卡)","Ban Standcreate | 封禁站卡", false, 3) or eventPlayer.checkpoint_current in BanStand
         if eventPlayer.ban_standcreate:
             eventPlayer.banString = "♠ {}".format(eventPlayer.banString) # ≥  √ ▼ ↓
-        eventPlayer.ban_dead = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Deathbhop - 封禁死小", false, 4) or eventPlayer.checkpoint_current in BanDead
+        eventPlayer.ban_dead = createWorkshopSetting(bool, "Ban (Applies To All Levels)\n封禁(应用于所有关卡)", "Ban Deathbhop | 封禁死小", false, 4) or eventPlayer.checkpoint_current in BanDead
         if eventPlayer.ban_dead:
             eventPlayer.banString = "X {}".format(eventPlayer.banString)
-        eventPlayer.ban_emote = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Emote Savehop - 封禁表情留小", false, 5) or eventPlayer.checkpoint_current in BanEmote
+        eventPlayer.ban_emote = createWorkshopSetting(bool, "Ban (Applies To All Levels)\n封禁(应用于所有关卡)", "Ban Emote Savehop | 封禁表情留小", false, 5) or eventPlayer.checkpoint_current in BanEmote
         if eventPlayer.ban_emote:
             eventPlayer.banString = "♥ {}".format(eventPlayer.banString)
-        eventPlayer.ban_climb = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban Wallclimb - 封禁爬墙", false, 6) or eventPlayer.checkpoint_current in BanClimb
+        eventPlayer.ban_climb = createWorkshopSetting(bool, "Ban (Applies To All Levels)\n封禁(应用于所有关卡)", "Ban Wallclimb | 封禁爬墙", false, 6) or eventPlayer.checkpoint_current in BanClimb
         if eventPlayer.ban_climb:
             eventPlayer.banString = "↑ {}".format(eventPlayer.banString)
-        eventPlayer.ban_savedouble = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)", "ban save double - 封禁延二段跳", false, 7) or eventPlayer.checkpoint_current in BanSaveDouble
+        eventPlayer.ban_savedouble = createWorkshopSetting(bool, "Ban (Applies To All Levels)\n封禁(应用于所有关卡)", "Ban Save Double | 封禁延二段跳", false, 7) or eventPlayer.checkpoint_current in BanSaveDouble
         if eventPlayer.ban_savedouble:
             eventPlayer.banString = "△ {}".format(eventPlayer.banString)
-        eventPlayer.ban_bhop = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require bhop available - 留小跳进点 ", false, 8) or eventPlayer.checkpoint_current in BanBhop
+        eventPlayer.ban_bhop = createWorkshopSetting(bool, "Ban (Applies To All Levels)\n封禁(应用于所有关卡)","Require Bhop Available | 留小跳进点 ", false, 8) or eventPlayer.checkpoint_current in BanBhop
         if eventPlayer.ban_bhop:
             eventPlayer.banString = "≥ {}".format(eventPlayer.banString) # ≥  √ ▼ ↓
-        eventPlayer.ban_djump = createWorkshopSetting(bool, "Ban (applies to all levels)\n封禁(应用于所有关卡)","require djump available - 留二段跳 ", false, 9) or eventPlayer.checkpoint_current in BanDjump
+        eventPlayer.ban_djump = createWorkshopSetting(bool, "Ban (Applies To All Levels)\n封禁(应用于所有关卡)","Require Djump Available | 留二段跳 ", false, 9) or eventPlayer.checkpoint_current in BanDjump
         if eventPlayer.ban_djump:
             eventPlayer.banString = "» {}".format(eventPlayer.banString) # ≥  √ ▼ ↓ ︽
     else:

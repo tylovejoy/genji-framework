@@ -94,19 +94,19 @@ rule "Huds | Global Localplayer":
         
         Difficultyhud = [
             createWorkshopSetting(enum[
-                "<fg27AAFFFF>playtest - 游戏测试", "<fgA0E81BFF>easy-", "<fgA0E81BFF>easy", "<fgA0E81BFF>easy+",
-                "<fge0e000FF>medium-", "<fge0e000FF>medium", "<fge0e000FF>medium+", "<fgEC9900FF>hard-", "<fgEC9900FF>hard",
-                "<fgEC9900FF>hard+", "<fgFF4500FF>very hard-", "<fgFF4500FF>very hard", "<fgFF4500FF>very hard+",
-                "<fgC80013FF>extreme-", "<fgC80013FF>extreme", "<fgC80013FF>extreme+", "<fg960000FF>hell", "don't display - 不显示"],
-                "map settings \n地图设置","difficulty (display hud) - 难度 (顶部hud)", 0, 0),
-            createWorkshopSetting(bool,"map settings \n地图设置","Playtest display - 游戏测试", false, 1)]
+                "<fg27AAFFFF>Playtest | 游戏测试", "<fgA0E81BFF>Easy-", "<fgA0E81BFF>Easy", "<fgA0E81BFF>Easy+",
+                "<fge0e000FF>Medium-", "<fge0e000FF>Medium", "<fge0e000FF>Medium+", "<fgEC9900FF>Hard-", "<fgEC9900FF>Hard",
+                "<fgEC9900FF>Hard+", "<fgFF4500FF>Very Hard-", "<fgFF4500FF>Very Hard", "<fgFF4500FF>Very Hard+",
+                "<fgC80013FF>Extreme-", "<fgC80013FF>Extreme", "<fgC80013FF>Extreme+", "<fg960000FF>Hell", "Do Not Display | 不显示"],
+                "Map Settings \n地图设置","Difficulty (Display Hud) | 难度 (顶部hud)", 0, 0),
+            createWorkshopSetting(bool,"Map Settings \n地图设置","Playtest Display | 游戏测试", false, 1)]
         # display
         if Difficultyhud[0] != 17: # 17th entry is 'dont display'
             hudText((localPlayer.toggle_guide and not localPlayer.toggle_leaderboard)[0],
                 t"Playtest"
                 #("游戏测试" checkCN "Playtest")
                 if Difficultyhud.last() else [],
-                ["playtest", "easy -", "easy", "easy +","medium -","medium","medium +","hard -","hard","hard +","very hard -","very hard","very hard +","extreme -","extreme","extreme +","hell",null][Difficultyhud[0]],
+                ["Playtest", "Easy -", "Easy", "Easy +","Medium -","Medium","Medium +","Hard -","Hard","Hard +","Very Hard -","Very Hard","Very Hard +","Extreme -","Extreme","Extreme +","Hell",null][Difficultyhud[0]],
                 null,
                 HudPosition.TOP, HO.data_dif,
                 Color.BLUE,
@@ -384,7 +384,7 @@ rule "Huds | Each Player":
                 "\nAttempt {0} / {1}".format(eventPlayer.comp_countAttempts, CompAtmpNum) if CompAtmpNum else [])),
             ("竞赛模式" if CompTime else "竞赛模式\n\n\n")
             checkCN
-            ("competitive mode" if CompTime else "competitive mode\n\n\n"),
+            ("Tournament Mode" if CompTime else "Tournament Mode\n\n\n"),
             HudPosition.TOP, HO.comp_info, null, Color.YELLOW, Color.YELLOW, HudReeval.STRING, SpecVisibility.DEFAULT)
 
 def UpdateTitle():

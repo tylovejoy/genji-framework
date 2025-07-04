@@ -93,7 +93,7 @@ globalvar CustomPortalStart 45              # [vect]                    --- cust
 globalvar CustomPortalEndpoint 46           # [vect]                    --- custom portal end points
 globalvar CustomPortalCP 47                 # [int]                     --- custom portal checkpoints
 
-globalvar CompMode 50                       # bool                      --- competitive mode toggle
+globalvar CompMode 50                       # bool                      --- Tournament mode toggle
 globalvar CompTime 51                       # int                       --- compt mode time limit
 globalvar CompAtmpNum 52                    # int                       --- compt mode attempt limit
 globalvar CompAtmpSaveNames 53              # [strings]                 --- comp name list
