@@ -388,12 +388,12 @@ def UpdateCache():
         eventPlayer.ban_emote = createWorkshopSetting(bool, "Ban (Applies To All Levels)\n封禁(应用于所有关卡)", "Ban Emote Savehop | 封禁表情留小", false, 5) or eventPlayer.checkpoint_current in BanEmote
         if eventPlayer.ban_emote:
             eventPlayer.banString = "♥ {}".format(eventPlayer.banString)
-        eventPlayer.ban_climb = createWorkshopSetting(bool, "Ban (Applies To All Levels)\n封禁(应用于所有关卡)", "Ban Wallclimb | 封禁爬墙", false, 6) or eventPlayer.checkpoint_current in BanClimb
-        if eventPlayer.ban_climb:
-            eventPlayer.banString = "↑ {}".format(eventPlayer.banString)
-        eventPlayer.ban_savedouble = createWorkshopSetting(bool, "Ban (Applies To All Levels)\n封禁(应用于所有关卡)", "Ban Save Double | 封禁延二段跳", false, 7) or eventPlayer.checkpoint_current in BanSaveDouble
+        eventPlayer.ban_savedouble = createWorkshopSetting(bool, "Ban (Applies To All Levels)\n封禁(应用于所有关卡)", "Ban Save Double | 封禁延二段跳", false, 6) or eventPlayer.checkpoint_current in BanSaveDouble
         if eventPlayer.ban_savedouble:
             eventPlayer.banString = "△ {}".format(eventPlayer.banString)
+        eventPlayer.ban_climb = createWorkshopSetting(bool, "Ban (Applies To All Levels)\n封禁(应用于所有关卡)", "Ban Wallclimb | 封禁爬墙", false, 7) or eventPlayer.checkpoint_current in BanClimb
+        if eventPlayer.ban_climb:
+            eventPlayer.banString = "↑ {}".format(eventPlayer.banString)
         eventPlayer.ban_bhop = createWorkshopSetting(bool, "Ban (Applies To All Levels)\n封禁(应用于所有关卡)","Require Bhop Available | 留小跳进点 ", false, 8) or eventPlayer.checkpoint_current in BanBhop
         if eventPlayer.ban_bhop:
             eventPlayer.banString = "≥ {}".format(eventPlayer.banString) # ≥  √ ▼ ↓
