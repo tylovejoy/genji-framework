@@ -77,7 +77,6 @@ rule "Addon | Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
 rule "Addon | Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
     @Disabled
     @Event playerJoined
-
     # "your nickname" your friends ingame name
     # "display title" fill in the custom title
     # 修改字符串 "your nickname <-------" 为好友名字 区分大小写
@@ -85,13 +84,13 @@ rule "Addon | Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)
     waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
     if "your nickname <-------" == eventPlayer[0].split([]):
         bigMessage(true[0], "Message to the whole room")
-        createInWorldText(true[0], "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+        createInWorldText((not eventPlayer.toggle_invisible)[0], "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
     if "your nickname <-------" == eventPlayer[0].split([]):
         bigMessage(true[0], "Message to the whole room")
-        createInWorldText(true[0], "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+        createInWorldText((not eventPlayer.toggle_invisible)[0], "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
     if "your nickname <-------" == eventPlayer[0].split([]):
         bigMessage(true[0], "Message to the whole room")
-        createInWorldText(true[0], "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+        createInWorldText((not eventPlayer.toggle_invisible)[0], "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
 rule "Addon | Display Author Time - 展示世界纪录 <---- EDIT ME / 在此处编辑":
     @Disabled
