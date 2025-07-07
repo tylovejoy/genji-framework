@@ -2,7 +2,7 @@
 rule "<tx0C00000000001344> Editor <tx0C00000000001344>":
     @Delimiter
 
-rule "Editor | Clear Excess Data to Save Map":
+rule "Editor | Clear Extra Data To Save Map":
     #@Event eachPlayer
     #@Condition eventPlayer == hostPlayer
     @Condition EditorOn
@@ -73,38 +73,38 @@ rule "Editor | Clear Excess Data to Save Map":
         " 创建新的代码 → 复制并记下代码\n\n"
 
         "   5. 添加作者信息:\n"
-        " Esc → 打开地图工坊编辑器 → 规则第(2/2)页 → 展开规则'Credits here - 作者名字'\n"
+        " Esc → 打开地图工坊编辑器 → 规则第(2/2)页 → 展开规则'Credits Here - 作者名字'\n"
         " 修改自定义字符串文本框中的内容\n\n"
 
         "   6. 更新地图及作者信息:\n"
         " Esc → 显示大厅 → 设置 → 共享代码 →\n"
         " 上传至现有代码 → 粘贴步骤4中获得的代码"
         checkCN
-        "   0. clear excess data:\n"
-        " Already done when opening this window\n\n"
+        "   0. Clear Extra Data:\n"
+        " Already Done Upon Opening This Window\n\n"
 
-        "   1. Copy data:\n"
-        " Open Workshop Inspector → Set variable target as global\n"
-        " click the [x]\n\n"
+        "   1. Copy Data:\n"
+        " Open Workshop Inspector → Set Variable Target To Global\n"
+        " Click The [X]\n\n"
 
-        "   2. Insert data:\n"
-        " Paste the data into rule named 'Map Data <---- INSERT HERE'\n\n"
+        "   2. Insert Data:\n"
+        " Paste The Data Into Rule Named 'Map Data <---- Insert Here'\n\n"
 
-        "   3. Workshop settings:\n"
-        " ESC → SHOW LOBBY → SETTINGS → workshop settings →\n"
-        " toggle 'Editor mode' off\n"
-        " Select display difficulty\n\n"
+        "   3. Workshop Settings:\n"
+        " Esc → Show Lobby → Settings → Workshop Settings →\n"
+        " Toggle 'Editor Mode' Off\n"
+        " Select Display Difficulty\n\n"
         
-        "   4. Create initial sharecode:\n"
-        " ESC → SHOW LOBBY → SETTINGS → SHARE CODE →\n"
-        " CREATE NEW CODE → COPY CODE\n\n"
+        "   4. Create Initial Sharecode:\n"
+        " Esc → Show Lobby → Settings → Share Code →\n"
+        " Create New Code → Copy Code\n\n"
 
-        "   5. Add credits:\n"
-        " Enter your name & map code in the 'Credits here' rule\n\n"
+        "   5. Add Credits:\n"
+        " Enter Your Name & Map Code In The 'Credits Here' Rule\n\n"
 
-        "   6. Update for credits:\n"
-        " ESC → SHOW LOBBY → SETTINGS → SHARE CODE →\n"
-        " UPLOAD TO EXISTING CODE → PASTE THE CODE YOU CREATED IN STEP 4",
+        "   6. Update For Credits:\n"
+        " Esc → Show Lobby → Settings → Share Code →\n"
+        " Upload To Existing Code → Paste The Code You Created In Step 4",
        HudPosition.TOP, HO.edit_clearec1, null, null, Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT)
     hostPlayer.editor_saveCache[2]=getLastCreatedText()
 
@@ -127,7 +127,7 @@ rule "Editor | Clear Excess Data to Save Map":
     hostPlayer.editor_saveCache = null
     hostPlayer.editor_lock = false
 
-rule "Editor | Hud and Effects":
+rule "Editor | Hud & Effects":
     wait(LoadOrder.hudsEditor)
     #waitUntil(entityExists(getAllPlayers()), Math.INFINITY)  # cant be condition because host player can leaves, removing the rule fx
     #wait()
@@ -227,7 +227,7 @@ rule "Editor | Hud and Effects":
             ][EditorMode.current] if not EditorMoveItem else
                 #"{0} (长按) | 快速移动"
                 "{0} | 放置实体"
-                "{1} | cancel placement\n".format(buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE))
+                "{1} | Cancel Placement\n".format(buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE))
             ) checkCN
             ([
                 "{0} + {1} | Remove/Add Teleport\n"
@@ -371,7 +371,7 @@ rule "Editor | Hud and Effects":
                     iconString(Icon.ARROW_RIGHT) if EditorMode.portal else "     ")
             if hostPlayer.isHoldingButton(Button.MELEE) else
                 " {1} {0} ".format(
-                    ["Checkpoints" ,"Boundary spheres","Function Orbs","Skill Bans","Portals"][EditorMode.current],
+                    ["Checkpoints" ,"Boundary Spheres","Function Orbs","Skill Bans","Portals"][EditorMode.current],
                     [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][EditorMode.current])
             if localPlayer == hostPlayer else
                 " {0} Genji Editor {0} ".format(iconString(Icon.BOLT)),
@@ -592,7 +592,7 @@ rule "Editor | Hud and Effects":
         createEffect(hostPlayer if len(EditSelectIdArray) and EditorMode.portal else null, Effect.SPARKLES, Color.PURPLE, CustomPortalEndpoint[EditSelected], 0.2, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
 
 # global functions ==============================================================
-rule "Editor |  Fly/Noclip Toggle":
+rule "Editor | Toggle Fly & Noclip":
     @Event eachPlayer
     @Condition EditorOn
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
@@ -626,7 +626,7 @@ rule "Editor |  Fly/Noclip Toggle":
     eventPlayer.stopForcingPosition()
     wait(1)
 
-rule "Editor | change mode":
+rule "Editor | Change Mode":
     #@Event eachPlayer
     #@Condition eventPlayer == hostPlayer
     @Condition EditorOn
@@ -647,7 +647,7 @@ rule "Editor | change mode":
     hostPlayer.editor_lock = false
 
 def EditUpdateSelectedIds():
-    @Name "Editor | update selected id"
+    @Name "Editor | Update Selected Id"
     if EditorMode.killBall:
         EditSelectIdArray = [i for _, i in KillballCheckpoints]
         EditSelectIdArray = [i for i in EditSelectIdArray if KillballCheckpoints[i] == hostPlayer.checkpoint_current ]
@@ -661,10 +661,10 @@ def EditUpdateSelectedIds():
         EditSelectIdArray = []
 
 def EditorSelectLast():
-    @Name "Editor | select last"
+    @Name "Editor | Select Last"
     EditSelected = EditSelectIdArray.last()
 
-rule "Editor | create cp/orb":
+rule "Editor | Create Cp/Orb":
     @Event eachPlayer
     @Condition eventPlayer == hostPlayer #Required for UpdateCache()
     @Condition EditorOn
@@ -775,7 +775,7 @@ rule "Editor | create cp/orb":
     hostPlayer.editor_lock = false
     wait(0.64)
 
-rule "Editor | delete cp/orb/portal":
+rule "Editor | Delete Cp/Orb/Portal":
     @Event eachPlayer
     @Condition eventPlayer == hostPlayer #Required for UpdateCache()
     @Condition EditorOn
@@ -892,7 +892,7 @@ rule "Editor | delete cp/orb/portal":
 
 # orb functions ==============================================================
 
-rule "Editor | toggle orb functions":
+rule "Editor | Toggle Orb Functions":
     @Event eachPlayer
     @Condition eventPlayer == hostPlayer #Required for UpdateCache()
     @Condition EditorOn
@@ -915,7 +915,7 @@ rule "Editor | toggle orb functions":
     hostPlayer.editor_lock = false
     wait()
 
-rule "Editor | orb radi/strength":
+rule "Editor | Orb Radii/Strength":
     @Event eachPlayer
     @Condition eventPlayer == hostPlayer #Required for UpdateCache()
     @Condition EditorOn
@@ -936,7 +936,7 @@ rule "Editor | orb radi/strength":
     UpdateCache()
     hostPlayer.editor_lock = false
 
-rule "Editor | select orb/portal":
+rule "Editor | Select Orb/Portal":
     #@Event eachPlayer
     #@Condition eventPlayer == hostPlayer
     @Condition EditorOn
@@ -957,7 +957,7 @@ rule "Editor | select orb/portal":
 
 # checkpoint functions ==============================================================
 
-rule "Editor | cp size hitbox display":
+rule "Editor | Cp Size Hitbox Display":
     #@Event eachPlayer
     #@Condition eventPlayer == hostPlayer
     @Condition EditorOn
@@ -967,7 +967,7 @@ rule "Editor | cp size hitbox display":
     hostPlayer.editor_hitboxToggle = not hostPlayer.editor_hitboxToggle
     wait()
 
-rule "Editor | cp add/remove teleport":
+rule "Editor | Cp Add/Remove Teleport":
     @Condition EditorOn
     @Condition EditorMode.current == 0
     @Condition hostPlayer.editor_lock == false
@@ -998,7 +998,7 @@ rule "Editor | cp add/remove teleport":
     hostPlayer.editor_lock = false
     wait()
 
-rule "Editor | moving checkpoint":
+rule "Editor | Moving Checkpoint":
     #@Event eachPlayer
     #@Condition eventPlayer == hostPlayer
     @Condition EditorOn
@@ -1033,7 +1033,7 @@ rule "Editor | moving checkpoint":
 
     hostPlayer.editor_lock = false
 
-rule "Editor | add ult/dash":
+rule "Editor | Toggle Ult/Dash":
     @Event eachPlayer
     @Condition eventPlayer == hostPlayer
     @Condition EditorOn
@@ -1049,7 +1049,7 @@ rule "Editor | add ult/dash":
         toggleCpInArray(DashEnabledCheckpoints)
     wait()
 
-rule "Editor | toggle bans":
+rule "Editor | Toggle Bans":
     @Event eachPlayer
     @Condition eventPlayer == hostPlayer #Required for UpdateCache()
     @Condition EditorOn
@@ -1085,7 +1085,7 @@ rule "Editor | toggle bans":
     UpdateCache()
     hostPlayer.editor_lock = false
 
-rule "Editor | portal cp change":
+rule "Editor | Change Portal Cp":
     #@Event eachPlayer
     #@Condition eventPlayer == hostPlayer
     @Condition EditorOn
@@ -1098,7 +1098,7 @@ rule "Editor | portal cp change":
     CustomPortalCP[EditSelected] = hostPlayer.checkpoint_current if CustomPortalCP[EditSelected] < 0 else -1
     wait(0.3)
 
-rule "Editor | move object":
+rule "Editor | Move Object":
     @Event eachPlayer
     @Condition eventPlayer == hostPlayer #Required for UpdateCache()
     @Condition EditorOn
