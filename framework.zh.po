@@ -318,7 +318,7 @@ msgstr "≥ 留小跳进点!"
 
 #. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
 msgid "» Must Have A Double Jump To Complete!"
-msgstr "» 留二段跳!"
+msgstr "» 留二段跳进点!"
 
 #. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
 msgid "Mission Complete! Time"
