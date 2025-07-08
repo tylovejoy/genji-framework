@@ -508,8 +508,8 @@ def CheckpointFailReset():
             eventPlayer.setDamageReceived(0)
             wait()
 
-    async(CheckUlt(), AsyncBehavior.NOOP)
-    async(CheckAbility1(), AsyncBehavior.NOOP)
+    async(CheckUlt(), AsyncBehavior.RESTART)
+    async(CheckAbility1(), AsyncBehavior.RESTART)
     AddonCustomLoadAndReset()
 
 def StartGame():
