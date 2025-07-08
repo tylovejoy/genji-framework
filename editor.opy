@@ -2,9 +2,9 @@
 rule "<tx0C00000000001344> Editor <tx0C00000000001344>":
     @Delimiter
 
-rule "Editor | Clear Extra Data To Save Map":
-    #@Event eachPlayer
-    #@Condition eventPlayer == hostPlayer
+rule "Editor | Export Map":
+    @Event eachPlayer
+    @Condition eventPlayer == hostPlayer
     @Condition EditorOn
     @Condition hostPlayer.isHoldingButton(Button.MELEE)
     @Condition hostPlayer.isHoldingButton(Button.INTERACT)
@@ -16,6 +16,7 @@ rule "Editor | Clear Extra Data To Save Map":
     TimeRemaining = null
     ColorConfig = null
     EditorOn = null
+
     CheckpointRings_Editing = null
     KillBallEffects = null
     TempIterator1 = null
@@ -49,7 +50,14 @@ rule "Editor | Clear Extra Data To Save Map":
     Cachedcredits = [Name, Code]
     Name = null
     Code = null
+
+    enableInspector()
+    disableInspector()
+    EditorOn = true
+    TimeRemaining = hostPlayer.editor_saveCache[0]
+    ColorConfig = hostPlayer.editor_saveCache.last()
     async(AddonCheckMap, AsyncBehavior.NOOP)
+
     hudText(hostPlayer,
         "­",
         null,
@@ -106,23 +114,18 @@ rule "Editor | Clear Extra Data To Save Map":
         " Esc → Show Lobby → Settings → Share Code →\n"
         " Upload To Existing Code → Paste The Code You Created In Step 4",
        HudPosition.TOP, HO.edit_clearec1, null, null, Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT)
-    hostPlayer.editor_saveCache[2]=getLastCreatedText()
+    hostPlayer.editor_saveCache[0] = getLastCreatedText()
 
     hudHeader(hostPlayer,
         "    > 按互动键关闭当前窗口 <    "
         checkCN
         "    > Press Interact To Close This Window <    "
         , HudPosition.TOP, HO.edit_clearec3, Color.LIME_GREEN, HudReeval.STRING)
-    hostPlayer.editor_saveCache[3]=getLastCreatedText()
+    hostPlayer.editor_saveCache[1] = getLastCreatedText()
 
-    enableInspector()
-    disableInspector()
-    EditorOn = true
-    TimeRemaining = hostPlayer.editor_saveCache[0]
-    ColorConfig = hostPlayer.editor_saveCache[1]
     waitUntil(not hostPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
     waitUntil(hostPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
-    destroyHudText(hostPlayer.editor_saveCache[2])
+    destroyHudText(hostPlayer.editor_saveCache[0])
     destroyHudText(hostPlayer.editor_saveCache.last())
     hostPlayer.editor_saveCache = null
     hostPlayer.editor_lock = false
