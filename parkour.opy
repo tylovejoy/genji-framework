@@ -18,19 +18,19 @@ rule "Parkour | Setup & Variables":
     EditorOn = createWorkshopSetting(bool, "Map Settings \n地图设置","Editor Mode | 作图模式", editoron, -1) # Turn Editor On
     wait(LoadOrder.setup) # wait for map data rule
 
-    # fix team because of naming
-    if ColorConfig[Customize.orb_lock] == Color.TEAM_1:
-        ColorConfig[Customize.orb_lock] = Color.BLUE
-    elif ColorConfig[Customize.orb_lock] == Color.TEAM_2:
-        ColorConfig[Customize.orb_lock] = Color.RED
-
-    # prevent same color lock orbs
-    if ColorConfig[Customize.orb_normal] == ColorConfig[Customize.orb_lock]:
-        ColorConfig[Customize.orb_lock] = Color.GREEN if ColorConfig[Customize.orb_normal] == Color.ORANGE else Color.ORANGE
-
-    # prevent same color bhop/climb used/unused
-    if ColorConfig[Customize.bhopclimb_available] == ColorConfig[Customize.bhopclimb_used]:
-        ColorConfig[Customize.bhopclimb_used] = Color.ORANGE if ColorConfig[Customize.bhopclimb_available] == Color.RED else Color.RED
+    if createWorkshopSetting(bool,"Map Settings \n地图设置","Basic Map Validator | 验证地图", true, 3):
+        async(AddonCheckMap, AsyncBehavior.NOOP)
+    PortalOn = createWorkshopSetting(bool, "Map Settings \n地图设置","Enable Portals (Control Maps) | 启用传送门 (占点地图)", true, 4)
+    CompMode = not EditorOn and createWorkshopSetting(bool, "Tournament Mode\n竞赛模式","Enable Tournament Mode | 开启竞赛模式", compModeToggle, 100)
+    if CompMode:
+        # -! comp minutes !-
+        CompTime = createWorkshopSetting(int[1:240], "Tournament Mode\n竞赛模式", "Time Limit (Global) | 时间限制", compTimeLimit, 101) # 5-240
+        # -! comp attempt count !-
+        CompAtmpNum = createWorkshopSetting(int[0:500], "Tournament Mode\n竞赛模式", "Attempt Count | 尝试次数", attemptCount, 102)
+        # -! comp restartlimiter !-
+        CompRestartLimit = createWorkshopSetting(bool, "Tournament Mode\n竞赛模式","Disable Restart During Run | 竞赛中禁用重新开始", compRestartLimit , 103)
+    else:
+        InstructionText = null
 
     SaveName = []
     SaveCp = []
@@ -76,19 +76,19 @@ rule "Parkour | Setup & Variables":
     BanSaveDouble = BanSaveDouble if len(BanSaveDouble) else []
     BanDjump = BanDjump if len(BanDjump) else []
 
-    if createWorkshopSetting(bool,"Map Settings \n地图设置","Basic Map Validator | 验证地图", true, 3):
-        async(AddonCheckMap, AsyncBehavior.NOOP)
-    PortalOn = createWorkshopSetting(bool, "Map Settings \n地图设置","Enable Portals (Control Maps) | 启用传送门 (占点地图)", true, 4)
-    CompMode = not EditorOn and createWorkshopSetting(bool, "Tournament Mode\n竞赛模式","Enable Tournament Mode | 开启竞赛模式", compModeToggle, 100)
-    if CompMode:
-        # -! comp minutes !-
-        CompTime = createWorkshopSetting(int[1:240], "Tournament Mode\n竞赛模式", "Time Limit (Global) | 时间限制", compTimeLimit, 101) # 5-240
-        # -! comp attempt count !-
-        CompAtmpNum = createWorkshopSetting(int[0:500], "Tournament Mode\n竞赛模式", "Attempt Count | 尝试次数", attemptCount, 102)
-        # -! comp restartlimiter !-
-        CompRestartLimit = createWorkshopSetting(bool, "Tournament Mode\n竞赛模式","Disable Restart During Run | 竞赛中禁用重新开始", compRestartLimit , 103)
-    else:
-        InstructionText = null
+    # fix team because of naming
+    if ColorConfig[Customize.orb_lock] == Color.TEAM_1:
+        ColorConfig[Customize.orb_lock] = Color.BLUE
+    elif ColorConfig[Customize.orb_lock] == Color.TEAM_2:
+        ColorConfig[Customize.orb_lock] = Color.RED
+
+    # prevent same color lock orbs
+    if ColorConfig[Customize.orb_normal] == ColorConfig[Customize.orb_lock]:
+        ColorConfig[Customize.orb_lock] = Color.GREEN if ColorConfig[Customize.orb_normal] == Color.ORANGE else Color.ORANGE
+
+    # prevent same color bhop/climb used/unused
+    if ColorConfig[Customize.bhopclimb_available] == ColorConfig[Customize.bhopclimb_used]:
+        ColorConfig[Customize.bhopclimb_used] = Color.ORANGE if ColorConfig[Customize.bhopclimb_available] == Color.RED else Color.RED
 
 rule "Parkour | Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
