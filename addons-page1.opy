@@ -261,9 +261,16 @@ def AddonCheckMap():
 
     destroyDummy(MapChecker.getTeam(), MapChecker.getSlot())
     MapChecker = null
-    enableInspector()
-    printLog("■ Map Check Complete ■")
-    disableInspector()
+    if EditorOn:
+        EditorOn = null
+        enableInspector()
+        printLog("■ Map Check Complete ■")
+        disableInspector()
+        EditorOn = true
+    else:
+        enableInspector()
+        printLog("■ Map Check Complete ■")
+        disableInspector()
 
 def Addon3rdPerson():
     @Name "Addon | SUB 3rd Person Camera"
