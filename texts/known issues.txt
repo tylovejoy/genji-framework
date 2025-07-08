@@ -98,3 +98,5 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@.ohdark`
  - Hide Hud text toggle reversed [Fixed]
    * Reported by `@zxzpkcxcc`
+ - Allowed ultimate status when toggling off invincibility [Fixed]
+   * Reported by @wolfdagur

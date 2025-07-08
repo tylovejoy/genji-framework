@@ -639,9 +639,12 @@ fixed:
    * Workshop Settings
    * Editor
    * Tournament Mode
-### Other
- - Fixed specate after spamming death
+### Commands
+ - Fixed allowing ultimate when toggling off invincibility 
+   * Reported by @wolfdagur
+ - Fixed Specate after spamming death
  - Fixed Hide Hud text toggle reversed
    * Reported by `@zxzpkcxcc` +5xp
+### Addons
  - Hide friend titles when invisible
    * Reported by `@bioslet` +5xp
