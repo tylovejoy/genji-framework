@@ -92,9 +92,9 @@ rule "Addon | Pre-set control map portal - toggled on via workshop settings":
         PortalLoc = [vect(231.98, 7.23, -262.84), vect(236.78, 7.23, -262.75), vect(-327.59, 3.6, -108.69), vect(-332.71, 3.6, -108.59), vect(25.4, 341, 354.38), vect( 30, 341, 354.34)     ]
         PortalDest = [vect(-329.86, 3.05, -103.4), vect(27.59, 339.76, 348.77), vect( 234.07, 6.12, -266.88), vect(27.59, 339.76, 348.77), vect(-329.86, 3.05, -103.4), vect( 234.07, 6.12, -266.88)   ]
 
-/*
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
+    @Condition false
     @Condition isGameInProgress()
     MsDestructo = []  # Multiple bots
     waitUntil(any([x.hasSpawned() for x in getAllPlayers()]), Math.INFINITY)
@@ -156,8 +156,6 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     MapVectorArray = null
     DestructoIter = null
     MsDestructo = null
-*/
-
 
 # decrease to make it wait more often if you have load problems, keep at full int numbers no floats
 #!define fence_delay 3
