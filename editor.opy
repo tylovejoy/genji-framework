@@ -51,13 +51,6 @@ rule "Editor | Export Map":
     Name = null
     Code = null
 
-    enableInspector()
-    disableInspector()
-    EditorOn = true
-    TimeRemaining = hostPlayer.editor_saveCache[0]
-    ColorConfig = hostPlayer.editor_saveCache.last()
-    async(AddonCheckMap, AsyncBehavior.NOOP)
-
     hudText(hostPlayer,
         "­",
         null,
@@ -114,19 +107,28 @@ rule "Editor | Export Map":
         " Esc → Show Lobby → Settings → Share Code →\n"
         " Upload To Existing Code → Paste The Code You Created In Step 4",
        HudPosition.TOP, HO.edit_clearec1, null, null, Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT)
-    hostPlayer.editor_saveCache[0] = getLastCreatedText()
+    hostPlayer.editor_saveCache[2] = getLastCreatedText()
+
+    AddonCheckMap()
+
+    enableInspector()
+    disableInspector()
+
+    EditorOn = true
+    TimeRemaining = hostPlayer.editor_saveCache[0]
+    ColorConfig = hostPlayer.editor_saveCache[1]
 
     hudHeader(hostPlayer,
         "    > 按互动键关闭当前窗口 <    "
         checkCN
-        "    > Press Interact To Close This Window <    "
-        , HudPosition.TOP, HO.edit_clearec3, Color.LIME_GREEN, HudReeval.STRING)
-    hostPlayer.editor_saveCache[1] = getLastCreatedText()
+        "    > Press Interact To Close This Window <    ",
+        HudPosition.TOP, HO.edit_clearec3, Color.LIME_GREEN, HudReeval.STRING)
+    hostPlayer.editor_saveCache[0] = getLastCreatedText()
 
     waitUntil(not hostPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
     waitUntil(hostPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
-    destroyHudText(hostPlayer.editor_saveCache[0])
-    destroyHudText(hostPlayer.editor_saveCache.last())
+    destroyHudText(hostPlayer.editor_saveCache[0]) # Close Window
+    destroyHudText(hostPlayer.editor_saveCache.last()) #Instructions
     hostPlayer.editor_saveCache = null
     hostPlayer.editor_lock = false
 
@@ -214,7 +216,7 @@ rule "Editor | Hud & Effects":
         hudSubtext(hostPlayer if hostPlayer.toggle_guide else null,
         ([
                 "{0} + {1} | 移除/新建传送点\n"
-                "{0} + {2} | 检查点碰撞模型\n".format(buttonString(Button.INTERACT) , buttonString(Button.RELOAD), buttonString(Button.ABILITY_1)),
+                "{0} + {2} | 检查点碰撞模型\n".format(buttonString(Button.INTERACT), buttonString(Button.RELOAD), buttonString(Button.ABILITY_1)),
 
                 "{0} + {1} | 选择上一个击杀球\n"
                 "{0} + {2} | 选择下一个击杀球\n".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
@@ -234,7 +236,7 @@ rule "Editor | Hud & Effects":
             ) checkCN
             ([
                 "{0} + {1} | Remove/Add Teleport\n"
-                "{0} + {2} | Toggle Hitbox\n".format(buttonString(Button.INTERACT) , buttonString(Button.RELOAD), buttonString(Button.ABILITY_1)),
+                "{0} + {2} | Toggle Hitbox\n".format(buttonString(Button.INTERACT), buttonString(Button.RELOAD), buttonString(Button.ABILITY_1)),
 
                 "{0} + {1} | Select Previous\n"
                 "{0} + {2} | Select Next\n".format(buttonString(Button.INTERACT), buttonString(Button.CROUCH), buttonString(Button.JUMP)),
@@ -291,7 +293,7 @@ rule "Editor | Hud & Effects":
                 "{0} + {1} | 移动选中的实体".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)),
                 "{0} + {1} | 移动选中的实体".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)),
                 "{0} + {1} | 留小跳进点\n"
-                "{0} + {2} | 站卡".format(buttonString(Button.ABILITY_2) , buttonString(Button.JUMP), buttonString(Button.CROUCH)),
+                "{0} + {2} | 站卡".format(buttonString(Button.ABILITY_2), buttonString(Button.JUMP), buttonString(Button.CROUCH)),
                 []
             ][EditorMode.current]
             ) checkCN
@@ -300,7 +302,7 @@ rule "Editor | Hud & Effects":
                 "{0} + {1} | Move".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE)  ),
                 "{0} + {1} | Move".format(buttonString(Button.ABILITY_2), buttonString(Button.PRIMARY_FIRE) ),
                 "{0} + {1} | Require Bhop\n"
-                "{0} + {2} | Stand Create".format(buttonString(Button.ABILITY_2) , buttonString(Button.JUMP), buttonString(Button.CROUCH)),
+                "{0} + {2} | Stand Create".format(buttonString(Button.ABILITY_2), buttonString(Button.JUMP), buttonString(Button.CROUCH)),
                 []
             ][EditorMode.current]),
             HudPosition.RIGHT, HO.edit_instructions_edit4, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
@@ -314,8 +316,8 @@ rule "Editor | Hud & Effects":
             checkCN
             " \n{0} + {1} | Next checkpoint\n"
             "{0} + {2} | Prev checkpoint\n"
-            "{3} (hold)| Fly\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1))
-            ,HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.toggle_guide else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
+            "{3} (hold)| Fly\n".format(buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.ABILITY_1)),
+            HudPosition.RIGHT, HO.edit_instructions_general, Color.GREEN if hostPlayer.toggle_guide else Color.ORANGE, HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT
         )
         */
         hudSubtext(
@@ -357,7 +359,7 @@ rule "Editor | Hud & Effects":
                     iconString(Icon.ARROW_RIGHT) if EditorMode.portal else "     ")
             if hostPlayer.isHoldingButton(Button.MELEE) else
                 " {1} {0} ".format(
-                    ["检查点模式" ,"击杀球模式","弹球模式","封禁(单关)","自定义传送门"][EditorMode.current],
+                    ["检查点模式", "击杀球模式","弹球模式","封禁(单关)","自定义传送门"][EditorMode.current],
                     [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP), iconString(Icon.SPIRAL)][EditorMode.current])
             if localPlayer == hostPlayer else
                 " {0} 源氏 编辑者 {0} ".format( iconString(Icon.BOLT))
@@ -374,7 +376,7 @@ rule "Editor | Hud & Effects":
                     iconString(Icon.ARROW_RIGHT) if EditorMode.portal else "     ")
             if hostPlayer.isHoldingButton(Button.MELEE) else
                 " {1} {0} ".format(
-                    ["Checkpoints" ,"Boundary Spheres","Function Orbs","Skill Bans","Portals"][EditorMode.current],
+                    ["Checkpoints", "Boundary Spheres","Function Orbs","Skill Bans","Portals"][EditorMode.current],
                     [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][EditorMode.current])
             if localPlayer == hostPlayer else
                 " {0} Genji Editor {0} ".format(iconString(Icon.BOLT)),
@@ -434,8 +436,8 @@ rule "Editor | Hud & Effects":
                 BounceToggleDash[EditSelected] if EditorMode.functionOrb else
                 hostPlayer.checkpoint_current in DashEnabledCheckpoints,
                 abilityIconString(Hero.GENJI, Button.ABILITY_1),
-                "Level" if EditorMode.checkpoint else "Orb")
-            , HudPosition.LEFT, HO.edit_orb_dash,
+                "Level" if EditorMode.checkpoint else "Orb"),
+            HudPosition.LEFT, HO.edit_orb_dash,
             Color.GREEN if BounceToggleDash[EditSelected] and EditorMode.functionOrb else
             Color.GREEN if hostPlayer.checkpoint_current in DashEnabledCheckpoints and EditorMode.checkpoint else Color.ORANGE,
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)

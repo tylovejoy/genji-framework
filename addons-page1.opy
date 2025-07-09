@@ -124,9 +124,9 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
             MapVectorArray = [vect(-328.19, 90.5, -103.11), vect(233.75, 71.95, -258.42), vect(26.93, 428.04, 336.34)]
             break
         default:
-            if strContains( "{}".format(getCurrentMap()) , "{}".format(Map.LIJIANG_TOWER)): # lunar new year catch
+            if strContains( "{}".format(getCurrentMap()), "{}".format(Map.LIJIANG_TOWER)): # lunar new year catch
                 MapVectorArray = [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)]
-            elif strContains( "{}".format(getCurrentMap()) ,"{}".format(Map.BUSAN)): # lunar new year catch
+            elif strContains( "{}".format(getCurrentMap()), "{}".format(Map.BUSAN)): # lunar new year catch
                 MapVectorArray = [vect(51.885, 37.172, -113.654), vect(-329.934, 56.136, 149.839), vect(227.21, 43.353, 252.64)]
             else:  # This default covers almost every map
                 MapVectorArray = [vect(73, 62, -17), vect(169, 62, 82), vect(-23, 62, -124), vect(-23, 62, 100)]
@@ -259,18 +259,14 @@ def AddonCheckMap():
             disableInspector()
         lbl_MapChecker_nextCp:
 
+    MapChecker.editor_saveCache = EditorOn
+    EditorOn = null
+    enableInspector()
+    printLog("■ Map Check Complete ■")
+    disableInspector()
+    EditorOn = MapChecker.editor_saveCache
     destroyDummy(MapChecker.getTeam(), MapChecker.getSlot())
     MapChecker = null
-    if EditorOn:
-        EditorOn = null
-        enableInspector()
-        printLog("■ Map Check Complete ■")
-        disableInspector()
-        EditorOn = true
-    else:
-        enableInspector()
-        printLog("■ Map Check Complete ■")
-        disableInspector()
 
 def Addon3rdPerson():
     @Name "Addon | SUB 3rd Person Camera"
