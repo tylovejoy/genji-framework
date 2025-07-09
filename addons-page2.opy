@@ -94,7 +94,6 @@ rule "Addon | Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)
 
 rule "Addon | Display Author Time - 展示世界纪录 <---- EDIT ME / 在此处编辑":
     @Disabled
-    @Condition EditorOn == false
     # type your entry in the textfield that says "name and time here"
     # 在文本框 中输入“名称和时间”
     hudText(true[0], null, " \n{0} author time {0}".format(iconString(Icon.FIRE)), "name and time here", HudPosition.RIGHT, HO.wr, null, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
