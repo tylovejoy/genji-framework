@@ -234,7 +234,7 @@ def AddonCheckMap():
     MapChecker.setInvisibility(Invis.ALL)
     MapChecker.startScalingSize(cpcircleradius / 0.45, false)
     MapChecker.setGravity(Math.INFINITY)
-    waitUntil(MapChecker.hasSpawned(), Math.INFINITY)
+    waitUntil(MapChecker.hasSpawned(), 16) # Not infinity incase dummy does not spawn
 
     for MapChecker.checkpoint_current in range(1, len(CheckpointPositions)):
         if nearestWalkablePosition(CheckpointPositions[MapChecker.checkpoint_current]) and distance(CheckpointPositions[MapChecker.checkpoint_current], nearestWalkablePosition(CheckpointPositions[MapChecker.checkpoint_current])) > cpcircleradius:
