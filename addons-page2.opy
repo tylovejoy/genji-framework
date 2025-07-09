@@ -175,7 +175,7 @@ rule "Addon | Stall Enhancer - 增强系統跳的判定":
         eventPlayer.isHoldingButton(Button.RELOAD) or
         eventPlayer.editor_fly or eventPlayer.isDead() or
         eventPlayer.isUsingAbility1() or
-        eventPlayer.getSpeed() > 3 , 3) # double jump catch
+        eventPlayer.getSpeed() > 3, 3) # double jump catch
     #wait(3)
     eventPlayer.setGravity(100)
     eventPlayer.setMoveSpeed(100)

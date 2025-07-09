@@ -101,7 +101,7 @@ globalvar CompAtmpSaveCount 54              # [int]                      --- com
 globalvar CompRestartLimit 55               # bool                      --- resest limiter
 #!define InstructionText instructiontext
 globalvar InstructionText 56                # [text]                    --- array of instructions
-globalvar TitleData 57                      # [[cp ,[title],[color]]    --- title addon
+globalvar TitleData 57                      # [[cp, [title], [color]]    --- title addon
 #globalvar HudStoreEdit 58                   # [textid]                  --- list of huds to delete if editormode is on
 
 globalvar SaveName 60

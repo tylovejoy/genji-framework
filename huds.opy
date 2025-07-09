@@ -38,7 +38,7 @@ rule "Huds | Global Localplayer":
             #"代码: {}" LeftAlign96.format(Code)
             #checkCN
             #"Map code: {}" LeftAlign96.format(Code),
-            HudPosition.LEFT, HO.data_code, ColorConfig[Customize.credit_code] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+            HudPosition.LEFT, HO.data_code, ColorConfig[Customize.credit_code], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
         hudSubtext(localPlayer.toggle_guide,
             f"{t'Hold'} {buttonString(Button.PRIMARY_FIRE)} + {buttonString(Button.SECONDARY_FIRE)} | {t'Preview CP'}",
@@ -123,7 +123,7 @@ rule "Huds | Global Localplayer":
         #checkCN
         #"Server Restart in {0} Min - {1}{2}".format(
         #    TimeRemaining, versionhere, "\nerror: max hud count reached" if getNumberOfTextIds() >= 128 else []),
-        HudPosition.RIGHT, HO.data_remaingtime, ColorConfig[Customize.servertime] , HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
+        HudPosition.RIGHT, HO.data_remaingtime, ColorConfig[Customize.servertime], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
 
     # padding for custom hud display
     hudSubtext(true[0], "­\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", HudPosition.TOP, HO.fillermain, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
