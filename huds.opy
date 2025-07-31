@@ -129,7 +129,8 @@ rule "Huds | Global Localplayer":
     hudSubtext(true[0], "­\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", HudPosition.TOP, HO.fillermain, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
     hudSubtext(localPlayer.toggle_guide,
-        f"{[] if localPlayer.toggle_quickRestart else t'Hold'} {buttonString(Button.RELOAD)} | {[] if localPlayer.toggle_quickRestart else t'Enable'} {t'Quick Reset'}",
+        f"{t'Hold'} {buttonString(Button.RELOAD)} | {t'Enable Quick Reset'}" if localPlayer.toggle_quickRestart else f"{buttonString(Button.RELOAD)} | {t'Quick Reset'}",
+        #f"{[] if localPlayer.toggle_quickRestart else t'Hold'} {buttonString(Button.RELOAD)} | {[] if localPlayer.toggle_quickRestart else t'Enable'} {t'Quick Reset'}",
 
         #"{0} {1} | {2}快速回点".format([] if localPlayer.toggle_quickRestart else "长按",buttonString(Button.RELOAD),[] if localPlayer.toggle_quickRestart else "启用")
         #checkCN

@@ -185,10 +185,6 @@ msgid "Hold"
 msgstr ""
 
 #. file huds.opy, rule "Huds | Global Localplayer"
-msgid "Enable"
-msgstr ""
-
-#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Quick Reset"
 msgstr ""
 
@@ -267,6 +263,10 @@ msgstr ""
 #.  - file huds.opy, rule "Huds | Leaderboard"
 #, hasMultipleOccurrencesNotification
 msgid "Leaderboard"
+msgstr ""
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Enable Quick Reset"
 msgstr ""
 
 #. file huds.opy, rule "Huds | Leaderboard"

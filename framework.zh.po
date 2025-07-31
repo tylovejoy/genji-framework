@@ -185,10 +185,6 @@ msgid "Hold"
 msgstr "长按"
 
 #. file huds.opy, rule "Huds | Global Localplayer"
-msgid "Enable"
-msgstr "启用"
-
-#. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Quick Reset"
 msgstr "快速回点"
 
@@ -271,6 +267,10 @@ msgstr "重新开始"
 #, hasMultipleOccurrencesNotification
 msgid "Leaderboard"
 msgstr "成绩排名"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Enable Quick Reset"
+msgstr "启用快速回点"
 
 #. file huds.opy, rule "Huds | Leaderboard"
 msgid "Top 5"
