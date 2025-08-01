@@ -50,7 +50,7 @@ macro compRestartLimit = false
 ###############################################################################
 #!translations en ko zh
 #!disableTranslationSourceLines
-##!keepUnusedTranslations
+#!keepUnusedTranslations
 ###############################################################################
 #!include "parkour.opy"
 ###############################################################################
