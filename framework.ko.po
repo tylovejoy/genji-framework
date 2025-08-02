@@ -186,7 +186,7 @@ msgstr "누르기"
 
 #. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Quick Reset"
-msgstr "빠른 재시작"
+msgstr "빠른 초기화가"
 
 #. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Invincible"
@@ -270,7 +270,7 @@ msgstr "순위표"
 
 #. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Enable Quick Reset"
-msgstr ""
+msgstr "빠른 초기화가 활성화"
 
 #. file huds.opy, rule "Huds | Leaderboard"
 msgid "Top 5"
