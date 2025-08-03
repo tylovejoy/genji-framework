@@ -203,7 +203,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             wait(0.048)
     elif eventPlayer.toggle_invincible or eventPlayer.toggle_spectate or (CompMode and not CompTime):# or eventPlayer.lockState:
         # Do nothing
-    elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpcircleradius:
+    elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpCircleRadius:
         # arrived ----------------------------------------------------------------------------------------------------
         if len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks:
             #"   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[Customize.orb_lock])
@@ -262,7 +262,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             #bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.checkpoint_current, "抵达检查点" checkCN "Arrived at level"))
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, null, eventPlayer, 100)
             playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, eventPlayer.getPosition(), 4)
-    elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpcircleradius:
+    elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpCircleRadius:
         CheckpointFailReset()
 
     eventPlayer.cache_collectedLocks = []
@@ -281,13 +281,13 @@ rule "Parkour | Bounce Ball / Orb":
     @Event eachPlayer
     @Condition eventPlayer.cache_bouncePosition != []
     #@Condition eventPlayer.checkpoint_notLast # disabled coz editor
-    @Condition (any([distance(pos, eventPlayer.getPosition() + Vector.UP * bounceoffset) < bounceorbdistance for pos in eventPlayer.cache_bouncePosition]))
+    @Condition (any([distance(pos, eventPlayer.getPosition() + Vector.UP * bounceOffset) < bounceOrbDistance for pos in eventPlayer.cache_bouncePosition]))
 
     eventPlayer.cache_bounceTouched = BouncePositions.index([pos for pos, i in BouncePositions if
         BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and
         i != eventPlayer.cache_bounceTouched and
         not (i in eventPlayer.cache_collectedLocks) and
-        distance(eventPlayer + Vector.UP * bounceoffset, pos) < bounceorbdistance])
+        distance(eventPlayer + Vector.UP * bounceOffset, pos) < bounceOrbDistance])
 
     if eventPlayer.cache_bounceTouched >= 0: # prevent same one activating twice in a row
         if BounceToggleLock[eventPlayer.cache_bounceTouched]:
@@ -417,9 +417,9 @@ def UpdateCache():
     if eventPlayer != hostPlayer or not EditorOn: return
     EditUpdateSelectedIds()
     destroyEffect(hostPlayer.editor_hitboxEffect)
-    createEffect(hostPlayer if hostPlayer.editor_hitboxToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[hostPlayer.checkpoint_current], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(hostPlayer if hostPlayer.editor_hitboxToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[hostPlayer.checkpoint_current], cpCircleRadius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     hostPlayer.editor_hitboxEffect = getLastCreatedEntity()
-    createEffect(hostPlayer if hostPlayer.editor_hitboxToggle and hostPlayer.checkpoint_notLast else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[hostPlayer.checkpoint_current + 1], cpcircleradius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(hostPlayer if hostPlayer.editor_hitboxToggle and hostPlayer.checkpoint_notLast else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[hostPlayer.checkpoint_current + 1], cpCircleRadius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     hostPlayer.editor_hitboxEffect.append(getLastCreatedEntity())
     hostPlayer.editor_bounceIndex = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in BouncePadCheckpoints] if e >=0]
     hostPlayer.editor_killIndex = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if e >=0]

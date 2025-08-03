@@ -680,7 +680,7 @@ rule "Editor | Create Cp/Orb":
 
     hostPlayer.editor_lock = true
     if EditorMode.checkpoint:
-        if len(CheckpointPositions) and distance(hostPlayer, CheckpointPositions[hostPlayer.checkpoint_current]) <= cpcircleradius:
+        if len(CheckpointPositions) and distance(hostPlayer, CheckpointPositions[hostPlayer.checkpoint_current]) <= cpCircleRadius:
             smallMessage(hostPlayer, "   放置的检查点距离太近" checkCN "   Cannot Place Checkpoint Too Close.")
         else:
             #$$

@@ -232,26 +232,26 @@ def AddonCheckMap():
     MapChecker.disableEnvironmentCollision(false)
     MapChecker.setStatusEffect(null, Status.PHASED_OUT, Math.INFINITY)
     MapChecker.setInvisibility(Invis.ALL)
-    MapChecker.startScalingSize(cpcircleradius / 0.45, false)
+    MapChecker.startScalingSize(cpCircleRadius / 0.45, false)
     MapChecker.setGravity(Math.INFINITY)
     waitUntil(MapChecker.hasSpawned(), 16) # Not infinity incase dummy does not spawn
 
     for MapChecker.checkpoint_current in range(1, len(CheckpointPositions)):
-        if nearestWalkablePosition(CheckpointPositions[MapChecker.checkpoint_current]) and distance(CheckpointPositions[MapChecker.checkpoint_current], nearestWalkablePosition(CheckpointPositions[MapChecker.checkpoint_current])) > cpcircleradius:
-            MapChecker.startForcingPosition(raycast(CheckpointPositions[MapChecker.checkpoint_current] + Vector.UP * cpcircleradius,CheckpointPositions[MapChecker.checkpoint_current] +
-                Vector.DOWN * cpcircleradius, [], [], false).getHitPosition(), true)
+        if nearestWalkablePosition(CheckpointPositions[MapChecker.checkpoint_current]) and distance(CheckpointPositions[MapChecker.checkpoint_current], nearestWalkablePosition(CheckpointPositions[MapChecker.checkpoint_current])) > cpCircleRadius:
+            MapChecker.startForcingPosition(raycast(CheckpointPositions[MapChecker.checkpoint_current] + Vector.UP * cpCircleRadius, CheckpointPositions[MapChecker.checkpoint_current] +
+                Vector.DOWN * cpCircleRadius, [], [], false).getHitPosition(), true)
             wait(7 * 0.016)
             MapChecker.stopForcingPosition()
             waitUntil(MapChecker.isOnGround(), true)
-            if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapChecker.checkpoint_current]) <= cpcircleradius:
+            if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapChecker.checkpoint_current]) <= cpCircleRadius:
                 goto lbl_MapChecker_nextCp
 
-            for MapChecker.checkpoint_practice in range(cpcircleradius, cpcircleradius - 0.2, -0.2):
+            for MapChecker.checkpoint_practice in range(cpCircleRadius, cpCircleRadius - 0.2, -0.2):
                 MapChecker.startForcingPosition(CheckpointPositions[MapChecker.checkpoint_current] + Vector.UP * MapChecker.checkpoint_practice,true)
                 wait(7 * 0.016)
                 MapChecker.stopForcingPosition()
                 waitUntil(MapChecker.isOnGround(), true)
-                if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapChecker.checkpoint_current]) <= cpcircleradius:
+                if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapChecker.checkpoint_current]) <= cpCircleRadius:
                     goto lbl_MapChecker_nextCp
 
             enableInspector()

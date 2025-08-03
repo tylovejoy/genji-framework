@@ -20,13 +20,13 @@ macro fxLimit = 193
 # Portal distance: 1.3
 macro portalDistance = 1.3
 # Circle radius: 1.4
-macro cpcircleradius = 1.4
+macro cpCircleRadius = 1.4
 # Default fx: 1
 macro cpCirkleFx = 1
 # Orb range for player: 1.4
-macro bounceorbdistance = 1.4
+macro bounceOrbDistance = 1.4
 # Height added to player for orb detection: 0.7
-macro bounceoffset = 0.7
+macro bounceOffset = 0.7
 # Enable perks: false
 macro usePerks = false
 # non-practice cheat mode: false

@@ -162,7 +162,7 @@ rule "orbradiustest": # show radius on all bounce orbs
             Effect.SPHERE,
             Color.WHITE,
             BouncePositions[evalOnce(TempIterator1)], #bounceoffset,
-            bounceorbdistance,
+            bounceOrbDistance,
             EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
         )
 
@@ -180,12 +180,12 @@ rule "orbradiustest": # show player orb hit detection
     @Condition orb_visialon
     @Event eachPlayer
     if show_orbradius:
-        createEffect(localPlayer, Effect.SPHERE, Color.RED, updateEveryTick( eventPlayer.getPosition() + Vector.UP * bounceoffset), 0.1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
-        createEffect(localPlayer, Effect.SPHERE, Color.ORANGE, updateEveryTick( eventPlayer.getPosition() + Vector.UP * bounceoffset), 0.03, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
+        createEffect(localPlayer, Effect.SPHERE, Color.RED, updateEveryTick( eventPlayer.getPosition() + Vector.UP * bounceOffset), 0.1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
+        createEffect(localPlayer, Effect.SPHERE, Color.ORANGE, updateEveryTick( eventPlayer.getPosition() + Vector.UP * bounceOffset), 0.03, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
 
     if show_playerradius:
         # own orb radius
-        createEffect(localPlayer, Effect.SPHERE, Color.YELLOW, updateEveryTick( eventPlayer.getPosition() + Vector.UP * bounceoffset), bounceorbdistance, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
+        createEffect(localPlayer, Effect.SPHERE, Color.YELLOW, updateEveryTick( eventPlayer.getPosition() + Vector.UP * bounceOffset), bounceOrbDistance, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
 
 
 # AI - leaderboard ######################################################################################################################################################
