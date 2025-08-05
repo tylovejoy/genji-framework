@@ -100,3 +100,8 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@zxzpkcxcc`
  - Allowed ultimate status when toggling off invincibility [Fixed]
    * Reported by @wolfdagur
+
+#1.10.4
+### Bug Reports
+ - Patched <TX and <FG tags in rule names [Fixed]
+   * Reported by Blizzard

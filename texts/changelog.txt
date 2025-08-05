@@ -648,3 +648,6 @@ fixed:
 ### Addons
  - Hide friend titles when invisible
    * Reported by `@bioslet` +5xp
+### Workshop
+ - Replaced <TX and <FG tags with similar characters in rule names
+   * Reported by Blizzard -100xp
