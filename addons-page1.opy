@@ -5,7 +5,7 @@ this gets put on page 1
 this should be parts of addons that get toggled with a workshop toggle
 */
 
-rule "<tx0C00000000001344> Addon Functions <tx0C00000000001344>":
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Addon Functions ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
 rule "Addon | AFK timer":

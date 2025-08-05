@@ -2,7 +2,7 @@
 /*
 Generalized mechanics for all heroes here
 */
-rule "<tx0C00000000001344> Mechanics | Checks <tx0C00000000001344>":
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Mechanics | Checks ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
 rule "Mechanic | All | Jump":

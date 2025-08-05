@@ -1,5 +1,6 @@
 #!mainFile "framework.opy"
-rule "<tx0C00000000001344> Effects <tx0C00000000001344>":
+
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Effects ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
 rule "Effects | Setup Effects":

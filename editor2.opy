@@ -1,14 +1,21 @@
 #!mainFile "framework.opy"
-rule "<tx0C00000000001344> Editor v2 <tx0C00000000001344>":
+
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Editor v2 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
 #!include "menu/menu.opy"
-
+#globalvar EditorOn
 globalvar debug_ult_on
 
 rule "Editor | Menu - HUD":
     @Condition EditorOn
-    hostPlayer.MenuCreateTranslatedHud(backMsg = t" ▶ 0. Back")
+    #!disableOptimizations
+    hudText(hostPlayer if hostPlayer.MenuIsVisible() else false,
+        hostPlayer.MenuText_Translated(backMsg = t" ▶ 0. Back"),
+        hostPlayer.MenuPreview_Translated(),
+        null,
+        HudPosition.LEFT, null, Color.WHITE, Color.WHITE, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+    #!enableOptimizations
 
 rule "Editor | Menu - Visibility":
     @Condition EditorOn

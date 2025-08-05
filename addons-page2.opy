@@ -5,8 +5,7 @@ translated file
 this gets put on page 2
 this should be parts of addons that get toggled by turning on rules
 */
-
-rule "<tx0C00000000001344> Addons Settings & Data - 附加组件 <tx0C00000000001344>":
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Addons Settings & Data - 附加组件 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
 rule "Addon | Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":
@@ -148,7 +147,7 @@ rule "Addon | 3rd Person Camera Mode - 第三人称":
     eventPlayer.addon_toggle3rdPov = true
     Addon3rdPerson()
 
-rule "<tx0C00000000001344> Addons Skills - 附加组件技能 <tx0C00000000001344>":
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Addons Skills - 附加组件技能 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
 # keeps you still shortly after getting in a stall

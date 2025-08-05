@@ -1,6 +1,6 @@
 #!mainFile "framework.opy"
 
-rule "<tx0C00000000001344> Commands <tx0C00000000001344>":
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Commands ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
 rule "Command | Toggle Leaderboard (Hold Melee)":

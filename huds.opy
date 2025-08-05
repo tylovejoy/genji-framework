@@ -5,7 +5,7 @@ huds outside this file:
     - display author time (addons pg2)
     - editor huds (editor)
 */
-rule "<tx0C00000000001344> Huds <tx0C00000000001344>":
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Huds ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
 rule "Huds | Global Localplayer":
