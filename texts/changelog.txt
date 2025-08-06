@@ -645,6 +645,7 @@ fixed:
  - Fixed Specate after spamming death
  - Fixed Hide Hud text toggle reversed
    * Reported by `@zxzpkcxcc` +5xp
+ - Fixed completing checkpoint with paused timer
 ### Addons
  - Hide friend titles when invisible
    * Reported by `@bioslet` +5xp
