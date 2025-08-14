@@ -378,10 +378,10 @@ rule "Huds | Each Player":
                 "\n你没有尝试过" if eventPlayer.comp_countAttempts < 0 else
                 "\n尝试 {0} / {1}".format(eventPlayer.comp_countAttempts, CompAtmpNum) if CompAtmpNum else [])
             ) checkCN (
-            "! competition is over !" if not CompTime else
-            "time left: {0} min{1}".format(
+            "! Competition Is Over !" if not CompTime else
+            "Time Left: {0} Min{1}".format(
                 CompTime,
-                "\nYou are out of attempts" if eventPlayer.comp_countAttempts < 0 else
+                "\nYou Are Out Of Attempts" if eventPlayer.comp_countAttempts < 0 else
                 "\nAttempt {0} / {1}".format(eventPlayer.comp_countAttempts, CompAtmpNum) if CompAtmpNum else [])),
             ("竞赛模式" if CompTime else "竞赛模式\n\n\n")
             checkCN

@@ -272,7 +272,7 @@ rule "Addon | Custom Orb Script":
     if eventPlayer.cache_bounceTouched in [1, 2]:
         # example gravity (should be reset to 100 in AddonCustomLoadAndReset)
         eventPlayer.setGravity(25)
-        smallMessage(eventPlayer," you feel light")
+        smallMessage(eventPlayer," You Feel Light")
         wait(2)
         eventPlayer.setGravity(100)
 
@@ -280,11 +280,11 @@ rule "Addon | Custom Orb Script":
        # example canceling primary makes double jump recover
        eventPlayer.cancelPrimaryAction()
        eventPlayer.skill_usedDouble = null
-       smallMessage(eventPlayer," double jump recovered")
+       smallMessage(eventPlayer," Double Jump Recovered")
     if eventPlayer.cache_bounceTouched in [5, 6]:
         # example move speed
         eventPlayer.setMoveSpeed(250)
-        smallMessage(eventPlayer," zooom")
+        smallMessage(eventPlayer," Zooom")
         wait(2)
         eventPlayer.setMoveSpeed(100)
 
