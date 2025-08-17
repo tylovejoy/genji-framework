@@ -43,8 +43,9 @@ triple jump ban doesnt work on workshop maps anymore
         - the rules for jumpcount shouldnt be affected but they are
         - jumpcount tracks +- if a player has been in the air for a moment
 
-# 1.10.3x
+# 1.10.X
 ### Bug Reports
+ - Unable to specatate from ult spam [Fixed]
  - Corrupt Map Object Data [Fixed]
    * Reported by `@hello_5702`
  - Exported data overwriting customization settings [Fixed]
@@ -81,7 +82,7 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@zxzpkcxcc`
  - Dash start on all levels [Fixed]
    * Reported by `@`
- - Ledge Dash addon always activated [REVERTED]
+ - Ledge Dash addon always activated [Reverted]
    * Reported by `@zxzpkcxcc`
  - Bypass ban save double jump with auto climb [Fixed]
    * Reported by `@zxzpkcxcc`
@@ -93,3 +94,14 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@bioslet`
  - 3rd person camera hud not displaying [Fixed]
    * Reported by `@zxzpkcxcc`
+ - Lose ultimate start of level
+   * Reported by `@.ohdark`
+ - Hide Hud text toggle reversed [Fixed]
+   * Reported by `@zxzpkcxcc`
+ - Allowed ultimate status when toggling off invincibility [Fixed]
+   * Reported by @wolfdagur
+
+#1.10.4
+### Bug Reports
+ - Patched <TX and <FG tags in rule names [Fixed]
+   * Reported by Blizzard

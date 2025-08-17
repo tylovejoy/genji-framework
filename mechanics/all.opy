@@ -2,7 +2,7 @@
 /*
 Generalized mechanics for all heroes here
 */
-rule "<tx0C00000000001344> Mechanics | Checks <tx0C00000000001344>":
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Mechanics | Checks ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
 rule "Mechanic | All | Jump":
@@ -10,7 +10,8 @@ rule "Mechanic | All | Jump":
     @Condition eventPlayer.isJumping()
     eventPlayer.skill_usedBhop = true
     if eventPlayer.skill_usedHop:
-        smallMessage(eventPlayer,"   小跳已用" checkCN "   Bhop")
+        #"   小跳已用" checkCN "   Bhop"
+        smallMessage(eventPlayer, t"   Bhop")
     else:
         eventPlayer.skill_usedHop = true
 
@@ -36,7 +37,8 @@ rule "Mechanic | All | Emote":
     if eventPlayer.ban_emote:
         waitUntil(not eventPlayer.isCommunicatingEmote(), Math.INFINITY)
         if eventPlayer.toggle_invincible: return
-        smallMessage(eventPlayer, "   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!")
+        #"   表情留小 ♥ 已禁用!" checkCN "   Emote Savehop ♥ is banned!"
+        smallMessage(eventPlayer, t"   Emote Savehop ♥ Is Banned!")
         wait()
         CheckpointFailReset()
 

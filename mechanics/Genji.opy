@@ -6,23 +6,24 @@ def CheckUlt(): # checks if ult should be turned on
     @Name "Mechanic | Genji | SUB Check Ultimate"
     if eventPlayer.lockState:
         eventPlayer.setUltCharge(0) # for dash start etc you can be away from cp so the keep charge activators
-    
+    /*
     eventPlayer.disallowButton(Button.ULTIMATE) # make sure the button cant be pressed until the entire rule ends even if it restarts
-    if eventPlayer.skill_ultCd > getTotalTimeElapsed(): # global cooldown that works even when rule is reset
+    #if eventPlayer.skill_ultCd > getTotalTimeElapsed(): # global cooldown that works even when rule is reset
         wait(eventPlayer.skill_ultCd - getTotalTimeElapsed())
     else:
         eventPlayer.skill_ultCd = getTotalTimeElapsed() + 0.36 # Set cooldown
-
+    */
     if eventPlayer.isUsingUltimate():
         waitUntil(not eventPlayer.isUsingUltimate(), 2)
         wait()
     if eventPlayer.isHoldingButton(Button.ULTIMATE): # incase spamming the button
         wait()
 
-    if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and eventPlayer.editor_on) or (not eventPlayer.checkpoint_notLast):
+    if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and EditorOn) or (not eventPlayer.checkpoint_notLast):
         goto lbl_a #skip msg if these
-    elif eventPlayer.checkpoint_current in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last() ) <= cpcircleradius: 
-        smallMessage(eventPlayer, "   {0} {1} ".format(abilityIconString(Hero.GENJI, Button.ULTIMATE),"终极技能已就绪" checkCN "Ultimate is ready")) 
+    elif eventPlayer.checkpoint_current in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last() ) <= cpCircleRadius: 
+        #"终极技能已就绪" checkCN "Ultimate is ready"
+        smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
         lbl_a:
         wait()        
         eventPlayer.setUltEnabled(true)
@@ -30,16 +31,16 @@ def CheckUlt(): # checks if ult should be turned on
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= 2 or eventPlayer.getUltCharge() < 100: # used to be just else, but have to deal with multi ult orbs
         eventPlayer.setUltEnabled(false)
         eventPlayer.setUltCharge(0)
-
-    eventPlayer.allowButton(Button.ULTIMATE)
+    wait(0.36)
 
 def CheckAbility1(): # checks if dash should be  turned on
     @Name "Mechanic | Genji | SUB Check Dash"
     waitUntil(not eventPlayer.isUsingAbility1(), true)
-    if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and eventPlayer.editor_on) or (not eventPlayer.checkpoint_notLast):
+    if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and EditorOn) or (not eventPlayer.checkpoint_notLast):
         goto lbl_a #skip msg if these
-    elif eventPlayer.checkpoint_current in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= cpcircleradius: 
-        smallMessage(eventPlayer, "   {0} {1}".format(abilityIconString(Hero.GENJI, Button.ABILITY_1),"技能1影已就绪" checkCN "Dash is ready")) 
+    elif eventPlayer.checkpoint_current in DashEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= cpCircleRadius: 
+        #"技能1影已就绪" checkCN "Dash is ready"
+        smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ABILITY_1)} {t'Dash Is Ready'}")
         lbl_a:
         eventPlayer.setAbility1Enabled(true)
     else:
@@ -54,12 +55,12 @@ rule "Mechanic | Genji | Ultimate":
     waitUntil(not eventPlayer.isUsingUltimate(), 2)
     wait()
     eventPlayer.allowButton(Button.PRIMARY_FIRE)
-    async(CheckUlt(), AsyncBehavior.RESTART) # sets ult charge back if done with map etc
+    async(CheckUlt(), AsyncBehavior.NOOP) # sets ult charge back if done with map etc
 
 rule "Mechanic | Genji | Dash":
     @Event eachPlayer
     @Condition eventPlayer.isUsingAbility1()
-    #async(CheckAbility1(), AsyncBehavior.RESTART)
+    #async(CheckAbility1(), AsyncBehavior.NOOP)
     CheckAbility1()
 
 rule "Mechanic | Genji | Double Jump":
@@ -101,5 +102,6 @@ rule "Mechanic | Genji | Ban Save Double - 封禁二段跳":
         wait(0.8, Wait.ABORT_WHEN_FALSE)
         #This can give a false negative, but advantage is small
         if eventPlayer.skill_usedBhop: return
-    smallMessage(eventPlayer, "   延二段跳已禁用!" checkCN "  save double banned!")
+    #"   延二段跳已禁用!" checkCN "   save double banned!"
+    smallMessage(eventPlayer, t"   Save Double Banned!")
     CheckpointFailReset()

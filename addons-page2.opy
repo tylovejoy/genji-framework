@@ -5,8 +5,7 @@ translated file
 this gets put on page 2
 this should be parts of addons that get toggled by turning on rules
 */
-
-rule "<tx0C00000000001344> Addons Settings & Data - 附加组件 <tx0C00000000001344>":
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Addons Settings & Data - 附加组件 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
 rule "Addon | Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":
@@ -27,7 +26,6 @@ rule "Addon | Comp Mode instruction message - 竞赛模式指引消息 <---- INS
 
 rule "Addon | Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled
-    @Delimiter
     #1) workshop settings > difficulty > set to "dont display"
     #2) enable this rule
     #3) type your difficulty in the hud below
@@ -40,9 +38,7 @@ rule "Addon | Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / �
         "enter custom difficulty here",
         null,
         HudPosition.TOP, HO.data_dif,
-        Color.BLUE, Color.GREEN, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
-    )
-    HudStoreEdit.append(getLastCreatedText())
+        Color.BLUE, Color.GREEN, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
 rule "Addon | Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
     @Disabled
@@ -57,8 +53,7 @@ rule "Addon | Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
         20,
         30,
         40,
-        50
-    ]
+        50]
     # title
     # 标题文本
     TitleData[1] = [
@@ -67,8 +62,7 @@ rule "Addon | Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
         "Ninja",
         "Pro",
         "Expert",
-        "Master"
-    ]
+        "Master"]
     # color
     # 颜色
     TitleData[2] = [
@@ -77,13 +71,11 @@ rule "Addon | Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
         Color.YELLOW,
         Color.ORANGE,
         Color.PURPLE,
-        Color.RED
-    ]
+        Color.RED]
 
 rule "Addon | Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
     @Disabled
     @Event playerJoined
-
     # "your nickname" your friends ingame name
     # "display title" fill in the custom title
     # 修改字符串 "your nickname <-------" 为好友名字 区分大小写
@@ -91,20 +83,19 @@ rule "Addon | Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)
     waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
     if "your nickname <-------" == eventPlayer[0].split([]):
         bigMessage(true[0], "Message to the whole room")
-        createInWorldText(true[0], "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+        createInWorldText((not eventPlayer.toggle_invisible)[0], "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
     if "your nickname <-------" == eventPlayer[0].split([]):
         bigMessage(true[0], "Message to the whole room")
-        createInWorldText(true[0], "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+        createInWorldText((not eventPlayer.toggle_invisible)[0], "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
     if "your nickname <-------" == eventPlayer[0].split([]):
         bigMessage(true[0], "Message to the whole room")
-        createInWorldText(true[0], "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+        createInWorldText((not eventPlayer.toggle_invisible)[0], "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
 rule "Addon | Display Author Time - 展示世界纪录 <---- EDIT ME / 在此处编辑":
     @Disabled
     # type your entry in the textfield that says "name and time here"
     # 在文本框 中输入“名称和时间”
     hudText(true[0], null, " \n{0} author time {0}".format(iconString(Icon.FIRE)), "name and time here", HudPosition.RIGHT, HO.wr, null, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-    HudStoreEdit.append(getLastCreatedText())
 
 rule "Addon | HUD text for certain Checkpoints - 特定关卡显示的HUD文本 <---- EDIT ME / 在此处编辑":
     @Disabled
@@ -156,12 +147,12 @@ rule "Addon | 3rd Person Camera Mode - 第三人称":
     eventPlayer.addon_toggle3rdPov = true
     Addon3rdPerson()
 
-rule "<tx0C00000000001344> Addons Skills - 附加组件技能 <tx0C00000000001344>":
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Addons Skills - 附加组件技能 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
 # keeps you still shortly after getting in a stall
 # makes it much easier to get in one
-rule "Addon | Stall enhancer - 增强系統跳的判定":
+rule "Addon | Stall Enhancer - 增强系統跳的判定":
     @Event eachPlayer
     #原作：家里有妖怪#5202(国服)
     @Disabled
@@ -169,8 +160,7 @@ rule "Addon | Stall enhancer - 增强系統跳的判定":
     @Condition (eventPlayer.getVerticalSpeed() >= -0.2 and eventPlayer.getVerticalSpeed() <= 0.05) == true
     @Condition eventPlayer.getHorizontalSpeed() <= 1.3
     @Condition eventPlayer.isInAir() == true
-    @Condition eventPlayer.editor_on and eventPlayer.editor_fly == false
-    #@Condition createWorkshopSetting(bool, "map settings \n地图设置"," Autobounce enhancer - 增强系統跳的判定", false, 3)
+    @Condition EditorOn and eventPlayer.editor_fly == false
 
     wait(0.25, Wait.ABORT_WHEN_FALSE)
     eventPlayer.startForcingPosition(eventPlayer.getPosition(), false)
@@ -183,7 +173,7 @@ rule "Addon | Stall enhancer - 增强系統跳的判定":
         eventPlayer.isHoldingButton(Button.RELOAD) or
         eventPlayer.editor_fly or eventPlayer.isDead() or
         eventPlayer.isUsingAbility1() or
-        eventPlayer.getSpeed() > 3 , 3) # double jump catch
+        eventPlayer.getSpeed() > 3, 3) # double jump catch
     #wait(3)
     eventPlayer.setGravity(100)
     eventPlayer.setMoveSpeed(100)
@@ -281,7 +271,7 @@ rule "Addon | Custom Orb Script":
     if eventPlayer.cache_bounceTouched in [1, 2]:
         # example gravity (should be reset to 100 in AddonCustomLoadAndReset)
         eventPlayer.setGravity(25)
-        smallMessage(eventPlayer," you feel light")
+        smallMessage(eventPlayer," You Feel Light")
         wait(2)
         eventPlayer.setGravity(100)
 
@@ -289,11 +279,11 @@ rule "Addon | Custom Orb Script":
        # example canceling primary makes double jump recover
        eventPlayer.cancelPrimaryAction()
        eventPlayer.skill_usedDouble = null
-       smallMessage(eventPlayer," double jump recovered")
+       smallMessage(eventPlayer," Double Jump Recovered")
     if eventPlayer.cache_bounceTouched in [5, 6]:
         # example move speed
         eventPlayer.setMoveSpeed(250)
-        smallMessage(eventPlayer," zooom")
+        smallMessage(eventPlayer," Zooom")
         wait(2)
         eventPlayer.setMoveSpeed(100)
 
@@ -324,7 +314,7 @@ rule "Addon | fisho cp cheat for overpy toggle":
     @Condition cpCheat
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.checkpoint_notLast) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.checkpoint_current)
-    @Condition eventPlayer.editor_on == false
+    @Condition EditorOn == false
     @Condition eventPlayer.toggle_practice == false
 
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
