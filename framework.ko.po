@@ -3,3 +3,327 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: ko\n"
 "X-Generator: OverPy\n"
+
+#. file all.opy, rule "Mechanic | All | Emote"
+msgid "Emote Savehop ♥ Is Banned!"
+msgstr "감정표현 콩콩이 유지 ♥ 는 금지되어 있습니다!"
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file all.opy, rule "Mechanic | All | Jump"
+#.  - file huds.opy, rule "Huds | Each Player"
+#, hasMultipleOccurrencesNotification
+msgid "Bhop"
+msgstr "콩콩이"
+
+#. file climbers.opy, rule "Mechanic | Climbers | Bhop count for stand ban"
+msgid "Stand Createbhop ♠ Is Banned!"
+msgstr "서서 콩콩이 생성 ♠ 은 금지되어 있습니다!"
+
+#. file climbers.opy, rule "Mechanic | Climbers | Create Bhop"
+msgid "Create Bhop ♂ Is Banned!"
+msgstr "콩콩이 생성 ♂ 은 금지되어 있습니다!"
+
+#. file climbers.opy, rule "Mechanic | Climbers | Create Bhop"
+msgid "Bhop Created!"
+msgstr "콩콩이 생성!"
+
+#. file climbers.opy, rule "Mechanic | Climbers | Multiclimb"
+msgid "Multiclimb ∞ Is Banned!"
+msgstr "무한 벽타기 ∞ 는 금지되어 있습니다!"
+
+#. file commands.opy, rule "Command | Quick Reset (Reload | Hold Reload to Enable)"
+msgid "Quick Reset Is Enabled"
+msgstr "빠른 초기화가 활성화됩니다"
+
+#. file commands.opy, rule "Command | Quick Reset (Reload | Hold Reload to Enable)"
+msgid "Quick Reset Is Disabled"
+msgstr "빠른 초기화가 비활성화됩니다"
+
+#. file commands.opy, rule "Command | Spectate (Hold Interact)"
+msgid "Hold Interact Again To Turn Off Spectate Mode"
+msgstr "상호작용 키를 다시 눌러 관전 모드를 해제할 수 있습니다"
+
+#. file commands.opy, rule "Command | Toggle Hud (Hold Secondary)"
+msgid "HUD Is Now Hidden"
+msgstr "HUD가 숨겨집니다"
+
+#. file commands.opy, rule "Command | Toggle Hud (Hold Secondary)"
+msgid "HUD Is Now Shown"
+msgstr "HUD가 보여집니다"
+
+#. file commands.opy, rule "Command | Toggle Invincible Mode (Melee + Reload)"
+msgid "Invincible Mode"
+msgstr "무적 모드"
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file commands.opy, rule "Command | Toggle Invincible Mode (Melee + Reload)"
+#.  - file commands.opy, rule "Command | Toggle Practice Mode (Melee + Ultimate)"
+#, hasMultipleOccurrencesNotification
+msgid "Practice Mode"
+msgstr "연습 모드"
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file commands.opy, rule "Command | Toggle Invincible Mode (Melee + Reload)"
+#.  - file commands.opy, rule "Command | Toggle Practice Mode (Melee + Ultimate)"
+#, hasMultipleOccurrencesNotification
+msgid "Normal Mode"
+msgstr "일반 모드"
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file commands.opy, rule "Command | Toggle Invisible (Hold Deflect)"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#, hasMultipleOccurrencesNotification
+msgid "Invisible"
+msgstr "투명화"
+
+# TODO: check if all occurrences have the same translation
+#. 5 occurrences:
+#.  - file commands.opy, rule "Command | Toggle Invisible (Hold Deflect)"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Addons"
+#, hasMultipleOccurrencesNotification
+msgid "| On"
+msgstr "| 활성화"
+
+#. file commands.opy, rule "Command | Toggle Invisible (Hold Deflect)"
+msgid "| Off"
+msgstr "| 비활상화"
+
+#. file GENJI.opy, rule "Mechanic | Genji | Ban Save Double - 封禁二段跳"
+msgid "Save Double Banned!"
+msgstr "이단점프 유지 금지!"
+
+#. file huds.opy, rule "Huds | Addons"
+msgid "3rd Person"
+msgstr "3인칭"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Practice Time:"
+msgstr "연습한 시간:"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Time:"
+msgstr "시간:"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Orb"
+msgstr "구체"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Portal"
+msgstr "포탈"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Checkpoint"
+msgstr "체크포인트"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Portal Exit"
+msgstr "포탈 출구"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Portal Start"
+msgstr "포탈 입구"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Level"
+msgstr "레벨"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "{0} Orbs"
+msgstr "{0} 구체(들)"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Climb"
+msgstr "벽타기"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Collect Orbs First"
+msgstr "미획득 구체 존재"
+
+#. file huds.opy, rule "Huds | Each Player"
+msgid "Come Here"
+msgstr "이곳으로"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Made By"
+msgstr "제작 - "
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Map Code"
+msgstr "맵 코드"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Min -"
+msgstr "(분) -"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Server Restart In"
+msgstr "서버 초기화까지 남은 시간"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Error: Max HUD Count Reached"
+msgstr "오류: 최대 HUD 요소 개수 초과"
+
+# TODO: check if all occurrences have the same translation
+#. 7 occurrences:
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Addons"
+#, hasMultipleOccurrencesNotification
+msgid "Hold"
+msgstr "누르기"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Quick Reset"
+msgstr "빠른 초기화가"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Invincible"
+msgstr "무적"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Toggle"
+msgstr "홟/비활성화"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Preview CP"
+msgstr "체크포인트 미리보기"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid ""
+"Walk ◀ ▶ | Preview Others\n"
+"Walk ▲ ▼ | Modify Zoom\n"
+"Aim | Change Preview Angle"
+msgstr ""
+"방향키 ◀ ▶ | 상대 미리보기\n"
+"방향키 ▲ ▼ | 확대/축소\n"
+"시야 변경 | 미리보기 각도 변경"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Split:"
+msgstr "스플릿:"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "― ― ― ― ― Hint ― ― ― ― ―"
+msgstr "― ― ― ― ― 힌트 ― ― ― ― ―"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "― ― ― Hint Available ― ― ―"
+msgstr "― ― ― ― 힌트 제공됨 ― ― ― ―"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Hide Hint"
+msgstr "힌트 숨기기"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Show Hint"
+msgstr "힌트 보이기"
+
+# TODO: check if all occurrences have the same translation
+#. file huds.opy, rule "Huds | Global Localplayer"
+#, hasMultipleOccurrencesNotification
+msgid "Spectate"
+msgstr "관전"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Practice"
+msgstr "연습"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Next Level"
+msgstr "다음 레벨"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Previous Level"
+msgstr "이전 레벨"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Restart Practice"
+msgstr "연습 재시작"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Playtest"
+msgstr "플레이테스트"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Restart"
+msgstr "재시작"
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file huds.opy, rule "Huds | Global Localplayer"
+#.  - file huds.opy, rule "Huds | Leaderboard"
+#, hasMultipleOccurrencesNotification
+msgid "Leaderboard"
+msgstr "순위표"
+
+#. file huds.opy, rule "Huds | Global Localplayer"
+msgid "Enable Quick Reset"
+msgstr "빠른 초기화 활성화"
+
+#. file huds.opy, rule "Huds | Leaderboard"
+msgid "Top 5"
+msgstr "탑 5"
+
+#. file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+msgid "Collected Orb"
+msgstr "획득한 구체"
+
+#. file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+msgid "» Double Jump Is Ready"
+msgstr "» 이단 점프 활성화"
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+#.  - file GENJI.opy, rule "Subroutine CheckUlt"
+#, hasMultipleOccurrencesNotification
+msgid "Ultimate Is Ready"
+msgstr "궁극기 활성화"
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+#.  - file GENJI.opy, rule "Subroutine CheckAbility1"
+#, hasMultipleOccurrencesNotification
+msgid "Dash Is Ready"
+msgstr "질풍참 활성화"
+
+#. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "! Collect All Lock Orbs To Complete !"
+msgstr "! 능력 구체를 모두 모은 다음 체크포인트로 가시오 !"
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+#.  - file climbers.opy, rule "Mechanic | Climbers | Ban Wallclimb - Message"
+#, hasMultipleOccurrencesNotification
+msgid "Climb ↑ Is Banned!"
+msgstr "벽타기 ↑ 는 금지되어 있습니다!"
+
+#. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "≥ Must Have A Bhop To Complete!"
+msgstr "≥ 콩콩이가 있는 상태여야 합니다!"
+
+#. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "» Must Have A Double Jump To Complete!"
+msgstr "» 이단 점프가 있는 상태여야 합니다!"
+
+#. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+msgid "Mission Complete! Time"
+msgstr "미션 성공! 시간"
+
+#. file parkour.opy, rule "Parkour | Match time"
+msgid "Maximum Lobby Time Reached, Restarting"
+msgstr "로비 제한 시간 임박, 재시작 중"

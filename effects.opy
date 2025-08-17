@@ -1,5 +1,6 @@
 #!mainFile "framework.opy"
-rule "<tx0C00000000001344> Effects <tx0C00000000001344>":
+
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Effects ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
 rule "Effects | Setup Effects":
@@ -18,9 +19,8 @@ rule "Effects | Setup Effects":
                 PortalNames[TempIterator1],
                 PortalLoc[TempIterator1] + Vector.UP,
                 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT)
-    waitUntil(entityExists(getAllPlayers()), Math.INFINITY)
-    wait()
-    if getAllPlayers().editor_on:
+        wait()
+    if EditorOn:
         RebuildKillOrbs()
         RebuildBounceOrbs()
         RebuildPortals()

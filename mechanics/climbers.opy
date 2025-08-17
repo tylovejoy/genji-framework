@@ -15,8 +15,9 @@ rule "Mechanic | Climbers | Bhop count for stand ban":
     @Condition eventPlayer.isJumping()
     @Condition eventPlayer.ban_standcreate
     eventPlayer.skill_countBhops++
-    if eventPlayer.skill_countBhops > 1 and not eventPlayer.toggle_invincible:   
-        smallMessage(eventPlayer, "   站卡 ♠ 已禁用!" checkCN "   Stand createBhop ♠ is banned!")
+    if eventPlayer.skill_countBhops > 1 and not eventPlayer.toggle_invincible:
+        #"   站卡 ♠ 已禁用!" checkCN "   Stand createBhop ♠ is banned!"
+        smallMessage(eventPlayer, t"   Stand Createbhop ♠ Is Banned!")
         CheckpointFailReset()
 
 rule "Mechanic | Climbers | Create Bhop":
@@ -31,13 +32,15 @@ rule "Mechanic | Climbers | Create Bhop":
     if eventPlayer.lockState: return # prevent restart from giving messsage, but stil allow it to become green
 
     if eventPlayer.ban_create and not eventPlayer.toggle_invincible:
-        smallMessage(eventPlayer, "   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!")
+        #"   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!"
+        smallMessage(eventPlayer, t"   Create Bhop ♂ Is Banned!")
         CheckpointFailReset()
     else:
         if eventPlayer.ban_standcreate and eventPlayer.skill_countBhops > null:
             eventPlayer.skill_countBhops--
         eventPlayer.skill_countCreates++
-        smallMessage(eventPlayer, "   success!" checkCN "   Bhop has been created!")
+        #"   success!" checkCN "   Bhop has been created!"
+        smallMessage(eventPlayer, t"   Bhop Created!")
 
 rule "Mechanic | Climbers | Multiclimb":
     @Event eachPlayer
@@ -50,7 +53,8 @@ rule "Mechanic | Climbers | Multiclimb":
         eventPlayer.skill_usedClimb = true
     else:
         if eventPlayer.ban_multi and eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
-            smallMessage(eventPlayer, "   蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!")
+            #"   蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!"
+            smallMessage(eventPlayer, t"   Multiclimb ∞ Is Banned!")
             CheckpointFailReset() 
         else:
             eventPlayer.skill_countMulti += 1
@@ -62,5 +66,5 @@ rule "Mechanic | Climbers | Ban Wallclimb - Message":
     @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.skill_usedClimb
     #CheckpointFailReset()
-    #eventPlayer.setStatusEffect(null,Status.BURNING, 0.1)
-    smallMessage(eventPlayer, "   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
+    #"   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!"
+    smallMessage(eventPlayer, t"   Climb ↑ Is Banned!")

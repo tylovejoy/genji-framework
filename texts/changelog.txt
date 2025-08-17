@@ -625,5 +625,29 @@ fixed:
    * Reported by `@n1troh` +5xp
  - Bounce/Lock Orbs unchanging color
    * Reported by `@bioslet` +5xp
-### Framework
+### Soon™
  - Preparing code for multi-language support
+   * Korean 한국어
+
+# 1.10.4
+### Languages
+ - English
+   * Renamed 'Competitive Mode' to 'Tournament Mode'
+ - Chinese 中文
+ - Korean 한국어
+  Not yet supported features
+   * Editor
+   * Tournament Mode
+### Commands
+ - Fixed allowing ultimate when toggling off invincibility 
+   * Reported by @wolfdagur
+ - Fixed Specate after spamming death
+ - Fixed Hide Hud text toggle reversed
+   * Reported by `@zxzpkcxcc` +5xp
+ - Fixed completing checkpoint with paused timer
+### Addons
+ - Hide friend titles when invisible
+   * Reported by `@bioslet` +5xp
+### Workshop
+ - Replaced <TX and <FG tags with similar characters in rule names
+   * Reported by Blizzard -100xp

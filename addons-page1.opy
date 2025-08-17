@@ -5,7 +5,7 @@ this gets put on page 1
 this should be parts of addons that get toggled with a workshop toggle
 */
 
-rule "<tx0C00000000001344> Addon Functions <tx0C00000000001344>":
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Addon Functions ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
 rule "Addon | AFK timer":
@@ -13,7 +13,7 @@ rule "Addon | AFK timer":
     @Condition eventPlayer.isMoving() == false
     @Condition eventPlayer.isAlive()
     @Condition eventPlayer.isCommunicatingEmote() == false
-    @Condition eventPlayer.editor_on == false
+    @Condition EditorOn == false
     wait(300, Wait.ABORT_WHEN_FALSE)
     if eventPlayer.addon_toggle3rdPov:
         eventPlayer.addon_toggle3rdPov = false
@@ -92,9 +92,9 @@ rule "Addon | Pre-set control map portal - toggled on via workshop settings":
         PortalLoc = [vect(231.98, 7.23, -262.84), vect(236.78, 7.23, -262.75), vect(-327.59, 3.6, -108.69), vect(-332.71, 3.6, -108.59), vect(25.4, 341, 354.38), vect( 30, 341, 354.34)     ]
         PortalDest = [vect(-329.86, 3.05, -103.4), vect(27.59, 339.76, 348.77), vect( 234.07, 6.12, -266.88), vect(27.59, 339.76, 348.77), vect(-329.86, 3.05, -103.4), vect( 234.07, 6.12, -266.88)   ]
 
-/*
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
+    @Condition false
     @Condition isGameInProgress()
     MsDestructo = []  # Multiple bots
     waitUntil(any([x.hasSpawned() for x in getAllPlayers()]), Math.INFINITY)
@@ -124,9 +124,9 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
             MapVectorArray = [vect(-328.19, 90.5, -103.11), vect(233.75, 71.95, -258.42), vect(26.93, 428.04, 336.34)]
             break
         default:
-            if strContains( "{}".format(getCurrentMap()) , "{}".format(Map.LIJIANG_TOWER)): # lunar new year catch
+            if strContains( "{}".format(getCurrentMap()), "{}".format(Map.LIJIANG_TOWER)): # lunar new year catch
                 MapVectorArray = [vect(-5.808, 324.398, 282.523), vect(-0.414, 156.197, 148.681), vect(-0.381, 53.736, -33.335)]
-            elif strContains( "{}".format(getCurrentMap()) ,"{}".format(Map.BUSAN)): # lunar new year catch
+            elif strContains( "{}".format(getCurrentMap()), "{}".format(Map.BUSAN)): # lunar new year catch
                 MapVectorArray = [vect(51.885, 37.172, -113.654), vect(-329.934, 56.136, 149.839), vect(227.21, 43.353, 252.64)]
             else:  # This default covers almost every map
                 MapVectorArray = [vect(73, 62, -17), vect(169, 62, 82), vect(-23, 62, -124), vect(-23, 62, 100)]
@@ -156,8 +156,6 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     MapVectorArray = null
     DestructoIter = null
     MsDestructo = null
-*/
-
 
 # decrease to make it wait more often if you have load problems, keep at full int numbers no floats
 #!define fence_delay 3
@@ -234,26 +232,26 @@ def AddonCheckMap():
     MapChecker.disableEnvironmentCollision(false)
     MapChecker.setStatusEffect(null, Status.PHASED_OUT, Math.INFINITY)
     MapChecker.setInvisibility(Invis.ALL)
-    MapChecker.startScalingSize(cpcircleradius / 0.45, false)
+    MapChecker.startScalingSize(cpCircleRadius / 0.45, false)
     MapChecker.setGravity(Math.INFINITY)
-    waitUntil(MapChecker.hasSpawned(), Math.INFINITY)
+    waitUntil(MapChecker.hasSpawned(), 16) # Not infinity incase dummy does not spawn
 
     for MapChecker.checkpoint_current in range(1, len(CheckpointPositions)):
-        if nearestWalkablePosition(CheckpointPositions[MapChecker.checkpoint_current]) and distance(CheckpointPositions[MapChecker.checkpoint_current], nearestWalkablePosition(CheckpointPositions[MapChecker.checkpoint_current])) > cpcircleradius:
-            MapChecker.startForcingPosition(raycast(CheckpointPositions[MapChecker.checkpoint_current] + Vector.UP * cpcircleradius,CheckpointPositions[MapChecker.checkpoint_current] +
-                Vector.DOWN * cpcircleradius, [], [], false).getHitPosition(), true)
+        if nearestWalkablePosition(CheckpointPositions[MapChecker.checkpoint_current]) and distance(CheckpointPositions[MapChecker.checkpoint_current], nearestWalkablePosition(CheckpointPositions[MapChecker.checkpoint_current])) > cpCircleRadius:
+            MapChecker.startForcingPosition(raycast(CheckpointPositions[MapChecker.checkpoint_current] + Vector.UP * cpCircleRadius, CheckpointPositions[MapChecker.checkpoint_current] +
+                Vector.DOWN * cpCircleRadius, [], [], false).getHitPosition(), true)
             wait(7 * 0.016)
             MapChecker.stopForcingPosition()
             waitUntil(MapChecker.isOnGround(), true)
-            if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapChecker.checkpoint_current]) <= cpcircleradius:
+            if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapChecker.checkpoint_current]) <= cpCircleRadius:
                 goto lbl_MapChecker_nextCp
 
-            for MapChecker.checkpoint_practice in range(cpcircleradius, cpcircleradius - 0.2, -0.2):
+            for MapChecker.checkpoint_practice in range(cpCircleRadius, cpCircleRadius - 0.2, -0.2):
                 MapChecker.startForcingPosition(CheckpointPositions[MapChecker.checkpoint_current] + Vector.UP * MapChecker.checkpoint_practice,true)
                 wait(7 * 0.016)
                 MapChecker.stopForcingPosition()
                 waitUntil(MapChecker.isOnGround(), true)
-                if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapChecker.checkpoint_current]) <= cpcircleradius:
+                if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapChecker.checkpoint_current]) <= cpCircleRadius:
                     goto lbl_MapChecker_nextCp
 
             enableInspector()
@@ -261,11 +259,14 @@ def AddonCheckMap():
             disableInspector()
         lbl_MapChecker_nextCp:
 
-    destroyDummy(MapChecker.getTeam(), MapChecker.getSlot())
-    MapChecker = null
+    MapChecker.editor_saveCache = EditorOn
+    EditorOn = null
     enableInspector()
     printLog("■ Map Check Complete ■")
     disableInspector()
+    EditorOn = MapChecker.editor_saveCache
+    destroyDummy(MapChecker.getTeam(), MapChecker.getSlot())
+    MapChecker = null
 
 def Addon3rdPerson():
     @Name "Addon | SUB 3rd Person Camera"

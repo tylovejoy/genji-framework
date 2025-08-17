@@ -1,12 +1,12 @@
 #!mainFile "framework.opy"
 
-rule "<tx0C0000000000D297><fg00FFFFFF> Map Data - 数据录入 <---- INSERT HERE / 在这输入":
+rule "Ø Map Data - 数据录入 <---- INSERT HERE / 在这输入":
     @Delimiter
 
 # note: Don't change defaults only here.
 # If you change this, also change it in the name/credit construciton in the huds
 # The old default should always be included to make old data valid
-rule "<tx0C00000000044B55><fg0FFFFFFF> Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这输入":
+rule "☞ Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这输入":
     wait(LoadOrder.customize)
     #Filling this in adds it to the inspector pasta after next restart.
     #You can fill in again to overwrite.

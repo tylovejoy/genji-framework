@@ -25,7 +25,6 @@ rule "general test data":
     CustomPortalEndpoint = [vect(-3.462, 10, 1.293), vect(-5.581, 10, -17.052), vect(15.256, 14.5, 0.353), vect(13.497, 11.71, -10.091), vect(8.499, 10, -15.718), vect(-2.473, 10, -15.138)]
     CustomPortalCP = [3, 1, 4, 4, 4, 5]
     CompMode = false
-    HudStoreEdit = []
     Cachedcredits = ["FishoFire", "The pirates code"]
     BanMulti = [0]
     BanCreate = []

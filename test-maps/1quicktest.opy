@@ -24,7 +24,6 @@ rule "quicktest data":
     CustomPortalEndpoint = []
     CustomPortalCP = []
     CompMode = false
-    HudStoreEdit = []
     SaveName = []
     SaveCp = []
     SaveEnt = []
@@ -65,7 +64,6 @@ rule "quicktest data":
     CustomPortalEndpoint = []
     CustomPortalCP = []
     CompMode = false
-    HudStoreEdit = []
     SaveName = []
     SaveCp = []
     SaveEnt = []
@@ -106,7 +104,6 @@ rule "quicktest data":
     CustomPortalEndpoint = []
     CustomPortalCP = []
     CompMode = false
-    HudStoreEdit = []
     SaveName = []
     SaveCp = []
     SaveEnt = []
@@ -147,7 +144,6 @@ rule "quicktest data":
     CustomPortalEndpoint = []
     CustomPortalCP = []
     CompMode = false
-    HudStoreEdit = []
     SaveName = []
     SaveCp = []
     SaveEnt = []
@@ -189,7 +185,6 @@ rule "quicktest data":
     CustomPortalEndpoint = []
     CustomPortalCP = []
     CompMode = false
-    HudStoreEdit = []
     SaveName = []
     SaveCp = []
     SaveEnt = []
@@ -231,7 +226,6 @@ rule "quicktest data":
     CustomPortalEndpoint = []
     CustomPortalCP = []
     CompMode = false
-    HudStoreEdit = []
     SaveName = []
     SaveCp = []
     SaveEnt = []

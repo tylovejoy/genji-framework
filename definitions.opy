@@ -3,7 +3,7 @@
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
-# Current Named Unused Variables: 1,6,9,11,16,17,19,28,29,31,36,37,48,49,59,72,89,90
+# Current Named Unused Variables: 1,6,9,11,17,19,28,29,31,36,37,39,48,49,58,59,72,89,90
 #!define CheckpointPositions A
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 #!define SelectedCheckpoint_Editing B
@@ -37,10 +37,9 @@ globalvar DashEnabledCheckpoints 13         # int                       --- dash
 #globalvar ListPlayersAtCheckpoints         # list[list[player]]        --- players at a specific checkpoint
 #!define ActivePlayers Q
 #globalvar ActivePlayers                    # list[player]              --- Active players, Non-saved, non-spectating active players
-#globalvar EditorOn                         # bool                      --- editor rules enabled?
 globalvar EditSelected 14
 globalvar EditSelectIdArray 15
-
+globalvar EditorOn 16                        # bool                      --- editor rules enabled?
 #globalvar EditorMoveItem                   # num                       --- used for moving a portal
 
 #Bounce Pad editing stuff
@@ -94,7 +93,7 @@ globalvar CustomPortalStart 45              # [vect]                    --- cust
 globalvar CustomPortalEndpoint 46           # [vect]                    --- custom portal end points
 globalvar CustomPortalCP 47                 # [int]                     --- custom portal checkpoints
 
-globalvar CompMode 50                       # bool                      --- competitive mode toggle
+globalvar CompMode 50                       # bool                      --- Tournament mode toggle
 globalvar CompTime 51                       # int                       --- compt mode time limit
 globalvar CompAtmpNum 52                    # int                       --- compt mode attempt limit
 globalvar CompAtmpSaveNames 53              # [strings]                 --- comp name list
@@ -102,8 +101,8 @@ globalvar CompAtmpSaveCount 54              # [int]                      --- com
 globalvar CompRestartLimit 55               # bool                      --- resest limiter
 #!define InstructionText instructiontext
 globalvar InstructionText 56                # [text]                    --- array of instructions
-globalvar TitleData 57                      # [[cp ,[title],[color]]    --- title addon
-globalvar HudStoreEdit 58                   # [textid]                  --- list of huds to delete if editormode is on
+globalvar TitleData 57                      # [[cp, [title], [color]]    --- title addon
+#globalvar HudStoreEdit 58                   # [textid]                  --- list of huds to delete if editormode is on
 
 globalvar SaveName 60
 globalvar SaveCp 61
@@ -221,7 +220,7 @@ playervar preview_array1                     # array                     --- sto
 playervar preview_array2
 playervar preview_i                         # int                       --- preview itterator
 
-playervar editor_on                          # bool                      --- on all players, but only gets checked from host player
+#playervar editor_on                          # bool                      --- on all players, but only gets checked from host player
 playervar editor_modeSelect                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
 playervar editor_fly                         # vector/null               --- null if not flying, else vector position, added by fisho
 playervar editor_saveCache                        # array                     --- array of save map hud ids

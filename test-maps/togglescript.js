@@ -3,7 +3,7 @@
         x = ('#!define testData #\n ' +
             '#!define skirmishMap ["workshopChamber"]\n' +
             '#!define tdmMap [] \n' +
-            '#!define editoron true\n')
+            '#!define editorDefaultOn true\n')
 
     } else {
         datafiles = {
@@ -74,6 +74,6 @@
             '#!include "'+ datafiles + '"\n'+
             '#!define skirmishMap [' + selectedmap[0] + ']\n' +
             '#!define tdmMap [' + selectedmap[1] + ']\n' +
-            '#!define editoron false\n')
+            '#!define editorDefaultOn false\n')
     }
 //return x}
