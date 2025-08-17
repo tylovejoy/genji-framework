@@ -636,7 +636,6 @@ fixed:
  - Chinese 中文
  - Korean 한국어
   Not yet supported features
-   * Workshop Settings
    * Editor
    * Tournament Mode
 ### Commands
