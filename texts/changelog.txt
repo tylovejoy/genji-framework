@@ -654,4 +654,4 @@ fixed:
 
 # 1.10.4A
  - Missing Practice & Invisible, flipped Quick Reset state
-   * Reported by `@bioslet` +5xp
+   * Reported by `@bioslet` +10xp
