@@ -129,7 +129,7 @@ rule "Huds | Global Localplayer":
     hudSubtext(true[0], "­\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", HudPosition.TOP, HO.fillermain, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
     hudSubtext(localPlayer.toggle_guide,
-        f"{t'Hold'} {buttonString(Button.RELOAD)} | {t'Enable Quick Reset'}" if localPlayer.toggle_quickRestart else f"{buttonString(Button.RELOAD)} | {t'Quick Reset'}",
+        f"{buttonString(Button.RELOAD)} | {t'Quick Reset'}" if localPlayer.toggle_quickRestart else f"{t'Hold'} {buttonString(Button.RELOAD)} | {t'Enable Quick Reset'}",
         #f"{[] if localPlayer.toggle_quickRestart else t'Hold'} {buttonString(Button.RELOAD)} | {[] if localPlayer.toggle_quickRestart else t'Enable'} {t'Quick Reset'}",
 
         #"{0} {1} | {2}快速回点".format([] if localPlayer.toggle_quickRestart else "长按",buttonString(Button.RELOAD),[] if localPlayer.toggle_quickRestart else "启用")
@@ -182,15 +182,7 @@ rule "Huds | Global Localplayer":
             hudSubtext([i for i in getAllPlayers() if i.comp_instructionHud], InstructionText[3], HudPosition.TOP, HO.comp_instruct4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
         hudHeader([i for i in getAllPlayers() if i.comp_instructionHud],"                                   Press {0} to start                                ".format(buttonString(Button.INTERACT)),
             HudPosition.TOP, HO.comp_instructbottom, Color.WHITE, HudReeval.VISIBILITY_AND_STRING,SpecVisibility.DEFAULT)
-    else if EditorOn:
-        hudSubtext(localPlayer.toggle_guide,
-            f"{t'Hold'} {buttonString(Button.INTERACT)} | {t'Spectate'}{t' | On' if localPlayer.toggle_spectate else []}",
-            #"长按 {0} | 观战模式{1}".format(buttonString(Button.INTERACT)," | 启用" if localPlayer.toggle_spectate else [])
-            #checkCN
-            #"Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | On" if localPlayer.toggle_spectate else []),
-            HudPosition.RIGHT, HO.com_spec, evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.toggle_spectate else evalOnce(ColorConfig[Customize.command_normal]),
-            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
-    else:
+    elif not EditorOn:
         hudSubtext(localPlayer.toggle_guide,
             f"{t'Hold'} {buttonString(Button.ABILITY_2)} | {t'Invisible'}{t' | On' if localPlayer.toggle_invisible else []}",
             #"长按 {0} | 隐身模式{1}".format(buttonString(Button.ABILITY_2)," | 启用" if localPlayer.toggle_invisible else [])
@@ -217,6 +209,16 @@ rule "Huds | Global Localplayer":
             #"{0} + {1} | Next level\n{0} + {2} | Previous level\n{3} | Start from practice cp ".format(
             #    buttonString(Button.CROUCH), buttonString(Button.PRIMARY_FIRE), buttonString(Button.SECONDARY_FIRE), buttonString(Button.INTERACT)),
             HudPosition.RIGHT, HO.com_practicesub, evalOnce(ColorConfig[Customize.command_highlight]),
+            HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
+            goto spectateHud
+    else:
+        spectateHud:
+        hudSubtext(localPlayer.toggle_guide,
+            f"{t'Hold'} {buttonString(Button.INTERACT)} | {t'Spectate'}{t' | On' if localPlayer.toggle_spectate else []}",
+            #"长按 {0} | 观战模式{1}".format(buttonString(Button.INTERACT)," | 启用" if localPlayer.toggle_spectate else [])
+            #checkCN
+            #"Hold {0} | Spectate{1}".format(buttonString(Button.INTERACT)," | On" if localPlayer.toggle_spectate else []),
+            HudPosition.RIGHT, HO.com_spec, evalOnce(ColorConfig[Customize.command_highlight]) if localPlayer.toggle_spectate else evalOnce(ColorConfig[Customize.command_normal]),
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
 rule "Huds | Leaderboard": # for global instead of tied to player

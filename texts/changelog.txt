@@ -651,3 +651,7 @@ fixed:
 ### Workshop
  - Replaced <TX and <FG tags with similar characters in rule names
    * Reported by Blizzard -100xp
+
+# 1.10.4A
+ - Missing Practice & Invisible, flipped Quick Reset state
+   * Reported by `@bioslet` +5xp
