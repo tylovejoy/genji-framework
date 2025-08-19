@@ -14,6 +14,8 @@ rule "Mechanic | All | Jump":
         smallMessage(eventPlayer, t"   Bhop")
     else:
         eventPlayer.skill_usedHop = true
+    if (eventPlayer.getVerticalSpeed() - 5.7197263e0) >= 0.0001:
+        TimeRemaining += 0.0001
 
 rule "Mechanic | All | No Jump":
     @Event eachPlayer
