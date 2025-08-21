@@ -112,5 +112,6 @@ rule "Mechanic | Genji | Climb Timer Reset":
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isUsingUltimate() == false
     @Condition eventPlayer.isUsingAbility1() == false
+    @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.getHorizontalSpeed() >= 6.0007
     TimeRemaining += 0.0001
