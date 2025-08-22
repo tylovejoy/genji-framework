@@ -264,6 +264,8 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, eventPlayer.getPosition(), 4)
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpCircleRadius:
         CheckpointFailReset()
+    elif not(eventPlayer.isUsingUltimate() or eventPlayer.isUsingAbility1()) and eventPlayer.getHorizontalSpeed() > 6.0008:
+        TimeRemaining += 0.0001
 
     eventPlayer.cache_collectedLocks = []
     wait(0.048)

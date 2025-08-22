@@ -105,13 +105,3 @@ rule "Mechanic | Genji | Ban Save Double - 封禁二段跳":
     #"   延二段跳已禁用!" checkCN "   save double banned!"
     smallMessage(eventPlayer, t"   Save Double Banned!")
     CheckpointFailReset()
-
-rule "Mechanic | Genji | Climb Timer Reset":
-    @Event eachPlayer
-    @Hero genji
-    @Condition eventPlayer.isOnGround()
-    @Condition eventPlayer.isUsingUltimate() == false
-    @Condition eventPlayer.isUsingAbility1() == false
-    @Condition eventPlayer.toggle_invincible == false
-    @Condition eventPlayer.getHorizontalSpeed() >= 6.0007
-    TimeRemaining += 0.0001
