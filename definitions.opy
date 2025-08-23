@@ -174,6 +174,7 @@ playervar toggle_practice                    # int                       --- tur
 playervar toggle_quickRestart                # bool                      -- enable reload to restart cp
 playervar toggle_guide                       # bool                       --- turned into bool, shows/hides editor hud
 playervar toggle_leaderboard                 # bool                      --- show/hide leaderboard
+playervar toggle_board
 playervar toggle_invisible                             # bool                      --- invis toggle added by fisho
 playervar toggle_hints
 

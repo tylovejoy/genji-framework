@@ -117,14 +117,13 @@ rule "Huds | Global Localplayer":
 
     # global huds
     hudSubheader(true[0],
-        f"{t'Server Restart In '}{TimeRemaining}{t' Min - '}{versionhere}{t'\nError: Max HUD Count Reached' if getNumberOfTextIds() >= 128 else []}",
+        f"{t'Server Restart In '}{TimeRemaining}{t' Min - '}{localPlayer.toggle_board}{versionhere}{t'\nError: Max HUD Count Reached' if getNumberOfTextIds() >= 128 else []}",
         #"房间将在 {0} 分钟后重启 - {1}{2}".format(
         #    TimeRemaining, versionhere, "\n错误: 已达到最大HUD数量上限" if getNumberOfTextIds() >= 128 else [])
         #checkCN
         #"Server Restart in {0} Min - {1}{2}".format(
         #    TimeRemaining, versionhere, "\nerror: max hud count reached" if getNumberOfTextIds() >= 128 else []),
         HudPosition.RIGHT, HO.data_remaingtime, ColorConfig[Customize.servertime], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
-
     # padding for custom hud display
     hudSubtext(true[0], "­\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", HudPosition.TOP, HO.fillermain, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
