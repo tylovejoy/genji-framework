@@ -3,7 +3,7 @@
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
-# Current Named Unused Variables: 1,2,6,9,11,17,19,28,29,31,36,37,39,48,49,58,59,72,89,90
+# Current Named Unused Variables: 1,2,9,11,17,19,28,29,30,31,36,37,39,48,49,58,59,72,89
 #!define CheckpointPositions A
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 #1
@@ -12,38 +12,29 @@ globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- some
 globalvar MsDestructo 3                     # Player
 globalvar TimeRemaining 4
 globalvar PortalEffects 5                   # list[effect]              --- Array holding custom portal effects
-#6
+#!define LobbyID G
+globalvar LobbyID 6
 #!define KillBallPositions H
 globalvar KillBallPositions 7               # list[vect]                --- KillBall position
 #!define KillBallRadii I
 globalvar KillBallRadii 8                   # list[float]               --- KillBall radius, default 5
-##!define SelectedKillball_Editing J
-#globalvar SelectedKillball_Editing 9         # int                       --- Current killball in editing context
+#9
 #!define KillBallEffects K
 globalvar KillBallEffects 10                # list[effect]              --- Array holding killball effects
-##!define KillBallChase L
-#globalvar KillBallChase 11                    # vect                      --- Location of killball while editing, chased.
+#11
 #!define BladeEnabledCheckpoints Dao
 globalvar BladeEnabledCheckpoints 12        # int                       --- blade enabled, should be bool.
 #!define DashEnabledCheckpoints SHIFT
 globalvar DashEnabledCheckpoints 13         # int                       --- dash enabled, should be bool.
-##!define ListPlayersAtCheckpoints P
-#globalvar ListPlayersAtCheckpoints         # list[list[player]]        --- players at a specific checkpoint
-##!define ActivePlayers Q
-#globalvar ActivePlayers                    # list[player]              --- Active players, Non-saved, non-spectating active players
 globalvar EditSelected 14
 globalvar EditSelectIdArray 15
 globalvar EditorOn 16                        # bool                      --- editor rules enabled?
-#globalvar EditorMoveItem 17                   # num                       --- used for moving a portal
-
+#17
 #!define BouncePositions TQ
 globalvar BouncePositions 18                # list[vect]                --- list of bouncepad positions
-##!define CurrentBounce_Editing TQ1
-#globalvar CurrentBounce_Editing 19            # int                       --- count of 0-indexed bouncepad pos currently
+#19
 #!define BounceEffects TQ2
 globalvar BounceEffects 20                  # list[effects]             --- list of bounce pad effect entities
-##!define CurrentBouncePosition_Editing TQ3
-#globalvar CurrentBouncePosition_Editing    # vect                      --- the position we just added to bouncepad positions
 globalvar EditorMoveItem 21                 # num                       --- used for moving a portal
 #!define BounceStrength EditMode
 globalvar BounceStrength 22                 # list[float]               --- bouncepad strength
@@ -58,15 +49,9 @@ globalvar KillballCheckpoints 26            # list[list[int]]           --- 2d l
 globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d list like killballnumber
 #28
 #29
-# old save progresion, removed but kept in here for legacy pasta purposes
-#!define SavedProgress save
-globalvar SavedProgress 30                  # list[Any]                 --- saves player data in array for rejoining, sequential data
+#30
 #31
-# Leaderboard stuff
-#globalvar toplistPlayers
-#globalvar toplistTimes
-#globalvar toplistSortedTimes
-globalvar LeaderBoardFull 32                # [[name,second,prettytime]]--- sorted list of 0-19 leaderboard entries
+globalvar LeaderBoardFull 32                # [[name,seconds,prettytime]]--- sorted list of 0-19 leaderboard entries
 globalvar LeaderBoardHuds 33
 globalvar LeaderBoardRemake 34              # bool                      --- indicate board needs remaking
 #!define BhopBanToggle kaxiaotiao
@@ -81,7 +66,6 @@ globalvar PortalLoc 41                      # [vect]                    --- port
 globalvar PortalDest 42                     # [vect]                    --- portal destination
 globalvar PortalOn 43                       # bool                      --- portals enabled
 globalvar Difficultyhud 44                  # number                    --- workshop toggle to display difficulty hud
-
 globalvar CustomPortalStart 45              # [vect]                    --- custom portal start
 globalvar CustomPortalEndpoint 46           # [vect]                    --- custom portal end points
 globalvar CustomPortalCP 47                 # [int]                     --- custom portal checkpoints
@@ -105,25 +89,19 @@ globalvar SaveTimer 63
 globalvar SaveElapsed 64
 globalvar SavePauseTime 65
 globalvar SavePauseEnabled 66
-
 globalvar HintCp 67
 globalvar HintText 68
-
 globalvar ColorConfig 69                    # [colors]                  --- configured colors
-
 globalvar Name 70
 globalvar Code 71
 #72
 globalvar Cachedcredits 73                  # [string, string]          --- Legacy
-
-# per cp iwt or hud
 globalvar CpHudText 74
 globalvar CpHudCp 75
 globalvar CpIwtText 76
 globalvar CpIwtCp 77
 globalvar CpIwtPos 78
 globalvar CpIwtColor 79
-
 globalvar BanTriple 80                      # legacy
 globalvar BanMulti 81
 globalvar BanCreate 82
@@ -157,11 +135,9 @@ playervar checkpoint_moved
 playervar checkpoint_notLast                       # bool                      --- false if you are noton the last cp or level below 2 cps
 
 playervar timer_normal                             # float                     --- Timer, chased.
-#playervar timer_pause                        # float                     --- time in spectate/invincible, chased
 playervar timer_practice
 playervar timer_split                         # int                       --- stored time that the split compares to
 playervar timer_splitDisplay                      # int                       --- displayed split value
-#playervar timer_splitsOn                         # bool                      --- turning splits on/off is now done via seting splittime to -Math.INFINITY
 
 playervar toggle_invincible                  # bool                       --- invincible/normal mode toggle now a bool
 playervar toggle_spectate                    # bool                       --- turned into bool
@@ -197,7 +173,6 @@ playervar ban_savedouble
 
 playervar cache_collectedLocks                     # [int]                    --- amount collected lock this cp
 playervar cache_bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
-#playervar cache_bounceLastTouched
 playervar cache_portalStart
 playervar cache_portalEnd
 playervar cache_bounceMaxLocks
