@@ -18,7 +18,6 @@ rule "Editor | Export Map":
     ColorConfig = null
     EditorOn = null
 
-    CheckpointRings_Editing = null
     KillBallEffects = null
     TempIterator1 = null
     BounceEffects = null
@@ -854,7 +853,6 @@ rule "Editor | Delete Cp/Orb/Portal":
 
         # Remove specified checkpoint =====================
         del CheckpointPositions[hostPlayer.checkpoint_current]
-        del CheckpointRings_Editing[hostPlayer.checkpoint_current]
         hostPlayer.checkpoint_current = max(hostPlayer.checkpoint_current - 1, 0)
 
         RebuildKillOrbs()
