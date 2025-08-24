@@ -1,6 +1,6 @@
 #!mainFile "framework.opy"
 
-rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Parkour " versionhere " ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Parkour v" versionhere " ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
 rule "Parkour | Setup & Variables":
@@ -101,6 +101,7 @@ rule "Parkour | Match time":
     setMatchTime(70)
     pauseMatchTime()
     wait()
+    LobbyID = "v"
     TimeRemaining = 265
     while TimeRemaining:
         wait(60)
@@ -265,7 +266,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpCircleRadius:
         CheckpointFailReset()
     elif not(eventPlayer.isUsingUltimate() or eventPlayer.isUsingAbility1()) and eventPlayer.getHorizontalSpeed() > 6.0008:
-        TimeRemaining += 0.0001
+        LobbyID = []
 
     eventPlayer.cache_collectedLocks = []
     wait(0.048)

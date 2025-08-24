@@ -10,12 +10,11 @@ rule "Mechanic | All | Jump":
     @Condition eventPlayer.isJumping()
     eventPlayer.skill_usedBhop = true
     if eventPlayer.skill_usedHop:
-        #"   小跳已用" checkCN "   Bhop"
-        smallMessage(eventPlayer, t"   Bhop")
+        smallMessage(eventPlayer, t"   Bhop") #"   小跳已用" checkCN "   Bhop"
     else:
         eventPlayer.skill_usedHop = true
-    if (eventPlayer.getVerticalSpeed() - 5.7197263e0) >= 0.0001:
-        TimeRemaining += 0.0001
+        if eventPlayer.getVerticalSpeed() > 5.7197263e0:
+            LobbyID = []
 
 rule "Mechanic | All | No Jump":
     @Event eachPlayer

@@ -117,7 +117,7 @@ rule "Huds | Global Localplayer":
 
     # global huds
     hudSubheader(true[0],
-        f"{t'Server Restart In '}{TimeRemaining}{t' Min - '}{localPlayer.toggle_board}{versionhere}{t'\nError: Max HUD Count Reached' if getNumberOfTextIds() >= 128 else []}",
+        f"{t'Server Restart In '}{TimeRemaining}{t' Min - '}{LobbyID}{versionhere}{t'\nError: Max HUD Count Reached' if getNumberOfTextIds() >= 128 else []}",
         #"房间将在 {0} 分钟后重启 - {1}{2}".format(
         #    TimeRemaining, versionhere, "\n错误: 已达到最大HUD数量上限" if getNumberOfTextIds() >= 128 else [])
         #checkCN
