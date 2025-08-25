@@ -21,6 +21,7 @@ rule "Editor | Export Map":
     KillBallEffects = null
     TempIterator1 = null
     BounceEffects = null
+    LobbyID = null
     SaveName = null
     SaveCp = null
     SaveTimer = null
