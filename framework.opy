@@ -4,7 +4,7 @@
 #!suppressWarnings w_lone_else
 #!suppressWarnings w_enum_constant
 ################################################################################
-#!define versionhere "1.10.4A"
+#!define versionhere "1.10.4B♨"
 #♨ Dev Build Icon
 ################################################################################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
