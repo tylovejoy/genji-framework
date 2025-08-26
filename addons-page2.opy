@@ -194,7 +194,7 @@ rule "Addon | Fake Ledge Dash - 超级跳":
     eventPlayer.addon_ledgeDash = eventPlayer.getFacingDirection()
     waitUntil(not eventPlayer.isUsingAbility1(), true) #25 * 0.016
     if eventPlayer.isInAir():
-            eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash, 50, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+        eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash, 50, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
 rule "Addon | Group up - Map Data":
     @Disabled
