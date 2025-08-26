@@ -8,7 +8,7 @@ this should be parts of addons that get toggled with a workshop toggle
 rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Addon Functions ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
-rule "Addon | AFK timer":
+rule "Addon | AFK Timer":
     @Event eachPlayer
     @Condition eventPlayer.isMoving() == false
     @Condition eventPlayer.isAlive()
@@ -20,7 +20,7 @@ rule "Addon | AFK timer":
     eventPlayer.setStatusEffect(null, Status.ASLEEP, Math.INFINITY)
         # raycast to prevent camera stuck on low wall
     eventPlayer.startCamera(
-        eventPlayer.getPosition() +
+        eventPlayer.getPosition() + #$$ Remove distance()
         Vector.UP * (distance(eventPlayer.getPosition(), raycast(eventPlayer.getPosition(), eventPlayer.getPosition() + 4 * Vector.UP, null, null, false).getHitPosition()) - 1),
         eventPlayer.getPosition(), 10)
     # cancel it after jumping or not sleep, reset cures sleep
@@ -28,13 +28,11 @@ rule "Addon | AFK timer":
     waitUntil(eventPlayer.isHoldingButton(Button.JUMP) or not eventPlayer.hasStatusEffect(Status.ASLEEP), Math.INFINITY)
     eventPlayer.clearStatusEffect(Status.ASLEEP)
     eventPlayer.stopCamera()
-
     if eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
         CheckpointFailReset()
-
     if RULE_CONDITION: goto RULE_START
 
-rule "Addon | Pre-set control map portal - toggled via workshop":
+rule "Addon | Pre-set control Map Portal - Toggle Via Workshop Settings":
     @Event eachPlayer
     @Condition PortalOn
     @Condition len(PortalLoc) != null
@@ -42,14 +40,14 @@ rule "Addon | Pre-set control map portal - toggled via workshop":
     @Condition any([distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance for i in PortalLoc])
     eventPlayer.teleport(sorted([i for i in PortalDest], lambda e, i: distance(eventPlayer, PortalLoc[i]))[0])
 
-rule "Addon | Custom portals":
+rule "Addon | Custom Portals":
     @Event eachPlayer
     @Condition len(eventPlayer.cache_portalStart) != null
     @Condition any([distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance for i in eventPlayer.cache_portalStart])
     eventPlayer.teleport(sorted([i for i in eventPlayer.cache_portalEnd], lambda e, i: distance(eventPlayer, eventPlayer.cache_portalStart[i]))[0])
     wait(0.512)
 
-rule "Addon | Pre-set control map portal - toggled on via workshop settings":
+rule "Addon | Preset Control Map Portal - Toggle Via Workshop Settings":
     @Condition PortalOn
     wait(LoadOrder.portal) # overwrite pasta
     if getCurrentMap() == Map.BUSAN:
@@ -159,16 +157,16 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
 
 # decrease to make it wait more often if you have load problems, keep at full int numbers no floats
 #!define fence_delay 3
-# proejctile size, 30 is maximum possible atm
+# projectile size, 30 is maximum possible atm
 #!define fence_proj_size 30
 # gridsize of 16 means a 16x16 grid with the point in the center
 #!define fence_grid 16
 # calculation to find the side of the map
-#!define fence_offset vect( (fence_grid*fence_proj_size)/2, 0, (fence_grid*fence_proj_size)/2 )
+#!define fence_offset vect((fence_grid * fence_proj_size) / 2, 0, (fence_grid * fence_proj_size) / 2)
 # calculation for next explosion
-#!define fence_position  MapVectorArray[1] - fence_offset + ( MapVectorArray[0] % fence_grid ) * (Vector.LEFT * fence_proj_size) + floor( MapVectorArray[0] / fence_grid ) * (Vector.FORWARD * fence_proj_size)
+#!define fence_position  MapVectorArray[1] - fence_offset + (MapVectorArray[0] % fence_grid) * (Vector.LEFT * fence_proj_size) + floor(MapVectorArray[0] / fence_grid) * (Vector.FORWARD * fence_proj_size)
 
-rule "Addon | Little destructo - fence breaker":
+rule "Addon | Little Destructo - Fence Breaker":
     # Made by FishoFire version 1.0
     # wait to overwrite any from copy pastas
 	wait(LoadOrder.destructo)
@@ -178,7 +176,7 @@ rule "Addon | Little destructo - fence breaker":
     # tdm/dm = first spawn points, the maps are not big so it just covers entire map. all teams defaults to team 1 spawn
     # push: payload and cp 0 are set but rest isnt. normal payload maps have more then 1 point.
     # rest of maps have up to 3 points
-    MapVectorArray.append(
+    MapVectorArray.append( #$$ Combine with `MapVectorArray = [0]`
         [getFlagPosition(Team.1), getFlagPosition(Team.2)] if getCurrentGamemode() == Gamemode.CTF else
         getSpawnPoints(Team.ALL)[0] if getCurrentGamemode() in [Gamemode.TDM, Gamemode.FFA] else
         getPayloadPosition() if getPayloadPosition()[0] and not (getObjectivePosition(1) + getObjectivePosition(2)) else
@@ -186,7 +184,7 @@ rule "Addon | Little destructo - fence breaker":
     # explode in a grid around the selected points
     while len(MapVectorArray) > 1:
         MapVectorArray[0] = 0
-        while MapVectorArray[0] < (fence_grid*fence_grid):
+        while MapVectorArray[0] < (fence_grid * fence_grid):
             createProjectile(
                 Projectile.ORB,  # the only orb available without fx extension
                 null,
@@ -195,11 +193,9 @@ rule "Addon | Little destructo - fence breaker":
                 DynamicEffect.GOOD_EXPLOSION, # possible without extensions: bad, good, ring
                 DynamicEffect.EXPLOSION_SOUND, # possible without extensions: explosion sound, buf sound, ring explosion sound
                 1, 1, 0, 0, 0, 0)
-
             MapVectorArray[0] ++
             if not (MapVectorArray[0] % fence_delay): # use modulo to only wait every x orbs keep the 0 change the other number
                 wait()
-
         del MapVectorArray[1]
 
     # handle exceptions (looking at you new queen street)
@@ -218,7 +214,7 @@ rule "Addon | Little destructo - fence breaker":
         wait()
     MapVectorArray = null
 
-rule "Addon | Cache jump & crouch inputs for spectators":
+rule "Addon | Caching Jump & Crouch Inputs For Spectators":
     @Event playerJoined
     wait()
     eventPlayer.cache_inputs = vect(eventPlayer.isHoldingButton(Button.JUMP), eventPlayer.isHoldingButton(Button.CROUCH), false)
