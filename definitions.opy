@@ -133,6 +133,7 @@ playervar checkpoint_current                # int                       --- Curr
 playervar checkpoint_practice               # int                       --- Saved practice checkpoint
 playervar checkpoint_moved
 playervar checkpoint_notLast                       # bool                      --- false if you are noton the last cp or level below 2 cps
+playervar checkpoint_skip
 
 playervar timer_normal                             # float                     --- Timer, chased.
 playervar timer_practice
