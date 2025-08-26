@@ -47,7 +47,7 @@ rule "Addon | Custom portals":
     @Condition len(eventPlayer.cache_portalStart) != null
     @Condition any([distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance for i in eventPlayer.cache_portalStart])
     eventPlayer.teleport(sorted([i for i in eventPlayer.cache_portalEnd], lambda e, i: distance(eventPlayer, eventPlayer.cache_portalStart[i]))[0])
-    wait(0.4)
+    wait(0.512)
 
 rule "Addon | Pre-set control map portal - toggled on via workshop settings":
     @Condition PortalOn

@@ -31,7 +31,7 @@ def CheckUlt(): # checks if ult should be turned on
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= 2 or eventPlayer.getUltCharge() < 100: # used to be just else, but have to deal with multi ult orbs
         eventPlayer.setUltEnabled(false)
         eventPlayer.setUltCharge(0)
-    wait(0.36)
+    wait(0.4)
 
 def CheckAbility1(): # checks if dash should be  turned on
     @Name "Mechanic | Genji | SUB Check Dash"
@@ -52,7 +52,7 @@ rule "Mechanic | Genji | Ultimate":
     wait(1.8, Wait.ABORT_WHEN_FALSE)
     if eventPlayer.checkpoint_notLast and (not eventPlayer.toggle_invincible):
         eventPlayer.disallowButton(Button.PRIMARY_FIRE) # disable primary fire because of slash exploit
-    waitUntil(not eventPlayer.isUsingUltimate(), 2)
+    waitUntil(not eventPlayer.isUsingUltimate(), 1)
     wait()
     eventPlayer.allowButton(Button.PRIMARY_FIRE)
     async(CheckUlt(), AsyncBehavior.NOOP) # sets ult charge back if done with map etc
