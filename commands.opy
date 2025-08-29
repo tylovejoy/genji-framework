@@ -281,22 +281,25 @@ rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) != (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) )
     #@Condition hostPlayer.editor_on or ( eventPlayer.toggle_practice and eventPlayer.isHoldingButton(Button.ABILITY_1) )
-
     eventPlayer.lockState = true
-    eventPlayer.checkpoint_skip = true
     eventPlayer.timer_split = 0
     eventPlayer.timer_practice = 0
     eventPlayer.checkpoint_current += len(CheckpointPositions) - 1 if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) else true
     eventPlayer.checkpoint_current %= len(CheckpointPositions)
     eventPlayer.checkpoint_moved = true
-
     #waitUntil(eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.256) # faster if you spam button
-    wait(0.32, Wait.RESTART_WHEN_TRUE)
-    UpdateCache()
-    CheckpointFailReset()
-    if RULE_CONDITION: goto RULE_START
+    if eventPlayer.checkpoint_skip:
+        wait(0.32, Wait.RESTART_WHEN_TRUE)
+        UpdateCache()
+        CheckpointFailReset()
+    else:
+        eventPlayer.checkpoint_skip = true
+        UpdateCache()
+        CheckpointFailReset()
+        wait(0.48, Wait.RESTART_WHEN_TRUE)
     eventPlayer.checkpoint_skip = false
     eventPlayer.lockState = false
+    if RULE_CONDITION: goto RULE_START
 
 rule "Command | Quick Reset (Reload | Hold Reload to Enable)":
     @Event eachPlayer

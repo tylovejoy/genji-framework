@@ -655,3 +655,9 @@ fixed:
 # 1.10.4A
  - Missing Practice & Invisible, flipped Quick Reset state
    * Reported by `@bioslet` +10xp
+
+# 1.10.4B
+### Commands
+ - Practice Mode changing checkpoints better server stability
+   * Holding will load level and teleport but slower change
+   * Spamming will change faster but delay loading until level is selected
