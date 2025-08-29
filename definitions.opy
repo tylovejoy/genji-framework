@@ -355,13 +355,12 @@ enum LoadOrder:
     mapData     = -1,
     customize   = 0,
     destructo   = 0.016 * 2,
-    setup       = 0.016 * 15,
-    portal      = LoadOrder.setup + 0.016 * 32,
-    effects     = LoadOrder.portal + 0.016 * 32,
-    hudsPlayer  = 0.016 * 32,
-    addon       = 0.016 * 48,
-    hudsGlobal  = 0.016 * 50,
-    hudsEditor  = 0.016 * 52,
+    setup       = 0.016 * 32,
+    addon       = 0.016 * 40,
+    hudsGlobal  = 0.016 * 48,
+    hudsPlayer  = 0.016 * 56,
+    hudsEditor  = 0.016 * 64,
+    effects     = 0.016 * 128,
 
 ######################################## Macro Tools ##########################
 macro localSpectator(condition):
