@@ -661,3 +661,6 @@ fixed:
  - Practice Mode changing checkpoints better server stability
    * Holding will load level and teleport but slower change
    * Spamming will change faster but delay loading until level is selected
+### Effect
+ - Increased delay for better reliablity when creating effects on higher ping
+   * Reported by `@dooosaaa` +5xp
