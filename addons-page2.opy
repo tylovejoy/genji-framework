@@ -8,7 +8,7 @@ this should be parts of addons that get toggled by turning on rules
 rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Addons Settings & Data - 附加组件 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
-rule "Addon | Comp Mode instruction message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":
+rule "Addon | Comp Mode Instruction Message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":
     wait(0.4)
     # Instructions that show when you start comp mode.
     # Due to the hud text limit, you there is 4 huds available.
@@ -19,12 +19,12 @@ rule "Addon | Comp Mode instruction message - 竞赛模式指引消息 <---- INS
     # 由于 hud 文本限制，你有 4 个hud可用
     # 如果你不需 要一个字段 只是空文 本字段
     InstructionText = [
-        "Change in Comp Mode instruction message hud 1",
-        "Change in Comp Mode instruction message hud 2",
-        "Change in Comp Mode instruction message hud 3",
-        "Change in Comp Mode instruction message hud 4"]
+        "Change Comp Mode Instruction Message Hud 1",
+        "Change Comp Mode Instruction Message Hud 2",
+        "Change Comp Mode Instruction Message Hud 3",
+        "Change Comp Mode Instruction Message Hud 4"]
 
-rule "Addon | Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / 在这输入":
+rule "Addon | Custom Difficulty Hud - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled
     #1) workshop settings > difficulty > set to "dont display"
     #2) enable this rule
@@ -35,7 +35,7 @@ rule "Addon | Custom difficulty hud  - 自定义难度hud <---- INSERT HERE / �
     #3) 修改下面的 创建hud文本 中的“enter custom difficulty here”
     hudText(true[0],
         ("游戏测试" checkCN "Playtest") if Difficultyhud.last() else [],
-        "enter custom difficulty here",
+        "Enter Custom Difficulty Here",
         null,
         HudPosition.TOP, HO.data_dif,
         Color.BLUE, Color.GREEN, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
@@ -81,42 +81,42 @@ rule "Addon | Friend Title - 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)
     # 修改字符串 "your nickname <-------" 为好友名字 区分大小写
     # 修改字符串 "display title" 为好友头顶 显示的称号
     waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
-    if "your nickname <-------" == eventPlayer[0].split([]):
-        bigMessage(true[0], "Message to the whole room")
-        createInWorldText((not eventPlayer.toggle_invisible)[0], "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    if "your nickname <-------" == eventPlayer[0].split([]):
-        bigMessage(true[0], "Message to the whole room")
-        createInWorldText((not eventPlayer.toggle_invisible)[0], "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
-    if "your nickname <-------" == eventPlayer[0].split([]):
-        bigMessage(true[0], "Message to the whole room")
-        createInWorldText((not eventPlayer.toggle_invisible)[0], "display title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+    if "Your Nickname <-------" == eventPlayer[0].split([]):
+        bigMessage(true[0], "Message To The Whole Room")
+        createInWorldText((not eventPlayer.toggle_invisible)[0], "Display Title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+    if "Your Nickname <-------" == eventPlayer[0].split([]):
+        bigMessage(true[0], "Message To The Whole Room")
+        createInWorldText((not eventPlayer.toggle_invisible)[0], "Display Title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
+    if "Your Nickname <-------" == eventPlayer[0].split([]):
+        bigMessage(true[0], "Message To The Whole Room")
+        createInWorldText((not eventPlayer.toggle_invisible)[0], "Display Title", eventPlayer, 1.5, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
 
 rule "Addon | Display Author Time - 展示世界纪录 <---- EDIT ME / 在此处编辑":
     @Disabled
-    # type your entry in the textfield that says "name and time here"
+    # type your entry in the textfield that says "Name and Time here"
     # 在文本框 中输入“名称和时间”
-    hudText(true[0], null, " \n{0} author time {0}".format(iconString(Icon.FIRE)), "name and time here", HudPosition.RIGHT, HO.wr, null, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+    hudText(true[0], null, " \n{0} Author Time {0}".format(iconString(Icon.FIRE)), "Name and Time here", HudPosition.RIGHT, HO.wr, null, Color.ROSE, Color.ROSE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
 
-rule "Addon | HUD text for certain Checkpoints - 特定关卡显示的HUD文本 <---- EDIT ME / 在此处编辑":
+rule "Addon | HUD Text For Certain Checkpoints - 特定关卡显示的HUD文本 <---- EDIT ME / 在此处编辑":
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的hud文本
     wait(LoadOrder.addon)
     # in CpHudText fill in text
     # 修改字符串 “CpHudText” 为顶部显示 的hud文本
-    CpHudText = ["text cp 1","text cp 3"]
+    CpHudText = ["Text CP 1", "Text CP 3"]
     # in CpHudCp fill in the at wich to display
     # 修改数组 “CpHudCp” 为hud文本 显示的关卡
     CpHudCp = [1, 3]
 
-rule "Addon | Inworld text for certain Checkpoints - 特定关卡显示的地图文本 <---- EDIT ME / 在此处编辑":
+rule "Addon | In-World Text For Certain Checkpoints - 特定关卡显示的地图文本 <---- EDIT ME / 在此处编辑":
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的地图文本
     wait(LoadOrder.addon)
     # in CpIwtText fill in text
     # 修改字符串 “CpIwtText” 为关卡显示 的地图文本
-    CpIwtText = ["text cp 1","text cp 3"]
+    CpIwtText = ["Text CP 1", "Text CP 3"]
     # in CpIwtCp fill in cp at wich to display
     # 修改数组 “CpIwtCp” 为显示地图 文本的关卡
     CpIwtCp = [1, 3]
@@ -127,7 +127,7 @@ rule "Addon | Inworld text for certain Checkpoints - 特定关卡显示的地图
     # 选择应用到 所有地图文 本的颜色
     CpIwtColor = Color.LIME_GREEN
 
-rule "Addon | Hint text for certain Checkpoints - 特定关卡的提示文本 <---- EDIT ME / 在此处编辑":
+rule "Addon | Hint Text For Certain Checkpoints - 特定关卡的提示文本 <---- EDIT ME / 在此处编辑":
     @Disabled
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的提示文本
@@ -204,7 +204,7 @@ rule "Addon | Group up - Map Data":
         [i for i in getAllPlayers() if i.checkpoint_current == 777],
         "{0} {1} {0}".format(
             abilityIconString(Hero.GENJI, Button.ULTIMATE),
-            "待在这里" checkCN "group up"),
+            "待在这里" checkCN "Group Up"),
         vect(1,1,1), 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
     # replace 777 with checkpoint number
     # replace vector 0,0,0 with orb position
@@ -222,9 +222,9 @@ rule "Addon | Group Up":
     @Condition eventPlayer.toggle_invincible == false
     # replace vector 0,0,0 with orb position
     # 3.5 is the radius
-    @Condition distance(eventPlayer, vect(1,1,1)) < 3.5
+    @Condition distance(eventPlayer, vect(1, 1, 1)) < 3.5
 
-    smallMessage(eventPlayer, "   stay in the bubble")
+    smallMessage(eventPlayer, "   Stay Within Bubble")
     wait(1, Wait.ABORT_WHEN_FALSE)
     smallMessage(eventPlayer, "   9")
     wait(1, Wait.ABORT_WHEN_FALSE)
@@ -251,7 +251,7 @@ rule "Addon | Group Up":
     eventPlayer.stopForcingPosition()
 
 def AddonCustomLoadAndReset():
-    @Name "Addon | Custom checkpoint loading or resetting"
+    @Name "Addon | Custom Checkpoint Loading or Resetting"
     @Disabled
     # This subroutine activates on failing, arriving, resetting, skipping etc
     # example: reset gravity and movespeed after being changed by custom orbs
@@ -265,8 +265,8 @@ rule "Addon | Custom Orb Script":
     @Condition eventPlayer.cache_bounceTouched >= null
     #Enable this rule and find the ID number of the bounce orbs via the editor display.
     #Note that the ID can change if you place or delete orbs infront of that orb.
-    #Add the desired ID numbers for the orb in the array
-    #add the script after it
+  #Add the desired ID numbers for the orb in the array
+  #Add the script after it
     #you can use the activateed sub above this rule to reset the effects
     if eventPlayer.cache_bounceTouched in [1, 2]:
         # example gravity (should be reset to 100 in AddonCustomLoadAndReset)
@@ -309,14 +309,13 @@ rule "Addon | Fake Triple Jump - 假三段跳":
 
 ###############################################################################
 
-rule "Addon | fisho cp cheat for overpy toggle":
+rule "Addon | Fisho CP Cheat With Overpy Toggle":
     @Event eachPlayer
     @Condition cpCheat
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.checkpoint_notLast) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.checkpoint_current)
     @Condition EditorOn == false
     @Condition eventPlayer.toggle_practice == false
-
     if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         eventPlayer.checkpoint_current -= 1
     else:
@@ -332,10 +331,8 @@ rule "Fake Ledge Dash - 超级跳":
     #爬墙/扒 > 长按跳 > 抓住窗台 > SHIFT > 等待发射 > 释放跳跃
     eventPlayer.addon_ledgeDash[0] = 0
     waitUntil(eventPlayer.getSpeed() >= 45, 0.4)
-
     while eventPlayer.isUsingAbility1() and eventPlayer.addon_ledgeDash[0] <= 12:
         eventPlayer.addon_ledgeDash[1] = eventPlayer.getFacingDirection()
-
         eventPlayer.addon_ledgeDash[2] = eventPlayer.getSpeed()
         if eventPlayer.getSpeed() < 45: # dashed into air or object = end
             goto lbla
@@ -350,7 +347,6 @@ rule "Fake Ledge Dash - 超级跳":
         eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash[1], eventPlayer.addon_ledgeDash[2], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
     # above 12 - climbed to long
     # below 5 - dashed into object
-
     lbla:
     eventPlayer.addon_ledgeDash[0] = null
     eventPlayer.addon_ledgeDash[1] = null
@@ -390,14 +386,13 @@ rule "Addon | Ledge Grab Patch v1.5":
         #Create cBhop
         waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)
 
-rule "Addon | Save Double - enable rule - 二段跳":
+rule "Addon | Save Double - Enable Rule - 二段跳":
     # Obsoleted by hero settings.
     @Event eachPlayer
     @Condition false
     @Condition eventPlayer.isOnGround() == false
     @Condition eventPlayer.skill_usedDouble == false
     @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
-
     waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
     if not RULE_CONDITION: return
     waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
