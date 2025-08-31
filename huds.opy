@@ -325,7 +325,7 @@ rule "Huds | Each Player":
         HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
     hudSubtext(eventPlayer,"{0}{1}{2}\n{3}{4}{5}" LeftAlign96.format(
-        "◆" if eventPlayer.cache_inputs.x else "□",
+        "■" if eventPlayer.cache_inputs.x else "□",
         "▲" if eventPlayer.getThrottle().z > null else "△",
         "●" if eventPlayer.cache_inputs.y else "○",
         "◀" if eventPlayer.getThrottle().x > null else "◁",
