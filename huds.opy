@@ -94,12 +94,12 @@ rule "Huds | Global Localplayer":
         
         Difficultyhud = [
             createWorkshopSetting(enum[
-                "<fg27AAFFFF>Playtest ■ 游戏测试 ■ 플레이테스트", "<fgA0E81BFF>Easy-", "<fgA0E81BFF>Easy", "<fgA0E81BFF>Easy+",
+                "<fg27AAFFFF>Playtest ◆ 游戏测试 ◆ 플레이테스트", "<fgA0E81BFF>Easy-", "<fgA0E81BFF>Easy", "<fgA0E81BFF>Easy+",
                 "<fge0e000FF>Medium-", "<fge0e000FF>Medium", "<fge0e000FF>Medium+", "<fgEC9900FF>Hard-", "<fgEC9900FF>Hard",
                 "<fgEC9900FF>Hard+", "<fgFF4500FF>Very Hard-", "<fgFF4500FF>Very Hard", "<fgFF4500FF>Very Hard+",
-                "<fgC80013FF>Extreme-", "<fgC80013FF>Extreme", "<fgC80013FF>Extreme+", "<fg960000FF>Hell", "Do Not Display ■ 不显示 ■ 표시 X"],
-                "Map Settings ■ 地图设置 ■ 맵 설정", "Difficulty (Display Hud) ■ 难度 (顶部hud) ■ 난이도 (HUD 디스플레이)", 0, 1),
-            createWorkshopSetting(bool, "Map Settings ■ 地图设置 ■ 맵 설정", "Playtest Display ■ 游戏测试 ■ 플레이테스트 디스플레이", false, 2)]
+                "<fgC80013FF>Extreme-", "<fgC80013FF>Extreme", "<fgC80013FF>Extreme+", "<fg960000FF>Hell", "Do Not Display ◆ 不显示 ◆ 표시 X"],
+                "Map Settings ◆ 地图设置 ◆ 맵 설정", "Difficulty (Display Hud) ◆ 难度 (顶部hud) ◆ 난이도 (HUD 디스플레이)", 0, 1),
+            createWorkshopSetting(bool, "Map Settings ◆ 地图设置 ◆ 맵 설정", "Playtest Display ◆ 游戏测试 ◆ 플레이테스트 디스플레이", false, 2)]
         # display
         if Difficultyhud[0] != 17: # 17th entry is 'dont display'
             hudText((localPlayer.toggle_guide and not localPlayer.toggle_leaderboard)[0],
@@ -325,7 +325,7 @@ rule "Huds | Each Player":
         HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
     hudSubtext(eventPlayer,"{0}{1}{2}\n{3}{4}{5}" LeftAlign96.format(
-        "■" if eventPlayer.cache_inputs.x else "□",
+        "◆" if eventPlayer.cache_inputs.x else "□",
         "▲" if eventPlayer.getThrottle().z > null else "△",
         "●" if eventPlayer.cache_inputs.y else "○",
         "◀" if eventPlayer.getThrottle().x > null else "◁",

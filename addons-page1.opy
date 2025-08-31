@@ -258,7 +258,7 @@ def AddonCheckMap():
     MapChecker.editor_saveCache = EditorOn
     EditorOn = null
     enableInspector()
-    printLog("■ Map Check Complete ■")
+    printLog("◆ Map Check Complete ◆")
     disableInspector()
     EditorOn = MapChecker.editor_saveCache
     destroyDummy(MapChecker.getTeam(), MapChecker.getSlot())
