@@ -93,7 +93,7 @@ rule "Command | Preview Orbs & Portals (Hold Primary + Secondary)":
 
 rule "Command | Restart Run (Crouch + Interact + Deflect)":
     @Event eachPlayer
-    @Condition eventPlayer.editor_lock == false or eventPlayer != hostPlayer
+    @Condition not eventPlayer.editor_lock or eventPlayer != hostPlayer
     @Condition eventPlayer.lockState == false
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
