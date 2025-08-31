@@ -7,7 +7,7 @@ rule "OverPy | Player Translation Setup":
     waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
     eventPlayer.startFacing(directionFromAngles(10 * __overpyTranslationHelper__.index(Color.WHITE.split([])), 5))
     waitUntil((not round(100 * eventPlayer.getHorizontalFacingAngle()) % 1000) and abs(eventPlayer.getVerticalFacingAngle() - 5) < 0.01, 16)
-    eventPlayer.__languageIndex__ = max(1, (abs(eventPlayer.getVerticalFacingAngle() - 5) < 0.01) * (round(eventPlayer.getHorizontalFacingAngle() / 10)))
+    eventPlayer.__languageIndex__ = max(1, (abs(eventPlayer.getVerticalFacingAngle() - 5) < 0.01) * (round(eventPlayer.getHorizontalFacingAngle() / 10))) if overrideLanguage < 0 else overrideLanguage
     eventPlayer.stopFacing()
 
 rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Parkour v" versionhere " ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
