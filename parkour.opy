@@ -120,7 +120,6 @@ rule "Parkour | Match time":
             CompTime--
             if not CompTime:
                 bigMessage(true[0], "时间到了" checkCN "Time's Up")
-                getAllPlayers().comp_done = true
                 stopChasingVariable(getAllPlayers().timer_normal)
                 getAllPlayers().setDamageReceived(100)
                 kill(getAllPlayers(), null)
@@ -174,9 +173,13 @@ rule "Parkour | Player Initialize":
             waitUntil(eventPlayer.isHoldingButton(Button.INTERACT) or CompTime < 1, Math.INFINITY)
             eventPlayer.setMoveSpeed(100)
             eventPlayer.comp_instructionHud = false
-        if eventPlayer.comp_countAttempts < 0 or CompTime < 1:
-            eventPlayer.comp_done = true
-
+        if CompTime < 1 or eventPlayer.comp_countAttempts < 0:
+            eventPlayer.toggle_leaderboard = true
+            eventPlayer.comp_countAttempts = -1
+            eventPlayer.setDamageReceived(100)
+            kill(eventPlayer,null)
+            eventPlayer.setDamageReceived(0)
+            return
     wait()
     StartGame()  # initialization of the game
     eventPlayer.lockState = false
@@ -249,9 +252,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
                         if eventPlayer.comp_countAttempts == CompAtmpNum:
                             CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = -1
                             eventPlayer.comp_countAttempts = -1
-                            eventPlayer.comp_done = true
                             eventPlayer.toggle_leaderboard = true
-                            #eventPlayer.disableRespawn()
                             eventPlayer.setDamageReceived(100)
                             kill(eventPlayer,null)
                             eventPlayer.setDamageReceived(0)
