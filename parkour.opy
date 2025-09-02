@@ -529,15 +529,11 @@ def CheckpointFailReset():
 
 def StartGame():
     @Name "Parkour | SUB Start Game"
-    if CompMode and (CompTime < 1 or eventPlayer.comp_done):
-        eventPlayer.toggle_leaderboard = true
-        eventPlayer.comp_done = true
-        #eventPlayer.disableRespawn()
-        eventPlayer.setDamageReceived(100)
-        kill(eventPlayer,null)
-        eventPlayer.setDamageReceived(0)
-        return
-
+    eventPlayer.checkpoint_practice = 0
+    eventPlayer.toggle_practice = false
+    eventPlayer.toggle_invincible = false
+    eventPlayer.toggle_spectate = false
+    eventPlayer.checkpoint_moved = true
     if len(CheckpointPositions):
         if eventPlayer[0].split([]) in SaveName: # load saved progres
             SaveEnt[SaveName.index(eventPlayer[0].split([]))] = eventPlayer
@@ -552,8 +548,3 @@ def StartGame():
         CheckpointFailReset()
         waitUntil(isGameInProgress(), Math.INFINITY) # FFA
         TimerResume()
-    #eventPlayer.enableRespawn()
-    eventPlayer.toggle_invincible = false
-    eventPlayer.toggle_spectate = false
-    eventPlayer.checkpoint_moved = true
-    # eventPlayer.lockState = false
