@@ -340,8 +340,9 @@ rule "Parkour | Bounce Ball / Orb":
 rule "Parkour | Death Reset":
     @Event playerDied
     @Condition eventPlayer.isDummy() == false
+    @Condition eventPlayer.isDead() == true
     @Condition eventPlayer.toggle_spectate == false
-    @Condition eventPlayer.comp_done == false
+    @Condition eventPlayer.comp_countAttempts < 0
     if len(CheckpointPositions):
         eventPlayer.resurrect()
     else:
@@ -351,22 +352,22 @@ rule "Parkour | Death Reset":
     # but doing waits only when needed without relying on a variable count
     waitUntil(eventPlayer.isAlive(), true)
     waitUntil(eventPlayer.isDead(), true)
-    if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):
-        wait(0.16)
-        eventPlayer.resurrect()
-        CheckpointFailReset()
-        waitUntil(eventPlayer.isAlive(), true)
-        waitUntil(eventPlayer.isDead(), true)
-        if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):
-            wait(0.44)
-            eventPlayer.resurrect()
-            CheckpointFailReset()
-            waitUntil(eventPlayer.isAlive(), true)
-            waitUntil(eventPlayer.isDead(), true)
-            if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):
-                wait(0.64)
-                eventPlayer.respawn()
-                CheckpointFailReset()
+    if not ruleCondition: return
+    wait(0.16)
+    eventPlayer.resurrect()
+    CheckpointFailReset()
+    waitUntil(eventPlayer.isAlive(), true)
+    waitUntil(eventPlayer.isDead(), true)
+    if not ruleCondition: return
+    wait(0.44)
+    eventPlayer.resurrect()
+    CheckpointFailReset()
+    waitUntil(eventPlayer.isAlive(), true)
+    waitUntil(eventPlayer.isDead(), true)
+    if not ruleCondition: return
+    wait(0.64)
+    eventPlayer.respawn()
+    CheckpointFailReset()
 
 def UpdateCache():
     @Name "Parkour | SUB Update Effect Cache"
