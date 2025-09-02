@@ -26,7 +26,7 @@ msgstr "卡小 ♂ 已禁用!"
 
 #. file climbers.opy, rule "Mechanic | Climbers | Create Bhop"
 msgid "Bhop Created!"
-msgstr "卡小!"
+msgstr "卡小成功!"
 
 #. file climbers.opy, rule "Mechanic | Climbers | Multiclimb"
 msgid "Multiclimb ∞ Is Banned!"

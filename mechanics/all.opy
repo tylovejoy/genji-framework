@@ -10,8 +10,10 @@ rule "Mechanic | All | Jump":
     @Condition eventPlayer.isJumping()
     eventPlayer.skill_usedBhop = true
     if eventPlayer.skill_usedHop:
-        #"   小跳已用" checkCN "   Bhop"
-        smallMessage(eventPlayer, t"   Bhop")
+        smallMessage(eventPlayer, t"   Bhop") #"   小跳已用" checkCN "   Bhop"
+        if eventPlayer.getVerticalSpeed() > 5.722:
+            LobbyID = []
+            /* hudText(hostPlayer, text=evalOnce(eventPlayer.getVerticalSpeed()) * 1000000, subheader=evalOnce(eventPlayer.checkpoint_current),textColor=Color.GREEN,sortOrder = HO.add_custommsg3) #*/
     else:
         eventPlayer.skill_usedHop = true
 
