@@ -664,5 +664,5 @@ fixed:
  - Fixed Restart not resetting checkpoint
    * Reported by `@zxzpkcxcc` +100xp
 ### Effect
- - Increased delay for better reliablity when creating effects on higher ping
+ - Increased delay for better reliability when creating effects on higher ping
    * Reported by `@dooosaaa` +5xp
