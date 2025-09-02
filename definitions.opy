@@ -204,9 +204,9 @@ playervar editor_bounceIndex
 playervar editor_killIndex
 playervar editor_temp
 
-playervar comp_done                          # bool                      --- out of atemps or time?
 playervar comp_countAttempts                      # int                       --- amound of attemps remaining
 playervar comp_instructionHud
+
 playervar addon_toggle3rdPov
 playervar addon_ledgeDash
 playervar addon_enableDoubleChecks
