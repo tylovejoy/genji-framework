@@ -3,10 +3,11 @@
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
-# Current Named Unused Variables: 1,2,9,11,17,19,28,29,30,31,36,37,39,48,49,58,59,72,89
+# Current Named Unused Variables: 1,2,9,11,17,19,28,29,30,31,36,37,39,48,49,58,59,65,66,72,80,89,90
 #!define CheckpointPositions A
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 #1
+#!define DestructoIter B
 #2
 #!define MapChecker MsDestructo
 globalvar MsDestructo 3                     # Player
@@ -54,8 +55,7 @@ globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d l
 globalvar LeaderBoardFull 32                # [[name,seconds,prettytime]]--- sorted list of 0-19 leaderboard entries
 globalvar LeaderBoardHuds 33
 globalvar LeaderBoardRemake 34              # bool                      --- indicate board needs remaking
-#!define BhopBanToggle kaxiaotiao
-globalvar BhopBanToggle 35                  # bool                      --- Enabled if Bhop is banned
+#globalvar kaxiaotiao 35
 #36
 #37
 #!define TempIterator1 NANBA
@@ -87,8 +87,8 @@ globalvar SaveCp 61
 globalvar SaveEnt 62
 globalvar SaveTimer 63
 globalvar SaveElapsed 64
-globalvar SavePauseTime 65
-globalvar SavePauseEnabled 66
+#globalvar SavePauseTime 65
+#globalvar SavePauseEnabled 66
 globalvar HintCp 67
 globalvar HintText 68
 globalvar ColorConfig 69                    # [colors]                  --- configured colors
@@ -102,7 +102,7 @@ globalvar CpIwtText 76
 globalvar CpIwtCp 77
 globalvar CpIwtPos 78
 globalvar CpIwtColor 79
-globalvar BanTriple 80                      # legacy
+#globalvar BanTriple 80                      # legacy
 globalvar BanMulti 81
 globalvar BanCreate 82
 globalvar BanDead 83
@@ -112,7 +112,6 @@ globalvar BanBhop 86
 globalvar BanStand 87                       # bans on second hop
 globalvar BanDjump 88
 globalvar BanSaveDouble 89
-globalvar DestructoIter 90
 globalvar MapVectorArray 91
 
 ######################################## Player Variables #####################
@@ -146,7 +145,6 @@ playervar toggle_practice                    # int                       --- tur
 playervar toggle_quickRestart                # bool                      -- enable reload to restart cp
 playervar toggle_guide                       # bool                       --- turned into bool, shows/hides editor hud
 playervar toggle_leaderboard                 # bool                      --- show/hide leaderboard
-playervar toggle_board
 playervar toggle_invisible                             # bool                      --- invis toggle added by fisho
 playervar toggle_hints
 
@@ -157,7 +155,6 @@ playervar skill_countMulti                   # int                       --- cli
 playervar skill_usedClimb                     # bool                      --- turned into bool
 playervar skill_usedBhop                          # bool                      --- turned into bool
 playervar skill_usedDouble                        # bool
-playervar skill_ultCd
 
 playervar banString                         # str                       --- displayed bans
 #playervar ban_triple
@@ -180,10 +177,6 @@ playervar cache_bounceMaxLocks
 playervar cache_killPosition
 playervar cache_killRadii
 playervar cache_bouncePosition
-#playervar cache_bounceStrength
-#playervar cache_bounceUlt
-#playervar cache_bounceDash
-#playervar cache_bounceLocks
 playervar cache_inputs
 playervar cache_rainbow                     # color                     --- color of fx after finish the map
 playervar cache_titleHud                        # textid                    --- store curent  title textid
@@ -211,8 +204,6 @@ playervar addon_toggle3rdPov
 playervar addon_ledgeDash
 playervar addon_enableDoubleChecks
 
-#playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
-#playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
 ######################################## Subroutines ##########################
 #subroutine KillBall
 #subroutine PinBall
