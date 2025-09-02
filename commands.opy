@@ -101,34 +101,24 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
 
     eventPlayer.lockState = true
     if CompMode:
-        wait()
         if CompTime < 1:
-            smallMessage(eventPlayer, "   比赛结束" checkCN "   Competition Is Over"  )
-            eventPlayer.lockState = false
-            return
-        elif eventPlayer.comp_done:
-            eventPlayer.lockState = false
-            return
+            smallMessage(eventPlayer, "   比赛结束" checkCN "   Competition Is Over")
         elif CompRestartLimit and eventPlayer.checkpoint_notLast:
             smallMessage(eventPlayer, "   禁止在此比赛中运行期间重新启动" checkCN "   Restart During Run Is Disabled For This Competition")
-            eventPlayer.lockState = false
-            return
         elif CompAtmpNum:
             if eventPlayer.comp_countAttempts == CompAtmpNum:
-                smallMessage(eventPlayer, "   最后一次尝试" checkCN "   This Is Your Final Attempt"  )
-                eventPlayer.lockState = false
-                return
-            if eventPlayer.comp_countAttempts < 0:
-                smallMessage(eventPlayer, "   你没有尝试过" checkCN "   You Are Out Of Attempts"  )
-                eventPlayer.lockState = false
-                return
-            eventPlayer.comp_countAttempts++
-            CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts
+                smallMessage(eventPlayer, "   最后一次尝试" checkCN "   You Are On Your Final Attempt")
+            elif eventPlayer.comp_countAttempts < 0:
+                smallMessage(eventPlayer, "   你没有尝试过" checkCN "   You Are Out Of Attempts")
+            else:
+                eventPlayer.comp_countAttempts++
+                CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts
+                goto compModeExit
+        eventPlayer.lockState = false
+        return
+    compModeExit:
     eventPlayer.editor_fly = null
-    eventPlayer.checkpoint_current = 0
     eventPlayer.timer_splitDisplay = -Math.INFINITY * (eventPlayer.timer_splitDisplay <= -Math.INFINITY)
-    eventPlayer.toggle_practice = false
-    eventPlayer.timer_practice = 0
     stopChasingVariable(eventPlayer.timer_practice)
     if eventPlayer in SaveEnt:
         DeleteSave()
@@ -175,7 +165,7 @@ rule "Command | Spectate (Hold Interact)":
 
 rule "Command | Toggle Invincible Mode (Melee + Reload)":
     @Event eachPlayer
-    @Condition (CompMode and eventPlayer.comp_done) == false
+    @Condition (CompMode and eventPlayer.comp_countAttempts < 0) == false
     @Condition eventPlayer.lockState == false
     @Condition eventPlayer.isAlive()
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
@@ -184,7 +174,6 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
 
     eventPlayer.lockState = true
     eventPlayer.toggle_invincible = not eventPlayer.toggle_invincible
-    eventPlayer.cache_collectedLocks = []
 
     if eventPlayer.toggle_invincible:
         #"探点模式" checkCN "Invincible mode"
