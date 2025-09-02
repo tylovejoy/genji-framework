@@ -52,7 +52,7 @@ macro compRestartLimit = false
 #!disableTranslationSourceLines
 #!translateWithPlayerVar noDetectionRule
 ##!keepUnusedTranslations
-macro overrideLanguage = -1 # off=-1 en=0 zh=1 ko=2
+macro overrideLanguage = -1 # Auto=-1 TLErr=0 EN=1 ZH=2 KO=3
 ################################################################################
 #!include "parkour.opy"
 ################################################################################
