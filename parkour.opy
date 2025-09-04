@@ -342,7 +342,7 @@ rule "Parkour | Death Reset":
     @Condition eventPlayer.isDummy() == false
     @Condition eventPlayer.isDead() == true
     @Condition eventPlayer.toggle_spectate == false
-    @Condition eventPlayer.comp_countAttempts < 0
+    @Condition eventPlayer.comp_countAttempts >= 0
     if len(CheckpointPositions):
         eventPlayer.resurrect()
     else:
