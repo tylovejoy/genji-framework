@@ -31,6 +31,7 @@
         22: "test-maps/generaltest.opy",
         23: "test-maps/bandoublejump.opy", // lulledlion's map
         24: "test-maps/puzzle.opy", // lulledlion's map
+        25: "test-maps/nooter_midtown.opy"
         }[x]
 
         selectedmap = {
@@ -58,6 +59,7 @@
         22: "workshopChamber",
         23: [,"lijiangNightMarket"],
         24: "hanamura",
+        25: "midtown",
         }[x]
 
         if (!Array.isArray(selectedmap)){

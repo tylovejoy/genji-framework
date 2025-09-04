@@ -3,54 +3,39 @@
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
-# Current Named Unused Variables: 1,6,9,11,17,19,28,29,31,36,37,39,48,49,58,59,72,89,90
+# Current Named Unused Variables: 1,2,9,11,17,19,28,29,30,31,36,37,39,48,49,58,59,65,66,72,80,89,90
 #!define CheckpointPositions A
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
-#!define SelectedCheckpoint_Editing B
-#globalvar SelectedCheckpoint_Editing       # legacy      # int                       --- selected checkpoint
-#!define CheckpointRings_Editing C
-globalvar CheckpointRings_Editing 2         # list[effect]              --- Holds checkpoint effects in editing context
+#1
+#!define DestructoIter B
+#2
 #!define MapChecker MsDestructo
 globalvar MsDestructo 3                     # Player
 globalvar TimeRemaining 4
 globalvar PortalEffects 5                   # list[effect]              --- Array holding custom portal effects
-#globalvar CurrentPortalEditing
-#!define Portal1PlayerList F
-#globalvar Portal1PlayerList                # list[player]              --- players who can see portal 1
-#!define Portal2PlayerList G
-#globalvar Portal2PlayerList                # list[player]              --- players who can see portal 2
+#!define LobbyID G
+globalvar LobbyID 6
 #!define KillBallPositions H
 globalvar KillBallPositions 7               # list[vect]                --- KillBall position
 #!define KillBallRadii I
 globalvar KillBallRadii 8                   # list[float]               --- KillBall radius, default 5
-#!define SelectedKillball_Editing J
-#globalvar SelectedKillball_Editing         # int                       --- Current killball in editing context
+#9
 #!define KillBallEffects K
 globalvar KillBallEffects 10                # list[effect]              --- Array holding killball effects
-#!define KillBallChase L
-#globalvar KillBallChase                    # vect                      --- Location of killball while editing, chased.
+#11
 #!define BladeEnabledCheckpoints Dao
 globalvar BladeEnabledCheckpoints 12        # int                       --- blade enabled, should be bool.
 #!define DashEnabledCheckpoints SHIFT
 globalvar DashEnabledCheckpoints 13         # int                       --- dash enabled, should be bool.
-#!define ListPlayersAtCheckpoints P
-#globalvar ListPlayersAtCheckpoints         # list[list[player]]        --- players at a specific checkpoint
-#!define ActivePlayers Q
-#globalvar ActivePlayers                    # list[player]              --- Active players, Non-saved, non-spectating active players
 globalvar EditSelected 14
 globalvar EditSelectIdArray 15
 globalvar EditorOn 16                        # bool                      --- editor rules enabled?
-#globalvar EditorMoveItem                   # num                       --- used for moving a portal
-
-#Bounce Pad editing stuff
+#17
 #!define BouncePositions TQ
 globalvar BouncePositions 18                # list[vect]                --- list of bouncepad positions
-#!define CurrentBounce_Editing TQ1
-#globalvar CurrentBounce_Editing            # int                       --- count of 0-indexed bouncepad pos currently
+#19
 #!define BounceEffects TQ2
 globalvar BounceEffects 20                  # list[effects]             --- list of bounce pad effect entities
-#!define CurrentBouncePosition_Editing TQ3
-#globalvar CurrentBouncePosition_Editing    # vect                      --- the position we just added to bouncepad positions
 globalvar EditorMoveItem 21                 # num                       --- used for moving a portal
 #!define BounceStrength EditMode
 globalvar BounceStrength 22                 # list[float]               --- bouncepad strength
@@ -63,36 +48,29 @@ globalvar BounceToggleLock 25               # list[bool]                --- lock
 globalvar KillballCheckpoints 26            # list[list[int]]           --- 2d list of checkpoints that havea kill ball [[0], [3]]
 #!define BouncePadCheckpoints pinballnumber
 globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d list like killballnumber
-
-# old save progresion, removed but kept in here for legacy pasta purposes
-#!define SavedProgress save
-globalvar SavedProgress 30                  # list[Any]                 --- saves player data in array for rejoining, sequential data
-
-# Leaderboard stuff
-#globalvar toplistPlayers
-#globalvar toplistTimes
-#globalvar toplistSortedTimes
-globalvar LeaderBoardFull 32                # [[name,second,prettytime]]--- sorted list of 0-19 leaderboard entries
+#28
+#29
+#30
+#31
+globalvar LeaderBoardFull 32                # [[name,seconds,prettytime]]--- sorted list of 0-19 leaderboard entries
 globalvar LeaderBoardHuds 33
 globalvar LeaderBoardRemake 34              # bool                      --- indicate board needs remaking
-#!define BhopBanToggle kaxiaotiao
-globalvar BhopBanToggle 35                  # bool                      --- Enabled if Bhop is banned
-
+#globalvar kaxiaotiao 35
+#36
+#37
 #!define TempIterator1 NANBA
 globalvar TempIterator1 38                  # int                       --- temp iterator
-
 #globalvar DashExploitToggle 39
-
 globalvar PortalNames 40                    # [str]                     --- display name of portals
 globalvar PortalLoc 41                      # [vect]                    --- portal position
 globalvar PortalDest 42                     # [vect]                    --- portal destination
 globalvar PortalOn 43                       # bool                      --- portals enabled
 globalvar Difficultyhud 44                  # number                    --- workshop toggle to display difficulty hud
-
 globalvar CustomPortalStart 45              # [vect]                    --- custom portal start
 globalvar CustomPortalEndpoint 46           # [vect]                    --- custom portal end points
 globalvar CustomPortalCP 47                 # [int]                     --- custom portal checkpoints
-
+#48
+#49
 globalvar CompMode 50                       # bool                      --- Tournament mode toggle
 globalvar CompTime 51                       # int                       --- compt mode time limit
 globalvar CompAtmpNum 52                    # int                       --- compt mode attempt limit
@@ -103,33 +81,28 @@ globalvar CompRestartLimit 55               # bool                      --- rese
 globalvar InstructionText 56                # [text]                    --- array of instructions
 globalvar TitleData 57                      # [[cp, [title], [color]]    --- title addon
 #globalvar HudStoreEdit 58                   # [textid]                  --- list of huds to delete if editormode is on
-
+#59
 globalvar SaveName 60
 globalvar SaveCp 61
 globalvar SaveEnt 62
 globalvar SaveTimer 63
 globalvar SaveElapsed 64
-globalvar SavePauseTime 65
-globalvar SavePauseEnabled 66
-
+#globalvar SavePauseTime 65
+#globalvar SavePauseEnabled 66
 globalvar HintCp 67
 globalvar HintText 68
-
 globalvar ColorConfig 69                    # [colors]                  --- configured colors
-
 globalvar Name 70
 globalvar Code 71
+#72
 globalvar Cachedcredits 73                  # [string, string]          --- Legacy
-
-# per cp iwt or hud
 globalvar CpHudText 74
 globalvar CpHudCp 75
 globalvar CpIwtText 76
 globalvar CpIwtCp 77
 globalvar CpIwtPos 78
 globalvar CpIwtColor 79
-
-globalvar BanTriple 80                      # legacy
+#globalvar BanTriple 80                      # legacy
 globalvar BanMulti 81
 globalvar BanCreate 82
 globalvar BanDead 83
@@ -139,7 +112,6 @@ globalvar BanBhop 86
 globalvar BanStand 87                       # bans on second hop
 globalvar BanDjump 88
 globalvar BanSaveDouble 89
-globalvar DestructoIter 90
 globalvar MapVectorArray 91
 
 ######################################## Player Variables #####################
@@ -160,13 +132,12 @@ playervar checkpoint_current                # int                       --- Curr
 playervar checkpoint_practice               # int                       --- Saved practice checkpoint
 playervar checkpoint_moved
 playervar checkpoint_notLast                       # bool                      --- false if you are noton the last cp or level below 2 cps
+playervar checkpoint_skip
 
 playervar timer_normal                             # float                     --- Timer, chased.
-#playervar timer_pause                        # float                     --- time in spectate/invincible, chased
 playervar timer_practice
 playervar timer_split                         # int                       --- stored time that the split compares to
 playervar timer_splitDisplay                      # int                       --- displayed split value
-#playervar timer_splitsOn                         # bool                      --- turning splits on/off is now done via seting splittime to -Math.INFINITY
 
 playervar toggle_invincible                  # bool                       --- invincible/normal mode toggle now a bool
 playervar toggle_spectate                    # bool                       --- turned into bool
@@ -184,7 +155,6 @@ playervar skill_countMulti                   # int                       --- cli
 playervar skill_usedClimb                     # bool                      --- turned into bool
 playervar skill_usedBhop                          # bool                      --- turned into bool
 playervar skill_usedDouble                        # bool
-playervar skill_ultCd
 
 playervar banString                         # str                       --- displayed bans
 #playervar ban_triple
@@ -201,17 +171,12 @@ playervar ban_savedouble
 
 playervar cache_collectedLocks                     # [int]                    --- amount collected lock this cp
 playervar cache_bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
-#playervar cache_bounceLastTouched
 playervar cache_portalStart
 playervar cache_portalEnd
 playervar cache_bounceMaxLocks
 playervar cache_killPosition
 playervar cache_killRadii
 playervar cache_bouncePosition
-#playervar cache_bounceStrength
-#playervar cache_bounceUlt
-#playervar cache_bounceDash
-#playervar cache_bounceLocks
 playervar cache_inputs
 playervar cache_rainbow                     # color                     --- color of fx after finish the map
 playervar cache_titleHud                        # textid                    --- store curent  title textid
@@ -232,15 +197,13 @@ playervar editor_bounceIndex
 playervar editor_killIndex
 playervar editor_temp
 
-playervar comp_done                          # bool                      --- out of atemps or time?
 playervar comp_countAttempts                      # int                       --- amound of attemps remaining
 playervar comp_instructionHud
+
 playervar addon_toggle3rdPov
 playervar addon_ledgeDash
 playervar addon_enableDoubleChecks
 
-#playervar ult_cd_global                     # int                       --- tracks cd for ult even if rule restarts the waits
-#playervar BhopHUDColor                      # Color                     --- Color for Bhop HUD
 ######################################## Subroutines ##########################
 #subroutine KillBall
 #subroutine PinBall
@@ -383,13 +346,12 @@ enum LoadOrder:
     mapData     = -1,
     customize   = 0,
     destructo   = 0.016 * 2,
-    setup       = 0.016 * 15,
-    portal      = LoadOrder.setup + 0.016 * 32,
-    effects     = LoadOrder.portal + 0.016 * 32,
-    hudsPlayer  = 0.016 * 32,
-    addon       = 0.016 * 48,
-    hudsGlobal  = 0.016 * 50,
-    hudsEditor  = 0.016 * 52,
+    setup       = 0.016 * 32,
+    addon       = 0.016 * 40,
+    hudsGlobal  = 0.016 * 48,
+    hudsPlayer  = 0.016 * 56,
+    hudsEditor  = 0.016 * 64,
+    effects     = 0.016 * 128,
 
 ######################################## Macro Tools ##########################
 macro localSpectator(condition):

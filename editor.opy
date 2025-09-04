@@ -18,10 +18,10 @@ rule "Editor | Export Map":
     ColorConfig = null
     EditorOn = null
 
-    CheckpointRings_Editing = null
     KillBallEffects = null
     TempIterator1 = null
     BounceEffects = null
+    LobbyID = null
     SaveName = null
     SaveCp = null
     SaveTimer = null
@@ -779,7 +779,7 @@ rule "Editor | Create Cp/Orb":
         EditorMoveItem = true
 
     hostPlayer.editor_lock = false
-    wait(0.64)
+    wait(0.512)
 
 rule "Editor | Delete Cp/Orb/Portal":
     @Event eachPlayer
@@ -854,7 +854,6 @@ rule "Editor | Delete Cp/Orb/Portal":
 
         # Remove specified checkpoint =====================
         del CheckpointPositions[hostPlayer.checkpoint_current]
-        del CheckpointRings_Editing[hostPlayer.checkpoint_current]
         hostPlayer.checkpoint_current = max(hostPlayer.checkpoint_current - 1, 0)
 
         RebuildKillOrbs()
@@ -938,7 +937,7 @@ rule "Editor | Orb Radii/Strength":
             BounceStrength[EditSelected] += 0.1 if hostPlayer.isHoldingButton(Button.JUMP) else -0.1
         elif EditorMode.killBall and len(hostPlayer.editor_killIndex):
             KillBallRadii[EditSelected] += 0.1 if hostPlayer.isHoldingButton(Button.JUMP) else -0.1
-        wait(0.1)
+        wait(0.128)
     UpdateCache()
     hostPlayer.editor_lock = false
 
@@ -1014,7 +1013,7 @@ rule "Editor | Moving Checkpoint":
     @Condition hostPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition hostPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false
     
-    wait(0.3, Wait.ABORT_WHEN_FALSE)
+    wait(0.256, Wait.ABORT_WHEN_FALSE)
     if hostPlayer.addon_toggle3rdPov:
         hostPlayer.addon_toggle3rdPov = false
     hostPlayer.editor_lock = true
@@ -1087,7 +1086,7 @@ rule "Editor | Toggle Bans":
         else:
             toggleCpInArray(BanBhop)
     # BanStand
-    wait(0.3)
+    wait(0.256)
     UpdateCache()
     hostPlayer.editor_lock = false
 
@@ -1102,7 +1101,7 @@ rule "Editor | Change Portal Cp":
     @Condition hostPlayer.isHoldingButton(Button.ABILITY_2)
 
     CustomPortalCP[EditSelected] = hostPlayer.checkpoint_current if CustomPortalCP[EditSelected] < 0 else -1
-    wait(0.3)
+    wait(0.256)
 
 rule "Editor | Move Object":
     @Event eachPlayer

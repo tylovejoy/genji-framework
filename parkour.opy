@@ -1,6 +1,16 @@
 #!mainFile "framework.opy"
 
-rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Parkour " versionhere " ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
+rule "OverPy | Player Translation Setup":
+    @Event playerJoined
+    @Condition eventPlayer.isDummy() == false
+    eventPlayer.__languageIndex__ = true
+    waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
+    eventPlayer.startFacing(directionFromAngles(10 * __overpyTranslationHelper__.index(Color.WHITE.split([])), 5))
+    waitUntil((not round(100 * eventPlayer.getHorizontalFacingAngle()) % 1000) and abs(eventPlayer.getVerticalFacingAngle() - 5) < 0.01, 16)
+    eventPlayer.__languageIndex__ = max(1, (abs(eventPlayer.getVerticalFacingAngle() - 5) < 0.01) * (round(eventPlayer.getHorizontalFacingAngle() / 10))) if overrideLanguage < 0 else overrideLanguage
+    eventPlayer.stopFacing()
+
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Parkour v" versionhere " ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
 rule "Parkour | Setup & Variables":
@@ -17,18 +27,18 @@ rule "Parkour | Setup & Variables":
     startForcingSpawn(Team.ALL, 2)
 
     wait(LoadOrder.setup) # wait for map data rule
-    EditorOn = createWorkshopSetting(bool, "Map Settings ■ 地图设置 ■ 맵 설정", "Editor Mode ■ 作图模式 ■ 수정 모드", editorDefaultOn, 0) # Turn Editor On
-    if createWorkshopSetting(bool, "Map Settings ■ 地图设置 ■ 맵 설정", "Basic Map Validator ■ 验证地图 ■ 맵 가능 여부 확인기", true, 3):
+    EditorOn = createWorkshopSetting(bool, "Map Settings ◆ 地图设置 ◆ 맵 설정", "Editor Mode ◆ 作图模式 ◆ 수정 모드", editorDefaultOn, 0) # Turn Editor On
+    if createWorkshopSetting(bool, "Map Settings ◆ 地图设置 ◆ 맵 설정", "Basic Map Validator ◆ 验证地图 ◆ 맵 가능 여부 확인기", true, 3):
         async(AddonCheckMap, AsyncBehavior.NOOP)
-    PortalOn = createWorkshopSetting(bool, "Map Settings ■ 地图设置 ■ 맵 설정", "Portals (Control Maps) ■ 启用传送门 (占点地图) ■ 순간이동 활성화 (쟁탈 맵)", true, 4)
-    CompMode = not EditorOn and createWorkshopSetting(bool, "Tournament Mode ■ 竞赛模式 ■ 토너먼트 모드", "Tournament Mode ■ 开启竞赛模式 ■ 토너먼트 모드 활성화", compModeToggle, 100)
+    PortalOn = createWorkshopSetting(bool, "Map Settings ◆ 地图设置 ◆ 맵 설정", "Portals (Control Maps) ◆ 启用传送门 (占点地图) ◆ 순간이동 활성화 (쟁탈 맵)", true, 4)
+    CompMode = not EditorOn and createWorkshopSetting(bool, "Tournament Mode ◆ 竞赛模式 ◆ 토너먼트 모드", "Tournament Mode ◆ 开启竞赛模式 ◆ 토너먼트 모드 활성화", compModeToggle, 100)
     if CompMode:
         # -! comp minutes !-
-        CompTime = createWorkshopSetting(int[1:240], "Tournament Mode ■ 竞赛模式 ■ 토너먼트 모드", "Time Limit (Global) ■ 时间限制 ■ 시간 제한 (전체)", compTimeLimit, 101) # 5-240
+        CompTime = createWorkshopSetting(int[1:240], "Tournament Mode ◆ 竞赛模式 ◆ 토너먼트 모드", "Time Limit (Global) ◆ 时间限制 ◆ 시간 제한 (전체)", compTimeLimit, 101) # 5-240
         # -! comp attempt count !-
-        CompAtmpNum = createWorkshopSetting(int[0:500], "Tournament Mode ■ 竞赛模式 ■ 토너먼트 모드", "Attempt Count ■ 尝试次数 ■ 시도 수 확인", attemptCount, 102)
+        CompAtmpNum = createWorkshopSetting(int[0:500], "Tournament Mode ◆ 竞赛模式 ◆ 토너먼트 모드", "Attempt Count ◆ 尝试次数 ◆ 시도 수 확인", attemptCount, 102)
         # -! comp restartlimiter !-
-        CompRestartLimit = createWorkshopSetting(bool, "Tournament Mode ■ 竞赛模式 ■ 토너먼트 모드", "Disable Restart During Run ■ 竞赛中禁用重新开始 ■ 시도 중 재시작 비활성화", compRestartLimit, 103)
+        CompRestartLimit = createWorkshopSetting(bool, "Tournament Mode ◆ 竞赛模式 ◆ 토너먼트 모드", "Disable Restart During Run ◆ 竞赛中禁用重新开始 ◆ 시도 중 재시작 비활성화", compRestartLimit, 103)
     else:
         InstructionText = null
 
@@ -101,6 +111,7 @@ rule "Parkour | Match time":
     setMatchTime(70)
     pauseMatchTime()
     wait()
+    LobbyID = "v"
     TimeRemaining = 265
     while TimeRemaining:
         wait(60)
@@ -109,7 +120,6 @@ rule "Parkour | Match time":
             CompTime--
             if not CompTime:
                 bigMessage(true[0], "时间到了" checkCN "Time's Up")
-                getAllPlayers().comp_done = true
                 stopChasingVariable(getAllPlayers().timer_normal)
                 getAllPlayers().setDamageReceived(100)
                 kill(getAllPlayers(), null)
@@ -163,9 +173,13 @@ rule "Parkour | Player Initialize":
             waitUntil(eventPlayer.isHoldingButton(Button.INTERACT) or CompTime < 1, Math.INFINITY)
             eventPlayer.setMoveSpeed(100)
             eventPlayer.comp_instructionHud = false
-        if eventPlayer.comp_countAttempts < 0 or CompTime < 1:
-            eventPlayer.comp_done = true
-
+        if CompTime < 1 or eventPlayer.comp_countAttempts < 0:
+            eventPlayer.toggle_leaderboard = true
+            eventPlayer.comp_countAttempts = -1
+            eventPlayer.setDamageReceived(100)
+            kill(eventPlayer,null)
+            eventPlayer.setDamageReceived(0)
+            return
     wait()
     StartGame()  # initialization of the game
     eventPlayer.lockState = false
@@ -238,9 +252,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
                         if eventPlayer.comp_countAttempts == CompAtmpNum:
                             CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = -1
                             eventPlayer.comp_countAttempts = -1
-                            eventPlayer.comp_done = true
                             eventPlayer.toggle_leaderboard = true
-                            #eventPlayer.disableRespawn()
                             eventPlayer.setDamageReceived(100)
                             kill(eventPlayer,null)
                             eventPlayer.setDamageReceived(0)
@@ -264,6 +276,8 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, eventPlayer.getPosition(), 4)
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpCircleRadius:
         CheckpointFailReset()
+    elif not(eventPlayer.isUsingUltimate() or eventPlayer.isUsingAbility1()) and eventPlayer.getHorizontalSpeed() > 6.05:
+        LobbyID = []
 
     eventPlayer.cache_collectedLocks = []
     wait(0.048)
@@ -326,8 +340,9 @@ rule "Parkour | Bounce Ball / Orb":
 rule "Parkour | Death Reset":
     @Event playerDied
     @Condition eventPlayer.isDummy() == false
+    @Condition eventPlayer.isDead() == true
     @Condition eventPlayer.toggle_spectate == false
-    @Condition eventPlayer.comp_done == false
+    @Condition eventPlayer.comp_countAttempts < 0
     if len(CheckpointPositions):
         eventPlayer.resurrect()
     else:
@@ -337,22 +352,22 @@ rule "Parkour | Death Reset":
     # but doing waits only when needed without relying on a variable count
     waitUntil(eventPlayer.isAlive(), true)
     waitUntil(eventPlayer.isDead(), true)
-    if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):
-        wait(0.16)
-        eventPlayer.resurrect()
-        CheckpointFailReset()
-        waitUntil(eventPlayer.isAlive(), true)
-        waitUntil(eventPlayer.isDead(), true)
-        if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):
-            wait(0.44)
-            eventPlayer.resurrect()
-            CheckpointFailReset()
-            waitUntil(eventPlayer.isAlive(), true)
-            waitUntil(eventPlayer.isDead(), true)
-            if eventPlayer.isDead() and not(eventPlayer.toggle_spectate or eventPlayer.comp_done):
-                wait(0.64)
-                eventPlayer.respawn()
-                CheckpointFailReset()
+    if not ruleCondition: return
+    wait(0.16)
+    eventPlayer.resurrect()
+    CheckpointFailReset()
+    waitUntil(eventPlayer.isAlive(), true)
+    waitUntil(eventPlayer.isDead(), true)
+    if not ruleCondition: return
+    wait(0.44)
+    eventPlayer.resurrect()
+    CheckpointFailReset()
+    waitUntil(eventPlayer.isAlive(), true)
+    waitUntil(eventPlayer.isDead(), true)
+    if not ruleCondition: return
+    wait(0.64)
+    eventPlayer.respawn()
+    CheckpointFailReset()
 
 def UpdateCache():
     @Name "Parkour | SUB Update Effect Cache"
@@ -373,31 +388,31 @@ def UpdateCache():
     eventPlayer.banString = []
     wait()
     if eventPlayer.checkpoint_notLast:
-        eventPlayer.ban_multi = createWorkshopSetting(bool, "Ban (All Levels) ■ 封禁(应用于所有关卡) ■ 금지 (모든 레벨에 적용)", "Ban Multiclimb ■ 封禁蹭留 ■ 무한 벽타기 금지", false, 1) or eventPlayer.checkpoint_current in BanMulti
+        eventPlayer.ban_multi = createWorkshopSetting(bool, "Ban (All Levels) ◆ 封禁(应用于所有关卡) ◆ 금지 (모든 레벨에 적용)", "Ban Multiclimb ◆ 封禁蹭留 ◆ 무한 벽타기 금지", false, 1) or eventPlayer.checkpoint_current in BanMulti
         if eventPlayer.ban_multi:
             eventPlayer.banString = "∞ {}".format(eventPlayer.banString)
-        eventPlayer.ban_create = createWorkshopSetting(bool, "Ban (All Levels) ■ 封禁(应用于所有关卡) ■ 금지 (모든 레벨에 적용)", "Ban Createbhop ■ 封禁卡小 ■ 콩콩이 생성 금지", false, 2) or eventPlayer.checkpoint_current in BanCreate
+        eventPlayer.ban_create = createWorkshopSetting(bool, "Ban (All Levels) ◆ 封禁(应用于所有关卡) ◆ 금지 (모든 레벨에 적용)", "Ban Createbhop ◆ 封禁卡小 ◆ 콩콩이 생성 금지", false, 2) or eventPlayer.checkpoint_current in BanCreate
         if eventPlayer.ban_create:
             eventPlayer.banString = "♂ {}".format(eventPlayer.banString)
-        eventPlayer.ban_standcreate = createWorkshopSetting(bool, "Ban (All Levels) ■ 封禁(应用于所有关卡) ■ 금지 (모든 레벨에 적용)","Ban Standcreate ■ 封禁站卡 ■ 서서 콩콩이 생성 금지", false, 3) or eventPlayer.checkpoint_current in BanStand
+        eventPlayer.ban_standcreate = createWorkshopSetting(bool, "Ban (All Levels) ◆ 封禁(应用于所有关卡) ◆ 금지 (모든 레벨에 적용)","Ban Standcreate ◆ 封禁站卡 ◆ 서서 콩콩이 생성 금지", false, 3) or eventPlayer.checkpoint_current in BanStand
         if eventPlayer.ban_standcreate:
             eventPlayer.banString = "♠ {}".format(eventPlayer.banString) # ≥  √ ▼ ↓
-        eventPlayer.ban_dead = createWorkshopSetting(bool, "Ban (All Levels) ■ 封禁(应用于所有关卡) ■ 금지 (모든 레벨에 적용)", "Ban Deathbhop ■ 封禁死小 ■ 죽음 콩콩이 금지", false, 4) or eventPlayer.checkpoint_current in BanDead
+        eventPlayer.ban_dead = createWorkshopSetting(bool, "Ban (All Levels) ◆ 封禁(应用于所有关卡) ◆ 금지 (모든 레벨에 적용)", "Ban Deathbhop ◆ 封禁死小 ◆ 죽음 콩콩이 금지", false, 4) or eventPlayer.checkpoint_current in BanDead
         if eventPlayer.ban_dead:
             eventPlayer.banString = "X {}".format(eventPlayer.banString)
-        eventPlayer.ban_emote = createWorkshopSetting(bool, "Ban (All Levels) ■ 封禁(应用于所有关卡) ■ 금지 (모든 레벨에 적용)", "Ban Emote Savehop ■ 封禁表情留小 ■ 감정표현 콩콩이 금지", false, 5) or eventPlayer.checkpoint_current in BanEmote
+        eventPlayer.ban_emote = createWorkshopSetting(bool, "Ban (All Levels) ◆ 封禁(应用于所有关卡) ◆ 금지 (모든 레벨에 적용)", "Ban Emote Savehop ◆ 封禁表情留小 ◆ 감정표현 콩콩이 금지", false, 5) or eventPlayer.checkpoint_current in BanEmote
         if eventPlayer.ban_emote:
             eventPlayer.banString = "♥ {}".format(eventPlayer.banString)
-        eventPlayer.ban_savedouble = createWorkshopSetting(bool, "Ban (All Levels) ■ 封禁(应用于所有关卡) ■ 금지 (모든 레벨에 적용)", "Ban Save Double ■ 封禁留二段跳 ■ 이단점프 킵 금지", false, 6) or eventPlayer.checkpoint_current in BanSaveDouble
+        eventPlayer.ban_savedouble = createWorkshopSetting(bool, "Ban (All Levels) ◆ 封禁(应用于所有关卡) ◆ 금지 (모든 레벨에 적용)", "Ban Save Double ◆ 封禁留二段跳 ◆ 이단점프 킵 금지", false, 6) or eventPlayer.checkpoint_current in BanSaveDouble
         if eventPlayer.ban_savedouble:
             eventPlayer.banString = "△ {}".format(eventPlayer.banString)
-        eventPlayer.ban_climb = createWorkshopSetting(bool, "Ban (All Levels) ■ 封禁(应用于所有关卡) ■ 금지 (모든 레벨에 적용)", "Ban Wallclimb ■ 封禁爬墙 ■ 벽타기 금지", false, 7) or eventPlayer.checkpoint_current in BanClimb
+        eventPlayer.ban_climb = createWorkshopSetting(bool, "Ban (All Levels) ◆ 封禁(应用于所有关卡) ◆ 금지 (모든 레벨에 적용)", "Ban Wallclimb ◆ 封禁爬墙 ◆ 벽타기 금지", false, 7) or eventPlayer.checkpoint_current in BanClimb
         if eventPlayer.ban_climb:
             eventPlayer.banString = "↑ {}".format(eventPlayer.banString)
-        eventPlayer.ban_bhop = createWorkshopSetting(bool, "Ban (All Levels) ■ 封禁(应用于所有关卡) ■ 금지 (모든 레벨에 적용)","Require Bhop Available ■ 留小跳进点 ■ 도착 시 콩콩이 필요", false, 8) or eventPlayer.checkpoint_current in BanBhop
+        eventPlayer.ban_bhop = createWorkshopSetting(bool, "Ban (All Levels) ◆ 封禁(应用于所有关卡) ◆ 금지 (모든 레벨에 적용)","Require Bhop Available ◆ 留小跳进点 ◆ 도착 시 콩콩이 필요", false, 8) or eventPlayer.checkpoint_current in BanBhop
         if eventPlayer.ban_bhop:
             eventPlayer.banString = "≥ {}".format(eventPlayer.banString) # ≥  √ ▼ ↓
-        eventPlayer.ban_djump = createWorkshopSetting(bool, "Ban (All Levels) ■ 封禁(应用于所有关卡) ■ 금지 (모든 레벨에 적용)","Require Djump Available ■ 留二段跳进点 ■ 도착 시 이단 점프 필요", false, 9) or eventPlayer.checkpoint_current in BanDjump
+        eventPlayer.ban_djump = createWorkshopSetting(bool, "Ban (All Levels) ◆ 封禁(应用于所有关卡) ◆ 금지 (모든 레벨에 적용)","Require Djump Available ◆ 留二段跳进点 ◆ 도착 시 이단 점프 필요", false, 9) or eventPlayer.checkpoint_current in BanDjump
         if eventPlayer.ban_djump:
             eventPlayer.banString = "» {}".format(eventPlayer.banString) # ≥  √ ▼ ↓ ︽
     else:
@@ -514,15 +529,11 @@ def CheckpointFailReset():
 
 def StartGame():
     @Name "Parkour | SUB Start Game"
-    if CompMode and (CompTime < 1 or eventPlayer.comp_done):
-        eventPlayer.toggle_leaderboard = true
-        eventPlayer.comp_done = true
-        #eventPlayer.disableRespawn()
-        eventPlayer.setDamageReceived(100)
-        kill(eventPlayer,null)
-        eventPlayer.setDamageReceived(0)
-        return
-
+    eventPlayer.checkpoint_practice = 0
+    eventPlayer.toggle_practice = false
+    eventPlayer.toggle_invincible = false
+    eventPlayer.toggle_spectate = false
+    eventPlayer.checkpoint_moved = true
     if len(CheckpointPositions):
         if eventPlayer[0].split([]) in SaveName: # load saved progres
             SaveEnt[SaveName.index(eventPlayer[0].split([]))] = eventPlayer
@@ -537,8 +548,3 @@ def StartGame():
         CheckpointFailReset()
         waitUntil(isGameInProgress(), Math.INFINITY) # FFA
         TimerResume()
-    #eventPlayer.enableRespawn()
-    eventPlayer.toggle_invincible = false
-    eventPlayer.toggle_spectate = false
-    eventPlayer.checkpoint_moved = true
-    # eventPlayer.lockState = false

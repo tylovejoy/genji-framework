@@ -32,7 +32,7 @@ rule "Effects | Setup Effects":
                     [i for i in getAllPlayers() if i.checkpoint_current == evalOnce(CustomPortalCP[TempIterator1]) or evalOnce(CustomPortalCP[TempIterator1] < 0)],
                     Effect.GOOD_AURA, ColorConfig[Customize.portal], CustomPortalStart[TempIterator1], 0.6, EffectReeval.VISIBILITY)
                 wait()
-            wait(0.5)
+            wait(0.512)
     
         if len(KillBallPositions):
             for TempIterator1 in range(0, len(KillBallPositions)):
@@ -41,7 +41,7 @@ rule "Effects | Setup Effects":
                     [x for x in getAllPlayers() if x.checkpoint_current == evalOnce(KillballCheckpoints[TempIterator1])],
                     Effect.SPHERE, ColorConfig[Customize.killorb], KillBallPositions[TempIterator1], abs(KillBallRadii[TempIterator1]), EffectReeval.VISIBILITY)
                 wait()
-            wait(0.5)
+            wait(0.512)
     
         if len(BouncePositions):
             for TempIterator1 in range(0, len(BouncePositions)):

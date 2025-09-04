@@ -21,7 +21,7 @@ rule "Command | Split hide (Hold Dash + Primary + Secondary)":
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
     #$$ Language
     smallMessage(eventPlayer, "   Split Display Off" if eventPlayer.timer_splitDisplay <= -Math.INFINITY else "   Split Display On")
-    wait(0.32)
+    wait(0.128)
 
 rule "Command | Toggle Invisible (Hold Deflect)":
     @Event eachPlayer
@@ -49,8 +49,7 @@ rule "Command | Preview Orbs & Portals (Hold Primary + Secondary)":
     @Condition eventPlayer.checkpoint_notLast
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
     @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE)
-    #wait(0.9, Wait.ABORT_WHEN_FALSE)
-    wait(0.45, Wait.ABORT_WHEN_FALSE)
+    wait(0.512, Wait.ABORT_WHEN_FALSE)
     eventPlayer.preview_array1 = [CheckpointPositions[eventPlayer.checkpoint_current + 1][0]]
     if len(BouncePadCheckpoints):
         eventPlayer.preview_array1.append([_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current])
@@ -94,7 +93,7 @@ rule "Command | Preview Orbs & Portals (Hold Primary + Secondary)":
 
 rule "Command | Restart Run (Crouch + Interact + Deflect)":
     @Event eachPlayer
-    @Condition eventPlayer.editor_lock == false or eventPlayer != hostPlayer
+    @Condition not eventPlayer.editor_lock or eventPlayer != hostPlayer
     @Condition eventPlayer.lockState == false
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.INTERACT)
@@ -102,34 +101,24 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
 
     eventPlayer.lockState = true
     if CompMode:
-        wait()
         if CompTime < 1:
-            smallMessage(eventPlayer, "   比赛结束" checkCN "   Competition Is Over"  )
-            eventPlayer.lockState = false
-            return
-        elif eventPlayer.comp_done:
-            eventPlayer.lockState = false
-            return
+            smallMessage(eventPlayer, "   比赛结束" checkCN "   Competition Is Over")
         elif CompRestartLimit and eventPlayer.checkpoint_notLast:
             smallMessage(eventPlayer, "   禁止在此比赛中运行期间重新启动" checkCN "   Restart During Run Is Disabled For This Competition")
-            eventPlayer.lockState = false
-            return
         elif CompAtmpNum:
             if eventPlayer.comp_countAttempts == CompAtmpNum:
-                smallMessage(eventPlayer, "   最后一次尝试" checkCN "   This Is Your Final Attempt"  )
-                eventPlayer.lockState = false
-                return
-            if eventPlayer.comp_countAttempts < 0:
-                smallMessage(eventPlayer, "   你没有尝试过" checkCN "   You Are Out Of Attempts"  )
-                eventPlayer.lockState = false
-                return
-            eventPlayer.comp_countAttempts++
-            CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts
+                smallMessage(eventPlayer, "   最后一次尝试" checkCN "   You Are On Your Final Attempt")
+            elif eventPlayer.comp_countAttempts < 0:
+                smallMessage(eventPlayer, "   你没有尝试过" checkCN "   You Are Out Of Attempts")
+            else:
+                eventPlayer.comp_countAttempts++
+                CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts
+                goto compModeExit
+        eventPlayer.lockState = false
+        return
+    compModeExit:
     eventPlayer.editor_fly = null
-    eventPlayer.checkpoint_current = 0
     eventPlayer.timer_splitDisplay = -Math.INFINITY * (eventPlayer.timer_splitDisplay <= -Math.INFINITY)
-    eventPlayer.toggle_practice = false
-    eventPlayer.timer_practice = 0
     stopChasingVariable(eventPlayer.timer_practice)
     if eventPlayer in SaveEnt:
         DeleteSave()
@@ -140,7 +129,7 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
     wait(CompMode)
     #eventPlayer.allowButton(Button.ABILITY_1)
     eventPlayer.lockState = false
-    wait(0.096) #Anti spam
+    wait(0.128) #Anti spam
 
 rule "Command | Spectate (Hold Interact)":
     @Event eachPlayer
@@ -176,7 +165,7 @@ rule "Command | Spectate (Hold Interact)":
 
 rule "Command | Toggle Invincible Mode (Melee + Reload)":
     @Event eachPlayer
-    @Condition (CompMode and eventPlayer.comp_done) == false
+    @Condition (CompMode and eventPlayer.comp_countAttempts < 0) == false
     @Condition eventPlayer.lockState == false
     @Condition eventPlayer.isAlive()
     @Condition eventPlayer.isHoldingButton(Button.MELEE)
@@ -185,7 +174,6 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
 
     eventPlayer.lockState = true
     eventPlayer.toggle_invincible = not eventPlayer.toggle_invincible
-    eventPlayer.cache_collectedLocks = []
 
     if eventPlayer.toggle_invincible:
         #"探点模式" checkCN "Invincible mode"
@@ -206,7 +194,7 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
             TimerResume()
             CheckpointFailReset()
     eventPlayer.lockState = false
-    wait(0.096) #Anti spam
+    wait(0.128) #Anti spam
 
 rule "Command | Toggle Practice Mode (Melee + Ultimate)":
     @Event eachPlayer
@@ -243,7 +231,7 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
             TimerResume()
             CheckpointFailReset()
     eventPlayer.lockState = false
-    wait(0.096) #Anti spam
+    wait(0.128) #Anti spam
 
 rule "Command | Restart Practice (Hold Interact)":
     @Event eachPlayer
@@ -278,25 +266,29 @@ rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
     @Condition EditorMoveItem == false
     @Condition (eventPlayer.editor_lock and eventPlayer == hostPlayer) == false
     @Condition EditorOn or eventPlayer.toggle_practice
-    @Condition eventPlayer.lockState == false
+    @Condition eventPlayer.lockState == eventPlayer.checkpoint_skip
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) != (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) )
     #@Condition hostPlayer.editor_on or ( eventPlayer.toggle_practice and eventPlayer.isHoldingButton(Button.ABILITY_1) )
-
     eventPlayer.lockState = true
     eventPlayer.timer_split = 0
     eventPlayer.timer_practice = 0
     eventPlayer.checkpoint_current += len(CheckpointPositions) - 1 if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) else true
     eventPlayer.checkpoint_current %= len(CheckpointPositions)
     eventPlayer.checkpoint_moved = true
-
-    UpdateCache()
-    CheckpointFailReset()
-    wait(0.064) #Anti spam
-    waitUntil(eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.256) # faster if you spam button
-    if RULE_CONDITION: goto RULE_START
-    # After loop to prevent instant teleports
+    #waitUntil(eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.256) # faster if you spam button
+    if eventPlayer.checkpoint_skip:
+        wait(0.32, Wait.RESTART_WHEN_TRUE)
+        UpdateCache()
+        CheckpointFailReset()
+    else:
+        eventPlayer.checkpoint_skip = true
+        UpdateCache()
+        CheckpointFailReset()
+        wait(0.48, Wait.RESTART_WHEN_TRUE)
+    eventPlayer.checkpoint_skip = false
     eventPlayer.lockState = false
+    if RULE_CONDITION: goto RULE_START
 
 rule "Command | Quick Reset (Reload | Hold Reload to Enable)":
     @Event eachPlayer
