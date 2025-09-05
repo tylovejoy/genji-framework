@@ -222,7 +222,6 @@ subroutine MakeSave
 subroutine TimerPause
 subroutine TimerResume
 subroutine EditUpdateSelectedIds
-subroutine EditorSelectLast
 subroutine AddonCustomLoadAndReset
 subroutine AddonCheckMap
 subroutine Addon3rdPerson
