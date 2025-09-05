@@ -18,7 +18,7 @@ jobs:
       - name: Compile .opy script to .ow
         uses: nebulaOW/overpy-compile-action@v1
         with:
-          entrypoint: framework.opy
+          entrypoint: ../framework.opy
           output_dir: dist
           language: en-US
           out_file_type: .ow
