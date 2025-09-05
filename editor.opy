@@ -647,7 +647,7 @@ rule "Editor | Change Mode":
         hostPlayer.editor_modeSelect += 1
     hostPlayer.editor_modeSelect %= 5
     EditUpdateSelectedIds()
-    EditorSelectLast()
+    EditSelected = EditSelectIdArray.last()
     wait()
     waitUntil(hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) == hostPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.1)
     hostPlayer.editor_lock = false
@@ -666,16 +666,12 @@ def EditUpdateSelectedIds():
     else:
         EditSelectIdArray = []
 
-def EditorSelectLast():
-    @Name "Editor | Select Last"
-    EditSelected = EditSelectIdArray.last()
-
 rule "Editor | Create Cp/Orb":
     @Event eachPlayer
-    @Condition eventPlayer == hostPlayer #Required for UpdateCache()
+    @Condition eventPlayer == hostPlayer #Required for UpdateCache
     @Condition EditorOn
     @Condition hostPlayer.editor_lock == false
-    @Condition EditorMode.current in [0,1,2,4]
+    @Condition EditorMode.current in [0, 1, 2, 4]
     @Condition hostPlayer.isHoldingButton(Button.INTERACT)
     @Condition hostPlayer.isHoldingButton(Button.PRIMARY_FIRE)
 
@@ -711,6 +707,7 @@ rule "Editor | Create Cp/Orb":
                 BanBhop = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanBhop]
                 BanDjump = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanDjump]
             UpdateCache()
+            CheckpointFailReset()
             smallMessage(hostPlayer, "   新检查点已创建" checkCN "   New Checkpoint Created")
     elif not len(CheckpointPositions):
         smallMessage(hostPlayer, "   请先放置检查点" checkCN "   Make A Checkpoint First")
@@ -722,7 +719,7 @@ rule "Editor | Create Cp/Orb":
         KillballCheckpoints.append(hostPlayer.checkpoint_current)
         KillBallRadii.append(5)
         EditUpdateSelectedIds() # to create the fx properly
-        EditorSelectLast()
+        EditSelected = EditSelectIdArray.last()
         createEffect(
             [i for i in getAllPlayers() if i.checkpoint_current == KillballCheckpoints[evalOnce(EditSelected)]],
             Effect.SPHERE, ColorConfig[Customize.killorb],
@@ -736,7 +733,7 @@ rule "Editor | Create Cp/Orb":
         while hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             KillBallPositions[EditSelected] = raycast(hostPlayer.getEyePosition(), hostPlayer.getEyePosition()+hostPlayer.getFacingDirection() * 8, null, null, false).getHitPosition()
             wait()
-        EditorMoveItem = true #UpdateCache()
+        EditorMoveItem = true
 
     elif EditorMode.functionOrb:
         BouncePositions.append(hostPlayer.getPosition())
@@ -746,7 +743,7 @@ rule "Editor | Create Cp/Orb":
         BounceToggleDash.append(false)
         BounceToggleLock.append(false)
         EditUpdateSelectedIds()
-        EditorSelectLast()
+        EditSelected = EditSelectIdArray.last()
         createEffect(
             [x for x in getAllPlayers().concat(null) if x.checkpoint_current == BouncePadCheckpoints[evalOnce(EditSelected)] and not (evalOnce(EditSelected) in x.cache_collectedLocks)],
             Effect.ORB, ColorConfig[Customize.orb_lock] if BounceToggleLock[evalOnce(EditSelected)] else ColorConfig[Customize.orb_normal],
@@ -757,14 +754,14 @@ rule "Editor | Create Cp/Orb":
         while hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             BouncePositions[EditSelected] = raycast(hostPlayer.getEyePosition(), hostPlayer.getEyePosition() + hostPlayer.getFacingDirection() * 7, null, null, false).getHitPosition()
             wait()
-        EditorMoveItem = true #UpdateCache()
+        EditorMoveItem = true
 
     elif EditorMode.portal:
         CustomPortalStart.append(hostPlayer.getPosition())
         CustomPortalEndpoint.append(hostPlayer.getPosition() + 10 * Vector.UP)
         CustomPortalCP.append(hostPlayer.checkpoint_current)
         EditUpdateSelectedIds()
-        EditorSelectLast()
+        EditSelected = EditSelectIdArray.last()
         createEffect([i for i in getAllPlayers() if CustomPortalCP[evalOnce(EditSelected)] == i.checkpoint_current or CustomPortalCP[evalOnce(EditSelected)] < 0],
             Effect.GOOD_AURA, ColorConfig[Customize.portal], CustomPortalStart[evalOnce(EditSelected)], 0.6,  EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
         PortalEffects.append(getLastCreatedEntity())
@@ -783,7 +780,7 @@ rule "Editor | Create Cp/Orb":
 
 rule "Editor | Delete Cp/Orb/Portal":
     @Event eachPlayer
-    @Condition eventPlayer == hostPlayer #Required for UpdateCache()
+    @Condition eventPlayer == hostPlayer #Required for UpdateCache
     @Condition EditorOn
     @Condition hostPlayer.editor_lock == false
     @Condition hostPlayer.isHoldingButton(Button.INTERACT)
@@ -891,7 +888,8 @@ rule "Editor | Delete Cp/Orb/Portal":
         return
 
     UpdateCache()
-    EditorSelectLast()
+    CheckpointFailReset()
+    EditSelected = EditSelectIdArray.last()
     hostPlayer.editor_lock = false
     wait(0.16 + (getNumberOfEntityIds() * 0.007))
 
@@ -899,7 +897,7 @@ rule "Editor | Delete Cp/Orb/Portal":
 
 rule "Editor | Toggle Orb Functions":
     @Event eachPlayer
-    @Condition eventPlayer == hostPlayer #Required for UpdateCache()
+    @Condition eventPlayer == hostPlayer #Required for UpdateCache
     @Condition EditorOn
     @Condition EditorMode.functionOrb
     @Condition hostPlayer.editor_lock == false
@@ -922,7 +920,7 @@ rule "Editor | Toggle Orb Functions":
 
 rule "Editor | Orb Radii/Strength":
     @Event eachPlayer
-    @Condition eventPlayer == hostPlayer #Required for UpdateCache()
+    @Condition eventPlayer == hostPlayer #Required for UpdateCache
     @Condition EditorOn
     @Condition EditorMode.current in [1,2]
     @Condition hostPlayer.editor_lock == false
@@ -1056,7 +1054,7 @@ rule "Editor | Toggle Ult/Dash":
 
 rule "Editor | Toggle Bans":
     @Event eachPlayer
-    @Condition eventPlayer == hostPlayer #Required for UpdateCache()
+    @Condition eventPlayer == hostPlayer #Required for UpdateCache
     @Condition EditorOn
     @Condition EditorMode.skillBan
     @Condition hostPlayer.editor_lock == false
@@ -1105,7 +1103,7 @@ rule "Editor | Change Portal Cp":
 
 rule "Editor | Move Object":
     @Event eachPlayer
-    @Condition eventPlayer == hostPlayer #Required for UpdateCache()
+    @Condition eventPlayer == hostPlayer #Required for UpdateCache
     @Condition EditorOn
     @Condition EditorMode.current in [1, 2, 4]
     @Condition hostPlayer.editor_lock == false
@@ -1157,7 +1155,7 @@ rule "Editor | Move Object":
         while not (hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) or hostPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
             CustomPortalEndpoint[EditSelected] += flyMovementDelta
             wait()
-/*  
+    /*  
     if hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         KillBallPositions[EditSelected] = hostPlayer.editor_undo[0]
     if hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):
@@ -1166,7 +1164,7 @@ rule "Editor | Move Object":
         CustomPortalStart[EditSelected] = hostPlayer.editor_undo[2]
     if hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         CustomPortalEndpoint[EditSelected] = hostPlayer.editor_undo[3]
-*/
+    */
     if hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         goto loc + 2 * EditorMode.current
     else:

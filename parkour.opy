@@ -268,10 +268,10 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             if len(CheckpointPositions[eventPlayer.checkpoint_current]) > 1:# teleport cps
                 CheckpointFailReset()
             else:
+                async(CheckUlt(), AsyncBehavior.NOOP)
+                async(CheckAbility1(), AsyncBehavior.NOOP)
                 AddonCustomLoadAndReset()
             wait()
-            # msg disabled due to annoying new sound
-            #bigMessage(eventPlayer,  "{1} {0}".format(eventPlayer.checkpoint_current, "抵达检查点" checkCN "Arrived at level"))
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, null, eventPlayer, 100)
             playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, eventPlayer.getPosition(), 4)
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpCircleRadius:
@@ -342,7 +342,7 @@ rule "Parkour | Death Reset":
     @Condition eventPlayer.isDummy() == false
     @Condition eventPlayer.isDead() == true
     @Condition eventPlayer.toggle_spectate == false
-    @Condition eventPlayer.comp_countAttempts < 0
+    @Condition eventPlayer.comp_countAttempts >= 0
     if len(CheckpointPositions):
         eventPlayer.resurrect()
     else:
@@ -365,7 +365,7 @@ rule "Parkour | Death Reset":
     waitUntil(eventPlayer.isAlive(), true)
     waitUntil(eventPlayer.isDead(), true)
     if not ruleCondition: return
-    wait(0.64)
+    wait(1)
     eventPlayer.respawn()
     CheckpointFailReset()
 
@@ -426,10 +426,9 @@ def UpdateCache():
         eventPlayer.ban_bhop = false
         eventPlayer.ban_djump = false
     wait()
-    async(CheckUlt(), AsyncBehavior.NOOP)
-    async(CheckAbility1(), AsyncBehavior.NOOP)
-
-    if eventPlayer != hostPlayer or not EditorOn: return
+    #async(CheckUlt(), AsyncBehavior.NOOP)
+    #async(CheckAbility1(), AsyncBehavior.NOOP)
+    if not EditorOn or eventPlayer != hostPlayer: return
     EditUpdateSelectedIds()
     destroyEffect(hostPlayer.editor_hitboxEffect)
     createEffect(hostPlayer if hostPlayer.editor_hitboxToggle else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[hostPlayer.checkpoint_current], cpCircleRadius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
@@ -439,7 +438,7 @@ def UpdateCache():
     hostPlayer.editor_bounceIndex = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in BouncePadCheckpoints] if e >=0]
     hostPlayer.editor_killIndex = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if e >=0]
     if hostPlayer.checkpoint_moved:
-        EditorSelectLast()
+        EditSelected = EditSelectIdArray.last()
         hostPlayer.checkpoint_moved = false
 
 def DeleteSave():

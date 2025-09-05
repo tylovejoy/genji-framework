@@ -124,6 +124,7 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
         DeleteSave()
     if eventPlayer.isDead():
         eventPlayer.resurrect() #eventPlayer.respawn()
+        wait(1)
     StartGame()
     playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, null, eventPlayer, 100)
     wait(CompMode)
