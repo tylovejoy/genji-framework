@@ -4,8 +4,8 @@
 
 def CheckUlt(): # checks if ult should be turned on
     @Name "Mechanic | Genji | SUB Check Ultimate"
-    if eventPlayer.lockState:
-        eventPlayer.setUltCharge(0) # for dash start etc you can be away from cp so the keep charge activators
+    #if eventPlayer.lockState:
+    #    eventPlayer.setUltCharge(0) # for dash start etc you can be away from cp so the keep charge activators
     /*
     eventPlayer.disallowButton(Button.ULTIMATE) # make sure the button cant be pressed until the entire rule ends even if it restarts
     #if eventPlayer.skill_ultCd > getTotalTimeElapsed(): # global cooldown that works even when rule is reset
@@ -21,14 +21,16 @@ def CheckUlt(): # checks if ult should be turned on
 
     if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and EditorOn) or (not eventPlayer.checkpoint_notLast):
         goto lbl_a #skip msg if these
-    elif eventPlayer.checkpoint_current in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last() ) <= cpCircleRadius: 
+    elif eventPlayer.checkpoint_current in BladeEnabledCheckpoints and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= cpCircleRadius: 
         #"终极技能已就绪" checkCN "Ultimate is ready"
         smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
         lbl_a:
         wait()        
         eventPlayer.setUltEnabled(true)
         eventPlayer.setUltCharge(100)
-    elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= 2 or eventPlayer.getUltCharge() < 100: # used to be just else, but have to deal with multi ult orbs
+    else:
+        # used to be just else, but have to deal with multi ult orbs
+        # elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= 2 or eventPlayer.getUltCharge() < 100:
         eventPlayer.setUltEnabled(false)
         eventPlayer.setUltCharge(0)
     wait(0.4)
