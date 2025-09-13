@@ -91,7 +91,7 @@ rule "Huds | Global Localplayer":
             #checkCN
             #"{0} + {1} + {2} | Restart\nHold {3} | leaderboard".format(buttonString(Button.CROUCH), buttonString(Button.ABILITY_2), buttonString(Button.INTERACT),buttonString(Button.MELEE)),
             HudPosition.RIGHT, HO.com_restart_n_board, ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-        
+
         Difficultyhud = [
             createWorkshopSettingEnum(SettingsText.MapCategory, SettingsText.MapDifficulty, 0, [
                 SettingsText.MapDiffOptions[0], SettingsText.MapDiffOptions[1], SettingsText.MapDiffOptions[2],

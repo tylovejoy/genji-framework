@@ -33,7 +33,7 @@ rule "Effects | Setup Effects":
                     Effect.GOOD_AURA, ColorConfig[Customize.portal], CustomPortalStart[TempIterator1], 0.6, EffectReeval.VISIBILITY)
                 wait()
             wait(0.512)
-    
+
         if len(KillBallPositions):
             for TempIterator1 in range(0, len(KillBallPositions)):
                 createEffect(
@@ -42,7 +42,7 @@ rule "Effects | Setup Effects":
                     Effect.SPHERE, ColorConfig[Customize.killorb], KillBallPositions[TempIterator1], abs(KillBallRadii[TempIterator1]), EffectReeval.VISIBILITY)
                 wait()
             wait(0.512)
-    
+
         if len(BouncePositions):
             for TempIterator1 in range(0, len(BouncePositions)):
                 createEffect(
@@ -60,7 +60,7 @@ rule "Effects | Setup Effects":
             Effect.SPARKLES,
             Color.PURPLE,
             localPlayer.preview_array1[localPlayer.preview_i], 0.5, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    
+
 def RebuildBounceOrbs(): # activates in editor. delets the current orbs to place ones that can be modified. orginal orbs in "SUB | Bounce Ball Effects"
     @Name "Effects | SUB Rebuild Bounce Orbs"
     destroyEffect(BounceEffects)

@@ -155,7 +155,7 @@ rule "Parkour | Player Initialize":
 
     if CompMode:
         eventPlayer.setInvisibility(Invis.ALL)
-        if eventPlayer[0].split([]) in CompAtmpSaveNames: 
+        if eventPlayer[0].split([]) in CompAtmpSaveNames:
             eventPlayer.comp_countAttempts = CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))]
             #smallMessage(eventPlayer,"now {0}".format(eventPlayer.comp_countAttempts))
         else: # instructions and settings for comp start
@@ -218,7 +218,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
         # arrived ----------------------------------------------------------------------------------------------------
         if len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks:
             #"   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[Customize.orb_lock])
-            smallMessage(eventPlayer, t"   ! Collect All Lock Orbs To Complete !")  
+            smallMessage(eventPlayer, t"   ! Collect All Lock Orbs To Complete !")
             CheckpointFailReset() # kill player if not colleted the locks
         elif eventPlayer.ban_climb and eventPlayer.skill_usedClimb:
             #"   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")

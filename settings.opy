@@ -141,7 +141,7 @@ enum SettingsText:
         MapPlaytest = "Playtest Display ◆ 游戏测试 ◆ 플레이테스트 디스플레이",
         MapValidator = "Basic Map Validator ◆ 验证地图 ◆ 맵 가능 여부 확인기",
         MapPortals = "Portals (Control Maps) ◆ 启用传送门 (占点地图) ◆ 순간이동 활성화 (쟁탈 맵)",
-    
+
     TournamentCategory = "Tournament Mode ◆ 竞赛模式 ◆ 토너먼트 모드",
         TournamentMode = "Tournament Mode ◆ 开启竞赛模式 ◆ 토너먼트 모드 활성화",
         TournamentTime = "Time Limit (Global) ◆ 时间限制 ◆ 시간 제한 (전체)",

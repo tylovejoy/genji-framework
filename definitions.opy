@@ -288,7 +288,7 @@ enum HO:
     com_preview,
     com_3rd,
     com_invis,
-    com_quickres,    
+    com_quickres,
     com_restart_n_board,
     com_spec,
     com_invincible,
