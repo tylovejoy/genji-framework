@@ -1,10 +1,10 @@
 #!optimizeForSize
 ##!suppressWarnings w_ow2_communicate_bug
-##!suppressWarnings w_tags
+#!suppressWarnings w_tags
 #!suppressWarnings w_lone_else
 #!suppressWarnings w_enum_constant
 ################################################################################
-#!define versionhere "1.10.4C"
+#!define versionhere "1.10.4D"
 #♨ Dev Build Icon
 ################################################################################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")

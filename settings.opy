@@ -1,5 +1,7 @@
 #!mainFile "framework.opy"
-# code 代码
+#!extension spawnMoreDummyBots
+#!extension playMoreEffects
+
 settings {
     "main": {
         "modeName": f"Genji Parkour - 源氏跑酷 - v{versionhere}",
@@ -101,6 +103,47 @@ settings {
     }
 }
 
-#extensions
-#!extension spawnMoreDummyBots
-#!extension playMoreEffects
+enum SettingsText:
+    BanCategory = "Ban (All Levels) ◆ 封禁(应用于所有关卡) ◆ 금지 (모든 레벨에 적용)",
+        BanMultiClimb = "Ban MultiClimb ◆ 封禁蹭留 ◆ 무한 벽타기 금지",
+        BanCreateBhop = "Ban CreateBhop ◆ 封禁卡小 ◆ 콩콩이 생성 금지",
+        BanStandCreate = "Ban StandCreate ◆ 封禁站卡 ◆ 서서 콩콩이 생성 금지",
+        BanDeathBhop = "Ban DeathBhop ◆ 封禁死小 ◆ 죽음 콩콩이 금지",
+        BanEmote = "Ban Emote Savehop ◆ 封禁表情留小 ◆ 감정표현 콩콩이 금지",
+        BanSaveDouble = "Ban Save Double ◆ 封禁留二段跳 ◆ 이단점프 킵 금지",
+        BanWallClimb = "Ban WallClimb ◆ 封禁爬墙 ◆ 벽타기 금지",
+        RequireBhop = "Require Bhop Available ◆ 留小跳进点 ◆ 도착 시 콩콩이 필요",
+        RequireDjump = "Require Djump Available ◆ 留二段跳进点 ◆ 도착 시 이단 점프 필요",
+
+    MapCategory = "Map Settings ◆ 地图设置 ◆ 맵 설정",
+        MapEditor = "Editor Mode ◆ 作图模式 ◆ 수정 모드",
+        MapDifficulty = "Difficulty (Display Hud) ◆ 难度 (顶部hud) ◆ 난이도 (HUD 디스플레이)",
+            MapDifficultyOptions = {
+                Playtest: "<fg27AAFFFF>Playtest ◆ 游戏测试 ◆ 플레이테스트",
+                EasyMinus: "<fgA0E81BFF>Easy-",
+                Easy: "<fgA0E81BFF>Easy",
+                EasyPlus: "<fgA0E81BFF>Easy+",
+                MediumMinus: "<fge0e000FF>Medium-",
+                Medium: "<fge0e000FF>Medium",
+                MediumPlus: "<fge0e000FF>Medium+",
+                HardMinus: "<fgEC9900FF>Hard-",
+                Hard: "<fgEC9900FF>Hard",
+                HardPlus: "<fgEC9900FF>Hard+",
+                VeryHardMinus: "<fgFF4500FF>Very Hard-",
+                VeryHard: "<fgFF4500FF>Very Hard",
+                VeryHardPlus: "<fgFF4500FF>Very Hard+",
+                ExtremeMinus: "<fgC80013FF>Extreme-",
+                Extreme: "<fgC80013FF>Extreme",
+                ExtremePlus: "<fgC80013FF>Extreme+",
+                Hell: "<fg960000FF>Hell",
+                NoDisplay: "Do Not Display ◆ 不显示 ◆ 표시 X"
+            }
+        MapPlaytest = "Playtest Display ◆ 游戏测试 ◆ 플레이테스트 디스플레이",
+        MapValidator = "Basic Map Validator ◆ 验证地图 ◆ 맵 가능 여부 확인기",
+        MapPortals = "Portals (Control Maps) ◆ 启用传送门 (占点地图) ◆ 순간이동 활성화 (쟁탈 맵)",
+    
+    TournamentCategory = "Tournament Mode ◆ 竞赛模式 ◆ 토너먼트 모드",
+        TournamentMode = "Tournament Mode ◆ 开启竞赛模式 ◆ 토너먼트 모드 활성화",
+        TournamentTime = "Time Limit (Global) ◆ 时间限制 ◆ 시간 제한 (전체)",
+        TournamentAttempts = "Attempt Count ◆ 尝试次数 ◆ 시도 수 확인",
+        TournamentRestart = "Disable Restart During Run ◆ 竞赛中禁用重新开始 ◆ 시도 중 재시작 비활성화",
