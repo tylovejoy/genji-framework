@@ -57,7 +57,6 @@ macro overrideLanguage = -1 # Auto=-1 TLErr=0 EN=1 ZH=2 KO=3
 #!include "parkour.opy"
 ################################################################################
 #$$ TODO proper multi-hero support
-#!include "mechanics/all.opy"
 importHero(["GENJI" /*, "HANZO", "HAZARD", "KIRIKO"*/][0])
 ################################################################################
 #!include "editor.opy"

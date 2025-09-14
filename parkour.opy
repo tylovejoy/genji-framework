@@ -265,8 +265,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             if len(CheckpointPositions[eventPlayer.checkpoint_current]) > 1:# teleport cps
                 CheckpointFailReset()
             else:
-                async(CheckUlt(), AsyncBehavior.NOOP)
-                async(CheckAbility1(), AsyncBehavior.NOOP)
+                ResetAbilities()
                 AddonCustomLoadAndReset()
             wait()
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, null, eventPlayer, 100)
@@ -370,17 +369,14 @@ def UpdateCache():
     @Name "Parkour | SUB Update Effect Cache"
     # note: if adding cp pos to cache, make sure to also adjust editor things like move and teleport
     eventPlayer.cache_bouncePosition = [_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    #eventPlayer.cache_bounceStrength = [_ for _, i in BounceStrength if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    #eventPlayer.cache_bounceUlt = [_ for _, i in BounceToggleUlt if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    #eventPlayer.cache_bounceDash = [_ for _, i in BounceToggleDash if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    #eventPlayer.cache_bounceLocks = [_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and _]
-    #eventPlayer.cache_bounceMaxLocks = len([_ for _ in eventPlayer.cache_bounceLocks if _])
     eventPlayer.cache_bounceMaxLocks = len([_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and _])
     eventPlayer.cache_killPosition = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.checkpoint_current]
     eventPlayer.cache_killRadii = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.checkpoint_current]
     eventPlayer.cache_portalStart = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] < 0]
     eventPlayer.cache_portalEnd = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] < 0]
     eventPlayer.checkpoint_notLast = (eventPlayer.checkpoint_current < len(CheckpointPositions) - 1 and len(CheckpointPositions) > 1)
+    eventPlayer.cache_startUlt = eventPlayer.checkpoint_current in BladeEnabledCheckpoints or not eventPlayer.checkpoint_notLast
+    eventPlayer.cache_startAbility1 = eventPlayer.checkpoint_current in DashEnabledCheckpoints or not eventPlayer.checkpoint_notLast
     eventPlayer.toggle_hints = false
     eventPlayer.banString = []
     wait()
@@ -423,8 +419,6 @@ def UpdateCache():
         eventPlayer.ban_bhop = false
         eventPlayer.ban_djump = false
     wait()
-    #async(CheckUlt(), AsyncBehavior.NOOP)
-    #async(CheckAbility1(), AsyncBehavior.NOOP)
     if not EditorOn or eventPlayer != hostPlayer: return
     EditUpdateSelectedIds()
     destroyEffect(hostPlayer.editor_hitboxEffect)
@@ -519,8 +513,7 @@ def CheckpointFailReset():
             eventPlayer.setDamageReceived(0)
             wait()
 
-    async(CheckUlt(), AsyncBehavior.RESTART)
-    async(CheckAbility1(), AsyncBehavior.RESTART)
+    ResetAbilities()
     AddonCustomLoadAndReset()
 
 def StartGame():

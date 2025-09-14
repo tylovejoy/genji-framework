@@ -285,17 +285,13 @@ msgid "» Double Jump Is Ready"
 msgstr "» 이단 점프 활성화"
 
 # TODO: check if all occurrences have the same translation
-#. 2 occurrences:
-#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
-#.  - file GENJI.opy, rule "Subroutine CheckUlt"
+#. file parkour.opy, rule "Parkour | Bounce Ball / Orb"
 #, hasMultipleOccurrencesNotification
 msgid "Ultimate Is Ready"
 msgstr "궁극기 활성화"
 
 # TODO: check if all occurrences have the same translation
-#. 2 occurrences:
-#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
-#.  - file GENJI.opy, rule "Subroutine CheckAbility1"
+#. file parkour.opy, rule "Parkour | Bounce Ball / Orb"
 #, hasMultipleOccurrencesNotification
 msgid "Dash Is Ready"
 msgstr "질풍참 활성화"
