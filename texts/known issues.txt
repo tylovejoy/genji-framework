@@ -105,11 +105,15 @@ triple jump ban doesnt work on workshop maps anymore
 ### Bug Reports
  - Patched <TX and <FG tags in rule names [Fixed]
    * Reported by Blizzard
- - Missing or mixed huds
+ - Missing or mixed huds [Fixed]
    * Reported by `@bioslet`
- - Missing portals and lava due to poor ping
+ - Missing portals and lava due to poor ping [Fixed]
    * Reported by `@dooosaaa`
- - Restart not resetting checkpoint
+ - Restart not resetting checkpoint  [Fixed]
    * Reported by `@zxzpkcxcc` +100xp
- - Not respawning on death
+ - Not respawning on death  [Fixed]
    * Reported by `@zxzpkcxcc` +5xp
+ - Ultimate charge removed during Ultimate
+   * Reported by `@dooosaaa` +5xp
+ - Less than optimizal Korean terminology  [Fixed]
+   * Reported and Fixed by `@h.jun.74` +10xp
