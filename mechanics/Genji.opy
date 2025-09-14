@@ -5,6 +5,7 @@
 #!include "climbers.opy"
 
 def ResetAbilities():
+    @Name "Mechanic | Genji | SUB Reset Abilities"
     if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and EditorOn):
         eventPlayer.setUltEnabled(true)
         eventPlayer.setAbility1Enabled(true)
