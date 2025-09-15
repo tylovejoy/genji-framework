@@ -96,7 +96,7 @@ rule "Editor | Export Map":
         " Esc → Show Lobby → Settings → Workshop Settings →\n"
         " Toggle 'Editor Mode' Off\n"
         " Select Display Difficulty\n\n"
-        
+
         "   4. Create Initial Sharecode:\n"
         " Esc → Show Lobby → Settings → Share Code →\n"
         " Create New Code → Copy Code\n\n"
@@ -625,7 +625,7 @@ rule "Editor | Toggle Fly & Noclip":
                 worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION) + \
                 Vector.UP * (eventPlayer.isHoldingButton(Button.JUMP) - eventPlayer.isHoldingButton(Button.CROUCH))))
         wait()
-    
+
     eventPlayer.allowButton(Button.ULTIMATE)
     eventPlayer.enableEnvironmentCollision()
     eventPlayer.editor_fly = null
@@ -686,7 +686,7 @@ rule "Editor | Create Cp/Orb":
 
             if hostPlayer.checkpoint_current == len(CheckpointPositions) - 1:
                 CheckpointPositions.append(hostPlayer.getPosition())
-                hostPlayer.checkpoint_current++ 
+                hostPlayer.checkpoint_current++
             else:
                 insert(CheckpointPositions, hostPlayer.checkpoint_current + 1, hostPlayer.getPosition())
                 hostPlayer.checkpoint_current++
@@ -1010,7 +1010,7 @@ rule "Editor | Moving Checkpoint":
     @Condition len(CheckpointPositions) > 0
     @Condition hostPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition hostPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false
-    
+
     wait(0.256, Wait.ABORT_WHEN_FALSE)
     if hostPlayer.addon_toggle3rdPov:
         hostPlayer.addon_toggle3rdPov = false
@@ -1124,7 +1124,7 @@ rule "Editor | Move Object":
     hostPlayer.setStatusEffect(null, Status.HACKED, Math.INFINITY)
     hostPlayer.setMoveSpeed(false)
     #hostPlayer.startForcingPosition(hostPlayer.getPosition(), false)
-    
+
     if EditorMode.killBall:
         hostPlayer.editor_undo = KillBallPositions[EditSelected]
         hostPlayer.startCamera(KillBallPositions[EditSelected] + hostPlayer.getFacingDirection() * (abs(KillBallRadii[EditSelected]) * -1.5),
@@ -1155,7 +1155,7 @@ rule "Editor | Move Object":
         while not (hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) or hostPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
             CustomPortalEndpoint[EditSelected] += flyMovementDelta
             wait()
-    /*  
+
     if hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         KillBallPositions[EditSelected] = hostPlayer.editor_undo[0]
     if hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):
@@ -1177,7 +1177,7 @@ rule "Editor | Move Object":
     else:
         CustomPortalStart[EditSelected] = hostPlayer.editor_undo[0]
         CustomPortalEndpoint[EditSelected] = hostPlayer.editor_undo.last()
-    
+
     hostPlayer.editor_undo = null
     #hostPlayer.allowButton(Button.ULTIMATE)
     #hostPlayer.allowButton(Button.JUMP)

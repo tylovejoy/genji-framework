@@ -169,6 +169,9 @@ playervar ban_standcreate                   # bans on second hop
 playervar ban_djump
 playervar ban_savedouble
 
+playervar cache_startUlt
+playervar cache_startAbility1
+#playervar cache_startAbility2
 playervar cache_collectedLocks                     # [int]                    --- amount collected lock this cp
 playervar cache_bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
 playervar cache_portalStart
@@ -209,13 +212,14 @@ playervar addon_enableDoubleChecks
 #subroutine PinBall
 #subroutine PortalCreate
 #subroutine CreateLeaderboard
+#subroutine CheckUlt
+#subroutine CheckAbility1
+#subroutine DashUltGive
 subroutine StartGame
-subroutine LeaderboardUpdate # fishos
+subroutine LeaderboardUpdate
 subroutine CheckpointFailReset
 subroutine UpdateTitle
-subroutine DashUltGive
-subroutine CheckUlt
-subroutine CheckAbility1
+subroutine ResetAbilities
 subroutine UpdateCache
 subroutine DeleteSave
 subroutine MakeSave
@@ -288,7 +292,7 @@ enum HO:
     com_preview,
     com_3rd,
     com_invis,
-    com_quickres,    
+    com_quickres,
     com_restart_n_board,
     com_spec,
     com_invincible,

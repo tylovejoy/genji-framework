@@ -1,10 +1,10 @@
 #!optimizeForSize
 ##!suppressWarnings w_ow2_communicate_bug
-##!suppressWarnings w_tags
+#!suppressWarnings w_tags
 #!suppressWarnings w_lone_else
 #!suppressWarnings w_enum_constant
 ################################################################################
-#!define versionhere "1.10.4C"
+#!define versionhere "1.10.4D"
 #♨ Dev Build Icon
 ################################################################################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
@@ -57,7 +57,6 @@ macro overrideLanguage = -1 # Auto=-1 TLErr=0 EN=1 ZH=2 KO=3
 #!include "parkour.opy"
 ################################################################################
 #$$ TODO proper multi-hero support
-#!include "mechanics/all.opy"
 importHero(["GENJI" /*, "HANZO", "HAZARD", "KIRIKO"*/][0])
 ################################################################################
 #!include "editor.opy"
