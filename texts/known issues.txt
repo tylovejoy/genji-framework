@@ -109,11 +109,11 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@bioslet`
  - Missing portals and lava due to poor ping [Fixed]
    * Reported by `@dooosaaa`
- - Restart not resetting checkpoint  [Fixed]
+ - Restart not resetting checkpoint [Fixed]
    * Reported by `@zxzpkcxcc` +100xp
  - Not respawning on death  [Fixed]
    * Reported by `@zxzpkcxcc` +5xp
- - Ultimate charge removed during Ultimate
+ - Ultimate charge removed during Ultimate [Fixed]
    * Reported by `@dooosaaa` +5xp
- - Less than optimizal Korean terminology  [Fixed]
+ - Less than optimizal Korean terminology [Fixed]
    * Reported and Fixed by `@h.jun.74` +10xp
