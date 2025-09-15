@@ -1155,7 +1155,7 @@ rule "Editor | Move Object":
         while not (hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) or hostPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
             CustomPortalEndpoint[EditSelected] += flyMovementDelta
             wait()
-
+    /*
     if hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         KillBallPositions[EditSelected] = hostPlayer.editor_undo[0]
     if hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):
