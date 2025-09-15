@@ -117,3 +117,5 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@dooosaaa` +5xp
  - Less than optimizal Korean terminology [Fixed]
    * Reported and Fixed by `@h.jun.74` +10xp
+ - Rubber banding double Dash [Fixed]
+   * Reported by `@zxzpkcxcc` +5xp
