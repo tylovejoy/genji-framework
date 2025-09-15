@@ -17,12 +17,13 @@ def ResetAbilities():
 rule "Mechanic | Genji | Dash":
     @Event eachPlayer
     @Condition eventPlayer.isUsingAbility1()
-    waitUntil(not eventPlayer.isUsingAbility1(), true)
-    if distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= cpCircleRadius:
-        #eventPlayer.setAbility1Enabled(true)
-        ResetAbilities()
+    if eventPlayer.toggle_invincible or (EditorOn and eventPlayer == hostPlayer) or not eventPlayer.checkpoint_notLast:
+        eventPlayer.setAbility1Enabled(true)
     else:
         eventPlayer.setAbility1Enabled(false)
+        waitUntil(not eventPlayer.isUsingAbility1(), true)
+        if distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current].last()) <= cpCircleRadius:
+            ResetAbilities()
 
 rule "Mechanic | Genji | Ultimate":
     @Event eachPlayer
