@@ -675,3 +675,9 @@ fixed:
  - Restart will no longer always give instant respawn
    * Reported by `@zxzpkcxcc` +5xp
  - Optimize when to check for allowed abilities
+
+# 1.10.4D
+ - Adjust Korean terminology
+   * Reported and Fixed by `@h.jun.74` +10xp
+ - Fixed ultimate charge removed during Ultimate
+   * Reported by `@dooosaaa` +5xp
