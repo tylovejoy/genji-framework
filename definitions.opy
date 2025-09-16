@@ -3,7 +3,7 @@
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
-# Current Named Unused Variables: 1,2,9,11,17,19,28,29,30,31,36,37,39,48,49,58,59,65,66,72,80,89,90
+# Current Named Unused Variables: 1,2,9,11,17,19,28,29,30,31,36,37,39,43,48,49,58,59,65,66,72,80,89,90
 #!define CheckpointPositions A
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 #1
@@ -64,7 +64,7 @@ globalvar TempIterator1 38                  # int                       --- temp
 globalvar PortalNames 40                    # [str]                     --- display name of portals
 globalvar PortalLoc 41                      # [vect]                    --- portal position
 globalvar PortalDest 42                     # [vect]                    --- portal destination
-globalvar PortalOn 43                       # bool                      --- portals enabled
+#globalvar PortalOn 43                       # bool                      --- portals enabled
 globalvar Difficultyhud 44                  # number                    --- workshop toggle to display difficulty hud
 globalvar CustomPortalStart 45              # [vect]                    --- custom portal start
 globalvar CustomPortalEndpoint 46           # [vect]                    --- custom portal end points

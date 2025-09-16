@@ -34,8 +34,7 @@ rule "Addon | AFK Timer":
 
 rule "Addon | Pre-set control Map Portal - Toggle Via Workshop Settings":
     @Event eachPlayer
-    @Condition PortalOn
-    @Condition len(PortalLoc) != null
+    @Condition PortalLoc != null
     @Condition eventPlayer.toggle_invincible or not eventPlayer.checkpoint_notLast
     @Condition any([distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance for i in PortalLoc])
     eventPlayer.teleport(sorted([i for i in PortalDest], lambda e, i: distance(eventPlayer, PortalLoc[i]))[0])
@@ -48,7 +47,7 @@ rule "Addon | Custom Portals":
     wait(0.512)
 
 rule "Addon | Preset Control Map Portal - Toggle Via Workshop Settings":
-    @Condition PortalOn
+    @Condition createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.MapPortals, true, 4)
     #wait(LoadOrder.portal) # overwrite pasta
     if getCurrentMap() == Map.BUSAN:
         #"down > sanc","down > meka","sanc > down","sanc > meka","meka > sanc","meka > down"

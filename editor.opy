@@ -18,6 +18,7 @@ rule "Editor | Export Map":
     ColorConfig = null
     EditorOn = null
 
+    __overpyTranslationHelper__ = null
     KillBallEffects = null
     TempIterator1 = null
     BounceEffects = null
@@ -26,13 +27,8 @@ rule "Editor | Export Map":
     SaveCp = null
     SaveTimer = null
     SaveEnt = null
-    #SavePauseTime = null
-    #SavePauseEnabled = null
     SaveElapsed = null
     CompMode = null
-    #LeaderBoardFull = null
-    #LeaderBoardHuds = null
-    PortalOn = null
     TitleData = null
     CpHudText = null
     CpHudCp = null
@@ -42,7 +38,6 @@ rule "Editor | Export Map":
     CpIwtCp = null
     CpIwtPos = null
     CpIwtColor = null
-    PortalNames = null
     PortalLoc = null
     PortalDest  = null
     PortalEffects = null
@@ -118,11 +113,9 @@ rule "Editor | Export Map":
     EditorOn = true
     TimeRemaining = hostPlayer.editor_saveCache[0]
     ColorConfig = hostPlayer.editor_saveCache[1]
+    __overpyTranslationHelper__ = "\uec480White0白色0흰색".split(null[0])
 
-    hudHeader(hostPlayer,
-        "    > 按互动键关闭当前窗口 <    "
-        checkCN
-        "    > Press Interact To Close This Window <    ",
+    hudHeader(hostPlayer, "    > 按互动键关闭当前窗口 <    " checkCN "    > Press Interact To Close This Window <    ",
         HudPosition.TOP, HO.edit_clearec3, Color.LIME_GREEN, HudReeval.STRING)
     hostPlayer.editor_saveCache[0] = getLastCreatedText()
 
