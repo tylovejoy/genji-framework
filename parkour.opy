@@ -379,6 +379,10 @@ def UpdateCache():
     eventPlayer.toggle_hints = false
     eventPlayer.banString = []
     wait()
+    if eventPlayer.cache_startUlt:
+        smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
+    if eventPlayer.cache_startAbility1:
+        smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ABILITY_1)} {t'Dash Is Ready'}")
     if eventPlayer.checkpoint_notLast:
         eventPlayer.ban_multi = createWorkshopSettingBool(SettingsText.BanCategory, SettingsText.BanMultiClimb, false, 1) or eventPlayer.checkpoint_current in BanMulti
         if eventPlayer.ban_multi:
