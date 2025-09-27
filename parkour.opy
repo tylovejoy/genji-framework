@@ -477,7 +477,7 @@ def LeaderboardUpdate():
         del LeaderBoardFull[24]
     else:
         return #Full and time too slow
-    LeaderBoardFull.append([[eventPlayer[0].split([]), eventPlayer.timer_normal, "{0} sec".format(eventPlayer.timer_normal)]])
+    LeaderBoardFull.append([[eventPlayer[0].split([]), eventPlayer.timer_normal, "{0} Sec".format(eventPlayer.timer_normal)]])
     LeaderBoardRemake = true #CreateLeaderboard()
 
 def CheckpointFailReset():
