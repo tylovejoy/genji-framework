@@ -610,7 +610,7 @@ rule "Editor | Toggle Fly & Noclip":
 
     while eventPlayer.isAlive() and eventPlayer.editor_fly and not eventPlayer.isHoldingButton(Button.ABILITY_1):
         if eventPlayer != hostPlayer or not eventPlayer.editor_lock:
-            eventPlayer.editor_fly += flyMovementDelta
+            eventPlayer.editor_fly += eventPlayer.flyMovementDelta()
         elif EditorMode.checkpoint:
             #$$ Due to moving checkpoint holding Ability 2
             eventPlayer.editor_fly += ((0.00288 + 0.09312 * eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)) * \
@@ -681,8 +681,8 @@ rule "Editor | Create Cp/Orb":
                 CheckpointPositions.append(hostPlayer.getPosition())
                 hostPlayer.checkpoint_current++
             else:
-                insert(CheckpointPositions, hostPlayer.checkpoint_current + 1, hostPlayer.getPosition())
-                hostPlayer.checkpoint_current++
+                insert(CheckpointPositions, hostPlayer.checkpoint_current + 1, hostPlayer.getPosition()) #$$
+                hostPlayer.checkpoint_current++ #$$
 
                 KillballCheckpoints = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in KillballCheckpoints]
                 BouncePadCheckpoints = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BouncePadCheckpoints]
@@ -830,17 +830,17 @@ rule "Editor | Delete Cp/Orb/Portal":
         hostPlayer.editor_temp = null
 
         # ult/dash/ban remove and lower the cp number of rest
-        removeCpAndShift(BladeEnabledCheckpoints)
-        removeCpAndShift(DashEnabledCheckpoints)
-        removeCpAndShift(BanMulti)
-        removeCpAndShift(BanCreate)
-        removeCpAndShift(BanStand)
-        removeCpAndShift(BanDead)
-        removeCpAndShift(BanEmote)
-        removeCpAndShift(BanClimb)
-        removeCpAndShift(BanSaveDouble)
-        removeCpAndShift(BanBhop)
-        removeCpAndShift(BanDjump)
+        BladeEnabledCheckpoints.removeAndShift(hostPlayer.checkpoint_current)
+        DashEnabledCheckpoints.removeAndShift(hostPlayer.checkpoint_current)
+        BanMulti.removeAndShift(hostPlayer.checkpoint_current)
+        BanCreate.removeAndShift(hostPlayer.checkpoint_current)
+        BanStand.removeAndShift(hostPlayer.checkpoint_current)
+        BanDead.removeAndShift(hostPlayer.checkpoint_current)
+        BanEmote.removeAndShift(hostPlayer.checkpoint_current)
+        BanClimb.removeAndShift(hostPlayer.checkpoint_current)
+        BanSaveDouble.removeAndShift(hostPlayer.checkpoint_current)
+        BanBhop.removeAndShift(hostPlayer.checkpoint_current)
+        BanDjump.removeAndShift(hostPlayer.checkpoint_current)
 
         # Remove specified checkpoint =====================
         del CheckpointPositions[hostPlayer.checkpoint_current]
@@ -1040,9 +1040,9 @@ rule "Editor | Toggle Ult/Dash":
     @Condition hostPlayer.isHoldingButton(Button.ULTIMATE)
 
     if hostPlayer.isHoldingButton(Button.PRIMARY_FIRE):
-        toggleCpInArray(BladeEnabledCheckpoints)
+        BladeEnabledCheckpoints.toggleItem(hostPlayer.checkpoint_current)
     else:
-        toggleCpInArray(DashEnabledCheckpoints)
+        DashEnabledCheckpoints.toggleItem(hostPlayer.checkpoint_current)
     wait()
 
 rule "Editor | Toggle Bans":
@@ -1058,24 +1058,24 @@ rule "Editor | Toggle Bans":
     hostPlayer.editor_lock = true
     if hostPlayer.isHoldingButton(Button.INTERACT):
         if hostPlayer.isHoldingButton(Button.PRIMARY_FIRE):
-            toggleCpInArray(BanMulti)
+            BanMulti.toggleItem(hostPlayer.checkpoint_current)
         elif hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-            toggleCpInArray(BanCreate)
+            BanCreate.toggleItem(hostPlayer.checkpoint_current)
         elif hostPlayer.isHoldingButton(Button.CROUCH):
-            toggleCpInArray(BanClimb)
+            BanClimb.toggleItem(hostPlayer.checkpoint_current)
         else:
-            toggleCpInArray(BanSaveDouble)
+            BanSaveDouble.toggleItem(hostPlayer.checkpoint_current)
 
     else:
         if hostPlayer.isHoldingButton(Button.PRIMARY_FIRE):
-            toggleCpInArray(BanDead)
-            #toggleCpInArray(BanSaveDouble)
+            BanDead.toggleItem(hostPlayer.checkpoint_current)
+            #BanSaveDouble.toggleItem(hostPlayer.checkpoint_current)
         elif hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-            toggleCpInArray(BanEmote)
+            BanEmote.toggleItem(hostPlayer.checkpoint_current)
         elif hostPlayer.isHoldingButton(Button.CROUCH):
-            toggleCpInArray(BanStand)
+            BanStand.toggleItem(hostPlayer.checkpoint_current)
         else:
-            toggleCpInArray(BanBhop)
+            BanBhop.toggleItem(hostPlayer.checkpoint_current)
     # BanStand
     wait(0.256)
     UpdateCache()
@@ -1123,14 +1123,14 @@ rule "Editor | Move Object":
         hostPlayer.startCamera(KillBallPositions[EditSelected] + hostPlayer.getFacingDirection() * (abs(KillBallRadii[EditSelected]) * -1.5),
             KillBallPositions[EditSelected], 30)
         while not (hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) or hostPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
-            KillBallPositions[EditSelected] += flyMovementDelta
+            KillBallPositions[EditSelected] += hostPlayer.flyMovementDelta()
             wait()
     elif EditorMode.functionOrb:
         hostPlayer.editor_undo = BouncePositions[EditSelected]
         hostPlayer.startCamera(BouncePositions[EditSelected] + hostPlayer.getFacingDirection() * -4,
             BouncePositions[EditSelected], 30)
         while not (hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) or hostPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
-            BouncePositions[EditSelected] += flyMovementDelta
+            BouncePositions[EditSelected] += hostPlayer.flyMovementDelta()
             wait()
     elif EditorMode.portal:
         hostPlayer.editor_undo = [CustomPortalStart[EditSelected], CustomPortalEndpoint[EditSelected]]
@@ -1138,7 +1138,7 @@ rule "Editor | Move Object":
         hostPlayer.startCamera(CustomPortalStart[EditSelected] + hostPlayer.getFacingDirection() * -4,
             CustomPortalStart[EditSelected], 30)
         while not (hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) or hostPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
-            CustomPortalStart[EditSelected] += flyMovementDelta
+            CustomPortalStart[EditSelected] += hostPlayer.flyMovementDelta()
             wait()
 
         # move destination
@@ -1146,7 +1146,7 @@ rule "Editor | Move Object":
             CustomPortalEndpoint[EditSelected], 30)
         waitUntil(not hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) or hostPlayer.isHoldingButton(Button.SECONDARY_FIRE), true)
         while not (hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) or hostPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
-            CustomPortalEndpoint[EditSelected] += flyMovementDelta
+            CustomPortalEndpoint[EditSelected] += hostPlayer.flyMovementDelta()
             wait()
     /*
     if hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):

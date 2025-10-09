@@ -358,32 +358,31 @@ enum LoadOrder:
 
 ######################################## Macro Tools ##########################
 macro localSpectator(condition):
+    # Testing, currently unused
     true if (condition) else (localPlayer.toggle_spectate or localPlayer.getSlot() < null)
-
-macro filtered(array, condition):
-    [current_element for current_element, current_index in (array) if (condition)]
-macro mapped(array, mapping):
-    [(mapping) for current_element, current_index in (array)]
-
-##!define RestartTimer(timeInMinutes) "{0} Hours and {1} Minutes".format(floor(timeInMinutes / 60 / 60), "{0}{1}".format(floor(timeInMinutes % 60 / 10), floor(timeInMinutes % 60 - floor(timeInMinutes % 60 / 10) * 10)))
-##!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format([] if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
-##!define prettyTime(timeInSeconds) "{0} {1}".format(timeInSeconds,"秒"  checkCN "sec")
-macro prettyTime(timeInSeconds):
-    "{0} sec".format(timeInSeconds)
 
 macro insert(insert_array, insert_index, insert_value):
     insert_array.append(insert_value)
-    insert_array = [e if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for e, i in insert_array]
+    insert_array = [CAE if CAI < insert_index else insert_array.last() if CAI == insert_index else insert_array[CAI - 1] for CAE, CAI in insert_array]
 
-macro toggleCpInArray(baninput):
-    if hostPlayer.checkpoint_current in baninput:
-        baninput.remove(hostPlayer.checkpoint_current)
+macro Array.insertAt(item, index):
+    self.append(item)
+    self = [CAE if CAI < index else self.last() if CAI == index else self[CAI - 1] for CAE, CAI in self]
+
+macro Array.shiftAt(index):
+    self = [CAE + (CAE >= index) for CAE, CAI in self]
+
+macro Array.removeAndShift(item):
+    self = [CAE - (CAE > item) for CAE, CAI in self.exclude(item)]
+
+macro Array.addUnique(item):
+    self = self.exclude(item).concat(item)
+
+macro Array.toggleItem(item):
+    if item in self:
+        self.remove(item)
     else:
-        baninput.append(hostPlayer.checkpoint_current)
-
-macro removeCpAndShift(arrayname):
-    arrayname.remove(hostPlayer.checkpoint_current)
-    arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in arrayname]
+        self.append(item)  
 
 #!define LeftAlign96 "                                                                                                "
 #!define LeftAlign128 "                                                                                                                                "
@@ -392,7 +391,8 @@ macro removeCpAndShift(arrayname):
 
 macro INVIS = Invis.ENEMIES if COMPILE_FOR_CHINESE else Invis.NONE
 
-macro flyMovementDelta = ((0.096 + 0.192 * eventPlayer.isHoldingButton(Button.JUMP) - 0.048 * eventPlayer.isHoldingButton(Button.CROUCH)) *
-    (eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z * (vect(1, not eventPlayer.isHoldingButton(Button.ABILITY_1), 1))+
-    worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION) +
-    Vector.UP * (eventPlayer.isHoldingButton(Button.ABILITY_2) - eventPlayer.isHoldingButton(Button.ULTIMATE))))
+macro Player.flyMovementDelta():
+    ((0.096 + 0.192 * self.isHoldingButton(Button.JUMP) - 0.048 * self.isHoldingButton(Button.CROUCH)) *
+    (self.getFacingDirection() * self.getThrottle().z * (vect(1, not self.isHoldingButton(Button.ABILITY_1), 1)) +
+    worldVector(self.getThrottle() * Vector.LEFT, self, Transform.ROTATION) +
+    Vector.UP * (self.isHoldingButton(Button.ABILITY_2) - self.isHoldingButton(Button.ULTIMATE))))
