@@ -681,24 +681,24 @@ rule "Editor | Create Cp/Orb":
                 CheckpointPositions.append(hostPlayer.getPosition())
                 hostPlayer.checkpoint_current++
             else:
-                insert(CheckpointPositions, hostPlayer.checkpoint_current + 1, hostPlayer.getPosition()) #$$
-                hostPlayer.checkpoint_current++ #$$
+                hostPlayer.checkpoint_current++
+                CheckpointPositions.insertAt(hostPlayer.checkpoint_current, hostPlayer.getPosition())
 
-                KillballCheckpoints = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in KillballCheckpoints]
-                BouncePadCheckpoints = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BouncePadCheckpoints]
-                CustomPortalCP = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in CustomPortalCP]
-                BladeEnabledCheckpoints = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BladeEnabledCheckpoints]
-                DashEnabledCheckpoints = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in DashEnabledCheckpoints]
+                KillballCheckpoints.shiftAt(hostPlayer.checkpoint_current)
+                BouncePadCheckpoints.shiftAt(hostPlayer.checkpoint_current)
+                CustomPortalCP.shiftAt(hostPlayer.checkpoint_current)
+                BladeEnabledCheckpoints.shiftAt(hostPlayer.checkpoint_current)
+                DashEnabledCheckpoints.shiftAt(hostPlayer.checkpoint_current)
 
-                BanMulti = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanMulti]
-                BanCreate = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanCreate]
-                BanStand = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanStand]
-                BanDead = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanDead]
-                BanEmote = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanEmote]
-                BanClimb = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanClimb]
-                BanSaveDouble = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanSaveDouble]
-                BanBhop = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanBhop]
-                BanDjump = [x + (1 if x >= hostPlayer.checkpoint_current else 0) for x in BanDjump]
+                BanMulti.shiftAt(hostPlayer.checkpoint_current)
+                BanCreate.shiftAt(hostPlayer.checkpoint_current)
+                BanStand.shiftAt(hostPlayer.checkpoint_current)
+                BanDead.shiftAt(hostPlayer.checkpoint_current)
+                BanEmote.shiftAt(hostPlayer.checkpoint_current)
+                BanClimb.shiftAt(hostPlayer.checkpoint_current)
+                BanSaveDouble.shiftAt(hostPlayer.checkpoint_current)
+                BanBhop.shiftAt(hostPlayer.checkpoint_current)
+                BanDjump.shiftAt(hostPlayer.checkpoint_current)
             UpdateCache()
             CheckpointFailReset()
             smallMessage(hostPlayer, "   新检查点已创建" checkCN "   New Checkpoint Created")
