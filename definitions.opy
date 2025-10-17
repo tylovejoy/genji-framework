@@ -357,23 +357,23 @@ enum LoadOrder:
     effects     = 0.016 * 128,
 
 ######################################## Macro Tools ##########################
-macro localSpectator(condition):
-    # Testing, currently unused
-    true if (condition) else (localPlayer.toggle_spectate or localPlayer.getSlot() < null)
+#!define LeftAlign96 "                                                                                                "
+#!define LeftAlign128 "                                                                                                                                "
+#!define checkCN if l"Oof" == "噢" else
 
-macro insert(insert_array, insert_index, insert_value):
-    insert_array.append(insert_value)
-    insert_array = [CAE if CAI < insert_index else insert_array.last() if CAI == insert_index else insert_array[CAI - 1] for CAE, CAI in insert_array]
+macro INVIS = Invis.ENEMIES if COMPILE_FOR_CHINESE else Invis.NONE
 
-macro Array.insertAt(item, index):
-    self.append(item)
-    self = [CAE if CAI < index else self.last() if CAI == index else self[CAI - 1] for CAE, CAI in self]
+macro Array.insertAt(index, item):
+    self.append(null)
+    self = [CAE if CAI <= index else self[CAI - 1] for CAE, CAI in self]
+    self[index] = item
 
 macro Array.shiftAt(index):
     self = [CAE + (CAE >= index) for CAE, CAI in self]
 
-macro Array.removeAndShift(item):
-    self = [CAE - (CAE > item) for CAE, CAI in self.exclude(item)]
+macro Array.removeAndShift(index):
+    self.remove(index)
+    self = [CAE - (CAE > index) for CAE, CAI in self]
 
 macro Array.addUnique(item):
     self = self.exclude(item).concat(item)
@@ -384,15 +384,11 @@ macro Array.toggleItem(item):
     else:
         self.append(item)  
 
-#!define LeftAlign96 "                                                                                                "
-#!define LeftAlign128 "                                                                                                                                "
-
-#!define checkCN if l"Oof" == "噢" else
-
-macro INVIS = Invis.ENEMIES if COMPILE_FOR_CHINESE else Invis.NONE
-
 macro Player.flyMovementDelta():
     ((0.096 + 0.192 * self.isHoldingButton(Button.JUMP) - 0.048 * self.isHoldingButton(Button.CROUCH)) *
     (self.getFacingDirection() * self.getThrottle().z * (vect(1, not self.isHoldingButton(Button.ABILITY_1), 1)) +
     worldVector(self.getThrottle() * Vector.LEFT, self, Transform.ROTATION) +
     Vector.UP * (self.isHoldingButton(Button.ABILITY_2) - self.isHoldingButton(Button.ULTIMATE))))
+
+macro Player.spectateIf(condition): # Testing, currently unused
+    true if (condition) else (self.toggle_spectate or self.getSlot() < null)
