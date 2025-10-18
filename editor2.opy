@@ -39,31 +39,25 @@ rule "Editor | Menu - Selected Menu or Action":
 
 MenuCreate(menu = {
     text: `t"Main Menu
- 1. Playtest
- 2. Checkpoints
+ 1. Checkpoints
+ 2. Abilities
  3. Ban Skills
- 4. Collectable Orbs
+ 4. Collectibles
  5. Lava Spheres
  6. Portals
  7. Targets
  8. Group Up
  9. Safe Zones
  10. Dummies
- 11. Lorem Ipsum
- 12. Save"`,
+ 11. Save"`,
     pages: [
-        {
-            code: `smallMessage(true[0], "  Playtest")`
-        },
         {
             text: `t"Checkpoints
  1. Create New
  2. Delete Selected
  3. Toggle Teleport
- 4. Toggle Ultimate
- 5. Toggle Dash
- 6. Toggle Visual Hitbox
- 7. Set Facing Angle"`,
+ 4. Toggle Visual Hitbox
+ 5. Set Facing Angle"`,
             code: `smallMessage(true[0], "  Checkpoint Menu Opened!")`,
             pages: [
                 {
@@ -73,45 +67,112 @@ MenuCreate(menu = {
                     code: `smallMessage(true[0], "  Checkpoint Deleted!")`
                 },
                 0,
-                {
-                    text: `t"Toggle Ultimate\n 1. Hello ON\n 2. World OFF" if debug_ult_on else t"Toggle Ultimate\n 1. Hello OFF\n 2. World ON"`,
-                    update: true,
-                    pages: [
-                        {
-                            code: `smallMessage(true[0], "  Ultimate On!")
-    debug_ult_on = true`
-                        },
-                        {
-                            code: `smallMessage(true[0], "  Ultimate Off!")
-    debug_ult_on = false`
-                        }
-                    ]
-                },
-                0,
                 0,
                 0
             ]
         },
         {
-            text: `t"Ban Skills
- 1. Emote ♥
- 2. Dead X
- 3. Multi-Climb ∞
- 4. Create ♂
- 5. Climb ↑
- 6. Save Double △
- - - - - - - - - - - - -
- 7. Have A Hop ≥
- 8. Have A Double Jump »"`,
+            text: `t"Abilities
+ 1. Ultimate
+ 2. Ability 1
+ #. Ability 2
+ #. Primary Fire
+ #. Secondary Fire
+ #. Crouch
+ #. Jump"`,
             pages: [
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0
+                {
+                    text: `ft"Ultimate: {hostPlayer.checkpoint_current in BladeEnabledCheckpoints}\n1. Switch"`,
+                    update: true,
+                    pages: [{
+                        code: `BladeEnabledCheckpoints.toggleItem(hostPlayer.checkpoint_current)`
+                    }]
+                },
+                {
+                    text: `ft"Ability 1: {hostPlayer.checkpoint_current in DashEnabledCheckpoints}\n1. Switch"`,
+                    update: true,
+                    pages: [{
+                        code: `DashEnabledCheckpoints.toggleItem(hostPlayer.checkpoint_current)`
+                    }]
+                }
+            ]
+        },
+        {
+            text: `t"Ban Skills
+ 1. Multi-Climb ∞ 
+ 2. Create ♂
+ 3. Stand Create ♠
+ 4. Dead Hop X
+ 5. Emote ♥
+ 6. Save Double △
+ 7. Climb ↑
+ - - - - - - - - - - - -
+ 8. Require Bhop ≥
+ 9. Require Double Jump »"`,
+            pages: [
+                {
+                    text: `ft"Multi-Climb ∞: {hostPlayer.checkpoint_current in BanMulti}\n1. Switch"`,
+                    update: true,
+                    pages: [{
+                        code: `BanMulti.toggleItem(hostPlayer.checkpoint_current)`
+                    }]
+                },
+                {
+                    text: `ft"Create ♂: {hostPlayer.checkpoint_current in BanCreate}\n1. Switch"`,
+                    update: true,
+                    pages: [{
+                        code: `BanCreate.toggleItem(hostPlayer.checkpoint_current)`
+                    }]
+                },
+                {
+                    text: `ft"Stand Create ♠: {hostPlayer.checkpoint_current in BanStand}\n1. Switch"`,
+                    update: true,
+                    pages: [{
+                        code: `BanStand.toggleItem(hostPlayer.checkpoint_current)`
+                    }]
+                },
+                {
+                    text: `ft"Dead Hop X: {hostPlayer.checkpoint_current in BanDead}\n1. Switch"`,
+                    update: true,
+                    pages: [{
+                        code: `BanDead.toggleItem(hostPlayer.checkpoint_current)`
+                    }]
+                },
+                {
+                    text: `ft"Emote ♥: {hostPlayer.checkpoint_current in BanEmote}\n1. Switch"`,
+                    update: true,
+                    pages: [{
+                        code: `BanEmote.toggleItem(hostPlayer.checkpoint_current)`
+                    }]
+                },
+                {
+                    text: `ft"Save Double △: {hostPlayer.checkpoint_current in BanSaveDouble}\n1. Switch"`,
+                    update: true,
+                    pages: [{
+                        code: `BanSaveDouble.toggleItem(hostPlayer.checkpoint_current)`
+                    }]
+                },
+                {
+                    text: `ft"Climb ↑: {hostPlayer.checkpoint_current in BanClimb}\n1. Switch"`,
+                    update: true,
+                    pages: [{
+                        code: `BanClimb.toggleItem(hostPlayer.checkpoint_current)`
+                    }]
+                },
+                {
+                    text: `ft"Require Bhop ≥: {hostPlayer.checkpoint_current in BanBhop}\n1. Switch"`,
+                    update: true,
+                    pages: [{
+                        code: `BanBhop.toggleItem(hostPlayer.checkpoint_current)`
+                    }]
+                },
+                {
+                    text: `ft"Require Double Jump »: {hostPlayer.checkpoint_current in BanDjump}\n1. Switch"`,
+                    update: true,
+                    pages: [{
+                        code: `BanDjump.toggleItem(hostPlayer.checkpoint_current)`
+                    }]
+                }
             ]
         },
         {
@@ -146,11 +207,6 @@ MenuCreate(menu = {
         },
         {
             text: `t"Dummies
- 1. "`,
-            pages: [0]
-        },
-        {
-            text: `t"Lorem Ipsum
  1. "`,
             pages: [0]
         }
