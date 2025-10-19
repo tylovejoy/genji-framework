@@ -357,7 +357,7 @@ enum LoadOrder:
     effects     = 0.016 * 128,
 
 ######################################## Macro Tools ##########################
-#!define LeftAlign96 "                                                                                                "
+#!define LeftAlign100 "                                                                                                    "
 #!define LeftAlign128 "                                                                                                                                "
 #!define checkCN if l"Oof" == "噢" else
 

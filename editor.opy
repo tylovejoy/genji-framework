@@ -335,9 +335,9 @@ rule "Editor | Hud & Effects":
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
         hudSubheader(hostPlayer if hostPlayer.toggle_guide else null,
-            "保存地图长按 {0} + {1} + {2} 后按弹出窗口的提示进行操作" LeftAlign96.format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD))
+            "保存地图长按 {0} + {1} + {2} 后按弹出窗口的提示进行操作" LeftAlign100.format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD))
             checkCN
-            "To Save Map, Hold {0} + {1} + {2} Then Follow Instructions" LeftAlign96.format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
+            "To Save Map, Hold {0} + {1} + {2} Then Follow Instructions" LeftAlign100.format(buttonString(Button.INTERACT), buttonString(Button.MELEE), buttonString(Button.RELOAD)),
             HudPosition.LEFT, HO.edit_savemap, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
         hudText(localPlayer if not localPlayer.editor_saveCache else null,
@@ -394,7 +394,7 @@ rule "Editor | Hud & Effects":
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
         hudSubtext(hostPlayer if hostPlayer.toggle_guide and (EditorMode.checkpoint or EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex)) else null, #if EditorMode.checkpoint or EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
-            "{0} + {1} | {4} {3} | {2}" LeftAlign96.format(
+            "{0} + {1} | {4} {3} | {2}" LeftAlign100.format(
                 buttonString(Button.ULTIMATE),
                 buttonString(Button.PRIMARY_FIRE),
                 (BounceToggleUlt[EditSelected]) if EditorMode.functionOrb else
@@ -403,7 +403,7 @@ rule "Editor | Hud & Effects":
                 "检查点给刀"  if EditorMode.checkpoint else "弹球给刀"
             )
             checkCN
-            "{0} + {1} | {4} Give Ult {3} | {2}" LeftAlign96.format(
+            "{0} + {1} | {4} Give Ult {3} | {2}" LeftAlign100.format(
                 buttonString(Button.ULTIMATE),
                 buttonString(Button.PRIMARY_FIRE),
                 (BounceToggleUlt[EditSelected]) if EditorMode.functionOrb else
@@ -416,7 +416,7 @@ rule "Editor | Hud & Effects":
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
         hudSubtext(hostPlayer if hostPlayer.toggle_guide and (EditorMode.checkpoint or EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex)) else null, #if EditorMode.checkpoint or EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
-            "{0} + {1} | {4} {3} | {2}" LeftAlign96.format(
+            "{0} + {1} | {4} {3} | {2}" LeftAlign100.format(
                 buttonString(Button.ULTIMATE),
                 buttonString(Button.SECONDARY_FIRE),
                 BounceToggleDash[EditSelected] if EditorMode.functionOrb else
@@ -424,7 +424,7 @@ rule "Editor | Hud & Effects":
                 abilityIconString(Hero.GENJI, Button.ABILITY_1),
             "检查点给Shift" if EditorMode.checkpoint else "弹球给Shift")
             checkCN
-            "{0} + {1} | {4} Give Dash {3} | {2}" LeftAlign96.format(
+            "{0} + {1} | {4} Give Dash {3} | {2}" LeftAlign100.format(
                 buttonString(Button.ULTIMATE),
                 buttonString(Button.SECONDARY_FIRE),
                 BounceToggleDash[EditSelected] if EditorMode.functionOrb else
@@ -437,13 +437,13 @@ rule "Editor | Hud & Effects":
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
         hudSubtext(hostPlayer if EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
-            "{0} + {1} |  收集球(进点前必须集齐) {3} | {2}\n" LeftAlign96.format(
+            "{0} + {1} |  收集球(进点前必须集齐) {3} | {2}\n" LeftAlign100.format(
                 buttonString(Button.ULTIMATE),
                 buttonString(Button.ABILITY_2),
                 BounceToggleLock[EditSelected],
                 iconString(Icon.ASTERISK))
             checkCN
-            "{0} + {1} | Unlocks Checkpoint {3} | {2}\n" LeftAlign96.format(
+            "{0} + {1} | Unlocks Checkpoint {3} | {2}\n" LeftAlign100.format(
                 buttonString(Button.ULTIMATE),
                 buttonString(Button.ABILITY_2),
                 BounceToggleLock[EditSelected],
@@ -678,8 +678,8 @@ rule "Editor | Create Cp/Orb":
                 hostPlayer.checkpoint_current = len(CheckpointPositions) - 1
 
             if hostPlayer.checkpoint_current == len(CheckpointPositions) - 1:
-                CheckpointPositions.append(hostPlayer.getPosition())
                 hostPlayer.checkpoint_current++
+                CheckpointPositions.append(hostPlayer.getPosition())
             else:
                 hostPlayer.checkpoint_current++
                 CheckpointPositions.insertAt(hostPlayer.checkpoint_current, hostPlayer.getPosition())
