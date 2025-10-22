@@ -540,3 +540,5 @@ def StartGame():
         CheckpointFailReset()
         waitUntil(isGameInProgress(), Math.INFINITY) # FFA
         TimerResume()
+    else:
+        eventPlayer.checkpoint_current = -1
