@@ -36,10 +36,15 @@ macro Player.MenuPrev():
 macro Player.MenuSelect():
     # Activate selected menu option
     __MenuAction__()
-    if __MenuPointer__[self.__MenuCurrent__][self.__MenuSelection__]:
+    if self.__MenuSelection__ < null:
+        self.__MenuSelection__ *= -1
+    elif  __MenuPointer__[self.__MenuCurrent__][self.__MenuSelection__]:
         self.__MenuCurrent__ = __MenuPointer__[self.__MenuCurrent__][self.__MenuSelection__]
         self.__MenuSelection__ = 1
     __MenuText__()
+################################################################################
+macro Player.MenuInvalidateSelect():
+    self.__MenuSelection__ *= -1
 ################################################################################
 macro Player.MenuText_Translated(backMsg = " ▶ 0. Back"):
     # Display Menu
