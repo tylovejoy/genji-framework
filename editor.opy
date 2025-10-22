@@ -673,15 +673,10 @@ rule "Editor | Create Cp/Orb":
         if len(CheckpointPositions) and distance(hostPlayer, CheckpointPositions[hostPlayer.checkpoint_current]) <= cpCircleRadius:
             smallMessage(hostPlayer, "   放置的检查点距离太近" checkCN "   Cannot Place Checkpoint Too Close.")
         else:
-            #$$
-            if hostPlayer.checkpoint_current >= len(CheckpointPositions) - 1:
-                hostPlayer.checkpoint_current = len(CheckpointPositions) - 1
-
-            if hostPlayer.checkpoint_current == len(CheckpointPositions) - 1:
-                hostPlayer.checkpoint_current++
+            hostPlayer.checkpoint_current++
+            if hostPlayer.checkpoint_current == len(CheckpointPositions):
                 CheckpointPositions.append(hostPlayer.getPosition())
             else:
-                hostPlayer.checkpoint_current++
                 CheckpointPositions.insertAt(hostPlayer.checkpoint_current, hostPlayer.getPosition())
 
                 KillballCheckpoints.shiftAt(hostPlayer.checkpoint_current)
@@ -844,8 +839,7 @@ rule "Editor | Delete Cp/Orb/Portal":
 
         # Remove specified checkpoint =====================
         del CheckpointPositions[hostPlayer.checkpoint_current]
-        hostPlayer.checkpoint_current = max(hostPlayer.checkpoint_current - 1, 0)
-
+        hostPlayer.checkpoint_current = max(hostPlayer.checkpoint_current - 1, 0 - not len(CheckpointPositions))
         RebuildKillOrbs()
         RebuildBounceOrbs()
         RebuildPortals()
@@ -967,7 +961,7 @@ rule "Editor | Cp Add/Remove Teleport":
     @Condition EditorOn
     @Condition EditorMode.current == 0
     @Condition hostPlayer.editor_lock == false
-    @Condition len(CheckpointPositions) > 1
+    @Condition len(CheckpointPositions)
     @Condition hostPlayer.isHoldingButton(Button.INTERACT)
     @Condition hostPlayer.isHoldingButton(Button.RELOAD)
     @Condition hostPlayer.isHoldingButton(Button.MELEE) == false
@@ -980,17 +974,12 @@ rule "Editor | Cp Add/Remove Teleport":
     if not hostPlayer.checkpoint_current:
         smallMessage(hostPlayer,"   不能在第一个检查点设置传送门" checkCN "   Cannot Place A Teleport On First Checkpoint")
         hostPlayer.editor_lock = false
-        return
-
-    if len(CheckpointPositions[hostPlayer.checkpoint_current]) > 1: # remove
+    elif len(CheckpointPositions[hostPlayer.checkpoint_current]) >= 2:
         CheckpointPositions[hostPlayer.checkpoint_current] = CheckpointPositions[hostPlayer.checkpoint_current][0]
         smallMessage(hostPlayer,"   关卡{0}的传送点已移除".format(hostPlayer.checkpoint_current) checkCN "   Teleport For Level {0} Has Been Removed".format(hostPlayer.checkpoint_current))
     else: # add
-        CheckpointPositions[hostPlayer.checkpoint_current] = [
-            CheckpointPositions[hostPlayer.checkpoint_current][0] if len(CheckpointPositions[hostPlayer.checkpoint_current]) else CheckpointPositions[hostPlayer.checkpoint_current],
-            hostPlayer.getPosition()]
+        CheckpointPositions[hostPlayer.checkpoint_current] = [CheckpointPositions[hostPlayer.checkpoint_current], hostPlayer.getPosition()]
         smallMessage(hostPlayer, "{1} {0}".format(hostPlayer.checkpoint_current,"   传送点已添加到当前关卡" checkCN "   Teleport Has Been Added For Level"))
-
     hostPlayer.editor_lock = false
     wait()
 
