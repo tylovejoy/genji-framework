@@ -973,13 +973,12 @@ rule "Editor | Cp Add/Remove Teleport":
     hostPlayer.editor_lock = true
     if not hostPlayer.checkpoint_current:
         smallMessage(hostPlayer,"   不能在第一个检查点设置传送门" checkCN "   Cannot Place A Teleport On First Checkpoint")
-        hostPlayer.editor_lock = false
     elif len(CheckpointPositions[hostPlayer.checkpoint_current]) >= 2:
         CheckpointPositions[hostPlayer.checkpoint_current] = CheckpointPositions[hostPlayer.checkpoint_current][0]
         smallMessage(hostPlayer,"   关卡{0}的传送点已移除".format(hostPlayer.checkpoint_current) checkCN "   Teleport For Level {0} Has Been Removed".format(hostPlayer.checkpoint_current))
     else: # add
         CheckpointPositions[hostPlayer.checkpoint_current] = [CheckpointPositions[hostPlayer.checkpoint_current], hostPlayer.getPosition()]
-        smallMessage(hostPlayer, "{1} {0}".format(hostPlayer.checkpoint_current,"   传送点已添加到当前关卡" checkCN "   Teleport Has Been Added For Level"))
+        smallMessage(hostPlayer, "{0} {1}".format("   传送点已添加到当前关卡" checkCN "   Teleport Has Been Added For Level", hostPlayer.checkpoint_current))
     hostPlayer.editor_lock = false
     wait()
 
