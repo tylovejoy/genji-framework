@@ -376,7 +376,9 @@ macro Array.removeAndShift(index):
     self = [CAE - (CAE > index) for CAE, CAI in self]
 
 macro Array.addUnique(item):
-    self = self.exclude(item).concat(item)
+    # self = self.exclude(item).concat(item)
+    self.remove(item) 
+    self.append(item)
 
 macro Array.toggleItem(item):
     if item in self:
