@@ -13,7 +13,7 @@ rule "Editor | Menu - HUD":
     hudText(hostPlayer if hostPlayer.MenuIsVisible() else false,
         hostPlayer.MenuText_Translated(backMsg = t" ▶ 0. Back"),
         hostPlayer.MenuPreview_Translated(),
-        null,
+        LeftAlign128,
         HudPosition.LEFT, null, Color.WHITE, Color.WHITE, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     #!enableOptimizations
 
@@ -31,6 +31,8 @@ rule "Editor | Menu - Move Selection":
         hostPlayer.MenuPrev()
 
 rule "Editor | Menu - Selected Menu or Action":
+    @Event eachPlayer
+    @Condition hostPlayer == eventPlayer #Required for UpdateCache
     @Condition hostPlayer.MenuIsVisible()
     @Condition hostPlayer.isHoldingButton(Button.JUMP) != hostPlayer.isHoldingButton(Button.CROUCH)
     if hostPlayer.isHoldingButton(Button.CROUCH):
@@ -39,36 +41,105 @@ rule "Editor | Menu - Selected Menu or Action":
 
 MenuCreate(menu = {
     text: `t"Main Menu
- 1. Checkpoints
- 2. Abilities
- 3. Ban Skills
- 4. Collectibles
- 5. Lava Spheres
- 6. Portals
- 7. Targets
- 8. Group Up
- 9. Safe Zones
- 10. Dummies
- 11. Save"`,
+ 1. Editor Movement
+ 2. Checkpoints
+ 3. Abilities
+ 4. Ban Skills
+ 5. Collectibles
+ 6. Lava Spheres
+ 7. Portals
+ 8. Targets
+ 9. Group Up
+ 10. Safe Zones
+ 11. Dummies
+ 12. Save"`,
     pages: [
+        {
+            text: `t"Editor Movement
+ 1. Fly
+ 2. Walk
+ 3. Collision Off
+ 4. Collision On
+ 5. Move Slow 3%
+ 6. Move Normal 100%
+ 7. Move Fast 300%"`,
+            pages: [
+                { code: `eventPlayer.startForcingPosition(eventPlayer.getPosition() + eventPlayer.flyMovementDelta(), true)` },
+                { code: `eventPlayer.stopForcingPosition()` },
+                { code: `eventPlayer.disableEnvironmentCollision(false)` },
+                { code: `eventPlayer.enableEnvironmentCollision()` },
+                { code: `eventPlayer.setMoveSpeed(3)` },
+                { code: `eventPlayer.setMoveSpeed(100)` },
+                { code: `eventPlayer.setMoveSpeed(300)` }
+            ]
+        },
         {
             text: `t"Checkpoints
  1. Create New
  2. Delete Selected
  3. Toggle Teleport
  4. Toggle Visual Hitbox
- 5. Set Facing Angle"`,
-            code: `smallMessage(true[0], "  Checkpoint Menu Opened!")`,
+ #. Set Facing Angle"`,
+            /*code: `smallMessage(true[0], "  Checkpoint Menu Opened!")`,*/
             pages: [
                 {
-                    code: `smallMessage(true[0], "  Checkpoint Created!")`
+                    code: `
+    if len(CheckpointPositions) and distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current]) <= cpCircleRadius:
+        smallMessage(eventPlayer, "   Cannot Place Checkpoint Too Close.") #"   放置的检查点距离太近"
+    else:
+        CheckpointPositions.insertAt(eventPlayer.checkpoint_current, eventPlayer.getPosition())
+        eventPlayer.checkpoint_current++
+
+        BladeEnabledCheckpoints.shiftAt(hostPlayer.checkpoint_current)
+        DashEnabledCheckpoints.shiftAt(hostPlayer.checkpoint_current)
+
+        BanMulti.shiftAt(eventPlayer.checkpoint_current)
+        BanCreate.shiftAt(eventPlayer.checkpoint_current)
+        BanStand.shiftAt(eventPlayer.checkpoint_current)
+        BanDead.shiftAt(eventPlayer.checkpoint_current)
+        BanEmote.shiftAt(eventPlayer.checkpoint_current)
+        BanClimb.shiftAt(eventPlayer.checkpoint_current)
+        BanSaveDouble.shiftAt(eventPlayer.checkpoint_current)
+        BanBhop.shiftAt(eventPlayer.checkpoint_current)
+        BanDjump.shiftAt(eventPlayer.checkpoint_current)
+
+        smallMessage(eventPlayer, "   Checkpoint Created!")
+        UpdateCache()`
                 },
                 {
-                    code: `smallMessage(true[0], "  Checkpoint Deleted!")`
+                    code: `
+    BladeEnabledCheckpoints.removeAndShift(hostPlayer.checkpoint_current)
+    DashEnabledCheckpoints.removeAndShift(hostPlayer.checkpoint_current)
+
+    BanMulti.removeAndShift(hostPlayer.checkpoint_current)
+    BanCreate.removeAndShift(hostPlayer.checkpoint_current)
+    BanStand.removeAndShift(hostPlayer.checkpoint_current)
+    BanDead.removeAndShift(hostPlayer.checkpoint_current)
+    BanEmote.removeAndShift(hostPlayer.checkpoint_current)
+    BanClimb.removeAndShift(hostPlayer.checkpoint_current)
+    BanSaveDouble.removeAndShift(hostPlayer.checkpoint_current)
+    BanBhop.removeAndShift(hostPlayer.checkpoint_current)
+    BanDjump.removeAndShift(hostPlayer.checkpoint_current)
+    
+    del CheckpointPositions[eventPlayer.checkpoint_current]
+    eventPlayer.checkpoint_current = max(eventPlayer.checkpoint_current - 1, 0 - not len(CheckpointPositions))
+    smallMessage(eventPlayer, "   Checkpoint Deleted!")
+    UpdateCache()`
                 },
-                0,
-                0,
-                0
+                {
+                    code: `
+    if eventPlayer.checkpoint_current <= 0:
+        smallMessage(eventPlayer, "   Teleport Unavailable For Level") # "   不能在第一个检查点设置传送门"
+    elif len(CheckpointPositions[eventPlayer.checkpoint_current]) >= 2:
+        CheckpointPositions[eventPlayer.checkpoint_current] = CheckpointPositions[eventPlayer.checkpoint_current][0]
+        smallMessage(eventPlayer, "   Teleport Removed For Level") # "   关卡{0}的传送点已移除"
+    else:
+        CheckpointPositions[eventPlayer.checkpoint_current] = [CheckpointPositions[eventPlayer.checkpoint_current], eventPlayer.getPosition()]
+        smallMessage(eventPlayer, "   Teleport Added For Level") # "   传送点已添加到当前关卡"`
+                },
+                {
+                    code: `eventPlayer.editor_hitboxToggle = not eventPlayer.editor_hitboxToggle`
+                }
             ]
         },
         {
@@ -80,20 +151,27 @@ MenuCreate(menu = {
  #. Secondary Fire
  #. Crouch
  #. Jump"`,
+            code: `
+    if not len(CheckpointPositions):
+        eventPlayer.MenuInvalidateSelect()
+        #UpdateCache()
+    `,
             pages: [
                 {
-                    text: `ft"Ultimate: {hostPlayer.checkpoint_current in BladeEnabledCheckpoints}\n1. Switch"`,
+                    text: `ft"Ultimate :{eventPlayer.checkpoint_current in BladeEnabledCheckpoints}\n 1. On\n 2. Off"`,
                     update: true,
-                    pages: [{
-                        code: `BladeEnabledCheckpoints.toggleItem(hostPlayer.checkpoint_current)`
-                    }]
+                    pages: [
+                        {code: `BladeEnabledCheckpoints.addUnique(eventPlayer.checkpoint_current)`},
+                        {code: `BladeEnabledCheckpoints.remove(eventPlayer.checkpoint_current)`}
+                    ]
                 },
                 {
-                    text: `ft"Ability 1: {hostPlayer.checkpoint_current in DashEnabledCheckpoints}\n1. Switch"`,
+                    text: `ft"Ability 1 :{eventPlayer.checkpoint_current in DashEnabledCheckpoints}\n 1. On\n 2. Off"`,
                     update: true,
-                    pages: [{
-                        code: `DashEnabledCheckpoints.toggleItem(hostPlayer.checkpoint_current)`
-                    }]
+                    pages: [
+                        {code: `DashEnabledCheckpoints.addUnique(eventPlayer.checkpoint_current)`},
+                        {code: `DashEnabledCheckpoints.remove(eventPlayer.checkpoint_current)`}
+                    ]
                 }
             ]
         },
@@ -107,71 +185,82 @@ MenuCreate(menu = {
  6. Save Double △
  7. Climb ↑
  - - - - - - - - - - - -
- 8. Require Bhop ≥
- 9. Require Double Jump »"`,
+ 8. Bhop ≥
+ 9. Double Jump »"`,
+            code: `if not len(CheckpointPositions):
+        eventPlayer.MenuInvalidateSelect()`,
             pages: [
                 {
-                    text: `ft"Multi-Climb ∞: {hostPlayer.checkpoint_current in BanMulti}\n1. Switch"`,
+                    text: `ft"Ban Multi-Climb ∞ :{eventPlayer.checkpoint_current in BanMulti}\n 1. On\n 2. Off"`,
                     update: true,
-                    pages: [{
-                        code: `BanMulti.toggleItem(hostPlayer.checkpoint_current)`
-                    }]
+                    pages: [
+                        {code: `BanMulti.addUnique(eventPlayer.checkpoint_current)`},
+                        {code: `BanMulti.remove(eventPlayer.checkpoint_current)`}
+                    ]
                 },
                 {
-                    text: `ft"Create ♂: {hostPlayer.checkpoint_current in BanCreate}\n1. Switch"`,
+                    text: `ft"Ban Create ♂ :{eventPlayer.checkpoint_current in BanCreate}\n 1. On\n 2. Off"`,
                     update: true,
-                    pages: [{
-                        code: `BanCreate.toggleItem(hostPlayer.checkpoint_current)`
-                    }]
+                    pages: [
+                        {code: `BanCreate.addUnique(eventPlayer.checkpoint_current)`},
+                        {code: `BanCreate.remove(eventPlayer.checkpoint_current)`}
+                    ]
                 },
                 {
-                    text: `ft"Stand Create ♠: {hostPlayer.checkpoint_current in BanStand}\n1. Switch"`,
+                    text: `ft"Ban Stand Create ♠ :{eventPlayer.checkpoint_current in BanStand}\n 1. On\n 2. Off"`,
                     update: true,
-                    pages: [{
-                        code: `BanStand.toggleItem(hostPlayer.checkpoint_current)`
-                    }]
+                    pages: [
+                        {code: `BanStand.addUnique(eventPlayer.checkpoint_current)`},
+                        {code: `BanStand.remove(eventPlayer.checkpoint_current)`}
+                    ]
                 },
                 {
-                    text: `ft"Dead Hop X: {hostPlayer.checkpoint_current in BanDead}\n1. Switch"`,
+                    text: `ft"Ban Dead Hop X :{eventPlayer.checkpoint_current in BanDead}\n 1. On\n 2. Off"`,
                     update: true,
-                    pages: [{
-                        code: `BanDead.toggleItem(hostPlayer.checkpoint_current)`
-                    }]
+                    pages: [
+                        {code: `BanDead.addUnique(eventPlayer.checkpoint_current)`},
+                        {code: `BanDead.remove(eventPlayer.checkpoint_current)`}
+                    ]
                 },
                 {
-                    text: `ft"Emote ♥: {hostPlayer.checkpoint_current in BanEmote}\n1. Switch"`,
+                    text: `ft"Ban Emote ♥ :{eventPlayer.checkpoint_current in BanEmote}\n 1. On\n 2. Off"`,
                     update: true,
-                    pages: [{
-                        code: `BanEmote.toggleItem(hostPlayer.checkpoint_current)`
-                    }]
+                    pages: [
+                        {code: `BanEmote.addUnique(eventPlayer.checkpoint_current)`},
+                        {code: `BanEmote.remove(eventPlayer.checkpoint_current)`}
+                    ]
                 },
                 {
-                    text: `ft"Save Double △: {hostPlayer.checkpoint_current in BanSaveDouble}\n1. Switch"`,
+                    text: `ft"Ban Save Double △ :{eventPlayer.checkpoint_current in BanSaveDouble}\n 1. On\n 2. Off"`,
                     update: true,
-                    pages: [{
-                        code: `BanSaveDouble.toggleItem(hostPlayer.checkpoint_current)`
-                    }]
+                    pages: [
+                        {code: `BanSaveDouble.addUnique(eventPlayer.checkpoint_current)`},
+                        {code: `BanSaveDouble.remove(eventPlayer.checkpoint_current)`}
+                    ]
                 },
                 {
-                    text: `ft"Climb ↑: {hostPlayer.checkpoint_current in BanClimb}\n1. Switch"`,
+                    text: `ft"Ban Climb ↑ :{eventPlayer.checkpoint_current in BanClimb}\n 1. On\n 2. Off"`,
                     update: true,
-                    pages: [{
-                        code: `BanClimb.toggleItem(hostPlayer.checkpoint_current)`
-                    }]
+                    pages: [
+                        {code: `BanClimb.addUnique(eventPlayer.checkpoint_current)`},
+                        {code: `BanClimb.remove(eventPlayer.checkpoint_current)`}
+                    ]
                 },
                 {
-                    text: `ft"Require Bhop ≥: {hostPlayer.checkpoint_current in BanBhop}\n1. Switch"`,
+                    text: `ft"Unused Bhop ≥ :{eventPlayer.checkpoint_current in BanBhop}\n 1. On\n 2. Off"`,
                     update: true,
-                    pages: [{
-                        code: `BanBhop.toggleItem(hostPlayer.checkpoint_current)`
-                    }]
+                    pages: [
+                        {code: `BanBhop.addUnique(eventPlayer.checkpoint_current)`},
+                        {code: `BanBhop.remove(eventPlayer.checkpoint_current)`}
+                    ]
                 },
                 {
-                    text: `ft"Require Double Jump »: {hostPlayer.checkpoint_current in BanDjump}\n1. Switch"`,
+                    text: `ft"Unused Double Jump » :{eventPlayer.checkpoint_current in BanDjump}\n 1. On\n 2. Off"`,
                     update: true,
-                    pages: [{
-                        code: `BanDjump.toggleItem(hostPlayer.checkpoint_current)`
-                    }]
+                    pages: [
+                        {code: `BanDjump.addUnique(eventPlayer.checkpoint_current)`},
+                        {code: `BanDjump.remove(eventPlayer.checkpoint_current)`}
+                    ]
                 }
             ]
         },
@@ -207,6 +296,11 @@ MenuCreate(menu = {
         },
         {
             text: `t"Dummies
+ 1. "`,
+            pages: [0]
+        },
+        {
+            text: `t"Save
  1. "`,
             pages: [0]
         }
