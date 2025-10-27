@@ -264,7 +264,7 @@ rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
     @Event eachPlayer
     @Condition len(CheckpointPositions)
     @Condition EditorMoveItem == false
-    @Condition (eventPlayer.editor_lock and eventPlayer == hostPlayer) == false
+    @Condition eventPlayer.editor_lock == false
     @Condition EditorOn or eventPlayer.toggle_practice
     @Condition eventPlayer.lockState == eventPlayer.checkpoint_skip
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
