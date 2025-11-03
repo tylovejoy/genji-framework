@@ -215,6 +215,7 @@ playervar addon_enableDoubleChecks
 #subroutine CheckUlt
 #subroutine CheckAbility1
 #subroutine DashUltGive
+#subroutine AddonCheckMap
 subroutine StartGame
 subroutine LeaderboardUpdate
 subroutine CheckpointFailReset
@@ -227,7 +228,6 @@ subroutine TimerPause
 subroutine TimerResume
 subroutine EditUpdateSelectedIds
 subroutine AddonCustomLoadAndReset
-subroutine AddonCheckMap
 subroutine Addon3rdPerson
 subroutine RebuildKillOrbs
 subroutine RebuildPortals

@@ -28,8 +28,8 @@ rule "Parkour | Setup & Variables":
     wait(LoadOrder.setup)
 
     EditorOn = createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.MapEditor, editorDefaultOn, 0)
-    if createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.MapValidator, true, 3):
-        async(AddonCheckMap, AsyncBehavior.NOOP)
+    #if createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.MapValidator, true, 3):
+    #    async(AddonCheckMap, AsyncBehavior.NOOP)
     CompMode = not EditorOn and createWorkshopSettingBool(SettingsText.TournamentCategory, SettingsText.TournamentMode, compModeToggle, 100)
     if CompMode:
         CompTime = createWorkshopSettingInt(SettingsText.TournamentCategory, SettingsText.TournamentTime, 1, 240, compTimeLimit, 101)

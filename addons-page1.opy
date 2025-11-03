@@ -218,7 +218,7 @@ rule "Addon | Caching Jump & Crouch Inputs For Spectators":
     wait()
     eventPlayer.cache_inputs = vect(eventPlayer.isHoldingButton(Button.JUMP), eventPlayer.isHoldingButton(Button.CROUCH), false)
     goto RULE_START
-
+/*
 def AddonCheckMap():
     @Name "Addon | SUB Basic Map Validator"
     if len(CheckpointPositions) <= 1: return
@@ -262,7 +262,7 @@ def AddonCheckMap():
     EditorOn = MapChecker.editor_saveCache
     destroyDummy(MapChecker.getTeam(), MapChecker.getSlot())
     MapChecker = null
-
+*/
 def Addon3rdPerson():
     @Name "Addon | SUB 3rd Person Camera"
     if eventPlayer.addon_toggle3rdPov:

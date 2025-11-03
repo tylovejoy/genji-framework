@@ -105,8 +105,6 @@ rule "Editor | Export Map":
        HudPosition.TOP, HO.edit_clearec1, null, null, Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT)
     hostPlayer.editor_saveCache[2] = getLastCreatedText()
 
-    AddonCheckMap()
-
     enableInspector()
     disableInspector()
 
