@@ -354,7 +354,7 @@ enum LoadOrder:
     hudsGlobal  = 0.016 * 48,
     hudsPlayer  = 0.016 * 56,
     hudsEditor  = 0.016 * 64,
-    effects     = 0.016 * 128,
+    effects     = 0.016 * 256,
 
 ######################################## Macro Tools ##########################
 #!define LeftAlign100 "                                                                                                    "
