@@ -9,11 +9,11 @@ rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒�
     @Delimiter
 
 rule "Addon | Comp Mode Instruction Message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":
-    wait(0.4)
     # Instructions that show when you start comp mode.
     # Due to the hud text limit, you there is 4 huds available.
     # If you dont need a field just empty the textfield.
-    return
+    wait(0.4)
+    #!disableOptimizeForSize
     # 竞赛模式 指引消息
     # 指引消息将 会在竞赛模 式开始时 显示
     # 由于 hud 文本限制，你有 4 个hud可用
@@ -23,6 +23,7 @@ rule "Addon | Comp Mode Instruction Message - 竞赛模式指引消息 <---- INS
         "Change Comp Mode Instruction Message Hud 2",
         "Change Comp Mode Instruction Message Hud 3",
         "Change Comp Mode Instruction Message Hud 4"]
+    #!enableOptimizations
 
 rule "Addon | Custom Difficulty Hud - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled
@@ -54,6 +55,7 @@ rule "Addon | Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
         30,
         40,
         50]
+    #!disableOptimizeForSize
     # title
     # 标题文本
     TitleData[1] = [
@@ -63,6 +65,7 @@ rule "Addon | Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
         "Pro",
         "Expert",
         "Master"]
+    #!enableOptimizations
     # color
     # 颜色
     TitleData[2] = [
@@ -102,9 +105,11 @@ rule "Addon | HUD Text For Certain Checkpoints - 特定关卡显示的HUD文本 
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的hud文本
     wait(LoadOrder.addon)
+    #!disableOptimizeForSize
     # in CpHudText fill in text
     # 修改字符串 “CpHudText” 为顶部显示 的hud文本
     CpHudText = ["Text CP 1", "Text CP 3"]
+    #!enableOptimizations
     # in CpHudCp fill in the at wich to display
     # 修改数组 “CpHudCp” 为hud文本 显示的关卡
     CpHudCp = [1, 3]
@@ -114,9 +119,11 @@ rule "Addon | In-World Text For Certain Checkpoints - 特定关卡显示的地�
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的地图文本
     wait(LoadOrder.addon)
+    #!disableOptimizeForSize
     # in CpIwtText fill in text
     # 修改字符串 “CpIwtText” 为关卡显示 的地图文本
     CpIwtText = ["Text CP 1", "Text CP 3"]
+    #!enableOptimizations
     # in CpIwtCp fill in cp at wich to display
     # 修改数组 “CpIwtCp” 为显示地图 文本的关卡
     CpIwtCp = [1, 3]
@@ -132,9 +139,11 @@ rule "Addon | Hint Text For Certain Checkpoints - 特定关卡的提示文本 <-
     # the example fill shows a text for cp 1 and cp 3
     # 示例已填写 关卡1和3 的提示文本
     wait(LoadOrder.addon)
+    #!disableOptimizeForSize
     # in HintText fill in text
     # 修改字符串 “HintText” 为关卡显示 的提示文本
-    HintText = ["text cp 1","text cp 3"]
+    HintText = ["Text CP 1", "Text CP 3"]
+    #!enableOptimizations
     # in HintCp fill in the at wich to display
     # 修改数组 “HintCp” 为提示文本 显示的关卡
     HintCp = [1, 3]
