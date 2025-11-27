@@ -681,3 +681,15 @@ fixed:
    * Reported and Fixed by `@h.jun.74` +10xp
  - Fixed ultimate charge removed during Ultimate
    * Reported by `@dooosaaa` +5xp
+
+# 1.10.4E
+### General
+ - Show Ultimate and Dash ready when loading level
+ - Increased delay even further for better reliability when creating effects on higher ping
+   * Reported by `@CoralMage` +5xp
+### Editor
+ - Empty maps will be shown as having Level -1/-1
+### Addons
+ - Removed unused Map Checker feature.
+ - Removed overly optimized text arrays
+   * Reported by `@n1troh` +5xp

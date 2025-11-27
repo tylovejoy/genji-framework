@@ -8,7 +8,7 @@ let result_textConst = "";
 let result_action = [];
 let result_textMutable = [];
 let indexPtrCounter = 0;
-const MaxSubmenus = 50;
+const MaxSubmenus = 45;
 
 build(menu);
 result += result_macro;

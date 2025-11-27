@@ -34,8 +34,7 @@ rule "Addon | AFK Timer":
 
 rule "Addon | Pre-set control Map Portal - Toggle Via Workshop Settings":
     @Event eachPlayer
-    @Condition PortalOn
-    @Condition len(PortalLoc) != null
+    @Condition PortalLoc != null
     @Condition eventPlayer.toggle_invincible or not eventPlayer.checkpoint_notLast
     @Condition any([distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance for i in PortalLoc])
     eventPlayer.teleport(sorted([i for i in PortalDest], lambda e, i: distance(eventPlayer, PortalLoc[i]))[0])
@@ -48,7 +47,7 @@ rule "Addon | Custom Portals":
     wait(0.512)
 
 rule "Addon | Preset Control Map Portal - Toggle Via Workshop Settings":
-    @Condition PortalOn
+    @Condition createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.MapPortals, true, 4)
     #wait(LoadOrder.portal) # overwrite pasta
     if getCurrentMap() == Map.BUSAN:
         #"down > sanc","down > meka","sanc > down","sanc > meka","meka > sanc","meka > down"
@@ -219,7 +218,7 @@ rule "Addon | Caching Jump & Crouch Inputs For Spectators":
     wait()
     eventPlayer.cache_inputs = vect(eventPlayer.isHoldingButton(Button.JUMP), eventPlayer.isHoldingButton(Button.CROUCH), false)
     goto RULE_START
-
+/*
 def AddonCheckMap():
     @Name "Addon | SUB Basic Map Validator"
     if len(CheckpointPositions) <= 1: return
@@ -263,7 +262,7 @@ def AddonCheckMap():
     EditorOn = MapChecker.editor_saveCache
     destroyDummy(MapChecker.getTeam(), MapChecker.getSlot())
     MapChecker = null
-
+*/
 def Addon3rdPerson():
     @Name "Addon | SUB 3rd Person Camera"
     if eventPlayer.addon_toggle3rdPov:

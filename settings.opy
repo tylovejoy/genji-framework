@@ -136,7 +136,7 @@ enum SettingsText:
                 14: "<fgC80013FF>Extreme",
                 15: "<fgC80013FF>Extreme+",
                 16: "<fg960000FF>Hell",
-                17: "Do Not Display ◆ 不显示 ◆ 난이도 표시 X"
+                17: "No Display ◆ 不显示 ◆ 난이도 표시 X"
             }
         MapPlaytest = "Playtest Display        ◆ 游戏测试      ◆ 플레이테스트 디스플레이",
         MapValidator = "Basic Map Validator       ◆ 验证地图      ◆ 맵 가능 여부 확인기",

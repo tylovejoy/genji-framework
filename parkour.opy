@@ -28,9 +28,8 @@ rule "Parkour | Setup & Variables":
     wait(LoadOrder.setup)
 
     EditorOn = createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.MapEditor, editorDefaultOn, 0)
-    if createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.MapValidator, true, 3):
-        async(AddonCheckMap, AsyncBehavior.NOOP)
-    PortalOn = createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.MapPortals, true, 4)
+    #if createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.MapValidator, true, 3):
+    #    async(AddonCheckMap, AsyncBehavior.NOOP)
     CompMode = not EditorOn and createWorkshopSettingBool(SettingsText.TournamentCategory, SettingsText.TournamentMode, compModeToggle, 100)
     if CompMode:
         CompTime = createWorkshopSettingInt(SettingsText.TournamentCategory, SettingsText.TournamentTime, 1, 240, compTimeLimit, 101)
@@ -72,13 +71,13 @@ rule "Parkour | Setup & Variables":
     HintText = []
 
     # clean out -1's after the ban has loaded
+    #BanTriple = [i for i in BanTriple if i + false >= 0] if len(BanTriple) else [] # legacy code, now auto sets it to null to save space
     BanBhop = [i for i in BanBhop if i + false >= 0] if len(BanBhop) else []
-    BanClimb = [i for i in BanClimb if i + false >= 0] if len(BanClimb) else []
     BanEmote = [i for i in BanEmote if i + false >= 0] if len(BanEmote) else []
+    BanClimb = [i for i in BanClimb if i + false >= 0] if len(BanClimb) else []
     BanDead = [i for i in BanDead if i + false >= 0] if len(BanDead) else []
     BanCreate = [i for i in BanCreate if i + false >= 0] if len(BanCreate) else []
     BanMulti = [i for i in BanMulti if i + false >= 0] if len(BanMulti) else []
-    #BanTriple = [i for i in BanTriple if i + false >= 0] if len(BanTriple) else [] # legacy code, now auto sets it to null to save space
     BanStand = [i for i in BanStand if i + false >= 0] if len(BanStand) else []
     BanSaveDouble = BanSaveDouble if len(BanSaveDouble) else []
     BanDjump = BanDjump if len(BanDjump) else []
@@ -380,6 +379,10 @@ def UpdateCache():
     eventPlayer.toggle_hints = false
     eventPlayer.banString = []
     wait()
+    if eventPlayer.cache_startUlt:
+        smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
+    if eventPlayer.cache_startAbility1:
+        smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ABILITY_1)} {t'Dash Is Ready'}")
     if eventPlayer.checkpoint_notLast:
         eventPlayer.ban_multi = createWorkshopSettingBool(SettingsText.BanCategory, SettingsText.BanMultiClimb, false, 1) or eventPlayer.checkpoint_current in BanMulti
         if eventPlayer.ban_multi:
@@ -474,7 +477,7 @@ def LeaderboardUpdate():
         del LeaderBoardFull[24]
     else:
         return #Full and time too slow
-    LeaderBoardFull.append([[eventPlayer[0].split([]), eventPlayer.timer_normal, "{0} sec".format(eventPlayer.timer_normal)]])
+    LeaderBoardFull.append([[eventPlayer[0].split([]), eventPlayer.timer_normal, "{0} Sec".format(eventPlayer.timer_normal)]])
     LeaderBoardRemake = true #CreateLeaderboard()
 
 def CheckpointFailReset():
@@ -537,3 +540,5 @@ def StartGame():
         CheckpointFailReset()
         waitUntil(isGameInProgress(), Math.INFINITY) # FFA
         TimerResume()
+    else:
+        eventPlayer.checkpoint_current = -1

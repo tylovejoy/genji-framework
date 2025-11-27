@@ -5,7 +5,7 @@ rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒�
 
 rule "Effects | Setup Effects":
     wait(LoadOrder.effects) # add back to below wait if removed
-    if len(PortalDest): # pre set control map portals. not in portal rule because shared I variable
+    if len(PortalLoc): # pre set control map portals. not in portal rule because shared I variable
         for TempIterator1 in range(len(PortalLoc)):
             createEffect(
                 [i for i in getAllPlayers() if i.toggle_invincible or not i.checkpoint_notLast], #$$ localspectate()
@@ -20,6 +20,7 @@ rule "Effects | Setup Effects":
                 PortalLoc[TempIterator1] + Vector.UP,
                 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT)
         wait()
+        PortalNames = null
     if EditorOn:
         RebuildKillOrbs()
         RebuildBounceOrbs()
