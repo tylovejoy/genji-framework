@@ -111,7 +111,7 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by `@dooosaaa`
  - Restart not resetting checkpoint [Fixed]
    * Reported by `@zxzpkcxcc` +100xp
- - Not respawning on death  [Fixed]
+ - Not respawning on death [Fixed]
    * Reported by `@zxzpkcxcc` +5xp
  - Ultimate charge removed during Ultimate [Fixed]
    * Reported by `@dooosaaa` +5xp
