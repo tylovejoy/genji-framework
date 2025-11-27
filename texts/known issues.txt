@@ -107,7 +107,7 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported by Blizzard
  - Missing or mixed huds [Fixed]
    * Reported by `@bioslet`
- - Missing portals and lava due to poor ping [Fixed]
+ - Missing portals and lava due to poor ping [Fixed x2]
    * Reported by `@dooosaaa`
  - Restart not resetting checkpoint [Fixed]
    * Reported by `@zxzpkcxcc` +100xp
@@ -119,3 +119,5 @@ triple jump ban doesnt work on workshop maps anymore
    * Reported and Fixed by `@h.jun.74` +10xp
  - Rubber banding double Dash [Fixed]
    * Reported by `@zxzpkcxcc` +5xp
+ - Overly Optimized Text Arrays [Fixed]
+   * Reported by `@n1troh`
