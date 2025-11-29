@@ -27,21 +27,34 @@ macro Player.MenuIsVisible():
 macro Player.MenuNext():
     # Move menu selection to next
     self.__MenuSelection__ = (self.__MenuSelection__ + 1) % len(__MenuPointer__[self.__MenuCurrent__])
+    #self.__MenuSelection__ = ((self.__MenuSelection__ + 1) % (len(__MenuPointer__[self.__MenuCurrent__])) - 1) + 1
+################################################################################
+macro Player.MenuCurr():
+    self.__MenuSelection__
 ################################################################################
 macro Player.MenuPrev():
     # Move menu selection to previous
     self.__MenuSelection__ = ((self.__MenuSelection__ + len(__MenuPointer__[self.__MenuCurrent__]) - 1) %
         len(__MenuPointer__[self.__MenuCurrent__]))
+        #(len(__MenuPointer__[self.__MenuCurrent__])) - 1)
+################################################################################
+macro Player.MenuGetVerticalSelect():
+    round((91 * len(__MenuPointer__[self.__MenuCurrent__]) + self.getVerticalFacingAngle()) / 4) % len(__MenuPointer__[self.__MenuCurrent__])
 ################################################################################
 macro Player.MenuSelect():
     # Activate selected menu option
     __MenuAction__()
-    if __MenuPointer__[self.__MenuCurrent__][self.__MenuSelection__]:
+    if self.__MenuSelection__ < null:
+        self.__MenuSelection__ *= -1
+    elif  __MenuPointer__[self.__MenuCurrent__][self.__MenuSelection__]:
         self.__MenuCurrent__ = __MenuPointer__[self.__MenuCurrent__][self.__MenuSelection__]
         self.__MenuSelection__ = 1
     __MenuText__()
 ################################################################################
-macro Player.MenuText_Translated(backMsg = " ▶ 0. Back"):
+macro Player.MenuInvalidateSelect():
+    self.__MenuSelection__ *= -1
+################################################################################
+macro Player.MenuText_Translated_Back(backMsg = " ▶ 0. Back"):
     # Display Menu
     # with translations enabled
     ("{0}▶{1}.{2}".format(
@@ -49,6 +62,22 @@ macro Player.MenuText_Translated(backMsg = " ▶ 0. Back"):
             self.__MenuSelection__,
             _(__MenuString__[self.__MenuCurrent__]).split(f" {self.__MenuSelection__}.").last())
             if self.__MenuSelection__ else backMsg)
+################################################################################
+macro Player.MenuText_Translated_Vertical():
+    # Display Menu
+    # with translations enabled
+    ("{0}▶{1}.{2}".format(
+            _(__MenuString__[self.__MenuCurrent__]).split(f" {self.MenuGetVerticalSelect()}."),
+            self.MenuGetVerticalSelect(),
+            _(__MenuString__[self.__MenuCurrent__]).split(f" {self.MenuGetVerticalSelect()}.").last()))
+################################################################################
+macro Player.MenuText_Translated():
+    # Display Menu
+    # with translations enabled
+    ("{0}▶{1}.{2}".format(
+            _(__MenuString__[self.__MenuCurrent__]).split(f" {self.__MenuSelection__}."),
+            self.__MenuSelection__,
+            _(__MenuString__[self.__MenuCurrent__]).split(f" {self.__MenuSelection__}.").last()))
 ################################################################################
 macro Player.MenuPreview_Translated():
     # Display Menu Preview

@@ -285,13 +285,17 @@ msgid "» Double Jump Is Ready"
 msgstr "» 二段跳已就绪"
 
 # TODO: check if all occurrences have the same translation
-#. file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+#. 2 occurrences:
+#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+#.  - file parkour.opy, rule "Subroutine UpdateCache"
 #, hasMultipleOccurrencesNotification
 msgid "Ultimate Is Ready"
 msgstr "终极技能已就绪"
 
 # TODO: check if all occurrences have the same translation
-#. file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+#. 2 occurrences:
+#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+#.  - file parkour.opy, rule "Subroutine UpdateCache"
 #, hasMultipleOccurrencesNotification
 msgid "Dash Is Ready"
 msgstr "技能1影已就绪"

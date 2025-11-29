@@ -3,7 +3,7 @@
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
-# Current Named Unused Variables: 1,2,9,11,17,19,28,29,30,31,36,37,39,48,49,58,59,65,66,72,80,89,90
+# Current Named Unused Variables: 1,2,9,11,17,19,28,29,30,31,36,37,39,43,48,49,58,59,65,66,72,80,89,90
 #!define CheckpointPositions A
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 #1
@@ -64,7 +64,7 @@ globalvar TempIterator1 38                  # int                       --- temp
 globalvar PortalNames 40                    # [str]                     --- display name of portals
 globalvar PortalLoc 41                      # [vect]                    --- portal position
 globalvar PortalDest 42                     # [vect]                    --- portal destination
-globalvar PortalOn 43                       # bool                      --- portals enabled
+#globalvar PortalOn 43                       # bool                      --- portals enabled
 globalvar Difficultyhud 44                  # number                    --- workshop toggle to display difficulty hud
 globalvar CustomPortalStart 45              # [vect]                    --- custom portal start
 globalvar CustomPortalEndpoint 46           # [vect]                    --- custom portal end points
@@ -215,6 +215,7 @@ playervar addon_enableDoubleChecks
 #subroutine CheckUlt
 #subroutine CheckAbility1
 #subroutine DashUltGive
+#subroutine AddonCheckMap
 subroutine StartGame
 subroutine LeaderboardUpdate
 subroutine CheckpointFailReset
@@ -227,7 +228,6 @@ subroutine TimerPause
 subroutine TimerResume
 subroutine EditUpdateSelectedIds
 subroutine AddonCustomLoadAndReset
-subroutine AddonCheckMap
 subroutine Addon3rdPerson
 subroutine RebuildKillOrbs
 subroutine RebuildPortals
@@ -354,45 +354,43 @@ enum LoadOrder:
     hudsGlobal  = 0.016 * 48,
     hudsPlayer  = 0.016 * 56,
     hudsEditor  = 0.016 * 64,
-    effects     = 0.016 * 128,
+    effects     = 0.016 * 256,
 
 ######################################## Macro Tools ##########################
-macro localSpectator(condition):
-    true if (condition) else (localPlayer.toggle_spectate or localPlayer.getSlot() < null)
-
-macro filtered(array, condition):
-    [current_element for current_element, current_index in (array) if (condition)]
-macro mapped(array, mapping):
-    [(mapping) for current_element, current_index in (array)]
-
-##!define RestartTimer(timeInMinutes) "{0} Hours and {1} Minutes".format(floor(timeInMinutes / 60 / 60), "{0}{1}".format(floor(timeInMinutes % 60 / 10), floor(timeInMinutes % 60 - floor(timeInMinutes % 60 / 10) * 10)))
-##!define prettyTime(timeInSeconds) "{0}:{1}".format(floor(timeInSeconds / 60), "{0}{1}.{2}".format(floor(timeInSeconds % 60 / 10), floor(timeInSeconds % 60 - floor(timeInSeconds % 60 / 10) * 10), "{0}{1}".format([] if floor((timeInSeconds % 1) * 100) >= 10 else "0", floor((timeInSeconds % 1) * 100))))
-##!define prettyTime(timeInSeconds) "{0} {1}".format(timeInSeconds,"秒"  checkCN "sec")
-macro prettyTime(timeInSeconds):
-    "{0} sec".format(timeInSeconds)
-
-macro insert(insert_array, insert_index, insert_value):
-    insert_array.append(insert_value)
-    insert_array = [e if i < insert_index else insert_array.last() if i == insert_index else insert_array[i - 1] for e, i in insert_array]
-
-macro toggleCpInArray(baninput):
-    if hostPlayer.checkpoint_current in baninput:
-        baninput.remove(hostPlayer.checkpoint_current)
-    else:
-        baninput.append(hostPlayer.checkpoint_current)
-
-macro removeCpAndShift(arrayname):
-    arrayname.remove(hostPlayer.checkpoint_current)
-    arrayname = [x - (1 if x >= hostPlayer.checkpoint_current else 0) for x in arrayname]
-
-#!define LeftAlign96 "                                                                                                "
+#!define LeftAlign100 "                                                                                                    "
 #!define LeftAlign128 "                                                                                                                                "
-
 #!define checkCN if l"Oof" == "噢" else
 
 macro INVIS = Invis.ENEMIES if COMPILE_FOR_CHINESE else Invis.NONE
 
-macro flyMovementDelta = ((0.096 + 0.192 * eventPlayer.isHoldingButton(Button.JUMP) - 0.048 * eventPlayer.isHoldingButton(Button.CROUCH)) *
-    (eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z * (vect(1, not eventPlayer.isHoldingButton(Button.ABILITY_1), 1))+
-    worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION) +
-    Vector.UP * (eventPlayer.isHoldingButton(Button.ABILITY_2) - eventPlayer.isHoldingButton(Button.ULTIMATE))))
+macro Array.insertAt(index, item):
+    self.append(null)
+    self = [CAE if CAI <= index else self[CAI - 1] for CAE, CAI in self]
+    self[index] = item
+
+macro Array.shiftAt(index):
+    self = [CAE + (CAE >= index) for CAE, CAI in self]
+
+macro Array.removeAndShift(index):
+    self.remove(index)
+    self = [CAE - (CAE > index) for CAE, CAI in self]
+
+macro Array.addUnique(item):
+    # self = self.exclude(item).concat(item)
+    self.remove(item) 
+    self.append(item)
+
+macro Array.toggleItem(item):
+    if item in self:
+        self.remove(item)
+    else:
+        self.append(item)  
+
+macro Player.flyMovementDelta():
+    ((0.096 + 0.192 * self.isHoldingButton(Button.JUMP) - 0.048 * self.isHoldingButton(Button.CROUCH)) *
+    (self.getFacingDirection() * self.getThrottle().z * (vect(1, not self.isHoldingButton(Button.ABILITY_1), 1)) +
+    worldVector(self.getThrottle() * Vector.LEFT, self, Transform.ROTATION) +
+    Vector.UP * (self.isHoldingButton(Button.ABILITY_2) - self.isHoldingButton(Button.ULTIMATE))))
+
+macro Player.spectateIf(condition): # Testing, currently unused
+    true if (condition) else (self.toggle_spectate or self.getSlot() < null)

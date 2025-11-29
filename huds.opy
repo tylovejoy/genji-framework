@@ -27,17 +27,17 @@ rule "Huds | Global Localplayer":
 
     if not EditorOn:
         hudText(true[0], null, "Discord: dsc.gg/genjiparkour" if localPlayer.toggle_guide else [],
-            f"{t'Made By'}: {Name}{LeftAlign96}",
-            #"作者: {}" LeftAlign96.format(Name)
+            f"{t'Made By'}: {Name}{LeftAlign100}",
+            #"作者: {}" LeftAlign100.format(Name)
             #checkCN
-            #"Made by: {}" LeftAlign96.format(Name),
+            #"Made by: {}" LeftAlign100.format(Name),
             HudPosition.LEFT, HO.data_name, null, ColorConfig[Customize.dsc], ColorConfig[Customize.credit_name], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
         hudSubtext(true[0],
-            f"{t'Map Code'}: {Code}{LeftAlign96}",
-            #"代码: {}" LeftAlign96.format(Code)
+            f"{t'Map Code'}: {Code}{LeftAlign100}",
+            #"代码: {}" LeftAlign100.format(Code)
             #checkCN
-            #"Map code: {}" LeftAlign96.format(Code),
+            #"Map code: {}" LeftAlign100.format(Code),
             HudPosition.LEFT, HO.data_code, ColorConfig[Customize.credit_code], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
         hudSubtext(localPlayer.toggle_guide,
@@ -58,10 +58,10 @@ rule "Huds | Global Localplayer":
 
         hudSubtext(localPlayer,
             [] if localPlayer.timer_splitDisplay <= -Math.INFINITY or localPlayer.toggle_spectate else
-                f"{t'Split: '}{localPlayer.timer_splitDisplay}{LeftAlign96}",
-                #("单关用时 {0}" LeftAlign96.format(localPlayer.timer_splitDisplay)
+                f"{t'Split: '}{localPlayer.timer_splitDisplay}{LeftAlign100}",
+                #("单关用时 {0}" LeftAlign100.format(localPlayer.timer_splitDisplay)
                 #checkCN
-                #"Split: {0}" LeftAlign96.format(localPlayer.timer_splitDisplay))),
+                #"Split: {0}" LeftAlign100.format(localPlayer.timer_splitDisplay))),
             HudPosition.LEFT, HO.game_split_display, ColorConfig[Customize.time], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
         if len(HintText): #Remove no hints - visual and element bloat
@@ -277,10 +277,10 @@ rule "Huds | Each Player":
     wait(LoadOrder.hudsPlayer)
 
     hudText(eventPlayer, null,
-        "{0} {1} sec".format(t"Practice Time:", eventPlayer.timer_practice) if eventPlayer.toggle_practice else [],
+        "{0} {1} Sec".format(t"Practice Time:", eventPlayer.timer_practice) if eventPlayer.toggle_practice else [],
         #"{0} {1} sec".format("练习用时" checkCN "Practice Time:", eventPlayer.timer_practice) if eventPlayer.toggle_practice else [],
-        "{0} {1} sec" LeftAlign96.format(t"Time:", eventPlayer.timer_normal),
-        #"{0} {1} sec" LeftAlign96.format("用时" checkCN "Time:", eventPlayer.timer_normal),
+        "{0} {1} Sec" LeftAlign100.format(t"Time:", eventPlayer.timer_normal),
+        #"{0} {1} sec" LeftAlign100.format("用时" checkCN "Time:", eventPlayer.timer_normal),
         HudPosition.LEFT, HO.game_timer, null, Color.GRAY, ColorConfig[Customize.time], HudReeval.STRING, SpecVisibility.DEFAULT)
 
     hudText(null if eventPlayer.toggle_leaderboard else eventPlayer,
@@ -325,7 +325,7 @@ rule "Huds | Each Player":
         HudPosition.TOP, HO.game_level_orb, ColorConfig[Customize.level], ColorConfig[Customize.level], ColorConfig[Customize.orb_lock],
         HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
-    hudSubtext(eventPlayer,"{0}{1}{2}\n{3}{4}{5}" LeftAlign96.format(
+    hudSubtext(eventPlayer,"{0}{1}{2}\n{3}{4}{5}" LeftAlign100.format(
         "■" if eventPlayer.cache_inputs.x else "□",
         "▲" if eventPlayer.getThrottle().z > null else "△",
         "●" if eventPlayer.cache_inputs.y else "○",
