@@ -47,7 +47,7 @@ rule "Addon | Custom Portals":
     wait(0.512)
 
 rule "Addon | Preset Control Map Portal - Toggle Via Workshop Settings":
-    @Condition createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.MapPortals, true, 4)
+    @Condition createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.Map_Portals, true, 3)
     #wait(LoadOrder.portal) # overwrite pasta
     if getCurrentMap() == Map.BUSAN:
         #"down > sanc","down > meka","sanc > down","sanc > meka","meka > sanc","meka > down"
@@ -78,12 +78,12 @@ rule "Addon | Preset Control Map Portal - Toggle Via Workshop Settings":
         PortalNames = ["Gardens", "City Center", "University", "City Center", "Gardens", "University"]
         PortalLoc = [vect(-211.137, 20, -5.084), vect(-211.346, 20, 5.029), vect(143.061, 8.377, -245.04), vect(139.333, 8.377, -249.964), vect(157.297, 12.522, 255.759), vect(151.452, 12.522, 261.099)]
         PortalDest = [vect(134.366, 7.829, -240.53), vect(158.27, 11.814, 262.272), vect(-206.269, 19.292, 0.103), vect(158.283, 11.814, 262.283), vect(134.318, 7.829, -240.667), vect(-206.269, 19.292, 0.103)]
-
+/*
     elif getCurrentMap() == Map.ANTARCTIC_PENINSULA:
         PortalNames = ["Labs", "Icebreaker", "Sublevel", "Icebreaker", "Labs", "Sublevel"]
         PortalLoc = [vect(280.66, -12.15, -223.65), vect(273.27, 42.74, 198.15), vect(266.58, 42.74, 198.17), vect(-58.29, -154, 63.03), vect(-58.36, -154, 56.47), vect(287.08, -12.15, -223.59)]
         PortalDest = [vect(270, 42.7, 190.44), vect(284.07, -12.75, -216.15), vect(-53.51, -154.5, 60.08), vect(284.07, -12.75, -216.15), vect(270, 42.7, 190.44), vect(-53.51, -154.5, 60.08)]
-
+*/
     elif getCurrentMap() == Map.SAMOA:
         PortalNames = ["Beach", "Volcano", "Downtown", "Volcano", "Beach", "Downtown"]
         PortalLoc = [vect(231.98, 7.23, -262.84), vect(236.78, 7.23, -262.75), vect(-327.59, 3.6, -108.69), vect(-332.71, 3.6, -108.59), vect(25.4, 341, 354.38), vect( 30, 341, 354.34)]
@@ -114,9 +114,11 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         case Map.NEW_QUEEN_STREET:
             MapVectorArray = [vect(-13.79, 1.96, 15.92), vect(0,35,25), vect(0,8, 23.77), vect(13.28, 2, 15)]
             break
+/*
         case Map.ANTARCTIC_PENINSULA:
             MapVectorArray = [vect(-86, -110, 59), vect(277, 132, 170), vect(283, 57, -235)]
             break
+*/
         case Map.SAMOA:
             MapVectorArray = [vect(-328.19, 90.5, -103.11), vect(233.75, 71.95, -258.42), vect(26.93, 428.04, 336.34)]
             break
@@ -132,17 +134,17 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
         createDummy(Hero.DVA, [player for player in getAllPlayers() if player.hasSpawned() and not player.isDummy()][0].getTeam(), 20 - evalOnce(DestructoIter), evalOnce(MapVectorArray[evalOnce(DestructoIter)]), vect(0, 0, 0))
         MsDestructo[evalOnce(DestructoIter)] = getLastCreatedEntity()
         MsDestructo[evalOnce(DestructoIter)].startScalingSize(20, true)
-        wait()
+        wait(0)
         MsDestructo[evalOnce(DestructoIter)].setGravity(0)
         MsDestructo[evalOnce(DestructoIter)].applyImpulse(Vector.UP, 1, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
         MsDestructo[evalOnce(DestructoIter)].teleport(evalOnce(MapVectorArray[evalOnce(DestructoIter)]))
         wait(1)
         MsDestructo[evalOnce(DestructoIter)].disableEnvironmentCollision(true)
-        wait()
+        wait(0)
         MsDestructo[evalOnce(DestructoIter)].setUltEnabled(true)
-        wait()
+        wait(0)
         MsDestructo[evalOnce(DestructoIter)].setUltCharge(100)
-        wait()
+        wait(0)
     wait(1)
     for DestructoIter in range(len(MapVectorArray)):
         MsDestructo[evalOnce(DestructoIter)].startForcingButton(Button.ULTIMATE)
@@ -194,7 +196,7 @@ rule "Addon | Little Destructo - Fence Breaker":
                 1, 1, 0, 0, 0, 0)
             MapVectorArray[0] ++
             if not (MapVectorArray[0] % fence_delay): # use modulo to only wait every x orbs keep the 0 change the other number
-                wait()
+                wait(0)
         del MapVectorArray[1]
 
     # handle exceptions (looking at you new queen street)
@@ -210,59 +212,15 @@ rule "Addon | Little Destructo - Fence Breaker":
             DynamicEffect.EXPLOSION_SOUND,
             1, 1, 0, 0, 0, 0)
         del MapVectorArray[0]
-        wait()
+        wait(0)
     MapVectorArray = null
 
 rule "Addon | Caching Jump & Crouch Inputs For Spectators":
     @Event playerJoined
-    wait()
+    wait(0)
     eventPlayer.cache_inputs = vect(eventPlayer.isHoldingButton(Button.JUMP), eventPlayer.isHoldingButton(Button.CROUCH), false)
     goto RULE_START
-/*
-def AddonCheckMap():
-    @Name "Addon | SUB Basic Map Validator"
-    if len(CheckpointPositions) <= 1: return
-    createDummy(Hero.ANA, Team.1 if getNumberOfSlots(Team.1) < getNumberOfSlots(Team.2) else Team.2, -1, CheckpointPositions[0], null)
-    MapChecker = getLastCreatedEntity()
-    MapChecker.disableEnvironmentCollision(false)
-    MapChecker.setStatusEffect(null, Status.PHASED_OUT, Math.INFINITY)
-    MapChecker.setInvisibility(Invis.ALL)
-    MapChecker.startScalingSize(cpCircleRadius / 0.45, false)
-    MapChecker.setGravity(Math.INFINITY)
-    waitUntil(MapChecker.hasSpawned(), 16) # Not infinity incase dummy does not spawn
 
-    for MapChecker.checkpoint_current in range(1, len(CheckpointPositions)):
-        if nearestWalkablePosition(CheckpointPositions[MapChecker.checkpoint_current]) and distance(CheckpointPositions[MapChecker.checkpoint_current], nearestWalkablePosition(CheckpointPositions[MapChecker.checkpoint_current])) > cpCircleRadius:
-            MapChecker.startForcingPosition(raycast(CheckpointPositions[MapChecker.checkpoint_current] + Vector.UP * cpCircleRadius, CheckpointPositions[MapChecker.checkpoint_current] +
-                Vector.DOWN * cpCircleRadius, [], [], false).getHitPosition(), true)
-            wait(7 * 0.016)
-            MapChecker.stopForcingPosition()
-            waitUntil(MapChecker.isOnGround(), true)
-            if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapChecker.checkpoint_current]) <= cpCircleRadius:
-                goto lbl_MapChecker_nextCp
-
-            for MapChecker.checkpoint_practice in range(cpCircleRadius, cpCircleRadius - 0.2, -0.2):
-                MapChecker.startForcingPosition(CheckpointPositions[MapChecker.checkpoint_current] + Vector.UP * MapChecker.checkpoint_practice,true)
-                wait(7 * 0.016)
-                MapChecker.stopForcingPosition()
-                waitUntil(MapChecker.isOnGround(), true)
-                if MapChecker.isOnGround() and distance(MapChecker, CheckpointPositions[MapChecker.checkpoint_current]) <= cpCircleRadius:
-                    goto lbl_MapChecker_nextCp
-
-            enableInspector()
-            printLog("Fail {0}".format(MapChecker.checkpoint_current))
-            disableInspector()
-        lbl_MapChecker_nextCp:
-
-    MapChecker.editor_saveCache = EditorOn
-    EditorOn = null
-    enableInspector()
-    printLog("◆ Map Check Complete ◆")
-    disableInspector()
-    EditorOn = MapChecker.editor_saveCache
-    destroyDummy(MapChecker.getTeam(), MapChecker.getSlot())
-    MapChecker = null
-*/
 def Addon3rdPerson():
     @Name "Addon | SUB 3rd Person Camera"
     if eventPlayer.addon_toggle3rdPov:
@@ -272,3 +230,48 @@ def Addon3rdPerson():
             updateEveryTick(0.5 * Vector.UP + eventPlayer.getEyePosition()), false)
     else:
         eventPlayer.stopCamera()
+/*
+def AddonCheckMap():
+    @Name "Addon | SUB Basic Map Validator"
+    if len(CheckpointPositions) <= 1: return
+    createDummy(Hero.ANA, Team.1 if getNumberOfSlots(Team.1) < getNumberOfSlots(Team.2) else Team.2, -1, CheckpointPositions[0], null)
+    MsDestructo = getLastCreatedEntity()
+    MsDestructo.disableEnvironmentCollision(false)
+    MsDestructo.setStatusEffect(null, Status.PHASED_OUT, Math.INFINITY)
+    MsDestructo.setInvisibility(Invis.ALL)
+    MsDestructo.startScalingSize(cpCircleRadius / 0.45, false)
+    MsDestructo.setGravity(Math.INFINITY)
+    waitUntil(MsDestructo.hasSpawned(), 16) # Not infinity incase dummy does not spawn
+
+    for MsDestructo.checkpoint_current in range(1, len(CheckpointPositions)):
+        if nearestWalkablePosition(CheckpointPositions[MsDestructo.checkpoint_current]) and distance(CheckpointPositions[MsDestructo.checkpoint_current], nearestWalkablePosition(CheckpointPositions[MsDestructo.checkpoint_current])) > cpCircleRadius:
+            MsDestructo.startForcingPosition(raycast(CheckpointPositions[MsDestructo.checkpoint_current] + Vector.UP * cpCircleRadius, CheckpointPositions[MsDestructo.checkpoint_current] +
+                Vector.DOWN * cpCircleRadius, [], [], false).getHitPosition(), true)
+            wait(7 * 0.016)
+            MsDestructo.stopForcingPosition()
+            waitUntil(MsDestructo.isOnGround(), true)
+            if MsDestructo.isOnGround() and distance(MsDestructo, CheckpointPositions[MsDestructo.checkpoint_current]) <= cpCircleRadius:
+                goto lbl_MsDestructo_nextCp
+
+            for MsDestructo.checkpoint_practice in range(cpCircleRadius, cpCircleRadius - 0.2, -0.2):
+                MsDestructo.startForcingPosition(CheckpointPositions[MsDestructo.checkpoint_current] + Vector.UP * MsDestructo.checkpoint_practice,true)
+                wait(7 * 0.016)
+                MsDestructo.stopForcingPosition()
+                waitUntil(MsDestructo.isOnGround(), true)
+                if MsDestructo.isOnGround() and distance(MsDestructo, CheckpointPositions[MsDestructo.checkpoint_current]) <= cpCircleRadius:
+                    goto lbl_MsDestructo_nextCp
+
+            enableInspector()
+            printLog("Fail {0}".format(MsDestructo.checkpoint_current))
+            disableInspector()
+        lbl_MsDestructo_nextCp:
+
+    MsDestructo.editor_saveCache = EditorOn
+    EditorOn = null
+    enableInspector()
+    printLog("◆ Map Check Complete ◆")
+    disableInspector()
+    EditorOn = MsDestructo.editor_saveCache
+    destroyDummy(MsDestructo.getTeam(), MsDestructo.getSlot())
+    MsDestructo = null
+*/

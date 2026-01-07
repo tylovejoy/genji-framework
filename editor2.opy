@@ -9,13 +9,13 @@ globalvar debug_ult_on
 
 rule "Editor | Menu - HUD":
     @Condition EditorOn
-    #!disableOptimizations
+    ##!disableOptimizations
     hudText(hostPlayer if hostPlayer.MenuIsVisible() else false,
         hostPlayer.MenuText_Translated_Vertical(),
         #hostPlayer.MenuText_Translated(),#backMsg = t" ▶ 0. Back"),
         hostPlayer.MenuPreview_Translated(),
         LeftAlign128, HudPosition.LEFT, null, Color.WHITE, Color.WHITE, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
-    #!enableOptimizations
+    #!optimizeForSize
     #createInWorldText(hostPlayer if hostPlayer.MenuIsVisible() else false, hostPlayer.MenuText_Translated(), worldVector(100 * Vector.FORWARD, hostPlayer, Transform.ROTATION_AND_TRANSLATION), 2)
 
 rule "Editor | Menu - Visibility":
@@ -92,8 +92,8 @@ MenuCreate(menu = {
         CheckpointPositions.insertAt(eventPlayer.checkpoint_current, eventPlayer.getPosition())
         eventPlayer.checkpoint_current++
         #Abilities
-        BladeEnabledCheckpoints.shiftAt(hostPlayer.checkpoint_current)
-        DashEnabledCheckpoints.shiftAt(hostPlayer.checkpoint_current)
+        UltCheckpoints.shiftAt(hostPlayer.checkpoint_current)
+        Ability1Checkpoints.shiftAt(hostPlayer.checkpoint_current)
         #Bans
         BanMulti.shiftAt(eventPlayer.checkpoint_current)
         BanCreate.shiftAt(eventPlayer.checkpoint_current)
@@ -112,8 +112,8 @@ MenuCreate(menu = {
                 {
                     code: `
     #Abilities
-    BladeEnabledCheckpoints.removeAndShift(hostPlayer.checkpoint_current)
-    DashEnabledCheckpoints.removeAndShift(hostPlayer.checkpoint_current)
+    UltCheckpoints.removeAndShift(hostPlayer.checkpoint_current)
+    Ability1Checkpoints.removeAndShift(hostPlayer.checkpoint_current)
     #Bans
     BanMulti.removeAndShift(hostPlayer.checkpoint_current)
     BanCreate.removeAndShift(hostPlayer.checkpoint_current)
@@ -163,19 +163,19 @@ MenuCreate(menu = {
     `,
             pages: [
                 {
-                    text: `ft"Ultimate: {eventPlayer.checkpoint_current in BladeEnabledCheckpoints}\n 1. On\n 2. Off\n 0. ← Back"`,
+                    text: `ft"Ultimate: {eventPlayer.checkpoint_current in UltCheckpoints}\n 1. On\n 2. Off\n 0. ← Back"`,
                     update: true,
                     pages: [
-                        {code: `BladeEnabledCheckpoints.addUnique(eventPlayer.checkpoint_current)`},
-                        {code: `BladeEnabledCheckpoints.remove(eventPlayer.checkpoint_current)`}
+                        {code: `UltCheckpoints.addUnique(eventPlayer.checkpoint_current)`},
+                        {code: `UltCheckpoints.remove(eventPlayer.checkpoint_current)`}
                     ]
                 },
                 {
-                    text: `ft"Ability 1: {eventPlayer.checkpoint_current in DashEnabledCheckpoints}\n 1. On\n 2. Off\n 0. ← Back"`,
+                    text: `ft"Ability 1: {eventPlayer.checkpoint_current in Ability1Checkpoints}\n 1. On\n 2. Off\n 0. ← Back"`,
                     update: true,
                     pages: [
-                        {code: `DashEnabledCheckpoints.addUnique(eventPlayer.checkpoint_current)`},
-                        {code: `DashEnabledCheckpoints.remove(eventPlayer.checkpoint_current)`}
+                        {code: `Ability1Checkpoints.addUnique(eventPlayer.checkpoint_current)`},
+                        {code: `Ability1Checkpoints.remove(eventPlayer.checkpoint_current)`}
                     ]
                 }
             ]

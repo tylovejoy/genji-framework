@@ -11,7 +11,7 @@ rule "Command | Toggle Leaderboard (Hold Melee)":
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.toggle_leaderboard = not eventPlayer.toggle_leaderboard
 
-rule "Command | Split hide (Hold Dash + Primary + Secondary)":
+rule "Command | Toggle Split (Hold Ability 1 + Primary + Secondary)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_1)
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE)
@@ -23,14 +23,15 @@ rule "Command | Split hide (Hold Dash + Primary + Secondary)":
     smallMessage(eventPlayer, "   Split Display Off" if eventPlayer.timer_splitDisplay <= -Math.INFINITY else "   Split Display On")
     wait(0.128)
 
-rule "Command | Toggle Invisible (Hold Deflect)":
+rule "Command | Toggle Invisible (Hold Ability 1)":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2)
     @Condition EditorOn == false
     @Condition CompMode == false
     wait(1, Wait.ABORT_WHEN_FALSE)
     eventPlayer.toggle_invisible = not eventPlayer.toggle_invisible
-    eventPlayer.setInvisibility(INVIS)
+    # Enable Invis Command (Invis Command cant be pasted in CN client die to null and none translating to same symbol)
+    (eventPlayer.setInvisibility(Invis.NONE)) if overrideLanguage != Languages.ZH else (eventPlayer.setInvisibility(Invis.ENEMIES))
     if eventPlayer.toggle_invisible:
         eventPlayer.setInvisibility(Invis.ALL)
     smallMessage(eventPlayer, f"  {t'Invisible'}{t' | On' if eventPlayer.toggle_invisible else t' | Off'}")
@@ -61,7 +62,7 @@ rule "Command | Preview Orbs & Portals (Hold Primary + Secondary)":
             eventPlayer.preview_array1.append([eventPlayer.cache_portalStart[eventPlayer.preview_i],eventPlayer.cache_portalEnd[eventPlayer.preview_i]])
             eventPlayer.preview_array2.append([[eventPlayer.preview_i, false],[eventPlayer.preview_i, true]])
 
-    wait()
+    wait(0)
     eventPlayer.preview_i = 0
     if eventPlayer.addon_toggle3rdPov:
         eventPlayer.addon_toggle3rdPov = false
@@ -80,7 +81,7 @@ rule "Command | Preview Orbs & Portals (Hold Primary + Secondary)":
             eventPlayer.preview_i += len(eventPlayer.preview_array1) - true
         eventPlayer.preview_i %= len(eventPlayer.preview_array1)
         waitUntil(abs(eventPlayer.getThrottle().x) < 0.5, true)
-        wait()
+        wait(0)
     eventPlayer.setPrimaryFireEnabled(true)
     eventPlayer.setSecondaryFireEnabled(true)
     eventPlayer.allowButton(Button.ABILITY_1)
@@ -101,13 +102,12 @@ rule "Command | Restart Run (Crouch + Interact + Deflect)":
 
     eventPlayer.lockState = true
     if CompMode:
-        if CompTime < 1:
-            smallMessage(eventPlayer, "   比赛结束" checkCN "   Competition Is Over")
-        elif CompRestartLimit and eventPlayer.checkpoint_notLast:
-            smallMessage(eventPlayer, "   禁止在此比赛中运行期间重新启动" checkCN "   Restart During Run Is Disabled For This Competition")
+        #if CompTime < 1: smallMessage(eventPlayer, "   比赛结束" checkCN "   Competition Is Over")
+        if CompMarathon and eventPlayer.checkpoint_notLast:
+            smallMessage(eventPlayer, "   禁止在此比赛中运行期间重新启动" checkCN "   Restarts In A Run Is Disabled")
         elif CompAtmpNum:
             if eventPlayer.comp_countAttempts == CompAtmpNum:
-                smallMessage(eventPlayer, "   最后一次尝试" checkCN "   You Are On Your Final Attempt")
+                smallMessage(eventPlayer, "   最后一次尝试" checkCN "   This is Your Final Attempt")
             elif eventPlayer.comp_countAttempts < 0:
                 smallMessage(eventPlayer, "   你没有尝试过" checkCN "   You Are Out Of Attempts")
             else:
@@ -233,7 +233,7 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
     eventPlayer.lockState = false
     wait(0.128) #Anti spam
 
-rule "Command | Restart Practice (Hold Interact)":
+rule "Command | Practice Restart (Hold Interact)":
     @Event eachPlayer
     @Condition EditorOn == false
     @Condition eventPlayer.lockState == false
@@ -260,7 +260,7 @@ rule "Command | Restart Practice (Hold Interact)":
     UpdateCache()
     CheckpointFailReset()
 
-rule "Command | Skip (Crouch + Primary-Next | Secondary-Previous)":
+rule "Command | Practice Skip (Crouch + Primary-Next | Secondary-Previous)":
     @Event eachPlayer
     @Condition len(CheckpointPositions)
     @Condition EditorMoveItem == false

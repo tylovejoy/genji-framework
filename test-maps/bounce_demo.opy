@@ -14,4 +14,4 @@ rule "map data":
      pinballnumber = [1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]
      LeaderBoardFull = []
 
-     DashEnabledCheckpoints = [2]
+     Ability1Checkpoints = [2]

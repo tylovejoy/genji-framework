@@ -16,9 +16,25 @@ msgstr "감콩 ♥ 금지!"
 msgid "Bhop"
 msgstr "콩콩이"
 
+#. file climbers.opy, rule "Mechanic | Climbers | Auto Create Bhop"
+msgid "Auto Create Bhop ∀ Is Banned!"
+msgstr "자동 앉콩 ∀ 금지!"
+
 #. file climbers.opy, rule "Mechanic | Climbers | Bhop count for stand ban"
-msgid "Stand Createbhop ♠ Is Banned!"
+msgid "Stand Create Bhop ♠ Is Banned!"
 msgstr "서콩 ♠ 금지!"
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file climbers.opy, rule "Mechanic | Climbers | Climb"
+#.  - file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+#, hasMultipleOccurrencesNotification
+msgid "Climb ↑ Is Banned!"
+msgstr "벽타기 ↑ 금지!"
+
+#. file climbers.opy, rule "Mechanic | Climbers | Climb"
+msgid "Multiclimb ∞ Is Banned!"
+msgstr "벽캔 ∞ 금지!"
 
 #. file climbers.opy, rule "Mechanic | Climbers | Create Bhop"
 msgid "Create Bhop ♂ Is Banned!"
@@ -27,10 +43,6 @@ msgstr "앉콩 ♂ 금지!"
 #. file climbers.opy, rule "Mechanic | Climbers | Create Bhop"
 msgid "Bhop Created!"
 msgstr "앉콩"
-
-#. file climbers.opy, rule "Mechanic | Climbers | Multiclimb"
-msgid "Multiclimb ∞ Is Banned!"
-msgstr "벽캔 ∞ 금지!"
 
 #. file commands.opy, rule "Command | Quick Reset (Reload | Hold Reload to Enable)"
 msgid "Quick Reset Is Enabled"
@@ -74,7 +86,7 @@ msgstr "일반 모드"
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file commands.opy, rule "Command | Toggle Invisible (Hold Deflect)"
+#.  - file commands.opy, rule "Command | Toggle Invisible (Hold Ability 1)"
 #.  - file huds.opy, rule "Huds | Global Localplayer"
 #, hasMultipleOccurrencesNotification
 msgid "Invisible"
@@ -82,7 +94,7 @@ msgstr "투명화"
 
 # TODO: check if all occurrences have the same translation
 #. 5 occurrences:
-#.  - file commands.opy, rule "Command | Toggle Invisible (Hold Deflect)"
+#.  - file commands.opy, rule "Command | Toggle Invisible (Hold Ability 1)"
 #.  - file huds.opy, rule "Huds | Global Localplayer"
 #.  - file huds.opy, rule "Huds | Global Localplayer"
 #.  - file huds.opy, rule "Huds | Global Localplayer"
@@ -91,13 +103,29 @@ msgstr "투명화"
 msgid "| On"
 msgstr "| 켜짐"
 
-#. file commands.opy, rule "Command | Toggle Invisible (Hold Deflect)"
+#. file commands.opy, rule "Command | Toggle Invisible (Hold Ability 1)"
 msgid "| Off"
 msgstr "| 꺼짐"
 
-#. file GENJI.opy, rule "Mechanic | Genji | Ban Save Double - 封禁二段跳"
-msgid "Save Double Banned!"
-msgstr "더블 세이브 금지!"
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file Genji.opy, rule "Mechanic | Climbers | Auto Create Bhop"
+#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+#, hasMultipleOccurrencesNotification
+msgid "Ultimate Is Ready"
+msgstr "궁극기 준비"
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file Genji.opy, rule "Mechanic | Climbers | Auto Create Bhop"
+#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+#, hasMultipleOccurrencesNotification
+msgid "Dash Is Ready"
+msgstr "질풍참 준비"
+
+#. file Genji.opy, rule "Mechanic | Genji | Ban Save Double - 封禁二段跳"
+msgid "Save Double » Is Banned!"
+msgstr "더블 세이브 » 금지!"
 
 #. file huds.opy, rule "Huds | Addons"
 msgid "3rd Person"
@@ -146,10 +174,6 @@ msgstr "벽타기"
 #. file huds.opy, rule "Huds | Each Player"
 msgid "Collect Orbs First"
 msgstr "먼저 오브를 수집하세요"
-
-#. file huds.opy, rule "Huds | Each Player"
-msgid "Come Here"
-msgstr "다음 단계"
 
 #. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Made By"
@@ -284,33 +308,9 @@ msgstr "오브가 수집되었습니다"
 msgid "» Double Jump Is Ready"
 msgstr "» 2단 점프 준비"
 
-# TODO: check if all occurrences have the same translation
-#. 2 occurrences:
-#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
-#.  - file parkour.opy, rule "Subroutine UpdateCache"
-#, hasMultipleOccurrencesNotification
-msgid "Ultimate Is Ready"
-msgstr "궁극기 준비"
-
-# TODO: check if all occurrences have the same translation
-#. 2 occurrences:
-#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
-#.  - file parkour.opy, rule "Subroutine UpdateCache"
-#, hasMultipleOccurrencesNotification
-msgid "Dash Is Ready"
-msgstr "질풍참 준비"
-
 #. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
 msgid "! Collect All Lock Orbs To Complete !"
 msgstr "! 모든 오브를 수집하세요 !"
-
-# TODO: check if all occurrences have the same translation
-#. 2 occurrences:
-#.  - file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
-#.  - file climbers.opy, rule "Mechanic | Climbers | Ban Wallclimb - Message"
-#, hasMultipleOccurrencesNotification
-msgid "Climb ↑ Is Banned!"
-msgstr "벽타기 ↑ 금지!"
 
 #. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
 msgid "≥ Must Have A Bhop To Complete!"

@@ -6,7 +6,7 @@ rule "Ø Map Data - 数据录入 <---- INSERT HERE / 在这输入":
 # note: Don't change defaults only here.
 # If you change this, also change it in the name/credit construciton in the huds
 # The old default should always be included to make old data valid
-rule "☞ Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / 在这输入":
+rule "☞ Credits and Colors Here - 作者代码HUD颜色 <---- INSERT HERE / 在这输入":
     wait(LoadOrder.customize)
     #Filling this in adds it to the inspector pasta after next restart.
     #You can fill in again to overwrite.
@@ -59,10 +59,14 @@ rule "☞ Credits and Colors here - 作者代码HUD颜色 <---- INSERT HERE / �
     ColorConfig[Customize.orb_lock] = Color.ORANGE
     #portals   -   自定义 传送门
     ColorConfig[Customize.portal] = Color.WHITE
+    #Addon checkpoint Huds   -   应用于 所有地图文 本的颜色
+    ColorConfig[Customize.cp_huds] = Color.BLUE
+    #Addon checkpoint IWT   -   应用于 所有地图文 本的颜色
+    ColorConfig[Customize.cp_iwts] = Color.LIME_GREEN
 
-rule "Instructions for Depricated Rules (ban / portal / dash /ult) - 旧版编辑器中已弃用规则指引 (单关封禁 / 传送门 / 给刀给S)":
+rule "Instructions For Depricated Rules (Ban / Portal / Dash /Ult) - 旧版编辑器中已弃用规则指引 (单关封禁 / 传送门 / 给刀给S)":
     @Delimiter
-    # The following rules should now be handled with the ingame editor
+    # The following rules should now be handled with the ingame editor.
     #- Ban per checkpoint
     #- Dash/Ult per checkpoint
     #- Custom portals
@@ -70,10 +74,10 @@ rule "Instructions for Depricated Rules (ban / portal / dash /ult) - 旧版编�
     # When updating old maps, these things should be added to your map data.
     # This is done with the instructions below
     return
-    #step 1) Open the old rule
-    #step 2) Select the variables and press copy
+    #Step 1) Open the old rule
+    #Step 2) Select the variables and press copy
     #      (do not select waits or workshop toggles, only select variables)
-    #step 3) Go to map data rule and paste this the variables
+    #Step 3) Go to map data rule and paste this the variables
     return
     #以下规则现在 要用游戏内置 编辑器编辑
 	#	- 单关 封禁(卡小、蹭留等)

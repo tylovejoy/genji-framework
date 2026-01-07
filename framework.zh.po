@@ -16,9 +16,25 @@ msgstr "表情留小 ♥ 已禁用!"
 msgid "Bhop"
 msgstr "小跳"
 
+#. file climbers.opy, rule "Mechanic | Climbers | Auto Create Bhop"
+msgid "Auto Create Bhop ∀ Is Banned!"
+msgstr "自动卡小 ∀ 已禁用!"
+
 #. file climbers.opy, rule "Mechanic | Climbers | Bhop count for stand ban"
-msgid "Stand Createbhop ♠ Is Banned!"
+msgid "Stand Create Bhop ♠ Is Banned!"
 msgstr "站卡 ♠ 已禁用!"
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file climbers.opy, rule "Mechanic | Climbers | Climb"
+#.  - file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+#, hasMultipleOccurrencesNotification
+msgid "Climb ↑ Is Banned!"
+msgstr "爬墙 ↑ 已禁用!"
+
+#. file climbers.opy, rule "Mechanic | Climbers | Climb"
+msgid "Multiclimb ∞ Is Banned!"
+msgstr "蹭留 ∞ 已禁用!"
 
 #. file climbers.opy, rule "Mechanic | Climbers | Create Bhop"
 msgid "Create Bhop ♂ Is Banned!"
@@ -27,10 +43,6 @@ msgstr "卡小 ♂ 已禁用!"
 #. file climbers.opy, rule "Mechanic | Climbers | Create Bhop"
 msgid "Bhop Created!"
 msgstr "卡小成功!"
-
-#. file climbers.opy, rule "Mechanic | Climbers | Multiclimb"
-msgid "Multiclimb ∞ Is Banned!"
-msgstr "蹭留 ∞ 已禁用!"
 
 #. file commands.opy, rule "Command | Quick Reset (Reload | Hold Reload to Enable)"
 msgid "Quick Reset Is Enabled"
@@ -74,7 +86,7 @@ msgstr "跑图模式"
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file commands.opy, rule "Command | Toggle Invisible (Hold Deflect)"
+#.  - file commands.opy, rule "Command | Toggle Invisible (Hold Ability 1)"
 #.  - file huds.opy, rule "Huds | Global Localplayer"
 #, hasMultipleOccurrencesNotification
 msgid "Invisible"
@@ -82,7 +94,7 @@ msgstr "隐身模式"
 
 # TODO: check if all occurrences have the same translation
 #. 5 occurrences:
-#.  - file commands.opy, rule "Command | Toggle Invisible (Hold Deflect)"
+#.  - file commands.opy, rule "Command | Toggle Invisible (Hold Ability 1)"
 #.  - file huds.opy, rule "Huds | Global Localplayer"
 #.  - file huds.opy, rule "Huds | Global Localplayer"
 #.  - file huds.opy, rule "Huds | Global Localplayer"
@@ -91,13 +103,29 @@ msgstr "隐身模式"
 msgid "| On"
 msgstr "| 启用"
 
-#. file commands.opy, rule "Command | Toggle Invisible (Hold Deflect)"
+#. file commands.opy, rule "Command | Toggle Invisible (Hold Ability 1)"
 msgid "| Off"
 msgstr "| 关闭"
 
-#. file GENJI.opy, rule "Mechanic | Genji | Ban Save Double - 封禁二段跳"
-msgid "Save Double Banned!"
-msgstr "延二段跳已禁用!"
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file Genji.opy, rule "Mechanic | Climbers | Auto Create Bhop"
+#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+#, hasMultipleOccurrencesNotification
+msgid "Ultimate Is Ready"
+msgstr "终极技能已就绪"
+
+# TODO: check if all occurrences have the same translation
+#. 2 occurrences:
+#.  - file Genji.opy, rule "Mechanic | Climbers | Auto Create Bhop"
+#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
+#, hasMultipleOccurrencesNotification
+msgid "Dash Is Ready"
+msgstr "技能1影已就绪"
+
+#. file Genji.opy, rule "Mechanic | Genji | Ban Save Double - 封禁二段跳"
+msgid "Save Double » Is Banned!"
+msgstr "延二段跳 » 已禁用!"
 
 #. file huds.opy, rule "Huds | Addons"
 msgid "3rd Person"
@@ -146,10 +174,6 @@ msgstr "爬墙"
 #. file huds.opy, rule "Huds | Each Player"
 msgid "Collect Orbs First"
 msgstr "先收集橙球"
-
-#. file huds.opy, rule "Huds | Each Player"
-msgid "Come Here"
-msgstr "到这里来"
 
 #. file huds.opy, rule "Huds | Global Localplayer"
 msgid "Made By"
@@ -284,33 +308,9 @@ msgstr "弹球已收集"
 msgid "» Double Jump Is Ready"
 msgstr "» 二段跳已就绪"
 
-# TODO: check if all occurrences have the same translation
-#. 2 occurrences:
-#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
-#.  - file parkour.opy, rule "Subroutine UpdateCache"
-#, hasMultipleOccurrencesNotification
-msgid "Ultimate Is Ready"
-msgstr "终极技能已就绪"
-
-# TODO: check if all occurrences have the same translation
-#. 2 occurrences:
-#.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
-#.  - file parkour.opy, rule "Subroutine UpdateCache"
-#, hasMultipleOccurrencesNotification
-msgid "Dash Is Ready"
-msgstr "技能1影已就绪"
-
 #. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
 msgid "! Collect All Lock Orbs To Complete !"
 msgstr "! 进点前需集齐所有收集球 !"
-
-# TODO: check if all occurrences have the same translation
-#. 2 occurrences:
-#.  - file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
-#.  - file climbers.opy, rule "Mechanic | Climbers | Ban Wallclimb - Message"
-#, hasMultipleOccurrencesNotification
-msgid "Climb ↑ Is Banned!"
-msgstr "爬墙 ↑ 已禁用!"
 
 #. file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
 msgid "≥ Must Have A Bhop To Complete!"

@@ -8,22 +8,16 @@ this should be parts of addons that get toggled by turning on rules
 rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Addons Settings & Data - 附加组件 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter
 
-rule "Addon | Comp Mode Instruction Message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":
-    # Instructions that show when you start comp mode.
-    # Due to the hud text limit, you there is 4 huds available.
-    # If you dont need a field just empty the textfield.
-    wait(0.4)
-    #!disableOptimizeForSize
+rule "Addon | Tournament Instruction Message - 竞赛模式指引消息 <---- INSERT HERE / 在这输入":
+    @Disabled
+    # Instructions that show when you start tournament mode.
     # 竞赛模式 指引消息
     # 指引消息将 会在竞赛模 式开始时 显示
     # 由于 hud 文本限制，你有 4 个hud可用
     # 如果你不需 要一个字段 只是空文 本字段
-    InstructionText = [
-        "Change Comp Mode Instruction Message Hud 1",
-        "Change Comp Mode Instruction Message Hud 2",
-        "Change Comp Mode Instruction Message Hud 3",
-        "Change Comp Mode Instruction Message Hud 4"]
-    #!enableOptimizations
+    InstructionText = ("Change Tournament Instruction Message Hud 1\n"
+        "Change Tournament Instruction Message Hud 2\n"
+        "Change Tournament Instruction Message Hud 3")
 
 rule "Addon | Custom Difficulty Hud - 自定义难度hud <---- INSERT HERE / 在这输入":
     @Disabled
@@ -65,7 +59,7 @@ rule "Addon | Title Data - 标题数据 <---- EDIT ME / 在此处编辑":
         "Pro",
         "Expert",
         "Master"]
-    #!enableOptimizations
+    #!optimizeForSize
     # color
     # 颜色
     TitleData[2] = [
@@ -109,7 +103,7 @@ rule "Addon | HUD Text For Certain Checkpoints - 特定关卡显示的HUD文本 
     # in CpHudText fill in text
     # 修改字符串 “CpHudText” 为顶部显示 的hud文本
     CpHudText = ["Text CP 1", "Text CP 3"]
-    #!enableOptimizations
+    #!optimizeForSize
     # in CpHudCp fill in the at wich to display
     # 修改数组 “CpHudCp” 为hud文本 显示的关卡
     CpHudCp = [1, 3]
@@ -123,16 +117,13 @@ rule "Addon | In-World Text For Certain Checkpoints - 特定关卡显示的地�
     # in CpIwtText fill in text
     # 修改字符串 “CpIwtText” 为关卡显示 的地图文本
     CpIwtText = ["Text CP 1", "Text CP 3"]
-    #!enableOptimizations
+    #!optimizeForSize
     # in CpIwtCp fill in cp at wich to display
     # 修改数组 “CpIwtCp” 为显示地图 文本的关卡
     CpIwtCp = [1, 3]
     # in CpIwtPos fill in the vector
     # 修改数组 “CpIwtPos” 为地图文本 的矢量位置
     CpIwtPos = [vect(1,1,1), vect(1,1,1)]
-    # color applies to all
-    # 选择应用到 所有地图文 本的颜色
-    CpIwtColor = Color.LIME_GREEN
 
 rule "Addon | Hint Text For Certain Checkpoints - 特定关卡的提示文本 <---- EDIT ME / 在此处编辑":
     @Disabled
@@ -143,7 +134,7 @@ rule "Addon | Hint Text For Certain Checkpoints - 特定关卡的提示文本 <-
     # in HintText fill in text
     # 修改字符串 “HintText” 为关卡显示 的提示文本
     HintText = ["Text CP 1", "Text CP 3"]
-    #!enableOptimizations
+    #!optimizeForSize
     # in HintCp fill in the at wich to display
     # 修改数组 “HintCp” 为提示文本 显示的关卡
     HintCp = [1, 3]
@@ -212,7 +203,7 @@ rule "Addon | Group up - Map Data":
     createInWorldText(
         [i for i in getAllPlayers() if i.checkpoint_current == 777],
         "{0} {1} {0}".format(
-            abilityIconString(Hero.GENJI, Button.ULTIMATE),
+            abilityIconString(FwHero.Hero, Button.ULTIMATE),
             "待在这里" checkCN "Group Up"),
         vect(1,1,1), 1.5, Clip.NONE, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE, SpecVisibility.DEFAULT)
     # replace 777 with checkpoint number
@@ -287,7 +278,7 @@ rule "Addon | Custom Orb Script":
     if eventPlayer.cache_bounceTouched in [3, 4]:
        # example canceling primary makes double jump recover
        eventPlayer.cancelPrimaryAction()
-       eventPlayer.skill_usedDouble = null
+       (eventPlayer.skill_usedDouble = null) if FwHero.Hero == Hero.GENJI else (pass)
        smallMessage(eventPlayer," Double Jump Recovered")
     if eventPlayer.cache_bounceTouched in [5, 6]:
         # example move speed
@@ -305,7 +296,7 @@ rule "Addon | Fake Triple Jump - 假三段跳":
     @Condition eventPlayer.skill_usedDouble == false #Double cannot be used already
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false #Don't activate on reset
     eventPlayer.addon_enableDoubleChecks = true #Enable checking double jump
-    wait()
+    wait(0)
     if RULE_CONDITION: goto RULE_START
     if eventPlayer.skill_usedDouble or eventPlayer.isHoldingButton(Button.RELOAD):
         return
@@ -320,7 +311,7 @@ rule "Addon | Fake Triple Jump - 假三段跳":
 
 rule "Addon | Fisho CP Cheat With Overpy Toggle":
     @Event eachPlayer
-    @Condition cpCheat
+    @Condition teleCheat
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
     @Condition (eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.checkpoint_notLast) or (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.checkpoint_current)
     @Condition EditorOn == false
@@ -349,7 +340,7 @@ rule "Fake Ledge Dash - 超级跳":
             eventPlayer.addon_ledgeDash[0] ++
         if eventPlayer.addon_ledgeDash[0] == 12: # stop storing, we keep this speed/direction
             waitUntil(eventPlayer.getSpeed() < 40, 0.4) # wait for dash to finish to execute
-        wait()
+        wait(0)
     # dash after ledge grab
     if eventPlayer.addon_ledgeDash[0] >= 5: #and eventPlayer.addon_ledgeDash[0] <= 12: # ledge dash execute
         # stores speed and launches you after dash if you done it during climb
@@ -373,11 +364,11 @@ rule "Addon | Ledge Grab Patch v1.5":
 
     #Directly after Double Jumping
     eventPlayer.stopForcingButton(Button.JUMP)
-    wait(false)
+    wait(0)
     eventPlayer.startForcingButton(Button.JUMP)
-    wait(false)
+    wait(0)
     eventPlayer.stopForcingButton(Button.JUMP)
-    wait(false)
+    wait(0)
     eventPlayer.startForcingButton(Button.JUMP)
     waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
     eventPlayer.stopForcingButton(Button.JUMP)
@@ -385,10 +376,10 @@ rule "Addon | Ledge Grab Patch v1.5":
     while not eventPlayer.isOnGround():
         #Multi-Climb
         if eventPlayer.isOnWall():
-            wait(false)
+            wait(0)
         else:
             eventPlayer.startForcingButton(Button.JUMP)
-            wait(false)
+            wait(0)
             eventPlayer.stopForcingButton(Button.JUMP)
         waitUntil(not eventPlayer.isInAir() or eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
         waitUntil(not (eventPlayer.isInAir() and eventPlayer.isHoldingButton(Button.JUMP)), Math.INFINITY)

@@ -6,32 +6,31 @@
             '#!define editorDefaultOn true\n')
 
     } else {
-        datafiles = {
-        1: "test-maps/1basic.opy",
-        2: "test-maps/1basic.opy",
-        3: "test-maps/1quicktest.opy", // spot free to pur temporary maps in
-        4: "test-maps/hollydata.opy", // 1W8FF -  Kami - hollywood 
-        5: "test-maps/route.opy", // 4QETZV - FRENCHFRIES - route 
-        6: "test-maps/minimap.opy", // tiny 3 cp workshop map by me
-        7: "test-maps/hanamura.opy", // RF0B8 - Kami - 100 cp hana
-        8: "test-maps/busan.opy",// portal test map by me
-        9: "test-maps/testinghana.opy", // BDRQ4 - genji community - framework test map
-        10: "test-maps/cp1skipbug.opy", // 0zh5n - the map data that sometimes skips cp 1 on reseting when people spec you
-        11: "test-maps/lavamap.opy", // some lava and balls
-        12: "test-maps/bounce_demo.opy", // bounce demo - fisho - no original code but uploaded to X05Y0 on new fw
-        13: "test-maps/bounce_heaven.opy",
-        14: "test-maps/bug_reload_completcp.opy", // bug were you can complete a cp by reloading while not standing on the ground
-        15: "test-maps/dashstart.opy", // dash start not banned
-        16: "test-maps/fisho_nepal.opy", // fisho's nepal map
-        17: "test-maps/fishodorado.opy", // my dorado
-        18: "test-maps/bounces_close.opy",
-        19: "test-maps/routetest.opy",
-        20: "test-maps/rialtofisho.opy", // my rialto
-        21: "test-maps/2cpmulti.opy", // 2 cp multi
-        22: "test-maps/generaltest.opy",
-        23: "test-maps/bandoublejump.opy", // lulledlion's map
-        24: "test-maps/puzzle.opy", // lulledlion's map
-        25: "test-maps/nooter_midtown.opy"
+        data = {
+        1: "1basic.opy",
+        2: "1basic.opy",
+        3: "1quicktest.opy", // spot free to pur temporary maps in
+        4: "hollydata.opy", // 1W8FF -  Kami - hollywood 
+        5: "route.opy", // 4QETZV - FRENCHFRIES - route 
+        6: "minimap.opy", // tiny 3 cp workshop map by me
+        7: "hanamura.opy", // RF0B8 - Kami - 100 cp hana
+        8: "busan.opy",// portal test map by me
+        9: "testinghana.opy", // BDRQ4 - genji community - framework test map
+        10: "cp1skipbug.opy", // 0zh5n - the map data that sometimes skips cp 1 on reseting when people spec you
+        11: "lavamap.opy", // some lava and balls
+        12: "bounce_demo.opy", // bounce demo - fisho - no original code but uploaded to X05Y0 on new fw
+        13: "bounce_heaven.opy",
+        14: "bug_reload_completcp.opy", // bug were you can complete a cp by reloading while not standing on the ground
+        15: "dashstart.opy", // dash start not banned
+        16: "fisho_nepal.opy", // fisho's nepal map
+        17: "fishodorado.opy", // my dorado
+        18: "bounces_close.opy",
+        19: "routetest.opy",
+        20: "rialtofisho.opy", // my rialto
+        21: "2cpmulti.opy", // 2 cp multi
+        22: "generaltest.opy",
+        23: "bandoublejump.opy", // lulledlion's map
+        24: "nooter_midtown.opy"
         }[x]
 
         selectedmap = {
@@ -57,23 +56,19 @@
         20: "rialto",
         21: "workshopChamber",
         22: "workshopChamber",
-        23: [,"lijiangNightMarket"],
-        24: "hanamura",
-        25: "midtown",
+        23: ["","lijiangNightMarket"],
+        24: "midtown",
         }[x]
 
-        if (!Array.isArray(selectedmap)){
-            selectedmap = ['"' + selectedmap + '"', ""]
+        if (Array.isArray(selectedmap)) {
+            selectedmap = [(selectedmap[0] === "" ? "" : '"' + selectedmap[0] + '"'), '"' + selectedmap[1] + '"']
         }
-        else{
-            selectedmap = [
-                (selectedmap[0] === undefined)? "" :  ('"' + selectedmap[0] + '"'),
-                '"' + selectedmap[1] + '"'
-            ]
+        else {
+            selectedmap = ['"' + selectedmap + '"', ""]
         }
 
         x = ('#!define testData ' +
-            '#!include "'+ datafiles + '"\n'+
+            '#!include "test-maps/'+ data + '"\n'+
             '#!define skirmishMap [' + selectedmap[0] + ']\n' +
             '#!define tdmMap [' + selectedmap[1] + ']\n' +
             '#!define editorDefaultOn false\n')

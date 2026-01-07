@@ -194,7 +194,7 @@ rule "leaderboard test bots":
     @Condition testaion
     wait(creationdelay) # wait for other entities to be created
     while len(testAI) < testbotnumber:
-        createDummy(Hero.GENJI, Team.1, -1, null, null)
+        createDummy(FwHero.Hero, Team.1, -1, null, null)
         testAI.append(getLastCreatedEntity())
         wait(0.1)
         testAI[len(testAI)-1].startForcingName("bot {0}".format(len(testAI)-1))

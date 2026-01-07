@@ -26,26 +26,17 @@ rule "Parkour | Setup & Variables":
     startForcingSpawn(Team.ALL, 1)
     startForcingSpawn(Team.ALL, 2)
     wait(LoadOrder.setup)
-
-    EditorOn = createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.MapEditor, editorDefaultOn, 0)
-    #if createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.MapValidator, true, 3):
-    #    async(AddonCheckMap, AsyncBehavior.NOOP)
-    CompMode = not EditorOn and createWorkshopSettingBool(SettingsText.TournamentCategory, SettingsText.TournamentMode, compModeToggle, 100)
+    EditorOn = createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.Map_Editor, editorDefaultOn, 0)
+    CompMode = not EditorOn and createWorkshopSettingBool(SettingsText.TournamentCategory, SettingsText.Tournament_Mode, compModeToggle, 100)
     if CompMode:
-        CompTime = createWorkshopSettingInt(SettingsText.TournamentCategory, SettingsText.TournamentTime, 1, 240, compTimeLimit, 101)
-        CompAtmpNum = createWorkshopSettingInt(SettingsText.TournamentCategory, SettingsText.TournamentAttempts, 0, 500, attemptCount, 102)
-        CompRestartLimit = createWorkshopSettingBool(SettingsText.TournamentCategory, SettingsText.TournamentRestart, compRestartLimit, 103)
-    else:
-        InstructionText = null
+        CompAtmpNum = createWorkshopSettingInt(SettingsText.TournamentCategory, SettingsText.Tournament_Attempts, attemptCount, 1, 500, 102)
+        CompMarathon = createWorkshopSettingBool(SettingsText.TournamentCategory, SettingsText.Tournament_Marathon, compMarathon, 103)
 
     SaveName = []
     SaveCp = []
     SaveTimer = []
     SaveEnt = []
     SaveElapsed = []
-
-    BladeEnabledCheckpoints = [i for i in BladeEnabledCheckpoints if i + false >= 0] if len(BladeEnabledCheckpoints) else []
-    DashEnabledCheckpoints = [i for i in DashEnabledCheckpoints if i + false >= 0] if len(DashEnabledCheckpoints) else []
 
     BouncePadCheckpoints = BouncePadCheckpoints if len(BouncePadCheckpoints) else []
     CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
@@ -65,22 +56,12 @@ rule "Parkour | Setup & Variables":
     CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) else []
     CustomPortalCP = CustomPortalCP if len(CustomPortalCP) else []
 
+    Fw_Parkour_Setup_Hero()
+
     LeaderBoardFull = []
     TitleData = null
     HintCp = []
     HintText = []
-
-    # clean out -1's after the ban has loaded
-    #BanTriple = [i for i in BanTriple if i + false >= 0] if len(BanTriple) else [] # legacy code, now auto sets it to null to save space
-    BanBhop = [i for i in BanBhop if i + false >= 0] if len(BanBhop) else []
-    BanEmote = [i for i in BanEmote if i + false >= 0] if len(BanEmote) else []
-    BanClimb = [i for i in BanClimb if i + false >= 0] if len(BanClimb) else []
-    BanDead = [i for i in BanDead if i + false >= 0] if len(BanDead) else []
-    BanCreate = [i for i in BanCreate if i + false >= 0] if len(BanCreate) else []
-    BanMulti = [i for i in BanMulti if i + false >= 0] if len(BanMulti) else []
-    BanStand = [i for i in BanStand if i + false >= 0] if len(BanStand) else []
-    BanSaveDouble = BanSaveDouble if len(BanSaveDouble) else []
-    BanDjump = BanDjump if len(BanDjump) else []
 
     # fix team because of naming
     if ColorConfig[Customize.orb_lock] == Color.TEAM_1:
@@ -98,29 +79,19 @@ rule "Parkour | Setup & Variables":
 
 rule "Parkour | Match time":
     if getCurrentGamemode() != Gamemode.SKIRMISH:
-        wait()
+        wait(0)
         setMatchTime(false)
-        wait()
+        wait(0)
         setMatchTime(false)
-        wait()
+        wait(0)
 
     setMatchTime(70)
     pauseMatchTime()
-    wait()
-    LobbyID = "v"
-    TimeRemaining = 265
-    while TimeRemaining:
-        wait(60)
-        TimeRemaining--
-        if CompMode:
-            CompTime--
-            if not CompTime:
-                bigMessage(true[0], "时间到了" checkCN "Time's Up")
-                stopChasingVariable(getAllPlayers().timer_normal)
-                getAllPlayers().setDamageReceived(100)
-                kill(getAllPlayers(), null)
-                #wait(0.032)
-                #LeaderBoardRemake = true #async(CreateLeaderboard(), AsyncBehavior.RESTART)
+    wait(0)
+    (LobbyID = "v") if antiCheat else (pass)
+    TimeRemaining = createWorkshopSettingInt(SettingsText.MapCategory, SettingsText.Map_Time, lobbyTime, 5, 265, 4)
+    while 60 * TimeRemaining - getTotalTimeElapsed() > 0:
+        wait(60 * TimeRemaining - getTotalTimeElapsed())
     #"房间已达最大持续时间, 即将重启" checkCN "Maximum Lobby Time Reached, Restarting"
     bigMessage(true[0], t"Maximum Lobby Time Reached, Restarting")
     wait(5)
@@ -139,7 +110,7 @@ rule "Parkour | Player Initialize":
     eventPlayer.enableDeathSpectateAllPlayers()
     eventPlayer.enableDeathSpectateTargetHud()
     eventPlayer.disableRespawn()
-    eventPlayer.preloadHero(Hero.GENJI)
+    eventPlayer.preloadHero(FwHero.Hero)
     eventPlayer.editor_lock = true
     eventPlayer.toggle_guide = true
     #eventPlayer.toggle_quickRestart = true
@@ -166,17 +137,17 @@ rule "Parkour | Player Initialize":
             eventPlayer.setAbility1Enabled(false)
             eventPlayer.setUltEnabled(false)
             waitUntil(not eventPlayer.isHoldingButton(Button.INTERACT), true)
-            waitUntil(eventPlayer.isHoldingButton(Button.INTERACT) or CompTime < 1, Math.INFINITY)
+            waitUntil(eventPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
             eventPlayer.setMoveSpeed(100)
             eventPlayer.comp_instructionHud = false
-        if CompTime < 1 or eventPlayer.comp_countAttempts < 0:
+        if eventPlayer.comp_countAttempts < 0:
             eventPlayer.toggle_leaderboard = true
-            eventPlayer.comp_countAttempts = -1
+            #eventPlayer.comp_countAttempts = -1
             eventPlayer.setDamageReceived(100)
             kill(eventPlayer,null)
             eventPlayer.setDamageReceived(0)
             return
-    wait()
+    wait(0)
     StartGame()  # initialization of the game
     eventPlayer.lockState = false
 
@@ -211,7 +182,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             wait(0.048)
             playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1.4)
             wait(0.048)
-    elif eventPlayer.toggle_invincible or eventPlayer.toggle_spectate or (CompMode and not CompTime):# or eventPlayer.lockState:
+    elif eventPlayer.toggle_invincible or eventPlayer.toggle_spectate:# or eventPlayer.lockState:
         # Do nothing
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpCircleRadius:
         # arrived ----------------------------------------------------------------------------------------------------
@@ -256,7 +227,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
                             CompAtmpSaveCount[CompAtmpSaveNames.index(eventPlayer[0].split([]))] = eventPlayer.comp_countAttempts + 1
                     #"已通关! 用时" checkCN "Mission Complete! Time"
                     bigMessage(true[0], f"{eventPlayer} {t'Mission Complete! Time'} {eventPlayer.timer_normal} Sec")
-                    wait()
+                    wait(0)
                 else: # update save
                     MakeSave()
                 UpdateTitle()
@@ -266,7 +237,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             else:
                 ResetAbilities()
                 AddonCustomLoadAndReset()
-            wait()
+            wait(0)
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, null, eventPlayer, 100)
             playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, eventPlayer.getPosition(), 4)
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpCircleRadius:
@@ -309,7 +280,7 @@ rule "Parkour | Bounce Ball / Orb":
             eventPlayer.applyImpulse(Vector.UP, BounceStrength[eventPlayer.cache_bounceTouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
         elif BounceStrength[eventPlayer.cache_bounceTouched] < 0:
             eventPlayer.cancelPrimaryAction()
-            eventPlayer.skill_usedDouble = null
+            (eventPlayer.skill_usedDouble = null) if Hero.FwHero == Hero.GENJI else (pass)
             #"   二段跳已就绪" checkCN "   » Double Jump is ready"
             smallMessage(eventPlayer, t"   » Double Jump Is Ready")
 
@@ -317,15 +288,15 @@ rule "Parkour | Bounce Ball / Orb":
             eventPlayer.setUltEnabled(true)
             eventPlayer.setUltCharge(100)
             #"终极技能已就绪" checkCN "Ultimate is ready"
-            smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
+            smallMessage(eventPlayer, f"   {abilityIconString(FwHero.Hero, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
 
         if BounceToggleDash[eventPlayer.cache_bounceTouched]:
             if eventPlayer.isUsingAbility1():
                 waitUntil(not eventPlayer.isUsingAbility1(), true)
-                wait()
+                wait(0)
             eventPlayer.setAbility1Enabled(true)
             #"技能1影已就绪" checkCN "Dash is ready"
-            smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ABILITY_1)} {t'Dash Is Ready'}")
+            smallMessage(eventPlayer, f"   {abilityIconString(FwHero.Hero, Button.ABILITY_1)} {t'Dash Is Ready'}")
 
         playEffect(eventPlayer, DynamicEffect.BUFF_EXPLOSION_SOUND, null, eventPlayer, 75)
     wait(0.24)
@@ -374,54 +345,11 @@ def UpdateCache():
     eventPlayer.cache_portalStart = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] < 0]
     eventPlayer.cache_portalEnd = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] < 0]
     eventPlayer.checkpoint_notLast = (eventPlayer.checkpoint_current < len(CheckpointPositions) - 1 and len(CheckpointPositions) > 1)
-    eventPlayer.cache_startUlt = eventPlayer.checkpoint_current in BladeEnabledCheckpoints or not eventPlayer.checkpoint_notLast
-    eventPlayer.cache_startAbility1 = eventPlayer.checkpoint_current in DashEnabledCheckpoints or not eventPlayer.checkpoint_notLast
     eventPlayer.toggle_hints = false
     eventPlayer.banString = []
-    wait()
-    if eventPlayer.cache_startUlt:
-        smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
-    if eventPlayer.cache_startAbility1:
-        smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ABILITY_1)} {t'Dash Is Ready'}")
-    if eventPlayer.checkpoint_notLast:
-        eventPlayer.ban_multi = createWorkshopSettingBool(SettingsText.BanCategory, SettingsText.BanMultiClimb, false, 1) or eventPlayer.checkpoint_current in BanMulti
-        if eventPlayer.ban_multi:
-            eventPlayer.banString = "∞ {}".format(eventPlayer.banString)
-        eventPlayer.ban_create = createWorkshopSettingBool(SettingsText.BanCategory, SettingsText.BanCreateBhop, false, 2) or eventPlayer.checkpoint_current in BanCreate
-        if eventPlayer.ban_create:
-            eventPlayer.banString = "♂ {}".format(eventPlayer.banString)
-        eventPlayer.ban_standcreate = createWorkshopSettingBool(SettingsText.BanCategory, SettingsText.BanStandCreate, false, 3) or eventPlayer.checkpoint_current in BanStand
-        if eventPlayer.ban_standcreate:
-            eventPlayer.banString = "♠ {}".format(eventPlayer.banString) # ≥  √ ▼ ↓
-        eventPlayer.ban_dead = createWorkshopSettingBool(SettingsText.BanCategory, SettingsText.BanDeathHop, false, 4) or eventPlayer.checkpoint_current in BanDead
-        if eventPlayer.ban_dead:
-            eventPlayer.banString = "X {}".format(eventPlayer.banString)
-        eventPlayer.ban_emote = createWorkshopSettingBool(SettingsText.BanCategory, SettingsText.BanEmote, false, 5) or eventPlayer.checkpoint_current in BanEmote
-        if eventPlayer.ban_emote:
-            eventPlayer.banString = "♥ {}".format(eventPlayer.banString)
-        eventPlayer.ban_savedouble = createWorkshopSettingBool(SettingsText.BanCategory, SettingsText.BanSaveDouble, false, 6) or eventPlayer.checkpoint_current in BanSaveDouble
-        if eventPlayer.ban_savedouble:
-            eventPlayer.banString = "△ {}".format(eventPlayer.banString)
-        eventPlayer.ban_climb = createWorkshopSettingBool(SettingsText.BanCategory, SettingsText.BanWallClimb, false, 7) or eventPlayer.checkpoint_current in BanClimb
-        if eventPlayer.ban_climb:
-            eventPlayer.banString = "↑ {}".format(eventPlayer.banString)
-        eventPlayer.ban_bhop = createWorkshopSettingBool(SettingsText.BanCategory, SettingsText.RequireBhop, false, 8) or eventPlayer.checkpoint_current in BanBhop
-        if eventPlayer.ban_bhop:
-            eventPlayer.banString = "≥ {}".format(eventPlayer.banString) # ≥  √ ▼ ↓
-        eventPlayer.ban_djump = createWorkshopSettingBool(SettingsText.BanCategory, SettingsText.RequireDjump, false, 9) or eventPlayer.checkpoint_current in BanDjump
-        if eventPlayer.ban_djump:
-            eventPlayer.banString = "» {}".format(eventPlayer.banString) # ≥  √ ▼ ↓ ︽
-    else:
-        eventPlayer.ban_multi = false
-        eventPlayer.ban_create = false
-        eventPlayer.ban_standcreate = false
-        eventPlayer.ban_dead = false
-        eventPlayer.ban_emote = false
-        eventPlayer.ban_climb = false
-        eventPlayer.ban_savedouble = false
-        eventPlayer.ban_bhop = false
-        eventPlayer.ban_djump = false
-    wait()
+    wait(0)
+    Fw_Parkour_UpdateCache_Hero()
+    wait(0)
     if not EditorOn or eventPlayer != hostPlayer: return
     EditUpdateSelectedIds()
     destroyEffect(hostPlayer.editor_hitboxEffect)
@@ -465,15 +393,12 @@ def TimerResume():
 
 def LeaderboardUpdate():
     @Name "Parkour | SUB Leaderboard Update"
-    # [[name, seconds, prettytime]]
+    # [[nameEntity, secondsFloat, timeString]]
     if eventPlayer[0].split([]) in [e[0] for e in LeaderBoardFull]: # you already have a time
         if eventPlayer.timer_normal >= [e for e in LeaderBoardFull if e[0] == eventPlayer[0].split([])][0][1]:
             return #Time too slow
         LeaderBoardFull = [e for e in LeaderBoardFull if e[0] != eventPlayer[0].split([])]
-    elif len(LeaderBoardFull) < 25 or eventPlayer.timer_normal < LeaderBoardFull[19].last():
-        # you are not in list yet
-        # board has room for more
-        # your time lower then last entry
+    elif len(LeaderBoardFull) < 25 or eventPlayer.timer_normal < LeaderBoardFull[24][1]:
         del LeaderBoardFull[24]
     else:
         return #Full and time too slow
@@ -482,20 +407,19 @@ def LeaderboardUpdate():
 
 def CheckpointFailReset():
     @Name "Parkour | SUB Checkpoint Fail"
-    eventPlayer.timer_split = eventPlayer.timer_practice if eventPlayer.toggle_practice else eventPlayer.timer_normal
     eventPlayer.cache_collectedLocks = []
-    eventPlayer.cancelPrimaryAction()
-    eventPlayer.skill_usedDouble = null
-
+    eventPlayer.timer_split = eventPlayer.timer_practice if eventPlayer.toggle_practice else eventPlayer.timer_normal
     if not (eventPlayer.checkpoint_current or eventPlayer.toggle_practice):
         eventPlayer.timer_normal = 0
         eventPlayer.timer_split = 0
 
+    eventPlayer.cancelPrimaryAction()
+    (eventPlayer.skill_usedDouble = null) if Hero.FwHero == Hero.GENJI else (pass)
     if len(CheckpointPositions):
         if eventPlayer.isUsingAbility1():
             eventPlayer.startForcingPosition(eventPlayer, false)
             waitUntil(not eventPlayer.isUsingAbility1(), true)
-            wait()
+            wait(0)
             eventPlayer.stopForcingPosition()
         eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current].last())
         #After teleport incase stopForcingPosition launches the player
@@ -514,7 +438,7 @@ def CheckpointFailReset():
             eventPlayer.setDamageReceived(100)
             kill(eventPlayer, null)
             eventPlayer.setDamageReceived(0)
-            wait()
+            wait(0)
 
     ResetAbilities()
     AddonCustomLoadAndReset()

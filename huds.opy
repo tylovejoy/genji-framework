@@ -93,14 +93,14 @@ rule "Huds | Global Localplayer":
             HudPosition.RIGHT, HO.com_restart_n_board, ColorConfig[Customize.command_normal], HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
         Difficultyhud = [
-            createWorkshopSettingEnum(SettingsText.MapCategory, SettingsText.MapDifficulty, 0, [
-                SettingsText.MapDiffOptions[0], SettingsText.MapDiffOptions[1], SettingsText.MapDiffOptions[2],
-                SettingsText.MapDiffOptions[3], SettingsText.MapDiffOptions[4], SettingsText.MapDiffOptions[5],
-                SettingsText.MapDiffOptions[6], SettingsText.MapDiffOptions[7], SettingsText.MapDiffOptions[8],
-                SettingsText.MapDiffOptions[9], SettingsText.MapDiffOptions[10], SettingsText.MapDiffOptions[11],
-                SettingsText.MapDiffOptions[12], SettingsText.MapDiffOptions[13], SettingsText.MapDiffOptions[14],
-                SettingsText.MapDiffOptions[15], SettingsText.MapDiffOptions[16], SettingsText.MapDiffOptions[17],], 1),
-            createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.MapPlaytest, false, 2)]
+            createWorkshopSettingEnum(SettingsText.MapCategory, SettingsText.Map_Difficulty, 0, [
+                SettingsText.Map_DiffOptions[0], SettingsText.Map_DiffOptions[1], SettingsText.Map_DiffOptions[2],
+                SettingsText.Map_DiffOptions[3], SettingsText.Map_DiffOptions[4], SettingsText.Map_DiffOptions[5],
+                SettingsText.Map_DiffOptions[6], SettingsText.Map_DiffOptions[7], SettingsText.Map_DiffOptions[8],
+                SettingsText.Map_DiffOptions[9], SettingsText.Map_DiffOptions[10], SettingsText.Map_DiffOptions[11],
+                SettingsText.Map_DiffOptions[12], SettingsText.Map_DiffOptions[13], SettingsText.Map_DiffOptions[14],
+                SettingsText.Map_DiffOptions[15], SettingsText.Map_DiffOptions[16], SettingsText.Map_DiffOptions[17],], 1),
+            createWorkshopSettingBool(SettingsText.MapCategory, SettingsText.Map_Playtest, false, 2)]
         # display
         if Difficultyhud[0] != 17: # 17th entry is 'dont display'
             hudText((localPlayer.toggle_guide and not localPlayer.toggle_leaderboard)[0],
@@ -118,7 +118,7 @@ rule "Huds | Global Localplayer":
 
     # global huds
     hudSubheader(true[0],
-        f"{t'Server Restart In '}{TimeRemaining}{t' Min - '}{LobbyID}{versionhere}{t'\nError: Max HUD Count Reached' if getNumberOfTextIds() >= 128 else []}",
+        f"{t'Server Restart In '}{ceil(TimeRemaining - getTotalTimeElapsed() / 60)}{t' Min - '}{(LobbyID) if antiCheat else ('v') }{versionhere}{t'\nError: Max HUD Count Reached' if getNumberOfTextIds() >= 128 else []}",
         #"房间将在 {0} 分钟后重启 - {1}{2}".format(
         #    TimeRemaining, versionhere, "\n错误: 已达到最大HUD数量上限" if getNumberOfTextIds() >= 128 else [])
         #checkCN
@@ -161,26 +161,18 @@ rule "Huds | Global Localplayer":
         hudText((localPlayer.checkpoint_current in CpHudCp and localPlayer.toggle_guide)[0],
             CpHudText[CpHudCp.index(localPlayer.checkpoint_current)],
             null, null,
-            HudPosition.TOP, HO.add_custommsg1, Color.BLUE, null, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
+            HudPosition.TOP, HO.add_custommsg1, ColorConfig[Customize.cp_huds], null, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
 
     if len(CpIwtText):
         createInWorldText(localPlayer.checkpoint_current in CpIwtCp,
             CpIwtText[CpIwtCp.index(localPlayer.checkpoint_current)],
             CpIwtPos[CpIwtCp.index(localPlayer.checkpoint_current)],
-            2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, CpIwtColor, SpecVisibility.DEFAULT)
+            2, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING, ColorConfig[Customize.cp_iwts], SpecVisibility.DEFAULT)
 
     if CompMode:
-        hudHeader([i for i in getAllPlayers() if i.comp_instructionHud],"                                                                                                                           ",
-            HudPosition.TOP, HO.comp_instructtop, Color.WHITE, HudReeval.VISIBILITY,SpecVisibility.DEFAULT)
-        if InstructionText[0]:
-            hudSubtext([i for i in getAllPlayers() if i.comp_instructionHud], InstructionText[0], HudPosition.TOP, HO.comp_instruct1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        if InstructionText[1]:
-            hudSubtext([i for i in getAllPlayers() if i.comp_instructionHud], InstructionText[1], HudPosition.TOP, HO.comp_instruct2, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        if InstructionText[2]:
-            hudSubtext([i for i in getAllPlayers() if i.comp_instructionHud], InstructionText[2], HudPosition.TOP, HO.comp_instruct3, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        if InstructionText[3]:
-            hudSubtext([i for i in getAllPlayers() if i.comp_instructionHud], InstructionText[3], HudPosition.TOP, HO.comp_instruct4, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
-        hudHeader([i for i in getAllPlayers() if i.comp_instructionHud],"                                   Press {0} to start                                ".format(buttonString(Button.INTERACT)),
+        if InstructionText:
+            hudSubtext(localPlayer.comp_instructionHud, InstructionText, HudPosition.TOP, HO.comp_instruct1, Color.WHITE, HudReeval.VISIBILITY, SpecVisibility.DEFAULT)
+        hudHeader(localPlayer.comp_instructionHud,"　　　　　Press {0} To Start　　　　　".format(buttonString(Button.INTERACT)),
             HudPosition.TOP, HO.comp_instructbottom, Color.WHITE, HudReeval.VISIBILITY_AND_STRING,SpecVisibility.DEFAULT)
     elif not EditorOn:
         hudSubtext(localPlayer.toggle_guide,
@@ -224,7 +216,7 @@ rule "Huds | Global Localplayer":
 rule "Huds | Leaderboard": # for global instead of tied to player
     @Condition LeaderBoardRemake
     @Condition LeaderBoardFull != []
-    wait() # account for delay in completion
+    wait(0) # account for delay in completion
     while len(LeaderBoardHuds):
         destroyHudText(LeaderBoardHuds[0])
         del LeaderBoardHuds[0]
@@ -244,33 +236,32 @@ rule "Huds | Leaderboard": # for global instead of tied to player
         #" \n{0} 排名前5 {0}".format(iconString(Icon.FLAG)) checkCN " \n{0} Top 5 {0}".format(iconString(Icon.FLAG)),
         HudPosition.RIGHT, HO.board_top5, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     LeaderBoardHuds = getLastCreatedText()
-    hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[0][0], LeaderBoardFull[0].last(), HudPosition.RIGHT, HO.board_top5+1,
+    hudText(true[0], heroIcon(FwHero.Hero), LeaderBoardFull[0][0], LeaderBoardFull[0].last(), HudPosition.RIGHT, HO.board_top5+1,
         Color.RED, Color.RED, Color.RED, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
     LeaderBoardHuds.append(getLastCreatedText())
     if LeaderBoardFull[1]:
-        hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[1][0], LeaderBoardFull[1].last(), HudPosition.RIGHT, HO.board_top5+2,
+        hudText(true[0], heroIcon(FwHero.Hero), LeaderBoardFull[1][0], LeaderBoardFull[1].last(), HudPosition.RIGHT, HO.board_top5+2,
             Color.ORANGE, Color.ORANGE, Color.ORANGE, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
         LeaderBoardHuds.append(getLastCreatedText())
         if LeaderBoardFull[2]:
-            hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[2][0], LeaderBoardFull[2].last(), HudPosition.RIGHT, HO.board_top5+3,
+            hudText(true[0], heroIcon(FwHero.Hero), LeaderBoardFull[2][0], LeaderBoardFull[2].last(), HudPosition.RIGHT, HO.board_top5+3,
                 Color.YELLOW, Color.YELLOW, Color.YELLOW, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
             LeaderBoardHuds.append(getLastCreatedText())
             if LeaderBoardFull[3]:
-                hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[3][0], LeaderBoardFull[3].last(), HudPosition.RIGHT, HO.board_top5+4,
+                hudText(true[0], heroIcon(FwHero.Hero), LeaderBoardFull[3][0], LeaderBoardFull[3].last(), HudPosition.RIGHT, HO.board_top5+4,
                     Color.LIME_GREEN, Color.LIME_GREEN,Color.LIME_GREEN, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
                 LeaderBoardHuds.append(getLastCreatedText())
                 if LeaderBoardFull[4]:
-                    hudText(true[0], heroIcon(Hero.GENJI), LeaderBoardFull[4][0], LeaderBoardFull[4].last(), HudPosition.RIGHT, HO.board_top5+5,
+                    hudText(true[0], heroIcon(FwHero.Hero), LeaderBoardFull[4][0], LeaderBoardFull[4].last(), HudPosition.RIGHT, HO.board_top5+5,
                         Color.GREEN, Color.GREEN, Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
                     LeaderBoardHuds.append(getLastCreatedText())
-
-    hudHeader(true if evalOnce(CompMode and not CompTime) else localPlayer.toggle_leaderboard,
+    hudHeader(localPlayer.toggle_leaderboard,
         "　　　　 {0} {1} {0} 　　　　\n　　　　　　　　　　　　　　　　　　{2}".format(iconString(Icon.FLAG), t"Leaderboard", evalOnce(LeaderBoardRemake)),
         #"　　　　 {0} {1} {0} 　　　　\n　　　　　　　　　　　　　　　　　　{2}".format(iconString(Icon.FLAG), "成绩排名" checkCN "Leaderboard", evalOnce(LeaderBoardRemake)),
         HudPosition.TOP, HO.board_display1, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     LeaderBoardHuds.append(getLastCreatedText())
     LeaderBoardRemake = null
-    wait()
+    wait(0)
 
 rule "Huds | Each Player":
     @Event playerJoined
@@ -292,8 +283,8 @@ rule "Huds | Each Player":
             len(eventPlayer.preview_array1), #2
             #3
             ("{0} {1} {2} {3}".format(
-                abilityIconString(Hero.GENJI, Button.ULTIMATE) if BounceToggleUlt[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
-                abilityIconString(Hero.GENJI, Button.ABILITY_1) if BounceToggleDash[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
+                abilityIconString(FwHero.Hero, Button.ULTIMATE) if BounceToggleUlt[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
+                abilityIconString(FwHero.Hero, Button.ABILITY_1) if BounceToggleDash[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
                 iconString(Icon.WARNING) if BounceToggleLock[eventPlayer.preview_array2[eventPlayer.preview_i]] else [],
                 iconString(Icon.ARROW_UP) if BounceStrength[eventPlayer.preview_array2[eventPlayer.preview_i]] > 0 else
                 iconString(Icon.ARROW_DOWN) if BounceStrength[eventPlayer.preview_array2[eventPlayer.preview_i]] < 0 else [])
@@ -362,7 +353,7 @@ rule "Huds | Each Player":
         eventPlayer if eventPlayer.checkpoint_notLast and eventPlayer.toggle_guide else null,
         f"{iconString(Icon.WARNING)}{t'Collect Orbs First'}"
         if eventPlayer.cache_bounceMaxLocks and len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks else
-        t"Come Here",
+        l"Come Here",
         #"{0} {1}".format(
         #    iconString(Icon.WARNING),
         #    "先收集橙球" checkCN "collect orbs first"
@@ -371,23 +362,17 @@ rule "Huds | Each Player":
         CheckpointPositions[eventPlayer.checkpoint_current + 1],
         1.5, Clip.NONE, WorldTextReeval.VISIBILITY_POSITION_AND_STRING,  ColorConfig[Customize.cometext], SpecVisibility.DEFAULT)
 
-    wait(2.5)
+    wait(0)
     if CompMode:
         hudText(eventPlayer, null,
-            ("! 比赛结束 !" if not CompTime else
-            "剩余时间: {0} 分钟{1}".format(
-                CompTime,
-                "\n你没有尝试过" if eventPlayer.comp_countAttempts < 0 else
-                "\n尝试 {0} / {1}".format(eventPlayer.comp_countAttempts, CompAtmpNum) if CompAtmpNum else [])
-            ) checkCN (
-            "! Competition Is Over !" if not CompTime else
-            "Time Left: {0} Min{1}".format(
-                CompTime,
-                "\nYou Are Out Of Attempts" if eventPlayer.comp_countAttempts < 0 else
-                "\nAttempt {0} / {1}".format(eventPlayer.comp_countAttempts, CompAtmpNum) if CompAtmpNum else [])),
-            ("竞赛模式" if CompTime else "竞赛模式\n\n\n")
+            (#"! 比赛结束 !" if not CompTime else "剩余时间: {0} 分钟{1}".format(CompTime,
+                ("你没有尝试过" if eventPlayer.comp_countAttempts < 0 else
+                "尝试 {0} / {1}".format(eventPlayer.comp_countAttempts, CompAtmpNum) if CompAtmpNum else []))
             checkCN
-            ("Tournament Mode" if CompTime else "Tournament Mode\n\n\n"),
+            (#"! Competition Is Over !" if not CompTime else "Time Left: {0} Min{1}".format(CompTime,
+                ("You Are Out Of Attempts" if eventPlayer.comp_countAttempts < 0 else
+                "Attempt {0} / {1}".format(eventPlayer.comp_countAttempts, CompAtmpNum) if CompAtmpNum else [])),
+            ("竞赛模式") checkCN ("Tournament Mode"),
             HudPosition.TOP, HO.comp_info, null, Color.YELLOW, Color.YELLOW, HudReeval.STRING, SpecVisibility.DEFAULT)
 
 def UpdateTitle():
@@ -402,7 +387,7 @@ def UpdateTitle():
 rule "Huds | Addons":
     wait(LoadOrder.hudsGlobal)
     waitUntil(entityExists(getAllPlayers()), Math.INFINITY)
-    wait()
+    wait(0)
     if getAllPlayers().addon_toggle3rdPov <= true:
         hudSubtext(localPlayer.toggle_guide,
             f"{t'Hold'} {buttonString(Button.CROUCH)} + {buttonString(Button.JUMP)} | {t'3rd Person'}{t' | On' if localPlayer.addon_toggle3rdPov else []}",

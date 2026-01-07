@@ -3,14 +3,15 @@
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
-# Current Named Unused Variables: 1,2,9,11,17,19,28,29,30,31,36,37,39,43,48,49,58,59,65,66,72,80,89,90
+# Current Named Unused Variables: 1,3,9,11,17,19,28,29,30,31,36,37,39,43,48,49,51,58,59,65,66,72,80,89
 #!define CheckpointPositions A
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
-#1
 #!define DestructoIter B
-#2
-#!define MapChecker MsDestructo
-globalvar MsDestructo 3                     # Player
+#globalvar DestructoIter 1
+#!define MapVectorArray C
+globalvar MapVectorArray 2
+#!define MsDestructo D
+#globalvar MsDestructo 3                     # Player
 globalvar TimeRemaining 4
 globalvar PortalEffects 5                   # list[effect]              --- Array holding custom portal effects
 #!define LobbyID G
@@ -19,21 +20,21 @@ globalvar LobbyID 6
 globalvar KillBallPositions 7               # list[vect]                --- KillBall position
 #!define KillBallRadii I
 globalvar KillBallRadii 8                   # list[float]               --- KillBall radius, default 5
-#9
+#globalvar J 9
 #!define KillBallEffects K
 globalvar KillBallEffects 10                # list[effect]              --- Array holding killball effects
-#11
-#!define BladeEnabledCheckpoints Dao
-globalvar BladeEnabledCheckpoints 12        # int                       --- blade enabled, should be bool.
-#!define DashEnabledCheckpoints SHIFT
-globalvar DashEnabledCheckpoints 13         # int                       --- dash enabled, should be bool.
+#globalvar L 11
+#!define UltCheckpoints Dao
+globalvar UltCheckpoints 12                 # int                       --- blade enabled, should be bool.
+#!define Ability1Checkpoints SHIFT
+globalvar Ability1Checkpoints 13            # int                       --- dash enabled, should be bool.
 globalvar EditSelected 14
 globalvar EditSelectIdArray 15
 globalvar EditorOn 16                        # bool                      --- editor rules enabled?
-#17
+#globalvar R 17
 #!define BouncePositions TQ
 globalvar BouncePositions 18                # list[vect]                --- list of bouncepad positions
-#19
+#globalvar T 19
 #!define BounceEffects TQ2
 globalvar BounceEffects 20                  # list[effects]             --- list of bounce pad effect entities
 globalvar EditorMoveItem 21                 # num                       --- used for moving a portal
@@ -48,16 +49,16 @@ globalvar BounceToggleLock 25               # list[bool]                --- lock
 globalvar KillballCheckpoints 26            # list[list[int]]           --- 2d list of checkpoints that havea kill ball [[0], [3]]
 #!define BouncePadCheckpoints pinballnumber
 globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d list like killballnumber
-#28
-#29
-#30
-#31
+#globalvar AC 28
+#globalvar AD 29
+#globalvar AE 30
+#globalvar AF 31
 globalvar LeaderBoardFull 32                # [[name,seconds,prettytime]]--- sorted list of 0-19 leaderboard entries
 globalvar LeaderBoardHuds 33
 globalvar LeaderBoardRemake 34              # bool                      --- indicate board needs remaking
 #globalvar kaxiaotiao 35
-#36
-#37
+#globalvar AK 36
+#globalvar AL 37
 #!define TempIterator1 NANBA
 globalvar TempIterator1 38                  # int                       --- temp iterator
 #globalvar DashExploitToggle 39
@@ -69,19 +70,20 @@ globalvar Difficultyhud 44                  # number                    --- work
 globalvar CustomPortalStart 45              # [vect]                    --- custom portal start
 globalvar CustomPortalEndpoint 46           # [vect]                    --- custom portal end points
 globalvar CustomPortalCP 47                 # [int]                     --- custom portal checkpoints
-#48
-#49
+#globalvar AW 48
+#globalvar AX 49
 globalvar CompMode 50                       # bool                      --- Tournament mode toggle
-globalvar CompTime 51                       # int                       --- compt mode time limit
+#globalvar CompTime 51                       # int                       --- compt mode time limit
 globalvar CompAtmpNum 52                    # int                       --- compt mode attempt limit
 globalvar CompAtmpSaveNames 53              # [strings]                 --- comp name list
 globalvar CompAtmpSaveCount 54              # [int]                      --- compt attempt list
-globalvar CompRestartLimit 55               # bool                      --- resest limiter
+#!define CompMarathon CompRestartLimit
+globalvar CompMarathon 55                   # bool                      --- Disallow restarts during runs
 #!define InstructionText instructiontext
 globalvar InstructionText 56                # [text]                    --- array of instructions
-globalvar TitleData 57                      # [[cp, [title], [color]]    --- title addon
+globalvar TitleData 57                       # [[cp, [title], [color]]    --- title addon
 #globalvar HudStoreEdit 58                   # [textid]                  --- list of huds to delete if editormode is on
-#59
+#globalvar BH 59
 globalvar SaveName 60
 globalvar SaveCp 61
 globalvar SaveEnt 62
@@ -94,14 +96,14 @@ globalvar HintText 68
 globalvar ColorConfig 69                    # [colors]                  --- configured colors
 globalvar Name 70
 globalvar Code 71
-#72
+#globalvar BU 72
 globalvar Cachedcredits 73                  # [string, string]          --- Legacy
 globalvar CpHudText 74
 globalvar CpHudCp 75
 globalvar CpIwtText 76
 globalvar CpIwtCp 77
 globalvar CpIwtPos 78
-globalvar CpIwtColor 79
+#globalvar CpIwtColor 79
 #globalvar BanTriple 80                      # legacy
 globalvar BanMulti 81
 globalvar BanCreate 82
@@ -112,7 +114,7 @@ globalvar BanBhop 86
 globalvar BanStand 87                       # bans on second hop
 globalvar BanDjump 88
 globalvar BanSaveDouble 89
-globalvar MapVectorArray 91
+globalvar CM 90 #BanAutoCreate
 
 ######################################## Player Variables #####################
 #PlayerEffects data
@@ -139,6 +141,10 @@ playervar timer_practice
 playervar timer_split                         # int                       --- stored time that the split compares to
 playervar timer_splitDisplay                      # int                       --- displayed split value
 
+playervar preview_array1                     # array                     --- store preview positions
+playervar preview_array2
+playervar preview_i                         # int                       --- preview itterator
+
 playervar toggle_invincible                  # bool                       --- invincible/normal mode toggle now a bool
 playervar toggle_spectate                    # bool                       --- turned into bool
 playervar toggle_practice                    # int                       --- turned into bool
@@ -159,15 +165,16 @@ playervar skill_usedDouble                        # bool
 playervar banString                         # str                       --- displayed bans
 #playervar ban_triple
 #playervar ban_dashStart
-playervar ban_multi
 playervar ban_create
+playervar ban_autocreate
+playervar ban_standcreate                   # bans on second hop
+playervar ban_multi
 playervar ban_dead
 playervar ban_emote
+playervar ban_savedouble
 playervar ban_climb
 playervar ban_bhop
-playervar ban_standcreate                   # bans on second hop
 playervar ban_djump
-playervar ban_savedouble
 
 playervar cache_startUlt
 playervar cache_startAbility1
@@ -183,10 +190,6 @@ playervar cache_bouncePosition
 playervar cache_inputs
 playervar cache_rainbow                     # color                     --- color of fx after finish the map
 playervar cache_titleHud                        # textid                    --- store curent  title textid
-
-playervar preview_array1                     # array                     --- store preview positions
-playervar preview_array2
-playervar preview_i                         # int                       --- preview itterator
 
 #playervar editor_on                          # bool                      --- on all players, but only gets checked from host player
 playervar editor_modeSelect                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
@@ -234,6 +237,13 @@ subroutine RebuildPortals
 subroutine RebuildBounceOrbs
 
 ######################################## Enums ################################
+enum Languages:
+    Automatic = -1,
+    TLErr = 0,
+    EN = 1,
+    ZH = 2,
+    KO = 3,
+
 enum HO:
     # Left #####################
     data_name = -200,
@@ -336,6 +346,8 @@ enum Customize: # always add new options on end so previously configured colors 
     orb_lock,
     portal,
     dsc,
+    cp_huds,
+    cp_iwts,
 
 enum EditorMode:
     current = (hostPlayer.editor_modeSelect),
@@ -360,8 +372,6 @@ enum LoadOrder:
 #!define LeftAlign100 "                                                                                                    "
 #!define LeftAlign128 "                                                                                                                                "
 #!define checkCN if l"Oof" == "噢" else
-
-macro INVIS = Invis.ENEMIES if COMPILE_FOR_CHINESE else Invis.NONE
 
 macro Array.insertAt(index, item):
     self.append(null)

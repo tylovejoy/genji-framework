@@ -4,60 +4,50 @@
 #!suppressWarnings w_lone_else
 #!suppressWarnings w_enum_constant
 ################################################################################
-#!define versionhere "1.10.4E"
+#!define versionhere "1.10.4F"
 #♨ Dev Build Icon
 ################################################################################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
 editortoggle(0) # 0 is editor, rest is numbers
 ################################################################################
-macro COMPILE_FOR_CHINESE = false
-# Enable Invis Command (Invis Command cant be pasted in CN client die to null and none translating to same symbol)
-# Debug force CN mode on (No longers works)
-##!define checkCN if true else
+#$$ TODO proper multi-hero support
+#!define importHero(Hero) __script__('FwHero/fwHero.js')
+importHero(["Genji", "Hanzo", "Hazard", "Kiriko", "Doomfist"][0])
 ################################################################################
-# Max orbs can be made
-macro fxLimit = 193
-# Portal distance: 1.3
-macro portalDistance = 1.3
-# Circle radius: 1.4
-macro cpCircleRadius = 1.4
-# Default fx: 1
-macro cpCirkleFx = 1
-# Orb range for player: 1.4
-macro bounceOrbDistance = 1.4
-# Height added to player for orb detection: 0.7
-macro bounceOffset = 0.7
-# Enable perks: false
-macro usePerks = false
-# non-practice cheat mode: false
-macro cpCheat = false
-# defaults: off, attempt:5, 120 min, restart:false
-macro compModeToggle = false
-macro attemptCount = 5
-macro compTimeLimit = 120
-macro compRestartLimit = false
-################################################################################
-#!define importHero(Hero) __script__('mechanics/fwHero.js')
+macro lobbyTime = 260 # Default lobby duration: 260
+macro fxLimit = 193 # Max orbs can be made
+macro portalDistance = 1.3 # Portal distance: 1.3
+macro cpCircleRadius = 1.4 # Sphere radius: 1.4
+macro cpCirkleFx = 1 # Ring radius fx: 1
+macro bounceOrbDistance = 1.4 # Orb range for player: 1.4
+macro bounceOffset = 0.7 # Height added to player for orb detection: 0.7
+macro usePerks = false # Enable perks: false (Requires some manual overriding)
+macro teleCheat = false # Teleport cheats: false
+macro antiCheat = true # Detect speed & gravity cheats
+macro compModeToggle = false # Enable Tournament Mode: false
+macro attemptCount = 5 # Allowed Restart(s) limit
+macro compMarathon = false # Enforce Marathon: false
 ################################################################################
 #!include "settings.opy"
 ################################################################################
 ##!excludeVariablesInCompilation
 #!include "definitions.opy"
 ################################################################################
-#!disableInspector
-#!globalvarInitRuleName "OverPy | Global Init"
-#!playervarInitRuleName "OverPy | Player Init"
-################################################################################
 #!translations en zh ko
 #!disableTranslationSourceLines
 #!translateWithPlayerVar noDetectionRule
 ##!keepUnusedTranslations
-macro overrideLanguage = -1 # Auto=-1 TLErr=0 EN=1 ZH=2 KO=3
+macro overrideLanguage = Languages.Automatic
+################################################################################
+#!disableInspector
+#!globalvarInitRuleName "OverPy | Global Init"
+#!playervarInitRuleName "OverPy | Player Init"
+################################################################################
+Fw_Include_Hero
 ################################################################################
 #!include "parkour.opy"
 ################################################################################
-#$$ TODO proper multi-hero support
-importHero(["GENJI" /*, "HANZO", "HAZARD", "KIRIKO"*/][0])
+Fw_Mechanics_Hero()
 ################################################################################
 #!include "editor.opy"
 ##!include "editor2.opy"

@@ -32,12 +32,11 @@ rule "Editor | Export Map":
     TitleData = null
     CpHudText = null
     CpHudCp = null
-    HintText = null
-    HintCp = null
     CpIwtText = null
     CpIwtCp = null
     CpIwtPos = null
-    CpIwtColor = null
+    HintText = null
+    HintCp = null
     PortalLoc = null
     PortalDest  = null
     PortalEffects = null
@@ -46,6 +45,14 @@ rule "Editor | Export Map":
     Cachedcredits = [Name, Code]
     Name = null
     Code = null
+
+    enableInspector()
+    disableInspector()
+
+    EditorOn = true
+    TimeRemaining = hostPlayer.editor_saveCache[0]
+    ColorConfig = hostPlayer.editor_saveCache[1]
+    __overpyTranslationHelper__ = "\uec480White0白色0흰색".split(null[0])
 
     hudText(hostPlayer,
         "­",
@@ -103,31 +110,23 @@ rule "Editor | Export Map":
         " Esc → Show Lobby → Settings → Share Code →\n"
         " Upload To Existing Code → Paste The Code You Created In Step 4",
        HudPosition.TOP, HO.edit_clearec1, null, null, Color.LIME_GREEN, HudReeval.STRING, SpecVisibility.DEFAULT)
-    hostPlayer.editor_saveCache[2] = getLastCreatedText()
-
-    enableInspector()
-    disableInspector()
-
-    EditorOn = true
-    TimeRemaining = hostPlayer.editor_saveCache[0]
-    ColorConfig = hostPlayer.editor_saveCache[1]
-    __overpyTranslationHelper__ = "\uec480White0白色0흰색".split(null[0])
+    hostPlayer.editor_saveCache[0] = getLastCreatedText()
 
     hudHeader(hostPlayer, "    > 按互动键关闭当前窗口 <    " checkCN "    > Press Interact To Close This Window <    ",
         HudPosition.TOP, HO.edit_clearec3, Color.LIME_GREEN, HudReeval.STRING)
-    hostPlayer.editor_saveCache[0] = getLastCreatedText()
+    hostPlayer.editor_saveCache[1] = getLastCreatedText()
 
     waitUntil(not hostPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
     waitUntil(hostPlayer.isHoldingButton(Button.INTERACT), Math.INFINITY)
-    destroyHudText(hostPlayer.editor_saveCache[0]) # Close Window
-    destroyHudText(hostPlayer.editor_saveCache.last()) #Instructions
+    destroyHudText(hostPlayer.editor_saveCache[0]) #Instructions
+    destroyHudText(hostPlayer.editor_saveCache.last()) # Close Window
     hostPlayer.editor_saveCache = null
     hostPlayer.editor_lock = false
 
 rule "Editor | Hud & Effects":
     wait(LoadOrder.hudsEditor)
     #waitUntil(entityExists(getAllPlayers()), Math.INFINITY)  # cant be condition because host player can leaves, removing the rule fx
-    #wait()
+    #wait(0)
     if EditorOn:
         #CustomPortalStart = CustomPortalStart if len(CustomPortalStart) else []
         #CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) else []
@@ -371,7 +370,7 @@ rule "Editor | Hud & Effects":
                     ["Checkpoints", "Boundary Spheres","Function Orbs","Skill Bans","Portals"][EditorMode.current],
                     [iconString(Icon.FLAG), iconString(Icon.SKULL), iconString(Icon.MOON), iconString(Icon.STOP),iconString(Icon.SPIRAL)][EditorMode.current])
             if localPlayer == hostPlayer else
-                " {0} Genji Editor {0} ".format(iconString(Icon.BOLT)),
+                f" {iconString(Icon.BOLT)} {FwHero.String} Editor {iconString(Icon.BOLT)} ",
             null,
             null,
             HudPosition.TOP, HO.edit_host_mode, Color.BLUE, null, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
@@ -396,8 +395,8 @@ rule "Editor | Hud & Effects":
                 buttonString(Button.ULTIMATE),
                 buttonString(Button.PRIMARY_FIRE),
                 (BounceToggleUlt[EditSelected]) if EditorMode.functionOrb else
-                (hostPlayer.checkpoint_current in BladeEnabledCheckpoints),
-                abilityIconString(Hero.GENJI, Button.ULTIMATE),
+                (hostPlayer.checkpoint_current in UltCheckpoints),
+                abilityIconString(FwHero.Hero, Button.ULTIMATE),
                 "检查点给刀"  if EditorMode.checkpoint else "弹球给刀"
             )
             checkCN
@@ -405,12 +404,12 @@ rule "Editor | Hud & Effects":
                 buttonString(Button.ULTIMATE),
                 buttonString(Button.PRIMARY_FIRE),
                 (BounceToggleUlt[EditSelected]) if EditorMode.functionOrb else
-                (hostPlayer.checkpoint_current in BladeEnabledCheckpoints),
-                abilityIconString(Hero.GENJI, Button.ULTIMATE),
+                (hostPlayer.checkpoint_current in UltCheckpoints),
+                abilityIconString(FwHero.Hero, Button.ULTIMATE),
                 "Level" if EditorMode.checkpoint  else "Orb"),
             HudPosition.LEFT, HO.edit_orb_ult,
             Color.GREEN if BounceToggleUlt[EditSelected] and EditorMode.functionOrb else
-            Color.GREEN if hostPlayer.checkpoint_current in BladeEnabledCheckpoints and EditorMode.checkpoint else Color.ORANGE,
+            Color.GREEN if hostPlayer.checkpoint_current in UltCheckpoints and EditorMode.checkpoint else Color.ORANGE,
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
         hudSubtext(hostPlayer if hostPlayer.toggle_guide and (EditorMode.checkpoint or EditorMode.functionOrb and len(hostPlayer.editor_bounceIndex)) else null, #if EditorMode.checkpoint or EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
@@ -418,20 +417,20 @@ rule "Editor | Hud & Effects":
                 buttonString(Button.ULTIMATE),
                 buttonString(Button.SECONDARY_FIRE),
                 BounceToggleDash[EditSelected] if EditorMode.functionOrb else
-                hostPlayer.checkpoint_current in DashEnabledCheckpoints,
-                abilityIconString(Hero.GENJI, Button.ABILITY_1),
+                hostPlayer.checkpoint_current in Ability1Checkpoints,
+                abilityIconString(FwHero.Hero, Button.ABILITY_1),
             "检查点给Shift" if EditorMode.checkpoint else "弹球给Shift")
             checkCN
             "{0} + {1} | {4} Give Dash {3} | {2}" LeftAlign100.format(
                 buttonString(Button.ULTIMATE),
                 buttonString(Button.SECONDARY_FIRE),
                 BounceToggleDash[EditSelected] if EditorMode.functionOrb else
-                hostPlayer.checkpoint_current in DashEnabledCheckpoints,
-                abilityIconString(Hero.GENJI, Button.ABILITY_1),
+                hostPlayer.checkpoint_current in Ability1Checkpoints,
+                abilityIconString(FwHero.Hero, Button.ABILITY_1),
                 "Level" if EditorMode.checkpoint else "Orb"),
             HudPosition.LEFT, HO.edit_orb_dash,
             Color.GREEN if BounceToggleDash[EditSelected] and EditorMode.functionOrb else
-            Color.GREEN if hostPlayer.checkpoint_current in DashEnabledCheckpoints and EditorMode.checkpoint else Color.ORANGE,
+            Color.GREEN if hostPlayer.checkpoint_current in Ability1Checkpoints and EditorMode.checkpoint else Color.ORANGE,
             HudReeval.VISIBILITY_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
         hudSubtext(hostPlayer if EditorMode.functionOrb and hostPlayer.toggle_guide and len(hostPlayer.editor_bounceIndex) else null,
@@ -597,7 +596,7 @@ rule "Editor | Toggle Fly & Noclip":
     @Condition (EditorMoveItem and eventPlayer == hostPlayer) == false
     waitUntil(eventPlayer.isHoldingButton(Button.RELOAD) or not eventPlayer.isHoldingButton(Button.ABILITY_1), 0.7)
     if eventPlayer.isHoldingButton(Button.RELOAD) or not eventPlayer.isHoldingButton(Button.ABILITY_1):
-        wait()
+        wait(0)
         return
 
     eventPlayer.editor_fly = eventPlayer.getPosition() + Vector.UP
@@ -615,7 +614,7 @@ rule "Editor | Toggle Fly & Noclip":
                 (eventPlayer.getFacingDirection() * eventPlayer.getThrottle().z + \
                 worldVector(eventPlayer.getThrottle() * Vector.LEFT, eventPlayer, Transform.ROTATION) + \
                 Vector.UP * (eventPlayer.isHoldingButton(Button.JUMP) - eventPlayer.isHoldingButton(Button.CROUCH))))
-        wait()
+        wait(0)
 
     eventPlayer.allowButton(Button.ULTIMATE)
     eventPlayer.enableEnvironmentCollision()
@@ -639,7 +638,7 @@ rule "Editor | Change Mode":
     hostPlayer.editor_modeSelect %= 5
     EditUpdateSelectedIds()
     EditSelected = EditSelectIdArray.last()
-    wait()
+    wait(0)
     waitUntil(hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) == hostPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.1)
     hostPlayer.editor_lock = false
 
@@ -680,8 +679,8 @@ rule "Editor | Create Cp/Orb":
                 KillballCheckpoints.shiftAt(hostPlayer.checkpoint_current)
                 BouncePadCheckpoints.shiftAt(hostPlayer.checkpoint_current)
                 CustomPortalCP.shiftAt(hostPlayer.checkpoint_current)
-                BladeEnabledCheckpoints.shiftAt(hostPlayer.checkpoint_current)
-                DashEnabledCheckpoints.shiftAt(hostPlayer.checkpoint_current)
+                UltCheckpoints.shiftAt(hostPlayer.checkpoint_current)
+                Ability1Checkpoints.shiftAt(hostPlayer.checkpoint_current)
 
                 BanMulti.shiftAt(hostPlayer.checkpoint_current)
                 BanCreate.shiftAt(hostPlayer.checkpoint_current)
@@ -718,7 +717,7 @@ rule "Editor | Create Cp/Orb":
         #EditUpdateSelectedIds() # to arrow during the placement properly
         while hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             KillBallPositions[EditSelected] = raycast(hostPlayer.getEyePosition(), hostPlayer.getEyePosition()+hostPlayer.getFacingDirection() * 8, null, null, false).getHitPosition()
-            wait()
+            wait(0)
         EditorMoveItem = true
 
     elif EditorMode.functionOrb:
@@ -739,7 +738,7 @@ rule "Editor | Create Cp/Orb":
         waitUntil(not(hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.PRIMARY_FIRE)), true)
         while hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             BouncePositions[EditSelected] = raycast(hostPlayer.getEyePosition(), hostPlayer.getEyePosition() + hostPlayer.getFacingDirection() * 7, null, null, false).getHitPosition()
-            wait()
+            wait(0)
         EditorMoveItem = true
 
     elif EditorMode.portal:
@@ -756,7 +755,7 @@ rule "Editor | Create Cp/Orb":
         #EditUpdateSelectedIds()
         while hostPlayer.isHoldingButton(Button.INTERACT) and hostPlayer.isHoldingButton(Button.PRIMARY_FIRE):
             CustomPortalStart[EditSelected] = raycast(hostPlayer.getEyePosition(), hostPlayer.getEyePosition() + hostPlayer.getFacingDirection() * 6, null, null, false).getHitPosition()
-            wait()
+            wait(0)
 
         bigMessage(true[0], "新传送门已创建!\n生效于当前检查点" checkCN "Portal Created \nOnly Valid For This Checkpoint")
         EditorMoveItem = true
@@ -782,7 +781,7 @@ rule "Editor | Delete Cp/Orb/Portal":
         for TempIterator1 in range(len(hostPlayer.editor_temp)):
             destroyEffect(KillBallEffects[hostPlayer.editor_temp[TempIterator1]])
             del KillBallEffects[hostPlayer.editor_temp[TempIterator1]]
-            wait()
+            wait(0)
         # Remove specified checkpoint
         KillballCheckpoints = [x for x in KillballCheckpoints if x != hostPlayer.checkpoint_current]
         # Decrement checkpoints after removed one
@@ -796,7 +795,7 @@ rule "Editor | Delete Cp/Orb/Portal":
         for TempIterator1 in range(len(hostPlayer.editor_temp)):
             destroyEffect(BounceEffects[hostPlayer.editor_temp[TempIterator1]])
             del BounceEffects[hostPlayer.editor_temp[TempIterator1]]
-            wait()
+            wait(0)
 
         BouncePadCheckpoints = [x for x in BouncePadCheckpoints if x != hostPlayer.checkpoint_current]
         # Decrement checkpoints after removed one
@@ -812,7 +811,7 @@ rule "Editor | Delete Cp/Orb/Portal":
         for TempIterator1 in range(len(hostPlayer.editor_temp)):
             destroyEffect(PortalEffects[hostPlayer.editor_temp[TempIterator1]])
             del PortalEffects[hostPlayer.editor_temp[TempIterator1]]
-            wait()
+            wait(0)
         # Remove specified checkpoint
         CustomPortalCP = [x for x in CustomPortalCP if x != hostPlayer.checkpoint_current]
         # Decrement checkpoints after removed one
@@ -823,8 +822,8 @@ rule "Editor | Delete Cp/Orb/Portal":
         hostPlayer.editor_temp = null
 
         # ult/dash/ban remove and lower the cp number of rest
-        BladeEnabledCheckpoints.removeAndShift(hostPlayer.checkpoint_current)
-        DashEnabledCheckpoints.removeAndShift(hostPlayer.checkpoint_current)
+        UltCheckpoints.removeAndShift(hostPlayer.checkpoint_current)
+        Ability1Checkpoints.removeAndShift(hostPlayer.checkpoint_current)
         BanMulti.removeAndShift(hostPlayer.checkpoint_current)
         BanCreate.removeAndShift(hostPlayer.checkpoint_current)
         BanStand.removeAndShift(hostPlayer.checkpoint_current)
@@ -834,7 +833,7 @@ rule "Editor | Delete Cp/Orb/Portal":
         BanSaveDouble.removeAndShift(hostPlayer.checkpoint_current)
         BanBhop.removeAndShift(hostPlayer.checkpoint_current)
         BanDjump.removeAndShift(hostPlayer.checkpoint_current)
-
+        wait(0)
         # Remove specified checkpoint =====================
         del CheckpointPositions[hostPlayer.checkpoint_current]
         hostPlayer.checkpoint_current = max(hostPlayer.checkpoint_current - 1, 0 - not len(CheckpointPositions))
@@ -861,7 +860,7 @@ rule "Editor | Delete Cp/Orb/Portal":
         RebuildBounceOrbs()
     elif EditorMode.portal and len(EditSelectIdArray):
         destroyEffect(PortalEffects[EditSelected])
-        wait()
+        wait(0)
         del CustomPortalStart[EditSelected]
         del CustomPortalEndpoint[EditSelected]
         del CustomPortalCP[EditSelected]
@@ -869,7 +868,7 @@ rule "Editor | Delete Cp/Orb/Portal":
         RebuildPortals()
     else:
         hostPlayer.editor_lock = false
-        wait()
+        wait(0)
         return
 
     UpdateCache()
@@ -901,7 +900,7 @@ rule "Editor | Toggle Orb Functions":
 
     UpdateCache()
     hostPlayer.editor_lock = false
-    wait()
+    wait(0)
 
 rule "Editor | Orb Radii/Strength":
     @Event eachPlayer
@@ -939,7 +938,7 @@ rule "Editor | Select Orb/Portal":
         EditSelected = EditSelectIdArray.last() if not EditSelectIdArray.index(EditSelected) else EditSelectIdArray[EditSelectIdArray.index(EditSelected) - 1]
     else:
         EditSelected = EditSelectIdArray[0] if EditSelectIdArray.index(EditSelected) == len(EditSelectIdArray) - 1 else EditSelectIdArray[EditSelectIdArray.index(EditSelected) + 1]
-    wait()
+    wait(0)
     hostPlayer.editor_lock = false
     waitUntil(not(hostPlayer.isHoldingButton(Button.INTERACT) and (hostPlayer.isHoldingButton(Button.CROUCH) or hostPlayer.isHoldingButton(Button.JUMP))), 0.24)
 
@@ -953,7 +952,7 @@ rule "Editor | Cp Size Hitbox Display":
     @Condition hostPlayer.isHoldingButton(Button.INTERACT)
     @Condition hostPlayer.isHoldingButton(Button.ABILITY_1)
     hostPlayer.editor_hitboxToggle = not hostPlayer.editor_hitboxToggle
-    wait()
+    wait(0)
 
 rule "Editor | Cp Add/Remove Teleport":
     @Condition EditorOn
@@ -978,7 +977,7 @@ rule "Editor | Cp Add/Remove Teleport":
         CheckpointPositions[hostPlayer.checkpoint_current] = [CheckpointPositions[hostPlayer.checkpoint_current], hostPlayer.getPosition()]
         smallMessage(hostPlayer, "{0} {1}".format("   传送点已添加到当前关卡" checkCN "   Teleport Has Been Added For Level", hostPlayer.checkpoint_current))
     hostPlayer.editor_lock = false
-    wait()
+    wait(0)
 
 rule "Editor | Moving Checkpoint":
     #@Event eachPlayer
@@ -1005,7 +1004,7 @@ rule "Editor | Moving Checkpoint":
             CheckpointPositions[hostPlayer.checkpoint_current] = [hostPlayer.getPosition(), CheckpointPositions[hostPlayer.checkpoint_current][1] ]
         else:
             CheckpointPositions[hostPlayer.checkpoint_current] = hostPlayer.getPosition()
-        wait()
+        wait(0)
 
     hostPlayer.stopCamera()
     hostPlayer.setMoveSpeed(100)
@@ -1026,10 +1025,10 @@ rule "Editor | Toggle Ult/Dash":
     @Condition hostPlayer.isHoldingButton(Button.ULTIMATE)
 
     if hostPlayer.isHoldingButton(Button.PRIMARY_FIRE):
-        BladeEnabledCheckpoints.toggleItem(hostPlayer.checkpoint_current)
+        UltCheckpoints.toggleItem(hostPlayer.checkpoint_current)
     else:
-        DashEnabledCheckpoints.toggleItem(hostPlayer.checkpoint_current)
-    wait()
+        Ability1Checkpoints.toggleItem(hostPlayer.checkpoint_current)
+    wait(0)
 
 rule "Editor | Toggle Bans":
     @Event eachPlayer
@@ -1110,14 +1109,14 @@ rule "Editor | Move Object":
             KillBallPositions[EditSelected], 30)
         while not (hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) or hostPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
             KillBallPositions[EditSelected] += hostPlayer.flyMovementDelta()
-            wait()
+            wait(0)
     elif EditorMode.functionOrb:
         hostPlayer.editor_undo = BouncePositions[EditSelected]
         hostPlayer.startCamera(BouncePositions[EditSelected] + hostPlayer.getFacingDirection() * -4,
             BouncePositions[EditSelected], 30)
         while not (hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) or hostPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
             BouncePositions[EditSelected] += hostPlayer.flyMovementDelta()
-            wait()
+            wait(0)
     elif EditorMode.portal:
         hostPlayer.editor_undo = [CustomPortalStart[EditSelected], CustomPortalEndpoint[EditSelected]]
         # move start position
@@ -1125,7 +1124,7 @@ rule "Editor | Move Object":
             CustomPortalStart[EditSelected], 30)
         while not (hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) or hostPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
             CustomPortalStart[EditSelected] += hostPlayer.flyMovementDelta()
-            wait()
+            wait(0)
 
         # move destination
         hostPlayer.startCamera(CustomPortalEndpoint[EditSelected] + hostPlayer.getFacingDirection() * -4,
@@ -1133,7 +1132,7 @@ rule "Editor | Move Object":
         waitUntil(not hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) or hostPlayer.isHoldingButton(Button.SECONDARY_FIRE), true)
         while not (hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) or hostPlayer.isHoldingButton(Button.SECONDARY_FIRE)):
             CustomPortalEndpoint[EditSelected] += hostPlayer.flyMovementDelta()
-            wait()
+            wait(0)
     /*
     if hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         KillBallPositions[EditSelected] = hostPlayer.editor_undo[0]
