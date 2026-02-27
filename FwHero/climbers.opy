@@ -6,9 +6,9 @@ macro Fw_Mechanics_Climber():
     rule "Mechanic | Climbers | Climb":
         @Event eachPlayer
         @Condition eventPlayer.isOnWall()
-        if eventPlayer.isHoldingButton(Button.JUMP): goto climb
+        #if eventPlayer.isHoldingButton(Button.JUMP): goto climb
         wait(0)
-        if eventPlayer.isOnWall() and not eventPlayer.isHoldingButton(Button.JUMP): #Auto Climb
+        if eventPlayer.isOnWall():# and not eventPlayer.isHoldingButton(Button.JUMP): #Auto Climb
             climb:
             eventPlayer.skill_usedClimb = true
             if eventPlayer.toggle_invincible: return

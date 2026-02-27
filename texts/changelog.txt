@@ -716,4 +716,6 @@ fixed:
 # 1.10.4G
 ### Skill Bans
  - Added Auto Create ban exception for bounce orbs
-    *  Reported by `dooosaaa` + 5xp
+   *  Reported by `dooosaaa` + 5xp
+ - Removed exception of counting multi-climb when Jump is continously held
+   * Reported by `@zxzpkcxcc` +50xp
