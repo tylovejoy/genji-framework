@@ -58,6 +58,7 @@ macro Fw_Mechanics_Climber():
 
     rule "Mechanic | Climbers | Auto Create Bhop":
         @Event eachPlayer
+        @Condition eventPlayer.ban_create == false
         @Condition eventPlayer.ban_autocreate
         @Condition eventPlayer.toggle_invincible == false
         @Condition eventPlayer.cache_bounceTouched <= 0 #Ignore if Orb Create
