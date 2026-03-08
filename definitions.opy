@@ -369,6 +369,11 @@ enum LoadOrder:
     effects     = 0.016 * 256,
 
 ######################################## Macro Tools ##########################
+#!define trueForAll(array, condition) all([condition for CAE, CAI in array])
+#!define trueForAny(array, condition) any([condition for CAE, CAI in array])
+#!define filter(array, condition) [CAE for CAE, CAI in array if (condition)]
+#!define mapped(array, condition) [condition for CAE, CAI in array]
+#!define sort(array, rank) sorted(array, lambda CAE, CAI: rank)
 #!define LeftAlign100 "                                                                                                    "
 #!define LeftAlign128 "                                                                                                                                "
 #!define checkCN if l"Oof" == "噢" else
