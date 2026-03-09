@@ -22,7 +22,7 @@ rule "Editor | Export Map":
     KillBallEffects = null
     TempIterator1 = null
     BounceEffects = null
-    LobbyID = null
+    (LobbyID = null) if antiCheat else (pass)
     SaveName = null
     SaveCp = null
     SaveTimer = null
@@ -51,7 +51,7 @@ rule "Editor | Export Map":
 
     EditorOn = true
     TimeRemaining = hostPlayer.editor_saveCache[0]
-    ColorConfig = hostPlayer.editor_saveCache[1]
+    ColorConfig = hostPlayer.editor_saveCache.last()
     __overpyTranslationHelper__ = "\uec480White0白色0흰색".split(null[0])
 
     hudText(hostPlayer,
