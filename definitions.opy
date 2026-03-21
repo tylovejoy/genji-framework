@@ -369,26 +369,32 @@ enum LoadOrder:
     effects     = 0.016 * 256,
 
 ######################################## Macro Tools ##########################
-#!define trueForAll(array, condition) all([condition for CAE, CAI in array])
-#!define trueForAny(array, condition) any([condition for CAE, CAI in array])
-#!define filter(array, condition) [CAE for CAE, CAI in array if (condition)]
-#!define mapped(array, condition) [condition for CAE, CAI in array]
-#!define sort(array, rank) sorted(array, lambda CAE, CAI: rank)
 #!define LeftAlign100 "                                                                                                    "
 #!define LeftAlign128 "                                                                                                                                "
 #!define checkCN if l"Oof" == "噢" else
 
-macro Array.insertAt(index, item):
+macro CAE = __currentArrayElement__
+macro CAI = __currentArrayIndex__
+macro Array.all(condition = CAE):
+    __all__(self, condition)
+macro Array.any(condition = CAE):
+    __any__(self, condition)
+macro Array.filter(condition = CAE):
+    __filteredArray__(self, condition = CAE)
+macro Array.map(replacement):
+    __mappedArray__(self, replacement)
+macro Array.sort(rank = CAE):
+    __sortedArray__(self, rank)
+
+macro Checkpoints.insertAt(index, item):
     self.append(null)
-    self = [CAE if CAI <= index else self[CAI - 1] for CAE, CAI in self]
+    self = self.map(CAE if CAI <= index else self[CAI - 1])
     self[index] = item
-
-macro Array.shiftAt(index):
-    self = [CAE + (CAE >= index) for CAE, CAI in self]
-
-macro Array.removeAndShift(index):
+macro Checkpoints.shiftAt(index):
+    self = self.map(CAE + (CAE >= index))
+macro Checkpoints.removeAndShift(index):
     self.remove(index)
-    self = [CAE - (CAE > index) for CAE, CAI in self]
+    self = self.map(CAE - (CAE > index))
 
 macro Array.addUnique(item):
     # self = self.exclude(item).concat(item)
