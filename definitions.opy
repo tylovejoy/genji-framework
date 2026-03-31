@@ -388,13 +388,13 @@ macro Array.sort(rank = CAE):
 
 macro Checkpoints.insertAt(index, item):
     self.append(null)
-    self = self.map(CAE if CAI <= index else self[CAI - 1])
+    self = self.map(lambda CAE, CAI: CAE if CAI <= index else self[CAI - 1])
     self[index] = item
 macro Checkpoints.shiftAt(index):
-    self = self.map(CAE + (CAE >= index))
+    self = self.map(lambda CAE, CAI: CAE + (CAE >= index))
 macro Checkpoints.removeAndShift(index):
     self.remove(index)
-    self = self.map(CAE - (CAE > index))
+    self = self.map(lambda CAE, CAI: CAE - (CAE > index))
 
 macro Array.addUnique(item):
     # self = self.exclude(item).concat(item)

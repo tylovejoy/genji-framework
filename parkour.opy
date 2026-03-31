@@ -254,14 +254,14 @@ rule "Parkour | Boundary Sphere":
     @Condition eventPlayer.cache_killPosition != []
     @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.checkpoint_notLast
-    @Condition (any([normalize(rad) * distance(eventPlayer.cache_killPosition[i], eventPlayer) < rad for rad, i in eventPlayer.cache_killRadii]))
+    @Condition eventPlayer.cache_killRadii.any(lambda CAE, CAI: normalize(CAE) * distance(eventPlayer.cache_killPosition[CAI], eventPlayer) < CAE)
     CheckpointFailReset()
 
 rule "Parkour | Bounce Ball / Orb":
     @Event eachPlayer
     @Condition eventPlayer.cache_bouncePosition != []
     #@Condition eventPlayer.checkpoint_notLast # disabled coz editor
-    @Condition (any([distance(pos, eventPlayer.getPosition() + Vector.UP * bounceOffset) < bounceOrbDistance for pos in eventPlayer.cache_bouncePosition]))
+    @Condition eventPlayer.cache_bouncePosition.any(lambda CAE, CAI: distance(CAE, eventPlayer.getPosition() + Vector.UP * bounceOffset) < bounceOrbDistance)
 
     eventPlayer.cache_bounceTouched = BouncePositions.index([pos for pos, i in BouncePositions if
         BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and

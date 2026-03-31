@@ -36,13 +36,13 @@ rule "Addon | Pre-set control Map Portal - Toggle Via Workshop Settings":
     @Event eachPlayer
     @Condition PortalLoc != null
     @Condition eventPlayer.toggle_invincible or not eventPlayer.checkpoint_notLast
-    @Condition any([distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance for i in PortalLoc])
+    @Condition PortalLoc.any(lambda CAE, CAI: distance(CAE, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance)
     eventPlayer.teleport(sorted([i for i in PortalDest], lambda e, i: distance(eventPlayer, PortalLoc[i]))[0])
 
 rule "Addon | Custom Portals":
     @Event eachPlayer
     @Condition len(eventPlayer.cache_portalStart) != null
-    @Condition any([distance(i, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance for i in eventPlayer.cache_portalStart])
+    @Condition eventPlayer.cache_portalStart.any(lambda CAE, CAI: distance(CAE, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance)
     eventPlayer.teleport(sorted([i for i in eventPlayer.cache_portalEnd], lambda e, i: distance(eventPlayer, eventPlayer.cache_portalStart[i]))[0])
     wait(0.512)
 
@@ -114,7 +114,7 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     @Condition false
     @Condition isGameInProgress()
     MsDestructo = []  # Multiple bots
-    waitUntil(any([x.hasSpawned() for x in getAllPlayers()]), Math.INFINITY)
+    waitUntil(getAllPlayers().any(lambda CAE, CAI: CAE.hasSpawned()), Math.INFINITY)
     switch getCurrentMap():
         case Map.ILIOS:
             MapVectorArray = [vect(322.988, 40, -37.732), vect(27.711, 100, -161.298), vect(-223.895, 50, 0.89)]
