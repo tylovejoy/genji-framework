@@ -263,12 +263,11 @@ rule "Parkour | Bounce Ball / Orb":
     #@Condition eventPlayer.checkpoint_notLast # disabled coz editor
     @Condition eventPlayer.cache_bouncePosition.any(lambda CAE, CAI: distance(CAE, eventPlayer.getPosition() + Vector.UP * bounceOffset) < bounceOrbDistance)
 
-    eventPlayer.cache_bounceTouched = BouncePositions.index([pos for pos, i in BouncePositions if
-        BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and
-        i != eventPlayer.cache_bounceTouched and
-        not (i in eventPlayer.cache_collectedLocks) and
-        distance(eventPlayer + Vector.UP * bounceOffset, pos) < bounceOrbDistance])
-
+    eventPlayer.cache_bounceTouched = BouncePositions.index(BouncePositions.filter(lambda CAE, CAI:
+        BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current and
+        CAI != eventPlayer.cache_bounceTouched and
+        not (CAI in eventPlayer.cache_collectedLocks) and
+        distance(eventPlayer + Vector.UP * bounceOffset, CAE) < bounceOrbDistance))
     if eventPlayer.cache_bounceTouched >= 0: # prevent same one activating twice in a row
         if BounceToggleLock[eventPlayer.cache_bounceTouched]:
             #eventPlayer.cache_collectedLocks.append(eventPlayer.cache_bouncePosition[eventPlayer.cache_bounceTouched])
@@ -338,12 +337,12 @@ rule "Parkour | Death Reset":
 def UpdateCache():
     @Name "Parkour | SUB Update Effect Cache"
     # note: if adding cp pos to cache, make sure to also adjust editor things like move and teleport
-    eventPlayer.cache_bouncePosition = [_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_bounceMaxLocks = len([_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and _])
-    eventPlayer.cache_killPosition = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_killRadii = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_portalStart = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] < 0]
-    eventPlayer.cache_portalEnd = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] < 0]
+    eventPlayer.cache_bouncePosition = BouncePositions.filter(lambda CAE, CAI: BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current)
+    eventPlayer.cache_bounceMaxLocks = len(BounceToggleLock.filter(lambda CAE, CAI: BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current and CAE))
+    eventPlayer.cache_killPosition = KillBallPositions.filter(lambda CAE, CAI: KillballCheckpoints[CAI] == eventPlayer.checkpoint_current)
+    eventPlayer.cache_killRadii = KillBallRadii.filter(lambda CAE, CAI: KillballCheckpoints[CAI] == eventPlayer.checkpoint_current)
+    eventPlayer.cache_portalStart = CustomPortalStart.filter(lambda CAE, CAI: CustomPortalCP[CAI] == eventPlayer.checkpoint_current or CustomPortalCP[CAI] < 0)
+    eventPlayer.cache_portalEnd = CustomPortalEndpoint.filter(lambda CAE, CAI: CustomPortalCP[CAI] == eventPlayer.checkpoint_current or CustomPortalCP[CAI] < 0)
     eventPlayer.checkpoint_notLast = (eventPlayer.checkpoint_current < len(CheckpointPositions) - 1 and len(CheckpointPositions) > 1)
     eventPlayer.toggle_hints = false
     eventPlayer.banString = []
@@ -357,8 +356,8 @@ def UpdateCache():
     hostPlayer.editor_hitboxEffect = getLastCreatedEntity()
     createEffect(hostPlayer if hostPlayer.editor_hitboxToggle and hostPlayer.checkpoint_notLast else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[hostPlayer.checkpoint_current + 1], cpCircleRadius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     hostPlayer.editor_hitboxEffect.append(getLastCreatedEntity())
-    hostPlayer.editor_bounceIndex = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in BouncePadCheckpoints] if e >=0]
-    hostPlayer.editor_killIndex = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if e >=0]
+    hostPlayer.editor_bounceIndex = BouncePadCheckpoints.map(lambda CAE, CAI: CAI if CAE == hostPlayer.checkpoint_current else -1).filter(lambda CAE, CAI: CAE >= 0)
+    hostPlayer.editor_killIndex = KillballCheckpoints.map(lambda CAE, CAI: CAI if CAE == hostPlayer.checkpoint_current else -1).filter(lambda CAE, CAI: CAE >= 0)
     if hostPlayer.checkpoint_moved:
         EditSelected = EditSelectIdArray.last()
         hostPlayer.checkpoint_moved = false
@@ -394,10 +393,11 @@ def TimerResume():
 def LeaderboardUpdate():
     @Name "Parkour | SUB Leaderboard Update"
     # [[nameEntity, secondsFloat, timeString]]
-    if eventPlayer[0].split([]) in [e[0] for e in LeaderBoardFull]: # you already have a time
-        if eventPlayer.timer_normal >= [e for e in LeaderBoardFull if e[0] == eventPlayer[0].split([])][0][1]:
+    if eventPlayer[0].split([]) in LeaderBoardFull.map(lambda CAE, CAI: CAE[0]):
+        #Player already has a time
+        if eventPlayer.timer_normal >= LeaderBoardFull.filter(lambda CAE, CAI: CAE[0] == eventPlayer[0].split([]))[0][1]:
             return #Time too slow
-        LeaderBoardFull = [e for e in LeaderBoardFull if e[0] != eventPlayer[0].split([])]
+        LeaderBoardFull = LeaderBoardFull.filter(lambda CAE, CAI: CAE[0] != eventPlayer[0].split([]))
     elif len(LeaderBoardFull) < 25 or eventPlayer.timer_normal < LeaderBoardFull[24][1]:
         del LeaderBoardFull[24]
     else:

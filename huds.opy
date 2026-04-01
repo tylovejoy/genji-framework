@@ -222,9 +222,9 @@ rule "Huds | Leaderboard": # for global instead of tied to player
         del LeaderBoardHuds[0]
 
     # top 5
-    LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
+    LeaderBoardFull = sorted(LeaderBoardFull, lambda CAE: CAE[1])
     LeaderBoardRemake = []
-    LeaderBoardHuds = ["　 {}:　{} - {}".format(i+1, e[0], e.last()) for e, i in LeaderBoardFull]
+    LeaderBoardHuds = LeaderBoardFull.map(lambda CAE, CAI: "　 {}:　{} - {}".format(CAI + 1, CAE[0], CAE.last()))
     while len(LeaderBoardHuds):
         LeaderBoardRemake = "{}\n{}".format(LeaderBoardRemake, LeaderBoardHuds[0])
         del LeaderBoardHuds[0]

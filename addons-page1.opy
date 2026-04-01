@@ -37,13 +37,13 @@ rule "Addon | Pre-set control Map Portal - Toggle Via Workshop Settings":
     @Condition PortalLoc != null
     @Condition eventPlayer.toggle_invincible or not eventPlayer.checkpoint_notLast
     @Condition PortalLoc.any(lambda CAE, CAI: distance(CAE, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance)
-    eventPlayer.teleport(sorted([i for i in PortalDest], lambda e, i: distance(eventPlayer, PortalLoc[i]))[0])
+    eventPlayer.teleport(sorted(PortalDest, lambda CAE, CAI: distance(eventPlayer, PortalLoc[CAI]))[0])
 
 rule "Addon | Custom Portals":
     @Event eachPlayer
     @Condition len(eventPlayer.cache_portalStart) != null
     @Condition eventPlayer.cache_portalStart.any(lambda CAE, CAI: distance(CAE, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance)
-    eventPlayer.teleport(sorted([i for i in eventPlayer.cache_portalEnd], lambda e, i: distance(eventPlayer, eventPlayer.cache_portalStart[i]))[0])
+    eventPlayer.teleport(sorted(eventPlayer.cache_portalEnd, lambda CAE, CAI: distance(eventPlayer, eventPlayer.cache_portalStart[CAI]))[0])
     wait(0.512)
 
 rule "Addon | Preset Control Map Portal - Toggle Via Workshop Settings":
@@ -149,7 +149,7 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
                 MapVectorArray = [vect(73, 62, -17), vect(169, 62, 82), vect(-23, 62, -124), vect(-23, 62, 100)]
             break
     for DestructoIter in range(len(MapVectorArray)):
-        createDummy(Hero.DVA, [player for player in getAllPlayers() if player.hasSpawned() and not player.isDummy()][0].getTeam(), 20 - evalOnce(DestructoIter), evalOnce(MapVectorArray[evalOnce(DestructoIter)]), vect(0, 0, 0))
+        createDummy(Hero.DVA, getAllPlayers().filter(lambda CAE, CAI: CAE.hasSpawned() and not CAE.isDummy())[0].getTeam(), 20 - evalOnce(DestructoIter), evalOnce(MapVectorArray[evalOnce(DestructoIter)]), vect(0, 0, 0))
         MsDestructo[evalOnce(DestructoIter)] = getLastCreatedEntity()
         MsDestructo[evalOnce(DestructoIter)].startScalingSize(20, true)
         wait(0)
