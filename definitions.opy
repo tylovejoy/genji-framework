@@ -372,29 +372,17 @@ enum LoadOrder:
 #!define LeftAlign100 "                                                                                                    "
 #!define LeftAlign128 "                                                                                                                                "
 #!define checkCN if l"Oof" == "噢" else
-
-macro CAE = __currentArrayElement__
-macro CAI = __currentArrayIndex__
-macro Array.all(condition = CAE):
-    __all__(self, condition)
-macro Array.any(condition = CAE):
-    __any__(self, condition)
-macro Array.filter(condition = CAE):
-    __filteredArray__(self, condition = CAE)
-macro Array.map(replacement):
-    __mappedArray__(self, replacement)
-macro Array.sort(rank = CAE):
-    __sortedArray__(self, rank)
+#!define tuple lambda CAE, CAI
 
 macro Checkpoints.insertAt(index, item):
     self.append(null)
-    self = self.map(lambda CAE, CAI: CAE if CAI <= index else self[CAI - 1])
+    self = self.map(tuple: CAE if CAI <= index else self[CAI - 1])
     self[index] = item
 macro Checkpoints.shiftAt(index):
-    self = self.map(lambda CAE, CAI: CAE + (CAE >= index))
+    self = self.map(tuple: CAE + (CAE >= index))
 macro Checkpoints.removeAndShift(index):
     self.remove(index)
-    self = self.map(lambda CAE, CAI: CAE - (CAE > index))
+    self = self.map(tuple: CAE - (CAE > index))
 
 macro Array.addUnique(item):
     # self = self.exclude(item).concat(item)

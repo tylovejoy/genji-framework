@@ -13,7 +13,7 @@ macro Fw_Mechanics_All(heroGroundReset=pass):
         if eventPlayer.skill_usedHop:
             smallMessage(eventPlayer, t"   Bhop") #"   小跳已用" checkCN "   Bhop"
             if antiCheat and eventPlayer.getVerticalSpeed() > 5.722:
-                (LobbyID = []) if antiCheat else (pass)
+                LobbyID = []
         else:
             eventPlayer.skill_usedHop = true
 

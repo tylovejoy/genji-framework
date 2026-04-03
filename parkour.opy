@@ -243,7 +243,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpCircleRadius:
         CheckpointFailReset()
     elif antiCheat and not(eventPlayer.isUsingUltimate() or eventPlayer.isUsingAbility1()) and eventPlayer.getHorizontalSpeed() > 6.05:
-        (LobbyID = []) if antiCheat else (pass)
+        LobbyID = []
 
     eventPlayer.cache_collectedLocks = []
     wait(0.048)
@@ -254,16 +254,16 @@ rule "Parkour | Boundary Sphere":
     @Condition eventPlayer.cache_killPosition != []
     @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.checkpoint_notLast
-    @Condition eventPlayer.cache_killRadii.any(lambda CAE, CAI: normalize(CAE) * distance(eventPlayer.cache_killPosition[CAI], eventPlayer) < CAE)
+    @Condition eventPlayer.cache_killRadii.any(tuple: normalize(CAE) * distance(eventPlayer.cache_killPosition[CAI], eventPlayer) < CAE)
     CheckpointFailReset()
 
 rule "Parkour | Bounce Ball / Orb":
     @Event eachPlayer
     @Condition eventPlayer.cache_bouncePosition != []
     #@Condition eventPlayer.checkpoint_notLast # disabled coz editor
-    @Condition eventPlayer.cache_bouncePosition.any(lambda CAE, CAI: distance(CAE, eventPlayer.getPosition() + Vector.UP * bounceOffset) < bounceOrbDistance)
+    @Condition eventPlayer.cache_bouncePosition.any(tuple: distance(CAE, eventPlayer.getPosition() + Vector.UP * bounceOffset) < bounceOrbDistance)
 
-    eventPlayer.cache_bounceTouched = BouncePositions.index(BouncePositions.filter(lambda CAE, CAI:
+    eventPlayer.cache_bounceTouched = BouncePositions.index(BouncePositions.filter(tuple:
         BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current and
         CAI != eventPlayer.cache_bounceTouched and
         not (CAI in eventPlayer.cache_collectedLocks) and
@@ -337,12 +337,12 @@ rule "Parkour | Death Reset":
 def UpdateCache():
     @Name "Parkour | SUB Update Effect Cache"
     # note: if adding cp pos to cache, make sure to also adjust editor things like move and teleport
-    eventPlayer.cache_bouncePosition = BouncePositions.filter(lambda CAE, CAI: BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current)
-    eventPlayer.cache_bounceMaxLocks = len(BounceToggleLock.filter(lambda CAE, CAI: BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current and CAE))
-    eventPlayer.cache_killPosition = KillBallPositions.filter(lambda CAE, CAI: KillballCheckpoints[CAI] == eventPlayer.checkpoint_current)
-    eventPlayer.cache_killRadii = KillBallRadii.filter(lambda CAE, CAI: KillballCheckpoints[CAI] == eventPlayer.checkpoint_current)
-    eventPlayer.cache_portalStart = CustomPortalStart.filter(lambda CAE, CAI: CustomPortalCP[CAI] == eventPlayer.checkpoint_current or CustomPortalCP[CAI] < 0)
-    eventPlayer.cache_portalEnd = CustomPortalEndpoint.filter(lambda CAE, CAI: CustomPortalCP[CAI] == eventPlayer.checkpoint_current or CustomPortalCP[CAI] < 0)
+    eventPlayer.cache_bouncePosition = BouncePositions.filter(tuple: BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current)
+    eventPlayer.cache_bounceMaxLocks = len(BounceToggleLock.filter(tuple: BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current and CAE))
+    eventPlayer.cache_killPosition = KillBallPositions.filter(tuple: KillballCheckpoints[CAI] == eventPlayer.checkpoint_current)
+    eventPlayer.cache_killRadii = KillBallRadii.filter(tuple: KillballCheckpoints[CAI] == eventPlayer.checkpoint_current)
+    eventPlayer.cache_portalStart = CustomPortalStart.filter(tuple: CustomPortalCP[CAI] == eventPlayer.checkpoint_current or CustomPortalCP[CAI] < 0)
+    eventPlayer.cache_portalEnd = CustomPortalEndpoint.filter(tuple: CustomPortalCP[CAI] == eventPlayer.checkpoint_current or CustomPortalCP[CAI] < 0)
     eventPlayer.checkpoint_notLast = (eventPlayer.checkpoint_current < len(CheckpointPositions) - 1 and len(CheckpointPositions) > 1)
     eventPlayer.toggle_hints = false
     eventPlayer.banString = []
@@ -356,8 +356,8 @@ def UpdateCache():
     hostPlayer.editor_hitboxEffect = getLastCreatedEntity()
     createEffect(hostPlayer if hostPlayer.editor_hitboxToggle and hostPlayer.checkpoint_notLast else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[hostPlayer.checkpoint_current + 1], cpCircleRadius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     hostPlayer.editor_hitboxEffect.append(getLastCreatedEntity())
-    hostPlayer.editor_bounceIndex = BouncePadCheckpoints.map(lambda CAE, CAI: CAI if CAE == hostPlayer.checkpoint_current else -1).filter(lambda CAE, CAI: CAE >= 0)
-    hostPlayer.editor_killIndex = KillballCheckpoints.map(lambda CAE, CAI: CAI if CAE == hostPlayer.checkpoint_current else -1).filter(lambda CAE, CAI: CAE >= 0)
+    hostPlayer.editor_bounceIndex = BouncePadCheckpoints.map(tuple: CAI if CAE == hostPlayer.checkpoint_current else -1).filter(tuple: CAE >= 0)
+    hostPlayer.editor_killIndex = KillballCheckpoints.map(tuple: CAI if CAE == hostPlayer.checkpoint_current else -1).filter(tuple: CAE >= 0)
     if hostPlayer.checkpoint_moved:
         EditSelected = EditSelectIdArray.last()
         hostPlayer.checkpoint_moved = false
@@ -393,11 +393,11 @@ def TimerResume():
 def LeaderboardUpdate():
     @Name "Parkour | SUB Leaderboard Update"
     # [[nameEntity, secondsFloat, timeString]]
-    if eventPlayer[0].split([]) in LeaderBoardFull.map(lambda CAE, CAI: CAE[0]):
+    if eventPlayer[0].split([]) in LeaderBoardFull.map(tuple: CAE[0]):
         #Player already has a time
-        if eventPlayer.timer_normal >= LeaderBoardFull.filter(lambda CAE, CAI: CAE[0] == eventPlayer[0].split([]))[0][1]:
+        if eventPlayer.timer_normal >= LeaderBoardFull.filter(tuple: CAE[0] == eventPlayer[0].split([]))[0][1]:
             return #Time too slow
-        LeaderBoardFull = LeaderBoardFull.filter(lambda CAE, CAI: CAE[0] != eventPlayer[0].split([]))
+        LeaderBoardFull = LeaderBoardFull.filter(tuple: CAE[0] != eventPlayer[0].split([]))
     elif len(LeaderBoardFull) < 25 or eventPlayer.timer_normal < LeaderBoardFull[24][1]:
         del LeaderBoardFull[24]
     else:

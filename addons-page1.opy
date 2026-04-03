@@ -36,14 +36,14 @@ rule "Addon | Pre-set control Map Portal - Toggle Via Workshop Settings":
     @Event eachPlayer
     @Condition PortalLoc != null
     @Condition eventPlayer.toggle_invincible or not eventPlayer.checkpoint_notLast
-    @Condition PortalLoc.any(lambda CAE, CAI: distance(CAE, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance)
-    eventPlayer.teleport(sorted(PortalDest, lambda CAE, CAI: distance(eventPlayer, PortalLoc[CAI]))[0])
+    @Condition PortalLoc.any(tuple: distance(CAE, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance)
+    eventPlayer.teleport(sorted(PortalDest, tuple: distance(eventPlayer, PortalLoc[CAI]))[0])
 
 rule "Addon | Custom Portals":
     @Event eachPlayer
     @Condition len(eventPlayer.cache_portalStart) != null
-    @Condition eventPlayer.cache_portalStart.any(lambda CAE, CAI: distance(CAE, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance)
-    eventPlayer.teleport(sorted(eventPlayer.cache_portalEnd, lambda CAE, CAI: distance(eventPlayer, eventPlayer.cache_portalStart[CAI]))[0])
+    @Condition eventPlayer.cache_portalStart.any(tuple: distance(CAE, eventPlayer.getPosition() + 0.2 * Vector.UP) < portalDistance)
+    eventPlayer.teleport(sorted(eventPlayer.cache_portalEnd, tuple: distance(eventPlayer, eventPlayer.cache_portalStart[CAI]))[0])
     wait(0.512)
 
 rule "Addon | Preset Control Map Portal - Toggle Via Workshop Settings":
@@ -92,12 +92,12 @@ rule "Addon | Preset Control Map Portal - Toggle Via Workshop Settings":
             {name: "University",  start: vect(151.452, 12.522, 261.099), end: vect(-206.269, 19.292, 0.103)}]) # City Center
     elif getCurrentMap() == Map.SAMOA:
         splitDictArray({name: PortalNames, start: PortalLoc, end: PortalDest},[
-            {name: "Beach",    start: vect(231.98, 7.23, -262.84), end: vect(-329.86, 3.05, -103.4)},   # Downtown
-            {name: "Volcano",  start: vect(236.78, 7.23, -262.75), end: vect(27.59, 339.76, 348.77)},   # Downtown
-            {name: "Downtown", start: vect(-327.59, 3.6, -108.69), end: vect( 234.07, 6.12, -266.88)},  # Beach
-            {name: "Volcano",  start: vect(-332.71, 3.6, -108.59), end: vect(27.59, 339.76, 348.77)},   # Beach
-            {name: "Beach",    start: vect(25.4, 341, 354.38),     end: vect(-329.86, 3.05, -103.4)},   # Volcano
-            {name: "Downtown", start: vect( 30, 341, 354.34),      end: vect( 234.07, 6.12, -266.88)}]) # Volcano
+            {name: "Beach",    start: vect(231.98, 7.23, -262.84), end: vect(-329.86, 3.05, -103.4)},  # Downtown
+            {name: "Volcano",  start: vect(236.78, 7.23, -262.75), end: vect(27.59, 339.76, 348.77)},  # Downtown
+            {name: "Downtown", start: vect(-327.59, 3.6, -108.69), end: vect(234.07, 6.12, -266.88)},  # Beach
+            {name: "Volcano",  start: vect(-332.71, 3.6, -108.59), end: vect(27.59, 339.76, 348.77)},  # Beach
+            {name: "Beach",    start: vect(25.4, 341, 354.38),     end: vect(-329.86, 3.05, -103.4)},  # Volcano
+            {name: "Downtown", start: vect(30, 341, 354.34),       end: vect(234.07, 6.12, -266.88)}]) # Volcano
 /*
     elif false: # getCurrentMap() == Map.ANTARCTIC_PENINSULA:
         PortalNames = ["Labs", "Icebreaker", "Sublevel", "Icebreaker", "Labs", "Sublevel"]
@@ -114,7 +114,7 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     @Condition false
     @Condition isGameInProgress()
     MsDestructo = []  # Multiple bots
-    waitUntil(getAllPlayers().any(lambda CAE, CAI: CAE.hasSpawned()), Math.INFINITY)
+    waitUntil(getAllPlayers().any(tuple: CAE.hasSpawned()), Math.INFINITY)
     switch getCurrentMap():
         case Map.ILIOS:
             MapVectorArray = [vect(322.988, 40, -37.732), vect(27.711, 100, -161.298), vect(-223.895, 50, 0.89)]
@@ -149,7 +149,7 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
                 MapVectorArray = [vect(73, 62, -17), vect(169, 62, 82), vect(-23, 62, -124), vect(-23, 62, 100)]
             break
     for DestructoIter in range(len(MapVectorArray)):
-        createDummy(Hero.DVA, getAllPlayers().filter(lambda CAE, CAI: CAE.hasSpawned() and not CAE.isDummy())[0].getTeam(), 20 - evalOnce(DestructoIter), evalOnce(MapVectorArray[evalOnce(DestructoIter)]), vect(0, 0, 0))
+        createDummy(Hero.DVA, getAllPlayers().filter(tuple: CAE.hasSpawned() and not CAE.isDummy())[0].getTeam(), 20 - evalOnce(DestructoIter), evalOnce(MapVectorArray[evalOnce(DestructoIter)]), vect(0, 0, 0))
         MsDestructo[evalOnce(DestructoIter)] = getLastCreatedEntity()
         MsDestructo[evalOnce(DestructoIter)].startScalingSize(20, true)
         wait(0)
@@ -188,7 +188,7 @@ rule "Addon | Little Destructo - Fence Breaker":
     # tdm/dm = first spawn points, the maps are not big so it just covers entire map. all teams defaults to team 1 spawn
     # push: payload and cp 0 are set but rest isnt. normal payload maps have more then 1 point.
     # rest of maps have up to 3 points
-    MapVectorArray.append( #$$ Combine with `MapVectorArray = [0]`
+    MapVectorArray.append(#$$ Combine with `MapVectorArray = [0]`
         [getFlagPosition(Team.1), getFlagPosition(Team.2)] if getCurrentGamemode() == Gamemode.CTF else
         getSpawnPoints(Team.ALL)[0] if getCurrentGamemode() in [Gamemode.TDM, Gamemode.FFA] else
         getPayloadPosition() if getPayloadPosition()[0] and not (getObjectivePosition(1) + getObjectivePosition(2)) else
