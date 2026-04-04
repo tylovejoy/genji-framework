@@ -724,7 +724,7 @@ rule "Editor | Create Cp/Orb":
         EditUpdateSelectedIds()
         EditSelected = EditSelectIdArray.last()
         createEffect(
-            [CAE for CAE in getAllPlayers().concat(null) if CAE.checkpoint_current == BouncePadCheckpoints[evalOnce(EditSelected)] and not (evalOnce(EditSelected) in CAE.cache_collectedLocks)],
+            getAllPlayers().concat(null).filter(tuple: CAE.checkpoint_current == BouncePadCheckpoints[evalOnce(EditSelected)] and not (evalOnce(EditSelected) in CAE.cache_collectedLocks)),
             Effect.ORB, ColorConfig[Customize.orb_lock] if BounceToggleLock[evalOnce(EditSelected)] else ColorConfig[Customize.orb_normal],
             BouncePositions[evalOnce(EditSelected)], 1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
         BounceEffects.append(getLastCreatedEntity())
@@ -741,7 +741,7 @@ rule "Editor | Create Cp/Orb":
         CustomPortalCP.append(hostPlayer.checkpoint_current)
         EditUpdateSelectedIds()
         EditSelected = EditSelectIdArray.last()
-        createEffect([CAE for CAE in getAllPlayers() if CustomPortalCP[evalOnce(EditSelected)] == CAE.checkpoint_current or CustomPortalCP[evalOnce(EditSelected)] < 0],
+        createEffect(getAllPlayers().filter(tuple: CustomPortalCP[evalOnce(EditSelected)] == CAE.checkpoint_current or CustomPortalCP[evalOnce(EditSelected)] < 0),
             Effect.GOOD_AURA, ColorConfig[Customize.portal], CustomPortalStart[evalOnce(EditSelected)], 0.6,  EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
         PortalEffects.append(getLastCreatedEntity())
         EditSelected = len(CustomPortalStart) - 1
@@ -770,49 +770,37 @@ rule "Editor | Delete Cp/Orb/Portal":
     hostPlayer.editor_lock = true
     if EditorMode.checkpoint and len(CheckpointPositions):
         # Resync Kill Orbs ==================
-        hostPlayer.editor_temp = [CAE for CAE in [(CAI if e2 == hostPlayer.checkpoint_current else -1) for e2, CAI in KillballCheckpoints] if CAE >= 0]
-        # hostPlayer.editor_temp = [i for e, i in KillballCheckpoints if e == hostPlayer.checkpoint_current]
+        hostPlayer.editor_temp = KillballCheckpoints.map(tuple: CAI if CAE == hostPlayer.checkpoint_current else -1).exclude(-1)
         for TempIterator1 in range(len(hostPlayer.editor_temp)):
             destroyEffect(KillBallEffects[hostPlayer.editor_temp[TempIterator1]])
             del KillBallEffects[hostPlayer.editor_temp[TempIterator1]]
             wait(0)
-        # Remove specified checkpoint
-        KillballCheckpoints = [CAE for CAE in KillballCheckpoints if CAE != hostPlayer.checkpoint_current]
-        # Decrement checkpoints after removed one
-        KillballCheckpoints = [CAE - (1 if CAE > hostPlayer.checkpoint_current else 0) for CAE in KillballCheckpoints]
-        # Remove Radii at Checkpoint indexes (temp)
-        KillBallRadii = [CAE for CAE, CAI in KillBallRadii if CAI not in hostPlayer.editor_temp]
-        KillBallPositions = [CAE for CAE, CAI in KillBallPositions if CAI not in hostPlayer.editor_temp]
+        KillballCheckpoints.removeAndShift(hostPlayer.checkpoint_current)
+        KillBallRadii = KillBallRadii.filter(tuple: CAI not in hostPlayer.editor_temp)
+        KillBallPositions = KillBallPositions.filter(tuple: CAI not in hostPlayer.editor_temp)
+
         # Resync Bounce Orbs ==============
-        hostPlayer.editor_temp = [CAE for CAE in [(CAI if e2 == hostPlayer.checkpoint_current else -1) for e2, CAI in BouncePadCheckpoints] if CAE >= 0]
-        # hostPlayer.editor_temp = [i for e, i in BouncePadCheckpoints if e == hostPlayer.checkpoint_current]
+        hostPlayer.editor_temp = BouncePadCheckpoints.map(tuple: CAI if CAE == hostPlayer.checkpoint_current else -1).exclude(-1)
         for TempIterator1 in range(len(hostPlayer.editor_temp)):
             destroyEffect(BounceEffects[hostPlayer.editor_temp[TempIterator1]])
             del BounceEffects[hostPlayer.editor_temp[TempIterator1]]
             wait(0)
-
-        BouncePadCheckpoints = [CAE for CAE in BouncePadCheckpoints if CAE != hostPlayer.checkpoint_current]
-        # Decrement checkpoints after removed one
-        BouncePadCheckpoints = [CAE - (1 if CAE > hostPlayer.checkpoint_current else 0) for CAE in BouncePadCheckpoints]
-        BouncePositions = [CAE for CAE, CAI in BouncePositions if CAI not in hostPlayer.editor_temp]
-        BounceStrength = [CAE for CAE, CAI in BounceStrength if CAI not in hostPlayer.editor_temp]
-        BounceToggleUlt = [CAE for CAE, CAI in BounceToggleUlt if CAI not in hostPlayer.editor_temp]
-        BounceToggleDash = [CAE for CAE, CAI in BounceToggleDash if CAI not in hostPlayer.editor_temp]
-        BounceToggleLock = [CAE for CAE, CAI in BounceToggleLock if CAI not in hostPlayer.editor_temp]
+        BouncePadCheckpoints.removeAndShift(hostPlayer.checkpoint_current)
+        BouncePositions = BouncePositions.filter(tuple: CAI not in hostPlayer.editor_temp)
+        BounceStrength = BounceStrength.filter(tuple: CAI not in hostPlayer.editor_temp)
+        BounceToggleUlt = BounceToggleUlt.filter(tuple: CAI not in hostPlayer.editor_temp)
+        BounceToggleDash = BounceToggleDash.filter(tuple: CAI not in hostPlayer.editor_temp)
+        BounceToggleLock = BounceToggleLock.filter(tuple: CAI not in hostPlayer.editor_temp)
 
         # Resync custom portals ==================
-        hostPlayer.editor_temp = [CAE for CAE in [(CAI if e2 == hostPlayer.checkpoint_current else -1) for e2, CAI in CustomPortalCP] if CAE >= 0]
+        hostPlayer.editor_temp = CustomPortalCP.map(tuple: CAI if CAE == hostPlayer.checkpoint_current else -1).exclude(-1)
         for TempIterator1 in range(len(hostPlayer.editor_temp)):
             destroyEffect(PortalEffects[hostPlayer.editor_temp[TempIterator1]])
             del PortalEffects[hostPlayer.editor_temp[TempIterator1]]
             wait(0)
-        # Remove specified checkpoint
-        CustomPortalCP = [CAE for CAE in CustomPortalCP if CAE != hostPlayer.checkpoint_current]
-        # Decrement checkpoints after removed one
-        CustomPortalCP = [CAE - (1 if CAE > hostPlayer.checkpoint_current else 0) for CAE in CustomPortalCP]
-        # Remove Radii at Checkpoint indexes (temp)
-        CustomPortalStart = [CAE for CAE, CAI in CustomPortalStart if CAI not in hostPlayer.editor_temp]
-        CustomPortalEndpoint = [CAE for CAE, CAI in CustomPortalEndpoint if CAI not in hostPlayer.editor_temp]
+        CustomPortalCP.removeAndShift(hostPlayer.checkpoint_current)
+        CustomPortalStart = CustomPortalStart.filter(tuple: CAI not in hostPlayer.editor_temp)
+        CustomPortalEndpoint = CustomPortalEndpoint.filter(tuple: CAI not in hostPlayer.editor_temp)
         hostPlayer.editor_temp = null
 
         # ult/dash/ban remove and lower the cp number of rest
