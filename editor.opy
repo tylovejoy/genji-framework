@@ -983,7 +983,7 @@ rule "Editor | Moving Checkpoint":
         else:
             hostPlayer.setMoveSpeed(3)
         if len(CheckpointPositions[hostPlayer.checkpoint_current]):
-            CheckpointPositions[hostPlayer.checkpoint_current] = [hostPlayer.getPosition(), CheckpointPositions[hostPlayer.checkpoint_current][1] ]
+            CheckpointPositions[hostPlayer.checkpoint_current] = [hostPlayer.getPosition(), CheckpointPositions[hostPlayer.checkpoint_current][1]]
         else:
             CheckpointPositions[hostPlayer.checkpoint_current] = hostPlayer.getPosition()
         wait(0)
