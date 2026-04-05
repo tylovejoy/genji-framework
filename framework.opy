@@ -41,7 +41,7 @@ macro overrideLanguage = Languages.Automatic
 ################################################################################
 #!disableInspector
 #!globalvarInitRuleName "OverPy | Global Init"
-#!playervarInitRuleName "OverPy | Player Init"
+##!playervarInitRuleName "OverPy | Player Init"
 ################################################################################
 Fw_Include_Hero
 ################################################################################
@@ -73,3 +73,5 @@ testData
 ################################################################################
 # Enable/disable the include
 ##!include "test-scripts.opy"
+################################################################################
+#!postCompileHook "corrections.js"
