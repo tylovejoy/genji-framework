@@ -10,19 +10,19 @@
 ################################################################################
 
 macro Fw_Parkour_Setup_Hero():
-    UltCheckpoints = UltCheckpoints.filter(tuple: CAE + false >= 0) if len(UltCheckpoints) else []
-    Ability1Checkpoints = Ability1Checkpoints.filter(tuple: CAE + false >= 0) if len(Ability1Checkpoints) else []
+    UltCheckpoints = UltCheckpoints.exclude(-1) if len(UltCheckpoints) else []
+    Ability1Checkpoints = Ability1Checkpoints.exclude(-1) if len(Ability1Checkpoints) else []
     # remove legacy -1's after the ban data has been loaded
-    # BanTriple = BanTriple.filter(tuple: CAE + false >= 0) if len(BanTriple) else [] # legacy code, now auto sets it to null to save space
-    BanCreate = BanCreate.filter(tuple: CAE + false >= 0) if len(BanCreate) else []
+    # BanTriple = BanTriple.exclude(-1) if len(BanTriple) else [] # legacy code, now auto sets it to null to save space
+    BanCreate = BanCreate.exclude(-1) if len(BanCreate) else []
     BanAutoCreate = BanAutoCreate if len(BanAutoCreate) else []
-    BanStand = BanStand.filter(tuple: CAE + false >= 0) if len(BanStand) else []
-    BanMulti = BanMulti.filter(tuple: CAE + false >= 0) if len(BanMulti) else []
-    BanDead = BanDead.filter(tuple: CAE + false >= 0) if len(BanDead) else []
-    BanEmote = BanEmote.filter(tuple: CAE + false >= 0) if len(BanEmote) else []
+    BanStand = BanStand.exclude(-1) if len(BanStand) else []
+    BanMulti = BanMulti.exclude(-1) if len(BanMulti) else []
+    BanDead = BanDead.exclude(-1) if len(BanDead) else []
+    BanEmote = BanEmote.exclude(-1) if len(BanEmote) else []
     BanSaveDouble = BanSaveDouble if len(BanSaveDouble) else []
-    BanClimb = BanClimb.filter(tuple: CAE + false >= 0) if len(BanClimb) else []
-    BanBhop = BanBhop.filter(tuple: CAE + false >= 0) if len(BanBhop) else []
+    BanClimb = BanClimb.exclude(-1) if len(BanClimb) else []
+    BanBhop = BanBhop.exclude(-1) if len(BanBhop) else []
     BanDjump = BanDjump if len(BanDjump) else []
 
 macro Fw_Parkour_UpdateCache_Hero():

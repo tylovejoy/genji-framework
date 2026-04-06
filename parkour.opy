@@ -263,10 +263,8 @@ rule "Parkour | Bounce Ball / Orb":
     @Condition eventPlayer.cache_bouncePosition.any(tuple: distance(CAE, eventPlayer.getPosition() + Vector.UP * bounceOffset) < bounceOrbDistance)
 
     eventPlayer.cache_bounceTouched = BouncePositions.index(BouncePositions.filter(tuple:
-        BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current and
-        CAI != eventPlayer.cache_bounceTouched and
-        not (CAI in eventPlayer.cache_collectedLocks) and
-        distance(eventPlayer + Vector.UP * bounceOffset, CAE) < bounceOrbDistance))
+        BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current and CAI != eventPlayer.cache_bounceTouched and
+        not (CAI in eventPlayer.cache_collectedLocks) and distance(eventPlayer + Vector.UP * bounceOffset, CAE) < bounceOrbDistance))
     if eventPlayer.cache_bounceTouched >= 0: # prevent same one activating twice in a row
         if BounceToggleLock[eventPlayer.cache_bounceTouched]:
             #eventPlayer.cache_collectedLocks.append(eventPlayer.cache_bouncePosition[eventPlayer.cache_bounceTouched])
@@ -277,10 +275,11 @@ rule "Parkour | Bounce Ball / Orb":
         if BounceStrength[eventPlayer.cache_bounceTouched] > 0:
             eventPlayer.applyImpulse(Vector.UP, BounceStrength[eventPlayer.cache_bounceTouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
         elif BounceStrength[eventPlayer.cache_bounceTouched] < 0:
-            eventPlayer.cancelPrimaryAction()
-            (eventPlayer.skill_usedDouble = null) if Hero.FwHero == Hero.GENJI else (pass)
-            #"   二段跳已就绪" checkCN "   » Double Jump is ready"
-            smallMessage(eventPlayer, t"   » Double Jump Is Ready")
+            if FwHero.Hero == Hero.GENJI:
+                eventPlayer.cancelPrimaryAction()
+                eventPlayer.skill_usedDouble = null
+                #"   二段跳已就绪" checkCN "   » Double Jump is ready"
+                smallMessage(eventPlayer, t"   » Double Jump Is Ready")
 
         if BounceToggleUlt[eventPlayer.cache_bounceTouched]:
             eventPlayer.setUltEnabled(true)
@@ -355,8 +354,8 @@ def UpdateCache():
     hostPlayer.editor_hitboxEffect = getLastCreatedEntity()
     createEffect(hostPlayer if hostPlayer.editor_hitboxToggle and hostPlayer.checkpoint_notLast else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[hostPlayer.checkpoint_current + 1], cpCircleRadius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     hostPlayer.editor_hitboxEffect.append(getLastCreatedEntity())
-    hostPlayer.editor_bounceIndex = BouncePadCheckpoints.map(tuple: CAI if CAE == hostPlayer.checkpoint_current else -1).filter(tuple: CAE >= 0)
-    hostPlayer.editor_killIndex = KillballCheckpoints.map(tuple: CAI if CAE == hostPlayer.checkpoint_current else -1).filter(tuple: CAE >= 0)
+    hostPlayer.editor_bounceIndex = BouncePadCheckpoints.map(tuple: CAI if CAE == hostPlayer.checkpoint_current else -1).exclude(-1)
+    hostPlayer.editor_killIndex = KillballCheckpoints.map(tuple: CAI if CAE == hostPlayer.checkpoint_current else -1).exclude(-1)
     if hostPlayer.checkpoint_moved:
         EditSelected = EditSelectIdArray.last()
         hostPlayer.checkpoint_moved = false
@@ -413,7 +412,7 @@ def CheckpointFailReset():
         eventPlayer.timer_split = 0
 
     eventPlayer.cancelPrimaryAction()
-    (eventPlayer.skill_usedDouble = null) if Hero.FwHero == Hero.GENJI else (pass)
+    (eventPlayer.skill_usedDouble = null) if FwHero.Hero == Hero.GENJI else (pass)
     if len(CheckpointPositions):
         if eventPlayer.isUsingAbility1():
             eventPlayer.startForcingPosition(eventPlayer, false)
@@ -424,21 +423,17 @@ def CheckpointFailReset():
         #After teleport incase stopForcingPosition launches the player
         eventPlayer.applyImpulse(-1 * eventPlayer.getVelocity(), Math.EPSILON, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
-        # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
         #if eventPlayer.ban_dead or eventPlayer.ban_emote and eventPlayer.isHoldingButton(Button.JUMP):
         if eventPlayer.ban_dead:
             if eventPlayer.isHoldingButton(Button.JUMP):
                 eventPlayer.forceButtonPress(Button.JUMP)
         else:
-            #Reset Hop
-            eventPlayer.setStatusEffect(null, Status.ROOTED, 0.096)
-
+            eventPlayer.setStatusEffect(null, Status.ROOTED, 0.096) #Readd old framework bug as Reset Hop feature.
         if eventPlayer.isUsingUltimate():
             eventPlayer.setDamageReceived(100)
             kill(eventPlayer, null)
             eventPlayer.setDamageReceived(0)
             wait(0)
-
     ResetAbilities()
     AddonCustomLoadAndReset()
 
@@ -450,7 +445,7 @@ def StartGame():
     eventPlayer.toggle_spectate = false
     eventPlayer.checkpoint_moved = true
     if len(CheckpointPositions):
-        if eventPlayer[0].split([]) in SaveName: # load saved progres
+        if eventPlayer[0].split([]) in SaveName: # load saved player progress
             SaveEnt[SaveName.index(eventPlayer[0].split([]))] = eventPlayer
             eventPlayer.checkpoint_current = SaveCp[SaveEnt.index(eventPlayer)]
             eventPlayer.timer_normal = SaveTimer[SaveEnt.index(eventPlayer)]
