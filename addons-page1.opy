@@ -18,13 +18,9 @@ rule "Addon | AFK Timer":
     if eventPlayer.addon_toggle3rdPov:
         eventPlayer.addon_toggle3rdPov = false
     eventPlayer.setStatusEffect(null, Status.ASLEEP, Math.INFINITY)
-        # raycast to prevent camera stuck on low wall
-    eventPlayer.startCamera(
-        eventPlayer.getPosition() + #$$ Remove distance()
-        Vector.UP * (distance(eventPlayer.getPosition(), raycast(eventPlayer.getPosition(), eventPlayer.getPosition() + 4 * Vector.UP, null, null, false).getHitPosition()) - 1),
-        eventPlayer.getPosition(), 10)
-    # cancel it after jumping or not sleep, reset cures sleep
-    wait(1)
+    # raycast to prevent camera stuck on low wall
+    eventPlayer.startCamera(raycast(eventPlayer.getPosition(), eventPlayer.getPosition() + 4 * Vector.UP, null, null, false).getHitPosition() + Vector.DOWN, eventPlayer.getPosition(), 10)
+    wait(1) # cancel it after jumping or not sleep, reset cures sleep
     waitUntil(eventPlayer.isHoldingButton(Button.JUMP) or not eventPlayer.hasStatusEffect(Status.ASLEEP), Math.INFINITY)
     eventPlayer.clearStatusEffect(Status.ASLEEP)
     eventPlayer.stopCamera()
@@ -177,18 +173,14 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
 macro fence_delay = 3 # decrease to make it wait more often if you have load problems, keep at full int numbers no floats
 macro fence_proj_size = 30 # projectile size, 30 is maximum possible atm
 macro fence_grid = 16 # gridsize of 16 means a 16x16 grid with the point in the center
-macro fence_position(): # calculation for next explosion
-    MapVectorArray.last() - (vect(fence_grid * fence_proj_size, 0, fence_grid * fence_proj_size) / 2) + (MapVectorArray[0] % fence_grid) * (Vector.LEFT * fence_proj_size) + floor(MapVectorArray[0] / fence_grid) * (Vector.FORWARD * fence_proj_size)
-
 rule "Addon | Little Destructo - Fence Breaker":
     # Made by FishoFire version 1.0
 	wait(LoadOrder.destructo) # wait to overwrite any from copy pastas
-    MapVectorArray = [0] # first entry will act as index, rest is the points themselves
     # flag mode = both flag points, just incase
     # tdm/dm = first spawn points, the maps are not big so it just covers entire map. all teams defaults to team 1 spawn
     # push: payload and cp 0 are set but rest isnt. normal payload maps have more then 1 point.
     # rest of maps have up to 3 points
-    MapVectorArray.append(#$$ Combine with `MapVectorArray = [0]`
+    MapVectorArray.append(
         [getFlagPosition(Team.1), getFlagPosition(Team.2)] if getCurrentGamemode() == Gamemode.CTF else
         getSpawnPoints(Team.ALL)[0] if getCurrentGamemode() in [Gamemode.TDM, Gamemode.FFA] else
         getPayloadPosition() if getPayloadPosition()[0] and not (getObjectivePosition(1) + getObjectivePosition(2)) else
@@ -200,7 +192,9 @@ rule "Addon | Little Destructo - Fence Breaker":
             createProjectile(
                 Projectile.ORB,  # the only orb available without fx extension
                 null,
-                fence_position(),
+                # calculation for next explosion
+                MapVectorArray.last() - (vect(fence_grid * fence_proj_size, 0, fence_grid * fence_proj_size) / 2) + (MapVectorArray[0] % fence_grid) *
+                    (Vector.LEFT * fence_proj_size) + floor(MapVectorArray[0] / fence_grid) * (Vector.FORWARD * fence_proj_size),
                 Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
                 DynamicEffect.GOOD_EXPLOSION, # possible without extensions: bad, good, ring
                 DynamicEffect.EXPLOSION_SOUND, # possible without extensions: explosion sound, buf sound, ring explosion sound
