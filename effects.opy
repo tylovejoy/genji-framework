@@ -8,14 +8,14 @@ rule "Effects | Setup Effects":
     if len(PortalLoc): # pre set control map portals. not in portal rule because shared I variable
         for TempIterator1 in range(len(PortalLoc)):
             createEffect(
-                getAllPlayers().filter(tuple: CAE.toggle_invincible or not CAE.checkpoint_notLast), #$$ localspectate()
+                getAllPlayers().filter(tuple: CAE.toggle_invincible or not CAE.checkpoint_notLast),
                 Effect.BAD_AURA,
                 Color.AQUA if TempIterator1 % 2 else Color.ORANGE,
                 PortalLoc[TempIterator1],
                 0.6,
                 EffectReeval.VISIBILITY)
             createInWorldText(
-                getAllPlayers().filter(tuple: CAE.toggle_invincible or not CAE.checkpoint_notLast), #$$ localspectate()
+                getAllPlayers().filter(tuple: CAE.toggle_invincible or not CAE.checkpoint_notLast),
                 PortalNames[TempIterator1],
                 PortalLoc[TempIterator1] + Vector.UP,
                 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE, SpecVisibility.DEFAULT)
@@ -29,7 +29,6 @@ rule "Effects | Setup Effects":
         if len(CustomPortalStart):
             for TempIterator1 in range(len(CustomPortalStart)):
                 createEffect(
-                    #localSpectator(localPlayer.checkpoint_current == CustomPortalCP[evalOnce(TempIterator1)] or CustomPortalCP[evalOnce(TempIterator1)] == -1), #$$ Testing
                     getAllPlayers().filter(tuple: CAE.checkpoint_current == evalOnce(CustomPortalCP[TempIterator1]) or evalOnce(CustomPortalCP[TempIterator1] < 0)),
                     Effect.GOOD_AURA, ColorConfig[Customize.portal], CustomPortalStart[TempIterator1], 0.6, EffectReeval.VISIBILITY)
                 wait(0)
@@ -38,7 +37,6 @@ rule "Effects | Setup Effects":
         if len(KillBallPositions):
             for TempIterator1 in range(0, len(KillBallPositions)):
                 createEffect(
-                    #localSpectator(localPlayer.checkpoint_current == KillballCheckpoints[evalOnce(TempIterator1)]), #$$ Testing
                     getAllPlayers().filter(tuple: CAE.checkpoint_current == evalOnce(KillballCheckpoints[TempIterator1])),
                     Effect.SPHERE, ColorConfig[Customize.killorb], KillBallPositions[TempIterator1], abs(KillBallRadii[TempIterator1]), EffectReeval.VISIBILITY)
                 wait(0)
@@ -47,7 +45,6 @@ rule "Effects | Setup Effects":
         if len(BouncePositions):
             for TempIterator1 in range(0, len(BouncePositions)):
                 createEffect(
-                    #localSpectator(localPlayer.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not (evalOnce(TempIterator1) in localPlayer.cache_collectedLocks)), #$$ Testing
                     getAllPlayers().filter(tuple: CAE.checkpoint_current == evalOnce(BouncePadCheckpoints[TempIterator1]) and not (evalOnce(TempIterator1) in CAE.cache_collectedLocks)),
                     Effect.ORB, ColorConfig[Customize.orb_lock] if BounceToggleLock[TempIterator1] else ColorConfig[Customize.orb_normal], BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
                 wait(0)
