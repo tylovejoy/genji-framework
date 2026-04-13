@@ -724,7 +724,7 @@ rule "Editor | Create Cp/Orb":
         EditUpdateSelectedIds()
         EditSelected = EditSelectIdArray.last()
         createEffect(
-            getAllPlayers().concat(null).filter(tuple: CAE.checkpoint_current == BouncePadCheckpoints[evalOnce(EditSelected)] and not (evalOnce(EditSelected) in CAE.cache_collectedLocks)),
+            getAllPlayers().filter(tuple: CAE.checkpoint_current == BouncePadCheckpoints[evalOnce(EditSelected)] and not (evalOnce(EditSelected) in CAE.cache_collectedLocks)),
             Effect.ORB, ColorConfig[Customize.orb_lock] if BounceToggleLock[evalOnce(EditSelected)] else ColorConfig[Customize.orb_normal],
             BouncePositions[evalOnce(EditSelected)], 1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
         BounceEffects.append(getLastCreatedEntity())

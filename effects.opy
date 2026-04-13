@@ -48,7 +48,7 @@ rule "Effects | Setup Effects":
             for TempIterator1 in range(0, len(BouncePositions)):
                 createEffect(
                     #localSpectator(localPlayer.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not (evalOnce(TempIterator1) in localPlayer.cache_collectedLocks)), #$$ Testing
-                    getAllPlayers().concat(0).filter(tuple: CAE.checkpoint_current == evalOnce(BouncePadCheckpoints[TempIterator1]) and not (evalOnce(TempIterator1) in CAE.cache_collectedLocks)),
+                    getAllPlayers().filter(tuple: CAE.checkpoint_current == evalOnce(BouncePadCheckpoints[TempIterator1]) and not (evalOnce(TempIterator1) in CAE.cache_collectedLocks)),
                     Effect.ORB, ColorConfig[Customize.orb_lock] if BounceToggleLock[TempIterator1] else ColorConfig[Customize.orb_normal], BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
                 wait(0)
         # End portal preview
@@ -68,7 +68,7 @@ def RebuildBounceOrbs(): # activates in editor. delets the current orbs to place
     BounceEffects = []
     for TempIterator1 in range(0, len(BouncePadCheckpoints)):
         createEffect(
-            getAllPlayers().concat(null).filter(tuple: CAE.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not (evalOnce(TempIterator1) in CAE.cache_collectedLocks)),
+            getAllPlayers().filter(tuple: CAE.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)] and not (evalOnce(TempIterator1) in CAE.cache_collectedLocks)),
             Effect.ORB,
             ColorConfig[Customize.orb_lock] if BounceToggleLock[evalOnce(TempIterator1)] else ColorConfig[Customize.orb_normal],
             BouncePositions[evalOnce(TempIterator1)],
@@ -84,7 +84,7 @@ def RebuildKillOrbs(): # activates in editor. delets the current orbs to place o
     destroyEffect(KillBallEffects)
     KillBallEffects = []
     for TempIterator1 in range(0, len(KillballCheckpoints)):
-        createEffect(getAllPlayers().concat(null).filter(tuple: CAE.checkpoint_current == KillballCheckpoints[evalOnce(TempIterator1)]),
+        createEffect(getAllPlayers().filter(tuple: CAE.checkpoint_current == KillballCheckpoints[evalOnce(TempIterator1)]),
         Effect.SPHERE, ColorConfig[Customize.killorb], KillBallPositions[evalOnce(TempIterator1)], abs(KillBallRadii[evalOnce(TempIterator1)]), EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
         KillBallEffects.append(getLastCreatedEntity())
         if not (TempIterator1 % 5):
