@@ -86,7 +86,7 @@ rule "Addon | Preset Control Map Portal - Toggle Via Workshop Settings":
             {name: "City Center", start: vect(139.333, 8.377, -249.964), end: vect(158.283, 11.814, 262.283)}, # Gardens
             {name: "Gardens",     start: vect(157.297, 12.522, 255.759), end: vect(134.318, 7.829, -240.667)}, # City Center
             {name: "University",  start: vect(151.452, 12.522, 261.099), end: vect(-206.269, 19.292, 0.103)}]) # City Center
-    elif f"{__getCurrentMap__()}" == Map.SAMOA:
+    elif getCurrentMap() == Map.SAMOA:
         splitDictArray({name: PortalNames, start: PortalLoc, end: PortalDest},[
             {name: "Beach",    start: vect(231.98, 7.23, -262.84), end: vect(-329.86, 3.05, -103.4)},  # Downtown
             {name: "Volcano",  start: vect(236.78, 7.23, -262.75), end: vect(27.59, 339.76, 348.77)},  # Downtown
