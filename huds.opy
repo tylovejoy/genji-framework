@@ -222,9 +222,9 @@ rule "Huds | Leaderboard": # for global instead of tied to player
         del LeaderBoardHuds[0]
 
     # top 5
-    LeaderBoardFull = sorted(LeaderBoardFull, lambda i: i[1])
+    LeaderBoardFull = sorted(LeaderBoardFull, lambda CAE: CAE[1])
     LeaderBoardRemake = []
-    LeaderBoardHuds = ["　 {}:　{} - {}".format(i+1, e[0], e.last()) for e, i in LeaderBoardFull]
+    LeaderBoardHuds = LeaderBoardFull.map(tuple: "　 {}:　{} - {}".format(CAI + 1, CAE[0], CAE.last()))
     while len(LeaderBoardHuds):
         LeaderBoardRemake = "{}\n{}".format(LeaderBoardRemake, LeaderBoardHuds[0])
         del LeaderBoardHuds[0]
@@ -296,8 +296,8 @@ rule "Huds | Each Player":
             f"{t'Portal Exit'} {eventPlayer.preview_array2[eventPlayer.preview_i]}"
             if eventPlayer.preview_array2[eventPlayer.preview_i].last() else
             f"{t'Portal Start'} {eventPlayer.preview_array2[eventPlayer.preview_i]}")
-            if eventPlayer.preview_i else eventPlayer.banString)
-            ) if eventPlayer.preview_array1 else [],
+            if eventPlayer.preview_i else eventPlayer.banString))
+        if eventPlayer.preview_array1 else [],
         #SubHeader: Level
         [] if eventPlayer.preview_array1 else "{0}{1} {2} / {3}".format(
             f"{eventPlayer.banString}\n" if eventPlayer.toggle_guide and eventPlayer.banString else [],

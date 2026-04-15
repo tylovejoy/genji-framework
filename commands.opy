@@ -53,14 +53,14 @@ rule "Command | Preview Orbs & Portals (Hold Primary + Secondary)":
     wait(0.512, Wait.ABORT_WHEN_FALSE)
     eventPlayer.preview_array1 = [CheckpointPositions[eventPlayer.checkpoint_current + 1][0]]
     if len(BouncePadCheckpoints):
-        eventPlayer.preview_array1.append([_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current])
-        eventPlayer.preview_array2.append([_ for _ in [i for _, i in BouncePadCheckpoints] if BouncePadCheckpoints[_] == eventPlayer.checkpoint_current])
+        eventPlayer.preview_array1.append(BouncePositions.filter(tuple: BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current))
+        eventPlayer.preview_array2.append(BouncePadCheckpoints.map(tuple: CAI).filter(tuple: BouncePadCheckpoints[CAE] == eventPlayer.checkpoint_current))
 
     if len(CustomPortalStart):
-        #eventPlayer.preview_array1.append( [i for i in CustomPortalStart if CustomPortalCP[CustomPortalStart.index(i)] == eventPlayer.checkpoint_current] )
+        #eventPlayer.preview_array1.append(CustomPortalStart.filter(tuple: CustomPortalCP[CustomPortalStart.index(CAE)] == eventPlayer.checkpoint_current))
         for eventPlayer.preview_i in range(len(eventPlayer.cache_portalStart)):
-            eventPlayer.preview_array1.append([eventPlayer.cache_portalStart[eventPlayer.preview_i],eventPlayer.cache_portalEnd[eventPlayer.preview_i]])
-            eventPlayer.preview_array2.append([[eventPlayer.preview_i, false],[eventPlayer.preview_i, true]])
+            eventPlayer.preview_array1.append([eventPlayer.cache_portalStart[eventPlayer.preview_i], eventPlayer.cache_portalEnd[eventPlayer.preview_i]])
+            eventPlayer.preview_array2.append([[eventPlayer.preview_i, false], [eventPlayer.preview_i, true]])
 
     wait(0)
     eventPlayer.preview_i = 0
@@ -268,8 +268,8 @@ rule "Command | Practice Skip (Crouch + Primary-Next | Secondary-Previous)":
     @Condition EditorOn or eventPlayer.toggle_practice
     @Condition eventPlayer.lockState == eventPlayer.checkpoint_skip
     @Condition eventPlayer.isHoldingButton(Button.CROUCH)
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) != (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) )
-    #@Condition hostPlayer.editor_on or ( eventPlayer.toggle_practice and eventPlayer.isHoldingButton(Button.ABILITY_1) )
+    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) != (eventPlayer.isHoldingButton(Button.SECONDARY_FIRE))
+    #@Condition hostPlayer.editor_on or (eventPlayer.toggle_practice and eventPlayer.isHoldingButton(Button.ABILITY_1))
     eventPlayer.lockState = true
     eventPlayer.timer_split = 0
     eventPlayer.timer_practice = 0

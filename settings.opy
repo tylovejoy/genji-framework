@@ -43,7 +43,7 @@ settings {
         },
         "assault": {
             "enabled": false,
-            #"enablePerks": usePerks
+            "enablePerks": usePerks
         },
         "bountyHunter": {
             "enabled": false,
@@ -51,7 +51,7 @@ settings {
         },
         "clash": {
             "enabled": false,
-            #"enablePerks": usePerks
+            "enablePerks": usePerks
         },
         "ctf": {
             "enabled": false,
@@ -59,11 +59,11 @@ settings {
         },
         "control": {
             "enabled": false,
-            #"enablePerks": usePerks
+            "enablePerks": usePerks
         },
         "escort": {
             "enabled": false,
-            #"enablePerks": usePerks
+            "enablePerks": usePerks
         },
         "elimination": {
             "enabled": false,
@@ -75,7 +75,7 @@ settings {
         },
         "hybrid": {
             "enabled": false,
-            #"enablePerks": usePerks
+            "enablePerks": usePerks
         },
         "practiceRange": {
             "enabled": false,
@@ -83,7 +83,7 @@ settings {
         },
         "push": {
             "enabled": false,
-            #"enablePerks": usePerks
+            "enablePerks": usePerks
         }
     },
     "heroes": {
