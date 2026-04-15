@@ -94,8 +94,7 @@ rule "Addon | Preset Control Map Portal - Toggle Via Workshop Settings":
             {name: "Volcano",  start: vect(-332.71, 3.6, -108.59), end: vect(27.59, 339.76, 348.77)},  # Beach
             {name: "Beach",    start: vect(25.4, 341, 354.38),     end: vect(-329.86, 3.05, -103.4)},  # Volcano
             {name: "Downtown", start: vect(30, 341, 354.34),       end: vect(234.07, 6.12, -266.88)}]) # Volcano
-/*
-    elif false: # getCurrentMap() == Map.ANTARCTIC_PENINSULA:
+    elif getCurrentMap() == Map.ANTARCTIC_PENINSULA:
         PortalNames = ["Labs", "Icebreaker", "Sublevel", "Icebreaker", "Labs", "Sublevel"]
         splitDictArray({name: PortalNames, start: PortalLoc, end: PortalDest},[
             {name: "Labs",       start: vect(280.66, -12.15, -223.65), end: vect(270, 42.7, 190.44)},       # Sublevel
@@ -104,7 +103,7 @@ rule "Addon | Preset Control Map Portal - Toggle Via Workshop Settings":
             {name: "Icebreaker", start: vect(-58.29, -154, 63.03),     end: vect(284.07, -12.75, -216.15)}, # Labs
             {name: "Labs",       start: vect(-58.36, -154, 56.47),     end: vect(270, 42.7, 190.44)},       # Icebreaker
             {name: "Sublevel",   start: vect(287.08, -12.15, -223.59), end: vect(-53.51, -154.5, 60.08)}])  # Icebreaker
-*/
+
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
     @Condition false
