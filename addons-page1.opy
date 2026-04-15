@@ -95,14 +95,13 @@ rule "Addon | Preset Control Map Portal - Toggle Via Workshop Settings":
             {name: "Beach",    start: vect(25.4, 341, 354.38),     end: vect(-329.86, 3.05, -103.4)},  # Volcano
             {name: "Downtown", start: vect(30, 341, 354.34),       end: vect(234.07, 6.12, -266.88)}]) # Volcano
     elif getCurrentMap() == Map.ANTARCTIC_PENINSULA:
-        PortalNames = ["Labs", "Icebreaker", "Sublevel", "Icebreaker", "Labs", "Sublevel"]
         splitDictArray({name: PortalNames, start: PortalLoc, end: PortalDest},[
-            {name: "Labs",       start: vect(280.66, -12.15, -223.65), end: vect(270, 42.7, 190.44)},       # Sublevel
-            {name: "Icebreaker", start: vect(273.27, 42.74, 198.15),   end: vect(284.07, -12.75, -216.15)}, # Sublevel
-            {name: "Sublevel",   start: vect(266.58, 42.74, 198.17),   end: vect(-53.51, -154.5, 60.08)},   # Labs
-            {name: "Icebreaker", start: vect(-58.29, -154, 63.03),     end: vect(284.07, -12.75, -216.15)}, # Labs
-            {name: "Labs",       start: vect(-58.36, -154, 56.47),     end: vect(270, 42.7, 190.44)},       # Icebreaker
-            {name: "Sublevel",   start: vect(287.08, -12.15, -223.59), end: vect(-53.51, -154.5, 60.08)}])  # Icebreaker
+            {name: "Drilling Rig", start: vect(280.66, -12, -223.5), end: vect(270, 42.7, 190.44)},       # Icebreaker
+            {name: "Anomaly",      start: vect(287.08, -12, -223.5), end: vect(-70, 0.5, 0)},             # Icebreaker
+            {name: "Icebreaker",   start: vect(273.27, 42.75, 198),  end: vect(284.07, -12.75, -216.15)}, # Drilling Rig
+            {name: "Anomaly",      start: vect(266.58, 42.75, 198),  end: vect(-70, 0.5, 0)},             # Drilling Rig
+            {name: "Icebreaker",   start: vect(-75, 1, 4),           end: vect(284.07, -12.75, -216.15)}, # Anomaly
+            {name: "Drilling Rig", start: vect(-75, 1, -4),          end: vect(270, 42.7, 190.44)}])      # SAnomaly
 
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571

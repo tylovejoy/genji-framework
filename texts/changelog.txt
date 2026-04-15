@@ -721,3 +721,12 @@ fixed:
    * Reported by `@zxzpkcxcc` +50xp
  - Remove detection of auto create when all creates are banned
    * Reported by `@zxzpkcxcc` +5xp
+
+### Control Point Portals
+ - Antarctic Peninsula
+   * Re-enabled portals
+   * Updated control point labels
+   * Updated Anomaly's portal coordinates
+ - Samoa
+   * Fixed map detection
+   * Reported to WSC by `@johnjunkrat`
