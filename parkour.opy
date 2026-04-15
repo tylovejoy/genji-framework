@@ -3,11 +3,10 @@
 rule "OverPy | Player Translation Setup":
     @Event playerJoined
     @Condition eventPlayer.isDummy() == false
-    eventPlayer.__languageIndex__ = true
     waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
     eventPlayer.startFacing(directionFromAngles(10 * __overpyTranslationHelper__.index(Color.WHITE.split([])), 5))
     waitUntil((not round(100 * eventPlayer.getHorizontalFacingAngle()) % 1000) and abs(eventPlayer.getVerticalFacingAngle() - 5) < 0.01, 16)
-    eventPlayer.__languageIndex__ = max(1, (abs(eventPlayer.getVerticalFacingAngle() - 5) < 0.01) * (round(eventPlayer.getHorizontalFacingAngle() / 10))) if overrideLanguage < 0 else overrideLanguage
+    eventPlayer.__languageIndex__ = max(0, (abs(eventPlayer.getVerticalFacingAngle() - 5) < 0.01) * (round(eventPlayer.getHorizontalFacingAngle() / 10) - 1)) if overrideLanguage < 0 else overrideLanguage
     eventPlayer.stopFacing()
 
 rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Parkour v" versionhere " ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
@@ -242,7 +241,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, eventPlayer.getPosition(), 4)
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpCircleRadius:
         CheckpointFailReset()
-    elif not(eventPlayer.isUsingUltimate() or eventPlayer.isUsingAbility1()) and eventPlayer.getHorizontalSpeed() > 6.05:
+    elif antiCheat and not(eventPlayer.isUsingUltimate() or eventPlayer.isUsingAbility1()) and eventPlayer.getHorizontalSpeed() > 6.05:
         LobbyID = []
 
     eventPlayer.cache_collectedLocks = []
@@ -254,21 +253,18 @@ rule "Parkour | Boundary Sphere":
     @Condition eventPlayer.cache_killPosition != []
     @Condition eventPlayer.toggle_invincible == false
     @Condition eventPlayer.checkpoint_notLast
-    @Condition (any([normalize(rad) * distance(eventPlayer.cache_killPosition[i], eventPlayer) < rad for rad, i in eventPlayer.cache_killRadii]))
+    @Condition eventPlayer.cache_killRadii.any(tuple: normalize(CAE) * distance(eventPlayer.cache_killPosition[CAI], eventPlayer) < CAE)
     CheckpointFailReset()
 
 rule "Parkour | Bounce Ball / Orb":
     @Event eachPlayer
     @Condition eventPlayer.cache_bouncePosition != []
     #@Condition eventPlayer.checkpoint_notLast # disabled coz editor
-    @Condition (any([distance(pos, eventPlayer.getPosition() + Vector.UP * bounceOffset) < bounceOrbDistance for pos in eventPlayer.cache_bouncePosition]))
+    @Condition eventPlayer.cache_bouncePosition.any(tuple: distance(CAE, eventPlayer.getPosition() + Vector.UP * bounceOffset) < bounceOrbDistance)
 
-    eventPlayer.cache_bounceTouched = BouncePositions.index([pos for pos, i in BouncePositions if
-        BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and
-        i != eventPlayer.cache_bounceTouched and
-        not (i in eventPlayer.cache_collectedLocks) and
-        distance(eventPlayer + Vector.UP * bounceOffset, pos) < bounceOrbDistance])
-
+    eventPlayer.cache_bounceTouched = BouncePositions.index(BouncePositions.filter(tuple:
+        BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current and CAI != eventPlayer.cache_bounceTouched and
+        not (CAI in eventPlayer.cache_collectedLocks) and distance(eventPlayer + Vector.UP * bounceOffset, CAE) < bounceOrbDistance))
     if eventPlayer.cache_bounceTouched >= 0: # prevent same one activating twice in a row
         if BounceToggleLock[eventPlayer.cache_bounceTouched]:
             #eventPlayer.cache_collectedLocks.append(eventPlayer.cache_bouncePosition[eventPlayer.cache_bounceTouched])
@@ -279,10 +275,11 @@ rule "Parkour | Bounce Ball / Orb":
         if BounceStrength[eventPlayer.cache_bounceTouched] > 0:
             eventPlayer.applyImpulse(Vector.UP, BounceStrength[eventPlayer.cache_bounceTouched], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
         elif BounceStrength[eventPlayer.cache_bounceTouched] < 0:
-            eventPlayer.cancelPrimaryAction()
-            (eventPlayer.skill_usedDouble = null) if Hero.FwHero == Hero.GENJI else (pass)
-            #"   二段跳已就绪" checkCN "   » Double Jump is ready"
-            smallMessage(eventPlayer, t"   » Double Jump Is Ready")
+            if FwHero.Hero == Hero.GENJI:
+                eventPlayer.cancelPrimaryAction()
+                eventPlayer.skill_usedDouble = null
+                #"   二段跳已就绪" checkCN "   » Double Jump is ready"
+                smallMessage(eventPlayer, t"   » Double Jump Is Ready")
 
         if BounceToggleUlt[eventPlayer.cache_bounceTouched]:
             eventPlayer.setUltEnabled(true)
@@ -338,12 +335,12 @@ rule "Parkour | Death Reset":
 def UpdateCache():
     @Name "Parkour | SUB Update Effect Cache"
     # note: if adding cp pos to cache, make sure to also adjust editor things like move and teleport
-    eventPlayer.cache_bouncePosition = [_ for _, i in BouncePositions if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_bounceMaxLocks = len([_ for _, i in BounceToggleLock if BouncePadCheckpoints[i] == eventPlayer.checkpoint_current and _])
-    eventPlayer.cache_killPosition = [_ for _, i in KillBallPositions if KillballCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_killRadii = [_ for _, i in KillBallRadii if KillballCheckpoints[i] == eventPlayer.checkpoint_current]
-    eventPlayer.cache_portalStart = [_ for _, i in CustomPortalStart if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] < 0]
-    eventPlayer.cache_portalEnd = [_ for _, i in CustomPortalEndpoint if CustomPortalCP[i] == eventPlayer.checkpoint_current or CustomPortalCP[i] < 0]
+    eventPlayer.cache_bouncePosition = BouncePositions.filter(tuple: BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current)
+    eventPlayer.cache_bounceMaxLocks = len(BounceToggleLock.filter(tuple: BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current and CAE))
+    eventPlayer.cache_killPosition = KillBallPositions.filter(tuple: KillballCheckpoints[CAI] == eventPlayer.checkpoint_current)
+    eventPlayer.cache_killRadii = KillBallRadii.filter(tuple: KillballCheckpoints[CAI] == eventPlayer.checkpoint_current)
+    eventPlayer.cache_portalStart = CustomPortalStart.filter(tuple: CustomPortalCP[CAI] == eventPlayer.checkpoint_current or CustomPortalCP[CAI] < 0)
+    eventPlayer.cache_portalEnd = CustomPortalEndpoint.filter(tuple: CustomPortalCP[CAI] == eventPlayer.checkpoint_current or CustomPortalCP[CAI] < 0)
     eventPlayer.checkpoint_notLast = (eventPlayer.checkpoint_current < len(CheckpointPositions) - 1 and len(CheckpointPositions) > 1)
     eventPlayer.toggle_hints = false
     eventPlayer.banString = []
@@ -357,8 +354,8 @@ def UpdateCache():
     hostPlayer.editor_hitboxEffect = getLastCreatedEntity()
     createEffect(hostPlayer if hostPlayer.editor_hitboxToggle and hostPlayer.checkpoint_notLast else null, Effect.SPHERE, Color.WHITE, CheckpointPositions[hostPlayer.checkpoint_current + 1], cpCircleRadius, EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     hostPlayer.editor_hitboxEffect.append(getLastCreatedEntity())
-    hostPlayer.editor_bounceIndex = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in BouncePadCheckpoints] if e >=0]
-    hostPlayer.editor_killIndex = [e for e in [(i if e2 == hostPlayer.checkpoint_current else -1) for e2, i in KillballCheckpoints] if e >=0]
+    hostPlayer.editor_bounceIndex = BouncePadCheckpoints.map(tuple: CAI if CAE == hostPlayer.checkpoint_current else -1).exclude(-1)
+    hostPlayer.editor_killIndex = KillballCheckpoints.map(tuple: CAI if CAE == hostPlayer.checkpoint_current else -1).exclude(-1)
     if hostPlayer.checkpoint_moved:
         EditSelected = EditSelectIdArray.last()
         hostPlayer.checkpoint_moved = false
@@ -394,10 +391,11 @@ def TimerResume():
 def LeaderboardUpdate():
     @Name "Parkour | SUB Leaderboard Update"
     # [[nameEntity, secondsFloat, timeString]]
-    if eventPlayer[0].split([]) in [e[0] for e in LeaderBoardFull]: # you already have a time
-        if eventPlayer.timer_normal >= [e for e in LeaderBoardFull if e[0] == eventPlayer[0].split([])][0][1]:
+    if eventPlayer[0].split([]) in LeaderBoardFull.map(tuple: CAE[0]):
+        #Player already has a time
+        if eventPlayer.timer_normal >= LeaderBoardFull.filter(tuple: CAE[0] == eventPlayer[0].split([]))[0][1]:
             return #Time too slow
-        LeaderBoardFull = [e for e in LeaderBoardFull if e[0] != eventPlayer[0].split([])]
+        LeaderBoardFull = LeaderBoardFull.filter(tuple: CAE[0] != eventPlayer[0].split([]))
     elif len(LeaderBoardFull) < 25 or eventPlayer.timer_normal < LeaderBoardFull[24][1]:
         del LeaderBoardFull[24]
     else:
@@ -414,7 +412,7 @@ def CheckpointFailReset():
         eventPlayer.timer_split = 0
 
     eventPlayer.cancelPrimaryAction()
-    (eventPlayer.skill_usedDouble = null) if Hero.FwHero == Hero.GENJI else (pass)
+    (eventPlayer.skill_usedDouble = null) if FwHero.Hero == Hero.GENJI else (pass)
     if len(CheckpointPositions):
         if eventPlayer.isUsingAbility1():
             eventPlayer.startForcingPosition(eventPlayer, false)
@@ -425,21 +423,17 @@ def CheckpointFailReset():
         #After teleport incase stopForcingPosition launches the player
         eventPlayer.applyImpulse(-1 * eventPlayer.getVelocity(), Math.EPSILON, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
-        # old: disallow jump > 0.1 sec wait > allow jump, this method bugs with ult check disabling ultimate for some reason
         #if eventPlayer.ban_dead or eventPlayer.ban_emote and eventPlayer.isHoldingButton(Button.JUMP):
         if eventPlayer.ban_dead:
             if eventPlayer.isHoldingButton(Button.JUMP):
                 eventPlayer.forceButtonPress(Button.JUMP)
         else:
-            #Reset Hop
-            eventPlayer.setStatusEffect(null, Status.ROOTED, 0.096)
-
+            eventPlayer.setStatusEffect(null, Status.ROOTED, 0.096) #Readd old framework bug as Reset Hop feature.
         if eventPlayer.isUsingUltimate():
             eventPlayer.setDamageReceived(100)
             kill(eventPlayer, null)
             eventPlayer.setDamageReceived(0)
             wait(0)
-
     ResetAbilities()
     AddonCustomLoadAndReset()
 
@@ -451,7 +445,7 @@ def StartGame():
     eventPlayer.toggle_spectate = false
     eventPlayer.checkpoint_moved = true
     if len(CheckpointPositions):
-        if eventPlayer[0].split([]) in SaveName: # load saved progres
+        if eventPlayer[0].split([]) in SaveName: # load saved player progress
             SaveEnt[SaveName.index(eventPlayer[0].split([]))] = eventPlayer
             eventPlayer.checkpoint_current = SaveCp[SaveEnt.index(eventPlayer)]
             eventPlayer.timer_normal = SaveTimer[SaveEnt.index(eventPlayer)]

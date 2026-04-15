@@ -4,7 +4,7 @@
 #!suppressWarnings w_lone_else
 #!suppressWarnings w_enum_constant
 ################################################################################
-#!define versionhere "1.10.4F"
+#!define versionhere "1.10.4G"
 #♨ Dev Build Icon
 ################################################################################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
@@ -23,7 +23,7 @@ macro bounceOrbDistance = 1.4 # Orb range for player: 1.4
 macro bounceOffset = 0.7 # Height added to player for orb detection: 0.7
 macro usePerks = false # Enable perks: false (Requires some manual overriding)
 macro teleCheat = false # Teleport cheats: false
-macro antiCheat = true # Detect speed & gravity cheats
+macro antiCheat = false # Detect speed & gravity cheats
 macro compModeToggle = false # Enable Tournament Mode: false
 macro attemptCount = 5 # Allowed Restart(s) limit
 macro compMarathon = false # Enforce Marathon: false
@@ -41,7 +41,7 @@ macro overrideLanguage = Languages.Automatic
 ################################################################################
 #!disableInspector
 #!globalvarInitRuleName "OverPy | Global Init"
-#!playervarInitRuleName "OverPy | Player Init"
+##!playervarInitRuleName "OverPy | Player Init"
 ################################################################################
 Fw_Include_Hero
 ################################################################################
@@ -73,3 +73,5 @@ testData
 ################################################################################
 # Enable/disable the include
 ##!include "test-scripts.opy"
+################################################################################
+#!postCompileHook "corrections.js"

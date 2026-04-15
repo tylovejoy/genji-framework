@@ -65,7 +65,7 @@ rule "3th person cam":
     @Condition 3thpersoncam
     @Event eachPlayer
     @Condition eventPlayer.hasSpawned()
-    eventPlayer.startCamera( eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), camspeed)
+    eventPlayer.startCamera(eventPlayer.getEyePosition() + (eventPlayer.getFacingDirection() * -2.5) + vect(0,0.5,0), eventPlayer.getEyePosition(), camspeed)
 
 rule "multi purpose hud":
     @Condition multipurposehud
@@ -80,11 +80,8 @@ rule "multi purpose hud":
         getNumberOfEntityIds(),
         localPlayer.checkpoint_notLast,
         EditorMoveItem,
-        localPlayer.cache_bounceTouched,
-        #localPlayer.cache_bounceLastTouched
-        )
-        , HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
-    )
+        localPlayer.cache_bounceTouched),
+        HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
 
 
@@ -103,17 +100,14 @@ rule "server load hud":
             getPeakServerLoad(),
             AvrgSecDisplay,
             LastTimePeak,
-            AvrgMinDisplay
-        ),
-
+            AvrgMinDisplay),
         HudPosition.LEFT, HO.leftend,
         Color.RED if getAverageServerLoad() > 220 else
         Color.ORANGE if getAverageServerLoad() > 190 else
         Color.YELLOW if getAverageServerLoad() > 160  else
         Color.BLUE if getAverageServerLoad() > 130 else
         Color.LIME_GREEN,
-        HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
-    )
+        HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
 #!define avrg 125
 rule "Avrg Seconds":
@@ -125,7 +119,7 @@ rule "Avrg Seconds":
     AvrgSecDisplay = 0
     LastTimePeak = 0
     while len(AvrgSecStore):
-        LastTimePeak = max(LastTimePeak,AvrgSecStore[0] )
+        LastTimePeak = max(LastTimePeak,AvrgSecStore[0])
         AvrgSecDisplay += AvrgSecStore[0]
         del AvrgSecStore[0]
 
@@ -155,37 +149,24 @@ rule "orbradiustest": # show radius on all bounce orbs
     @Condition orb_visialon
     @Condition show_orbradius
     wait(8)
-    for TempIterator1 in range(0,len(BouncePadCheckpoints)):
+    for TempIterator1 in range(0, len(BouncePadCheckpoints)):
+        createEffect(getAllPlayers().filter(tuple: CAE.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)]),
+            Effect.SPHERE, Color.WHITE, BouncePositions[evalOnce(TempIterator1)], #bounce offset
+            bounceOrbDistance, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
 
-        createEffect(
-            [i for i in getAllPlayers() if i.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)]],
-            Effect.SPHERE,
-            Color.WHITE,
-            BouncePositions[evalOnce(TempIterator1)], #bounceoffset,
-            bounceOrbDistance,
-            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
-        )
-
-        createEffect(
-            [i for i in getAllPlayers() if i.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)]],
-            Effect.SPHERE,
-            Color.RED,
-            BouncePositions[evalOnce(TempIterator1)], #bounceoffset,
-            0.1,
-            EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR
-        )
-
+        createEffect(getAllPlayers().filter(tuple: CAE.checkpoint_current == BouncePadCheckpoints[evalOnce(TempIterator1)]),
+            Effect.SPHERE, Color.RED, BouncePositions[evalOnce(TempIterator1)], #bounce offset
+            0.1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
 
 rule "orbradiustest": # show player orb hit detection
     @Condition orb_visialon
     @Event eachPlayer
     if show_orbradius:
-        createEffect(localPlayer, Effect.SPHERE, Color.RED, updateEveryTick( eventPlayer.getPosition() + Vector.UP * bounceOffset), 0.1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
-        createEffect(localPlayer, Effect.SPHERE, Color.ORANGE, updateEveryTick( eventPlayer.getPosition() + Vector.UP * bounceOffset), 0.03, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
-
+        createEffect(localPlayer, Effect.SPHERE, Color.RED, updateEveryTick(eventPlayer.getPosition() + Vector.UP * bounceOffset), 0.1, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
+        createEffect(localPlayer, Effect.SPHERE, Color.ORANGE, updateEveryTick(eventPlayer.getPosition() + Vector.UP * bounceOffset), 0.03, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
     if show_playerradius:
         # own orb radius
-        createEffect(localPlayer, Effect.SPHERE, Color.YELLOW, updateEveryTick( eventPlayer.getPosition() + Vector.UP * bounceOffset), bounceOrbDistance, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
+        createEffect(localPlayer, Effect.SPHERE, Color.YELLOW, updateEveryTick(eventPlayer.getPosition() + Vector.UP * bounceOffset), bounceOrbDistance, EffectReeval.VISIBILITY_POSITION_RADIUS_AND_COLOR)
 
 
 # AI - leaderboard ######################################################################################################################################################
@@ -197,9 +178,7 @@ rule "leaderboard test bots":
         createDummy(FwHero.Hero, Team.1, -1, null, null)
         testAI.append(getLastCreatedEntity())
         wait(0.1)
-        testAI[len(testAI)-1].startForcingName("bot {0}".format(len(testAI)-1))
-
-
+        testAI[len(testAI) - 1].startForcingName("bot {0}".format(len(testAI) - 1))
     AIcreated = true
 
 rule "leaderboard test ai":
@@ -207,28 +186,21 @@ rule "leaderboard test ai":
     @Condition testaion
     @Condition leaderboardai
     @Condition eventPlayer in testAI
-
     @Condition eventPlayer.checkpoint_current < len(CheckpointPositions) #- 1
     @Condition (waitforcreate and AIcreated) or not waitforcreate
-
-
     if aistartdelay:
-        wait(aiactiondelay )
-
+        wait(aiactiondelay)
     if CompMode:
         wait(0.16)
         eventPlayer.forceButtonPress(Button.INTERACT)
         wait(0.16)
-
     else:
         wait(1)
-
     eventPlayer.checkpoint_current = len(CheckpointPositions) - 2
     CheckpointFailReset()
     wait(1)
     eventPlayer.cache_collectedLocks = eventPlayer.cache_bouncePosition #cache_collectedLocks uses indices instead of positions
-    eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current+1]+ vect(0,3,0)) # teleport not needed
-
+    eventPlayer.teleport(CheckpointPositions[eventPlayer.checkpoint_current + 1] + 3 * Vector.UP) # teleport not needed
 
 rule "action test ai":
     @Event eachPlayer
@@ -236,34 +208,27 @@ rule "action test ai":
     @Condition actionai
     @Condition eventPlayer in testAI
     @Condition (waitforcreate and AIcreated) or not waitforcreate
-
     if aistartdelay:
-        wait(aiactiondelay )
-
+        wait(aiactiondelay)
     wait(1)
-    wait( ((testAI.index(eventPlayer)) * 0.1 ) )
+    wait(testAI.index(eventPlayer) * 0.1)
     # 1 for map 4 - 42 for rialto
     eventPlayer.checkpoint_current = 1
     wait()
     UpdateCache()
-
     wait()
     CheckpointFailReset()
-
     wait()
-    eventPlayer.teleport(CheckpointPositions[2] + vect(0,10,0) )
-
-    #wait(eventPlayer.getSlot()*0.5)
-    #wait(0.2 + ((testAI.index(eventPlayer))*0.075) ) # one bot
-    #waitUntil(eventPlayer.getAltitude() <  ((testAI.index(eventPlayer))*0.01), 4) # to early
+    eventPlayer.teleport(CheckpointPositions[2] + 10 * Vector.UP)
+    #wait(eventPlayer.getSlot() * 0.5)
+    #wait(0.2 + ((testAI.index(eventPlayer)) * 0.075)) # one bot
+    #waitUntil(eventPlayer.getAltitude() <  ((testAI.index(eventPlayer)) * 0.01), 4) # to early
     waitUntil(eventPlayer.isInAir(), 10)
     wait(0.1)
     #eventPlayer.checkpoint_current = 42
-
     waitUntil(eventPlayer.isOnGround(), 40)
-    #wait( ((testAI.index(eventPlayer))*0.01)  ) # result in 1
-    wait( ((testAI.index(eventPlayer))*0.04)  )
-
+    #wait(testAI.index(eventPlayer) * 0.01) # result in 1
+    wait(testAI.index(eventPlayer) * 0.04)
     eventPlayer.startForcingButton(Button.CROUCH)
     eventPlayer.startForcingButton(Button.INTERACT)
     wait()
@@ -272,9 +237,7 @@ rule "action test ai":
     eventPlayer.stopForcingButton(Button.CROUCH)
     eventPlayer.stopForcingButton(Button.INTERACT)
 
-
 /*
-
 ## hud performance tests #################
 
 globalvar hudtestafafafg
@@ -294,11 +257,8 @@ rule "hud test":
         getNumberOfEntityIds(),
         localPlayer.getHorizontalFacingAngle(),
         localPlayer.getVerticalFacingAngle(),
-        localPlayer.getAltitude()
-
-        ),
-        HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT
-    )
+        localPlayer.getAltitude()),
+        HudPosition.LEFT, HO.leftend + 10, Color.LIME_GREEN, HudReeval.VISIBILITY_SORT_ORDER_STRING_AND_COLOR, SpecVisibility.DEFAULT)
 
     while getNumberOfTextIds() < 95:
         hudSubtext(hostPlayer if hostPlayer.toggle_guide else null,
@@ -364,8 +324,7 @@ rule "hud test":
             ][hostPlayer.editor_modeSelect])
 
             ,
-            HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
-        )
+            HudPosition.RIGHT, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
         wait()
 
     hudtestafafafg = true
@@ -441,10 +400,7 @@ rule "each":
             ][hostPlayer.editor_modeSelect])
 
             ,
-            HudPosition.TOP, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT
-        )
+            HudPosition.TOP, HO.edit_instructions_edit, Color.YELLOW, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
         wait()
         eventPlayer.sflkj ++
-
-
-        */
+*/

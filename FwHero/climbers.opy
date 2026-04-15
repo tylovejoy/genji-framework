@@ -6,9 +6,9 @@ macro Fw_Mechanics_Climber():
     rule "Mechanic | Climbers | Climb":
         @Event eachPlayer
         @Condition eventPlayer.isOnWall()
-        if eventPlayer.isHoldingButton(Button.JUMP): goto climb
+        #if eventPlayer.isHoldingButton(Button.JUMP): goto climb
         wait(0)
-        if eventPlayer.isOnWall() and not eventPlayer.isHoldingButton(Button.JUMP): #Auto Climb
+        if eventPlayer.isOnWall():# and not eventPlayer.isHoldingButton(Button.JUMP): #Auto Climb
             climb:
             eventPlayer.skill_usedClimb = true
             if eventPlayer.toggle_invincible: return
@@ -58,8 +58,10 @@ macro Fw_Mechanics_Climber():
 
     rule "Mechanic | Climbers | Auto Create Bhop":
         @Event eachPlayer
+        @Condition eventPlayer.ban_create == false
         @Condition eventPlayer.ban_autocreate
         @Condition eventPlayer.toggle_invincible == false
+        @Condition eventPlayer.cache_bounceTouched <= 0 #Ignore if Orb Create
         @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
         wait(0)
         if not ruleCondition: return
