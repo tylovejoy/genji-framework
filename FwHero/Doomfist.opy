@@ -14,7 +14,18 @@ macro Fw_Parkour_Setup_Hero():
     UltCheckpoints = UltCheckpoints if len(UltCheckpoints) else []
 
 macro Fw_Parkour_UpdateCache_Hero():
-    pass
+    if eventPlayer.checkpoint_notLast:
+        eventPlayer.cache_startUlt = eventPlayer.checkpoint_current in UltCheckpoints
+        if eventPlayer.cache_startUlt:
+            smallMessage(eventPlayer, f"   {abilityIconString(Hero.DOOMFIST, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
+        eventPlayer.cache_startAbility1 = eventPlayer.checkpoint_current in Ability1Checkpoints
+        if eventPlayer.cache_startAbility1:
+            smallMessage(eventPlayer, f"   {abilityIconString(Hero.DOOMFIST, Button.ABILITY_1)} {t'Dash Is Ready'}")
+    else:
+        eventPlayer.cache_startUlt = true
+        eventPlayer.cache_startAbility1 = true
+        #eventPlayer.cache_startAbility2 = true
+        #eventPlayer.cache_startSecondary = true
 
 ################################################################################
 

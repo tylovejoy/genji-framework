@@ -8,7 +8,7 @@
 #!include "all.opy"
 ################################################################################
 /* Bind Button Commands */
-
+# Not implemented yet
 macro Fw_Commands_Leaderboard():
     pass
 
@@ -57,7 +57,12 @@ macro Fw_Parkour_Setup_Hero():
     pass
 
 macro Fw_Parkour_UpdateCache_Hero():
-    pass
+    if eventPlayer.checkpoint_notLast:
+        pass
+    else:
+        pass
+
+################################################################################
 
 macro Fw_Mechanics_GroundReset_Hero():
     pass
