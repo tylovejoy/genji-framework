@@ -154,6 +154,23 @@ playervar toggle_leaderboard                 # bool                      --- sho
 playervar toggle_invisible                             # bool                      --- invis toggle added by fisho
 playervar toggle_hints
 
+playervar cache_startAbility1
+playervar cache_startAbility2
+playervar cache_startPrimary
+playervar cache_startSecondary
+playervar cache_startUlt
+playervar cache_collectedLocks                     # [int]                    --- amount collected lock this cp
+playervar cache_bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
+playervar cache_portalStart
+playervar cache_portalEnd
+playervar cache_bounceMaxLocks
+playervar cache_killPosition
+playervar cache_killRadii
+playervar cache_bouncePosition
+playervar cache_inputs
+playervar cache_rainbow                     # color                     --- color of fx after finish the map
+playervar cache_titleHud                        # textid                    --- store curent  title textid
+
 playervar skill_countBhops                         # int                       --- counts bhops used for stand create ban
 playervar skill_usedHop                         # int                       --- jump tracking count, 0, 1, 2
 playervar skill_countCreates
@@ -175,21 +192,6 @@ playervar ban_savedouble
 playervar ban_climb
 playervar ban_bhop
 playervar ban_djump
-
-playervar cache_startUlt
-playervar cache_startAbility1
-#playervar cache_startAbility2
-playervar cache_collectedLocks                     # [int]                    --- amount collected lock this cp
-playervar cache_bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
-playervar cache_portalStart
-playervar cache_portalEnd
-playervar cache_bounceMaxLocks
-playervar cache_killPosition
-playervar cache_killRadii
-playervar cache_bouncePosition
-playervar cache_inputs
-playervar cache_rainbow                     # color                     --- color of fx after finish the map
-playervar cache_titleHud                        # textid                    --- store curent  title textid
 
 #playervar editor_on                          # bool                      --- on all players, but only gets checked from host player
 playervar editor_modeSelect                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball

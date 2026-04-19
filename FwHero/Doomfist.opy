@@ -15,17 +15,23 @@ macro Fw_Parkour_Setup_Hero():
 
 macro Fw_Parkour_UpdateCache_Hero():
     if eventPlayer.checkpoint_notLast:
+        eventPlayer.cache_startAbility1 = eventPlayer.checkpoint_current in Ability1Checkpoints
+        if eventPlayer.cache_startAbility1:
+            smallMessage(eventPlayer, f"   {abilityIconString(Hero.DOOMFIST, Button.ABILITY_1)} {t'Ability 1 Is Ready'}")
+        eventPlayer.cache_startAbility2 = eventPlayer.checkpoint_current in []
+        if eventPlayer.cachecache_startAbility2_startUlt:
+            smallMessage(eventPlayer, f"   {abilityIconString(Hero.DOOMFIST, Button.ABILITY_2)} {t'Ability 2 Is Ready'}")
+        eventPlayer.cache_startSecondary = eventPlayer.checkpoint_current in []
+        if eventPlayer.cache_startSecondary:
+            smallMessage(eventPlayer, f"   {abilityIconString(Hero.DOOMFIST, Button.SECONDARY_FIRE)} {t'Secondary Is Ready'}")
         eventPlayer.cache_startUlt = eventPlayer.checkpoint_current in UltCheckpoints
         if eventPlayer.cache_startUlt:
             smallMessage(eventPlayer, f"   {abilityIconString(Hero.DOOMFIST, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
-        eventPlayer.cache_startAbility1 = eventPlayer.checkpoint_current in Ability1Checkpoints
-        if eventPlayer.cache_startAbility1:
-            smallMessage(eventPlayer, f"   {abilityIconString(Hero.DOOMFIST, Button.ABILITY_1)} {t'Dash Is Ready'}")
     else:
-        eventPlayer.cache_startUlt = true
         eventPlayer.cache_startAbility1 = true
-        #eventPlayer.cache_startAbility2 = true
-        #eventPlayer.cache_startSecondary = true
+        eventPlayer.cache_startAbility2 = true
+        eventPlayer.cache_startSecondary = true
+        eventPlayer.cache_startUlt = true
 
 ################################################################################
 
