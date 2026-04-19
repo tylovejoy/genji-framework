@@ -17,10 +17,10 @@ macro Fw_Parkour_UpdateCache_Hero():
     if eventPlayer.checkpoint_notLast:
         eventPlayer.cache_startAbility1 = eventPlayer.checkpoint_current in Ability1Checkpoints
         if eventPlayer.cache_startAbility1:
-            smallMessage(eventPlayer, f"   {abilityIconString(Hero.DOOMFIST, Button.ABILITY_1)} {t'Ability 1 Is Ready'}")
+            smallMessage(eventPlayer, f"   {abilityIconString(Hero.DOOMFIST, Button.ABILITY_1)} {t'Slam Is Ready'}")
         eventPlayer.cache_startAbility2 = eventPlayer.checkpoint_current in []
-        if eventPlayer.cachecache_startAbility2_startUlt:
-            smallMessage(eventPlayer, f"   {abilityIconString(Hero.DOOMFIST, Button.ABILITY_2)} {t'Ability 2 Is Ready'}")
+        if eventPlayer.cache_startAbility2:
+            smallMessage(eventPlayer, f"   {abilityIconString(Hero.DOOMFIST, Button.ABILITY_2)} {t'Block Is Ready'}")
         eventPlayer.cache_startSecondary = eventPlayer.checkpoint_current in []
         if eventPlayer.cache_startSecondary:
             smallMessage(eventPlayer, f"   {abilityIconString(Hero.DOOMFIST, Button.SECONDARY_FIRE)} {t'Secondary Is Ready'}")

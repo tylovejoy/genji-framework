@@ -62,7 +62,7 @@ macro Fw_Parkour_UpdateCache_Hero():
         if eventPlayer.cache_startAbility1:
             smallMessage(eventPlayer, f"   {abilityIconString(FwHero.Hero, Button.ABILITY_1)} {t'Ability 1 Is Ready'}")
         eventPlayer.cache_startAbility2 = eventPlayer.checkpoint_current in []
-        if eventPlayer.cachecache_startAbility2_startUlt:
+        if eventPlayer.cache_startAbility2:
             smallMessage(eventPlayer, f"   {abilityIconString(FwHero.Hero, Button.ABILITY_2)} {t'Ability 2 Is Ready'}")
         eventPlayer.cache_startPrimary = eventPlayer.checkpoint_current in []
         if eventPlayer.cache_startPrimary:
