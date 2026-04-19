@@ -717,7 +717,7 @@ fixed:
 ### Skill Bans
  - Added Auto Create ban exception for bounce orbs
    *  Reported by `dooosaaa` + 5xp
- - Removed exception of counting multi-climb when Jump is continously held
+ - Removed exception of counting multi-climb when Jump is continuously held
    * Reported by `@zxzpkcxcc` +50xp
  - Remove detection of auto create when all creates are banned
    * Reported by `@zxzpkcxcc` +5xp
@@ -729,3 +729,6 @@ fixed:
  - Samoa
    * Fixed map detection
    * Reported to WSC by `@johnjunkrat`
+
+# 1.10.
+###
