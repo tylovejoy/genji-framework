@@ -23,7 +23,7 @@ rule "☞ Credits and Colors Here - 作者代码HUD颜色 <---- INSERT HERE / �
     ColorConfig[Customize.credit_name] = Color.VIOLET
     #credit hud code   -   代码HUD
     ColorConfig[Customize.credit_code] = Color.SKY_BLUE
-    #dsc.gg/genjiparkour
+    #discord link
     ColorConfig[Customize.dsc] = Color.AQUA
     #server time hud   -   房间倒计时
     ColorConfig[Customize.servertime] = Color.RED
