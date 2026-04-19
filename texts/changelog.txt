@@ -730,5 +730,7 @@ fixed:
    * Fixed map detection
    * Reported to WSC by `@johnjunkrat`
 
-# 1.10.
-###
+# 1.10.4H
+### General
+ - Fixed optimization to Fencer Breaker
+   * Reported by `@CoralMage` +10xp
