@@ -10,8 +10,8 @@
 ################################################################################
 
 macro Fw_Parkour_Setup_Hero():
-    UltCheckpoints = UltCheckpoints.exclude(-1) if len(UltCheckpoints) else []
     Ability1Checkpoints = Ability1Checkpoints.exclude(-1) if len(Ability1Checkpoints) else []
+    UltCheckpoints = UltCheckpoints.exclude(-1) if len(UltCheckpoints) else []
     # remove legacy -1's after the ban data has been loaded
     # BanTriple = BanTriple.exclude(-1) if len(BanTriple) else [] # legacy code, now auto sets it to null to save space
     BanCreate = BanCreate.exclude(-1) if len(BanCreate) else []
@@ -27,12 +27,12 @@ macro Fw_Parkour_Setup_Hero():
 
 macro Fw_Parkour_UpdateCache_Hero():
     if eventPlayer.checkpoint_notLast:
-        eventPlayer.cache_startUlt = eventPlayer.checkpoint_current in UltCheckpoints
-        if eventPlayer.cache_startUlt:
-            smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
         eventPlayer.cache_startAbility1 = eventPlayer.checkpoint_current in Ability1Checkpoints
         if eventPlayer.cache_startAbility1:
             smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ABILITY_1)} {t'Dash Is Ready'}")
+        eventPlayer.cache_startUlt = eventPlayer.checkpoint_current in UltCheckpoints
+        if eventPlayer.cache_startUlt:
+            smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
         eventPlayer.ban_create = createWorkshopSettingBool(SettingsText.BanCategory, SettingsText.Ban_CreateBhop, false, 1) or eventPlayer.checkpoint_current in BanCreate
         if eventPlayer.ban_create:
             eventPlayer.banString = f"♂ {eventPlayer.banString}"
@@ -64,8 +64,8 @@ macro Fw_Parkour_UpdateCache_Hero():
         if eventPlayer.ban_djump:
             eventPlayer.banString = f"» {eventPlayer.banString}" # ≥  √ ▼ ↓ ︽
     else:
-        eventPlayer.cache_startUlt = true
         eventPlayer.cache_startAbility1 = true
+        eventPlayer.cache_startUlt = true
         eventPlayer.ban_create = false
         eventPlayer.ban_autocreate = false
         eventPlayer.ban_standcreate = false
@@ -89,11 +89,11 @@ macro Fw_Mechanics_Hero():
     def ResetAbilities():
         @Name "Mechanic | Genji | SUB Reset Abilities"
         if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and EditorOn):
-            eventPlayer.setUltEnabled(true)
             eventPlayer.setAbility1Enabled(true)
+            eventPlayer.setUltEnabled(true)
         else:
-            eventPlayer.setUltEnabled(eventPlayer.cache_startUlt)
             eventPlayer.setAbility1Enabled(eventPlayer.cache_startAbility1)
+            eventPlayer.setUltEnabled(eventPlayer.cache_startUlt)
         eventPlayer.setUltCharge(100)
 
     rule "Mechanic | Genji | Dash":
