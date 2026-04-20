@@ -13,11 +13,23 @@ rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒�
     @Delimiter
 
 rule "Parkour | Setup & Variables":
-    #◀ The Official Genji Parkour Editor ▶
-    #Discord: dsc.gg/genjiparkour
-    #Code: 54CRY
-    #Adapted by: LulledLion, FishoFire, Nebula
-    disableGamemodeCompletion()
+    if FwHero.Hero == Hero.GENJI:
+        # ◀ Official Genji Parkour Editor ▶
+        # Discord: dsc.gg/genjiparkour
+        # Code: 54CRY
+        # Adapted by: LulledLion, FishoFire, Nebula
+        disableGamemodeCompletion()
+    elif FwHero.Hero == Hero.DOOMFIST:
+        # ◀ Doomfist Parkour Editor ▶
+        # Discord: dsc.gg/projectmomentum
+        # Code: undefined
+        # Adapted by: LulledLion, FishoFire, Nebula
+        disableGamemodeCompletion()
+    else:
+        # ◀ Parkour Editor ▶
+        # Code: undefined
+        # Adapted by: LulledLion, FishoFire, Nebula
+        disableGamemodeCompletion()
     disableScoring()
     disableMusic()
     disableAnnouncer()

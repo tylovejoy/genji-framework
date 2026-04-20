@@ -9,8 +9,8 @@
 
 macro Fw_Parkour_Setup_Hero():
     Ability1Checkpoints = Ability1Checkpoints if len(Ability1Checkpoints) else []
-    #Ability2Checkpoints = Ability2Checkpoints if len(Ability2Checkpoints) else []
-    #SecondaryCheckpoints = SecondaryCheckpoints if len(SecondaryCheckpoints) else []
+    Ability2Checkpoints = Ability2Checkpoints if len(Ability2Checkpoints) else []
+    SecondaryCheckpoints = SecondaryCheckpoints if len(SecondaryCheckpoints) else []
     UltCheckpoints = UltCheckpoints if len(UltCheckpoints) else []
 
 macro Fw_Parkour_UpdateCache_Hero():
@@ -18,10 +18,10 @@ macro Fw_Parkour_UpdateCache_Hero():
         eventPlayer.cache_startAbility1 = eventPlayer.checkpoint_current in Ability1Checkpoints
         if eventPlayer.cache_startAbility1:
             smallMessage(eventPlayer, f"   {abilityIconString(Hero.DOOMFIST, Button.ABILITY_1)} {t'Slam Is Ready'}")
-        eventPlayer.cache_startAbility2 = eventPlayer.checkpoint_current in []
+        eventPlayer.cache_startAbility2 = eventPlayer.checkpoint_current in Ability2Checkpoints
         if eventPlayer.cache_startAbility2:
             smallMessage(eventPlayer, f"   {abilityIconString(Hero.DOOMFIST, Button.ABILITY_2)} {t'Block Is Ready'}")
-        eventPlayer.cache_startSecondary = eventPlayer.checkpoint_current in []
+        eventPlayer.cache_startSecondary = eventPlayer.checkpoint_current in SecondaryCheckpoints
         if eventPlayer.cache_startSecondary:
             smallMessage(eventPlayer, f"   {abilityIconString(Hero.DOOMFIST, Button.SECONDARY_FIRE)} {t'Secondary Is Ready'}")
         eventPlayer.cache_startUlt = eventPlayer.checkpoint_current in UltCheckpoints
@@ -50,7 +50,7 @@ macro Fw_Mechanics_Hero():
         else:
             eventPlayer.setUltEnabled(eventPlayer.cache_startUlt)
             eventPlayer.setAbility1Enabled(eventPlayer.cache_startAbility1)
-            #eventPlayer.setAbility2Enabled(eventPlayer.cache_startAbility2) # Not implemented yet.
+            eventPlayer.setAbility2Enabled(eventPlayer.cache_startAbility2)
         eventPlayer.setUltCharge(100)
 
     rule "Mechanic | Doomfist | Ability 1":

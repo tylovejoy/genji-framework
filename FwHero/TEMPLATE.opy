@@ -54,23 +54,27 @@ macro Fw_Commands_3rdPerson():
 ################################################################################
 
 macro Fw_Parkour_Setup_Hero():
-    pass
+    Ability1Checkpoints = Ability1Checkpoints if len(Ability1Checkpoints) else []
+    Ability2Checkpoints = Ability2Checkpoints if len(Ability2Checkpoints) else []
+    PrimaryCheckpoints = PrimaryCheckpoints if len(PrimaryCheckpoints) else []
+    SecondaryCheckpoints = SecondaryCheckpoints if len(SecondaryCheckpoints) else []
+    UltCheckpoints = UltCheckpoints if len(UltCheckpoints) else []
 
 macro Fw_Parkour_UpdateCache_Hero():
     if eventPlayer.checkpoint_notLast:
-        eventPlayer.cache_startAbility1 = eventPlayer.checkpoint_current in []
+        eventPlayer.cache_startAbility1 = eventPlayer.checkpoint_current in Ability1Checkpoints
         if eventPlayer.cache_startAbility1:
             smallMessage(eventPlayer, f"   {abilityIconString(FwHero.Hero, Button.ABILITY_1)} {t'Ability 1 Is Ready'}")
-        eventPlayer.cache_startAbility2 = eventPlayer.checkpoint_current in []
+        eventPlayer.cache_startAbility2 = eventPlayer.checkpoint_current in Ability2Checkpoints
         if eventPlayer.cache_startAbility2:
             smallMessage(eventPlayer, f"   {abilityIconString(FwHero.Hero, Button.ABILITY_2)} {t'Ability 2 Is Ready'}")
-        eventPlayer.cache_startPrimary = eventPlayer.checkpoint_current in []
+        eventPlayer.cache_startPrimary = eventPlayer.checkpoint_current in PrimaryCheckpoints
         if eventPlayer.cache_startPrimary:
             smallMessage(eventPlayer, f"   {abilityIconString(FwHero.Hero, Button.PRIMARY_FIRE)} {t'Primary Is Ready'}")
-        eventPlayer.cache_startSecondary = eventPlayer.checkpoint_current in []
+        eventPlayer.cache_startSecondary = eventPlayer.checkpoint_current in SecondaryCheckpoints
         if eventPlayer.cache_startSecondary:
             smallMessage(eventPlayer, f"   {abilityIconString(FwHero.Hero, Button.SECONDARY_FIRE)} {t'Secondary Is Ready'}")
-        eventPlayer.cache_startUlt = eventPlayer.checkpoint_current in []
+        eventPlayer.cache_startUlt = eventPlayer.checkpoint_current in UltCheckpoints
         if eventPlayer.cache_startUlt:
             smallMessage(eventPlayer, f"   {abilityIconString(FwHero.Hero, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
     else:

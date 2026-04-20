@@ -3,27 +3,30 @@
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
-# Current Named Unused Variables: 1,3,9,11,17,19,28,29,30,31,36,37,39,43,48,49,51,58,59,65,66,72,80,89
+# Current Named Unused Variables: 1,3,17,19,28,29,30,31,36,37,39,43,48,49,51,58,59,65,66,72,80,89
 #!define CheckpointPositions A
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 #!define DestructoIter B
-#globalvar DestructoIter 1
+#!define LobbyID B
+#globalvar B 1
 #!define MapVectorArray C
 globalvar MapVectorArray 2
 #!define MsDestructo D
 #globalvar MsDestructo 3                     # Player
 globalvar TimeRemaining 4
 globalvar PortalEffects 5                   # list[effect]              --- Array holding custom portal effects
-#!define LobbyID G
-globalvar LobbyID 6
+#!define PrimaryCheckpoints G
+globalvar PrimaryCheckpoints 6
 #!define KillBallPositions H
 globalvar KillBallPositions 7               # list[vect]                --- KillBall position
 #!define KillBallRadii I
 globalvar KillBallRadii 8                   # list[float]               --- KillBall radius, default 5
-#globalvar J 9
+#!define SecondaryCheckpoints J
+globalvar SecondaryCheckpoints 9
 #!define KillBallEffects K
 globalvar KillBallEffects 10                # list[effect]              --- Array holding killball effects
-#globalvar L 11
+#!define Ability2Checkpoints L
+globalvar Ability2Checkpoints 11
 #!define UltCheckpoints Dao
 globalvar UltCheckpoints 12                 # int                       --- blade enabled, should be bool.
 #!define Ability1Checkpoints SHIFT
