@@ -174,6 +174,7 @@ playervar cache_inputs
 playervar cache_rainbow                     # color                     --- color of fx after finish the map
 playervar cache_titleHud                        # textid                    --- store curent  title textid
 
+playervar skill_safe
 playervar skill_countBhops                         # int                       --- counts bhops used for stand create ban
 playervar skill_usedHop                         # int                       --- jump tracking count, 0, 1, 2
 playervar skill_countCreates
