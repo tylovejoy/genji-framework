@@ -44,13 +44,15 @@ macro Fw_Mechanics_Hero():
     def ResetAbilities():
         @Name "Mechanic | Doomfist | SUB Reset Abilities"
         if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and EditorOn):
-            eventPlayer.setUltEnabled(true)
             eventPlayer.setAbility1Enabled(true)
             eventPlayer.setAbility2Enabled(true)
+            eventPlayer.setSecondaryFireEnabled(true)
+            eventPlayer.setUltEnabled(true)
         else:
-            eventPlayer.setUltEnabled(eventPlayer.cache_startUlt)
             eventPlayer.setAbility1Enabled(eventPlayer.cache_startAbility1)
             eventPlayer.setAbility2Enabled(eventPlayer.cache_startAbility2)
+            eventPlayer.setSecondaryFireEnabled(eventPlayer.cache_startSecondary)
+            eventPlayer.setUltEnabled(eventPlayer.cache_startUlt)
         eventPlayer.setUltCharge(100)
 
     rule "Mechanic | Doomfist | Ability 1":
