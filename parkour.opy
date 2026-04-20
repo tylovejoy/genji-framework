@@ -193,8 +193,8 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             wait(0.048)
             playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1.4)
             wait(0.048)
-    elif eventPlayer.toggle_invincible or eventPlayer.toggle_spectate:# or eventPlayer.lockState:
-        # Do nothing
+    elif eventPlayer.toggle_invincible: pass
+    elif eventPlayer.toggle_spectate: pass
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpCircleRadius:
         # arrived ----------------------------------------------------------------------------------------------------
         if len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks:
@@ -251,6 +251,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             wait(0)
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, null, eventPlayer, 100)
             playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, eventPlayer.getPosition(), 4)
+    #elif eventPlayer.skill_safe: pass
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpCircleRadius:
         CheckpointFailReset()
     elif antiCheat and not(eventPlayer.isUsingUltimate() or eventPlayer.isUsingAbility1()) and eventPlayer.getHorizontalSpeed() > 6.05:
