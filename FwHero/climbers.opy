@@ -76,3 +76,40 @@ macro Fw_Mechanics_GroundReset_Climbers(heroReset = pass):
     eventPlayer.skill_countMulti = null
     eventPlayer.skill_countCreates = null
     heroReset
+
+################################################################################
+
+macro Fw_AddonsPg2_Climbers():
+    rule "Addon | Climbers | Ledge Grab Patch v1.5":
+        # Obsolete for OW v2.12
+        @Event eachPlayer
+        @Condition false
+        @Condition eventPlayer.isAlive() == true
+        @Condition eventPlayer.isOnGround() == false
+        @Condition eventPlayer.getCurrentHero() == Hero.GENJI == eventPlayer.skill_usedDouble
+        @Condition eventPlayer.getCurrentHero() == Hero.HANZO == eventPlayer.getAbilityCooldown(Button.JUMP)
+        @Condition (eventPlayer.getCurrentHero() == Hero.KIRIKO and eventPlayer.isHoldingButton(Button.JUMP)) == (eventPlayer.getCurrentHero() == Hero.KIRIKO)
+
+        #Directly after Double Jumping
+        eventPlayer.stopForcingButton(Button.JUMP)
+        wait(0)
+        eventPlayer.startForcingButton(Button.JUMP)
+        wait(0)
+        eventPlayer.stopForcingButton(Button.JUMP)
+        wait(0)
+        eventPlayer.startForcingButton(Button.JUMP)
+        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
+        eventPlayer.stopForcingButton(Button.JUMP)
+        #Ledge Grab loop
+        while not eventPlayer.isOnGround():
+            #Multi-Climb
+            if eventPlayer.isOnWall():
+                wait(0)
+            else:
+                eventPlayer.startForcingButton(Button.JUMP)
+                wait(0)
+                eventPlayer.stopForcingButton(Button.JUMP)
+            waitUntil(not eventPlayer.isInAir() or eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
+            waitUntil(not (eventPlayer.isInAir() and eventPlayer.isHoldingButton(Button.JUMP)), Math.INFINITY)
+            #Create cBhop
+            waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)

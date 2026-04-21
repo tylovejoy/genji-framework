@@ -75,3 +75,8 @@ macro Fw_Mechanics_Hero():
         @Condition eventPlayer.isUsingUltimate()
         if eventPlayer.toggle_invincible or (EditorOn and eventPlayer == hostPlayer) or not eventPlayer.checkpoint_notLast: return
         pass
+
+################################################################################
+
+macro Fw_Addons_Hero():
+    pass

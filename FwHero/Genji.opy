@@ -172,3 +172,7 @@ macro Fw_Mechanics_Hero():
         #"   延二段跳已禁用!" checkCN "   save double banned!"
         smallMessage(eventPlayer, t"   Save Double » Is Banned!")
         CheckpointFailReset()
+
+################################################################################
+
+macro Fw_AddonsPg2_Hero():
