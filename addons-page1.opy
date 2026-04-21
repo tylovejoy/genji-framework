@@ -96,12 +96,12 @@ rule "Addon | Preset Control Map Portal - Toggle Via Workshop Settings":
             {name: "Downtown", start: vect(30, 341, 354.34),       end: vect(234.07, 6.12, -266.88)}]) # Volcano
     elif getCurrentMap() == Map.ANTARCTIC_PENINSULA:
         splitDictArray({name: PortalNames, start: PortalLoc, end: PortalDest},[
-            {name: "Drilling Rig", start: vect(280.66, -12, -223.5), end: vect(270, 42.7, 190.44)},       # Icebreaker
-            {name: "Anomaly",      start: vect(287.08, -12, -223.5), end: vect(-70, 0.5, 0)},             # Icebreaker
-            {name: "Icebreaker",   start: vect(273.27, 42.75, 198),  end: vect(284.07, -12.75, -216.15)}, # Drilling Rig
-            {name: "Anomaly",      start: vect(266.58, 42.75, 198),  end: vect(-70, 0.5, 0)},             # Drilling Rig
-            {name: "Icebreaker",   start: vect(-75, 1, 4),           end: vect(284.07, -12.75, -216.15)}, # Anomaly
-            {name: "Drilling Rig", start: vect(-75, 1, -4),          end: vect(270, 42.7, 190.44)}])      # SAnomaly
+            {name: "Drilling Rig", start: vect(280.66, -12, -223.5), end: vect(270, 42.75, 190.44)},     # Icebreaker
+            {name: "Anomaly",      start: vect(287.08, -12, -223.5), end: vect(-70, 0.75, 0)},           # Icebreaker
+            {name: "Icebreaker",   start: vect(273.27, 42.75, 198),  end: vect(284.07, -12.5, -216.15)}, # Drilling Rig
+            {name: "Anomaly",      start: vect(266.58, 42.75, 198),  end: vect(-70, 0.75, 0)},           # Drilling Rig
+            {name: "Icebreaker",   start: vect(-75, 1, 4),           end: vect(284.07, -12.5, -216.15)}, # Anomaly
+            {name: "Drilling Rig", start: vect(-75, 1, -4),          end: vect(270, 42.75, 190.44)}])    # Anomaly
 
 rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
