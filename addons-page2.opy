@@ -181,21 +181,6 @@ rule "Addon | Stall Enhancer - 增强系統跳的判定":
         eventPlayer.applyImpulse(Vector.UP, 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
         if RULE_CONDITION: goto RULE_START
 
-rule "Addon | Fake Ledge Dash - 超级跳":
-    @Event eachPlayer
-    @Disabled
-    #Version 2
-    @Condition eventPlayer.isUsingAbility1()
-    @Condition eventPlayer.getSpeed() < 45
-    @Condition eventPlayer.getThrottle().z > null
-    @Condition abs(eventPlayer.getVerticalSpeed() - 7) < 0.8
-    # Dash into a wall/edge
-    # Release wall/edge before dash ends
-    eventPlayer.addon_ledgeDash = eventPlayer.getFacingDirection()
-    waitUntil(not eventPlayer.isUsingAbility1(), true) #25 * 0.016
-    if eventPlayer.isInAir():
-        eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash, 50, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
-
 rule "Addon | Group up - Map Data":
     @Disabled
     # replace 777 with checkpoint number
@@ -269,41 +254,22 @@ rule "Addon | Custom Orb Script":
     if eventPlayer.cache_bounceTouched in [1, 2]:
         # example gravity (should be reset to 100 in AddonCustomLoadAndReset)
         eventPlayer.setGravity(25)
-        smallMessage(eventPlayer," You Feel Light")
+        smallMessage(eventPlayer, " You Feel Light")
         wait(2)
         eventPlayer.setGravity(100)
-
     if eventPlayer.cache_bounceTouched in [3, 4]:
        # example canceling primary makes double jump recover
        eventPlayer.cancelPrimaryAction()
        (eventPlayer.skill_usedDouble = null) if FwHero.Hero == Hero.GENJI else (pass)
-       smallMessage(eventPlayer," Double Jump Recovered")
+       smallMessage(eventPlayer, " Double Jump Recovered")
     if eventPlayer.cache_bounceTouched in [5, 6]:
         # example move speed
         eventPlayer.setMoveSpeed(250)
-        smallMessage(eventPlayer," Zooom")
+        smallMessage(eventPlayer, " Zooom")
         wait(2)
         eventPlayer.setMoveSpeed(100)
 
-rule "Addon | Fake Triple Jump - 假三段跳":
-    @Disabled
-    @Event eachPlayer
-    @Hero genji
-    #@Condition BanTriple == false
-    @Condition eventPlayer.isOnGround() == false
-    @Condition eventPlayer.skill_usedDouble == false #Double cannot be used already
-    @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false #Don't activate on reset
-    eventPlayer.addon_enableDoubleChecks = true #Enable checking double jump
-    wait(0)
-    if RULE_CONDITION: goto RULE_START
-    if eventPlayer.skill_usedDouble or eventPlayer.isHoldingButton(Button.RELOAD):
-        return
-    #Input window to Triple
-    waitUntil(eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP), 0.048)
-    if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping():
-        eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
-    else:
-        if RULE_CONDITION: goto RULE_START
+Fw_AddonsPg2_Hero()
 
 ###############################################################################
 
@@ -319,81 +285,3 @@ rule "Addon | Fisho CP Cheat With Overpy Toggle":
     else:
         eventPlayer.checkpoint_current += 1
     CheckpointFailReset()
-
-rule "Fake Ledge Dash - 超级跳":
-    @Event eachPlayer
-    @Condition false
-    # based on code taken: wzr31 and S7DR0 and simplified
-    @Condition eventPlayer.isUsingAbility1()
-    #climb / ledge > hold jump > hands on the ledge > dash  > wait for launch > release jump
-    #爬墙/扒 > 长按跳 > 抓住窗台 > SHIFT > 等待发射 > 释放跳跃
-    eventPlayer.addon_ledgeDash[0] = 0
-    waitUntil(eventPlayer.getSpeed() >= 45, 0.4)
-    while eventPlayer.isUsingAbility1() and eventPlayer.addon_ledgeDash[0] <= 12:
-        eventPlayer.addon_ledgeDash[1] = eventPlayer.getFacingDirection()
-        eventPlayer.addon_ledgeDash[2] = eventPlayer.getSpeed()
-        if eventPlayer.getSpeed() < 45: # dashed into air or object = end
-            goto lbla
-        else:
-            eventPlayer.addon_ledgeDash[0] ++
-        if eventPlayer.addon_ledgeDash[0] == 12: # stop storing, we keep this speed/direction
-            waitUntil(eventPlayer.getSpeed() < 40, 0.4) # wait for dash to finish to execute
-        wait(0)
-    # dash after ledge grab
-    if eventPlayer.addon_ledgeDash[0] >= 5: #and eventPlayer.addon_ledgeDash[0] <= 12: # ledge dash execute
-        # stores speed and launches you after dash if you done it during climb
-        eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash[1], eventPlayer.addon_ledgeDash[2], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
-    # above 12 - climbed to long
-    # below 5 - dashed into object
-    lbla:
-    eventPlayer.addon_ledgeDash[0] = null
-    eventPlayer.addon_ledgeDash[1] = null
-    eventPlayer.addon_ledgeDash[2] = null
-
-rule "Addon | Ledge Grab Patch v1.5":
-    # Obsolete for OW v2.12
-    @Event eachPlayer
-    @Condition false
-    @Condition eventPlayer.isAlive() == true
-    @Condition eventPlayer.isOnGround() == false
-    @Condition eventPlayer.getCurrentHero() == Hero.GENJI == eventPlayer.skill_usedDouble
-    @Condition eventPlayer.getCurrentHero() == Hero.HANZO == eventPlayer.getAbilityCooldown(Button.JUMP)
-    @Condition (eventPlayer.getCurrentHero() == Hero.KIRIKO and eventPlayer.isHoldingButton(Button.JUMP)) == (eventPlayer.getCurrentHero() == Hero.KIRIKO)
-
-    #Directly after Double Jumping
-    eventPlayer.stopForcingButton(Button.JUMP)
-    wait(0)
-    eventPlayer.startForcingButton(Button.JUMP)
-    wait(0)
-    eventPlayer.stopForcingButton(Button.JUMP)
-    wait(0)
-    eventPlayer.startForcingButton(Button.JUMP)
-    waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
-    eventPlayer.stopForcingButton(Button.JUMP)
-    #Ledge Grab loop
-    while not eventPlayer.isOnGround():
-        #Multi-Climb
-        if eventPlayer.isOnWall():
-            wait(0)
-        else:
-            eventPlayer.startForcingButton(Button.JUMP)
-            wait(0)
-            eventPlayer.stopForcingButton(Button.JUMP)
-        waitUntil(not eventPlayer.isInAir() or eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
-        waitUntil(not (eventPlayer.isInAir() and eventPlayer.isHoldingButton(Button.JUMP)), Math.INFINITY)
-        #Create cBhop
-        waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.CROUCH), 0.064)
-
-rule "Addon | Save Double - Enable Rule - 二段跳":
-    # Obsoleted by hero settings.
-    @Event eachPlayer
-    @Condition false
-    @Condition eventPlayer.isOnGround() == false
-    @Condition eventPlayer.skill_usedDouble == false
-    @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
-    waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
-    if not RULE_CONDITION: return
-    waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
-    if not RULE_CONDITION: return
-    eventPlayer.cancelPrimaryAction()
-    if RULE_CONDITION: goto RULE_START

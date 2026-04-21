@@ -114,7 +114,7 @@ macro Fw_Mechanics_Hero():
         # Blade: 125 ticks, 2s
         # Recovery: 17 ticks, 0.272s
         # Swing Duration: 38 ticks, 0.608s
-        @Condition eventPlayer.isUsingUltimate() 
+        @Condition eventPlayer.isUsingUltimate()
         if eventPlayer.toggle_invincible or (EditorOn and eventPlayer == hostPlayer) or not eventPlayer.checkpoint_notLast:
             eventPlayer.setUltEnabled(true)
             eventPlayer.setUltCharge(100)
@@ -176,3 +176,81 @@ macro Fw_Mechanics_Hero():
 ################################################################################
 
 macro Fw_AddonsPg2_Hero():
+    rule "Addon | Genji | Fake Ledge Dash - 超级跳":
+        @Event eachPlayer
+        @Disabled
+        #Version 2
+        @Condition eventPlayer.isUsingAbility1()
+        @Condition eventPlayer.getSpeed() < 45
+        @Condition eventPlayer.getThrottle().z > null
+        @Condition abs(eventPlayer.getVerticalSpeed() - 7) < 0.8
+        # Dash into a wall/edge
+        # Release wall/edge before dash ends
+        eventPlayer.addon_ledgeDash = eventPlayer.getFacingDirection()
+        waitUntil(not eventPlayer.isUsingAbility1(), true) #25 * 0.016
+        if eventPlayer.isInAir():
+            eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash, 50, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+
+    rule "Addon | Genji | Fake Triple Jump - 假三段跳":
+        @Disabled
+        @Event eachPlayer
+        @Hero genji
+        #@Condition BanTriple == false
+        @Condition eventPlayer.isOnGround() == false
+        @Condition eventPlayer.skill_usedDouble == false #Double cannot be used already
+        @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false #Don't activate on reset
+        eventPlayer.addon_enableDoubleChecks = true #Enable checking double jump
+        wait(0)
+        if RULE_CONDITION: goto RULE_START
+        if eventPlayer.skill_usedDouble or eventPlayer.isHoldingButton(Button.RELOAD):
+            return
+        #Input window to Triple
+        waitUntil(eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP), 0.048)
+        if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping():
+            eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+        else:
+            if RULE_CONDITION: goto RULE_START
+
+    rule "Addon | Genji | Old Fake Ledge Dash - 超级跳":
+        @Event eachPlayer
+        @Condition false
+        # based on code taken: wzr31 and S7DR0 and simplified
+        @Condition eventPlayer.isUsingAbility1()
+        #climb / ledge > hold jump > hands on the ledge > dash  > wait for launch > release jump
+        #爬墙/扒 > 长按跳 > 抓住窗台 > SHIFT > 等待发射 > 释放跳跃
+        eventPlayer.addon_ledgeDash[0] = 0
+        waitUntil(eventPlayer.getSpeed() >= 45, 0.4)
+        while eventPlayer.isUsingAbility1() and eventPlayer.addon_ledgeDash[0] <= 12:
+            eventPlayer.addon_ledgeDash[1] = eventPlayer.getFacingDirection()
+            eventPlayer.addon_ledgeDash[2] = eventPlayer.getSpeed()
+            if eventPlayer.getSpeed() < 45: # dashed into air or object = end
+                goto lbla
+            else:
+                eventPlayer.addon_ledgeDash[0] ++
+            if eventPlayer.addon_ledgeDash[0] == 12: # stop storing, we keep this speed/direction
+                waitUntil(eventPlayer.getSpeed() < 40, 0.4) # wait for dash to finish to execute
+            wait(0)
+        # dash after ledge grab
+        if eventPlayer.addon_ledgeDash[0] >= 5: #and eventPlayer.addon_ledgeDash[0] <= 12: # ledge dash execute
+            # stores speed and launches you after dash if you done it during climb
+            eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash[1], eventPlayer.addon_ledgeDash[2], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+        # above 12 - climbed to long
+        # below 5 - dashed into object
+        lbla:
+        eventPlayer.addon_ledgeDash[0] = null
+        eventPlayer.addon_ledgeDash[1] = null
+        eventPlayer.addon_ledgeDash[2] = null
+
+    rule "Addon | Save Double - Enable Rule - 二段跳":
+        # Obsoleted by hero settings.
+        @Event eachPlayer
+        @Condition false
+        @Condition eventPlayer.isOnGround() == false
+        @Condition eventPlayer.skill_usedDouble == false
+        @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
+        waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
+        if not RULE_CONDITION: return
+        waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
+        if not RULE_CONDITION: return
+        eventPlayer.cancelPrimaryAction()
+        if RULE_CONDITION: goto RULE_START
