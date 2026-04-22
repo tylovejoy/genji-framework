@@ -78,7 +78,13 @@ macro Fw_Mechanics_Hero():
 
 ################################################################################
 macro Fw_AddonsPg1_Hero():
-    pass
+    rule "Addon | Doomfist | Momentum Grace"
+    @Event eachPlayer
+    @Hero doomfist
+    @Condition eventPlayer.getSpeed() >= 15
+    eventPlayer.skill_safe = true
+    waitUntil(eventPlayer.getSpeed() < 15)
+    eventPlayer.skill_safe = null
 
 macro Fw_AddonsPg2_Hero():
     rule ""::@Disabled:pass
