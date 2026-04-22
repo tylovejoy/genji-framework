@@ -174,6 +174,8 @@ macro Fw_Mechanics_Hero():
         CheckpointFailReset()
 
 ################################################################################
+macro Fw_AddonsPg1_Hero():
+    pass
 
 macro Fw_AddonsPg2_Hero():
     rule "Addon | Genji | Fake Ledge Dash - 超级跳":
@@ -241,7 +243,7 @@ macro Fw_AddonsPg2_Hero():
         eventPlayer.addon_ledgeDash[1] = null
         eventPlayer.addon_ledgeDash[2] = null
 
-    rule "Addon | Save Double - Enable Rule - 二段跳":
+    rule "Addon | Genji | Save Double - Enable Rule - 二段跳":
         # Obsoleted by hero settings.
         @Event eachPlayer
         @Condition false

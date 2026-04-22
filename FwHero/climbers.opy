@@ -78,6 +78,8 @@ macro Fw_Mechanics_GroundReset_Climbers(heroReset = pass):
     heroReset
 
 ################################################################################
+macro Fw_AddonsPg1_Climbers():
+    pass
 
 macro Fw_AddonsPg2_Climbers():
     rule "Addon | Climbers | Ledge Grab Patch v1.5":
