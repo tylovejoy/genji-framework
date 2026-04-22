@@ -131,7 +131,7 @@ macro Fw_Mechanics_Hero():
 
 ################################################################################
 macro Fw_AddonsPg1_Hero():
-    rule ""::@Disabled:pass
+    rule ""::@Disabled
 
 macro Fw_AddonsPg2_Hero():
-    rule ""::@Disabled:pass
+    rule ""::@Disabled

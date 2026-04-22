@@ -87,4 +87,4 @@ macro Fw_AddonsPg1_Hero():
     eventPlayer.skill_safe = null
 
 macro Fw_AddonsPg2_Hero():
-    rule ""::@Disabled:pass
+    rule ""::@Disabled
