@@ -233,6 +233,11 @@ def Addon3rdPerson():
             updateEveryTick(0.5 * Vector.UP + eventPlayer.getEyePosition()), false)
     else:
         eventPlayer.stopCamera()
+
+Fw_AddonsPg1_Hero()
+
+################################################################################
+
 /*
 def AddonCheckMap():
     @Name "Addon | SUB Basic Map Validator"

@@ -81,4 +81,4 @@ macro Fw_AddonsPg1_Hero():
     pass
 
 macro Fw_AddonsPg2_Hero():
-    pass
+    rule ""::@Disabled:pass
