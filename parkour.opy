@@ -22,7 +22,7 @@ rule "Parkour | Setup & Variables":
     elif FwHero.Hero == Hero.DOOMFIST:
         # ◀ Doomfist Parkour Editor ▶
         # Discord: dsc.gg/projectmomentum
-        # Code: undefined
+        # Code: NAPGF
         # Adapted by: LulledLion, FishoFire, Nebula
         disableGamemodeCompletion()
     else:

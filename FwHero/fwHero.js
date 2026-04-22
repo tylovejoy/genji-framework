@@ -4,12 +4,12 @@ if (Array.isArray(Hero)){
     Result = Hero.map(i => '#!include "FwHero/' + i).join('.opy"\n');
 }
 else{
-    Discord = {
-        "Doomfist": "dsc.gg/projectmomentum",
-        "Genji": "dsc.gg/genjiparkour",
-        "Kiriko": "",
-        "Lucio": "discord.com/invite/G9QBCDY",
-        "Mercy": "discord.gg/mercyparkour",
+    Project = {
+        "Doomfist": ["dsc.gg/projectmomentum", "NAPGF"],
+        "Genji": ["dsc.gg/genjiparkour", "54CRY"],
+        "Kiriko": [""],
+        "Lucio": ["discord.com/invite/G9QBCDY"],
+        "Mercy": ["discord.gg/mercyparkour"],
     }
     Result =
 'enum FwHero:\n' +
@@ -17,7 +17,8 @@ else{
     '\tString = "' + Hero + '"\n' +
     '\tStringLC = "' + Hero.toLowerCase() + '"\n' +
     '\tStringUC = "' + Hero.toUpperCase() + '"\n' +
-    '\tDiscord = "' + Discord[Hero] + '"\n' +
+    '\tDiscord = "' + (Project[Hero][0] ?? '') + '"\n' +
+    '\tShareCode = "' + (Project[Hero][1] ?? 'XXXXX') + '"\n' +
 '#!define Fw_Include_Hero #!include "FwHero/' + Hero + '.opy"\n';
 }
 Hero = Result
