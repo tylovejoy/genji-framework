@@ -269,8 +269,6 @@ rule "Addon | Custom Orb Script":
         wait(2)
         eventPlayer.setMoveSpeed(100)
 
-Fw_AddonsPg2_Hero()
-
 ###############################################################################
 
 rule "Addon | Fisho CP Cheat With Overpy Toggle":

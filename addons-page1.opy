@@ -169,8 +169,6 @@ def Addon3rdPerson():
     else:
         eventPlayer.stopCamera()
 
-Fw_AddonsPg1_Hero()
-
 ################################################################################
 
 rule "Addon | Ms. Destructo | Destroys Breakable Objects On All Maps":

@@ -59,6 +59,7 @@ Fw_Mechanics_Hero()
 #!include "effects.opy"
 ################################################################################
 #!include "addons-page1.opy"
+Fw_AddonsPg1_Hero()
 ################################################################################
 rule "MAP DATA - 地图数据":
     @NewPage ("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
@@ -70,6 +71,7 @@ testData
 #!include "customize.opy"
 ################################################################################
 #!include "addons-page2.opy"
+Fw_AddonsPg2_Hero()
 ################################################################################
 # Enable/disable the include
 ##!include "test-scripts.opy"
