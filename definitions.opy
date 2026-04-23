@@ -3,7 +3,7 @@
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
-# Current Named Unused Variables: 1,3,17,19,28,29,30,31,36,37,39,43,48,49,51,58,59,65,66,72,80,89
+# Current Named Unused Variables: 1,3,17,19,30,31,36,37,39,43,48,49,51,58,59,65,66,72,80,89
 #!define CheckpointPositions A
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 #!define DestructoIter B
@@ -52,8 +52,10 @@ globalvar BounceToggleLock 25               # list[bool]                --- lock
 globalvar KillballCheckpoints 26            # list[list[int]]           --- 2d list of checkpoints that havea kill ball [[0], [3]]
 #!define BouncePadCheckpoints pinballnumber
 globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d list like killballnumber
-#globalvar AC 28
-#globalvar AD 29
+#!define SafeRingCheckpoints AC
+globalvar SafeRingCheckpoints 28
+#!define SafeRingPositions AD
+globalvar SafeRingPositions 29
 #globalvar AE 30
 #globalvar AF 31
 globalvar LeaderBoardFull 32                # [[name,seconds,prettytime]]--- sorted list of 0-19 leaderboard entries
@@ -164,6 +166,7 @@ playervar cache_startSecondary
 playervar cache_startUlt
 playervar cache_collectedLocks                     # [int]                    --- amount collected lock this cp
 playervar cache_bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
+playervar cache_safeRing
 playervar cache_portalStart
 playervar cache_portalEnd
 playervar cache_bounceMaxLocks
@@ -354,6 +357,7 @@ enum Customize: # always add new options on end so previously configured colors 
     dsc,
     cp_huds,
     cp_iwts,
+    ring_safe,
 
 enum EditorMode:
     current = (hostPlayer.editor_modeSelect),

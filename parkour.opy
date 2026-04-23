@@ -51,7 +51,6 @@ rule "Parkour | Setup & Variables":
 
     BouncePadCheckpoints = BouncePadCheckpoints if len(BouncePadCheckpoints) else []
     CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
-    CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
     KillballCheckpoints = KillballCheckpoints if len(KillballCheckpoints) else []
     KillBallPositions = KillBallPositions if len(KillBallPositions) else []
     KillBallRadii = KillBallRadii if len(KillBallRadii) else []
@@ -62,6 +61,8 @@ rule "Parkour | Setup & Variables":
     BounceToggleUlt = BounceToggleUlt if len(BounceToggleUlt) else []
     BounceToggleDash = BounceToggleDash if len(BounceToggleDash) else []
     BounceToggleLock = BounceToggleLock if len(BounceToggleLock) else []
+    #SafeRingCheckpoints = SafeRingCheckpoints if len(SafeRingCheckpoints) else []
+    #SafeRingPositions = SafeRingPositions if len(SafeRingPositions) else []
 
     CustomPortalStart = CustomPortalStart if len(CustomPortalStart) else []
     CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) else []
@@ -312,7 +313,18 @@ rule "Parkour | Bounce Ball / Orb":
     wait(0.24)
     if RULE_CONDITION: goto RULE_START
     eventPlayer.cache_bounceTouched = -1
-
+/*
+rule "Parkour | Safe Ring":
+    @Event eachPlayer
+    @Disabled
+    @Condition eventPlayer.cache_safeRing != []
+    @Condition eventPlayer.checkpoint_notLast
+    @Condition eventPlayer.skill_safe == false
+    @Condition eventPlayer.cache_safeRing.any(tuple: distance(eventPlayer, CAE) < cpCirkleFx)
+    eventPlayer.skill_safe = true
+    waitUntil(not len(eventPlayer.cache_safeRing) and eventPlayer.cache_safeRing.any(tuple: distance(eventPlayer, CAE) > cpCirkleFx))
+    eventPlayer.skill_safe = null
+*/
 rule "Parkour | Death Reset":
     @Event playerDied
     @Condition eventPlayer.isDummy() == false
@@ -352,6 +364,7 @@ def UpdateCache():
     eventPlayer.cache_bounceMaxLocks = len(BounceToggleLock.filter(tuple: BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current and CAE))
     eventPlayer.cache_killPosition = KillBallPositions.filter(tuple: KillballCheckpoints[CAI] == eventPlayer.checkpoint_current)
     eventPlayer.cache_killRadii = KillBallRadii.filter(tuple: KillballCheckpoints[CAI] == eventPlayer.checkpoint_current)
+    #eventPlayer.cache_safeRing = SafeRingPositions.filter(tuple: SafeRingCheckpoints[CAI] == eventPlayer.checkpoint_current)
     eventPlayer.cache_portalStart = CustomPortalStart.filter(tuple: CustomPortalCP[CAI] == eventPlayer.checkpoint_current or CustomPortalCP[CAI] < 0)
     eventPlayer.cache_portalEnd = CustomPortalEndpoint.filter(tuple: CustomPortalCP[CAI] == eventPlayer.checkpoint_current or CustomPortalCP[CAI] < 0)
     eventPlayer.checkpoint_notLast = (eventPlayer.checkpoint_current < len(CheckpointPositions) - 1 and len(CheckpointPositions) > 1)
