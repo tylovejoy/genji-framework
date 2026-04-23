@@ -50,8 +50,8 @@ rule "☞ Credits and Colors Here - 作者代码HUD颜色 <---- INSERT HERE / �
     ColorConfig[Customize.nexticon_color] = Color.SKY_BLUE
     #"come here" text   -   到这里来" 文本
     ColorConfig[Customize.cometext] = Color.WHITE
-    /* #safe ground rings
-    ColorConfig[Customize.ring_safe] = Color.GREEN */
+    #safe ground rings   -
+    ColorConfig[Customize.ring_safe] = Color.GREEN
     #kill orbs   -   击杀球
     ColorConfig[Customize.killorb] = Color.BLUE
     #normal orbs   -   弹球
