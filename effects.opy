@@ -50,15 +50,15 @@ rule "Effects | Setup Effects":
                     Effect.ORB, ColorConfig[Customize.orb_lock] if BounceToggleLock[TempIterator1] else ColorConfig[Customize.orb_normal],
                     BouncePositions[TempIterator1], 1, EffectReeval.VISIBILITY)
                 wait(0)
-        /*
-        if len(SafeRingPositions):
-            for TempIterator1 in range(0, len(SafeRingPositions)):
+
+        if len(SafeRings):
+            for TempIterator1 in range(0, len(SafeRings)):
                 createEffect(
-                    getAllPlayers().filter(tuple: CAE.checkpoint_current == evalOnce(SafeRingCheckpoints[TempIterator1])),
-                    Effect.RING, ColorConfig[Customize.ring_safe], SafeRingPositions[TempIterator1], cpCirkleFx, EffectReeval.VISIBILITY)
+                    getAllPlayers().filter(tuple: CAE.checkpoint_current == evalOnce(SafeRings[TempIterator1][0])),
+                    Effect.RING, ColorConfig[Customize.ring_safe], SafeRings[TempIterator1].last(), cpCirkleFx, EffectReeval.VISIBILITY)
                 wait(0)
             wait(0.512)
-        */
+
         createEffect(# End portal preview
             localPlayer if localPlayer.preview_i and localPlayer.preview_i > len(localPlayer.cache_bouncePosition) and
                 localPlayer.preview_array2[localPlayer.preview_i].last() else null,

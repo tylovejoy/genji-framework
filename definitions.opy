@@ -3,7 +3,7 @@
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
-# Current Named Unused Variables: 1,3,17,19,30,31,36,37,39,43,48,49,51,58,59,65,66,72,80,89
+# Current Named Unused Variables: 1,3,17,19,29,30,31,36,37,39,43,48,49,51,58,59,65,66,72,80,89
 #!define CheckpointPositions A
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 #!define DestructoIter B
@@ -53,9 +53,8 @@ globalvar KillballCheckpoints 26            # list[list[int]]           --- 2d l
 #!define BouncePadCheckpoints pinballnumber
 globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d list like killballnumber
 #!define SafeRingCheckpoints AC
-globalvar SafeRingCheckpoints 28
-#!define SafeRingPositions AD
-globalvar SafeRingPositions 29
+globalvar SafeRings 28
+#globalvar AD 29
 #globalvar AE 30
 #globalvar AF 31
 globalvar LeaderBoardFull 32                # [[name,seconds,prettytime]]--- sorted list of 0-19 leaderboard entries
