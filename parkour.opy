@@ -319,12 +319,10 @@ rule "Parkour | Safe Ring":
     @Disabled
     @Condition eventPlayer.cache_safeRing != []
     @Condition eventPlayer.checkpoint_notLast
-    @Condition eventPlayer.skill_safe == false
-    @Condition eventPlayer.cache_safeRing.any(tuple: distance(eventPlayer, CAE) < cpCirkleFx)
-    eventPlayer.skill_safe = true
-    waitUntil(not len(eventPlayer.cache_safeRing) and eventPlayer.cache_safeRing.any(tuple: distance(eventPlayer, CAE) > cpCirkleFx))
-    eventPlayer.skill_safe = null
-*/
+    @Condition eventPlayer.cache_safeRing.any(tuple: distance(eventPlayer, CAE.last()) < cpCircleRadius)
+    eventPlayer.skill_safe += true
+    waitUntil(not len(eventPlayer.cache_safeRing) and eventPlayer.cache_safeRing.any(tuple: distance(eventPlayer, CAE.last()) > cpCircleRadius))
+    eventPlayer.skill_safe -= true
 rule "Parkour | Death Reset":
     @Event playerDied
     @Condition eventPlayer.isDummy() == false
