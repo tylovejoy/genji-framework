@@ -213,8 +213,9 @@ macro Fw_AddonsPg2_Hero():
         else:
             if RULE_CONDITION: goto RULE_START
 
-    rule "Addon | Genji | Old Fake Ledge Dash - 超级跳":
+    rule "Addon | Genji | Legacy Fake Ledge Dash - 超级跳":
         @Event eachPlayer
+        @Hero genji
         @Condition false
         # based on code taken: wzr31 and S7DR0 and simplified
         @Condition eventPlayer.isUsingAbility1()
@@ -243,10 +244,31 @@ macro Fw_AddonsPg2_Hero():
         eventPlayer.addon_ledgeDash[1] = null
         eventPlayer.addon_ledgeDash[2] = null
 
-    rule "Addon | Genji | Save Double - Enable Rule - 二段跳":
-        # Obsoleted by hero settings.
+    rule "Addon | Genji | Legacy Fake Triple Jump - 假三段跳": 
         @Event eachPlayer
-        @Condition false
+        @Hero genji
+        @Condition false # method c
+        #@Condition BanTriple == false
+        @Condition eventPlayer.isInAir() # check starts in air when not double jumping, this is to detect double jumping
+        @Condition eventPlayer.isJumping() # false when double jumping
+        @Condition eventPlayer.getAltitude() < 0.5 # prevent rest of code from running if you are not gona be close to ground
+        @Condition eventPlayer.getVerticalSpeed() < 0 # avoid trigering on start of jump, only when u go downwards
+        @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false # don't triger on reset
+        @Condition eventPlayer.isUsingAbility1() == false
+        # if you double jump or climb etc before touching ground, reset
+        waitUntil(not eventPlayer.isInAir() or not eventPlayer.isJumping() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD), Math.INFINITY) 
+        if not (eventPlayer.isOnGround() or eventPlayer.isJumping()) or eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD):
+            return
+        # window on the ground were you can press jump
+        waitUntil(eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP) or
+            eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD), 0.048) 
+        if eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD) or eventPlayer.hasStatusEffect(Status.ROOTED):
+        elif eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping():
+            eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ) # ban goes here if it was on
+
+    rule "Addon | Genji | Legacy Save Double - 二段跳":
+        @Event eachPlayer
+        @Condition false # Obsoleted by hero settings.
         @Condition eventPlayer.isOnGround() == false
         @Condition eventPlayer.skill_usedDouble == false
         @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
