@@ -31,33 +31,15 @@ rule "Addon | Title Data ◆ 标题数据 <---- EDIT ME / 在此处编辑":
     wait(LoadOrder.addon)
     # checkpoint number
     # 每关数量
-    TitleData[0] = [
-        0,
-        10,
-        20,
-        30,
-        40,
-        50]
+    TitleData[0] = [0, 10, 20, 30, 40, 50]
     #!disableOptimizeForSize
     # title
     # 标题文本
-    TitleData[1] = [
-        "Bunny",
-        "Jumper",
-        "Ninja",
-        "Pro",
-        "Expert",
-        "Master"]
+    TitleData[1] = ["Bunny", "Jumper", "Ninja", "Pro", "Expert", "Master"]
     #!optimizeForSize
     # color
     # 颜色
-    TitleData[2] = [
-        Color.LIME_GREEN,
-        Color.WHITE,
-        Color.YELLOW,
-        Color.ORANGE,
-        Color.PURPLE,
-        Color.RED]
+    TitleData[2] = [Color.LIME_GREEN, Color.WHITE, Color.YELLOW, Color.ORANGE, Color.PURPLE, Color.RED]
 
 rule "Addon | Friend Title ◆ 朋友称号 <---- DISPLAY MESSAGE HERE (ON PLAYER)":
     @Disabled
