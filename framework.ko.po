@@ -123,7 +123,7 @@ msgstr "궁극기 준비"
 msgid "Dash Is Ready"
 msgstr "질풍참 준비"
 
-#. file Genji.opy, rule "Mechanic | Genji | Ban Save Double - 封禁二段跳"
+#. file Genji.opy, rule "Mechanic | Genji | Ban Save Double ◆ 封禁二段跳"
 msgid "Save Double » Is Banned!"
 msgstr "더블 세이브 » 금지!"
 

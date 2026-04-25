@@ -61,11 +61,12 @@ Fw_Mechanics_Hero()
 #!include "addons-page1.opy"
 Fw_AddonsPg1_Hero()
 ################################################################################
-rule ""::@NewPage ("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
-    " Map Data & Addon Settings Are On Page 2 - 地图数据和附加组件的设置在第2页 "
+rule "":
+    @NewPage ("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
+    " Map Data & Addon Settings Are On Page 2 ◆ 地图数据和附加组件的设置在第2页 "
     "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒")
 rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒" \
-    " Map Data & Addon Settings Are On Page 2 - 地图数据和附加组件的设置在第2页 "\
+    " Map Data & Addon Settings Are On Page 2 ◆ 地图数据和附加组件的设置在第2页 "\
     "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
     @Delimiter #Duplicate to fix rule deletion offset in #!postCompileHook
 ################################################################################

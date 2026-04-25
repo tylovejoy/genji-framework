@@ -1,12 +1,12 @@
 #!mainFile "framework.opy"
 
-rule "Ø Map Data - 数据录入 <---- INSERT HERE / 在这输入":
+rule "Ø Map Data ◆ 数据录入 <---- INSERT HERE / 在这输入":
     @Delimiter
 
 # note: Don't change defaults only here.
 # If you change this, also change it in the name/credit construciton in the huds
 # The old default should always be included to make old data valid
-rule "☞ Credits and Colors Here - 作者代码HUD颜色 <---- INSERT HERE / 在这输入":
+rule "☞ Credits and Colors Here ◆ 作者代码HUD颜色 <---- INSERT HERE / 在这输入":
     wait(LoadOrder.customize)
     #Filling this in adds it to the inspector pasta after next restart.
     #You can fill in again to overwrite.
@@ -66,7 +66,7 @@ rule "☞ Credits and Colors Here - 作者代码HUD颜色 <---- INSERT HERE / �
     #Addon checkpoint IWT   -   应用于 所有地图文 本的颜色
     ColorConfig[Customize.cp_iwts] = Color.LIME_GREEN
 
-rule "Instructions For Depricated Rules (Ban / Portal / Dash /Ult) - 旧版编辑器中已弃用规则指引 (单关封禁 / 传送门 / 给刀给S)":
+rule "Instructions For Depricated Rules (Ban / Portal / Dash /Ult) ◆ 旧版编辑器中已弃用规则指引 (单关封禁 / 传送门 / 给刀给S)":
     @Delimiter
     # The following rules should now be handled with the ingame editor.
     #- Ban per checkpoint

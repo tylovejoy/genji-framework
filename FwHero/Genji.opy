@@ -149,7 +149,7 @@ macro Fw_Mechanics_Hero():
             waitUntil(eventPlayer.isOnGround() or not eventPlayer.skill_usedDouble, Math.INFINITY)
             if not RULE_CONDITION: return
 
-    rule "Mechanic | Genji | Ban Save Double - 封禁二段跳":
+    rule "Mechanic | Genji | Ban Save Double ◆ 封禁二段跳":
         @Event eachPlayer
         @Hero genji
         @Condition eventPlayer.ban_savedouble
@@ -178,7 +178,7 @@ macro Fw_AddonsPg1_Hero():
     rule ""::@Disabled
 
 macro Fw_AddonsPg2_Hero():
-    rule "Addon | Genji | Fake Ledge Dash - 超级跳":
+    rule "Addon | Genji | Fake Ledge Dash ◆ 超级跳":
         @Event eachPlayer
         @Disabled
         #Version 2
@@ -193,7 +193,7 @@ macro Fw_AddonsPg2_Hero():
         if eventPlayer.isInAir():
             eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash, 50, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
 
-    rule "Addon | Genji | Fake Triple Jump - 假三段跳":
+    rule "Addon | Genji | Fake Triple Jump ◆ 假三段跳":
         @Disabled
         @Event eachPlayer
         @Hero genji
@@ -213,7 +213,7 @@ macro Fw_AddonsPg2_Hero():
         else:
             if RULE_CONDITION: goto RULE_START
 
-    rule "Addon | Genji | Legacy Fake Ledge Dash - 超级跳":
+    rule "Addon | Genji | Legacy Fake Ledge Dash ◆ 超级跳":
         @Event eachPlayer
         @Hero genji
         @Condition false
@@ -244,7 +244,7 @@ macro Fw_AddonsPg2_Hero():
         eventPlayer.addon_ledgeDash[1] = null
         eventPlayer.addon_ledgeDash[2] = null
 
-    rule "Addon | Genji | Legacy Fake Triple Jump - 假三段跳": 
+    rule "Addon | Genji | Legacy Fake Triple Jump ◆ 假三段跳": 
         @Event eachPlayer
         @Hero genji
         @Condition false # method c
@@ -266,7 +266,7 @@ macro Fw_AddonsPg2_Hero():
         elif eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping():
             eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ) # ban goes here if it was on
 
-    rule "Addon | Genji | Legacy Save Double - 二段跳":
+    rule "Addon | Genji | Legacy Save Double ◆ 二段跳":
         @Event eachPlayer
         @Condition false # Obsoleted by hero settings.
         @Condition eventPlayer.isOnGround() == false
