@@ -11,8 +11,8 @@ rule "Editor | Menu - HUD":
     @Condition EditorOn
     ##!disableOptimizations
     hudText(hostPlayer if hostPlayer.MenuIsVisible() else false,
-        hostPlayer.MenuText_Translated_Vertical(),
-        #hostPlayer.MenuText_Translated(),#backMsg = t" ▶ 0. Back"),
+        #hostPlayer.MenuText_Translated_Vertical(),
+        hostPlayer.MenuText_Translated(/* backMsg = t" ◀ 0. Back" */),
         hostPlayer.MenuPreview_Translated(),
         LeftAlign128, HudPosition.LEFT, null, Color.WHITE, Color.WHITE, null, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.DEFAULT)
     #!optimizeForSize
@@ -23,13 +23,22 @@ rule "Editor | Menu - Visibility":
     @Condition hostPlayer.isHoldingButton(Button.MELEE)
     hostPlayer.MenuToggleVisibility()
 
+rule "Editor | Menu - Move Selection":
+    @Condition hostPlayer.MenuIsVisible()
+    @Condition hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) != hostPlayer.isHoldingButton(Button.SECONDARY_FIRE)
+    if hostPlayer.isHoldingButton(Button.PRIMARY_FIRE):
+        hostPlayer.MenuNext()
+    else:
+        hostPlayer.MenuPrev()
+
 rule "Editor | Menu - Selected Menu or Action":
     @Event eachPlayer
     @Condition hostPlayer == eventPlayer #Required for UpdateCache
     @Condition hostPlayer.MenuIsVisible()
-    @Condition hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) != hostPlayer.isHoldingButton(Button.SECONDARY_FIRE)
-    hostPlayer.__MenuSelection__ = hostPlayer.MenuGetVerticalSelect()
-    if hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):
+    #@Condition hostPlayer.isHoldingButton(Button.PRIMARY_FIRE) != hostPlayer.isHoldingButton(Button.SECONDARY_FIRE)
+    @Condition hostPlayer.isHoldingButton(Button.JUMP) != hostPlayer.isHoldingButton(Button.CROUCH)
+    #hostPlayer.__MenuSelection__ = hostPlayer.MenuGetVerticalSelect()
+    if hostPlayer.isHoldingButton(Button.CROUCH): # if hostPlayer.isHoldingButton(Button.SECONDARY_FIRE):
         hostPlayer.__MenuSelection__ = null
     hostPlayer.MenuSelect()
 
@@ -47,7 +56,7 @@ MenuCreate(menu = {
  10. Safe Zones
  11. Dummies
  12. Save
- 0. × Close"`,
+ 0. Close"`,
     pages: [
         {
             text: `t"Editor Movement
@@ -60,7 +69,7 @@ MenuCreate(menu = {
  7. Move Fast 300%
  8. Slow Motion 50%
  9. Slow Motion Off
- 0. ← Back"`,
+ 0. Back"`,
             pages: [
                 { code: `eventPlayer.startForcingPosition(eventPlayer.getPosition() + eventPlayer.flyMovementDelta(), true)` },
                 { code: `eventPlayer.stopForcingPosition()` },
@@ -81,7 +90,7 @@ MenuCreate(menu = {
  4. Toggle Teleport
  5. Toggle Visual Hitbox
  #. Set Facing Angle
- 0. ← Back"`,
+ 0. Back"`,
             /*code: `smallMessage(true[0], "  Checkpoint Menu Opened!")`,*/
             pages: [
                 {
@@ -155,7 +164,7 @@ MenuCreate(menu = {
  #. Secondary Fire
  #. Crouch
  #. Jump
- 0. ← Back"`,
+ 0. Back"`,
             code: `
     if not len(CheckpointPositions):
         eventPlayer.MenuInvalidateSelect()
@@ -163,7 +172,7 @@ MenuCreate(menu = {
     `,
             pages: [
                 {
-                    text: `ft"Ultimate: {eventPlayer.checkpoint_current in UltCheckpoints}\n 1. On\n 2. Off\n 0. ← Back"`,
+                    text: `ft"Ultimate: {eventPlayer.checkpoint_current in UltCheckpoints}\n 1. On\n 2. Off\n 0. Back"`,
                     update: true,
                     pages: [
                         {code: `UltCheckpoints.addUnique(eventPlayer.checkpoint_current)`},
@@ -171,7 +180,7 @@ MenuCreate(menu = {
                     ]
                 },
                 {
-                    text: `ft"Ability 1: {eventPlayer.checkpoint_current in Ability1Checkpoints}\n 1. On\n 2. Off\n 0. ← Back"`,
+                    text: `ft"Ability 1: {eventPlayer.checkpoint_current in Ability1Checkpoints}\n 1. On\n 2. Off\n 0. Back"`,
                     update: true,
                     pages: [
                         {code: `Ability1Checkpoints.addUnique(eventPlayer.checkpoint_current)`},
@@ -192,12 +201,12 @@ MenuCreate(menu = {
  - - - - - - - - - - - -
  8. Bhop ≥
  9. Double Jump »
- 0. ← Back"`,
+ 0. Back"`,
             code: `if not len(CheckpointPositions):
         eventPlayer.MenuInvalidateSelect()`,
             pages: [
                 {
-                    text: `ft"Ban Multi-Climb ∞: {eventPlayer.checkpoint_current in BanMulti}\n 1. On\n 2. Off\n 0. ← Back"`,
+                    text: `ft"Ban Multi-Climb ∞: {eventPlayer.checkpoint_current in BanMulti}\n 1. On\n 2. Off\n 0. Back"`,
                     update: true,
                     pages: [
                         {code: `BanMulti.addUnique(eventPlayer.checkpoint_current)`},
@@ -205,7 +214,7 @@ MenuCreate(menu = {
                     ]
                 },
                 {
-                    text: `ft"Ban Create ♂: {eventPlayer.checkpoint_current in BanCreate}\n 1. On\n 2. Off\n 0. ← Back"`,
+                    text: `ft"Ban Create ♂: {eventPlayer.checkpoint_current in BanCreate}\n 1. On\n 2. Off\n 0. Back"`,
                     update: true,
                     pages: [
                         {code: `BanCreate.addUnique(eventPlayer.checkpoint_current)`},
@@ -213,7 +222,7 @@ MenuCreate(menu = {
                     ]
                 },
                 {
-                    text: `ft"Ban Stand Create ♠: {eventPlayer.checkpoint_current in BanStand}\n 1. On\n 2. Off\n 0. ← Back"`,
+                    text: `ft"Ban Stand Create ♠: {eventPlayer.checkpoint_current in BanStand}\n 1. On\n 2. Off\n 0. Back"`,
                     update: true,
                     pages: [
                         {code: `BanStand.addUnique(eventPlayer.checkpoint_current)`},
@@ -221,7 +230,7 @@ MenuCreate(menu = {
                     ]
                 },
                 {
-                    text: `ft"Ban Dead Hop ×: {eventPlayer.checkpoint_current in BanDead}\n 1. On\n 2. Off\n 0. ← Back"`,
+                    text: `ft"Ban Dead Hop ×: {eventPlayer.checkpoint_current in BanDead}\n 1. On\n 2. Off\n 0. Back"`,
                     update: true,
                     pages: [
                         {code: `BanDead.addUnique(eventPlayer.checkpoint_current)`},
@@ -229,7 +238,7 @@ MenuCreate(menu = {
                     ]
                 },
                 {
-                    text: `ft"Ban Emote ♥: {eventPlayer.checkpoint_current in BanEmote}\n 1. On\n 2. Off\n 0. ← Back"`,
+                    text: `ft"Ban Emote ♥: {eventPlayer.checkpoint_current in BanEmote}\n 1. On\n 2. Off\n 0. Back"`,
                     update: true,
                     pages: [
                         {code: `BanEmote.addUnique(eventPlayer.checkpoint_current)`},
@@ -237,7 +246,7 @@ MenuCreate(menu = {
                     ]
                 },
                 {
-                    text: `ft"Ban Save Double △: {eventPlayer.checkpoint_current in BanSaveDouble}\n 1. On\n 2. Off\n 0. ← Back"`,
+                    text: `ft"Ban Save Double △: {eventPlayer.checkpoint_current in BanSaveDouble}\n 1. On\n 2. Off\n 0. Back"`,
                     update: true,
                     pages: [
                         {code: `BanSaveDouble.addUnique(eventPlayer.checkpoint_current)`},
@@ -245,7 +254,7 @@ MenuCreate(menu = {
                     ]
                 },
                 {
-                    text: `ft"Ban Climb ↑: {eventPlayer.checkpoint_current in BanClimb}\n 1. On\n 2. Off\n 0. ← Back"`,
+                    text: `ft"Ban Climb ↑: {eventPlayer.checkpoint_current in BanClimb}\n 1. On\n 2. Off\n 0. Back"`,
                     update: true,
                     pages: [
                         {code: `BanClimb.addUnique(eventPlayer.checkpoint_current)`},
@@ -253,7 +262,7 @@ MenuCreate(menu = {
                     ]
                 },
                 {
-                    text: `ft"Unused Bhop ≥: {eventPlayer.checkpoint_current in BanBhop}\n 1. On\n 2. Off\n 0. ← Back"`,
+                    text: `ft"Unused Bhop ≥: {eventPlayer.checkpoint_current in BanBhop}\n 1. On\n 2. Off\n 0. Back"`,
                     update: true,
                     pages: [
                         {code: `BanBhop.addUnique(eventPlayer.checkpoint_current)`},
@@ -261,7 +270,7 @@ MenuCreate(menu = {
                     ]
                 },
                 {
-                    text: `ft"Unused Double Jump »: {eventPlayer.checkpoint_current in BanDjump}\n 1. On\n 2. Off\n 0. ← Back"`,
+                    text: `ft"Unused Double Jump »: {eventPlayer.checkpoint_current in BanDjump}\n 1. On\n 2. Off\n 0. Back"`,
                     update: true,
                     pages: [
                         {code: `BanDjump.addUnique(eventPlayer.checkpoint_current)`},
@@ -277,7 +286,7 @@ MenuCreate(menu = {
  3. Delete
  4. Next
  5. Previous
- 0. ← Back"`,
+ 0. Back"`,
             pages: [0, 0, 0, 0, 0]
         },
         {
@@ -287,7 +296,7 @@ MenuCreate(menu = {
  3. Delete
  4. Next
  5. Previous
- 0. ← Back"`,
+ 0. Back"`,
             pages: [0, 0, 0, 0, 0]
         },
         {
@@ -297,7 +306,7 @@ MenuCreate(menu = {
  3. Delete
  4. Next
  5. Previous
- 0. ← Back"`,
+ 0. Back"`,
             pages: [0, 0, 0, 0, 0]
         },
         {
@@ -307,7 +316,7 @@ MenuCreate(menu = {
  3. Delete
  4. Next
  5. Previous
- 0. ← Back"`,
+ 0. Back"`,
             pages: [0, 0, 0, 0, 0]
         },
         {
@@ -317,7 +326,7 @@ MenuCreate(menu = {
  3. Delete
  4. Next
  5. Previous
- 0. ← Back"`,
+ 0. Back"`,
             pages: [0, 0, 0, 0, 0]
         },
         {
@@ -327,7 +336,7 @@ MenuCreate(menu = {
  3. Delete
  4. Next
  5. Previous
- 0. ← Back"`,
+ 0. Back"`,
             pages: [0, 0, 0, 0, 0]
         },
         {
@@ -337,7 +346,7 @@ MenuCreate(menu = {
  3. Delete
  4. Next
  5. Previous
- 0. ← Back"`,
+ 0. Back"`,
             pages: [0, 0, 0, 0, 0]
         },
         {
