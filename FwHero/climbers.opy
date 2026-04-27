@@ -7,6 +7,11 @@ macro Fw_Mechanics_Climber():
         @Event eachPlayer
         @Condition eventPlayer.isOnWall()
         #if eventPlayer.isHoldingButton(Button.JUMP): goto climb
+        if eventPlayer.toggle_invincible: pass
+        elif eventPlayer.ban_multi and eventPlayer.skill_countMulti:
+            CheckpointFailReset() 
+            #"   蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!"
+            smallMessage(eventPlayer, t"   Multiclimb ∞ Is Banned!")
         wait(0)
         if eventPlayer.isOnWall():# and not eventPlayer.isHoldingButton(Button.JUMP): #Auto Climb
             climb:
@@ -16,10 +21,6 @@ macro Fw_Mechanics_Climber():
             CheckpointFailReset()
             #"   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!"
             smallMessage(eventPlayer, t"   Climb ↑ Is Banned!")
-        elif eventPlayer.ban_multi and not eventPlayer.toggle_invincible:
-            CheckpointFailReset() 
-            #"   蹭留 ∞ 已禁用!" checkCN "   Multiclimb ∞ is banned!"
-            smallMessage(eventPlayer, t"   Multiclimb ∞ Is Banned!")
         else:
             eventPlayer.skill_countMulti += 1
 
@@ -72,7 +73,7 @@ macro Fw_Mechanics_Climber():
         CheckpointFailReset()
 
 macro Fw_Mechanics_GroundReset_Climbers(heroReset = pass):
-    eventPlayer.skill_usedClimb = false
+    eventPlayer.skill_usedClimb = null
     eventPlayer.skill_countMulti = null
     eventPlayer.skill_countCreates = null
     heroReset
