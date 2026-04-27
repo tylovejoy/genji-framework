@@ -24,7 +24,8 @@ rule "Addon | AFK Timer":
     waitUntil(eventPlayer.isHoldingButton(Button.JUMP) or not eventPlayer.hasStatusEffect(Status.ASLEEP), Math.INFINITY)
     eventPlayer.clearStatusEffect(Status.ASLEEP)
     eventPlayer.stopCamera()
-    if eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
+    if eventPlayer.toggle_invincible: pass
+    elif eventPlayer.checkpoint_notLast:
         CheckpointFailReset()
     if RULE_CONDITION: goto RULE_START
 

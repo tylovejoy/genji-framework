@@ -176,7 +176,8 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isAlive()
     if not eventPlayer.checkpoint_notLast:
-        if (eventPlayer.isMoving() and not (eventPlayer.toggle_practice or eventPlayer.toggle_invisible or EditorOn or CompMode)):
+        if eventPlayer.toggle_practice or eventPlayer.toggle_invisible or EditorOn or CompMode: pass
+        elif eventPlayer.isMoving():
             # traces ----------------------------------------------------------------------------------------------------
             eventPlayer.cache_rainbow = [Color.RED, Color.ORANGE, Color.YELLOW, Color.LIME_GREEN, Color.GREEN, Color.TURQUOISE, Color.BLUE, Color.PURPLE, Color.VIOLET, Color.ROSE][(floor(getTotalTimeElapsed()*2))%10]
             #eventPlayer.cache_rainbow =  rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255)
@@ -219,7 +220,8 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             else:
                 eventPlayer.timer_split = eventPlayer.timer_normal
                 DeleteSave()
-                if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and not EditorOn: # complete lvl
+                if EditorOn: pass
+                elif eventPlayer.checkpoint_current == len(CheckpointPositions) - 1: # complete lvl
                     stopChasingVariable(eventPlayer.timer_normal)
                     LeaderboardUpdate()
                     if CompMode and CompAtmpNum:
@@ -247,10 +249,11 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             wait(0)
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, null, eventPlayer, 100)
             playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, eventPlayer.getPosition(), 4)
-    #elif eventPlayer.skill_safe: pass
+    elif eventPlayer.skill_safe: pass
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpCircleRadius:
         CheckpointFailReset()
-    elif antiCheat and not(eventPlayer.isUsingUltimate() or eventPlayer.isUsingAbility1()) and eventPlayer.getHorizontalSpeed() > 6.05:
+    elif antiCheat and (eventPlayer.isUsingUltimate() or eventPlayer.isUsingAbility1()): pass
+    elif antiCheat and eventPlayer.getHorizontalSpeed() > 6.05:
         LobbyID = []
 
     eventPlayer.cache_collectedLocks = []
@@ -311,7 +314,6 @@ rule "Parkour | Bounce Ball / Orb":
 
 rule "Parkour | Safe Rings":
     @Event eachPlayer
-    @Disabled
     @Condition eventPlayer.cache_safeRing != []
     @Condition eventPlayer.checkpoint_notLast
     @Condition eventPlayer.cache_safeRing.any(tuple: distance(eventPlayer, CAE.last()) < cpCircleRadius)

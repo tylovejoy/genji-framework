@@ -45,7 +45,6 @@ macro Fw_Mechanics_Climber():
         @Condition eventPlayer.isHoldingButton(Button.JUMP) == false
         eventPlayer.skill_usedBhop = false
         if eventPlayer.lockState: return # prevent restart from giving messsage, but stil allow it to become green
-
         if eventPlayer.ban_create and not eventPlayer.toggle_invincible:
             #"   卡小 ♂ 已禁用!" checkCN "   Create Bhop ♂ is banned!"
             smallMessage(eventPlayer, t"   Create Bhop ♂ Is Banned!")
