@@ -201,10 +201,6 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             #"   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[Customize.orb_lock])
             smallMessage(eventPlayer, t"   ! Collect All Lock Orbs To Complete !")
             CheckpointFailReset() # kill player if not colleted the locks
-        elif eventPlayer.ban_climb and eventPlayer.skill_usedClimb:
-            #"   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
-            smallMessage(eventPlayer, t"   Climb ↑ Is Banned!")
-            CheckpointFailReset()
         elif eventPlayer.ban_bhop and eventPlayer.skill_usedBhop:
             #"   ≥ 留小跳进点!" checkCN "   ≥ Must Have A Bhop To Complete!!"
             smallMessage(eventPlayer, t"   ≥ Must Have A Bhop To Complete!")

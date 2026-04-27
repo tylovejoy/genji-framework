@@ -13,7 +13,7 @@ macro Fw_Mechanics_Climber():
             eventPlayer.skill_usedClimb = true
             if eventPlayer.toggle_invincible: return
             if not eventPlayer.ban_climb: return
-            #CheckpointFailReset()
+            CheckpointFailReset()
             #"   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!"
             smallMessage(eventPlayer, t"   Climb ↑ Is Banned!")
         elif eventPlayer.ban_multi and not eventPlayer.toggle_invincible:

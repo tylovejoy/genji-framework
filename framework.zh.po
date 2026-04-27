@@ -25,9 +25,7 @@ msgid "Stand Create Bhop ♠ Is Banned!"
 msgstr "站卡 ♠ 已禁用!"
 
 # TODO: check if all occurrences have the same translation
-#. 2 occurrences:
-#.  - file climbers.opy, rule "Mechanic | Climbers | Climb"
-#.  - file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+#. file climbers.opy, rule "Mechanic | Climbers | Climb"
 #, hasMultipleOccurrencesNotification
 msgid "Climb ↑ Is Banned!"
 msgstr "爬墙 ↑ 已禁用!"
