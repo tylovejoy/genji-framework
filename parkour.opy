@@ -206,7 +206,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             #"   ≥ 留小跳进点!" checkCN "   ≥ Must Have A Bhop To Complete!!"
             smallMessage(eventPlayer, t"   ≥ Must Have A Bhop To Complete!")
             CheckpointFailReset()
-        elif eventPlayer.ban_djump and eventPlayer.skill_usedDouble:
+        elif FwHero.Hero == Hero.GENJI and eventPlayer.ban_djump and eventPlayer.skill_usedDouble:
             #"   » 留二段跳!" checkCN "   » Must Have A Double Jump To Complete!"
             smallMessage(eventPlayer, t"   » Must Have A Double Jump To Complete!")
             CheckpointFailReset()
@@ -220,8 +220,7 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             else:
                 eventPlayer.timer_split = eventPlayer.timer_normal
                 DeleteSave()
-                if EditorOn: pass
-                elif eventPlayer.checkpoint_current == len(CheckpointPositions) - 1: # complete lvl
+                if eventPlayer.checkpoint_current == len(CheckpointPositions) - 1 and not EditorOn: # complete lvl
                     stopChasingVariable(eventPlayer.timer_normal)
                     LeaderboardUpdate()
                     if CompMode and CompAtmpNum:
