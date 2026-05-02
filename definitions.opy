@@ -52,7 +52,7 @@ globalvar BounceToggleLock 25               # list[bool]                --- lock
 globalvar KillballCheckpoints 26            # list[list[int]]           --- 2d list of checkpoints that havea kill ball [[0], [3]]
 #!define BouncePadCheckpoints pinballnumber
 globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d list like killballnumber
-#!define SafeRingCheckpoints AC
+#!define SafeRings AC
 globalvar SafeRings 28
 #globalvar AD 29
 #globalvar AE 30
