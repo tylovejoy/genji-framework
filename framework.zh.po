@@ -325,3 +325,15 @@ msgstr "已通关! 用时"
 #. file parkour.opy, rule "Parkour | Match time"
 msgid "Maximum Lobby Time Reached, Restarting"
 msgstr "房间已达最大持续时间, 即将重启"
+
+#. Unused translation
+msgid "Slam Is Ready"
+msgstr ""
+
+#. Unused translation
+msgid "Block Is Ready"
+msgstr ""
+
+#. Unused translation
+msgid "Punch Is Ready"
+msgstr ""
