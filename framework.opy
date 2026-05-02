@@ -36,7 +36,7 @@ macro compMarathon = false # Enforce Marathon: false
 #!translations en zh ko
 #!disableTranslationSourceLines
 #!translateWithPlayerVar noDetectionRule
-##!keepUnusedTranslations
+#!keepUnusedTranslations
 macro overrideLanguage = Languages.Automatic
 ################################################################################
 #!disableInspector
