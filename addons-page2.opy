@@ -216,6 +216,12 @@ rule "Addon | Group Up":
     wait(7 * 0.016)
     eventPlayer.stopForcingPosition()
 
+rule "Addon | Safe Rings - Map Data":
+    @Disabled
+    # Replace 777 & 888 with checkpoint number
+    # Replace Vector(2, 2, 2) & Vector(3, 3, 3) for the position
+    SafeRings = [[777, vect(2, 2, 2)], [888, vect(3, 3, 3)]]
+
 def AddonCustomLoadAndReset():
     @Name "Addon | Custom Checkpoint Loading or Resetting"
     @Disabled
@@ -233,17 +239,17 @@ rule "Addon | Custom Orb Script":
     #Note that the ID can change if you place or delete orbs infront of that orb.
   #Add the desired ID numbers for the orb in the array
   #Add the script after it
-    #you can use the activateed sub above this rule to reset the effects
+    #you can use the activated sub above this rule to reset the effects
     if eventPlayer.cache_bounceTouched in [1, 2]:
         # example gravity (should be reset to 100 in AddonCustomLoadAndReset)
         eventPlayer.setGravity(25)
         smallMessage(eventPlayer, " You Feel Light")
         wait(2)
         eventPlayer.setGravity(100)
-    if eventPlayer.cache_bounceTouched in [3, 4]:
+    if FwHero.Hero == Hero.GENJI and eventPlayer.cache_bounceTouched in [3, 4]:
        # example canceling primary makes double jump recover
        eventPlayer.cancelPrimaryAction()
-       (eventPlayer.skill_usedDouble = null) if FwHero.Hero == Hero.GENJI else (pass)
+       eventPlayer.skill_usedDouble = null
        smallMessage(eventPlayer, " Double Jump Recovered")
     if eventPlayer.cache_bounceTouched in [5, 6]:
         # example move speed
