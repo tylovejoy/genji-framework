@@ -243,18 +243,18 @@ rule "Addon | Custom Orb Script":
     if eventPlayer.cache_bounceTouched in [1, 2]:
         # example gravity (should be reset to 100 in AddonCustomLoadAndReset)
         eventPlayer.setGravity(25)
-        smallMessage(eventPlayer, " You Feel Light")
+        smallMessage(eventPlayer, "   You Feel Light")
         wait(2)
         eventPlayer.setGravity(100)
     if FwHero.Hero == Hero.GENJI and eventPlayer.cache_bounceTouched in [3, 4]:
        # example canceling primary makes double jump recover
        eventPlayer.cancelPrimaryAction()
        eventPlayer.skill_usedDouble = null
-       smallMessage(eventPlayer, " Double Jump Recovered")
+       smallMessage(eventPlayer, "   Double Jump Recovered")
     if eventPlayer.cache_bounceTouched in [5, 6]:
         # example move speed
         eventPlayer.setMoveSpeed(250)
-        smallMessage(eventPlayer, " Zooom")
+        smallMessage(eventPlayer, "   Zooom")
         wait(2)
         eventPlayer.setMoveSpeed(100)
 
