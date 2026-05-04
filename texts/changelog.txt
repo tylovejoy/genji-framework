@@ -734,3 +734,15 @@ fixed:
 ### General
  - Fixed optimization to Fencer Breaker
    * Reported by `@CoralMage` +10xp
+### Skill Bans
+ - Ban MultiClimb will now allow use of 1 multi-climb when climb does not get used, to prevent false positives from 1-tick quick climb
+   * Reported by `@zxzpkcxcc` +10xp
+   * False Negatives from this change
+     - Climb indicator can falsely indicate climb as still available when 1-tick quick climb is performed
+     - Ban Climb can falsely allow use of climb when 1-tick quick climb is performed
+### Addon
+ - Safe Rings
+   * Allow player to safely touch ground that is not a checkpoint
+   * Edit save data on page 2 rule "Addon | Safe Rings - Map Data"
+     - Currently not editable in the editor
+     - Experimental save data format for map objects
