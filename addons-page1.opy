@@ -24,7 +24,8 @@ rule "Addon | AFK Timer":
     waitUntil(eventPlayer.isHoldingButton(Button.JUMP) or not eventPlayer.hasStatusEffect(Status.ASLEEP), Math.INFINITY)
     eventPlayer.clearStatusEffect(Status.ASLEEP)
     eventPlayer.stopCamera()
-    if eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
+    if eventPlayer.toggle_invincible: pass
+    elif eventPlayer.checkpoint_notLast:
         CheckpointFailReset()
     if RULE_CONDITION: goto RULE_START
 
@@ -96,14 +97,82 @@ rule "Addon | Preset Control Map Portal - Toggle Via Workshop Settings":
             {name: "Downtown", start: vect(30, 341, 354.34),       end: vect(234.07, 6.12, -266.88)}]) # Volcano
     elif getCurrentMap() == Map.ANTARCTIC_PENINSULA:
         splitDictArray({name: PortalNames, start: PortalLoc, end: PortalDest},[
-            {name: "Drilling Rig", start: vect(280.66, -12, -223.5), end: vect(270, 42.7, 190.44)},       # Icebreaker
-            {name: "Anomaly",      start: vect(287.08, -12, -223.5), end: vect(-70, 0.5, 0)},             # Icebreaker
-            {name: "Icebreaker",   start: vect(273.27, 42.75, 198),  end: vect(284.07, -12.75, -216.15)}, # Drilling Rig
-            {name: "Anomaly",      start: vect(266.58, 42.75, 198),  end: vect(-70, 0.5, 0)},             # Drilling Rig
-            {name: "Icebreaker",   start: vect(-75, 1, 4),           end: vect(284.07, -12.75, -216.15)}, # Anomaly
-            {name: "Drilling Rig", start: vect(-75, 1, -4),          end: vect(270, 42.7, 190.44)}])      # SAnomaly
+            {name: "Drilling Rig", start: vect(280.66, -12, -223.5), end: vect(270, 42.75, 190.44)},     # Icebreaker
+            {name: "Anomaly",      start: vect(287.08, -12, -223.5), end: vect(-70, 0.75, 0)},           # Icebreaker
+            {name: "Icebreaker",   start: vect(273.27, 42.75, 198),  end: vect(284.07, -12.5, -216.15)}, # Drilling Rig
+            {name: "Anomaly",      start: vect(266.58, 42.75, 198),  end: vect(-70, 0.75, 0)},           # Drilling Rig
+            {name: "Icebreaker",   start: vect(-75, 1, 4),           end: vect(284.07, -12.5, -216.15)}, # Anomaly
+            {name: "Drilling Rig", start: vect(-75, 1, -4),          end: vect(270, 42.75, 190.44)}])    # Anomaly
 
-rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
+macro fence_delay = 3 # decrease to make it wait more often if you have load problems, keep at full int numbers no floats
+macro fence_proj_size = 30 # projectile size, 30 is maximum possible atm
+macro fence_grid = 16 # gridsize of 16 means a 16x16 grid with the point in the center
+rule "Addon | Little Destructo - Fence Breaker":
+    # Made by FishoFire version 1.0
+	wait(LoadOrder.destructo) # wait to overwrite any from copy pastas
+    # flag mode = both flag points, just incase
+    # tdm/dm = first spawn points, the maps are not big so it just covers entire map. all teams defaults to team 1 spawn
+    # push: payload and cp 0 are set but rest isnt. normal payload maps have more then 1 point.
+    # rest of maps have up to 3 points
+    MapVectorArray.append(
+        [getFlagPosition(Team.1), getFlagPosition(Team.2)] if getCurrentGamemode() == Gamemode.CTF else
+        getSpawnPoints(Team.ALL)[0] if getCurrentGamemode() in [Gamemode.TDM, Gamemode.FFA] else
+        getPayloadPosition() if getPayloadPosition()[0] and not (getObjectivePosition(1) + getObjectivePosition(2)) else
+        [getObjectivePosition(0), getObjectivePosition(1), getObjectivePosition(2)])
+    # explode in a grid around the selected points
+    while len(MapVectorArray) > 1:
+        MapVectorArray[0] = 0
+        while MapVectorArray[0] < (fence_grid * fence_grid):
+            createProjectile(
+                Projectile.ORB,  # the only orb available without fx extension
+                null,
+                # calculation for next explosion
+                MapVectorArray[1] - fence_proj_size * vect(0.5 * fence_grid + (MapVectorArray[0] % fence_grid),
+                0, 0.5 * fence_grid + floor(MapVectorArray[0] / fence_grid)),
+                Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
+                DynamicEffect.GOOD_EXPLOSION, # possible without extensions: bad, good, ring
+                DynamicEffect.EXPLOSION_SOUND, # possible without extensions: explosion sound, buf sound, ring explosion sound
+                1, 1, 0, 0, 0, 0)
+            MapVectorArray[0]++
+            if not (MapVectorArray[0] % fence_delay): # use modulo to only wait every x orbs keep the 0 change the other number
+                wait(0)
+        del MapVectorArray[1]
+
+    # handle exceptions (looking at you new queen street)
+    MapVectorArray = [vect(8.276, 4.113, 15.261), vect(-8.319, 2.624, 14.245), vect(0, 4.821, 18.513)]
+    while len(MapVectorArray):
+        # same as other projectile before
+        createProjectile(
+            Projectile.ORB,
+            null,
+            MapVectorArray[0],
+            Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
+            DynamicEffect.GOOD_EXPLOSION,
+            DynamicEffect.EXPLOSION_SOUND,
+            1, 1, 0, 0, 0, 0)
+        del MapVectorArray[0]
+        wait(0)
+    MapVectorArray = null
+
+rule "Addon | Caching Jump & Crouch Inputs For Spectators":
+    @Event playerJoined
+    wait(0)
+    eventPlayer.cache_inputs = vect(eventPlayer.isHoldingButton(Button.JUMP), eventPlayer.isHoldingButton(Button.CROUCH), false)
+    goto RULE_START
+
+def Addon3rdPerson():
+    @Name "Addon | SUB 3rd Person Camera"
+    if eventPlayer.addon_toggle3rdPov:
+        eventPlayer.startCamera(updateEveryTick(
+            raycast(0.5 * Vector.UP + eventPlayer.getEyePosition(),
+            0.5 * Vector.UP + eventPlayer.getEyePosition() - 3.5 * eventPlayer.getFacingDirection(), [], [], false).getHitPosition() + 0.5 * eventPlayer.getFacingDirection()),
+            updateEveryTick(0.5 * Vector.UP + eventPlayer.getEyePosition()), false)
+    else:
+        eventPlayer.stopCamera()
+
+################################################################################
+
+rule "Addon | Ms. Destructo | Destroys Breakable Objects On All Maps":
     # Credit: nebula#11571
     @Condition false
     @Condition isGameInProgress()
@@ -168,71 +237,6 @@ rule "Ms. Destructo | Destroys Breakable Objects On All Maps":
     DestructoIter = null
     MsDestructo = null
 
-macro fence_delay = 3 # decrease to make it wait more often if you have load problems, keep at full int numbers no floats
-macro fence_proj_size = 30 # projectile size, 30 is maximum possible atm
-macro fence_grid = 16 # gridsize of 16 means a 16x16 grid with the point in the center
-rule "Addon | Little Destructo - Fence Breaker":
-    # Made by FishoFire version 1.0
-	wait(LoadOrder.destructo) # wait to overwrite any from copy pastas
-    # flag mode = both flag points, just incase
-    # tdm/dm = first spawn points, the maps are not big so it just covers entire map. all teams defaults to team 1 spawn
-    # push: payload and cp 0 are set but rest isnt. normal payload maps have more then 1 point.
-    # rest of maps have up to 3 points
-    MapVectorArray.append(
-        [getFlagPosition(Team.1), getFlagPosition(Team.2)] if getCurrentGamemode() == Gamemode.CTF else
-        getSpawnPoints(Team.ALL)[0] if getCurrentGamemode() in [Gamemode.TDM, Gamemode.FFA] else
-        getPayloadPosition() if getPayloadPosition()[0] and not (getObjectivePosition(1) + getObjectivePosition(2)) else
-        [getObjectivePosition(0), getObjectivePosition(1), getObjectivePosition(2)])
-    # explode in a grid around the selected points
-    while len(MapVectorArray) > 1:
-        MapVectorArray[0] = 0
-        while MapVectorArray[0] < (fence_grid * fence_grid):
-            createProjectile(
-                Projectile.ORB,  # the only orb available without fx extension
-                null,
-                # calculation for next explosion
-                MapVectorArray.last() - (vect(fence_grid * fence_proj_size, 0, fence_grid * fence_proj_size) / 2) + (MapVectorArray[0] % fence_grid) *
-                    (Vector.LEFT * fence_proj_size) + floor(MapVectorArray[0] / fence_grid) * (Vector.FORWARD * fence_proj_size),
-                Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
-                DynamicEffect.GOOD_EXPLOSION, # possible without extensions: bad, good, ring
-                DynamicEffect.EXPLOSION_SOUND, # possible without extensions: explosion sound, buf sound, ring explosion sound
-                1, 1, 0, 0, 0, 0)
-            MapVectorArray[0]++
-            if not (MapVectorArray[0] % fence_delay): # use modulo to only wait every x orbs keep the 0 change the other number
-                wait(0)
-        del MapVectorArray[1]
-
-    # handle exceptions (looking at you new queen street)
-    MapVectorArray = [vect(8.276, 4.113, 15.261), vect(-8.319, 2.624, 14.245), vect(0, 4.821, 18.513)]
-    while len(MapVectorArray):
-        # same as other projectile before
-        createProjectile(
-            Projectile.ORB,
-            null,
-            MapVectorArray[0],
-            Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
-            DynamicEffect.GOOD_EXPLOSION,
-            DynamicEffect.EXPLOSION_SOUND,
-            1, 1, 0, 0, 0, 0)
-        del MapVectorArray[0]
-        wait(0)
-    MapVectorArray = null
-
-rule "Addon | Caching Jump & Crouch Inputs For Spectators":
-    @Event playerJoined
-    wait(0)
-    eventPlayer.cache_inputs = vect(eventPlayer.isHoldingButton(Button.JUMP), eventPlayer.isHoldingButton(Button.CROUCH), false)
-    goto RULE_START
-
-def Addon3rdPerson():
-    @Name "Addon | SUB 3rd Person Camera"
-    if eventPlayer.addon_toggle3rdPov:
-        eventPlayer.startCamera(updateEveryTick(
-            raycast(0.5 * Vector.UP + eventPlayer.getEyePosition(),
-            0.5 * Vector.UP + eventPlayer.getEyePosition() - 3.5 * eventPlayer.getFacingDirection(), [], [], false).getHitPosition() + 0.5 * eventPlayer.getFacingDirection()),
-            updateEveryTick(0.5 * Vector.UP + eventPlayer.getEyePosition()), false)
-    else:
-        eventPlayer.stopCamera()
 /*
 def AddonCheckMap():
     @Name "Addon | SUB Basic Map Validator"

@@ -25,9 +25,7 @@ msgid "Stand Create Bhop ♠ Is Banned!"
 msgstr "서콩 ♠ 금지!"
 
 # TODO: check if all occurrences have the same translation
-#. 2 occurrences:
-#.  - file climbers.opy, rule "Mechanic | Climbers | Climb"
-#.  - file parkour.opy, rule "Parkour | Ground: Traces, Arrive, & Reset"
+#. file climbers.opy, rule "Mechanic | Climbers | Climb"
 #, hasMultipleOccurrencesNotification
 msgid "Climb ↑ Is Banned!"
 msgstr "벽타기 ↑ 금지!"
@@ -109,7 +107,7 @@ msgstr "| 꺼짐"
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file Genji.opy, rule "Mechanic | Climbers | Auto Create Bhop"
+#.  - file Genji.opy, rule "Addon | Climbers | Ledge Grab Patch v1.5"
 #.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
 #, hasMultipleOccurrencesNotification
 msgid "Ultimate Is Ready"
@@ -117,13 +115,13 @@ msgstr "궁극기 준비"
 
 # TODO: check if all occurrences have the same translation
 #. 2 occurrences:
-#.  - file Genji.opy, rule "Mechanic | Climbers | Auto Create Bhop"
+#.  - file Genji.opy, rule "Addon | Climbers | Ledge Grab Patch v1.5"
 #.  - file parkour.opy, rule "Parkour | Bounce Ball / Orb"
 #, hasMultipleOccurrencesNotification
 msgid "Dash Is Ready"
 msgstr "질풍참 준비"
 
-#. file Genji.opy, rule "Mechanic | Genji | Ban Save Double - 封禁二段跳"
+#. file Genji.opy, rule "Mechanic | Genji | Ban Save Double ◆ 封禁二段跳"
 msgid "Save Double » Is Banned!"
 msgstr "더블 세이브 » 금지!"
 
@@ -327,3 +325,15 @@ msgstr "님이 최종 목표에 도달했습니다! 시간"
 #. file parkour.opy, rule "Parkour | Match time"
 msgid "Maximum Lobby Time Reached, Restarting"
 msgstr "최대 로비 시간에 도달했습니다, 재시작합니다"
+
+#. Unused translation
+msgid "Slam Is Ready"
+msgstr ""
+
+#. Unused translation
+msgid "Block Is Ready"
+msgstr ""
+
+#. Unused translation
+msgid "Punch Is Ready"
+msgstr ""

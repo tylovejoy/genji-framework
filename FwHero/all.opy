@@ -2,7 +2,7 @@
 /*
 Generalized mechanics for all heroes here
 */
-macro Fw_Mechanics_All(heroGroundReset=pass):
+macro Fw_Mechanics_All(heroGroundReset = pass):
     rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Mechanics | Checks ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
         @Delimiter
 

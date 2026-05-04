@@ -26,7 +26,7 @@ rule "Huds | Global Localplayer":
     Cachedcredits = null
 
     if not EditorOn:
-        hudText(true[0], null, "Discord: dsc.gg/genjiparkour" if localPlayer.toggle_guide else [],
+        hudText(true[0], null, f"Discord: {FwHero.Discord}" if localPlayer.toggle_guide else [],
             f"{t'Made By'}: {Name}{LeftAlign100}",
             #"作者: {}" LeftAlign100.format(Name)
             #checkCN

@@ -4,7 +4,7 @@
 #!suppressWarnings w_lone_else
 #!suppressWarnings w_enum_constant
 ################################################################################
-#!define versionhere "1.10.4G"
+#!define versionhere "1.10.4H"
 #♨ Dev Build Icon
 ################################################################################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
@@ -23,7 +23,7 @@ macro bounceOrbDistance = 1.4 # Orb range for player: 1.4
 macro bounceOffset = 0.7 # Height added to player for orb detection: 0.7
 macro usePerks = false # Enable perks: false (Requires some manual overriding)
 macro teleCheat = false # Teleport cheats: false
-macro antiCheat = false # Detect speed & gravity cheats
+macro antiCheat = false # Detect speed & gravity cheats (Unreliable)
 macro compModeToggle = false # Enable Tournament Mode: false
 macro attemptCount = 5 # Allowed Restart(s) limit
 macro compMarathon = false # Enforce Marathon: false
@@ -36,7 +36,7 @@ macro compMarathon = false # Enforce Marathon: false
 #!translations en zh ko
 #!disableTranslationSourceLines
 #!translateWithPlayerVar noDetectionRule
-##!keepUnusedTranslations
+#!keepUnusedTranslations
 macro overrideLanguage = Languages.Automatic
 ################################################################################
 #!disableInspector
@@ -59,17 +59,23 @@ Fw_Mechanics_Hero()
 #!include "effects.opy"
 ################################################################################
 #!include "addons-page1.opy"
+Fw_AddonsPg1_Hero()
 ################################################################################
-rule "MAP DATA - 地图数据":
+rule "":
     @NewPage ("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
-    " Map Data & Addon Settings Are On Page 2 - 地图数据和附加组件的设置在第2页 "
+    " Map Data & Addon Settings Are On Page 2 ◆ 地图数据和附加组件的设置在第2页 "
     "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒")
+rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒" \
+    " Map Data & Addon Settings Are On Page 2 ◆ 地图数据和附加组件的设置在第2页 "\
+    "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒":
+    @Delimiter #Duplicate to fix rule deletion offset in #!postCompileHook
 ################################################################################
 testData
 ################################################################################
 #!include "customize.opy"
 ################################################################################
 #!include "addons-page2.opy"
+Fw_AddonsPg2_Hero()
 ################################################################################
 # Enable/disable the include
 ##!include "test-scripts.opy"

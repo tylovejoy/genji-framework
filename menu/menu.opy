@@ -41,27 +41,18 @@ macro Player.MenuPrev():
 macro Player.MenuGetVerticalSelect():
     round((91 * len(__MenuPointer__[self.__MenuCurrent__]) + self.getVerticalFacingAngle()) / 4) % len(__MenuPointer__[self.__MenuCurrent__])
 ################################################################################
+macro Player.MenuInvalidateSelect():
+    self.__MenuSelection__ *= -1
+################################################################################
 macro Player.MenuSelect():
     # Activate selected menu option
     __MenuAction__()
     if self.__MenuSelection__ < null:
-        self.__MenuSelection__ *= -1
+        self.MenuInvalidateSelect()
     elif  __MenuPointer__[self.__MenuCurrent__][self.__MenuSelection__]:
         self.__MenuCurrent__ = __MenuPointer__[self.__MenuCurrent__][self.__MenuSelection__]
         self.__MenuSelection__ = 1
     __MenuText__()
-################################################################################
-macro Player.MenuInvalidateSelect():
-    self.__MenuSelection__ *= -1
-################################################################################
-macro Player.MenuText_Translated_Back(backMsg = " ▶ 0. Back"):
-    # Display Menu
-    # with translations enabled
-    ("{0}▶{1}.{2}".format(
-            _(__MenuString__[self.__MenuCurrent__]).split(f" {self.__MenuSelection__}."),
-            self.__MenuSelection__,
-            _(__MenuString__[self.__MenuCurrent__]).split(f" {self.__MenuSelection__}.").last())
-            if self.__MenuSelection__ else backMsg)
 ################################################################################
 macro Player.MenuText_Translated_Vertical():
     # Display Menu
@@ -74,8 +65,9 @@ macro Player.MenuText_Translated_Vertical():
 macro Player.MenuText_Translated():
     # Display Menu
     # with translations enabled
-    ("{0}▶{1}.{2}".format(
+    ("{0}{1}{2}.{3}".format(
             _(__MenuString__[self.__MenuCurrent__]).split(f" {self.__MenuSelection__}."),
+            "▶◀".substring(not self.__MenuSelection__, true),
             self.__MenuSelection__,
             _(__MenuString__[self.__MenuCurrent__]).split(f" {self.__MenuSelection__}.").last()))
 ################################################################################
