@@ -182,17 +182,16 @@ rule "Command | Toggle Invincible Mode (Melee + Reload)":
         TimerPause()
         stopChasingVariable(eventPlayer.timer_practice)
         ResetAbilities()
-    else:
-        if eventPlayer.toggle_practice:
-            #"练习模式" checkCN "Practice mode"
-            bigMessage(eventPlayer, t"Practice Mode")
-            chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)
-            CheckpointFailReset()
-        elif eventPlayer.checkpoint_notLast:
-            #"跑图模式" checkCN "Normal mode"
-            bigMessage(eventPlayer, t"Normal Mode")
-            TimerResume()
-            CheckpointFailReset()
+    elif eventPlayer.toggle_practice:
+        #"练习模式" checkCN "Practice mode"
+        bigMessage(eventPlayer, t"Practice Mode")
+        chase(eventPlayer.timer_practice, Math.INFINITY, rate=1, ChaseReeval.NONE)
+        CheckpointFailReset()
+    elif eventPlayer.checkpoint_notLast:
+        #"跑图模式" checkCN "Normal mode"
+        bigMessage(eventPlayer, t"Normal Mode")
+        TimerResume()
+        CheckpointFailReset()
     eventPlayer.lockState = false
     wait(0.128) #Anti spam
 
@@ -226,7 +225,8 @@ rule "Command | Toggle Practice Mode (Melee + Ultimate)":
         stopChasingVariable(eventPlayer.timer_practice)
         eventPlayer.checkpoint_current = eventPlayer.checkpoint_practice
         UpdateCache()
-        if eventPlayer.checkpoint_notLast and not eventPlayer.toggle_invincible:
+        if eventPlayer.toggle_invincible: pass
+        elif eventPlayer.checkpoint_notLast:
             eventPlayer.timer_split = eventPlayer.timer_normal
             TimerResume()
             CheckpointFailReset()

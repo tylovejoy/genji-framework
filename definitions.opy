@@ -3,27 +3,30 @@
 ######################################## Global Variables #####################
 # Warning do not change global variable indices.
 # Will result in variable mismatch upon exporting mapdata to newer versions
-# Current Named Unused Variables: 1,3,9,11,17,19,28,29,30,31,36,37,39,43,48,49,51,58,59,65,66,72,80,89
+# Current Named Unused Variables: 1,3,17,19,29,30,31,36,37,39,43,48,49,51,58,59,65,66,72,80,89
 #!define CheckpointPositions A
 globalvar CheckpointPositions 0             # list[vect | list[vect]]   --- sometimes nested - 0 original end, 1 teleported
 #!define DestructoIter B
-#globalvar DestructoIter 1
+#!define LobbyID B
+#globalvar B 1
 #!define MapVectorArray C
 globalvar MapVectorArray 2
 #!define MsDestructo D
 #globalvar MsDestructo 3                     # Player
 globalvar TimeRemaining 4
 globalvar PortalEffects 5                   # list[effect]              --- Array holding custom portal effects
-#!define LobbyID G
-globalvar LobbyID 6
+#!define PrimaryCheckpoints G
+globalvar PrimaryCheckpoints 6
 #!define KillBallPositions H
 globalvar KillBallPositions 7               # list[vect]                --- KillBall position
 #!define KillBallRadii I
 globalvar KillBallRadii 8                   # list[float]               --- KillBall radius, default 5
-#globalvar J 9
+#!define SecondaryCheckpoints J
+globalvar SecondaryCheckpoints 9
 #!define KillBallEffects K
 globalvar KillBallEffects 10                # list[effect]              --- Array holding killball effects
-#globalvar L 11
+#!define Ability2Checkpoints L
+globalvar Ability2Checkpoints 11
 #!define UltCheckpoints Dao
 globalvar UltCheckpoints 12                 # int                       --- blade enabled, should be bool.
 #!define Ability1Checkpoints SHIFT
@@ -49,7 +52,8 @@ globalvar BounceToggleLock 25               # list[bool]                --- lock
 globalvar KillballCheckpoints 26            # list[list[int]]           --- 2d list of checkpoints that havea kill ball [[0], [3]]
 #!define BouncePadCheckpoints pinballnumber
 globalvar BouncePadCheckpoints 27           # list[list[int]]           --- 2d list like killballnumber
-#globalvar AC 28
+#!define SafeRings AC
+globalvar SafeRings 28
 #globalvar AD 29
 #globalvar AE 30
 #globalvar AF 31
@@ -154,6 +158,25 @@ playervar toggle_leaderboard                 # bool                      --- sho
 playervar toggle_invisible                             # bool                      --- invis toggle added by fisho
 playervar toggle_hints
 
+playervar cache_startAbility1
+playervar cache_startAbility2
+playervar cache_startPrimary
+playervar cache_startSecondary
+playervar cache_startUlt
+playervar cache_collectedLocks                     # [int]                    --- amount collected lock this cp
+playervar cache_bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
+playervar cache_safeRing
+playervar cache_portalStart
+playervar cache_portalEnd
+playervar cache_bounceMaxLocks
+playervar cache_killPosition
+playervar cache_killRadii
+playervar cache_bouncePosition
+playervar cache_inputs
+playervar cache_rainbow                     # color                     --- color of fx after finish the map
+playervar cache_titleHud                        # textid                    --- store curent  title textid
+
+playervar skill_safe
 playervar skill_countBhops                         # int                       --- counts bhops used for stand create ban
 playervar skill_usedHop                         # int                       --- jump tracking count, 0, 1, 2
 playervar skill_countCreates
@@ -175,21 +198,6 @@ playervar ban_savedouble
 playervar ban_climb
 playervar ban_bhop
 playervar ban_djump
-
-playervar cache_startUlt
-playervar cache_startAbility1
-#playervar cache_startAbility2
-playervar cache_collectedLocks                     # [int]                    --- amount collected lock this cp
-playervar cache_bounceTouched                     # int                       --- cache of the bouncepad id you are currently touching
-playervar cache_portalStart
-playervar cache_portalEnd
-playervar cache_bounceMaxLocks
-playervar cache_killPosition
-playervar cache_killRadii
-playervar cache_bouncePosition
-playervar cache_inputs
-playervar cache_rainbow                     # color                     --- color of fx after finish the map
-playervar cache_titleHud                        # textid                    --- store curent  title textid
 
 #playervar editor_on                          # bool                      --- on all players, but only gets checked from host player
 playervar editor_modeSelect                 # int                       --- EditMode - 1 checkpoint | 2 Killing sphere | 3 Bouncing ball
@@ -348,6 +356,7 @@ enum Customize: # always add new options on end so previously configured colors 
     dsc,
     cp_huds,
     cp_iwts,
+    ring_safe,
 
 enum EditorMode:
     current = (hostPlayer.editor_modeSelect),

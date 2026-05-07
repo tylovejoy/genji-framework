@@ -10,8 +10,8 @@
 ################################################################################
 
 macro Fw_Parkour_Setup_Hero():
-    UltCheckpoints = UltCheckpoints.exclude(-1) if len(UltCheckpoints) else []
     Ability1Checkpoints = Ability1Checkpoints.exclude(-1) if len(Ability1Checkpoints) else []
+    UltCheckpoints = UltCheckpoints.exclude(-1) if len(UltCheckpoints) else []
     # remove legacy -1's after the ban data has been loaded
     # BanTriple = BanTriple.exclude(-1) if len(BanTriple) else [] # legacy code, now auto sets it to null to save space
     BanCreate = BanCreate.exclude(-1) if len(BanCreate) else []
@@ -27,12 +27,12 @@ macro Fw_Parkour_Setup_Hero():
 
 macro Fw_Parkour_UpdateCache_Hero():
     if eventPlayer.checkpoint_notLast:
-        eventPlayer.cache_startUlt = eventPlayer.checkpoint_current in UltCheckpoints
-        if eventPlayer.cache_startUlt:
-            smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
         eventPlayer.cache_startAbility1 = eventPlayer.checkpoint_current in Ability1Checkpoints
         if eventPlayer.cache_startAbility1:
             smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ABILITY_1)} {t'Dash Is Ready'}")
+        eventPlayer.cache_startUlt = eventPlayer.checkpoint_current in UltCheckpoints
+        if eventPlayer.cache_startUlt:
+            smallMessage(eventPlayer, f"   {abilityIconString(Hero.GENJI, Button.ULTIMATE)} {t'Ultimate Is Ready'}")
         eventPlayer.ban_create = createWorkshopSettingBool(SettingsText.BanCategory, SettingsText.Ban_CreateBhop, false, 1) or eventPlayer.checkpoint_current in BanCreate
         if eventPlayer.ban_create:
             eventPlayer.banString = f"♂ {eventPlayer.banString}"
@@ -64,8 +64,8 @@ macro Fw_Parkour_UpdateCache_Hero():
         if eventPlayer.ban_djump:
             eventPlayer.banString = f"» {eventPlayer.banString}" # ≥  √ ▼ ↓ ︽
     else:
-        eventPlayer.cache_startUlt = true
         eventPlayer.cache_startAbility1 = true
+        eventPlayer.cache_startUlt = true
         eventPlayer.ban_create = false
         eventPlayer.ban_autocreate = false
         eventPlayer.ban_standcreate = false
@@ -89,11 +89,11 @@ macro Fw_Mechanics_Hero():
     def ResetAbilities():
         @Name "Mechanic | Genji | SUB Reset Abilities"
         if eventPlayer.toggle_invincible or (eventPlayer == hostPlayer and EditorOn):
-            eventPlayer.setUltEnabled(true)
             eventPlayer.setAbility1Enabled(true)
+            eventPlayer.setUltEnabled(true)
         else:
-            eventPlayer.setUltEnabled(eventPlayer.cache_startUlt)
             eventPlayer.setAbility1Enabled(eventPlayer.cache_startAbility1)
+            eventPlayer.setUltEnabled(eventPlayer.cache_startUlt)
         eventPlayer.setUltCharge(100)
 
     rule "Mechanic | Genji | Dash":
@@ -114,7 +114,7 @@ macro Fw_Mechanics_Hero():
         # Blade: 125 ticks, 2s
         # Recovery: 17 ticks, 0.272s
         # Swing Duration: 38 ticks, 0.608s
-        @Condition eventPlayer.isUsingUltimate() 
+        @Condition eventPlayer.isUsingUltimate()
         if eventPlayer.toggle_invincible or (EditorOn and eventPlayer == hostPlayer) or not eventPlayer.checkpoint_notLast:
             eventPlayer.setUltEnabled(true)
             eventPlayer.setUltCharge(100)
@@ -149,7 +149,7 @@ macro Fw_Mechanics_Hero():
             waitUntil(eventPlayer.isOnGround() or not eventPlayer.skill_usedDouble, Math.INFINITY)
             if not RULE_CONDITION: return
 
-    rule "Mechanic | Genji | Ban Save Double - 封禁二段跳":
+    rule "Mechanic | Genji | Ban Save Double ◆ 封禁二段跳":
         @Event eachPlayer
         @Hero genji
         @Condition eventPlayer.ban_savedouble
@@ -172,3 +172,109 @@ macro Fw_Mechanics_Hero():
         #"   延二段跳已禁用!" checkCN "   save double banned!"
         smallMessage(eventPlayer, t"   Save Double » Is Banned!")
         CheckpointFailReset()
+
+################################################################################
+macro Fw_AddonsPg1_Hero():
+    rule ""::@Disabled
+
+macro Fw_AddonsPg2_Hero():
+    rule "Addon | Genji | Fake Ledge Dash ◆ 超级跳":
+        @Event eachPlayer
+        @Disabled
+        #Version 2
+        @Condition eventPlayer.isUsingAbility1()
+        @Condition eventPlayer.getSpeed() < 45
+        @Condition eventPlayer.getThrottle().z > null
+        @Condition abs(eventPlayer.getVerticalSpeed() - 7) < 0.8
+        # Dash into a wall/edge
+        # Release wall/edge before dash ends
+        eventPlayer.addon_ledgeDash = eventPlayer.getFacingDirection()
+        waitUntil(not eventPlayer.isUsingAbility1(), true) #25 * 0.016
+        if eventPlayer.isInAir():
+            eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash, 50, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+
+    rule "Addon | Genji | Fake Triple Jump ◆ 假三段跳":
+        @Disabled
+        @Event eachPlayer
+        @Hero genji
+        #@Condition BanTriple == false
+        @Condition eventPlayer.isOnGround() == false
+        @Condition eventPlayer.skill_usedDouble == false #Double cannot be used already
+        @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false #Don't activate on reset
+        eventPlayer.addon_enableDoubleChecks = true #Enable checking double jump
+        wait(0)
+        if RULE_CONDITION: goto RULE_START
+        if eventPlayer.skill_usedDouble or eventPlayer.isHoldingButton(Button.RELOAD):
+            return
+        #Input window to Triple
+        waitUntil(eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP), 0.048)
+        if eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping():
+            eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+        else:
+            if RULE_CONDITION: goto RULE_START
+
+    rule "Addon | Genji | Legacy Fake Ledge Dash ◆ 超级跳":
+        @Event eachPlayer
+        @Hero genji
+        @Condition false
+        # based on code taken: wzr31 and S7DR0 and simplified
+        @Condition eventPlayer.isUsingAbility1()
+        #climb / ledge > hold jump > hands on the ledge > dash  > wait for launch > release jump
+        #爬墙/扒 > 长按跳 > 抓住窗台 > SHIFT > 等待发射 > 释放跳跃
+        eventPlayer.addon_ledgeDash[0] = 0
+        waitUntil(eventPlayer.getSpeed() >= 45, 0.4)
+        while eventPlayer.isUsingAbility1() and eventPlayer.addon_ledgeDash[0] <= 12:
+            eventPlayer.addon_ledgeDash[1] = eventPlayer.getFacingDirection()
+            eventPlayer.addon_ledgeDash[2] = eventPlayer.getSpeed()
+            if eventPlayer.getSpeed() < 45: # dashed into air or object = end
+                goto lbla
+            else:
+                eventPlayer.addon_ledgeDash[0] ++
+            if eventPlayer.addon_ledgeDash[0] == 12: # stop storing, we keep this speed/direction
+                waitUntil(eventPlayer.getSpeed() < 40, 0.4) # wait for dash to finish to execute
+            wait(0)
+        # dash after ledge grab
+        if eventPlayer.addon_ledgeDash[0] >= 5: #and eventPlayer.addon_ledgeDash[0] <= 12: # ledge dash execute
+            # stores speed and launches you after dash if you done it during climb
+            eventPlayer.applyImpulse(eventPlayer.addon_ledgeDash[1], eventPlayer.addon_ledgeDash[2], Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION_XYZ)
+        # above 12 - climbed to long
+        # below 5 - dashed into object
+        lbla:
+        eventPlayer.addon_ledgeDash[0] = null
+        eventPlayer.addon_ledgeDash[1] = null
+        eventPlayer.addon_ledgeDash[2] = null
+
+    rule "Addon | Genji | Legacy Fake Triple Jump ◆ 假三段跳": 
+        @Event eachPlayer
+        @Hero genji
+        @Condition false # method c
+        #@Condition BanTriple == false
+        @Condition eventPlayer.isInAir() # check starts in air when not double jumping, this is to detect double jumping
+        @Condition eventPlayer.isJumping() # false when double jumping
+        @Condition eventPlayer.getAltitude() < 0.5 # prevent rest of code from running if you are not gona be close to ground
+        @Condition eventPlayer.getVerticalSpeed() < 0 # avoid trigering on start of jump, only when u go downwards
+        @Condition eventPlayer.isHoldingButton(Button.RELOAD) == false # don't triger on reset
+        @Condition eventPlayer.isUsingAbility1() == false
+        # if you double jump or climb etc before touching ground, reset
+        waitUntil(not eventPlayer.isInAir() or not eventPlayer.isJumping() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD), Math.INFINITY) 
+        if not (eventPlayer.isOnGround() or eventPlayer.isJumping()) or eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD):
+            return
+        # window on the ground were you can press jump
+        waitUntil(eventPlayer.isJumping() and eventPlayer.isHoldingButton(Button.JUMP) or
+            eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD), 0.048) 
+        if eventPlayer.isOnWall() or eventPlayer.isUsingAbility1() or eventPlayer.isHoldingButton(Button.RELOAD) or eventPlayer.hasStatusEffect(Status.ROOTED):
+        elif eventPlayer.isHoldingButton(Button.JUMP) and eventPlayer.isJumping():
+            eventPlayer.applyImpulse(Vector.UP, 9, Relativity.TO_PLAYER, Impulse.CANCEL_CONTRARY_MOTION_XYZ) # ban goes here if it was on
+
+    rule "Addon | Genji | Legacy Save Double ◆ 二段跳":
+        @Event eachPlayer
+        @Condition false # Obsoleted by hero settings.
+        @Condition eventPlayer.isOnGround() == false
+        @Condition eventPlayer.skill_usedDouble == false
+        @Condition eventPlayer.isHoldingButton(Button.JUMP) == true
+        waitUntil(eventPlayer.getThrottle().z > null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
+        if not RULE_CONDITION: return
+        waitUntil(eventPlayer.getThrottle().z <= null or eventPlayer.isOnGround() or eventPlayer.skill_usedDouble or not eventPlayer.isHoldingButton(Button.JUMP), Math.INFINITY)
+        if not RULE_CONDITION: return
+        eventPlayer.cancelPrimaryAction()
+        if RULE_CONDITION: goto RULE_START

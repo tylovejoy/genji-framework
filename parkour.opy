@@ -13,11 +13,23 @@ rule "▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒�
     @Delimiter
 
 rule "Parkour | Setup & Variables":
-    #◀ The Official Genji Parkour Editor ▶
-    #Discord: dsc.gg/genjiparkour
-    #Code: 54CRY
-    #Adapted by: LulledLion, FishoFire, Nebula
-    disableGamemodeCompletion()
+    if FwHero.Hero == Hero.GENJI:
+        # ◀ Official Genji Parkour Editor ▶
+        # Discord: dsc.gg/genjiparkour
+        # Code: 54CRY
+        # Adapted by: LulledLion, FishoFire, Nebula
+        disableGamemodeCompletion()
+    elif FwHero.Hero == Hero.DOOMFIST:
+        # ◀ Doomfist Parkour Editor ▶
+        # Discord: dsc.gg/projectmomentum
+        # Code: NAPGF
+        # Adapted by: LulledLion, FishoFire, Nebula
+        disableGamemodeCompletion()
+    else:
+        # ◀ Parkour Editor ▶
+        # Code: undefined
+        # Adapted by: LulledLion, FishoFire, Nebula
+        disableGamemodeCompletion()
     disableScoring()
     disableMusic()
     disableAnnouncer()
@@ -39,7 +51,6 @@ rule "Parkour | Setup & Variables":
 
     BouncePadCheckpoints = BouncePadCheckpoints if len(BouncePadCheckpoints) else []
     CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
-    CheckpointPositions = CheckpointPositions if len(CheckpointPositions) else []
     KillballCheckpoints = KillballCheckpoints if len(KillballCheckpoints) else []
     KillBallPositions = KillBallPositions if len(KillBallPositions) else []
     KillBallRadii = KillBallRadii if len(KillBallRadii) else []
@@ -50,6 +61,7 @@ rule "Parkour | Setup & Variables":
     BounceToggleUlt = BounceToggleUlt if len(BounceToggleUlt) else []
     BounceToggleDash = BounceToggleDash if len(BounceToggleDash) else []
     BounceToggleLock = BounceToggleLock if len(BounceToggleLock) else []
+    SafeRings = SafeRings if len(SafeRings) else []
 
     CustomPortalStart = CustomPortalStart if len(CustomPortalStart) else []
     CustomPortalEndpoint = CustomPortalEndpoint if len(CustomPortalEndpoint) else []
@@ -164,7 +176,8 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
     @Condition eventPlayer.isOnGround()
     @Condition eventPlayer.isAlive()
     if not eventPlayer.checkpoint_notLast:
-        if (eventPlayer.isMoving() and not (eventPlayer.toggle_practice or eventPlayer.toggle_invisible or EditorOn or CompMode)):
+        if eventPlayer.toggle_practice or eventPlayer.toggle_invisible or EditorOn or CompMode: pass
+        elif eventPlayer.isMoving():
             # traces ----------------------------------------------------------------------------------------------------
             eventPlayer.cache_rainbow = [Color.RED, Color.ORANGE, Color.YELLOW, Color.LIME_GREEN, Color.GREEN, Color.TURQUOISE, Color.BLUE, Color.PURPLE, Color.VIOLET, Color.ROSE][(floor(getTotalTimeElapsed()*2))%10]
             #eventPlayer.cache_rainbow =  rgb((cosDeg(getTotalTimeElapsed()/2 * 360 - 0) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 120) + 0.5) * 255, (cosDeg(getTotalTimeElapsed/2 * 360 - 240) + 0.5) * 255)
@@ -181,23 +194,19 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             wait(0.048)
             playEffect(true[0], DynamicEffect.RING_EXPLOSION, eventPlayer.cache_rainbow, eventPlayer.getPosition(), 1.4)
             wait(0.048)
-    elif eventPlayer.toggle_invincible or eventPlayer.toggle_spectate:# or eventPlayer.lockState:
-        # Do nothing
+    elif eventPlayer.toggle_invincible: pass
+    elif eventPlayer.toggle_spectate: pass
     elif distance(eventPlayer, CheckpointPositions[eventPlayer.checkpoint_current + 1]) <= cpCircleRadius:
         # arrived ----------------------------------------------------------------------------------------------------
         if len(eventPlayer.cache_collectedLocks) < eventPlayer.cache_bounceMaxLocks:
             #"   ! 进点前需集齐所有收集球 !" checkCN "   ! collect ALL {} orbs to unlock !".format(ColorConfig[Customize.orb_lock])
             smallMessage(eventPlayer, t"   ! Collect All Lock Orbs To Complete !")
             CheckpointFailReset() # kill player if not colleted the locks
-        elif eventPlayer.ban_climb and eventPlayer.skill_usedClimb:
-            #"   爬墙 ↑ 已禁用!" checkCN "   Climb ↑ is banned!")
-            smallMessage(eventPlayer, t"   Climb ↑ Is Banned!")
-            CheckpointFailReset()
         elif eventPlayer.ban_bhop and eventPlayer.skill_usedBhop:
             #"   ≥ 留小跳进点!" checkCN "   ≥ Must Have A Bhop To Complete!!"
             smallMessage(eventPlayer, t"   ≥ Must Have A Bhop To Complete!")
             CheckpointFailReset()
-        elif eventPlayer.ban_djump and eventPlayer.skill_usedDouble:
+        elif FwHero.Hero == Hero.GENJI and eventPlayer.ban_djump and eventPlayer.skill_usedDouble:
             #"   » 留二段跳!" checkCN "   » Must Have A Double Jump To Complete!"
             smallMessage(eventPlayer, t"   » Must Have A Double Jump To Complete!")
             CheckpointFailReset()
@@ -239,9 +248,11 @@ rule "Parkour | Ground: Traces, Arrive, & Reset":
             wait(0)
             playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, null, eventPlayer, 100)
             playEffect(eventPlayer if CompMode or eventPlayer.toggle_invisible else true, DynamicEffect.RING_EXPLOSION, Color.SKY_BLUE, eventPlayer.getPosition(), 4)
+    elif eventPlayer.skill_safe: pass
     elif distance(eventPlayer,CheckpointPositions[eventPlayer.checkpoint_current].last()) > cpCircleRadius:
         CheckpointFailReset()
-    elif antiCheat and not(eventPlayer.isUsingUltimate() or eventPlayer.isUsingAbility1()) and eventPlayer.getHorizontalSpeed() > 6.05:
+    elif antiCheat and (eventPlayer.isUsingUltimate() or eventPlayer.isUsingAbility1()): pass
+    elif antiCheat and eventPlayer.getHorizontalSpeed() > 6.05:
         LobbyID = []
 
     eventPlayer.cache_collectedLocks = []
@@ -300,6 +311,15 @@ rule "Parkour | Bounce Ball / Orb":
     if RULE_CONDITION: goto RULE_START
     eventPlayer.cache_bounceTouched = -1
 
+rule "Parkour | Safe Rings":
+    @Event eachPlayer
+    @Condition eventPlayer.cache_safeRing != []
+    @Condition eventPlayer.checkpoint_notLast
+    @Condition eventPlayer.cache_safeRing.any(tuple: distance(eventPlayer, CAE.last()) < cpCircleRadius)
+    eventPlayer.skill_safe += true
+    waitUntil(not len(eventPlayer.cache_safeRing) and eventPlayer.cache_safeRing.any(tuple: distance(eventPlayer, CAE.last()) > cpCircleRadius))
+    eventPlayer.skill_safe -= true
+
 rule "Parkour | Death Reset":
     @Event playerDied
     @Condition eventPlayer.isDummy() == false
@@ -339,6 +359,7 @@ def UpdateCache():
     eventPlayer.cache_bounceMaxLocks = len(BounceToggleLock.filter(tuple: BouncePadCheckpoints[CAI] == eventPlayer.checkpoint_current and CAE))
     eventPlayer.cache_killPosition = KillBallPositions.filter(tuple: KillballCheckpoints[CAI] == eventPlayer.checkpoint_current)
     eventPlayer.cache_killRadii = KillBallRadii.filter(tuple: KillballCheckpoints[CAI] == eventPlayer.checkpoint_current)
+    eventPlayer.cache_safeRing = SafeRings.filter(tuple: CAE[0] == eventPlayer.checkpoint_current)
     eventPlayer.cache_portalStart = CustomPortalStart.filter(tuple: CustomPortalCP[CAI] == eventPlayer.checkpoint_current or CustomPortalCP[CAI] < 0)
     eventPlayer.cache_portalEnd = CustomPortalEndpoint.filter(tuple: CustomPortalCP[CAI] == eventPlayer.checkpoint_current or CustomPortalCP[CAI] < 0)
     eventPlayer.checkpoint_notLast = (eventPlayer.checkpoint_current < len(CheckpointPositions) - 1 and len(CheckpointPositions) > 1)
