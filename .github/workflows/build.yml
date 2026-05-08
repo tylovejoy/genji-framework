@@ -15,13 +15,18 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Compile .opy script to .ow
-        uses: nebulaOW/overpy-compile-action@v1
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
         with:
-          entrypoint: ../framework.opy
-          output_dir: dist
-          language: en-US
-          out_file_type: .ow
+          node-version: 20
+
+      - name: Install OverPy CLI
+        run: npm install -g overpy
+
+      - name: Compile .opy script to .ow
+        run: |
+          mkdir -p dist
+          overpy compile -i framework.opy -o dist/framework.ow -l en-US
 
       - name: Upload compiled .ow files as artifact
         uses: actions/upload-artifact@v4
@@ -33,6 +38,6 @@ jobs:
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v1
         with:
-          files: "*.ow"
+          files: "dist/*.ow"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
