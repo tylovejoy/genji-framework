@@ -23,7 +23,7 @@ if (result_action)
 //console.log(result);
 result;//Output
 
-function build(node, parentIndexPtr = 1, currPage = 0) {
+function build(node, parentIndexPtr = 0, currPage = 0) {
     if (node === 0) return 0;
 
     if ("text" in node) {

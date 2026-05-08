@@ -746,3 +746,9 @@ fixed:
    * Edit save data on page 2 rule "Addon | Safe Rings - Map Data"
      - Currently not editable in the editor
      - Experimental save data format for map objects
+
+# 1.10.4H
+### General
+ - Fixed math simplification to Fencer Breaker
+   * Reported by `kuma0997` +10xp
+   * Thanks `Zezombye` for spotting the math mistake x-y+z ≠ x-(y+z)
