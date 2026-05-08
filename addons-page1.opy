@@ -127,8 +127,8 @@ rule "Addon | Little Destructo - Fence Breaker":
                 Projectile.ORB,  # the only orb available without fx extension
                 null,
                 # calculation for next explosion
-                MapVectorArray[1] - fence_proj_size * vect(0.5 * fence_grid + (MapVectorArray[0] % fence_grid),
-                0, 0.5 * fence_grid + floor(MapVectorArray[0] / fence_grid)),
+                MapVectorArray[1] + fence_proj_size * vect(MapVectorArray[0] % fence_grid - 0.5 * fence_grid,
+                0, floor(MapVectorArray[0] / fence_grid) - 0.5 * fence_grid),
                 Vector.DOWN, Relativity.TO_WORLD, ModifyHealth.HEAL, Team.1, 0, 0, fence_proj_size,
                 DynamicEffect.GOOD_EXPLOSION, # possible without extensions: bad, good, ring
                 DynamicEffect.EXPLOSION_SOUND, # possible without extensions: explosion sound, buf sound, ring explosion sound
