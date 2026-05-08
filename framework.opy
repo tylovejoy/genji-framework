@@ -4,7 +4,7 @@
 #!suppressWarnings w_lone_else
 #!suppressWarnings w_enum_constant
 ################################################################################
-#!define versionhere "1.10.4H"
+#!define versionhere "1.10.4I"
 #♨ Dev Build Icon
 ################################################################################
 #!define editortoggle(x) __script__("test-maps/togglescript.js")
@@ -36,7 +36,7 @@ macro compMarathon = false # Enforce Marathon: false
 #!translations en zh ko
 #!disableTranslationSourceLines
 #!translateWithPlayerVar noDetectionRule
-#!keepUnusedTranslations
+##!keepUnusedTranslations
 macro overrideLanguage = Languages.Automatic
 ################################################################################
 #!disableInspector

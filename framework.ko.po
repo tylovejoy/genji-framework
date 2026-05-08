@@ -325,15 +325,3 @@ msgstr "님이 최종 목표에 도달했습니다! 시간"
 #. file parkour.opy, rule "Parkour | Match time"
 msgid "Maximum Lobby Time Reached, Restarting"
 msgstr "최대 로비 시간에 도달했습니다, 재시작합니다"
-
-#. Unused translation
-msgid "Slam Is Ready"
-msgstr ""
-
-#. Unused translation
-msgid "Block Is Ready"
-msgstr ""
-
-#. Unused translation
-msgid "Punch Is Ready"
-msgstr ""
