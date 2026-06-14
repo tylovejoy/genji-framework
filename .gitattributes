@@ -1,0 +1,2 @@
+# Force all files with this extension to be treated as a specific language
+*.opy linguist-language=OverPy
